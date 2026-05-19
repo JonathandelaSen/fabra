@@ -19,6 +19,20 @@ import type {
 import { activityContextQueryKeys } from "../api/activity-context-query-keys";
 import { getErrorMessage } from "@/lib/errors";
 
+function invalidateActivityContextConsumers(queryClient: ReturnType<typeof useQueryClient>) {
+  return queryClient.invalidateQueries({
+    predicate: (query) => {
+      const key = query.queryKey;
+      return (
+        key[0] === activityContextQueryKeys.all[0] ||
+        (key[0] === "objectives" && key[1] === "workspace") ||
+        key[0] === "work-journal" ||
+        key[0] === "received-feedback"
+      );
+    },
+  });
+}
+
 export function useActivityContexts() {
   return useQuery({
     queryKey: activityContextQueryKeys.lists(),
@@ -32,8 +46,7 @@ export function useCreateActivityContext() {
 
   const mutation = useMutation({
     mutationFn: createActivityContext,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: activityContextQueryKeys.all }),
+    onSuccess: () => invalidateActivityContextConsumers(queryClient),
   });
 
   const create = useCallback(
@@ -58,8 +71,7 @@ export function useUpdateActivityContext() {
 
   const mutation = useMutation({
     mutationFn: updateActivityContext,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: activityContextQueryKeys.all }),
+    onSuccess: () => invalidateActivityContextConsumers(queryClient),
   });
 
   const update = useCallback(
@@ -84,8 +96,7 @@ export function useDeleteActivityContext() {
 
   const mutation = useMutation({
     mutationFn: deleteActivityContext,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: activityContextQueryKeys.all }),
+    onSuccess: () => invalidateActivityContextConsumers(queryClient),
   });
 
   const remove = useCallback(
@@ -110,8 +121,7 @@ export function useHandleActivityContextSuggestion() {
 
   const mutation = useMutation({
     mutationFn: handleActivityContextSuggestion,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: activityContextQueryKeys.all }),
+    onSuccess: () => invalidateActivityContextConsumers(queryClient),
   });
 
   const promote = useCallback(

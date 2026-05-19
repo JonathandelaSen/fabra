@@ -165,7 +165,11 @@ export default function CVLibrary({
                   {blockingAnalyses.map((analysis) => (
                     <a
                       key={analysis.id}
-                      href={`/?analysis=${encodeURIComponent(analysis.id)}`}
+                      href={
+                        analysis.analysis_mode === "job_match"
+                          ? `/job-analyses/${encodeURIComponent(analysis.id)}`
+                          : `/cv-analysis/${encodeURIComponent(analysis.id)}`
+                      }
                       onClick={(event) => {
                         event.preventDefault();
                         onOpenAnalysis(analysis.id);
@@ -369,7 +373,11 @@ export default function CVLibrary({
                     {selectedAnalyses.map((analysis) => (
                       <a
                         key={analysis.id}
-                        href={`/?analysis=${encodeURIComponent(analysis.id)}`}
+                        href={
+                        analysis.analysis_mode === "job_match"
+                          ? `/job-analyses/${encodeURIComponent(analysis.id)}`
+                          : `/cv-analysis/${encodeURIComponent(analysis.id)}`
+                      }
                         onClick={(event) => {
                           event.preventDefault();
                           onOpenAnalysis(analysis.id);

@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import type { AnalysisSummary } from "@/lib/analysis-types";
 import Sidebar from "@/components/shell/sidebar";
 import NewAnalysisFlow from "@/components/cv-library/new-analysis-flow";
-import CVLibrary from "@/components/cv-library/cv-library";
+import { CVLibraryView } from "@/features/cv-library";
 import TemplatesView from "@/components/cv-library/templates-view";
 import CVEditorView from "@/components/cv-library/cv-editor-view";
 import { InterviewQuestionsView } from "@/features/interview-questions";
@@ -25,12 +25,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Sparkles } from "lucide-react";
 import { AnalysisDetailSkeleton } from "@/components/shared/skeletons";
 import { createClient } from "@/lib/supabase/client";
+import { normalizeAnalysisSummaries } from "@/components/shell/analysis-summary-normalizer";
 import type {
   AnalysisMode,
   AIContext,
   OfferStatus,
 } from "@/lib/analysis-types";
 import type { CVDocumentSummaryResponse as CVSummary } from "@/modules/cv-library/client";
+import type { ListCVDocumentsResponse } from "@/app/api/cvs/responses";
 import type { InterviewQuestionResponse as InterviewQuestionSummary } from "@/app/api/interview-questions/responses";
 import {
   getStoredAIApiKey,
@@ -117,6 +119,26 @@ interface FullAnalysis {
   ai_analyzed_at: string | null;
 }
 
+function toLegacyCVSummary(cv: ListCVDocumentsResponse[number]): CVSummary {
+  return {
+    id: cv.id,
+    name: cv.name,
+    filename: cv.filename,
+    file_size: cv.fileSize,
+    type: cv.type,
+    source_cv_id: cv.sourceCvId,
+    template_id: cv.templateId,
+    template_locale: cv.templateLocale,
+    profile: cv.profile,
+    public_enabled: cv.publicEnabled,
+    public_id: cv.publicId,
+    public_slug: cv.publicSlug,
+    public_published_at: cv.publicPublishedAt,
+    created_at: cv.createdAt,
+    updated_at: cv.updatedAt,
+  };
+}
+
 interface AppShellProps {
   initialView?: AppView;
   initialUserEmail?: string | null;
@@ -129,6 +151,8 @@ export default function AppShell({
   initialIsAdmin = false,
 }: AppShellProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const analysisFlow = useTranslations("analysisFlow.appShell");
   const [analyses, setAnalyses] = useState<AnalysisSummary[]>([]);
   const [analysesLoading, setAnalysesLoading] = useState(true);
@@ -140,7 +164,12 @@ export default function AppShell({
   const [activeAnalysis, setActiveAnalysis] = useState<FullAnalysis | null>(
     null,
   );
-  const [viewTab, setViewTab] = useState<ViewTab>("extraction");
+  const tabFromUrl = searchParams.get("tab") as ViewTab | null;
+  const viewTab: ViewTab = tabFromUrl || (activeAnalysis?.ai_score !== null && activeAnalysis?.ai_score !== undefined ? "analysis" : "extraction");
+
+  const setViewTab = (tab: ViewTab) => {
+    router.replace(`${pathname}?tab=${tab}`, { scroll: false });
+  };
   const [activeView, setActiveView] = useState<AppView>(initialView);
   const [activeEditorCvId, setActiveEditorCvId] = useState<string | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
@@ -154,8 +183,11 @@ export default function AppShell({
   const lastWorkJournalHrefRef = useRef("/work-journal");
   const lastObjectivesHrefRef = useRef("/objectives");
   const lastInterviewQuestionsHrefRef = useRef("/interview-questions");
+  const lastCVAnalysesHrefRef = useRef("/cv-analysis");
   const lastJobAnalysesHrefRef = useRef("/job-analyses");
+  const lastCVLibraryHrefRef = useRef("/cvs");
   const hasLoadedAnalysesRef = useRef(false);
+  const hasLoadedCVAnalysesRef = useRef(false);
   const hasLoadedCVsRef = useRef(false);
   const hasLoadedInterviewQuestionsRef = useRef(false);
   const analysesRequestRef = useRef<Promise<void> | null>(null);
@@ -163,23 +195,33 @@ export default function AppShell({
   const interviewQuestionsRequestRef = useRef<Promise<void> | null>(null);
 
   // Fetch analyses list
-  const fetchAnalyses = useCallback(async () => {
+  const fetchAnalyses = useCallback(async (includeJobMatches: boolean = false) => {
     setAnalysesLoading(true);
     try {
-      const [cvRes, jobMatchRes] = await Promise.all([
-        fetch("/api/cv-analyses"),
-        fetch("/api/job-match-analyses"),
-      ]);
-      if (cvRes.ok && jobMatchRes.ok) {
-        const [cvAnalyses, jobMatchAnalyses] = await Promise.all([
-          cvRes.json(),
-          jobMatchRes.json(),
-        ]);
-        setAnalyses(
-          [...cvAnalyses, ...jobMatchAnalyses].sort((a, b) =>
-            b.created_at.localeCompare(a.created_at),
-          ),
+      const requests = [fetch("/api/cv-analyses")];
+      if (includeJobMatches) {
+        requests.push(fetch("/api/job-match-analyses"));
+      }
+
+      const responses = await Promise.all(requests);
+      const cvAnalyses = responses[0].ok ? await responses[0].json() : [];
+      const jobMatchAnalyses =
+        includeJobMatches && responses[1]?.ok ? await responses[1].json() : [];
+
+      setAnalyses((prev) => {
+        const existingJobMatches = prev.filter(
+          (a) => a.analysis_mode === "job_match",
         );
+        const newJobMatches = includeJobMatches
+          ? jobMatchAnalyses
+          : existingJobMatches;
+        return normalizeAnalysisSummaries([
+          ...cvAnalyses,
+          ...newJobMatches,
+        ]).sort((a, b) => b.created_at.localeCompare(a.created_at));
+      });
+      hasLoadedCVAnalysesRef.current = true;
+      if (includeJobMatches) {
         hasLoadedAnalysesRef.current = true;
       }
     } catch {
@@ -193,8 +235,8 @@ export default function AppShell({
     try {
       const res = await fetch("/api/cvs");
       if (res.ok) {
-        const data = await res.json();
-        setCVs(data);
+        const data = (await res.json()) as ListCVDocumentsResponse;
+        setCVs(data.map(toLegacyCVSummary));
         hasLoadedCVsRef.current = true;
       }
     } catch {
@@ -216,8 +258,16 @@ export default function AppShell({
   }, []);
 
   const ensureAnalyses = useCallback(async () => {
+    if (hasLoadedCVAnalysesRef.current || hasLoadedAnalysesRef.current) return;
+    analysesRequestRef.current ??= fetchAnalyses(false).finally(() => {
+      analysesRequestRef.current = null;
+    });
+    await analysesRequestRef.current;
+  }, [fetchAnalyses]);
+
+  const ensureAllAnalyses = useCallback(async () => {
     if (hasLoadedAnalysesRef.current) return;
-    analysesRequestRef.current ??= fetchAnalyses().finally(() => {
+    analysesRequestRef.current ??= fetchAnalyses(true).finally(() => {
       analysesRequestRef.current = null;
     });
     await analysesRequestRef.current;
@@ -256,14 +306,14 @@ export default function AppShell({
     }
 
     if (activeView === "cvs") {
-      void Promise.all([ensureCVs(), ensureAnalyses(), ensureInterviewQuestions()]);
+      void Promise.all([ensureAllAnalyses(), ensureInterviewQuestions()]);
       return;
     }
 
     if (activeView === "questions") {
       return;
     }
-  }, [activeView, ensureAnalyses, ensureCVs, ensureInterviewQuestions]);
+  }, [activeView, ensureAnalyses, ensureAllAnalyses, ensureCVs, ensureInterviewQuestions]);
 
   useEffect(() => {
     if (initialUserEmail) return;
@@ -330,9 +380,21 @@ export default function AppShell({
     }
   }, []);
 
+  const rememberCVAnalysesLocation = useCallback(() => {
+    if (window.location.pathname.startsWith("/cv-analysis")) {
+      lastCVAnalysesHrefRef.current = `${window.location.pathname}${window.location.search}`;
+    }
+  }, []);
+
   const rememberJobAnalysesLocation = useCallback(() => {
     if (window.location.pathname.startsWith("/job-analyses")) {
       lastJobAnalysesHrefRef.current = `${window.location.pathname}${window.location.search}`;
+    }
+  }, []);
+
+  const rememberCVLibraryLocation = useCallback(() => {
+    if (window.location.pathname.startsWith("/cvs")) {
+      lastCVLibraryHrefRef.current = `${window.location.pathname}${window.location.search}`;
     }
   }, []);
 
@@ -359,7 +421,6 @@ export default function AppShell({
       }
       if (data) {
         setActiveAnalysis(data);
-        setViewTab(data.ai_score !== null ? "analysis" : "extraction");
         setActiveView("analysis");
       }
     } catch {
@@ -370,17 +431,37 @@ export default function AppShell({
   }, [analyses]);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const analysisId = params.get("analysis");
-    const view = params.get("view");
+    const analysisId = searchParams.get("analysis");
+    const view = searchParams.get("view");
 
     if (analysisId) {
       queueMicrotask(() => {
-        setActiveAnalysisId(analysisId);
         setActiveView("analysis");
-        void fetchAnalysisDetail(analysisId);
+        setActiveAnalysisId((prevId) => {
+          if (prevId !== analysisId) {
+            void fetchAnalysisDetail(analysisId);
+          }
+          return analysisId;
+        });
       });
+    } else if (pathname.startsWith("/cv-analysis/")) {
+      const id = pathname.split("/cv-analysis/")[1];
+      if (id) {
+        queueMicrotask(() => {
+          setActiveView("analysis");
+          setActiveAnalysisId((prevId) => {
+            if (prevId !== id) {
+              void fetchAnalysisDetail(id);
+            }
+            return id;
+          });
+        });
+      }
     } else if (view === "cvs") {
+      queueMicrotask(() => {
+        router.replace("/cvs");
+      });
+    } else if (pathname.startsWith("/cvs")) {
       queueMicrotask(() => {
         setActiveView("cvs");
         setActiveAnalysisId(null);
@@ -397,19 +478,19 @@ export default function AppShell({
         setActiveView("editor");
         setActiveAnalysisId(null);
         setActiveAnalysis(null);
-        setActiveEditorCvId(params.get("cv"));
+        setActiveEditorCvId(searchParams.get("cv"));
       });
     } else if (view === "questions") {
       queueMicrotask(() => {
         const nextParams = new URLSearchParams();
-        const cv = params.get("cv");
-        const offer = params.get("offer");
+        const cv = searchParams.get("cv");
+        const offer = searchParams.get("offer");
         if (cv) nextParams.set("cv", cv);
         if (offer) nextParams.set("offer", offer);
         const query = nextParams.toString();
         router.replace(query ? `/interview-questions?${query}` : "/interview-questions");
       });
-    } else if (window.location.pathname.startsWith("/interview-questions")) {
+    } else if (pathname.startsWith("/interview-questions")) {
       queueMicrotask(() => {
         setActiveView("questions");
         setActiveAnalysisId(null);
@@ -419,7 +500,7 @@ export default function AppShell({
       queueMicrotask(() => {
         router.replace("/work-journal");
       });
-    } else if (window.location.pathname.startsWith("/work-journal")) {
+    } else if (pathname.startsWith("/work-journal")) {
       queueMicrotask(() => {
         setActiveView("journal");
         setActiveAnalysisId(null);
@@ -429,7 +510,7 @@ export default function AppShell({
       queueMicrotask(() => {
         router.replace("/objectives");
       });
-    } else if (window.location.pathname.startsWith("/objectives")) {
+    } else if (pathname.startsWith("/objectives")) {
       queueMicrotask(() => {
         setActiveView("objectives");
         setActiveAnalysisId(null);
@@ -439,13 +520,17 @@ export default function AppShell({
       queueMicrotask(() => {
         router.replace("/feedback-notes");
       });
-    } else if (window.location.pathname.startsWith("/feedback-notes")) {
+    } else if (pathname.startsWith("/feedback-notes")) {
       queueMicrotask(() => {
         setActiveView("feedback-notes");
         setActiveAnalysisId(null);
         setActiveAnalysis(null);
       });
     } else if (view === "cv-analyses") {
+      queueMicrotask(() => {
+        router.replace("/cv-analysis");
+      });
+    } else if (pathname === "/cv-analysis") {
       queueMicrotask(() => {
         setActiveView("cv-analyses");
         setActiveAnalysisId(null);
@@ -455,7 +540,7 @@ export default function AppShell({
       queueMicrotask(() => {
         router.replace("/job-analyses");
       });
-    } else if (window.location.pathname.startsWith("/job-analyses")) {
+    } else if (pathname.startsWith("/job-analyses")) {
       queueMicrotask(() => {
         setActiveView("job-analyses");
         setActiveAnalysisId(null);
@@ -465,13 +550,13 @@ export default function AppShell({
       queueMicrotask(() => {
         router.replace("/received-feedback");
       });
-    } else if (window.location.pathname.startsWith("/received-feedback")) {
+    } else if (pathname.startsWith("/received-feedback")) {
       queueMicrotask(() => {
         setActiveView("received-feedback");
         setActiveAnalysisId(null);
         setActiveAnalysis(null);
       });
-    } else if (window.location.pathname.startsWith("/activity-contexts")) {
+    } else if (pathname.startsWith("/activity-contexts")) {
       queueMicrotask(() => {
         setActiveView("activity-context");
         setActiveAnalysisId(null);
@@ -483,14 +568,14 @@ export default function AppShell({
         setActiveAnalysisId(null);
         setActiveAnalysis(null);
       });
-    } else if (window.location.pathname === "/admin" || view === "admin") {
+    } else if (pathname === "/admin" || view === "admin") {
       queueMicrotask(() => {
         setActiveView("admin");
         setActiveAnalysisId(null);
         setActiveAnalysis(null);
       });
     }
-  }, [fetchAnalysisDetail, router]);
+  }, [fetchAnalysisDetail, router, pathname, searchParams]);
 
   // Handle selecting an analysis
   const handleSelect = (id: string) => {
@@ -500,14 +585,20 @@ export default function AppShell({
     rememberReceivedFeedbackLocation();
     rememberInterviewQuestionsLocation();
     rememberJobAnalysesLocation();
+    rememberCVAnalysesLocation();
+    rememberCVLibraryLocation();
     setActiveAnalysisId(id);
     setActiveView("analysis");
-    window.history.replaceState(
-      null,
-      "",
-      `/?analysis=${encodeURIComponent(id)}`,
-    );
     fetchAnalysisDetail(id);
+
+    const mode = analyses.find((a) => a.id === id)?.analysis_mode;
+    if (mode === "general") {
+      router.push(`/cv-analysis/${encodeURIComponent(id)}`);
+    } else if (mode === "job_match") {
+      router.push(`/job-analyses/${encodeURIComponent(id)}`);
+    } else {
+      router.push(`/?analysis=${encodeURIComponent(id)}`);
+    }
   };
 
   // Handle new analysis
@@ -518,6 +609,7 @@ export default function AppShell({
     rememberReceivedFeedbackLocation();
     rememberInterviewQuestionsLocation();
     rememberJobAnalysesLocation();
+    rememberCVLibraryLocation();
     setActiveView("new");
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
@@ -534,8 +626,7 @@ export default function AppShell({
     setActiveView("cvs");
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
-    window.history.replaceState(null, "", "/?view=cvs");
-    fetchCVs();
+    router.push(lastCVLibraryHrefRef.current);
   };
 
   const handleOpenTemplates = () => {
@@ -545,6 +636,7 @@ export default function AppShell({
     rememberReceivedFeedbackLocation();
     rememberInterviewQuestionsLocation();
     rememberJobAnalysesLocation();
+    rememberCVLibraryLocation();
     setActiveView("templates");
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
@@ -557,6 +649,7 @@ export default function AppShell({
     rememberObjectivesLocation();
     rememberFeedbackNotesLocation();
     rememberReceivedFeedbackLocation();
+    rememberCVLibraryLocation();
     const targetCvId = cvId !== undefined ? cvId : null;
     setActiveView("editor");
     setActiveAnalysisId(null);
@@ -575,6 +668,7 @@ export default function AppShell({
     rememberObjectivesLocation();
     rememberFeedbackNotesLocation();
     rememberReceivedFeedbackLocation();
+    rememberCVLibraryLocation();
     const cvId = options?.cvId ?? null;
     const analysisId = options?.analysisId ?? null;
     setActiveView("questions");
@@ -596,6 +690,7 @@ export default function AppShell({
     rememberReceivedFeedbackLocation();
     rememberInterviewQuestionsLocation();
     rememberJobAnalysesLocation();
+    rememberCVLibraryLocation();
     setActiveView("journal");
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
@@ -608,6 +703,7 @@ export default function AppShell({
     rememberReceivedFeedbackLocation();
     rememberInterviewQuestionsLocation();
     rememberJobAnalysesLocation();
+    rememberCVLibraryLocation();
     setActiveView("objectives");
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
@@ -620,6 +716,7 @@ export default function AppShell({
     rememberReceivedFeedbackLocation();
     rememberInterviewQuestionsLocation();
     rememberJobAnalysesLocation();
+    rememberCVLibraryLocation();
     setActiveView("feedback-notes");
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
@@ -632,6 +729,7 @@ export default function AppShell({
     rememberFeedbackNotesLocation();
     rememberInterviewQuestionsLocation();
     rememberJobAnalysesLocation();
+    rememberCVLibraryLocation();
     setActiveView("received-feedback");
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
@@ -645,10 +743,11 @@ export default function AppShell({
     rememberReceivedFeedbackLocation();
     rememberInterviewQuestionsLocation();
     rememberJobAnalysesLocation();
+    rememberCVLibraryLocation();
     setActiveView("cv-analyses");
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
-    window.history.replaceState(null, "", "/?view=cv-analyses");
+    router.push(lastCVAnalysesHrefRef.current);
   };
 
   const handleOpenJobAnalyses = () => {
@@ -657,6 +756,7 @@ export default function AppShell({
     rememberFeedbackNotesLocation();
     rememberReceivedFeedbackLocation();
     rememberInterviewQuestionsLocation();
+    rememberCVLibraryLocation();
     setActiveView("job-analyses");
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
@@ -670,6 +770,7 @@ export default function AppShell({
     rememberReceivedFeedbackLocation();
     rememberInterviewQuestionsLocation();
     rememberJobAnalysesLocation();
+    rememberCVLibraryLocation();
     setActiveView("settings");
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
@@ -683,6 +784,7 @@ export default function AppShell({
     rememberReceivedFeedbackLocation();
     rememberInterviewQuestionsLocation();
     rememberJobAnalysesLocation();
+    rememberCVLibraryLocation();
     setActiveView("admin");
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
@@ -699,7 +801,7 @@ export default function AppShell({
       `/?analysis=${encodeURIComponent(id)}`,
     );
     fetchAnalysisDetail(id);
-    fetchAnalyses();
+    fetchAnalyses(hasLoadedAnalysesRef.current);
     fetchCVs();
     fetchInterviewQuestions();
   };
@@ -708,7 +810,7 @@ export default function AppShell({
   const handleAIComplete = () => {
     if (activeAnalysisId) {
       fetchAnalysisDetail(activeAnalysisId);
-      fetchAnalyses();
+      fetchAnalyses(hasLoadedAnalysesRef.current);
     }
   };
 
@@ -724,7 +826,7 @@ export default function AppShell({
           : `/api/cv-analyses/${id}`;
       const res = await fetch(endpoint, { method: "DELETE" });
       if (res.ok) {
-        await fetchAnalyses();
+        await fetchAnalyses(hasLoadedAnalysesRef.current);
         if (activeAnalysisId === id) {
           setActiveAnalysisId(null);
           setActiveAnalysis(null);
@@ -836,14 +938,13 @@ export default function AppShell({
               exit={{ opacity: 0 }}
               className="flex-1 flex flex-col overflow-hidden min-h-0"
             >
-              <CVLibrary
-                cvs={cvs}
+              <CVLibraryView
                 analyses={analyses}
-                onRefresh={fetchCVs}
                 onOpenAnalysis={handleSelect}
                 onOpenEditor={handleOpenEditor}
                 interviewQuestions={interviewQuestions}
                 onOpenQuestions={(cvId) => handleOpenQuestions({ cvId })}
+                onCVsChanged={fetchCVs}
               />
             </motion.div>
           ) : activeView === "templates" ? (

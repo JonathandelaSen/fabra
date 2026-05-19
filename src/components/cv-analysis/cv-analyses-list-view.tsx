@@ -93,10 +93,18 @@ export default function CVAnalysesListView({
           </div>
         ) : (
           analyses.map((a) => (
-            <button
+            <div
               key={a.id}
+              role="button"
+              tabIndex={0}
               onClick={() => onSelect(a.id)}
-              className="group w-full flex items-center gap-4 px-4 py-3.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] hover:border-white/[0.10] transition-all text-left"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onSelect(a.id);
+                }
+              }}
+              className="group w-full flex items-center gap-4 px-4 py-3.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] hover:border-white/[0.10] transition-all text-left cursor-pointer"
             >
               <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
                 <FileSearch className="w-5 h-5 text-indigo-400" />
@@ -137,7 +145,7 @@ export default function CVAnalysesListView({
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>
-            </button>
+            </div>
           ))
         )}
       </div>

@@ -12,6 +12,30 @@ import { cvLibraryModule } from "@/lib/container";
 import { CV_PDFS_BUCKET, presentCVDocument, presentCVDocuments } from "@/modules/cv-library";
 import { parseUploadCVFormData } from "./validation";
 import { ok, errorResponse, handleApiError } from "@/modules/shared";
+import {
+  type CVDocumentDetailResponse,
+  type CVDocumentSummaryResponse,
+  toCVDocumentDetailResponse,
+  toCVDocumentSummaryResponse,
+  type CreateCVDocumentResponse,
+  type ListCVDocumentsResponse,
+} from "./responses";
+
+type LegacyCVDocumentSummary = ReturnType<typeof presentCVDocuments>[number];
+type CompatCVDocumentSummary = LegacyCVDocumentSummary & CVDocumentSummaryResponse;
+type CompatCVDocumentDetail = ReturnType<typeof presentCVDocument> & CVDocumentDetailResponse;
+
+function toCompatCVDocumentSummary(
+  cv: LegacyCVDocumentSummary
+): CompatCVDocumentSummary {
+  return { ...cv, ...toCVDocumentSummaryResponse(cv) };
+}
+
+function toCompatCVDocumentDetail(
+  cv: ReturnType<typeof presentCVDocument>
+): CompatCVDocumentDetail {
+  return { ...cv, ...toCVDocumentDetailResponse(cv) };
+}
 
 export async function GET() {
   try {
@@ -22,7 +46,9 @@ export async function GET() {
     const cvs = await cvLibraryModule
       .bindRequest(supabase)
       .listCVDocuments.execute({ userId: user.id });
-    return ok(presentCVDocuments(cvs));
+    return ok(
+      presentCVDocuments(cvs).map(toCompatCVDocumentSummary) satisfies ListCVDocumentsResponse
+    );
   } catch (error: unknown) {
     return handleApiError(error);
   }
@@ -202,7 +228,9 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return ok(responseCV);
+    return ok(
+      toCompatCVDocumentDetail(responseCV) satisfies CreateCVDocumentResponse
+    );
   } catch (error: unknown) {
     await recordProcessingEvent({
       userId,

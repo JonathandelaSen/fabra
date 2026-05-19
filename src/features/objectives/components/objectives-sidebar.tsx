@@ -31,6 +31,29 @@ export function ObjectivesSidebar({
   statusLabel,
   t,
 }: ObjectivesSidebarProps) {
+  const contextIds = new Set(contexts.map((context) => context.id));
+  const orphanedCommitments = commitments.filter(
+    (commitment) => !contextIds.has(commitment.contextId)
+  );
+  const groups = [
+    ...contexts.map((context) => ({
+      id: context.id,
+      name: context.name,
+      commitments: commitments.filter(
+        (commitment) => commitment.contextId === context.id
+      ),
+    })),
+    ...(orphanedCommitments.length > 0
+      ? [
+          {
+            id: "missing-context",
+            name: t("fallbackContext"),
+            commitments: orphanedCommitments,
+          },
+        ]
+      : []),
+  ];
+
   return (
     <aside className="flex w-full shrink-0 flex-col border-b border-white/[0.06] bg-[#0d0d14]/80 lg:w-[340px] lg:border-b-0 lg:border-r">
       <div className="border-b border-white/[0.06] p-4">
@@ -55,19 +78,16 @@ export function ObjectivesSidebar({
         {!hasLoadedWorkspace ? (
           <ObjectivesSidebarSkeleton />
         ) : (
-          contexts.map((context) => {
-            const group = commitments.filter(
-              (commitment) => commitment.contextId === context.id
-            );
-            if (group.length === 0) return null;
+          groups.map((group) => {
+            if (group.commitments.length === 0) return null;
             return (
-              <section key={context.id} className="mb-4">
+              <section key={group.id} className="mb-4">
                 <div className="mb-1 flex items-center justify-between px-3 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-600">
-                  <span>{context.name}</span>
-                  <span>{group.length}</span>
+                  <span>{group.name}</span>
+                  <span>{group.commitments.length}</span>
                 </div>
                 <div>
-                  {group.map((commitment) => {
+                  {group.commitments.map((commitment) => {
                     const active = commitment.id === selectedId;
                     const done = commitment.items.filter(
                       (item) => item.status === "done"

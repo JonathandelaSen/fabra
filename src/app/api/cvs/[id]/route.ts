@@ -8,6 +8,20 @@ import { cvLibraryModule } from "@/lib/container";
 import { presentCVDocument } from "@/modules/cv-library";
 import { parseUpdateCVDocumentRequest } from "../validation";
 import { ok, errorResponse, notFound, badRequest, handleApiError } from "@/modules/shared";
+import {
+  type CVDocumentDetailResponse,
+  toCVDocumentDetailResponse,
+  type DeleteCVDocumentResponse,
+  type GetCVDocumentResponse,
+  type UpdateCVDocumentResponse,
+} from "../responses";
+
+type LegacyCVDocumentDetail = ReturnType<typeof presentCVDocument>;
+type CompatCVDocumentDetail = LegacyCVDocumentDetail & CVDocumentDetailResponse;
+
+function toCompatCVDocumentDetail(cv: LegacyCVDocumentDetail): CompatCVDocumentDetail {
+  return { ...cv, ...toCVDocumentDetailResponse(cv) };
+}
 
 export async function GET(
   _req: NextRequest,
@@ -26,7 +40,9 @@ export async function GET(
       throw notFound("CV not found");
     }
 
-    return ok(presentCVDocument(cv));
+    return ok(
+      toCompatCVDocumentDetail(presentCVDocument(cv)) satisfies GetCVDocumentResponse
+    );
   } catch (error: unknown) {
     return handleApiError(error);
   }
@@ -90,7 +106,9 @@ export async function PATCH(
       if (!updated) {
         throw notFound("Template CV not found");
       }
-      return ok(presentCVDocument(updated));
+      return ok(
+        toCompatCVDocumentDetail(presentCVDocument(updated)) satisfies UpdateCVDocumentResponse
+      );
     }
 
     if (body.profile || body.template_locale) {
@@ -106,7 +124,9 @@ export async function PATCH(
       if (!updated) {
         throw notFound("Template CV not found");
       }
-      return ok(presentCVDocument(updated));
+      return ok(
+        toCompatCVDocumentDetail(presentCVDocument(updated)) satisfies UpdateCVDocumentResponse
+      );
     }
 
     const trimmedName = body.name?.trim();
@@ -121,7 +141,9 @@ export async function PATCH(
       throw notFound("CV not found");
     }
 
-    return ok(presentCVDocument(cv));
+    return ok(
+      toCompatCVDocumentDetail(presentCVDocument(cv)) satisfies UpdateCVDocumentResponse
+    );
   } catch (error: unknown) {
     return handleApiError(error);
   }
@@ -153,7 +175,7 @@ export async function DELETE(
       );
     }
 
-    return ok({ success: true });
+    return ok({ success: true } satisfies DeleteCVDocumentResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }

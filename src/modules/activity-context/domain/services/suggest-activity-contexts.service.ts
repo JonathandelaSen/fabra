@@ -11,7 +11,7 @@ export function suggestActivityContextsFromCVs(
   const suggestions = new Map<string, ActivityContextSuggestion>();
 
   for (const cv of cvs) {
-    if (cv.type !== "template" || !cv.profile) continue;
+    if (!cv.profile) continue;
 
     for (const item of cv.profile.experience ?? []) {
       if (!item.company) continue;

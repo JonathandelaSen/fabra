@@ -286,11 +286,6 @@ export default function Sidebar({
                     {!collapsed && (
                       <span className="flex-1 text-left">{t("cvAnalyses")}</span>
                     )}
-                    {!collapsed && generalAnalyses.length > 0 && (
-                      <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-white/[0.08] text-zinc-400">
-                        {generalAnalyses.length}
-                      </span>
-                    )}
                   </button>
                   <button
                     onClick={onOpenCVs}
@@ -365,11 +360,6 @@ export default function Sidebar({
                     <Briefcase className="w-4 h-4 shrink-0" />
                     {!collapsed && (
                       <span className="flex-1 text-left">{t("jobAnalyses")}</span>
-                    )}
-                    {!collapsed && jobMatchAnalyses.length > 0 && (
-                      <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-white/[0.08] text-zinc-400">
-                        {jobMatchAnalyses.length}
-                      </span>
                     )}
                   </button>
                   <button

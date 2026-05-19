@@ -2,10 +2,10 @@ import { suggestActivityContextsFromCVs } from "./suggest-activity-contexts.serv
 import { describe, expect, it } from "vitest";
 
 describe("suggestActivityContextsFromCVs", () => {
-  it("suggests employers and projects from template CVs", () => {
+  it("suggests employers and projects from CV profiles", () => {
     const suggestions = suggestActivityContextsFromCVs([
       {
-        type: "template",
+        type: "uploaded",
         profile: {
           personalInfo: {},
           experience: [

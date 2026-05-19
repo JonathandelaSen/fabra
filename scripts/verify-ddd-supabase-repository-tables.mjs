@@ -34,6 +34,7 @@ const legacyCrossModuleReads = new Set([
   "src/modules/selection-process/infrastructure/repositories/supabase-follow-up.repository.ts::job_match_analyses",
   "src/modules/work-journal/infrastructure/repositories/supabase-cv-data.repository.ts::cvs",
   "src/modules/activity-context/infrastructure/repositories/supabase-cv-data.repository.ts::cvs",
+  "src/modules/activity-context/infrastructure/repositories/supabase-cv-data.repository.ts::cv_structured_profiles",
   "src/modules/work-journal/infrastructure/repositories/supabase-work-journal-context.repository.ts::work_journal_hidden_context_suggestions",
   "src/modules/received-feedback/infrastructure/repositories/supabase-received-feedback.repository.ts::activity_contexts",
   "src/modules/work-journal/infrastructure/repositories/supabase-work-journal-context.repository.ts::activity_contexts",
