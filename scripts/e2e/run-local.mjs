@@ -30,9 +30,13 @@ const parserContainerName = "ats-cv-ai-checker-pdf-parser-e2e";
 const parserImageName = "ats-cv-ai-checker-pdf-parser:e2e";
 const parserSecret = "e2e-parser-secret";
 
-const args = new Set(process.argv.slice(2));
+const rawArgs = process.argv.slice(2);
+const args = new Set(rawArgs);
 const isUi = args.has("--ui");
 const keepStack = args.has("--keep-stack");
+const playwrightExtraArgs = rawArgs.filter(
+  (arg) => arg !== "--ui" && arg !== "--keep-stack",
+);
 
 const children = new Set();
 
@@ -199,6 +203,7 @@ async function main() {
 
   const playwrightArgs = ["playwright", "test"];
   if (isUi) playwrightArgs.push("--ui");
+  playwrightArgs.push(...playwrightExtraArgs);
   await run("npx", playwrightArgs, {
     pipeOutput: true,
     env: {

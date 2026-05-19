@@ -1,11 +1,12 @@
 import { expect, test } from "@playwright/test";
 import { loginViaUI } from "./helpers/auth";
-import { createExtractionViaUI } from "./helpers/cv";
+import { createExtractionViaUI, createFixtureViaApi } from "./helpers/cv";
 import {
   adminClient,
   createConfirmedUser,
   getProcessingEvents,
 } from "./helpers/supabase";
+import { messages } from "../src/i18n/messages";
 
 test("user can upload a PDF, create an extraction, and read persisted backend state", async ({
   page,
@@ -72,4 +73,37 @@ test("user can upload a PDF, create an extraction, and read persisted backend st
       expect.objectContaining({ stage: "pdf_parser" }),
     ])
   );
+});
+
+test("cv analysis routes support direct entry, selection, and history navigation", async ({
+  page,
+}) => {
+  const user = await createConfirmedUser("cv-analysis-routes");
+  await loginViaUI(page, user);
+  const { analysis } = await createFixtureViaApi(page.request, "routes");
+
+  await page.goto("/cv-analysis");
+  await expect(
+    page.getByRole("heading", {
+      name: messages.en.analysisFlow.lists.cvTitle,
+    }),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: /routes-analysis/ }).click();
+  await expect(page).toHaveURL(new RegExp(`/cv-analysis/${analysis.id}`));
+  await expect(page.getByText(messages.en.analysisFlow.extraction.subtitle)).toBeVisible();
+
+  await page.goBack();
+  await expect(page).toHaveURL(/\/cv-analysis$/);
+  await expect(
+    page.getByRole("heading", {
+      name: messages.en.analysisFlow.lists.cvTitle,
+    }),
+  ).toBeVisible();
+
+  await page.goto(`/cv-analysis/${analysis.id}`);
+  await expect(page.getByText(messages.en.analysisFlow.extraction.subtitle)).toBeVisible();
+
+  await page.goto("/cv-analysis?mode=new");
+  await expect(page.getByTestId("new-analysis-upload-source")).toBeVisible();
 });

@@ -17,10 +17,19 @@ import {
   Trash2,
   UserRound,
 } from "lucide-react";
-import type {
-  AnalysisChatConversation,
-  AnalysisChatMessage,
-} from "@/modules/analysis-chat";
+interface AnalysisChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  created_at: string;
+}
+
+interface AnalysisChatConversation {
+  id: string;
+  analysis_id: string;
+  title: string | null;
+  messages: AnalysisChatMessage[];
+}
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -125,7 +134,7 @@ function ConversationList({
 
   const startEditing = (conv: AnalysisChatConversation) => {
     setEditingId(conv.id);
-    setEditTitle(conv.title);
+    setEditTitle(conv.title ?? "");
   };
 
   const commitRename = () => {

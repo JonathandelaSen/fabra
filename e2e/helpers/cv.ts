@@ -22,6 +22,7 @@ export async function createExtractionViaUI(page: Page) {
   const cvName = uniqueLabel("ui-cv");
   const analysisTitle = uniqueLabel("ui-analysis");
 
+  await page.goto("/cv-analysis?mode=new");
   await page.getByTestId("new-analysis-upload-source").click();
   await page
     .getByTestId("new-analysis-file-input")
@@ -39,7 +40,7 @@ export async function createExtractionViaUI(page: Page) {
   expect(analysisResponse.ok()).toBeTruthy();
   const analysis = (await analysisResponse.json()) as AnalysisResponse;
 
-  await expect(page).toHaveURL(new RegExp(`analysis=${analysis.id}`));
+  await expect(page).toHaveURL(new RegExp(`/cv-analysis/${analysis.id}`));
 
   return { cvName, analysisTitle, analysis };
 }

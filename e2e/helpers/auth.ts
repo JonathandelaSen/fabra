@@ -7,5 +7,7 @@ export async function loginViaUI(page: Page, user: E2EUser) {
   await page.getByRole("textbox", { name: "Password" }).fill(user.password);
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL(/\/$/);
-  await expect(page.getByText("New extraction")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "CV analyses" }),
+  ).toBeVisible();
 }

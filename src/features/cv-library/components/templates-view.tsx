@@ -17,38 +17,37 @@ import {
   X,
 } from "lucide-react";
 import { getErrorMessage } from "@/lib/errors";
-import type { CVDocumentSummaryResponse as CVSummary } from "@/modules/cv-library/client";
 import {
   CV_TEMPLATES,
   type CVTemplateDefinition,
   type CVTemplateLocale,
 } from "@/lib/cv-templates";
-import CVTemplatePreview from "@/components/cv-library/cv-template-preview";
+import {
+  getStoredAIApiKey,
+  getStoredAIModel,
+  getStoredAIProvider,
+} from "@/lib/browser-preferences";
 import { Button } from "@/components/ui/button";
+import CVTemplatePreview from "./cv-template-preview";
+import { useCVDocumentList } from "../hooks/use-cv-library-queries";
 
 interface TemplatesViewProps {
-  cvs: CVSummary[];
-  aiProvider: "gemini" | "mock";
-  aiApiKey: string;
-  aiModel: string;
-  hasAIApiKey: boolean;
   onOpenSettings: () => void;
   onOpenEditor: (versionId: string) => void;
   onOpenUpload: () => void;
-  onCVUpdated: () => void;
 }
 
 export default function TemplatesView({
-  cvs,
-  aiProvider,
-  aiApiKey,
-  aiModel,
-  hasAIApiKey,
   onOpenSettings,
   onOpenEditor,
   onOpenUpload,
-  onCVUpdated,
 }: TemplatesViewProps) {
+  const listQuery = useCVDocumentList();
+  const cvs = listQuery.data ?? [];
+  const aiProvider = getStoredAIProvider();
+  const aiApiKey = getStoredAIApiKey();
+  const aiModel = getStoredAIModel();
+  const hasAIApiKey = aiProvider === "mock" || aiApiKey.length > 0;
   const t = useTranslations("analysisFlow.templates");
   const [selectedTemplate, setSelectedTemplate] =
     useState<CVTemplateDefinition | null>(null);
@@ -90,7 +89,7 @@ export default function TemplatesView({
         );
       }
 
-      onCVUpdated();
+      void listQuery.refetch();
       onOpenEditor(data.version.id);
     } catch (err: unknown) {
       setError(getErrorMessage(err));

@@ -9,6 +9,10 @@ import {
 import { cvAnalysisModule } from "@/lib/container";
 import { presentCVAnalysis } from "@/modules/cv-analysis";
 import { parseScoreCVAnalysisRequest } from "../../validation";
+import {
+  toCVAnalysisDetailResponse,
+  type ScoreCVAnalysisResponse,
+} from "../../responses";
 import { ok, errorResponse, notFound, handleApiError } from "@/modules/shared";
 
 export const maxDuration = 60;
@@ -48,7 +52,9 @@ export async function POST(
       throw notFound("Analysis not found");
     }
 
-    return ok(presentCVAnalysis(updated));
+    return ok(
+      toCVAnalysisDetailResponse(presentCVAnalysis(updated)) satisfies ScoreCVAnalysisResponse,
+    );
   } catch (error: unknown) {
     await recordProcessingEvent({
       userId,

@@ -65,26 +65,30 @@ If the section does not have a detail resource, use:
 /<section>?<tab-or-filter-query>=<value>
 ```
 
-### Current Migration Decision: CV Library
+### Current Migration Decision: CV Analysis
 
 Previous decision note: Interview Questions has already been migrated to
 `src/features/interview-questions` with real `/interview-questions` routes, so
 the next target should move forward to the largest remaining legacy app section
 that still lives under `src/components/`.
 
+Update: CV Library has now been migrated to `src/features/cv-library`, with
+the editor split into `src/features/cv-editor`. The next target is the general
+CV Analysis section.
+
 ```txt
-Section label: CV Library
-Route segment: /cvs
-Primary detail resource: CV document/version, via /cvs/[cvId]
-Query params: tab=library|templates|editor, plus optional source=<cvId> only if the editor/template flow needs to preserve an originating uploaded CV. Do not keep the active CV, template/editor tab, or selected version as shell-only state once migrated.
-Existing legacy entry points: src/components/cv-library/cv-library.tsx, src/components/cv-library/templates-view.tsx, src/components/cv-library/cv-editor-view.tsx, src/components/cv-library/new-analysis-flow.tsx, and smaller CV library helpers under src/components/cv-library/
-Existing API routes: /api/cvs, /api/cvs/[id], /api/cvs/[id]/edit, /api/cvs/[id]/recommendations, /api/cvs/[id]/save-as-cv, /api/cvs/[id]/structured-profile, /api/cvs/[id]/template, /api/cvs/[id]/template-pdf, /api/cvs/[id]/pdf, and /api/parse if upload parsing remains part of this feature
-Backend mutations: yes; verify create/upload, rename, delete, template generation, template profile edits, AI edit, public settings, and save-as-CV operations keep or add platform observability events
-AI prompt impact: yes; CV structuring/editing flows use docs/prompts/extraccion-info-cv/prompt.md and docs/prompts/editado-cv/prompt.md. Update the relevant prompt doc in the same change if model input data, response shape, prompt text, or controller behavior changes.
-Server state owned by TanStack Query: CV document list, selected CV detail, selected structured profile/template profile, recommendations/edit results, generated template state, and mutation results
-Local UI state owned by React: upload draft/progress, rename draft, template/editor form drafts, manual structured-profile edit drafts, AI instruction text, public share toggles while editing, modal open state, copied indicators, saving/error indicators, and delete confirmation state
-Navigation style: follow Feedback Notes, Objectives, and Interview Questions. Every selected CV/version must have a URL, tab state must be in the query string, and back/forward must restore the selected CV plus library/template/editor tab without waiting for a server navigation.
-Why this section next: CV Library is now the highest-impact legacy surface still rendered from src/components. It is central to the product, still uses shell-owned CV state and direct module imports from frontend components, and its three related shell views (CVs, Templates, Editor) should become one route-driven feature before migrating the remaining general CV analysis/detail screens.
+Section label: CV Analysis
+Route segment: /cv-analysis
+Primary detail resource: CV analysis, via /cv-analysis/[analysisId]
+Query params: mode=new for creation and tab=extraction|analysis for detail tab state
+Existing legacy entry points: src/components/cv-analysis/* and src/components/cv-library/new-analysis-flow.tsx
+Existing API routes: /api/cv-analyses, /api/cv-analyses/[id], /api/cv-analyses/[id]/score, /api/cv-analyses/[id]/pdf, /api/cvs for upload/source options, and /api/interview-questions for related question links
+Backend mutations: yes; verify upload/create, delete, and score operations keep or add platform observability events
+AI prompt impact: yes only if scoring prompt input, response shape, prompt text, or controller behavior changes
+Server state owned by TanStack Query: analysis list, selected analysis detail, CV source options, related interview questions, score mutation result, upload/create/delete mutation results
+Local UI state owned by React: upload draft/progress, source selection, parser tab, PDF preview state, copied indicators, scoring form drafts, and analysis tab display state
+Navigation style: follow Feedback Notes, Objectives, and Interview Questions. Every selected analysis must have a URL, detail tab state must be in the query string, and back/forward must restore list/detail/new mode without waiting for a server navigation.
+Why this section next: CV Analysis is now the highest-impact legacy product surface still rendered from src/components. It owns the general CV analysis list/detail/upload flow and still kept broad analysis state in AppShell.
 ```
 
 ## Target File Structure

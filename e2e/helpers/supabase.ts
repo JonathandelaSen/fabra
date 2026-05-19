@@ -39,6 +39,45 @@ export async function createConfirmedUser(prefix = "e2e"): Promise<E2EUser> {
   };
 }
 
+export async function grantAdminAccess(userId: string) {
+  const { error } = await adminClient
+    .from("admin_users")
+    .upsert({ user_id: userId });
+
+  if (error) throw error;
+}
+
+export async function createProcessingEvent(input: {
+  userId?: string | null;
+  requestId?: string;
+  stage?: string;
+  status?: "started" | "success" | "warning" | "error";
+  source?: string | null;
+  errorCode?: string | null;
+  errorMessage?: string | null;
+}) {
+  const { data, error } = await adminClient
+    .from("processing_events")
+    .insert({
+      user_id: input.userId ?? null,
+      request_id: input.requestId ?? "e2e-admin-observability",
+      stage: input.stage ?? "ai_analysis",
+      status: input.status ?? "success",
+      source: input.source ?? "e2e",
+      error_code: input.errorCode ?? null,
+      error_message: input.errorMessage ?? null,
+      duration_ms: 128,
+      text_length: 42,
+      file_size: 2048,
+      metadata: { fixture: "admin-observability" },
+    })
+    .select("id")
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
 export async function getProcessingEvents(filter: {
   userId?: string;
   cvId?: string;

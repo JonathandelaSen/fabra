@@ -5,12 +5,13 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
 import type { AnalysisSummary } from "@/lib/analysis-types";
-import type { InterviewQuestionResponse } from "@/app/api/interview-questions/responses";
 import type { CVDocumentListItem } from "../api/cv-library-api";
 import { useCVLibraryMutations } from "../hooks/use-cv-library-mutations";
 import {
+  useAllAnalyses,
   useCVDocumentDetail,
   useCVDocumentList,
+  useInterviewQuestionsForLibrary,
 } from "../hooks/use-cv-library-queries";
 import { useCVLibraryRouteState } from "../hooks/use-cv-library-route-state";
 import { CVLibraryDetail } from "./cv-library-detail";
@@ -18,12 +19,9 @@ import { CVLibrarySidebar } from "./cv-library-sidebar";
 import { CVLibrarySkeleton } from "./cv-library-skeleton";
 
 interface CVLibraryViewProps {
-  analyses: AnalysisSummary[];
-  interviewQuestions: InterviewQuestionResponse[];
   onOpenAnalysis: (id: string) => void;
   onOpenEditor: (cvId: string) => void;
   onOpenQuestions: (cvId: string) => void;
-  onCVsChanged?: () => void;
 }
 
 function groupAnalysesByCv(analyses: AnalysisSummary[]) {
@@ -42,18 +40,19 @@ function selectedAfterDelete(items: CVDocumentListItem[], deletedId: string) {
 }
 
 export default function CVLibraryView({
-  analyses,
-  interviewQuestions,
   onOpenAnalysis,
   onOpenEditor,
   onOpenQuestions,
-  onCVsChanged,
 }: CVLibraryViewProps) {
   const t = useTranslations("analysisFlow.cvLibrary");
   const routeState = useCVLibraryRouteState();
   const listQuery = useCVDocumentList();
   const detailQuery = useCVDocumentDetail(routeState.cvId);
+  const analysesQuery = useAllAnalyses();
+  const questionsQuery = useInterviewQuestionsForLibrary();
   const mutations = useCVLibraryMutations();
+  const analyses = analysesQuery.data ?? [];
+  const interviewQuestions = questionsQuery.data ?? [];
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draftName, setDraftName] = useState("");
   const [loadingId, setLoadingId] = useState<string | null>(null);
@@ -97,7 +96,6 @@ export default function CVLibraryView({
     setEditingId(null);
     try {
       await mutations.renameCV.mutateAsync({ id, name: nextName });
-      onCVsChanged?.();
     } catch (err: unknown) {
       setEditingId(id);
       setError(getErrorMessage(err) || t("renameFailed"));
@@ -116,7 +114,6 @@ export default function CVLibraryView({
     routeState.replaceCV(nextSelection);
     try {
       await mutations.deleteCV.mutateAsync(id);
-      onCVsChanged?.();
     } catch (err: unknown) {
       routeState.replaceCV(id);
       setError(getErrorMessage(err) || t("deleteFailed"));

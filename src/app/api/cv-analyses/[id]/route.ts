@@ -2,6 +2,11 @@ import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvAnalysisModule } from "@/lib/container";
 import { presentCVAnalysis } from "@/modules/cv-analysis";
+import {
+  toCVAnalysisDetailResponse,
+  type DeleteCVAnalysisResponse,
+  type GetCVAnalysisResponse,
+} from "../responses";
 import { ok, notFound, handleApiError } from "@/modules/shared";
 
 export async function GET(
@@ -20,7 +25,9 @@ export async function GET(
     if (!analysis) {
       throw notFound("CV analysis not found");
     }
-    return ok(presentCVAnalysis(analysis));
+    return ok(
+      toCVAnalysisDetailResponse(presentCVAnalysis(analysis)) satisfies GetCVAnalysisResponse,
+    );
   } catch (error: unknown) {
     return handleApiError(error);
   }
@@ -42,7 +49,7 @@ export async function DELETE(
     if (!deleted) {
       throw notFound("CV analysis not found");
     }
-    return ok({ success: true });
+    return ok({ success: true } satisfies DeleteCVAnalysisResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }

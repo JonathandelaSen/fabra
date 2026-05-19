@@ -1,7 +1,12 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getCVDocument, listCVDocuments } from "../api/cv-library-api";
+import {
+  getCVDocument,
+  listAllAnalyses,
+  listCVDocuments,
+  listInterviewQuestionsForLibrary,
+} from "../api/cv-library-api";
 import { cvLibraryQueryKeys } from "../api/cv-library-query-keys";
 
 export function useCVDocumentList() {
@@ -16,5 +21,19 @@ export function useCVDocumentDetail(id: string | null) {
     queryKey: cvLibraryQueryKeys.detail(id),
     queryFn: () => getCVDocument(id as string),
     enabled: Boolean(id),
+  });
+}
+
+export function useAllAnalyses() {
+  return useQuery({
+    queryKey: cvLibraryQueryKeys.analyses(),
+    queryFn: listAllAnalyses,
+  });
+}
+
+export function useInterviewQuestionsForLibrary() {
+  return useQuery({
+    queryKey: cvLibraryQueryKeys.interviewQuestions(),
+    queryFn: listInterviewQuestionsForLibrary,
   });
 }

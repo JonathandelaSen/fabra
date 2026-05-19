@@ -5,22 +5,20 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import type { AnalysisSummary } from "@/lib/analysis-types";
 import Sidebar from "@/components/shell/sidebar";
-import NewAnalysisFlow from "@/components/cv-library/new-analysis-flow";
-import { CVLibraryView } from "@/features/cv-library";
-import TemplatesView from "@/components/cv-library/templates-view";
-import CVEditorView from "@/components/cv-library/cv-editor-view";
+import { CVEditorView } from "@/features/cv-editor";
+import { CVLibraryView, TemplatesView } from "@/features/cv-library";
+import { CVAnalysisView } from "@/features/cv-analysis";
 import { InterviewQuestionsView } from "@/features/interview-questions";
 import { WorkJournalView } from "@/features/work-journal";
 import { ObjectivesView } from "@/features/objectives";
 import { FeedbackNotesView } from "@/features/feedback-notes";
 import { ReceivedFeedbackView } from "@/features/received-feedback";
 import { ActivityContextView } from "@/features/activity-context";
-import ExtractionView from "@/components/cv-analysis/extraction-view";
-import AIAnalysisView from "@/components/cv-analysis/analysis-view";
-import CVAnalysesListView from "@/components/cv-analysis/cv-analyses-list-view";
+import { AdminObservabilityView } from "@/features/admin-observability";
+import ExtractionView from "@/features/cv-analysis/components/extraction-view";
+import AIAnalysisView from "@/features/cv-analysis/components/analysis-view";
 import { JobMatchAnalysisView } from "@/features/job-match-analysis";
 import SettingsView from "@/components/settings/settings-view";
-import AdminObservabilityDashboard from "@/components/observability/admin-observability-dashboard";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Sparkles } from "lucide-react";
 import { AnalysisDetailSkeleton } from "@/components/shared/skeletons";
@@ -146,7 +144,7 @@ interface AppShellProps {
 }
 
 export default function AppShell({
-  initialView = "new",
+  initialView = "cv-analyses",
   initialUserEmail = null,
   initialIsAdmin = false,
 }: AppShellProps) {
@@ -290,12 +288,15 @@ export default function AppShell({
   }, [fetchInterviewQuestions]);
 
   useEffect(() => {
-    if (activeView === "new" || activeView === "templates" || activeView === "editor") {
-      void ensureCVs();
+    if (activeView === "new" || activeView === "cv-analyses") {
       return;
     }
 
-    if (activeView === "analysis" || activeView === "cv-analyses") {
+    if (activeView === "templates" || activeView === "editor") {
+      return;
+    }
+
+    if (activeView === "analysis") {
       void ensureAnalyses();
       return;
     }
@@ -610,10 +611,10 @@ export default function AppShell({
     rememberInterviewQuestionsLocation();
     rememberJobAnalysesLocation();
     rememberCVLibraryLocation();
-    setActiveView("new");
+    setActiveView("cv-analyses");
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
-    window.history.replaceState(null, "", "/");
+    router.push("/cv-analysis?mode=new");
   };
 
   const handleOpenCVs = () => {
@@ -641,7 +642,6 @@ export default function AppShell({
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
     window.history.replaceState(null, "", "/?view=templates");
-    fetchCVs();
   };
 
   const handleOpenEditor = (cvId?: string | null) => {
@@ -657,7 +657,6 @@ export default function AppShell({
     setActiveEditorCvId(targetCvId);
     const suffix = targetCvId ? `&cv=${encodeURIComponent(targetCvId)}` : "";
     window.history.replaceState(null, "", `/?view=editor${suffix}`);
-    fetchCVs();
   };
 
   const handleOpenQuestions = (options?: {
@@ -794,11 +793,11 @@ export default function AppShell({
   // Handle analysis creation complete
   const handleAnalysisCreated = (id: string) => {
     setActiveAnalysisId(id);
-    setActiveView("analysis");
+    setActiveView("cv-analyses");
     window.history.replaceState(
       null,
       "",
-      `/?analysis=${encodeURIComponent(id)}`,
+      `/cv-analysis/${encodeURIComponent(id)}`,
     );
     fetchAnalysisDetail(id);
     fetchAnalyses(hasLoadedAnalysesRef.current);
@@ -830,8 +829,8 @@ export default function AppShell({
         if (activeAnalysisId === id) {
           setActiveAnalysisId(null);
           setActiveAnalysis(null);
-          setActiveView("new");
-          window.history.replaceState(null, "", "/");
+          setActiveView("cv-analyses");
+          window.history.replaceState(null, "", "/cv-analysis");
         }
       }
     } catch {
@@ -879,45 +878,30 @@ export default function AppShell({
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden min-w-0 min-h-0">
-        <AnimatePresence mode="wait">
           {activeView === "new" ? (
-            <motion.div
-              key="new-analysis"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col min-h-0"
-            >
-              <NewAnalysisFlow
-                cvs={cvs}
-                onCVCreated={fetchCVs}
-                onAnalysisCreated={handleAnalysisCreated}
+            <div key="new-analysis" className="flex-1 flex flex-col min-h-0">
+              <CVAnalysisView
+                aiProvider={aiProvider}
+                aiApiKey={aiApiKey}
+                aiModel={aiModel}
+                hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
+                onOpenSettings={handleOpenSettings}
+                onOpenQuestions={(options) => handleOpenQuestions(options)}
               />
-            </motion.div>
+            </div>
           ) : activeView === "cv-analyses" ? (
-            <motion.div
-              key="cv-analyses-list"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col overflow-hidden min-h-0"
-            >
-              <CVAnalysesListView
-                analyses={analyses.filter((a) => a.analysis_mode === "general")}
-                isLoading={analysesLoading && analyses.length === 0}
-                onSelect={handleSelect}
-                onNewAnalysis={handleNewAnalysis}
-                onDelete={handleDelete}
+            <div key="cv-analyses-list" className="flex-1 flex flex-col overflow-hidden min-h-0">
+              <CVAnalysisView
+                aiProvider={aiProvider}
+                aiApiKey={aiApiKey}
+                aiModel={aiModel}
+                hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
+                onOpenSettings={handleOpenSettings}
+                onOpenQuestions={(options) => handleOpenQuestions(options)}
               />
-            </motion.div>
+            </div>
           ) : activeView === "job-analyses" ? (
-            <motion.div
-              key="job-analyses-list"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col overflow-hidden min-h-0"
-            >
+            <div key="job-analyses-list" className="flex-1 flex flex-col overflow-hidden min-h-0">
               <JobMatchAnalysisView
                 aiProvider={aiProvider}
                 aiApiKey={aiApiKey}
@@ -929,75 +913,35 @@ export default function AppShell({
                 interviewQuestions={interviewQuestions}
                 onInterviewQuestionCreated={fetchInterviewQuestions}
               />
-            </motion.div>
+            </div>
           ) : activeView === "cvs" ? (
-            <motion.div
-              key="cv-library"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col overflow-hidden min-h-0"
-            >
+            <div key="cv-library" className="flex-1 flex flex-col overflow-hidden min-h-0">
               <CVLibraryView
-                analyses={analyses}
                 onOpenAnalysis={handleSelect}
                 onOpenEditor={handleOpenEditor}
-                interviewQuestions={interviewQuestions}
                 onOpenQuestions={(cvId) => handleOpenQuestions({ cvId })}
-                onCVsChanged={fetchCVs}
               />
-            </motion.div>
+            </div>
           ) : activeView === "templates" ? (
-            <motion.div
-              key="templates"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col overflow-hidden min-h-0"
-            >
+            <div key="templates" className="flex-1 flex flex-col overflow-hidden min-h-0">
               <TemplatesView
-                cvs={cvs}
-                aiProvider={aiProvider}
-                aiApiKey={aiApiKey}
-                aiModel={aiModel}
-                hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
                 onOpenSettings={handleOpenSettings}
                 onOpenEditor={handleOpenEditor}
                 onOpenUpload={handleNewAnalysis}
-                onCVUpdated={fetchCVs}
               />
-            </motion.div>
+            </div>
           ) : activeView === "editor" ? (
-            <motion.div
-              key="editor"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col overflow-hidden min-h-0"
-            >
+            <div key="editor" className="flex-1 flex flex-col overflow-hidden min-h-0">
               <CVEditorView
-                cvs={cvs.filter((c) => c.type === "template")}
-                hasOriginalCVs={cvs.some((c) => c.type === "uploaded")}
                 activeVersionId={activeEditorCvId}
-                aiProvider={aiProvider}
-                aiApiKey={aiApiKey}
-                aiModel={aiModel}
-                hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
                 onOpenTemplates={handleOpenTemplates}
                 onOpenSettings={handleOpenSettings}
                 onStartAnalysis={handleNewAnalysis}
-                onCVUpdated={fetchCVs}
                 onBackToLibrary={handleOpenCVs}
               />
-            </motion.div>
+            </div>
           ) : activeView === "questions" ? (
-            <motion.div
-              key="interview-questions"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col overflow-hidden min-h-0"
-            >
+            <div key="interview-questions" className="flex-1 flex flex-col overflow-hidden min-h-0">
               <InterviewQuestionsView
                 aiProvider={aiProvider}
                 aiApiKey={aiApiKey}
@@ -1006,15 +950,9 @@ export default function AppShell({
                 onOpenSettings={handleOpenSettings}
                 onOpenAnalysis={handleSelect}
               />
-            </motion.div>
+            </div>
           ) : activeView === "journal" ? (
-            <motion.div
-              key="work-journal"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col overflow-hidden min-h-0"
-            >
+            <div key="work-journal" className="flex-1 flex flex-col overflow-hidden min-h-0">
               <WorkJournalView
                 aiProvider={aiProvider}
                 aiApiKey={aiApiKey}
@@ -1022,25 +960,13 @@ export default function AppShell({
                 hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
                 onOpenSettings={handleOpenSettings}
               />
-            </motion.div>
+            </div>
           ) : activeView === "objectives" ? (
-            <motion.div
-              key="objectives"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col overflow-hidden min-h-0"
-            >
+            <div key="objectives" className="flex-1 flex flex-col overflow-hidden min-h-0">
               <ObjectivesView />
-            </motion.div>
+            </div>
           ) : activeView === "feedback-notes" ? (
-            <motion.div
-              key="feedback-notes"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col overflow-hidden min-h-0"
-            >
+            <div key="feedback-notes" className="flex-1 flex flex-col overflow-hidden min-h-0">
               <FeedbackNotesView
                 aiProvider={aiProvider}
                 aiApiKey={aiApiKey}
@@ -1048,35 +974,17 @@ export default function AppShell({
                 hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
                 onOpenSettings={handleOpenSettings}
               />
-            </motion.div>
+            </div>
           ) : activeView === "received-feedback" ? (
-            <motion.div
-              key="received-feedback"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col overflow-hidden min-h-0"
-            >
+            <div key="received-feedback" className="flex-1 flex flex-col overflow-hidden min-h-0">
               <ReceivedFeedbackView />
-            </motion.div>
+            </div>
           ) : activeView === "activity-context" ? (
-            <motion.div
-              key="activity-context"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col overflow-hidden min-h-0"
-            >
+            <div key="activity-context" className="flex-1 flex flex-col overflow-hidden min-h-0">
               <ActivityContextView />
-            </motion.div>
+            </div>
           ) : activeView === "settings" ? (
-            <motion.div
-              key="settings"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col overflow-hidden min-h-0"
-            >
+            <div key="settings" className="flex-1 flex flex-col overflow-hidden min-h-0">
               <SettingsView
                 aiProvider={aiProvider}
                 aiApiKey={aiApiKey}
@@ -1088,35 +996,17 @@ export default function AppShell({
                 }}
                 userEmail={userEmail}
               />
-            </motion.div>
+            </div>
           ) : activeView === "admin" && isAdmin ? (
-            <motion.div
-              key="admin-observability"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col overflow-hidden min-h-0"
-            >
-              <AdminObservabilityDashboard userEmail={userEmail} />
-            </motion.div>
+            <div key="admin-observability" className="flex-1 flex flex-col overflow-hidden min-h-0">
+              <AdminObservabilityView userEmail={userEmail} />
+            </div>
           ) : loadingDetail ? (
-            <motion.div
-              key="loading"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 overflow-y-auto p-6"
-            >
+            <div key="loading" className="flex-1 overflow-y-auto p-6">
               <AnalysisDetailSkeleton />
-            </motion.div>
+            </div>
           ) : activeAnalysis ? (
-            <motion.div
-              key={activeAnalysis.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col overflow-hidden min-h-0"
-            >
+            <div key={activeAnalysis.id} className="flex-1 flex flex-col overflow-hidden min-h-0">
               {/* Tabs - Extraction / Analysis */}
               {activeAnalysis.ai_score !== null && (
                 <div className="shrink-0 flex items-center gap-1 px-4 sm:px-6 pt-4">
@@ -1230,21 +1120,14 @@ export default function AppShell({
                   </motion.div>
                 ) : null}
               </AnimatePresence>
-            </motion.div>
+            </div>
           ) : (
-            <motion.div
-              key="empty"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex items-center justify-center"
-            >
+            <div key="empty" className="flex-1 flex items-center justify-center">
               <div className="text-center text-zinc-600">
                 <p>{analysisFlow("empty")}</p>
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
       </main>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,19 +23,12 @@ import {
   Undo2,
   Wand2,
 } from "lucide-react";
-import type { CVRecommendationAnalysis } from "@/lib/analysis-types";
-import type { CVDocumentSummaryResponse as CVSummary } from "@/modules/cv-library/client";
-import { getCVTemplate, type CVTemplateLocale } from "@/lib/cv-templates";
-import { getErrorMessage } from "@/lib/errors";
-import { buildPublicCVPath, normalizePublicCVSlug } from "@/modules/cv-library/client";
-import {
-  normalizeStandardCVProfile,
-  type StandardCVProfile,
-} from "@/lib/cv-profile";
+import { getCVTemplate } from "@/lib/cv-templates";
 
 import { Button } from "@/components/ui/button";
-import { ManualEditor } from "@/components/cv-library/cv-manual-editor/manual-editor";
-import { useProfileHistory } from "@/components/cv-library/cv-manual-editor/use-profile-history";
+import { ManualEditor } from "./cv-manual-editor/manual-editor";
+import { useCVEditorMutations } from "../hooks/use-cv-editor-mutations";
+import { useCVEditorState } from "../hooks/use-cv-editor-state";
 
 const PDFPreview = dynamic(
   () => import("@/components/shared/pdf-preview").then((mod) => mod.PDFPreview),
@@ -50,17 +43,10 @@ const PDFPreview = dynamic(
 );
 
 interface CVEditorViewProps {
-  cvs: CVSummary[];
-  hasOriginalCVs: boolean;
   activeVersionId: string | null;
-  aiProvider: "gemini" | "mock";
-  aiApiKey: string;
-  aiModel: string;
-  hasAIApiKey: boolean;
   onOpenTemplates: () => void;
   onOpenSettings: () => void;
   onStartAnalysis: () => void;
-  onCVUpdated: () => void;
   onBackToLibrary?: () => void;
 }
 
@@ -75,22 +61,11 @@ function safeParseArray(value: string | null | undefined): string[] {
   }
 }
 
-function serializeProfile(profile: StandardCVProfile | null | undefined) {
-  return JSON.stringify(profile ? normalizeStandardCVProfile(profile) : null);
-}
-
 export default function CVEditorView({
-  cvs,
-  hasOriginalCVs,
   activeVersionId,
-  aiProvider,
-  aiApiKey,
-  aiModel,
-  hasAIApiKey,
   onOpenTemplates,
   onOpenSettings,
   onStartAnalysis,
-  onCVUpdated,
   onBackToLibrary,
 }: CVEditorViewProps) {
   const t = useTranslations("cvEditor");
@@ -98,367 +73,84 @@ export default function CVEditorView({
   const [isSavingModalOpen, setIsSavingModalOpen] = useState(false);
   const [isPublicModalOpen, setIsPublicModalOpen] = useState(false);
   const [saveName, setSaveName] = useState("");
-  const [savingAsCv, setSavingAsCv] = useState(false);
-  const [savingPublicSettings, setSavingPublicSettings] = useState(false);
-  const [publicSlugDraft, setPublicSlugDraft] = useState<{
-    cvId: string | null;
-    value: string;
-  }>({ cvId: null, value: "" });
   const [publicCopied, setPublicCopied] = useState(false);
-  const [manuallySelectedVersionId, setManuallySelectedVersionId] = useState<
-    string | null
-  >(null);
-  const [editedVersion, setEditedVersion] = useState<CVSummary | null>(null);
-  const [recommendationAnalysis, setRecommendationAnalysis] =
-    useState<CVRecommendationAnalysis | null>(null);
-  const [selectedModel, setSelectedModel] = useState("gemini-3.1-pro-preview");
-  const [editInstruction, setEditInstruction] = useState("");
-  const [editingProfile, setEditingProfile] = useState(false);
-  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved">(
-    "idle",
-  );
-  const [savingLocale, setSavingLocale] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [editorTab, setEditorTab] = useState<"ai" | "manual">("ai");
-  const [previewVersion, setPreviewVersion] = useState(0);
-  const activeHistoryCvIdRef = useRef<string | null>(null);
-  const savedProfileJsonRef = useRef<string | null>(null);
-  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const currentVersionId = manuallySelectedVersionId ?? activeVersionId;
-  const currentVersionFromList = useMemo(
-    () =>
-      currentVersionId
-        ? (cvs.find((v) => v.id === currentVersionId) ?? null)
-        : null,
-    [cvs, currentVersionId],
-  );
-
-  const currentVersion =
-    editedVersion?.id === currentVersionFromList?.id
-      ? editedVersion
-      : currentVersionFromList;
-  const currentVersionIdForSave = currentVersion?.id ?? null;
-  const activeTemplate = currentVersion?.template_id
-    ? getCVTemplate(currentVersion.template_id)
-    : null;
-  const locale = (currentVersion?.template_locale ?? "es") as CVTemplateLocale;
+  const editorState = useCVEditorState(activeVersionId);
   const {
-    present: historyProfile,
+    templateCvs,
+    aiProvider,
+    aiApiKey,
+    hasAIApiKey,
+    currentVersion,
+    activeTemplate,
+    locale,
+    currentProfile,
+    previewSrc,
     canUndo,
     canRedo,
-    reset: resetProfileHistory,
-    setProfile,
     undo,
     redo,
-  } = useProfileHistory(currentVersion?.profile ?? null);
-  const currentProfile = historyProfile ?? currentVersion?.profile ?? null;
-  const currentProfileJson = serializeProfile(currentProfile);
-  const previewSrc = currentVersion?.id
-    ? `/api/cvs/${currentVersion.id}/template-pdf?v=${previewVersion}`
-    : "";
-  const defaultPublicSlug =
-    currentVersion?.public_slug ??
-    normalizePublicCVSlug(currentVersion?.name) ??
-    "";
-  const publicSlug =
-    publicSlugDraft.cvId === currentVersion?.id
-      ? publicSlugDraft.value
-      : defaultPublicSlug;
-  const normalizedPublicSlug =
-    normalizePublicCVSlug(publicSlug || currentVersion?.name) ?? "";
-  const savedPublicSlug = currentVersion?.public_slug ?? "";
-  const hasPublicSlugChanges = Boolean(
-    currentVersion?.public_enabled &&
-    normalizedPublicSlug &&
-    normalizedPublicSlug !== savedPublicSlug,
-  );
-  const sharePublicSlug =
-    currentVersion?.public_enabled && hasPublicSlugChanges
-      ? savedPublicSlug
-      : normalizedPublicSlug;
-  const publicPath =
-    currentVersion?.public_id && sharePublicSlug
-      ? buildPublicCVPath(currentVersion.public_id, sharePublicSlug)
-      : "";
-  const publicDraftPath =
-    currentVersion?.public_id && normalizedPublicSlug
-      ? buildPublicCVPath(currentVersion.public_id, normalizedPublicSlug)
-      : "";
-  const publicUrl =
-    typeof window !== "undefined" && publicPath
-      ? `${window.location.origin}${publicPath}`
-      : publicPath;
-  const publicDraftUrl =
-    typeof window !== "undefined" && publicDraftPath
-      ? `${window.location.origin}${publicDraftPath}`
-      : publicDraftPath;
+    saveState,
+    error,
+    setError,
+    selectedModel,
+    setSelectedModel,
+    setEditedVersion,
+    setManuallySelectedVersionId,
+    setProfile,
+    saveProfileToApi,
+    reloadPreview,
+    recommendationAnalysis,
+    handleManualChange,
+    publicSlug,
+    normalizedPublicSlug,
+    publicUrl,
+    publicDraftUrl,
+    hasPublicSlugChanges,
+    setPublicSlugDraft,
+    savedProfileJsonRef,
+  } = editorState;
 
-  useEffect(() => {
-    if (!currentVersion?.source_cv_id) return;
-
-    let cancelled = false;
-    fetch(`/api/cvs/${currentVersion.source_cv_id}/recommendations`)
-      .then(async (res) => {
-        const data = await res.json();
-        if (!res.ok) return null;
-        return data.analysis ?? null;
-      })
-      .then((nextRecommendation) => {
-        if (cancelled) return;
-        setRecommendationAnalysis(nextRecommendation);
-      })
-      .catch(() => {
-        // silent error for recommendations
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [currentVersion?.source_cv_id]);
+  const {
+    editInstruction,
+    setEditInstruction,
+    editingProfile,
+    savingAsCv,
+    savingLocale,
+    savingPublicSettings,
+    applyInstruction,
+    saveAsCV,
+    updateLocale,
+    updatePublicSettings,
+  } = useCVEditorMutations({
+    currentVersionId: currentVersion?.id ?? null,
+    currentProfile,
+    normalizedPublicSlug,
+    aiProvider,
+    aiApiKey,
+    selectedModel,
+    hasAIApiKey,
+    savedProfileJsonRef,
+    setEditedVersion,
+    setProfile,
+    saveProfileToApi,
+    reloadPreview,
+    setError,
+    setPublicSlugDraft,
+  });
 
   const handleSaveAsCV = async () => {
-    if (!currentVersion?.id || !saveName.trim()) return;
-    setSavingAsCv(true);
-    try {
-      const res = await fetch(`/api/cvs/${currentVersion.id}/save-as-cv`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: saveName.trim() }),
-      });
-      if (!res.ok) throw new Error(t("errors.saveAsCv"));
-      setIsSavingModalOpen(false);
-      onCVUpdated();
-    } catch (err) {
-      setError(getErrorMessage(err));
-    } finally {
-      setSavingAsCv(false);
-    }
+    const saved = await saveAsCV(saveName);
+    if (saved) setIsSavingModalOpen(false);
   };
 
-  const reloadPreview = useCallback(() => {
-    setPreviewVersion((version) => version + 1);
-  }, []);
-
-  useEffect(() => {
-    if (!currentVersion?.id || !currentVersion.profile) return;
-
-    const incomingJson = serializeProfile(currentVersion.profile);
-    const isNewCV = activeHistoryCvIdRef.current !== currentVersion.id;
-    const isExternalProfileChange =
-      incomingJson !== savedProfileJsonRef.current &&
-      currentProfileJson === savedProfileJsonRef.current;
-
-    if (isNewCV || isExternalProfileChange) {
-      activeHistoryCvIdRef.current = currentVersion.id;
-      savedProfileJsonRef.current = incomingJson;
-      resetProfileHistory(currentVersion.profile);
-      setSaveState("idle");
-      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-    }
-  }, [
-    currentProfileJson,
-    currentVersion?.id,
-    currentVersion?.profile,
-    resetProfileHistory,
-  ]);
-
-  const saveProfile = useCallback(
-    async (profile: StandardCVProfile | null) => {
-      if (!currentVersionIdForSave || !profile) return false;
-
-      const normalized = normalizeStandardCVProfile(profile);
-      const json = JSON.stringify(normalized);
-      if (json === savedProfileJsonRef.current) return true;
-
-      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-      setSaveState("saving");
-      try {
-        const res = await fetch(`/api/cvs/${currentVersionIdForSave}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ profile: normalized }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || t("errors.save"));
-        savedProfileJsonRef.current = json;
-        setEditedVersion(data);
-        setSaveState("saved");
-        reloadPreview();
-        onCVUpdated();
-        return true;
-      } catch (err: unknown) {
-        setSaveState("idle");
-        setError(getErrorMessage(err));
-        return false;
-      }
-    },
-    [currentVersionIdForSave, onCVUpdated, reloadPreview, t],
-  );
-
-  useEffect(() => {
-    if (!currentVersion?.id || !currentProfile) return;
-
-    if (currentProfileJson === savedProfileJsonRef.current) return;
-    setSaveState("idle");
-    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-    saveTimerRef.current = setTimeout(() => {
-      void saveProfile(currentProfile);
-    }, 1500);
-
-    return () => {
-      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-    };
-  }, [currentProfile, currentProfileJson, currentVersion?.id, saveProfile]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      const isUndoKey = event.key.toLowerCase() === "z";
-      const isRedoKey = event.key.toLowerCase() === "y";
-      const hasModifier = event.metaKey || event.ctrlKey;
-      if (!hasModifier) return;
-
-      if (isUndoKey && event.shiftKey && canRedo) {
-        event.preventDefault();
-        redo();
-        return;
-      }
-
-      if (isUndoKey && !event.shiftKey && canUndo) {
-        event.preventDefault();
-        undo();
-        return;
-      }
-
-      if (isRedoKey && event.ctrlKey && canRedo) {
-        event.preventDefault();
-        redo();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [canRedo, canUndo, redo, undo]);
-
-  const handleManualChange = useCallback(
-    (updater: (prev: StandardCVProfile) => StandardCVProfile) => {
-      setProfile(updater, "manual");
-    },
-    [setProfile],
-  );
-
-  const applyInstruction = async (instruction = editInstruction) => {
-    if (!currentVersion?.id) return;
-    if (!hasAIApiKey) {
-      setError(t("errors.missingApiKey"));
-      return;
-    }
-    if (!instruction.trim()) return;
-
-    setEditingProfile(true);
-    setError(null);
-    try {
-      if (currentProfile && !(await saveProfile(currentProfile))) return;
-
-      const res = await fetch(`/api/cvs/${currentVersion.id}/edit`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          provider: aiProvider,
-          apiKey: aiApiKey,
-          model: selectedModel,
-          instruction: instruction.trim(),
-        }),
-      });
-
-      const text = await res.text();
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        console.error("Non-JSON response from edit API:", text);
-        throw new Error(
-          t("errors.unexpectedServer", { status: res.status }),
-        );
-      }
-
-      if (!res.ok) {
-        throw new Error(
-          data.error || data.details || t("errors.editFailed"),
-        );
-      }
-      if (data.version?.profile) {
-        savedProfileJsonRef.current = serializeProfile(data.version.profile);
-        setProfile(data.version.profile, "instant");
-        setSaveState("saved");
-      }
-      setEditedVersion(data.version);
-      setEditInstruction("");
-      reloadPreview();
-      onCVUpdated();
-    } catch (err: unknown) {
-      setError(getErrorMessage(err));
-    } finally {
-      setEditingProfile(false);
-    }
-  };
-
-  const updateLocale = async (nextLocale: CVTemplateLocale) => {
-    if (!currentVersion?.id) return;
-    setSavingLocale(true);
-    setError(null);
-    try {
-      const res = await fetch(`/api/cvs/${currentVersion.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ template_locale: nextLocale }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || t("errors.changeLanguage"));
-      setEditedVersion(data.version);
-      reloadPreview();
-      onCVUpdated();
-    } catch (err: unknown) {
-      setError(getErrorMessage(err));
-    } finally {
-      setSavingLocale(false);
-    }
-  };
-
-  const updatePublicSettings = async (
+  const handleUpdatePublicSettings = async (
     enabled: boolean,
     confirmPublicExposure = false,
   ) => {
-    if (!currentVersion?.id || !normalizedPublicSlug) return;
-    setSavingPublicSettings(true);
-    setError(null);
-    try {
-      const res = await fetch(`/api/cvs/${currentVersion.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          public_enabled: enabled,
-          public_slug: normalizedPublicSlug,
-          confirmPublicExposure: confirmPublicExposure,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok)
-        throw new Error(
-          data.error || t("errors.updatePublicPage"),
-        );
-      setEditedVersion(data);
-      setPublicSlugDraft({
-        cvId: data.id,
-        value: data.public_slug ?? normalizedPublicSlug,
-      });
-      setIsPublicModalOpen(false);
-      onCVUpdated();
-    } catch (err: unknown) {
-      setError(getErrorMessage(err));
-    } finally {
-      setSavingPublicSettings(false);
-    }
+    const saved = await updatePublicSettings(enabled, confirmPublicExposure);
+    if (saved) setIsPublicModalOpen(false);
   };
 
   const copyPublicUrl = async () => {
@@ -482,9 +174,9 @@ export default function CVEditorView({
             {t("empty.description")}
           </p>
 
-          {cvs.length > 0 ? (
+          {templateCvs.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-left">
-              {cvs.map((cv) => (
+              {templateCvs.map((cv) => (
                 <button
                   key={cv.id}
                   onClick={() => setManuallySelectedVersionId(cv.id)}
@@ -495,10 +187,10 @@ export default function CVEditorView({
                   </span>
                   <div className="flex items-center gap-2 mt-3">
                     <span className="rounded-md bg-white/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-zinc-400">
-                      {getCVTemplate(cv.template_id!)?.name || cv.template_id}
+                      {getCVTemplate(cv.templateId!)?.name || cv.templateId}
                     </span>
                     <span className="rounded-md bg-white/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-zinc-400">
-                      {cv.template_locale}
+                      {cv.templateLocale}
                     </span>
                   </div>
                 </button>
@@ -524,7 +216,6 @@ export default function CVEditorView({
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden bg-[#050509]">
-      {/* Topbar */}
       <header className="z-20 flex h-14 shrink-0 items-center justify-between border-b border-white/5 bg-[#0a0a12]/80 px-4 backdrop-blur-md">
         <div className="flex items-center gap-4">
           <Button
@@ -618,7 +309,6 @@ export default function CVEditorView({
       </header>
 
       <div className="relative flex flex-1 overflow-hidden">
-        {/* Canvas */}
         <div className="relative flex-1 overflow-auto bg-[#050509] scrollbar-thin">
           <div
             className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -637,7 +327,6 @@ export default function CVEditorView({
           )}
         </div>
 
-        {/* Side Panel */}
         <AnimatePresence>
           {isPanelOpen && (
             <motion.aside
@@ -649,7 +338,6 @@ export default function CVEditorView({
             >
               <div className="flex h-full flex-col overflow-y-auto p-6 scrollbar-thin">
                 <div className="space-y-8">
-                  {/* Tab Switcher */}
                   <div className="flex gap-1 rounded-xl border border-white/5 p-1 bg-white/5">
                     <button
                       onClick={() => setEditorTab("ai")}
@@ -674,11 +362,10 @@ export default function CVEditorView({
                       locale={locale}
                       saveState={saveState}
                       onChange={handleManualChange}
-                      onSave={() => void saveProfile(currentProfile)}
+                      onSave={() => void saveProfileToApi(currentProfile)}
                     />
                   )}
 
-                  {/* IA Section */}
                   {editorTab === "ai" && (
                     <section>
                       <header className="mb-4 flex items-center justify-between">
@@ -758,7 +445,6 @@ export default function CVEditorView({
                     </section>
                   )}
 
-                  {/* Recommendations Section */}
                   <section className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -835,17 +521,17 @@ export default function CVEditorView({
                             {t("publicPage.title")}
                           </h3>
                           <p className="text-[11px] text-zinc-600">
-                            {currentVersion.public_enabled
+                            {currentVersion.publicEnabled
                               ? t("publicPage.enabled")
                               : t("publicPage.disabled")}
                           </p>
                         </div>
                       </div>
-                      {currentVersion.public_enabled ? (
+                      {currentVersion.publicEnabled ? (
                         <Button
                           variant="ghost"
                           disabled={savingPublicSettings}
-                          onClick={() => void updatePublicSettings(false)}
+                          onClick={() => void handleUpdatePublicSettings(false)}
                           className="h-8 border border-rose-500/20 bg-rose-500/5 px-3 text-[11px] text-rose-300 hover:bg-rose-500/10"
                         >
                           {t("publicPage.unpublish")}
@@ -869,7 +555,7 @@ export default function CVEditorView({
                       </label>
                       <div className="flex min-w-0 items-center gap-2 rounded-xl border border-white/5 bg-white/5 p-1.5">
                         <span className="hidden shrink-0 pl-2 text-[11px] text-zinc-600 sm:inline">
-                          /cv/{currentVersion.public_id ?? "id"}/
+                          /cv/{currentVersion.publicId ?? "id"}/
                         </span>
                         <input
                           value={publicSlug}
@@ -894,14 +580,14 @@ export default function CVEditorView({
                       </p>
                     </div>
 
-                    {currentVersion.public_enabled && publicUrl && (
+                    {currentVersion.publicEnabled && publicUrl && (
                       <div className="space-y-2">
                         {hasPublicSlugChanges && (
                           <Button
                             disabled={
                               savingPublicSettings || !normalizedPublicSlug
                             }
-                            onClick={() => void updatePublicSettings(true)}
+                            onClick={() => void handleUpdatePublicSettings(true)}
                             className="h-8 w-full bg-sky-500 px-3 text-[11px] font-bold text-black hover:bg-sky-400"
                           >
                             {savingPublicSettings ? (
@@ -938,7 +624,6 @@ export default function CVEditorView({
                     )}
                   </section>
 
-                  {/* Settings Section */}
                   <section className="pt-4 border-t border-white/5 space-y-4">
                     <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-600">
                       {t("settings.title")}
@@ -1037,7 +722,7 @@ export default function CVEditorView({
                 </Button>
                 <Button
                   disabled={savingPublicSettings || !normalizedPublicSlug}
-                  onClick={() => void updatePublicSettings(true, true)}
+                  onClick={() => void handleUpdatePublicSettings(true, true)}
                   className="flex-1 bg-rose-500 text-white hover:bg-rose-400"
                 >
                   {savingPublicSettings ? (

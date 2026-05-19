@@ -15,11 +15,19 @@ import {
   ShieldCheck,
   XCircle,
 } from "lucide-react";
-import type { ProcessingEvent, ProcessingEventStatus } from "@/lib/observability";
+import type {
+  ProcessingEventResponse,
+  ProcessingEventStatus,
+} from "@/app/api/admin/processing-events/responses";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
-import { ObservabilityListSkeleton, ObservabilityDetailSkeleton } from "./observability-skeleton";
+import {
+  ObservabilityDetailSkeleton,
+  ObservabilityListSkeleton,
+} from "./observability-skeleton";
+import { useProcessingEventsQuery } from "../hooks/use-admin-observability-queries";
+import { useAdminObservabilityRouteState } from "../hooks/use-admin-observability-route-state";
 
-interface AdminObservabilityDashboardProps {
+interface AdminObservabilityViewProps {
   userEmail: string | null;
 }
 
@@ -52,27 +60,32 @@ const statusIcon = {
   error: XCircle,
 };
 
-export default function AdminObservabilityDashboard({
+export function AdminObservabilityView({
   userEmail,
-}: AdminObservabilityDashboardProps) {
+}: AdminObservabilityViewProps) {
   const t = useTranslations("admin");
   const { locale } = useInterfaceLanguage();
   const dateLocale = locale === "es" ? "es-ES" : "en-US";
-  const [events, setEvents] = useState<ProcessingEvent[]>([]);
+  const { filters, setStatus, setStage } = useAdminObservabilityRouteState();
+  const eventsQuery = useProcessingEventsQuery(filters);
+  const events = eventsQuery.data?.events ?? [];
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [status, setStatus] = useState("");
-  const [stage, setStage] = useState("");
   const [query, setQuery] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const loading = eventsQuery.isLoading;
+  const error =
+    eventsQuery.error instanceof Error
+      ? eventsQuery.error.message
+      : eventsQuery.error
+        ? t("errors.unexpected")
+        : null;
 
   const selectedEvent = useMemo(
     () => events.find((event) => event.id === selectedId) ?? events[0] ?? null,
-    [events, selectedId]
+    [events, selectedId],
   );
 
-  const handleCopy = async (event: ProcessingEvent) => {
+  const handleCopy = async (event: ProcessingEventResponse) => {
     try {
       await navigator.clipboard.writeText(JSON.stringify(event, null, 2));
       setCopiedId(event.id);
@@ -85,18 +98,18 @@ export default function AdminObservabilityDashboard({
   const timelineEvents = useMemo(() => {
     if (!selectedEvent) return [];
     const related = events.filter((event) => {
-      if (selectedEvent.request_id) {
-        return event.request_id === selectedEvent.request_id;
+      if (selectedEvent.requestId) {
+        return event.requestId === selectedEvent.requestId;
       }
-      if (selectedEvent.analysis_id) {
-        return event.analysis_id === selectedEvent.analysis_id;
+      if (selectedEvent.analysisId) {
+        return event.analysisId === selectedEvent.analysisId;
       }
-      return event.cv_id && event.cv_id === selectedEvent.cv_id;
+      return event.cvId && event.cvId === selectedEvent.cvId;
     });
 
     return related.sort(
       (a, b) =>
-        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
     );
   }, [events, selectedEvent]);
 
@@ -106,47 +119,27 @@ export default function AdminObservabilityDashboard({
 
     return events.filter((event) =>
       [
-        event.request_id,
-        event.cv_id,
-        event.analysis_id,
+        event.requestId,
+        event.cvId,
+        event.analysisId,
         event.stage,
         event.source,
-        event.error_code,
-        event.error_message,
+        event.errorCode,
+        event.errorMessage,
       ]
         .filter(Boolean)
-        .some((value) => String(value).toLowerCase().includes(normalized))
+        .some((value) => String(value).toLowerCase().includes(normalized)),
     );
   }, [events, query]);
 
-  const loadEvents = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const params = new URLSearchParams({ limit: "150" });
-      if (status) params.set("status", status);
-      if (stage) params.set("stage", stage);
-
-      const res = await fetch(`/api/admin/processing-events?${params}`);
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || t("errors.loadEvents"));
-      }
-
-      setEvents(data.events ?? []);
-      setSelectedId((current) => current ?? data.events?.[0]?.id ?? null);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : t("errors.unexpected"));
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    queueMicrotask(() => void loadEvents());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, stage]);
+    setSelectedId((current) => {
+      if (current && events.some((event) => event.id === current)) {
+        return current;
+      }
+      return events[0]?.id ?? null;
+    });
+  }, [events]);
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col bg-[#09090f] px-5 py-5 text-zinc-100">
@@ -155,7 +148,7 @@ export default function AdminObservabilityDashboard({
           <div>
             <div className="mb-1 flex items-center gap-2 text-xs font-medium text-emerald-300">
               <ShieldCheck className="h-3.5 w-3.5" />
-              {userEmail ?? "Admin"}
+              {userEmail ?? t("adminFallback")}
             </div>
             <h1 className="text-2xl font-semibold tracking-normal">
               {t("title")}
@@ -164,7 +157,7 @@ export default function AdminObservabilityDashboard({
         </div>
         <button
           type="button"
-          onClick={loadEvents}
+          onClick={() => void eventsQuery.refetch()}
           className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-zinc-100 px-3 text-sm font-medium text-zinc-950 transition hover:bg-white disabled:opacity-60"
           disabled={loading}
         >
@@ -173,15 +166,19 @@ export default function AdminObservabilityDashboard({
         </button>
       </header>
 
-        <section className="grid min-h-0 flex-1 gap-4 py-5 lg:grid-cols-[420px_1fr]">
+      <section className="grid min-h-0 flex-1 gap-4 py-5 lg:grid-cols-[420px_1fr]">
           <aside className="flex min-h-[420px] flex-col overflow-hidden rounded-lg border border-white/[0.06] bg-white/[0.02]">
             <div className="shrink-0 border-b border-white/[0.06] p-3">
               <div className="mb-3 grid gap-2 sm:grid-cols-2">
                 <label className="relative block">
                   <Filter className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
                   <select
-                    value={status}
-                    onChange={(event) => setStatus(event.target.value)}
+                    value={filters.status}
+                    onChange={(event) =>
+                      setStatus(
+                        event.target.value as ProcessingEventStatus | "",
+                      )
+                    }
                     className="h-9 w-full appearance-none rounded-lg border border-white/[0.06] bg-[#0d0d14] pl-9 pr-3 text-sm text-zinc-200 outline-none focus:border-indigo-500/50"
                   >
                     {STATUS_OPTIONS.map((option) => (
@@ -192,7 +189,7 @@ export default function AdminObservabilityDashboard({
                   </select>
                 </label>
                 <select
-                  value={stage}
+                  value={filters.stage}
                   onChange={(event) => setStage(event.target.value)}
                   className="h-9 rounded-lg border border-white/[0.06] bg-[#0d0d14] px-3 text-sm text-zinc-200 outline-none focus:border-indigo-500/50"
                 >
@@ -242,18 +239,18 @@ export default function AdminObservabilityDashboard({
                     <div className="mb-2 flex items-center justify-between gap-2">
                       <StatusBadge status={event.status} />
                       <span className="shrink-0 text-[11px] text-zinc-500">
-                        {formatTime(event.created_at, dateLocale)}
+                        {formatTime(event.createdAt, dateLocale)}
                       </span>
                     </div>
                     <p className="truncate text-sm font-medium text-zinc-100">
                       {event.stage}
                     </p>
                     <p className="mt-1 truncate text-xs text-zinc-500">
-                      {event.source || t("noSource")} · {event.request_id}
+                      {event.source || t("noSource")} · {event.requestId}
                     </p>
-                    {event.error_code && (
+                    {event.errorCode && (
                       <p className="mt-2 truncate text-xs text-rose-300">
-                        {event.error_code}
+                        {event.errorCode}
                       </p>
                     )}
                   </button>
@@ -299,18 +296,21 @@ export default function AdminObservabilityDashboard({
                     </button>
                   </div>
                   <div className="grid gap-3 text-xs text-zinc-500 md:grid-cols-2 xl:grid-cols-4">
-                    <Metric label="Request" value={selectedEvent.request_id} />
-                    <Metric label="CV" value={selectedEvent.cv_id ?? "-"} />
+                    <Metric
+                      label={t("request")}
+                      value={selectedEvent.requestId}
+                    />
+                    <Metric label={t("cv")} value={selectedEvent.cvId ?? "-"} />
                     <Metric
                       label={t("analysis")}
-                      value={selectedEvent.analysis_id ?? "-"}
+                      value={selectedEvent.analysisId ?? "-"}
                     />
                     <Metric
                       label={t("duration")}
                       value={
-                        selectedEvent.duration_ms === null
+                        selectedEvent.durationMs === null
                           ? "-"
-                          : `${selectedEvent.duration_ms} ms`
+                          : `${selectedEvent.durationMs} ms`
                       }
                     />
                   </div>
@@ -326,7 +326,7 @@ export default function AdminObservabilityDashboard({
                         type="button"
                         onClick={() => {
                           navigator.clipboard.writeText(
-                            JSON.stringify(timelineEvents, null, 2)
+                            JSON.stringify(timelineEvents, null, 2),
                           );
                           setCopiedId("timeline");
                           setTimeout(() => setCopiedId(null), 2000);
@@ -368,7 +368,7 @@ export default function AdminObservabilityDashboard({
                                   {event.source ? ` · ${event.source}` : ""}
                                 </p>
                                 <p className="mt-1 text-xs text-zinc-500">
-                                  {formatDateTime(event.created_at, dateLocale)}
+                                  {formatDateTime(event.createdAt, dateLocale)}
                                 </p>
                               </div>
                               <div className="flex shrink-0 items-center gap-2">
@@ -389,25 +389,25 @@ export default function AdminObservabilityDashboard({
                             </div>
                             <div className="mt-3 grid gap-2 text-xs text-zinc-500 sm:grid-cols-3">
                               <span>
-                                {t("text")}: {event.text_length ?? "-"}
+                                {t("text")}: {event.textLength ?? "-"}
                               </span>
                               <span>
-                                {t("file")}: {formatBytes(event.file_size)}
+                                {t("file")}: {formatBytes(event.fileSize)}
                               </span>
                               <span>
-                                {event.duration_ms === null
+                                {event.durationMs === null
                                   ? `${t("duration")}: -`
-                                  : `${t("duration")}: ${event.duration_ms} ms`}
+                                  : `${t("duration")}: ${event.durationMs} ms`}
                               </span>
                             </div>
-                            {(event.error_code || event.error_message) && (
+                            {(event.errorCode || event.errorMessage) && (
                               <div className="mt-3 rounded-md border border-rose-500/20 bg-rose-500/10 p-2 text-xs text-rose-200">
                                 <p className="font-medium">
-                                  {event.error_code ?? "error"}
+                                  {event.errorCode ?? t("errorFallback")}
                                 </p>
-                                {event.error_message && (
+                                {event.errorMessage && (
                                   <p className="mt-1 text-rose-100/80">
-                                    {event.error_message}
+                                    {event.errorMessage}
                                   </p>
                                 )}
                               </div>
@@ -434,8 +434,8 @@ export default function AdminObservabilityDashboard({
               </div>
             )}
           </section>
-        </section>
-      </div>
+      </section>
+    </div>
   );
 }
 

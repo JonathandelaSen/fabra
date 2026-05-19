@@ -1,10 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import {
-  normalizeStandardCVProfile,
-  type StandardCVProfile,
-} from "@/lib/cv-profile";
+import type { StandardCVProfile } from "@/lib/cv-profile";
 
 type ProfileUpdater = (prev: StandardCVProfile) => StandardCVProfile;
 type ProfileHistorySource = "manual" | "instant";

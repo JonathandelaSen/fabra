@@ -11,6 +11,12 @@ import {
   presentCVAnalysis,
   presentCVAnalysisSummary,
 } from "@/modules/cv-analysis";
+import {
+  toCVAnalysisDetailResponse,
+  toCVAnalysisSummaryResponse,
+  type CreateCVAnalysisResponse,
+  type ListCVAnalysesResponse,
+} from "./responses";
 import { parseCreateCVAnalysisRequest } from "./validation";
 import { ok, errorResponse, notFound, badRequest, handleApiError } from "@/modules/shared";
 
@@ -25,7 +31,11 @@ export async function GET() {
     const analyses = await cvAnalysisModule
       .bindRequest(supabase)
       .listCVAnalyses.execute({ userId: user.id });
-    return ok(analyses.map(presentCVAnalysisSummary));
+    return ok(
+      analyses.map((analysis) =>
+        toCVAnalysisSummaryResponse(presentCVAnalysisSummary(analysis)),
+      ) satisfies ListCVAnalysesResponse,
+    );
   } catch (error: unknown) {
     return handleApiError(error);
   }
@@ -95,21 +105,23 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const analysis = presentCVAnalysis(
-      await cvAnalysisModule
-        .bindRequest(supabase)
-        .createCVAnalysis.execute({
-          id: analysisIdForEvents,
-          userId: user.id,
-          cvDocumentId: prepared.cv.id,
-          title,
-          filename: prepared.filename,
-          fileSize: prepared.fileSize,
-          pdfStoragePath: prepared.pdfStoragePath,
-          extractedText: prepared.extractedText,
-          aiModel: model,
-          aiContext: context ?? null,
-        }),
+    const analysis = toCVAnalysisDetailResponse(
+      presentCVAnalysis(
+        await cvAnalysisModule
+          .bindRequest(supabase)
+          .createCVAnalysis.execute({
+            id: analysisIdForEvents,
+            userId: user.id,
+            cvDocumentId: prepared.cv.id,
+            title,
+            filename: prepared.filename,
+            fileSize: prepared.fileSize,
+            pdfStoragePath: prepared.pdfStoragePath,
+            extractedText: prepared.extractedText,
+            aiModel: model,
+            aiContext: context ?? null,
+          }),
+      ),
     );
 
     await recordProcessingEvent({
@@ -128,7 +140,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return ok(analysis);
+    return ok(analysis satisfies CreateCVAnalysisResponse);
   } catch (error: unknown) {
     await recordProcessingEvent({
       userId,

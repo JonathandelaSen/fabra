@@ -19,6 +19,7 @@ import type { AnalysisMode, AIContext } from "@/lib/analysis-types";
 import AnalysisModeSelector from "./analysis-mode-selector";
 import GeneralAnalysisForm from "./general-analysis-form";
 import JobMatchForm from "./job-match-form";
+import type { ScoreCVAnalysisInput } from "../hooks/use-cv-analysis-mutations";
 
 interface ExtractionData {
   text_python: string | null;
@@ -51,6 +52,7 @@ interface ExtractionViewProps {
   aiModel: string;
   hasAIApiKey: boolean;
   onOpenSettings: () => void;
+  onScoreAnalysis?: (id: string, input: ScoreCVAnalysisInput) => Promise<void>;
 }
 
 type ParserTab = "python" | "pdfjs" | "node";
@@ -89,6 +91,7 @@ export default function ExtractionView({
   aiModel,
   hasAIApiKey,
   onOpenSettings,
+  onScoreAnalysis,
 }: ExtractionViewProps) {
   const t = useTranslations("analysisFlow.extraction");
   const [activeTab, setActiveTab] = useState<ParserTab>("python");
@@ -155,20 +158,29 @@ export default function ExtractionView({
     setAiError(null);
 
     try {
-      const res = await fetch(`/api/cv-analyses/${analysis.id}/score`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      if (onScoreAnalysis) {
+        await onScoreAnalysis(analysis.id, {
           additionalContext: context?.additionalContext ?? null,
           provider: aiProvider,
           apiKey: aiApiKey,
           model,
-        }),
-      });
+        });
+      } else {
+        const res = await fetch(`/api/cv-analyses/${analysis.id}/score`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            additionalContext: context?.additionalContext ?? null,
+            provider: aiProvider,
+            apiKey: aiApiKey,
+            model,
+          }),
+        });
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || t("aiAnalysisFailed"));
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.error || t("aiAnalysisFailed"));
+        }
       }
 
       onAIAnalysisComplete();

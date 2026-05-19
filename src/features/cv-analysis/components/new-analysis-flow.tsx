@@ -13,11 +13,13 @@ import {
   Zap,
 } from "lucide-react";
 import { getErrorMessage } from "@/lib/errors";
-import type { CVDocumentSummaryResponse as CVSummary } from "@/modules/cv-library/client";
+import type { CVDocumentSummaryResponse as CVSummary } from "@/app/api/cvs/responses";
+import type { CreateCVAnalysisInput } from "../hooks/use-cv-analysis-mutations";
 
 interface NewAnalysisFlowProps {
   cvs: CVSummary[];
-  onCVCreated: () => void;
+  onCreateCV: (file: File, name: string) => Promise<string>;
+  onCreateAnalysis: (input: CreateCVAnalysisInput) => Promise<string>;
   onAnalysisCreated: (analysisId: string) => void;
 }
 
@@ -25,7 +27,8 @@ type CVSource = "existing" | "upload";
 
 export default function NewAnalysisFlow({
   cvs,
-  onCVCreated,
+  onCreateCV,
+  onCreateAnalysis,
   onAnalysisCreated,
 }: NewAnalysisFlowProps) {
   const t = useTranslations("analysisFlow.newExtraction");
@@ -63,21 +66,7 @@ export default function NewAnalysisFlow({
 
   const uploadCV = async () => {
     if (!file) throw new Error(t("selectPdf"));
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("name", cvName.trim() || file.name.replace(/\.pdf$/i, ""));
-
-    const res = await fetch("/api/cvs", {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.error || data.details || t("uploadFailed"));
-    }
-    onCVCreated();
-    return data.id as string;
+    return onCreateCV(file, cvName.trim() || file.name.replace(/\.pdf$/i, ""));
   };
 
   const handleSubmit = async () => {
@@ -99,21 +88,12 @@ export default function NewAnalysisFlow({
     try {
       const cvId = source === "upload" ? await uploadCV() : selectedCvId;
 
-      const res = await fetch("/api/cv-analyses", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          cvId,
-          title: title.trim(),
-        }),
+      const analysisId = await onCreateAnalysis({
+        cvId,
+        title: title.trim(),
       });
 
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || data.details || t("createFailed"));
-      }
-
-      onAnalysisCreated(data.id);
+      onAnalysisCreated(analysisId);
     } catch (err: unknown) {
       setError(getErrorMessage(err));
     } finally {

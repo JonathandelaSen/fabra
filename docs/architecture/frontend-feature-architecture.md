@@ -50,6 +50,14 @@ Route-driven features should use real route segments. The Feedback Notes pilot s
 
 The `feedbackId` path segment controls the detail resource. The `status` query param controls only the sidebar list. Selecting the first loaded note automatically should use `router.replace`; user selection should use `router.push`.
 
+## E2E Navigation Coverage
+
+Every migrated route-driven feature should include Playwright coverage for its core navigation paths. These tests should exercise direct URL entry, automatic default selection, tab/filter query params, item selection, global shell navigation, and browser back/forward behavior.
+
+When adding those E2E tests, instrument frontend API request logging inside the test run. For now, use the logs as review evidence instead of strict request-budget assertions. The logs should group requests by HTTP method and URL so duplicate list/detail calls caused by route effects, unstable query keys, broad invalidation, or changing `enabled` conditions are easy to spot.
+
+If navigation produces obvious duplicate or unnecessary backend requests during the E2E run, treat that as part of the migration and fix the route state, TanStack Query key, `enabled` guard, or invalidation scope before finishing.
+
 ## Verification
 
 Run `npm run build` after changes under `src/app`, `src/components`, `src/features`, or `src/frontend`. Run `npm run ddd:check` when architecture boundaries may be affected. `scripts/verify-frontend-boundaries.mjs` currently enforces migrated frontend roots (`src/features` and `src/frontend`) plus unsafe `responses.ts` imports; legacy `src/components/<module-name>` screens should be migrated into feature folders before being brought under the stricter check.
