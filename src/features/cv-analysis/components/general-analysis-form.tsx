@@ -4,16 +4,12 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Sparkles,
-  ArrowRight,
   ArrowLeft,
-  Loader2,
-  Cpu,
-  ChevronRight,
   MessageSquare,
-  KeyRound,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { AIContext } from "@/lib/analysis-types";
+import AIActionLauncher from "@/components/shared/ai-action-launcher";
 
 interface GeneralAnalysisFormProps {
   onSubmit: (context: AIContext, model: string) => void;
@@ -35,7 +31,6 @@ export default function GeneralAnalysisForm({
   onAnalyzeWithExternalChat,
 }: GeneralAnalysisFormProps) {
   const t = useTranslations("analysisFlow.forms");
-  const common = useTranslations("common");
   const [additionalContext, setAdditionalContext] = useState("");
   const [selectedModel, setSelectedModel] = useState("gemini-2.5-flash");
 
@@ -53,6 +48,11 @@ export default function GeneralAnalysisForm({
       context.additionalContext = additionalContext.trim();
     onAnalyzeWithExternalChat(context);
   };
+
+  const models = [
+    { id: "gemini-2.5-flash", label: `Gemini 2.5 Flash (${t("fast")})` },
+    { id: "gemini-3.1-pro-preview", label: `Gemini 3.1 Pro Preview (${t("powerful")})` },
+  ];
 
   return (
     <motion.div
@@ -74,7 +74,7 @@ export default function GeneralAnalysisForm({
         </div>
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+          className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           {t("changeMode")}
@@ -82,7 +82,7 @@ export default function GeneralAnalysisForm({
       </div>
 
       {/* Additional Context */}
-      <div className="mb-4">
+      <div className="mb-6">
         <label className="flex items-center gap-2 text-sm text-zinc-400 mb-1.5">
           <MessageSquare className="w-3.5 h-3.5" />
           {t("additionalContext")}
@@ -98,83 +98,25 @@ export default function GeneralAnalysisForm({
         />
       </div>
 
-      {/* Footer: Model selector + Submit */}
-      <div className="flex flex-col sm:flex-row sm:items-end gap-4">
-        {/* Model selector */}
-        <div className="flex-1">
-          <label className="flex items-center gap-2 text-sm text-zinc-400 mb-1.5">
-            <Cpu className="w-3.5 h-3.5" />
-            {t("aiModel")}
-          </label>
-          <div className="relative">
-            <select
-              value={selectedModel}
-              onChange={(e) => setSelectedModel(e.target.value)}
-              className="w-full h-10 px-4 rounded-xl bg-[#0a0a12] border border-white/[0.06] text-sm text-zinc-300 focus:outline-none focus:border-indigo-500/40 appearance-none cursor-pointer"
-            >
-              <option value="gemini-2.5-flash">
-                Gemini 2.5 Flash ({t("fast")})
-              </option>
-              <option value="gemini-3.1-pro-preview">
-                Gemini 3.1 Pro Preview ({t("powerful")})
-              </option>
-            </select>
-            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-              <ChevronRight className="w-4 h-4 text-zinc-500 rotate-90" />
-            </div>
-          </div>
-        </div>
-
-        <div className="flex w-full flex-col gap-2 sm:w-auto">
-          <button
-            onClick={handleSubmit}
-            disabled={loading || !hasAIApiKey}
-            className="flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold text-sm bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-xl shadow-violet-900/30 transition-all active:scale-[0.97] disabled:opacity-60 disabled:cursor-not-allowed h-fit shrink-0 w-full"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                {common("states.analyzing")}
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4" />
-                {t("analyzeCV")}
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
-          </button>
-          <button
-            type="button"
-            onClick={handleExternalChat}
-            disabled={loading}
-            className="flex items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-6 py-3 text-sm font-semibold text-zinc-200 transition-all hover:bg-white/[0.07] disabled:opacity-60"
-          >
-            <MessageSquare className="h-4 w-4" />
-            {t("analyzeWithExternalChat")}
-          </button>
-        </div>
+      {/* Footer: Unified AI Action Launcher */}
+      <div className="w-full flex justify-end">
+        <AIActionLauncher
+          actionLabel={t("analyzeCV")}
+          loading={loading}
+          integrated={{
+            available: hasAIApiKey,
+            selectedModelId: selectedModel,
+            models,
+            onModelChange: setSelectedModel,
+            onRun: handleSubmit,
+            onConfigure: onOpenSettings,
+          }}
+          copyPaste={{
+            available: true,
+            onOpenFlow: handleExternalChat,
+          }}
+        />
       </div>
-
-      {!hasAIApiKey && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="mt-3 flex flex-col gap-3 rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-100 sm:flex-row sm:items-center sm:justify-between"
-        >
-          <span>
-            {t("missingApiKey")}
-          </span>
-          <button
-            type="button"
-            onClick={onOpenSettings}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-amber-400 px-3 py-2 text-xs font-semibold text-zinc-950 transition-colors hover:bg-amber-300"
-          >
-            <KeyRound className="h-3.5 w-3.5" />
-            {common("actions.configure")}
-          </button>
-        </motion.div>
-      )}
 
       {error && (
         <motion.div
@@ -188,3 +130,4 @@ export default function GeneralAnalysisForm({
     </motion.div>
   );
 }
+

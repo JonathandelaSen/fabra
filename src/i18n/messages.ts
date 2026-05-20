@@ -1036,6 +1036,18 @@ export const messages = {
       missingKeywords: "Missing keywords",
       jobKeywords: "Job keywords",
     },
+    aiLauncher: {
+      title: "Use AI for this action",
+      insideLabel: "Inside the app",
+      insideDesc: "Choose a model and generate here.",
+      externalLabel: "External chat",
+      externalDesc: "Copy the prompt, run it outside the app, and paste the result.",
+      buttonText: "AI",
+      modelLabel: "Model",
+      openFlow: "Open flow",
+      configureAI: "Configure AI",
+      continue: "Continue",
+    },
   },
   es: {
     common: {
@@ -2070,6 +2082,18 @@ export const messages = {
       matchingKeywords: "Keywords coincidentes",
       missingKeywords: "Keywords faltantes",
       jobKeywords: "Keywords de la oferta",
+    },
+    aiLauncher: {
+      title: "Usar AI para esta acción",
+      insideLabel: "Dentro de la app",
+      insideDesc: "Elige modelo y genera aquí.",
+      externalLabel: "Chat externo",
+      externalDesc: "Copia el prompt, úsalo fuera y pega el resultado.",
+      buttonText: "AI",
+      modelLabel: "Modelo",
+      openFlow: "Abrir flujo",
+      configureAI: "Configurar AI",
+      continue: "Continuar",
     },
   },
 } as const;

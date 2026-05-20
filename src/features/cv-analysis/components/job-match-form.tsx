@@ -2,18 +2,9 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Sparkles,
-  ArrowRight,
-  ArrowLeft,
-  Loader2,
-  Cpu,
-  ChevronRight,
-  Briefcase,
-  KeyRound,
-  Link,
-} from "lucide-react";
+import { Briefcase, KeyRound, Link, ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
+import AIActionLauncher from "@/components/shared/ai-action-launcher";
 
 interface JobMatchFormProps {
   onSubmit: (jobDescription: string, jobUrl: string, model: string) => void;
@@ -43,6 +34,11 @@ export default function JobMatchForm({
     onSubmit(jobDescription.trim(), jobUrl.trim(), selectedModel);
   };
 
+  const models = [
+    { id: "gemini-2.5-flash", label: `Gemini 2.5 Flash (${t("fast")})` },
+    { id: "gemini-3.1-pro-preview", label: `Gemini 3.1 Pro Preview (${t("powerful")})` },
+  ];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -60,95 +56,69 @@ export default function JobMatchForm({
         </div>
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+          className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           {t("changeMode")}
         </button>
       </div>
 
-      <div className="grid md:grid-cols-[1fr_auto] gap-4 items-end">
-        <div className="space-y-3">
-          {/* Job URL */}
-          <div>
-            <label className="flex items-center gap-2 text-sm text-zinc-400 mb-1.5">
-              <Link className="w-3.5 h-3.5" />
-              {t("jobUrl")}
-              <span className="text-[10px] text-zinc-500 bg-zinc-800/60 px-1.5 py-0.5 rounded border border-white/[0.05]">
-                {t("optional")}
-              </span>
-            </label>
-            <input
-              type="url"
-              placeholder="https://www.linkedin.com/jobs/view/..."
-              className="w-full h-10 px-4 rounded-xl bg-[#0a0a12] border border-white/[0.06] text-sm text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500/40 focus:ring-2 focus:ring-emerald-500/10 transition-all mb-3"
-              value={jobUrl}
-              onChange={(e) => setJobUrl(e.target.value)}
-            />
-          </div>
-
-          {/* Job description */}
-          <div>
-            <label className="flex items-center gap-2 text-sm text-zinc-400 mb-1.5">
-              <Briefcase className="w-3.5 h-3.5" />
-              {t("jobDescription")}
-              <span className="text-[10px] text-rose-400 bg-rose-500/10 px-1.5 py-0.5 rounded border border-rose-500/20">
-                {t("required")}
-              </span>
-            </label>
-            <textarea
-              placeholder={t("jobDescriptionPlaceholder")}
-              className="w-full h-48 px-4 py-3 rounded-xl bg-[#0a0a12] border border-white/[0.06] text-sm text-zinc-300 placeholder:text-zinc-600 resize-none focus:outline-none focus:border-emerald-500/40 focus:ring-2 focus:ring-emerald-500/10 transition-all"
-              value={jobDescription}
-              onChange={(e) => setJobDescription(e.target.value)}
-            />
-          </div>
-
-          {/* Model selector */}
-          <div>
-            <label className="flex items-center gap-2 text-sm text-zinc-400 mb-1.5">
-              <Cpu className="w-3.5 h-3.5" />
-              {t("aiModel")}
-            </label>
-            <div className="relative">
-              <select
-                value={selectedModel}
-                onChange={(e) => setSelectedModel(e.target.value)}
-                className="w-full h-10 px-4 rounded-xl bg-[#0a0a12] border border-white/[0.06] text-sm text-zinc-300 focus:outline-none focus:border-emerald-500/40 appearance-none cursor-pointer"
-              >
-                <option value="gemini-2.5-flash">
-                  Gemini 2.5 Flash ({t("fast")})
-                </option>
-                <option value="gemini-3.1-pro-preview">
-                  Gemini 3.1 Pro Preview ({t("powerful")})
-                </option>
-              </select>
-              <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                <ChevronRight className="w-4 h-4 text-zinc-500 rotate-90" />
-              </div>
-            </div>
-          </div>
+      <div className="space-y-4">
+        {/* Job URL */}
+        <div>
+          <label className="flex items-center gap-2 text-sm text-zinc-400 mb-1.5">
+            <Link className="w-3.5 h-3.5" />
+            {t("jobUrl")}
+            <span className="text-[10px] text-zinc-500 bg-zinc-800/60 px-1.5 py-0.5 rounded border border-white/[0.05]">
+              {t("optional")}
+            </span>
+          </label>
+          <input
+            type="url"
+            placeholder="https://www.linkedin.com/jobs/view/..."
+            className="w-full h-10 px-4 rounded-xl bg-[#0a0a12] border border-white/[0.06] text-sm text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500/40 focus:ring-2 focus:ring-emerald-500/10 transition-all"
+            value={jobUrl}
+            onChange={(e) => setJobUrl(e.target.value)}
+          />
         </div>
 
-        {/* Analyze button */}
-        <button
-          onClick={handleSubmit}
-          disabled={loading || !jobDescription.trim() || !hasAIApiKey}
-          className="flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold text-sm bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-xl shadow-emerald-900/30 transition-all active:scale-[0.97] disabled:opacity-60 disabled:cursor-not-allowed h-fit w-full md:w-auto"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              {common("states.analyzing")}
-            </>
-          ) : (
-            <>
-              <Sparkles className="w-4 h-4" />
-              {t("compareOffer")}
-              <ArrowRight className="w-4 h-4" />
-            </>
-          )}
-        </button>
+        {/* Job description */}
+        <div>
+          <label className="flex items-center gap-2 text-sm text-zinc-400 mb-1.5">
+            <Briefcase className="w-3.5 h-3.5" />
+            {t("jobDescription")}
+            <span className="text-[10px] text-rose-400 bg-rose-500/10 px-1.5 py-0.5 rounded border border-rose-500/20">
+              {t("required")}
+            </span>
+          </label>
+          <textarea
+            placeholder={t("jobDescriptionPlaceholder")}
+            className="w-full h-48 px-4 py-3 rounded-xl bg-[#0a0a12] border border-white/[0.06] text-sm text-zinc-300 placeholder:text-zinc-600 resize-none focus:outline-none focus:border-emerald-500/40 focus:ring-2 focus:ring-emerald-500/10 transition-all"
+            value={jobDescription}
+            onChange={(e) => setJobDescription(e.target.value)}
+          />
+        </div>
+
+        {/* Unified AI Action Launcher */}
+        <div className="w-full pt-2 flex justify-end">
+          <AIActionLauncher
+            actionLabel={t("compareOffer")}
+            loading={loading}
+            disabled={!jobDescription.trim()}
+            integrated={{
+              available: hasAIApiKey,
+              selectedModelId: selectedModel,
+              models,
+              onModelChange: setSelectedModel,
+              onRun: handleSubmit,
+              onConfigure: onOpenSettings,
+            }}
+            copyPaste={{
+              available: false,
+              onOpenFlow: () => {},
+            }}
+          />
+        </div>
       </div>
 
       {!hasAIApiKey && (
@@ -157,13 +127,11 @@ export default function JobMatchForm({
           animate={{ opacity: 1 }}
           className="mt-3 flex flex-col gap-3 rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-100 sm:flex-row sm:items-center sm:justify-between"
         >
-          <span>
-            {t("missingApiKey")}
-          </span>
+          <span>{t("missingApiKey")}</span>
           <button
             type="button"
             onClick={onOpenSettings}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-amber-400 px-3 py-2 text-xs font-semibold text-zinc-950 transition-colors hover:bg-amber-300"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-amber-400 px-3 py-2 text-xs font-semibold text-zinc-950 transition-colors hover:bg-amber-300 cursor-pointer"
           >
             <KeyRound className="h-3.5 w-3.5" />
             {common("actions.configure")}
