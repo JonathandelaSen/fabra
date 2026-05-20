@@ -1,4 +1,5 @@
 # Assisted workflow implementation plan: CV profile structuring for templates
+This implementation is already done.
 
 ## Workflow summary
 

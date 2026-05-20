@@ -13,7 +13,6 @@ import {
   KeyRound,
   Link,
 } from "lucide-react";
-import { CopyPasteWorkflowTriggerButton } from "@/components/shared/copy-paste-workflow-trigger-button";
 import { useTranslations } from "next-intl";
 
 interface JobMatchFormProps {
@@ -23,7 +22,6 @@ interface JobMatchFormProps {
   error: string | null;
   hasAIApiKey: boolean;
   onOpenSettings: () => void;
-  onCopyPasteOpen?: (jobDescription: string, jobUrl: string) => void;
 }
 
 export default function JobMatchForm({
@@ -33,7 +31,6 @@ export default function JobMatchForm({
   error,
   hasAIApiKey,
   onOpenSettings,
-  onCopyPasteOpen,
 }: JobMatchFormProps) {
   const t = useTranslations("analysisFlow.forms");
   const common = useTranslations("common");
@@ -133,32 +130,25 @@ export default function JobMatchForm({
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 h-fit w-full md:w-auto">
-          <button
-            onClick={handleSubmit}
-            disabled={loading || !jobDescription.trim() || !hasAIApiKey}
-            className="flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold text-sm bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-xl shadow-emerald-900/30 transition-all active:scale-[0.97] disabled:opacity-60 disabled:cursor-not-allowed w-full"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                {common("states.analyzing")}
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4" />
-                {t("compareOffer")}
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
-          </button>
-          {onCopyPasteOpen && jobDescription.trim() && (
-            <CopyPasteWorkflowTriggerButton
-              label={t("analyzeWithExternalChat")}
-              onClick={() => onCopyPasteOpen(jobDescription.trim(), jobUrl.trim())}
-            />
+        {/* Analyze button */}
+        <button
+          onClick={handleSubmit}
+          disabled={loading || !jobDescription.trim() || !hasAIApiKey}
+          className="flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold text-sm bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-xl shadow-emerald-900/30 transition-all active:scale-[0.97] disabled:opacity-60 disabled:cursor-not-allowed h-fit w-full md:w-auto"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              {common("states.analyzing")}
+            </>
+          ) : (
+            <>
+              <Sparkles className="w-4 h-4" />
+              {t("compareOffer")}
+              <ArrowRight className="w-4 h-4" />
+            </>
           )}
-        </div>
+        </button>
       </div>
 
       {!hasAIApiKey && (

@@ -1,4 +1,5 @@
 # Assisted workflow implementation plan: Work Journal draft
+This implementation is already done.
 
 ## Workflow summary
 

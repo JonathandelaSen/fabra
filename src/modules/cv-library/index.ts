@@ -16,6 +16,7 @@ export {
   type StandardCVProfile,
   normalizeStandardCVProfile,
   getBestCVText,
+  getBestCVPrimitiveText,
   profileToPlainText,
   getCVSourceTextHash,
 } from "./domain/cv-profile";
@@ -41,6 +42,11 @@ export {
   getSectionLabels,
 } from "./domain/cv-templates";
 export { CV_PDFS_BUCKET } from "./domain/services/cv-storage";
+export {
+  CV_PROFILE_COPY_PASTE_MODEL,
+  CV_PROFILE_COPY_PASTE_SCHEMA_VERSION,
+  CV_PROFILE_COPY_PASTE_WORKFLOW_ID,
+} from "./domain/services/cv-profile-copy-paste-workflow";
 export {
   presentCVDocument,
   presentCVDocumentSummary,

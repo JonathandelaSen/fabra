@@ -1,0 +1,90 @@
+import { createRequestId } from "@/lib/observability";
+import { ASSISTANCE_MODE } from "@/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
+import { badRequest, type EventTracker } from "@/modules/shared";
+import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
+import {
+  CV_PROFILE_COPY_PASTE_MODEL,
+  CV_PROFILE_COPY_PASTE_SCHEMA_VERSION,
+  CV_PROFILE_COPY_PASTE_WORKFLOW_ID,
+} from "../../domain/services/cv-profile-copy-paste-workflow";
+import { PrepareCVAnalysisInputUseCase } from "./prepare-cv-analysis-input.use-case";
+
+export interface PrepareCVProfileStructureCopyPasteInput {
+  cvDocumentId: string;
+  userId: string;
+  templateId?: string | null;
+  locale?: string | null;
+}
+
+export interface PrepareCVProfileStructureCopyPasteResult {
+  workflowId: typeof CV_PROFILE_COPY_PASTE_WORKFLOW_ID;
+  schemaVersion: typeof CV_PROFILE_COPY_PASTE_SCHEMA_VERSION;
+  prompt: string;
+  expectedResponse: { kind: "json"; envelope: true };
+  privacyNotice: string;
+}
+
+export class PrepareCVProfileStructureCopyPasteUseCase {
+  constructor(
+    private readonly deps: {
+      documentRepo: CVDocumentRepository;
+      prepareAnalysisInput: PrepareCVAnalysisInputUseCase;
+      tracker: EventTracker;
+      buildPrompt: (input: {
+        text: string;
+        templateId?: string | null;
+        locale?: string | null;
+      }) => string;
+    },
+  ) {}
+
+  async execute(
+    input: PrepareCVProfileStructureCopyPasteInput,
+  ): Promise<PrepareCVProfileStructureCopyPasteResult | null> {
+    const requestId = createRequestId("cv_profile_copy_paste_prepare");
+    const prepared = await this.deps.prepareAnalysisInput.execute({
+      cvId: input.cvDocumentId,
+      userId: input.userId,
+      requestId,
+      source: "cv_profile_copy_paste",
+    });
+    if (!prepared) return null;
+
+    const text = prepared.analysisText;
+    if (!text) {
+      throw badRequest("No extracted text available for this CV");
+    }
+
+    const prompt = this.deps.buildPrompt({
+      text,
+      templateId: input.templateId,
+      locale: input.locale,
+    });
+
+    await this.deps.tracker.record({
+      userId: input.userId,
+      cvId: input.cvDocumentId,
+      requestId,
+      stage: "cv_profile_copy_paste_prompt_prepared",
+      status: "success",
+      source: "cv_library",
+      metadata: {
+        assistanceMode: ASSISTANCE_MODE.copyPaste,
+        workflowId: CV_PROFILE_COPY_PASTE_WORKFLOW_ID,
+        schemaVersion: CV_PROFILE_COPY_PASTE_SCHEMA_VERSION,
+        model: CV_PROFILE_COPY_PASTE_MODEL,
+        templateId: input.templateId,
+        locale: input.locale,
+      },
+    });
+
+    return {
+      workflowId: CV_PROFILE_COPY_PASTE_WORKFLOW_ID,
+      schemaVersion: CV_PROFILE_COPY_PASTE_SCHEMA_VERSION,
+      prompt,
+      expectedResponse: { kind: "json", envelope: true },
+      privacyNotice:
+        "This prompt includes extracted CV data. Paste it only into external tools you trust.",
+    };
+  }
+}

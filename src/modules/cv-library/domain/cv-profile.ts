@@ -261,6 +261,19 @@ export function getBestCVText(input: {
   return input.text_python || input.text_pdfjs || input.text_node || null;
 }
 
+export function getBestCVPrimitiveText(input: {
+  textPython?: string | null;
+  textPdfjs?: string | null;
+  textNode?: string | null;
+}): string | null {
+  return (
+    input.textPython?.trim() ||
+    input.textPdfjs?.trim() ||
+    input.textNode?.trim() ||
+    null
+  );
+}
+
 function joinParts(parts: Array<string | undefined>): string {
   return parts.filter(Boolean).join(" | ");
 }

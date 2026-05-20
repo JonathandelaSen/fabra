@@ -17,7 +17,7 @@ export interface RenameCVDocumentInput {
   name: string;
 }
 
-async function readJsonResponse<T>(
+export async function readJsonResponse<T>(
   res: Response,
   fallbackMessage: string
 ): Promise<T> {

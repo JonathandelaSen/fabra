@@ -41,6 +41,22 @@ export interface EditCVProfileHttpInput extends AIRequestConfig {
   locale?: string;
 }
 
+export interface PrepareCVProfileCopyPasteHttpInput {
+  templateId?: string;
+  locale?: string;
+}
+
+export interface PreviewCVProfileCopyPasteHttpInput {
+  rawResponse: string;
+}
+
+export interface ApplyCVProfileCopyPasteHttpInput {
+  parsedResult: Record<string, unknown>;
+  templateId?: string;
+  locale?: string;
+  createTemplateVersion: boolean;
+}
+
 function validationError(message: string): Result<never, HttpValidationError> {
   return { ok: false, error: { message, status: 400 } };
 }
@@ -127,6 +143,46 @@ export function parseEditCVProfileRequest(
       instruction,
       templateId: text(body.templateId) || undefined,
       locale: text(body.locale) || undefined,
+    },
+  };
+}
+
+export function parsePrepareCVProfileCopyPasteRequest(
+  body: unknown
+): Result<PrepareCVProfileCopyPasteHttpInput, HttpValidationError> {
+  if (!isRecord(body)) return validationError("Request body must be a JSON object");
+  return {
+    ok: true,
+    value: {
+      templateId: text(body.templateId) || undefined,
+      locale: text(body.locale) || undefined,
+    },
+  };
+}
+
+export function parsePreviewCVProfileCopyPasteRequest(
+  body: unknown
+): Result<PreviewCVProfileCopyPasteHttpInput, HttpValidationError> {
+  if (!isRecord(body)) return validationError("Request body must be a JSON object");
+  const rawResponse = text(body.rawResponse);
+  if (!rawResponse) return validationError("Paste the JSON response from the external chat.");
+  return { ok: true, value: { rawResponse } };
+}
+
+export function parseApplyCVProfileCopyPasteRequest(
+  body: unknown
+): Result<ApplyCVProfileCopyPasteHttpInput, HttpValidationError> {
+  if (!isRecord(body)) return validationError("Request body must be a JSON object");
+  if (!isRecord(body.parsedResult)) {
+    return validationError("The parsed profile result is required.");
+  }
+  return {
+    ok: true,
+    value: {
+      parsedResult: body.parsedResult,
+      templateId: text(body.templateId) || undefined,
+      locale: text(body.locale) || undefined,
+      createTemplateVersion: body.createTemplateVersion === true,
     },
   };
 }

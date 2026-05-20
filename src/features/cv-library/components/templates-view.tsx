@@ -28,7 +28,9 @@ import {
   getStoredAIProvider,
 } from "@/lib/browser-preferences";
 import { Button } from "@/components/ui/button";
+import { CopyPasteWorkflowTriggerButton } from "@/components/shared/copy-paste-workflow-trigger-button";
 import CVTemplatePreview from "./cv-template-preview";
+import CVProfileStructureCopyPasteModal from "./cv-profile-structure-copy-paste-modal";
 import { useCVDocumentList } from "../hooks/use-cv-library-queries";
 
 interface TemplatesViewProps {
@@ -55,6 +57,7 @@ export default function TemplatesView({
   const [locale, setLocale] = useState<CVTemplateLocale>("es");
   const [searchQuery, setSearchQuery] = useState("");
   const [creating, setCreating] = useState(false);
+  const [copyPasteOpen, setCopyPasteOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const filteredCvs = cvs.filter(
@@ -308,8 +311,15 @@ export default function TemplatesView({
                     )}
 
                     <div className="pt-2">
+                      <div className="mb-3 flex justify-end">
+                        <CopyPasteWorkflowTriggerButton
+                          label={t("structureWithExternalChat")}
+                          disabled={!selectedCvId}
+                          onClick={() => setCopyPasteOpen(true)}
+                        />
+                      </div>
                       <Button
-                        disabled={!selectedCvId || creating}
+                        disabled={!selectedCvId || creating || !hasAIApiKey}
                         onClick={handleCreateVersion}
                         className="w-full h-12 bg-teal-500 text-black font-semibold hover:bg-teal-400 disabled:opacity-50 transition-colors"
                       >
@@ -330,6 +340,22 @@ export default function TemplatesView({
                 </div>
               </div>
             </motion.div>
+            {selectedCvId && (
+              <CVProfileStructureCopyPasteModal
+                cvId={selectedCvId}
+                templateId={selectedTemplate.templateId}
+                locale={locale}
+                open={copyPasteOpen}
+                onClose={() => setCopyPasteOpen(false)}
+                onApplied={(result) => {
+                  void listQuery.refetch();
+                  if (result.version) {
+                    setSelectedTemplate(null);
+                    onOpenEditor(result.version.id);
+                  }
+                }}
+              />
+            )}
           </motion.div>
         )}
       </AnimatePresence>

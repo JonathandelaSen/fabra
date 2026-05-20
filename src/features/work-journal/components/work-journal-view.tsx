@@ -8,7 +8,6 @@ import { useTranslations } from "next-intl";
 import type { LucideIcon } from "lucide-react";
 import {
   BriefcaseBusiness,
-  Clipboard,
   CalendarDays,
   FilePenLine,
   FolderKanban,
@@ -42,10 +41,10 @@ import {
   removeWorkJournalEntryFromCache,
   replaceWorkJournalEntryInCache,
 } from "../api/work-journal-entry-cache";
-import { buildWorkJournalEntryDraftClipboardPrompt } from "../api/work-journal-prompt";
 import { getErrorMessage } from "@/lib/errors";
-import { CopyPromptModal } from "@/components/shared/copy-prompt-modal";
+import { CopyPasteWorkflowTriggerButton } from "@/components/shared/copy-paste-workflow-trigger-button";
 import { WorkJournalSkeleton } from "./work-journal-skeleton";
+import { WorkJournalCopyPastePanel } from "./work-journal-copy-paste-panel";
 
 interface WorkJournalViewProps {
   aiProvider: "gemini" | "mock";
@@ -92,8 +91,7 @@ export default function WorkJournalView({
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [contextFilter, setContextFilter] = useState<string>("");
-  const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
-  const [copiedPromptContent, setCopiedPromptContent] = useState("");
+  const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
 
   const contexts = contextsQuery.data?.contexts ?? [];
   const entries = entriesQuery.data ?? [];
@@ -235,28 +233,6 @@ export default function WorkJournalView({
     } finally {
       setAiLoading(false);
     }
-  };
-
-  const copyPrompt = async () => {
-    if (!draft.context_id || !draft.raw_notes.trim()) return;
-    const selectedContext = contexts.find((c) => c.id === draft.context_id);
-    if (!selectedContext) return;
-
-    const prompt = buildWorkJournalEntryDraftClipboardPrompt({
-      context: {
-        type: selectedContext.type,
-        name: selectedContext.name,
-        roleOrLabel: selectedContext.role_or_label,
-      },
-      dateStart: draft.date_start,
-      dateEnd: draft.date_end || null,
-      topic: draft.topic || null,
-      notes: draft.raw_notes,
-    });
-
-    await navigator.clipboard.writeText(prompt);
-    setCopiedPromptContent(prompt);
-    setIsCopyModalOpen(true);
   };
 
   const patchEntry = async (
@@ -416,25 +392,45 @@ export default function WorkJournalView({
                             {aiLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                             {t("generateProfessionalDraft")}
                           </button>
-                          <button
-                            type="button"
-                            onClick={() => void copyPrompt()}
+                          <CopyPasteWorkflowTriggerButton
+                            label={t("copyPaste.open")}
+                            onClick={() => setIsCopyPasteOpen((current) => !current)}
                             disabled={!draft.raw_notes.trim() || !draft.context_id}
-                            className="inline-flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-zinc-300 transition-colors disabled:opacity-50"
-                          >
-                            <Clipboard className="h-4 w-4" />
-                            {t("copyAiPrompt")}
-                          </button>
+                            className="border-transparent bg-transparent px-0 py-0 text-sm text-zinc-400 hover:bg-transparent hover:text-zinc-300"
+                          />
                         </div>
+
+                        {isCopyPasteOpen && (
+                          <WorkJournalCopyPastePanel
+                            context={
+                              contexts.find((context) => context.id === draft.context_id) ??
+                              null
+                            }
+                            dateStart={draft.date_start}
+                            dateEnd={draft.date_end || null}
+                            topic={draft.topic || null}
+                            notes={draft.raw_notes}
+                            onPasteText={(finalText) =>
+                              setDraft((current) => ({ ...current, final_text: finalText }))
+                            }
+                            onClose={() => setIsCopyPasteOpen(false)}
+                          />
+                        )}
                         
                         {draft.final_text && (
+                          <div>
+                            <label htmlFor="work-journal-final-text" className={labelClass}>
+                              {t("finalText")}
+                            </label>
                           <textarea
+                            id="work-journal-final-text"
                             className="w-full bg-teal-950/20 text-teal-50/90 rounded-xl p-4 text-base leading-relaxed outline-none resize-none min-h-[160px] border border-teal-900/50"
                             value={draft.final_text}
                             onChange={(event) =>
                               setDraft((current) => ({ ...current, final_text: event.target.value }))
                             }
                           />
+                          </div>
                         )}
                       </motion.div>
                     )}
@@ -461,8 +457,9 @@ export default function WorkJournalView({
                   {/* Right Col: Metadata & Context */}
                   <div className="space-y-8">
                     <div>
-                      <label className={labelClass}>{t("context")}</label>
+                      <label htmlFor="work-journal-context" className={labelClass}>{t("context")}</label>
                       <select
+                        id="work-journal-context"
                         className={inputClass}
                         value={draft.context_id}
                         onChange={(event) =>
@@ -549,13 +546,6 @@ export default function WorkJournalView({
         </div>
       </div>
       
-      <CopyPromptModal 
-        isOpen={isCopyModalOpen} 
-        onClose={() => setIsCopyModalOpen(false)} 
-        title={t("promptCopiedTitle")}
-        message={t("promptCopiedMessage")}
-        promptContent={copiedPromptContent}
-      />
     </div>
   );
 }

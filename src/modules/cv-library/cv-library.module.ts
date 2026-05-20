@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { QueryBus } from "@/modules/shared";
 import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
 import { SupabaseEventTracker } from "@/modules/shared";
+import { ApplyCVProfileStructureCopyPasteUseCase } from "./application/use-cases/apply-cv-profile-structure-copy-paste.use-case";
 import { CreateTemplateCVDocumentUseCase } from "./application/use-cases/create-template-cv-document.use-case";
 import { CreateUploadedCVDocumentUseCase } from "./application/use-cases/create-uploaded-cv-document.use-case";
 import { DeleteCVDocumentUseCase } from "./application/use-cases/delete-cv-document.use-case";
@@ -11,6 +12,8 @@ import { GetCVStructuredProfileUseCase } from "./application/use-cases/get-cv-st
 import { GetPublishedCVDocumentUseCase } from "./application/use-cases/get-published-cv-document.use-case";
 import { ListCVDocumentsUseCase } from "./application/use-cases/list-cv-documents.use-case";
 import { PrepareCVAnalysisInputUseCase } from "./application/use-cases/prepare-cv-analysis-input.use-case";
+import { PrepareCVProfileStructureCopyPasteUseCase } from "./application/use-cases/prepare-cv-profile-structure-copy-paste.use-case";
+import { PreviewCVProfileStructureCopyPasteUseCase } from "./application/use-cases/preview-cv-profile-structure-copy-paste.use-case";
 import { StructureCVProfileWithAIUseCase } from "./application/use-cases/structure-cv-profile-with-ai.use-case";
 import { UpdateCVDocumentNameUseCase } from "./application/use-cases/update-cv-document-name.use-case";
 import { UpdateCVDocumentExtractionUseCase } from "./application/use-cases/update-cv-document-extraction.use-case";
@@ -28,6 +31,7 @@ import { ProviderCVProfileEditingAIServiceFactory } from "./infrastructure/servi
 import { ProviderCVProfileStructuringAIServiceFactory } from "./infrastructure/services/provider-cv-profile-structuring-ai-service.factory";
 import { SupabaseCVPdfStorage } from "./infrastructure/services/supabase-cv-pdf-storage.service";
 import { TemplateCVPdfRenderer } from "./infrastructure/services/template-cv-pdf-renderer.service";
+import { buildCVProfileStructuringCopyPastePrompt } from "./infrastructure/services/cv-profile-structuring-prompts";
 
 const documentRepo = new SupabaseCVDocumentRepository();
 const profileRepo = new SupabaseCVStructuredProfileRepository();
@@ -45,6 +49,22 @@ const profileEditingAI = new ProviderCVProfileEditingAIServiceFactory({
 const tracker: EventTracker = new SupabaseEventTracker();
 
 function createUseCases(queryBus: QueryBus) {
+  const prepareCVAnalysisInput = new PrepareCVAnalysisInputUseCase({
+    documentRepo,
+    pdfStorage,
+    textExtractor,
+    templateRenderer,
+    tracker,
+  });
+  const createTemplateCVDocument = new CreateTemplateCVDocumentUseCase({
+    documentRepo,
+    tracker,
+  });
+  const upsertCVStructuredProfile = new UpsertCVStructuredProfileUseCase({
+    profileRepo,
+    tracker,
+  });
+
   return {
     listCVDocuments: new ListCVDocumentsUseCase({ documentRepo }),
     getCVDocument: new GetCVDocumentUseCase({ documentRepo }),
@@ -52,10 +72,7 @@ function createUseCases(queryBus: QueryBus) {
       documentRepo,
       tracker,
     }),
-    createTemplateCVDocument: new CreateTemplateCVDocumentUseCase({
-      documentRepo,
-      tracker,
-    }),
+    createTemplateCVDocument,
     updateCVDocumentName: new UpdateCVDocumentNameUseCase({
       documentRepo,
       tracker,
@@ -64,13 +81,7 @@ function createUseCases(queryBus: QueryBus) {
       documentRepo,
       tracker,
     }),
-    prepareCVAnalysisInput: new PrepareCVAnalysisInputUseCase({
-      documentRepo,
-      pdfStorage,
-      textExtractor,
-      templateRenderer,
-      tracker,
-    }),
+    prepareCVAnalysisInput,
     updateCVDocumentPublicSettings: new UpdateCVDocumentPublicSettingsUseCase({
       documentRepo,
       tracker,
@@ -94,10 +105,27 @@ function createUseCases(queryBus: QueryBus) {
     editCVProfileWithAI: new EditCVProfileWithAIUseCase({
       aiFactory: profileEditingAI,
     }),
-    upsertCVStructuredProfile: new UpsertCVStructuredProfileUseCase({
-      profileRepo,
-      tracker,
-    }),
+    upsertCVStructuredProfile,
+    prepareCVProfileStructureCopyPaste:
+      new PrepareCVProfileStructureCopyPasteUseCase({
+        documentRepo,
+        prepareAnalysisInput: prepareCVAnalysisInput,
+        tracker,
+        buildPrompt: buildCVProfileStructuringCopyPastePrompt,
+      }),
+    previewCVProfileStructureCopyPaste:
+      new PreviewCVProfileStructureCopyPasteUseCase({
+        documentRepo,
+        tracker,
+      }),
+    applyCVProfileStructureCopyPaste:
+      new ApplyCVProfileStructureCopyPasteUseCase({
+        documentRepo,
+        prepareAnalysisInput: prepareCVAnalysisInput,
+        upsertProfile: upsertCVStructuredProfile,
+        createTemplateDocument: createTemplateCVDocument,
+        tracker,
+      }),
   };
 }
 

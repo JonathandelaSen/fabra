@@ -3,7 +3,9 @@
 ## Source
 - Prompt source file: `src/modules/cv-library/infrastructure/services/cv-profile-structuring-prompts.ts`
 - System prompt constant: `SYSTEM_PROMPT`
+- Copy Paste prompt builder: `buildCVProfileStructuringCopyPastePrompt`
 - Use case: `StructureCVProfileWithAIUseCase` in `src/modules/cv-library/application/use-cases/structure-cv-profile-with-ai.use-case.ts`
+- Copy Paste use cases: `PrepareCVProfileStructureCopyPasteUseCase`, `PreviewCVProfileStructureCopyPasteUseCase`, and `ApplyCVProfileStructureCopyPasteUseCase` in `src/modules/cv-library/application/use-cases/`
 - Model controller: provider-aware `ProviderCVProfileStructuringAIServiceFactory` selects mock or Gemini and delegates Gemini calls to `src/modules/cv-library/infrastructure/services/gemini-cv-profile-structuring-ai.service.ts`
 - Schema version: `CV_PROFILE_SCHEMA_VERSION`
 
@@ -38,6 +40,24 @@ JSON format:
 }
 ```
 
+## Copy Paste Prompt
+`buildCVProfileStructuringCopyPastePrompt` reuses the same extraction task as `SYSTEM_PROMPT`, then adds external-chat transport instructions. The external response must be pure JSON with this envelope:
+
+```json
+{
+  "workflowId": "cv_profile.structure_for_template",
+  "schemaVersion": "1",
+  "result": {}
+}
+```
+
+`result` must contain the standard CV profile shape documented above. The prompt includes the extracted CV text plus optional template context:
+
+- `templateId`, when the structuring flow is launched from template creation.
+- `locale`, used as template locale context.
+
+The Copy Paste flow does not call a real AI provider. The user copies the prompt, runs it in an external trusted chat, and pastes the JSON envelope back into the app.
+
 ## Data Inputs
 - User content sent to the model: extracted CV text.
 - System instruction data: fixed standard CV schema and extraction rules.
@@ -49,5 +69,10 @@ JSON format:
 3. The service sends the raw CV text as the user message.
 4. The JSON response is normalized and returned with `CV_PROFILE_SCHEMA_VERSION`.
 
+## Copy Paste Runtime Flow
+1. `prepare` authenticates the user, loads the owned CV, selects the best extracted CV text, adds template/locale context, builds the external-chat prompt, and returns the expected JSON envelope metadata plus a privacy notice.
+2. `preview` parses the pasted JSON, validates exact `workflowId` and `schemaVersion`, normalizes the standard profile schema, and returns a read-only preview with detected sections, missing important fields, locale context, completeness, and external-chat origin.
+3. `apply` revalidates the parsed profile, upserts the structured profile with `aiModel: "external-chat"`, and, when launched from template creation, creates the editable template CV version through the normal template document flow.
+
 ## Maintenance
-When `SYSTEM_PROMPT`, the standard CV profile schema, or `CV_PROFILE_SCHEMA_VERSION` changes, update this document in the same change.
+When `SYSTEM_PROMPT`, `buildCVProfileStructuringCopyPastePrompt`, the standard CV profile schema, the Copy Paste envelope, template/locale input context, preview/apply behavior, or `CV_PROFILE_SCHEMA_VERSION` changes, update this document in the same change.

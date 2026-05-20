@@ -1,7 +1,9 @@
 import { readFileSync } from "node:fs";
+import crypto from "node:crypto";
 import path from "node:path";
 import { expect, type APIRequestContext, type Page } from "@playwright/test";
 import { uniqueLabel } from "./env";
+import { adminClient } from "./supabase";
 
 export interface CreatedAnalysisFixture {
   cv: {
@@ -77,4 +79,56 @@ export async function createFixtureViaApi(
     (await analysisResponse.json()) as CreatedAnalysisFixture["analysis"];
 
   return { cv, analysis };
+}
+
+export async function createStoredCVWithoutExtractedText(userId: string) {
+  const cvName = uniqueLabel("stored-unextracted-cv");
+  const cvId = crypto.randomUUID();
+  const pdf = readFileSync(path.resolve(process.cwd(), "test.pdf"));
+  const pdfStoragePath = `${userId}/${cvId}-${cvName}.pdf`;
+
+  const { error: uploadError } = await adminClient.storage
+    .from("cv-pdfs")
+    .upload(pdfStoragePath, pdf, {
+      contentType: "application/pdf",
+      upsert: false,
+    });
+  if (uploadError) throw uploadError;
+
+  const now = new Date().toISOString();
+  const { data, error } = await adminClient
+    .from("cvs")
+    .insert({
+      id: cvId,
+      user_id: userId,
+      name: cvName,
+      filename: `${cvName}.pdf`,
+      file_size: pdf.length,
+      pdf_storage_path: pdfStoragePath,
+      type: "uploaded",
+      source_cv_id: null,
+      template_id: null,
+      template_locale: null,
+      schema_version: null,
+      source_text_hash: null,
+      ai_model: null,
+      profile: null,
+      public_enabled: false,
+      public_id: null,
+      public_slug: null,
+      public_published_at: null,
+      text_python: null,
+      text_pdfjs: null,
+      text_node: null,
+      extract_error_python: null,
+      extract_error_pdfjs: null,
+      extract_error_node: null,
+      created_at: now,
+      updated_at: now,
+    })
+    .select("id,name")
+    .single();
+
+  if (error) throw error;
+  return data;
 }
