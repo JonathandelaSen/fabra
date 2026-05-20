@@ -2,12 +2,16 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
 import type { AnalysisSummary } from "@/lib/analysis-types";
 import Sidebar from "@/components/shell/sidebar";
 import { CVEditorView } from "@/features/cv-editor";
 import { CVLibraryView, TemplatesView } from "@/features/cv-library";
-import { CVAnalysisView } from "@/features/cv-analysis";
+import {
+  CVAnalysisDetailView,
+  CVAnalysisView,
+  type CVAnalysisDetail,
+  type CVAnalysisDetailTab,
+} from "@/features/cv-analysis";
 import { InterviewQuestionsView } from "@/features/interview-questions";
 import { WorkJournalView } from "@/features/work-journal";
 import { ObjectivesView } from "@/features/objectives";
@@ -15,20 +19,10 @@ import { FeedbackNotesView } from "@/features/feedback-notes";
 import { ReceivedFeedbackView } from "@/features/received-feedback";
 import { ActivityContextView } from "@/features/activity-context";
 import { AdminObservabilityView } from "@/features/admin-observability";
-import ExtractionView from "@/features/cv-analysis/components/extraction-view";
-import AIAnalysisView from "@/features/cv-analysis/components/analysis-view";
 import { JobMatchAnalysisView } from "@/features/job-match-analysis";
 import { SettingsView } from "@/features/settings";
-import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Sparkles } from "lucide-react";
-import { AnalysisDetailSkeleton } from "@/components/shared/skeletons";
 import { createClient } from "@/lib/supabase/client";
 import { normalizeAnalysisSummaries } from "@/components/shell/analysis-summary-normalizer";
-import type {
-  AnalysisMode,
-  AIContext,
-  OfferStatus,
-} from "@/lib/analysis-types";
 import type { CVDocumentSummaryResponse as CVSummary } from "@/modules/cv-library/client";
 import type { ListCVDocumentsResponse } from "@/app/api/cvs/responses";
 import type { InterviewQuestionResponse as InterviewQuestionSummary } from "@/app/api/interview-questions/responses";
@@ -58,7 +52,6 @@ function loadAdminStatus() {
   return adminStatusRequest;
 }
 
-type ViewTab = "extraction" | "analysis";
 type AppView =
   | "new"
   | "analysis"
@@ -75,47 +68,6 @@ type AppView =
   | "feedback-notes"
   | "settings"
   | "admin";
-
-interface FullAnalysis {
-  id: string;
-  cv_id: string | null;
-  cv: {
-    id: string;
-    name: string;
-    filename: string;
-    type?: string;
-  } | null;
-  title: string;
-  filename: string;
-  file_size: number | null;
-  created_at: string;
-  updated_at: string;
-  text_python: string | null;
-  text_pdfjs: string | null;
-  text_node: string | null;
-  extract_error_python: string | null;
-  extract_error_pdfjs: string | null;
-  extract_error_node: string | null;
-  analysis_mode: AnalysisMode;
-  ai_model: string | null;
-  job_description: string | null;
-  job_url: string | null;
-  offer_status: OfferStatus | null;
-  offer_notes: string | null;
-  offer_next_action: string | null;
-  offer_next_action_at: string | null;
-  ai_context: AIContext | null;
-  ai_score: number | null;
-  ai_feedback: string | null;
-  ai_keywords: string | null;
-  ai_improvements: string | null;
-  job_key_data: string | null;
-  job_keywords: string | null;
-  cv_keywords: string | null;
-  matching_keywords: string | null;
-  missing_keywords: string | null;
-  ai_analyzed_at: string | null;
-}
 
 function toLegacyCVSummary(cv: ListCVDocumentsResponse[number]): CVSummary {
   return {
@@ -151,7 +103,6 @@ export default function AppShell({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const analysisFlow = useTranslations("analysisFlow.appShell");
   const [analyses, setAnalyses] = useState<AnalysisSummary[]>([]);
   const [analysesLoading, setAnalysesLoading] = useState(true);
   const [cvs, setCVs] = useState<CVSummary[]>([]);
@@ -159,13 +110,17 @@ export default function AppShell({
     InterviewQuestionSummary[]
   >([]);
   const [activeAnalysisId, setActiveAnalysisId] = useState<string | null>(null);
-  const [activeAnalysis, setActiveAnalysis] = useState<FullAnalysis | null>(
+  const [activeAnalysis, setActiveAnalysis] = useState<CVAnalysisDetail | null>(
     null,
   );
-  const tabFromUrl = searchParams.get("tab") as ViewTab | null;
-  const viewTab: ViewTab = tabFromUrl || (activeAnalysis?.ai_score !== null && activeAnalysis?.ai_score !== undefined ? "analysis" : "extraction");
+  const tabFromUrl = searchParams.get("tab") as CVAnalysisDetailTab | null;
+  const viewTab: CVAnalysisDetailTab =
+    tabFromUrl ||
+    (activeAnalysis?.ai_score !== null && activeAnalysis?.ai_score !== undefined
+      ? "analysis"
+      : "extraction");
 
-  const setViewTab = (tab: ViewTab) => {
+  const setViewTab = (tab: CVAnalysisDetailTab) => {
     router.replace(`${pathname}?tab=${tab}`, { scroll: false });
   };
   const [activeView, setActiveView] = useState<AppView>(initialView);
@@ -193,41 +148,46 @@ export default function AppShell({
   const interviewQuestionsRequestRef = useRef<Promise<void> | null>(null);
 
   // Fetch analyses list
-  const fetchAnalyses = useCallback(async (includeJobMatches: boolean = false) => {
-    setAnalysesLoading(true);
-    try {
-      const requests = [fetch("/api/cv-analyses")];
-      if (includeJobMatches) {
-        requests.push(fetch("/api/job-match-analyses"));
-      }
+  const fetchAnalyses = useCallback(
+    async (includeJobMatches: boolean = false) => {
+      setAnalysesLoading(true);
+      try {
+        const requests = [fetch("/api/cv-analyses")];
+        if (includeJobMatches) {
+          requests.push(fetch("/api/job-match-analyses"));
+        }
 
-      const responses = await Promise.all(requests);
-      const cvAnalyses = responses[0].ok ? await responses[0].json() : [];
-      const jobMatchAnalyses =
-        includeJobMatches && responses[1]?.ok ? await responses[1].json() : [];
+        const responses = await Promise.all(requests);
+        const cvAnalyses = responses[0].ok ? await responses[0].json() : [];
+        const jobMatchAnalyses =
+          includeJobMatches && responses[1]?.ok
+            ? await responses[1].json()
+            : [];
 
-      setAnalyses((prev) => {
-        const existingJobMatches = prev.filter(
-          (a) => a.analysis_mode === "job_match",
-        );
-        const newJobMatches = includeJobMatches
-          ? jobMatchAnalyses
-          : existingJobMatches;
-        return normalizeAnalysisSummaries([
-          ...cvAnalyses,
-          ...newJobMatches,
-        ]).sort((a, b) => b.created_at.localeCompare(a.created_at));
-      });
-      hasLoadedCVAnalysesRef.current = true;
-      if (includeJobMatches) {
-        hasLoadedAnalysesRef.current = true;
+        setAnalyses((prev) => {
+          const existingJobMatches = prev.filter(
+            (a) => a.analysis_mode === "job_match",
+          );
+          const newJobMatches = includeJobMatches
+            ? jobMatchAnalyses
+            : existingJobMatches;
+          return normalizeAnalysisSummaries([
+            ...cvAnalyses,
+            ...newJobMatches,
+          ]).sort((a, b) => b.created_at.localeCompare(a.created_at));
+        });
+        hasLoadedCVAnalysesRef.current = true;
+        if (includeJobMatches) {
+          hasLoadedAnalysesRef.current = true;
+        }
+      } catch {
+        // silent
+      } finally {
+        setAnalysesLoading(false);
       }
-    } catch {
-      // silent
-    } finally {
-      setAnalysesLoading(false);
-    }
-  }, []);
+    },
+    [],
+  );
 
   const fetchCVs = useCallback(async () => {
     try {
@@ -281,9 +241,11 @@ export default function AppShell({
 
   const ensureInterviewQuestions = useCallback(async () => {
     if (hasLoadedInterviewQuestionsRef.current) return;
-    interviewQuestionsRequestRef.current ??= fetchInterviewQuestions().finally(() => {
-      interviewQuestionsRequestRef.current = null;
-    });
+    interviewQuestionsRequestRef.current ??= fetchInterviewQuestions().finally(
+      () => {
+        interviewQuestionsRequestRef.current = null;
+      },
+    );
     await interviewQuestionsRequestRef.current;
   }, [fetchInterviewQuestions]);
 
@@ -314,7 +276,13 @@ export default function AppShell({
     if (activeView === "questions") {
       return;
     }
-  }, [activeView, ensureAnalyses, ensureAllAnalyses, ensureCVs, ensureInterviewQuestions]);
+  }, [
+    activeView,
+    ensureAnalyses,
+    ensureAllAnalyses,
+    ensureCVs,
+    ensureInterviewQuestions,
+  ]);
 
   useEffect(() => {
     if (initialUserEmail) return;
@@ -400,36 +368,40 @@ export default function AppShell({
   }, []);
 
   // Fetch single analysis detail
-  const fetchAnalysisDetail = useCallback(async (id: string) => {
-    setLoadingDetail(true);
-    try {
-      const knownMode = analyses.find((analysis) => analysis.id === id)
-        ?.analysis_mode;
-      const endpoints =
-        knownMode === "job_match"
-          ? [`/api/job-match-analyses/${id}`]
-          : knownMode === "general"
-            ? [`/api/cv-analyses/${id}`]
-            : [`/api/cv-analyses/${id}`, `/api/job-match-analyses/${id}`];
+  const fetchAnalysisDetail = useCallback(
+    async (id: string) => {
+      setLoadingDetail(true);
+      try {
+        const knownMode = analyses.find(
+          (analysis) => analysis.id === id,
+        )?.analysis_mode;
+        const endpoints =
+          knownMode === "job_match"
+            ? [`/api/job-match-analyses/${id}`]
+            : knownMode === "general"
+              ? [`/api/cv-analyses/${id}`]
+              : [`/api/cv-analyses/${id}`, `/api/job-match-analyses/${id}`];
 
-      let data: FullAnalysis | null = null;
-      for (const endpoint of endpoints) {
-        const res = await fetch(endpoint);
-        if (res.ok) {
-          data = await res.json();
-          break;
+        let data: CVAnalysisDetail | null = null;
+        for (const endpoint of endpoints) {
+          const res = await fetch(endpoint);
+          if (res.ok) {
+            data = await res.json();
+            break;
+          }
         }
+        if (data) {
+          setActiveAnalysis(data);
+          setActiveView("analysis");
+        }
+      } catch {
+        // silent
+      } finally {
+        setLoadingDetail(false);
       }
-      if (data) {
-        setActiveAnalysis(data);
-        setActiveView("analysis");
-      }
-    } catch {
-      // silent
-    } finally {
-      setLoadingDetail(false);
-    }
-  }, [analyses]);
+    },
+    [analyses],
+  );
 
   useEffect(() => {
     const analysisId = searchParams.get("analysis");
@@ -489,7 +461,9 @@ export default function AppShell({
         if (cv) nextParams.set("cv", cv);
         if (offer) nextParams.set("offer", offer);
         const query = nextParams.toString();
-        router.replace(query ? `/interview-questions?${query}` : "/interview-questions");
+        router.replace(
+          query ? `/interview-questions?${query}` : "/interview-questions",
+        );
       });
     } else if (pathname.startsWith("/interview-questions")) {
       queueMicrotask(() => {
@@ -882,256 +856,187 @@ export default function AppShell({
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden min-w-0 min-h-0">
-          {activeView === "new" ? (
-            <div key="new-analysis" className="flex-1 flex flex-col min-h-0">
-              <CVAnalysisView
-                aiProvider={aiProvider}
-                aiApiKey={aiApiKey}
-                aiModel={aiModel}
-                hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
-                onOpenSettings={handleOpenSettings}
-                onOpenQuestions={(options) => handleOpenQuestions(options)}
-              />
-            </div>
-          ) : activeView === "cv-analyses" ? (
-            <div key="cv-analyses-list" className="flex-1 flex flex-col overflow-hidden min-h-0">
-              <CVAnalysisView
-                aiProvider={aiProvider}
-                aiApiKey={aiApiKey}
-                aiModel={aiModel}
-                hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
-                onOpenSettings={handleOpenSettings}
-                onOpenQuestions={(options) => handleOpenQuestions(options)}
-              />
-            </div>
-          ) : activeView === "job-analyses" ? (
-            <div key="job-analyses-list" className="flex-1 flex flex-col overflow-hidden min-h-0">
-              <JobMatchAnalysisView
-                aiProvider={aiProvider}
-                aiApiKey={aiApiKey}
-                aiModel={aiModel}
-                hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
-                onOpenSettings={handleOpenSettings}
-                onNewAnalysis={handleNewAnalysis}
-                onOpenQuestions={(options) => handleOpenQuestions(options)}
-                interviewQuestions={interviewQuestions}
-                onInterviewQuestionCreated={fetchInterviewQuestions}
-              />
-            </div>
-          ) : activeView === "cvs" ? (
-            <div key="cv-library" className="flex-1 flex flex-col overflow-hidden min-h-0">
-              <CVLibraryView
-                onOpenAnalysis={handleSelect}
-                onOpenEditor={handleOpenEditor}
-                onOpenQuestions={(cvId) => handleOpenQuestions({ cvId })}
-              />
-            </div>
-          ) : activeView === "templates" ? (
-            <div key="templates" className="flex-1 flex flex-col overflow-hidden min-h-0">
-              <TemplatesView
-                onOpenSettings={handleOpenSettings}
-                onOpenEditor={handleOpenEditor}
-                onOpenUpload={handleNewAnalysis}
-              />
-            </div>
-          ) : activeView === "editor" ? (
-            <div key="editor" className="flex-1 flex flex-col overflow-hidden min-h-0">
-              <CVEditorView
-                activeVersionId={activeEditorCvId}
-                onOpenTemplates={handleOpenTemplates}
-                onOpenSettings={handleOpenSettings}
-                onStartAnalysis={handleNewAnalysis}
-                onBackToLibrary={handleOpenCVs}
-              />
-            </div>
-          ) : activeView === "questions" ? (
-            <div key="interview-questions" className="flex-1 flex flex-col overflow-hidden min-h-0">
-              <InterviewQuestionsView
-                aiProvider={aiProvider}
-                aiApiKey={aiApiKey}
-                aiModel={aiModel}
-                hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
-                onOpenSettings={handleOpenSettings}
-                onOpenAnalysis={handleSelect}
-              />
-            </div>
-          ) : activeView === "journal" ? (
-            <div key="work-journal" className="flex-1 flex flex-col overflow-hidden min-h-0">
-              <WorkJournalView
-                aiProvider={aiProvider}
-                aiApiKey={aiApiKey}
-                aiModel={aiModel}
-                hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
-                onOpenSettings={handleOpenSettings}
-              />
-            </div>
-          ) : activeView === "objectives" ? (
-            <div key="objectives" className="flex-1 flex flex-col overflow-hidden min-h-0">
-              <ObjectivesView />
-            </div>
-          ) : activeView === "feedback-notes" ? (
-            <div key="feedback-notes" className="flex-1 flex flex-col overflow-hidden min-h-0">
-              <FeedbackNotesView
-                aiProvider={aiProvider}
-                aiApiKey={aiApiKey}
-                aiModel={aiModel}
-                hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
-                onOpenSettings={handleOpenSettings}
-              />
-            </div>
-          ) : activeView === "received-feedback" ? (
-            <div key="received-feedback" className="flex-1 flex flex-col overflow-hidden min-h-0">
-              <ReceivedFeedbackView />
-            </div>
-          ) : activeView === "activity-context" ? (
-            <div key="activity-context" className="flex-1 flex flex-col overflow-hidden min-h-0">
-              <ActivityContextView />
-            </div>
-          ) : activeView === "settings" ? (
-            <div key="settings" className="flex-1 flex flex-col overflow-hidden min-h-0">
-              <SettingsView
-                aiProvider={aiProvider}
-                aiApiKey={aiApiKey}
-                aiModel={aiModel}
-                onAISettingsChange={(settings) => {
-                  setAIProvider(settings.provider);
-                  setAIApiKey(settings.apiKey);
-                  setAIModel(settings.model);
-                }}
-                userEmail={userEmail}
-              />
-            </div>
-          ) : activeView === "admin" && isAdmin ? (
-            <div key="admin-observability" className="flex-1 flex flex-col overflow-hidden min-h-0">
-              <AdminObservabilityView userEmail={userEmail} />
-            </div>
-          ) : loadingDetail ? (
-            <div key="loading" className="flex-1 overflow-y-auto p-6">
-              <AnalysisDetailSkeleton />
-            </div>
-          ) : activeAnalysis ? (
-            <div key={activeAnalysis.id} className="flex-1 flex flex-col overflow-hidden min-h-0">
-              {/* Tabs - Extraction / Analysis */}
-              {activeAnalysis.ai_score !== null && (
-                <div className="shrink-0 flex items-center gap-1 px-4 sm:px-6 pt-4">
-                  <button
-                    onClick={() => setViewTab("extraction")}
-                    className={`
-                      flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
-                      ${
-                        viewTab === "extraction"
-                          ? "bg-white/[0.08] text-zinc-100 shadow-sm"
-                          : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]"
-                      }
-                    `}
-                  >
-                    <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    {analysisFlow("extractionTab")}
-                  </button>
-                  <button
-                    onClick={() => setViewTab("analysis")}
-                    className={`
-                      flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
-                      ${
-                        viewTab === "analysis"
-                          ? "bg-white/[0.08] text-zinc-100 shadow-sm"
-                          : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]"
-                      }
-                    `}
-                  >
-                    <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    {analysisFlow("analysisTab")}
-                  </button>
-                </div>
-              )}
-
-              {/* View Content */}
-              <AnimatePresence mode="wait">
-                {viewTab === "extraction" ? (
-                  <motion.div
-                    key="extraction-view"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 10 }}
-                    transition={{ duration: 0.15 }}
-                    className="flex-1 flex flex-col overflow-hidden min-h-0"
-                  >
-                    <ExtractionView
-                      analysis={activeAnalysis}
-                      onAIAnalysisComplete={handleAIComplete}
-                      aiProvider={aiProvider}
-                      aiApiKey={aiApiKey}
-                      aiModel={aiModel}
-                      hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
-                      onOpenSettings={handleOpenSettings}
-                    />
-                  </motion.div>
-                ) : activeAnalysis.ai_score !== null ? (
-                  <motion.div
-                    key="analysis-view"
-                    initial={{ opacity: 0, x: 10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -10 }}
-                    transition={{ duration: 0.15 }}
-                    className="flex-1 flex flex-col overflow-hidden min-h-0"
-                  >
-                    <AIAnalysisView
-                      analysis={{
-                        ai_score: activeAnalysis.ai_score,
-                        ai_feedback: activeAnalysis.ai_feedback!,
-                        ai_keywords: activeAnalysis.ai_keywords!,
-                        ai_improvements: activeAnalysis.ai_improvements!,
-                        ai_model: activeAnalysis.ai_model!,
-                        ai_analyzed_at: activeAnalysis.ai_analyzed_at!,
-                        analysis_mode: activeAnalysis.analysis_mode,
-                        job_description: activeAnalysis.job_description,
-                        job_url: activeAnalysis.job_url,
-                        offer_status: activeAnalysis.offer_status,
-                        offer_notes: activeAnalysis.offer_notes,
-                        offer_next_action: activeAnalysis.offer_next_action,
-                        offer_next_action_at:
-                          activeAnalysis.offer_next_action_at,
-                        ai_context: activeAnalysis.ai_context,
-                        job_key_data: activeAnalysis.job_key_data,
-                        job_keywords: activeAnalysis.job_keywords,
-                        cv_keywords: activeAnalysis.cv_keywords,
-                        matching_keywords: activeAnalysis.matching_keywords,
-                        missing_keywords: activeAnalysis.missing_keywords,
-                        id: activeAnalysis.id,
-                        cv_id: activeAnalysis.cv_id,
-                        cv: activeAnalysis.cv,
-                        title: activeAnalysis.title,
-                        filename: activeAnalysis.filename,
-                      }}
-                      aiProvider={aiProvider}
-                      aiApiKey={aiApiKey}
-                      aiModel={aiModel}
-                      hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
-                      onDelete={handleDelete}
-                      onUpdate={() => fetchAnalysisDetail(activeAnalysis.id)}
-                      interviewQuestions={interviewQuestions.filter(
-                        (question) =>
-                          question.analysisId === activeAnalysis.id,
-                      )}
-                      onInterviewQuestionCreated={fetchInterviewQuestions}
-                      onOpenQuestions={() =>
-                        handleOpenQuestions({
-                          cvId: activeAnalysis.cv_id,
-                          analysisId: activeAnalysis.id,
-                        })
-                      }
-                    />
-                  </motion.div>
-                ) : null}
-              </AnimatePresence>
-            </div>
-          ) : (
-            <div key="empty" className="flex-1 flex items-center justify-center">
-              <div className="text-center text-zinc-600">
-                <p>{analysisFlow("empty")}</p>
-              </div>
-            </div>
-          )}
+        {activeView === "new" ? (
+          <div key="new-analysis" className="flex-1 flex flex-col min-h-0">
+            <CVAnalysisView
+              aiProvider={aiProvider}
+              aiApiKey={aiApiKey}
+              aiModel={aiModel}
+              hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
+              onOpenSettings={handleOpenSettings}
+              onOpenQuestions={(options) => handleOpenQuestions(options)}
+            />
+          </div>
+        ) : activeView === "cv-analyses" ? (
+          <div
+            key="cv-analyses-list"
+            className="flex-1 flex flex-col overflow-hidden min-h-0"
+          >
+            <CVAnalysisView
+              aiProvider={aiProvider}
+              aiApiKey={aiApiKey}
+              aiModel={aiModel}
+              hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
+              onOpenSettings={handleOpenSettings}
+              onOpenQuestions={(options) => handleOpenQuestions(options)}
+            />
+          </div>
+        ) : activeView === "job-analyses" ? (
+          <div
+            key="job-analyses-list"
+            className="flex-1 flex flex-col overflow-hidden min-h-0"
+          >
+            <JobMatchAnalysisView
+              aiProvider={aiProvider}
+              aiApiKey={aiApiKey}
+              aiModel={aiModel}
+              hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
+              onOpenSettings={handleOpenSettings}
+              onNewAnalysis={handleNewAnalysis}
+              onOpenQuestions={(options) => handleOpenQuestions(options)}
+              interviewQuestions={interviewQuestions}
+              onInterviewQuestionCreated={fetchInterviewQuestions}
+            />
+          </div>
+        ) : activeView === "cvs" ? (
+          <div
+            key="cv-library"
+            className="flex-1 flex flex-col overflow-hidden min-h-0"
+          >
+            <CVLibraryView
+              onOpenAnalysis={handleSelect}
+              onOpenEditor={handleOpenEditor}
+              onOpenQuestions={(cvId) => handleOpenQuestions({ cvId })}
+            />
+          </div>
+        ) : activeView === "templates" ? (
+          <div
+            key="templates"
+            className="flex-1 flex flex-col overflow-hidden min-h-0"
+          >
+            <TemplatesView
+              onOpenSettings={handleOpenSettings}
+              onOpenEditor={handleOpenEditor}
+              onOpenUpload={handleNewAnalysis}
+            />
+          </div>
+        ) : activeView === "editor" ? (
+          <div
+            key="editor"
+            className="flex-1 flex flex-col overflow-hidden min-h-0"
+          >
+            <CVEditorView
+              activeVersionId={activeEditorCvId}
+              onOpenTemplates={handleOpenTemplates}
+              onOpenSettings={handleOpenSettings}
+              onStartAnalysis={handleNewAnalysis}
+              onBackToLibrary={handleOpenCVs}
+            />
+          </div>
+        ) : activeView === "questions" ? (
+          <div
+            key="interview-questions"
+            className="flex-1 flex flex-col overflow-hidden min-h-0"
+          >
+            <InterviewQuestionsView
+              aiProvider={aiProvider}
+              aiApiKey={aiApiKey}
+              aiModel={aiModel}
+              hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
+              onOpenSettings={handleOpenSettings}
+              onOpenAnalysis={handleSelect}
+            />
+          </div>
+        ) : activeView === "journal" ? (
+          <div
+            key="work-journal"
+            className="flex-1 flex flex-col overflow-hidden min-h-0"
+          >
+            <WorkJournalView
+              aiProvider={aiProvider}
+              aiApiKey={aiApiKey}
+              aiModel={aiModel}
+              hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
+              onOpenSettings={handleOpenSettings}
+            />
+          </div>
+        ) : activeView === "objectives" ? (
+          <div
+            key="objectives"
+            className="flex-1 flex flex-col overflow-hidden min-h-0"
+          >
+            <ObjectivesView />
+          </div>
+        ) : activeView === "feedback-notes" ? (
+          <div
+            key="feedback-notes"
+            className="flex-1 flex flex-col overflow-hidden min-h-0"
+          >
+            <FeedbackNotesView
+              aiProvider={aiProvider}
+              aiApiKey={aiApiKey}
+              aiModel={aiModel}
+              hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
+              onOpenSettings={handleOpenSettings}
+            />
+          </div>
+        ) : activeView === "received-feedback" ? (
+          <div
+            key="received-feedback"
+            className="flex-1 flex flex-col overflow-hidden min-h-0"
+          >
+            <ReceivedFeedbackView />
+          </div>
+        ) : activeView === "activity-context" ? (
+          <div
+            key="activity-context"
+            className="flex-1 flex flex-col overflow-hidden min-h-0"
+          >
+            <ActivityContextView />
+          </div>
+        ) : activeView === "settings" ? (
+          <div
+            key="settings"
+            className="flex-1 flex flex-col overflow-hidden min-h-0"
+          >
+            <SettingsView
+              aiProvider={aiProvider}
+              aiApiKey={aiApiKey}
+              aiModel={aiModel}
+              onAISettingsChange={(settings) => {
+                setAIProvider(settings.provider);
+                setAIApiKey(settings.apiKey);
+                setAIModel(settings.model);
+              }}
+              userEmail={userEmail}
+            />
+          </div>
+        ) : activeView === "admin" && isAdmin ? (
+          <div
+            key="admin-observability"
+            className="flex-1 flex flex-col overflow-hidden min-h-0"
+          >
+            <AdminObservabilityView userEmail={userEmail} />
+          </div>
+        ) : (
+          <CVAnalysisDetailView
+            analysis={activeAnalysis}
+            loading={loadingDetail}
+            activeTab={viewTab}
+            aiProvider={aiProvider}
+            aiApiKey={aiApiKey}
+            aiModel={aiModel}
+            hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
+            interviewQuestions={interviewQuestions}
+            onTabChange={setViewTab}
+            onAIAnalysisComplete={handleAIComplete}
+            onDelete={handleDelete}
+            onUpdate={fetchAnalysisDetail}
+            onInterviewQuestionCreated={fetchInterviewQuestions}
+            onOpenQuestions={handleOpenQuestions}
+            onOpenSettings={handleOpenSettings}
+          />
+        )}
       </main>
     </div>
   );
