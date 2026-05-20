@@ -46,9 +46,14 @@ export function FeedbackNoteListItem({
           {t(`status.${feedback.status}`)}
         </span>
       </div>
-      <p className="mt-1 text-xs text-zinc-600">
-        {t("updated", { date: formatDate(feedback.updatedAt) })}
-      </p>
+      <div className="mt-2 flex items-center justify-between gap-2">
+        <p className="text-[10px] text-zinc-500">
+          {t("updated", { date: formatDate(feedback.updatedAt) })}
+        </p>
+        <span className="truncate text-[10px] font-medium text-zinc-600">
+          {feedback.activityContextName}
+        </span>
+      </div>
     </button>
   );
 }

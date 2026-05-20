@@ -1,4 +1,4 @@
-import { UpdatePasswordForm } from "@/components/auth/update-password-form";
+import { UpdatePasswordForm } from "@/features/auth";
 import { createClient } from "@/lib/supabase/server";
 import { FileText } from "lucide-react";
 import { redirect } from "next/navigation";

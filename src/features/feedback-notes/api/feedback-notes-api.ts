@@ -44,7 +44,7 @@ export async function getFeedback(feedbackId: string) {
   return readJsonResponse<GetFeedbackResponse>(res, "Could not load feedback note.");
 }
 
-export async function createFeedback(input: { personName: string }) {
+export async function createFeedback(input: { personName: string; activityContextId: string }) {
   const res = await fetch("/api/feedback-notes/feedbacks", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -55,7 +55,7 @@ export async function createFeedback(input: { personName: string }) {
 
 export async function updateFeedback(
   feedbackId: string,
-  updates: { personName?: string; finalFeedback?: string | null }
+  updates: { personName?: string; finalFeedback?: string | null; activityContextId?: string }
 ) {
   const res = await fetch(`/api/feedback-notes/feedbacks/${feedbackId}`, {
     method: "PATCH",

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createTestUser } from "@/modules/test-helpers/setup";
 import {
+  createDefaultContext,
   createEntryFixture,
   createFeedbackFixture,
   makeFeedbackDeps,
@@ -11,7 +12,8 @@ describe("DeleteFeedbackUseCase", () => {
   it("hard deletes feedback and cascades entries", async () => {
     const user = await createTestUser("feedback-delete");
     const { feedbackRepo, entryRepo, tracker } = makeFeedbackDeps();
-    const feedback = await createFeedbackFixture(user.id);
+    const context = await createDefaultContext(user.id);
+    const feedback = await createFeedbackFixture(user.id, context.id);
     const entry = await createEntryFixture(user.id, feedback.id);
 
     await new DeleteFeedbackUseCase({ feedbackRepo, tracker }).execute(

@@ -13,11 +13,13 @@ export interface HttpValidationError {
 export interface CreateFeedbackHttpInput {
   person_name: string;
   final_feedback: string | null;
+  activity_context_id: string;
 }
 
 export interface UpdateFeedbackHttpInput {
   person_name?: string;
   final_feedback?: string | null;
+  activity_context_id?: string;
 }
 
 export interface FeedbackEntryContentHttpInput {
@@ -64,13 +66,17 @@ export function parseCreateFeedbackRequest(
 ): Result<CreateFeedbackHttpInput, HttpValidationError> {
   if (!isRecord(body)) return validationError("Request body must be a JSON object");
   const person_name = normalizeRequiredText(body.personName ?? body.person_name);
+  const activity_context_id = normalizeRequiredText(
+    body.activityContextId ?? body.activity_context_id
+  );
   const rawFinalFeedback = body.finalFeedback ?? body.final_feedback;
   const final_feedback =
     rawFinalFeedback === undefined ? null : normalizeOptionalText(rawFinalFeedback);
-  if (!person_name || final_feedback === undefined) {
+
+  if (!person_name || !activity_context_id || final_feedback === undefined) {
     return validationError("Invalid feedback payload");
   }
-  return { ok: true, value: { person_name, final_feedback } };
+  return { ok: true, value: { person_name, final_feedback, activity_context_id } };
 }
 
 export function parseUpdateFeedbackRequest(
@@ -87,6 +93,11 @@ export function parseUpdateFeedbackRequest(
     const finalFeedback = normalizeOptionalText(body.finalFeedback ?? body.final_feedback);
     if (finalFeedback === undefined) return validationError("Invalid final feedback");
     updates.final_feedback = finalFeedback;
+  }
+  if (body.activityContextId !== undefined || body.activity_context_id !== undefined) {
+    const contextId = normalizeRequiredText(body.activityContextId ?? body.activity_context_id);
+    if (!contextId) return validationError("Context ID is required");
+    updates.activity_context_id = contextId;
   }
   return { ok: true, value: updates };
 }

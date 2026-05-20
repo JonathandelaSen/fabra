@@ -48,7 +48,11 @@ export function useFeedbackNotesMutations(status: FeedbackFilter) {
         updates,
       }: {
         feedbackId: string;
-        updates: { personName?: string; finalFeedback?: string | null };
+        updates: {
+          personName?: string;
+          finalFeedback?: string | null;
+          activityContextId?: string;
+        };
       }) => updateFeedback(feedbackId, updates),
       onSuccess: async (feedback) => {
         queryClient.setQueryData(feedbackNotesQueryKeys.detail(feedback.id), feedback);

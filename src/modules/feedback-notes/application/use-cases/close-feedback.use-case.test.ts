@@ -1,13 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { createTestUser } from "@/modules/test-helpers/setup";
-import { createFeedbackFixture, makeFeedbackDeps } from "../../test-helpers";
+import { createDefaultContext, createFeedbackFixture, makeFeedbackDeps } from "../../test-helpers";
 import { CloseFeedbackUseCase } from "./close-feedback.use-case";
 
 describe("CloseFeedbackUseCase", () => {
   it("closes feedback and records observability", async () => {
     const user = await createTestUser("feedback-close");
     const { feedbackRepo, tracker } = makeFeedbackDeps();
-    const feedback = await createFeedbackFixture(user.id);
+    const context = await createDefaultContext(user.id);
+    const feedback = await createFeedbackFixture(user.id, context.id);
 
     const closed = await new CloseFeedbackUseCase({
       feedbackRepo,

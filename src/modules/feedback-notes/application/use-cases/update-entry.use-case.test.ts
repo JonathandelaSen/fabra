@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createTestUser } from "@/modules/test-helpers/setup";
 import {
+  createDefaultContext,
   createEntryFixture,
   createFeedbackFixture,
   makeFeedbackDeps,
@@ -11,7 +12,8 @@ describe("UpdateEntryUseCase", () => {
   it("updates an entry for active feedback", async () => {
     const user = await createTestUser("feedback-update-entry");
     const { feedbackRepo, entryRepo, tracker } = makeFeedbackDeps();
-    const feedback = await createFeedbackFixture(user.id);
+    const context = await createDefaultContext(user.id);
+    const feedback = await createFeedbackFixture(user.id, context.id);
     const entry = await createEntryFixture(user.id, feedback.id);
 
     const updated = await new UpdateEntryUseCase({

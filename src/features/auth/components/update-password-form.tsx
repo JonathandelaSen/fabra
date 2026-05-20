@@ -1,29 +1,20 @@
 "use client";
 
-import { useActionState } from "react";
 import { useTranslations } from "next-intl";
 import { AlertCircle, KeyRound, Loader2 } from "lucide-react";
-import {
-  updatePasswordFromRecovery,
-  type AuthFormState,
-} from "@/app/login/actions";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import { InterfaceLanguageSelect } from "@/components/shared/interface-language-select";
-
-const INITIAL_STATE: AuthFormState = {};
+import { useUpdatePasswordFormState } from "../hooks/use-update-password-form-state";
 
 export function UpdatePasswordForm() {
   const t = useTranslations("auth.updatePassword");
   const auth = useTranslations("auth");
   const { locale } = useInterfaceLanguage();
-  const [state, action, pending] = useActionState(
-    updatePasswordFromRecovery,
-    INITIAL_STATE
-  );
+  const { state, action, pending } = useUpdatePasswordFormState();
 
   return (
     <div className="rounded-2xl border border-white/[0.07] bg-[#0d0d14]/90 p-5 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-6">

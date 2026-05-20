@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createTestUser } from "@/modules/test-helpers/setup";
-import { createFeedbackFixture, makeFeedbackDeps } from "../../test-helpers";
+import { createDefaultContext, createFeedbackFixture, makeFeedbackDeps } from "../../test-helpers";
 import { FeedbackClosedError } from "../../domain/errors/feedback-closed.error";
 import { CreateEntryUseCase } from "./create-entry.use-case";
 
@@ -8,7 +8,8 @@ describe("CreateEntryUseCase", () => {
   it("creates an entry for active feedback", async () => {
     const user = await createTestUser("feedback-create-entry");
     const { feedbackRepo, entryRepo, tracker } = makeFeedbackDeps();
-    const feedback = await createFeedbackFixture(user.id);
+    const context = await createDefaultContext(user.id);
+    const feedback = await createFeedbackFixture(user.id, context.id);
 
     const entry = await new CreateEntryUseCase({
       feedbackRepo,
@@ -32,7 +33,8 @@ describe("CreateEntryUseCase", () => {
   it("rejects entry creation for closed feedback", async () => {
     const user = await createTestUser("feedback-create-entry-closed");
     const { feedbackRepo, entryRepo, tracker } = makeFeedbackDeps();
-    const feedback = await createFeedbackFixture(user.id);
+    const context = await createDefaultContext(user.id);
+    const feedback = await createFeedbackFixture(user.id, context.id);
     feedback.close(new Date().toISOString());
     await feedbackRepo.save(feedback);
 

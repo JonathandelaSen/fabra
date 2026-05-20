@@ -1,18 +1,18 @@
 import { describe, expect, it } from "vitest";
 import { createTestUser } from "@/modules/test-helpers/setup";
-import { createFeedbackFixture } from "../../test-helpers";
+import { createDefaultContext, createFeedbackFixture } from "../../test-helpers";
 import { FeedbackEntry } from "../../domain/entities/feedback-entry.entity";
 import { SupabaseFeedbackEntryRepository } from "./supabase-feedback-entry.repository";
 import { getSupabaseClient } from "@/modules/test-helpers/setup";
 
 const repo = new SupabaseFeedbackEntryRepository();
-
 repo.bindRequest(getSupabaseClient());
 
 describe("SupabaseFeedbackEntryRepository", () => {
   it("persists entries and lists them chronologically for a feedback", async () => {
     const user = await createTestUser("feedback-entry-repo-list");
-    const feedback = await createFeedbackFixture(user.id);
+    const context = await createDefaultContext(user.id);
+    const feedback = await createFeedbackFixture(user.id, context.id);
     const first = await repo.save(
       FeedbackEntry.create({
         id: crypto.randomUUID(),
@@ -41,7 +41,8 @@ describe("SupabaseFeedbackEntryRepository", () => {
 
   it("updates and deletes entries", async () => {
     const user = await createTestUser("feedback-entry-repo-update");
-    const feedback = await createFeedbackFixture(user.id);
+    const context = await createDefaultContext(user.id);
+    const feedback = await createFeedbackFixture(user.id, context.id);
     const entry = await repo.save(
       FeedbackEntry.create({
         id: crypto.randomUUID(),

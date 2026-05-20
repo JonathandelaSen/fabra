@@ -12,6 +12,7 @@ import { CloseFeedbackUseCase } from "./application/use-cases/close-feedback.use
 import { ReopenFeedbackUseCase } from "./application/use-cases/reopen-feedback.use-case";
 import { UpdateEntryUseCase } from "./application/use-cases/update-entry.use-case";
 import { UpdateFeedbackUseCase } from "./application/use-cases/update-feedback.use-case";
+import { GetFeedbackUseCase } from "./application/use-cases/get-feedback.use-case";
 import { SupabaseFeedbackEntryRepository } from "./infrastructure/repositories/supabase-feedback-entry.repository";
 import { SupabaseFeedbackRepository } from "./infrastructure/repositories/supabase-feedback.repository";
 import { GeminiFeedbackAIServiceFactory } from "./infrastructure/services/gemini-feedback-ai.service";
@@ -29,6 +30,7 @@ const aiFactory = new ProviderFeedbackAIServiceFactory({
 function createUseCases() {
   return {
     listFeedbacks: new ListFeedbacksUseCase({ feedbackRepo }),
+    getFeedback: new GetFeedbackUseCase({ feedbackRepo }),
     createFeedback: new CreateFeedbackUseCase({ feedbackRepo, tracker }),
     updateFeedback: new UpdateFeedbackUseCase({ feedbackRepo, tracker }),
     closeFeedback: new CloseFeedbackUseCase({ feedbackRepo, tracker }),

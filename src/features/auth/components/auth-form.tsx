@@ -1,6 +1,5 @@
 "use client";
 
-import { FormEvent, useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   AlertCircle,
@@ -13,21 +12,13 @@ import {
   MailCheck,
   UserPlus,
 } from "lucide-react";
-import {
-  resendConfirmationEmail,
-  signIn,
-  signUp,
-  type AuthFormState,
-} from "@/app/login/actions";
-import { createClient } from "@/lib/supabase/client";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import { InterfaceLanguageSelect } from "@/components/shared/interface-language-select";
-
-const INITIAL_STATE: AuthFormState = {};
+import { useAuthFormState } from "../hooks/use-auth-form-state";
 
 interface AuthFormProps {
   initialError?: string;
@@ -38,35 +29,25 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
   const t = useTranslations("auth");
   const common = useTranslations("common");
   const { locale } = useInterfaceLanguage();
-  const [mode, setMode] = useState<"login" | "signup" | "recover">("login");
-  const [loginState, loginAction, loginPending] = useActionState(
-    signIn,
-    INITIAL_STATE
-  );
-  const [signupState, signupAction, signupPending] = useActionState(
-    signUp,
-    INITIAL_STATE
-  );
-  const [resendState, resendAction, resendPending] = useActionState(
-    resendConfirmationEmail,
-    INITIAL_STATE
-  );
-  const [recoverState, setRecoverState] = useState<AuthFormState>(INITIAL_STATE);
-  const [recoverPending, setRecoverPending] = useState(false);
-  const [emailValue, setEmailValue] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-
-  const isSignup = mode === "signup";
-  const isRecover = mode === "recover";
-  const state = isRecover ? recoverState : isSignup ? signupState : loginState;
-  const pending = isRecover ? recoverPending : isSignup ? signupPending : loginPending;
-  const visibleError = resendState.message
-    ? initialError
-    : resendState.error || state.error || initialError;
-  const visibleMessage = resendState.message || state.message || initialMessage;
-  const resendEmail = state.email || resendState.email || emailValue.trim();
-  const showResendConfirmation =
-    !isRecover && (state.canResendConfirmation || resendState.canResendConfirmation);
+  const {
+    emailValue,
+    handleRecoverSubmit,
+    isRecover,
+    isSignup,
+    loginAction,
+    pending,
+    resendAction,
+    resendEmail,
+    resendPending,
+    setEmailValue,
+    setMode,
+    setShowPassword,
+    showPassword,
+    showResendConfirmation,
+    signupAction,
+    visibleError,
+    visibleMessage,
+  } = useAuthFormState(initialError, initialMessage);
   const title = isRecover
     ? t("recover.title")
     : isSignup
@@ -77,40 +58,6 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
     : isSignup
       ? t("signup.description")
       : t("login.description");
-
-  async function handleRecoverSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const formData = new FormData(event.currentTarget);
-    const email = String(formData.get("email") || "").trim();
-
-    if (!email) {
-      setRecoverState({ error: t("recover.missingEmail") });
-      return;
-    }
-
-    setRecoverPending(true);
-    setRecoverState({});
-
-    const supabase = createClient();
-    const redirectTo = `${window.location.origin}/auth/callback?next=/account/update-password`;
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo,
-    });
-
-    setRecoverPending(false);
-
-    if (error) {
-      setRecoverState({
-        error: t("recover.sendError"),
-      });
-      return;
-    }
-
-    setRecoverState({
-      message: t("recover.sent"),
-    });
-  }
 
   return (
     <div className="rounded-2xl border border-white/[0.07] bg-[#0d0d14]/90 backdrop-blur-xl p-5 shadow-2xl shadow-black/30 sm:p-6">
@@ -166,7 +113,7 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
             value={emailValue}
             onChange={(event) => setEmailValue(event.target.value)}
             autoComplete="email"
-            placeholder="tu@email.com"
+            placeholder={t("fields.emailPlaceholder")}
             required
             className="h-11 bg-white/[0.04] border-white/[0.08]"
           />

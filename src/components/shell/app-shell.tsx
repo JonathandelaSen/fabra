@@ -23,7 +23,6 @@ import { JobMatchAnalysisView } from "@/features/job-match-analysis";
 import { SettingsView } from "@/features/settings";
 import { createClient } from "@/lib/supabase/client";
 import { normalizeAnalysisSummaries } from "@/components/shell/analysis-summary-normalizer";
-import type { CVDocumentSummaryResponse as CVSummary } from "@/modules/cv-library/client";
 import type { ListCVDocumentsResponse } from "@/app/api/cvs/responses";
 import type { InterviewQuestionResponse as InterviewQuestionSummary } from "@/app/api/interview-questions/responses";
 import {
@@ -68,6 +67,24 @@ type AppView =
   | "feedback-notes"
   | "settings"
   | "admin";
+
+type CVSummary = {
+  id: string;
+  name: string;
+  filename: string | null;
+  file_size: number | null;
+  type: ListCVDocumentsResponse[number]["type"];
+  source_cv_id: string | null;
+  template_id: string | null;
+  template_locale: string | null;
+  profile: ListCVDocumentsResponse[number]["profile"];
+  public_enabled: boolean;
+  public_id: string | null;
+  public_slug: string | null;
+  public_published_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
 
 function toLegacyCVSummary(cv: ListCVDocumentsResponse[number]): CVSummary {
   return {

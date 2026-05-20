@@ -1,5 +1,4 @@
-import { AuthForm } from "@/components/auth/auth-form";
-import { AuthHeroTitle } from "@/components/auth/auth-hero-title";
+import { AuthForm, AuthHeroTitle } from "@/features/auth";
 import { getMessages } from "@/i18n/messages";
 import { resolveInterfaceLanguage } from "@/i18n/server";
 import { createClient } from "@/lib/supabase/server";

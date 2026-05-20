@@ -8,6 +8,7 @@ export class FeedbackFixture {
   ): CreateFeedbackInput {
     return {
       user_id: overrides.user_id ?? faker.string.uuid(),
+      activity_context_id: overrides.activity_context_id ?? faker.string.uuid(),
       person_name: `${faker.person.fullName()} (${faker.person.jobTitle()})`,
       ...overrides,
     };

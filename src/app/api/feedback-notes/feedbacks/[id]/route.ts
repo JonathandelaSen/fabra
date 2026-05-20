@@ -23,9 +23,7 @@ export async function GET(
     const { supabase, user } = authContext;
     const { id } = await params;
     feedbackNotesModule.bindRequest(supabase);
-    const feedbacks = await feedbackNotesModule.listFeedbacks.execute(user.id, "all");
-    const feedback = feedbacks.find((item) => item.id === id);
-    if (!feedback) notFound("Feedback not found");
+    const feedback = await feedbackNotesModule.getFeedback.execute(user.id, id);
     const entries = await feedbackNotesModule.listEntries.execute(user.id, id);
     return ok(
       toFeedbackResponse(presentFeedback(feedback, entries.length)) satisfies GetFeedbackResponse

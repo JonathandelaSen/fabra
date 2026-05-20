@@ -7,6 +7,7 @@ import { recordFeedbackEvent } from "./tracking";
 export interface UpdateFeedbackInput {
   person_name?: string;
   final_feedback?: string | null;
+  activity_context_id?: string;
 }
 
 export class UpdateFeedbackUseCase {
@@ -34,6 +35,10 @@ export class UpdateFeedbackUseCase {
     if (input.final_feedback !== undefined) {
       feedback.updateFinalFeedback(input.final_feedback);
       fields.push("final_feedback");
+    }
+    if (input.activity_context_id !== undefined) {
+      feedback.updateActivityContext(input.activity_context_id);
+      fields.push("activity_context_id");
     }
 
     const saved = await this.deps.feedbackRepo.save(feedback);

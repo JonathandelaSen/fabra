@@ -5,6 +5,7 @@ import { recordFeedbackEvent } from "./tracking";
 
 export interface CreateFeedbackInput {
   user_id: string;
+  activity_context_id: string;
   person_name: string;
   final_feedback?: string | null;
 }
@@ -22,6 +23,7 @@ export class CreateFeedbackUseCase {
       Feedback.create({
         id: crypto.randomUUID(),
         user_id: input.user_id,
+        activity_context_id: input.activity_context_id,
         person_name: input.person_name,
         final_feedback: input.final_feedback,
         now: new Date().toISOString(),

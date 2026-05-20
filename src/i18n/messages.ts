@@ -65,6 +65,7 @@ export const messages = {
       },
       fields: {
         email: "Email",
+        emailPlaceholder: "you@example.com",
         password: "Password",
         passwordPlaceholder: "Minimum 6 characters",
       },
@@ -668,6 +669,7 @@ export const messages = {
       },
       fields: {
         personName: "Person name",
+        activityContext: "Context",
       },
       actions: {
         refresh: "Refresh",
@@ -675,6 +677,7 @@ export const messages = {
         reopen: "Reopen",
         close: "Close",
         delete: "Delete",
+        manageContexts: "Manage contexts",
       },
       entries: {
         title: "Entries",
@@ -1043,6 +1046,7 @@ export const messages = {
       },
       fields: {
         email: "Email",
+        emailPlaceholder: "tu@email.com",
         password: "Contraseña",
         passwordPlaceholder: "Mínimo 6 caracteres",
       },
@@ -1646,6 +1650,7 @@ export const messages = {
       },
       fields: {
         personName: "Nombre de la persona",
+        activityContext: "Contexto",
       },
       actions: {
         refresh: "Actualizar",
@@ -1653,6 +1658,7 @@ export const messages = {
         reopen: "Reabrir",
         close: "Cerrar",
         delete: "Eliminar",
+        manageContexts: "Gestionar contextos",
       },
       entries: {
         title: "Entradas",

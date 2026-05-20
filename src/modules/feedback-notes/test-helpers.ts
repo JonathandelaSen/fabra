@@ -2,6 +2,7 @@ import {
   createMockTracker,
   getSupabaseClient,
 } from "@/modules/test-helpers/setup";
+import { activityContextsModule } from "@/lib/container";
 import { SupabaseFeedbackEntryRepository } from "./infrastructure/repositories/supabase-feedback-entry.repository";
 import { SupabaseFeedbackRepository } from "./infrastructure/repositories/supabase-feedback.repository";
 
@@ -15,7 +16,21 @@ export function makeFeedbackDeps() {
   return { feedbackRepo, entryRepo, tracker };
 }
 
-export async function createFeedbackFixture(userId: string, personName = "Jon") {
+export async function createDefaultContext(userId: string) {
+  const supabase = getSupabaseClient();
+  activityContextsModule.bindRequest(supabase);
+  return activityContextsModule.createActivityContext.execute({
+    userId,
+    type: "project",
+    name: "General",
+  });
+}
+
+export async function createFeedbackFixture(
+  userId: string,
+  activityContextId: string,
+  personName = "Jon"
+) {
   const { feedbackRepo } = makeFeedbackDeps();
   return feedbackRepo.save(
     (
@@ -23,6 +38,7 @@ export async function createFeedbackFixture(userId: string, personName = "Jon") 
     ).Feedback.create({
       id: crypto.randomUUID(),
       user_id: userId,
+      activity_context_id: activityContextId,
       person_name: personName,
       now: new Date().toISOString(),
     })

@@ -11,6 +11,7 @@ import {
   useFeedbackNotesList,
 } from "../hooks/use-feedback-notes-queries";
 import { useFeedbackNotesRouteState } from "../hooks/use-feedback-notes-route-state";
+import { useActivityContexts } from "@/features/activity-context";
 import { FeedbackNotesDetailSkeleton } from "./feedback-notes-skeleton";
 import { FeedbackNotesDetail } from "./feedback-notes-detail";
 import { FeedbackNotesSidebar } from "./feedback-notes-sidebar";
@@ -43,6 +44,7 @@ export default function FeedbackNotesView({
   const listQuery = useFeedbackNotesList(status);
   const detailQuery = useFeedbackNoteDetail(feedbackId);
   const entriesQuery = useFeedbackEntries(feedbackId);
+  const contextsQuery = useActivityContexts();
   const mutations = useFeedbackNotesMutations(status);
   const [error, setError] = useState<string | null>(null);
   const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
@@ -93,6 +95,7 @@ export default function FeedbackNotesView({
     <div className="flex h-full min-h-0 bg-[#09090f] text-zinc-100">
       <FeedbackNotesSidebar
         feedbacks={feedbacks}
+        contexts={contextsQuery.data?.contexts ?? []}
         selectedId={selectedIdInCurrentList}
         status={status}
         isLoading={isInitialListLoading}
@@ -100,9 +103,12 @@ export default function FeedbackNotesView({
         onStatusChange={setStatus}
         onSelect={selectFeedback}
         onRefresh={() => void mutations.refresh()}
-        onCreate={(personName) =>
+        onCreate={(personName, activityContextId) =>
           void runMutation(async () => {
-            const feedback = await mutations.createFeedback.mutateAsync({ personName });
+            const feedback = await mutations.createFeedback.mutateAsync({
+              personName,
+              activityContextId,
+            });
             replaceFeedback(feedback.id);
           })
         }
@@ -125,6 +131,7 @@ export default function FeedbackNotesView({
           <FeedbackNotesDetail
             feedback={selectedFeedback}
             entries={entries}
+            contexts={contextsQuery.data?.contexts ?? []}
             deletingEntryIds={deletingEntryIds}
             isSaving={isSaving}
             isGenerating={mutations.generateFinalFeedback.isPending}

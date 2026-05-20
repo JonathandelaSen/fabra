@@ -10,6 +10,8 @@ export type FeedbackStatus = "active" | "closed";
 export interface FeedbackPrimitives {
   id: string;
   user_id: string;
+  activity_context_id: string;
+  activity_context_name?: string;
   person_name: string;
   status: FeedbackStatus;
   final_feedback: string | null;
@@ -21,6 +23,7 @@ export interface FeedbackPrimitives {
 export interface CreateFeedbackParams {
   id: string;
   user_id: string;
+  activity_context_id: string;
   person_name: string;
   final_feedback?: string | null;
   now: string;
@@ -35,6 +38,7 @@ export class Feedback extends AggregateRoot {
     const feedback = new Feedback({
       id: params.id,
       user_id: params.user_id,
+      activity_context_id: params.activity_context_id,
       person_name: params.person_name.trim(),
       status: "active",
       final_feedback: normalizeOptionalText(params.final_feedback),
@@ -58,12 +62,23 @@ export class Feedback extends AggregateRoot {
     return this.primitives.user_id;
   }
 
+  get activityContextId(): string {
+    return this.primitives.activity_context_id;
+  }
+
   get status(): FeedbackStatus {
     return this.primitives.status;
   }
 
   isActive(): boolean {
     return this.primitives.status === "active";
+  }
+
+  updateActivityContext(activityContextId: string): void {
+    this.primitives.activity_context_id = activityContextId;
+    this.recordDomainEvent(
+      new FeedbackUpdatedEvent(this.id, ["activity_context_id"])
+    );
   }
 
   updatePersonName(personName: string): void {

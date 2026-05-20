@@ -8,6 +8,7 @@ describe("Feedback", () => {
     const feedback = Feedback.create({
       id: "fb-1",
       user_id: "user-1",
+      activity_context_id: "ctx-1",
       person_name: " Jon ",
       now,
     });
@@ -15,6 +16,7 @@ describe("Feedback", () => {
     expect(feedback.toPrimitives()).toMatchObject({
       id: "fb-1",
       user_id: "user-1",
+      activity_context_id: "ctx-1",
       person_name: "Jon",
       status: "active",
       final_feedback: null,
@@ -25,10 +27,11 @@ describe("Feedback", () => {
     ]);
   });
 
-  it("closes and reopens feedback", () => {
+  it("closes, reopens and updates context", () => {
     const feedback = Feedback.fromPrimitives({
       id: "fb-1",
       user_id: "user-1",
+      activity_context_id: "ctx-1",
       person_name: "Jon",
       status: "active",
       final_feedback: null,
@@ -48,5 +51,8 @@ describe("Feedback", () => {
       status: "active",
       closed_at: null,
     });
+
+    feedback.updateActivityContext("ctx-2");
+    expect(feedback.toPrimitives().activity_context_id).toBe("ctx-2");
   });
 });

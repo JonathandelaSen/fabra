@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { createTestUser } from "@/modules/test-helpers/setup";
 import {
+  createDefaultContext,
   createEntryFixture,
   createFeedbackFixture,
   makeFeedbackDeps,
@@ -12,7 +13,8 @@ describe("GenerateFinalFeedbackUseCase", () => {
   it("generates and stores final feedback from all entries", async () => {
     const user = await createTestUser("feedback-generate");
     const { feedbackRepo, entryRepo, tracker } = makeFeedbackDeps();
-    const feedback = await createFeedbackFixture(user.id, "Jon");
+    const context = await createDefaultContext(user.id);
+    const feedback = await createFeedbackFixture(user.id, context.id, "Jon");
     await createEntryFixture(user.id, feedback.id, "First note");
     await createEntryFixture(user.id, feedback.id, "Second note");
     const aiService = {
@@ -42,7 +44,8 @@ describe("GenerateFinalFeedbackUseCase", () => {
   it("requires at least one entry", async () => {
     const user = await createTestUser("feedback-generate-empty");
     const { feedbackRepo, entryRepo, tracker } = makeFeedbackDeps();
-    const feedback = await createFeedbackFixture(user.id);
+    const context = await createDefaultContext(user.id);
+    const feedback = await createFeedbackFixture(user.id, context.id);
 
     await expect(
       new GenerateFinalFeedbackUseCase({
