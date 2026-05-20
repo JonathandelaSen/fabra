@@ -1,0 +1,179 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+import {
+  AlertTriangle,
+  Check,
+  Eye,
+  EyeOff,
+  KeyRound,
+  Save,
+  ShieldCheck,
+  Trash2,
+} from "lucide-react";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
+import { useAISettingsDraft } from "../hooks/use-ai-settings-draft";
+
+interface AISettingsPanelProps {
+  aiProvider: StoredAIProvider;
+  aiApiKey: string;
+  aiModel: string;
+  onAISettingsChange: (settings: {
+    provider: StoredAIProvider;
+    apiKey: string;
+    model: string;
+  }) => void;
+}
+
+export function AISettingsPanel({
+  aiProvider,
+  aiApiKey,
+  aiModel,
+  onAISettingsChange,
+}: AISettingsPanelProps) {
+  const t = useTranslations("settings.apiKey");
+  const common = useTranslations("common");
+  const {
+    draftProvider,
+    setDraftProvider,
+    draftModel,
+    setDraftModel,
+    inputValue,
+    setDraftValue,
+    showKey,
+    setShowKey,
+    saved,
+    keySummary,
+    save,
+    remove,
+  } = useAISettingsDraft({
+    aiProvider,
+    aiApiKey,
+    aiModel,
+    onAISettingsChange,
+    notConfiguredLabel: common("states.notConfigured"),
+    configuredLabel: common("states.configured"),
+  });
+
+  return (
+    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-zinc-100">
+          <ShieldCheck className="h-5 w-5 text-emerald-400" />
+          {t("title")}
+        </h2>
+        <div className="w-fit rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-2 text-left sm:text-right">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-600">
+            {t("status")}
+          </p>
+          <p className="mt-1 text-sm font-medium text-zinc-200">
+            {keySummary}
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-5">
+        <div className="rounded-xl border border-amber-500/25 bg-amber-500/[0.08] p-4">
+          <div className="flex gap-3">
+            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" />
+            <div>
+              <h3 className="text-sm font-semibold text-amber-100">
+                {t("warningTitle")}
+              </h3>
+              <p className="mt-1 text-sm leading-6 text-amber-100/75">
+                {t("warningBody")}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-white/[0.06] bg-[#0a0a12] p-4">
+          <p className="mb-4 flex items-center gap-2 text-sm font-medium text-zinc-200">
+            <KeyRound className="h-4 w-4 text-indigo-300" />
+            {t("fieldLabel")}
+          </p>
+          <div className="mb-3 grid gap-3 sm:grid-cols-[180px_1fr]">
+            <select
+              value={draftProvider}
+              onChange={(event) =>
+                setDraftProvider(event.target.value as StoredAIProvider)
+              }
+              className="h-11 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 text-sm text-zinc-200 outline-none transition-all focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
+            >
+              <option value="gemini">Gemini</option>
+              {process.env.NODE_ENV !== "production" && (
+                <option value="mock">Mock</option>
+              )}
+            </select>
+            <input
+              value={draftModel}
+              onChange={(event) => setDraftModel(event.target.value)}
+              placeholder="gemini-3.1-pro-preview"
+              className="h-11 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 text-sm text-zinc-200 outline-none transition-all placeholder:text-zinc-600 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
+              autoComplete="off"
+              spellCheck={false}
+            />
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="relative flex-1">
+              <input
+                type={showKey ? "text" : "password"}
+                value={inputValue}
+                onChange={(event) => {
+                  setDraftValue(event.target.value);
+                }}
+                placeholder={t("placeholder")}
+                className="h-11 w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 pr-12 text-sm text-zinc-200 outline-none transition-all placeholder:text-zinc-600 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
+                autoComplete="off"
+                spellCheck={false}
+              />
+              <button
+                type="button"
+                onClick={() => setShowKey((value) => !value)}
+                className="absolute inset-y-0 right-2 flex w-9 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-white/[0.06] hover:text-zinc-200"
+                title={
+                  showKey
+                    ? common("actions.hideKey")
+                    : common("actions.showKey")
+                }
+              >
+                {showKey ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={save}
+              disabled={draftProvider !== "mock" && !inputValue.trim()}
+              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 text-sm font-semibold text-white shadow-lg shadow-indigo-900/30 transition-all hover:from-indigo-500 hover:to-violet-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {saved ? (
+                <>
+                  <Check className="h-4 w-4" />
+                  {common("actions.saved")}
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4" />
+                  {common("actions.save")}
+                </>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={remove}
+              disabled={!aiApiKey && !inputValue}
+              className="flex h-11 items-center justify-center gap-2 rounded-xl border border-rose-500/20 bg-rose-500/10 px-5 text-sm font-semibold text-rose-300 transition-all hover:bg-rose-500/15 hover:text-rose-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              <Trash2 className="h-4 w-4" />
+              {common("actions.delete")}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

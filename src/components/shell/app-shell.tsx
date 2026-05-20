@@ -18,7 +18,7 @@ import { AdminObservabilityView } from "@/features/admin-observability";
 import ExtractionView from "@/features/cv-analysis/components/extraction-view";
 import AIAnalysisView from "@/features/cv-analysis/components/analysis-view";
 import { JobMatchAnalysisView } from "@/features/job-match-analysis";
-import SettingsView from "@/components/settings/settings-view";
+import { SettingsView } from "@/features/settings";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Sparkles } from "lucide-react";
 import { AnalysisDetailSkeleton } from "@/components/shared/skeletons";
@@ -565,6 +565,10 @@ export default function AppShell({
       });
     } else if (view === "settings") {
       queueMicrotask(() => {
+        router.replace("/settings");
+      });
+    } else if (pathname === "/settings") {
+      queueMicrotask(() => {
         setActiveView("settings");
         setActiveAnalysisId(null);
         setActiveAnalysis(null);
@@ -773,7 +777,7 @@ export default function AppShell({
     setActiveView("settings");
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
-    window.history.replaceState(null, "", "/?view=settings");
+    router.push("/settings");
   };
 
   const handleOpenAdmin = () => {

@@ -17,8 +17,8 @@ test("user can create a job match analysis and view the results", async ({
   const user = await createConfirmedUser("job-match");
   await loginViaUI(page, user);
 
-  // Set API key via UI to ensure proper state sync
   await page.getByRole("button", { name: messages.en.navigation.settings }).click();
+  await expect(page).toHaveURL(/\/settings$/);
   await page.getByPlaceholder(messages.en.settings.apiKey.placeholder).fill("test-api-key");
   await page.getByRole("button", { name: messages.en.common.actions.save }).click();
   await expect(page.getByText(messages.en.common.actions.saved)).toBeVisible();
@@ -31,11 +31,15 @@ test("user can create a job match analysis and view the results", async ({
   await createExtractionViaUI(page);
 
   // 2. Select Mode
-  await page.getByText(tMode.jobTitle).click();
+  await page
+    .getByRole("button", { name: new RegExp(tMode.jobTitle) })
+    .click();
 
   // 3. Fill Job
   const jobDescription = "We are looking for a Senior React Developer with 5+ years of experience in Next.js.";
-  await page.locator("textarea").fill(jobDescription);
+  const jobDescriptionInput = page.locator("textarea");
+  await expect(jobDescriptionInput).toBeVisible();
+  await jobDescriptionInput.fill(jobDescription);
 
   // 4. Mock API
   await page.route(/\/api\/job-match-analyses\/[^\/]+\/score/, async (route) => {
@@ -46,48 +50,61 @@ test("user can create a job match analysis and view the results", async ({
     });
   });
 
+  const jobMatchAnalysisResponse = {
+    id: "mocked-id",
+    cv_id: "mocked-cv-id",
+    title: "Job Match Test",
+    filename: "test.pdf",
+    created_at: new Date().toISOString(),
+    analysis_mode: "job_match",
+    ai_score: 85,
+    ai_analyzed_at: new Date().toISOString(),
+    job_url: null,
+    offer_status: null,
+    offer_next_action_at: null,
+    user_id: "user-id",
+    file_size: 1000,
+    pdf_storage_path: "path",
+    updated_at: new Date().toISOString(),
+    ai_model: "gemini-2.5-flash",
+    job_description: jobDescription,
+    offer_notes: null,
+    offer_next_action: null,
+    ai_context: null,
+    ai_feedback: "Great match for the position.",
+    ai_keywords: JSON.stringify(["React", "Next.js"]),
+    ai_improvements: JSON.stringify(["Add more tests to your CV"]),
+    job_key_data: "null",
+    job_keywords: JSON.stringify(["React", "Next.js", "TypeScript"]),
+    cv_keywords: JSON.stringify(["React", "Next.js"]),
+    matching_keywords: JSON.stringify(["React", "Next.js"]),
+    missing_keywords: JSON.stringify(["TypeScript"]),
+    text_python: "John Doe CV\nExperience: Developer",
+    text_pdfjs: null,
+    text_node: null,
+    extract_error_python: null,
+    extract_error_pdfjs: null,
+    extract_error_node: null,
+  };
+
   await page.route(/\/api\/job-match-analyses\/[^\/]+$/, async (route) => {
     if (route.request().method() === "GET") {
-      const json = {
-        id: "mocked-id",
-        cv_id: "mocked-cv-id",
-        title: "Job Match Test",
-        filename: "test.pdf",
-        created_at: new Date().toISOString(),
-        analysis_mode: "job_match",
-        ai_score: 85,
-        ai_analyzed_at: new Date().toISOString(),
-        job_url: null,
-        offer_status: null,
-        offer_next_action_at: null,
-        user_id: "user-id",
-        file_size: 1000,
-        pdf_storage_path: "path",
-        updated_at: new Date().toISOString(),
-        ai_model: "gemini-2.5-flash",
-        job_description: jobDescription,
-        offer_notes: null,
-        offer_next_action: null,
-        ai_context: null,
-        ai_feedback: "Great match for the position.",
-        ai_keywords: JSON.stringify(["React", "Next.js"]),
-        ai_improvements: JSON.stringify(["Add more tests to your CV"]),
-        job_key_data: "null",
-        job_keywords: JSON.stringify(["React", "Next.js", "TypeScript"]),
-        cv_keywords: JSON.stringify(["React", "Next.js"]),
-        matching_keywords: JSON.stringify(["React", "Next.js"]),
-        missing_keywords: JSON.stringify(["TypeScript"]),
-        text_python: "John Doe CV\nExperience: Developer",
-        text_pdfjs: null,
-        text_node: null,
-        extract_error_python: null,
-        extract_error_pdfjs: null,
-        extract_error_node: null
-      };
       await route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify(json)
+        body: JSON.stringify(jobMatchAnalysisResponse)
+      });
+    } else {
+      await route.continue();
+    }
+  });
+
+  await page.route(/\/api\/cv-analyses\/[^\/]+$/, async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(jobMatchAnalysisResponse),
       });
     } else {
       await route.continue();

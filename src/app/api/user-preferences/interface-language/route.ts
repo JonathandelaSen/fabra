@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { errorResponse, handleApiError, ok } from "@/modules/shared";
 import { isInterfaceLanguage } from "@/i18n/config";
+import { toInterfaceLanguagePreferenceResponse } from "./responses";
 
 export async function PUT(req: NextRequest) {
   try {
@@ -27,7 +28,7 @@ export async function PUT(req: NextRequest) {
 
     if (error) throw error;
 
-    return ok({ interface_language: body.locale });
+    return ok(toInterfaceLanguagePreferenceResponse(body.locale));
   } catch (error: unknown) {
     return handleApiError(error);
   }
