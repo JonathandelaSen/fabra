@@ -172,7 +172,6 @@ test("replacement warning appears when analysis already has a score", async ({
     })
     .click();
 
-  await jobDescriptionInput.fill(jobDescription);
   await page
     .getByRole("button", { name: tForms.analyzeWithExternalChat })
     .click();

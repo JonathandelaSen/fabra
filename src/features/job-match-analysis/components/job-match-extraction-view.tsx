@@ -17,6 +17,7 @@ import {
 import { getErrorMessage } from "@/lib/errors";
 import type { JobMatchAnalysisDetail } from "../api/job-match-analysis-api";
 import type { JobMatchAnalysisDetailResponse } from "@/app/api/job-match-analyses/responses";
+import { CopyPasteWorkflowTriggerButton } from "@/components/shared/copy-paste-workflow-trigger-button";
 import JobMatchForm from "./job-match-form";
 import JobMatchScoreCopyPasteModal from "./job-match-score-copy-paste-modal";
 
@@ -64,6 +65,7 @@ export default function JobMatchExtractionView({
   onCopyPasteApplied,
 }: JobMatchExtractionViewProps) {
   const t = useTranslations("analysisFlow.extraction");
+  const formsT = useTranslations("analysisFlow.forms");
   const [activeTab, setActiveTab] = useState<ParserTab>("python");
   const [fullscreen, setFullscreen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -185,6 +187,16 @@ export default function JobMatchExtractionView({
                 <Download className="w-3.5 h-3.5" />
                 <span className="hidden xs:inline">{t("download")}</span>
               </a>
+              {analysis.aiScore !== null && (
+                <CopyPasteWorkflowTriggerButton
+                  label={formsT("analyzeWithExternalChat")}
+                  onClick={() => {
+                    setCopyPasteJobDescription(analysis.jobDescription ?? "");
+                    setCopyPasteJobUrl(analysis.jobUrl ?? null);
+                    setCopyPasteOpen(true);
+                  }}
+                />
+              )}
             </>
           )}
           <div className="flex items-center gap-1.5 ml-auto sm:ml-0">
