@@ -16,7 +16,9 @@ import {
 } from "lucide-react";
 import { getErrorMessage } from "@/lib/errors";
 import type { AnalysisMode, AIContext } from "@/lib/analysis-types";
+import { CopyPasteWorkflowTriggerButton } from "@/components/shared/copy-paste-workflow-trigger-button";
 import AnalysisModeSelector from "./analysis-mode-selector";
+import CVScoreCopyPasteModal from "./cv-score-copy-paste-modal";
 import GeneralAnalysisForm from "./general-analysis-form";
 import JobMatchForm from "./job-match-form";
 import type { ScoreCVAnalysisInput } from "../hooks/use-cv-analysis-mutations";
@@ -94,6 +96,7 @@ export default function ExtractionView({
   onScoreAnalysis,
 }: ExtractionViewProps) {
   const t = useTranslations("analysisFlow.extraction");
+  const formsT = useTranslations("analysisFlow.forms");
   const [activeTab, setActiveTab] = useState<ParserTab>("python");
   const [fullscreen, setFullscreen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -103,6 +106,8 @@ export default function ExtractionView({
   const [selectedMode, setSelectedMode] = useState<AnalysisMode | null>(null);
   const [loadingAI, setLoadingAI] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
+  const [copyPasteContext, setCopyPasteContext] = useState<string | null>(null);
+  const [copyPasteOpen, setCopyPasteOpen] = useState(false);
 
   const getTextForTab = (tab: ParserTab) => {
     switch (tab) {
@@ -191,6 +196,11 @@ export default function ExtractionView({
     }
   };
 
+  const handleExternalChatAnalysis = (context: AIContext) => {
+    setCopyPasteContext(context.additionalContext ?? null);
+    setCopyPasteOpen(true);
+  };
+
   const handleJobMatchAnalysis = async (
     jobDescription: string,
     jobUrl: string,
@@ -232,6 +242,16 @@ export default function ExtractionView({
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
+      <CVScoreCopyPasteModal
+        analysisId={analysis.id}
+        additionalContext={copyPasteContext}
+        open={copyPasteOpen}
+        onClose={() => setCopyPasteOpen(false)}
+        onApplied={() => {
+          setCopyPasteOpen(false);
+          onAIAnalysisComplete();
+        }}
+      />
       {/* Header bar */}
       <div className="shrink-0 px-4 sm:px-6 py-4 border-b border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -250,6 +270,15 @@ export default function ExtractionView({
         <div className="flex flex-wrap items-center gap-2">
           {analysis.id && (
             <>
+              {analysis.analysis_mode === "general" && analysis.ai_score !== null && (
+                <CopyPasteWorkflowTriggerButton
+                  label={formsT("analyzeWithExternalChat")}
+                  onClick={() => {
+                    setCopyPasteContext(null);
+                    setCopyPasteOpen(true);
+                  }}
+                />
+              )}
               <button
                 onClick={() => setShowPdfPreview(!showPdfPreview)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
@@ -480,6 +509,7 @@ export default function ExtractionView({
                 error={aiError}
                 hasAIApiKey={hasAIApiKey}
                 onOpenSettings={onOpenSettings}
+                onAnalyzeWithExternalChat={handleExternalChatAnalysis}
               />
             ) : (
               <JobMatchForm

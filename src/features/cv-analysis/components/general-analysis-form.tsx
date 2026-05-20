@@ -22,6 +22,7 @@ interface GeneralAnalysisFormProps {
   error: string | null;
   hasAIApiKey: boolean;
   onOpenSettings: () => void;
+  onAnalyzeWithExternalChat: (context: AIContext) => void;
 }
 
 export default function GeneralAnalysisForm({
@@ -31,6 +32,7 @@ export default function GeneralAnalysisForm({
   error,
   hasAIApiKey,
   onOpenSettings,
+  onAnalyzeWithExternalChat,
 }: GeneralAnalysisFormProps) {
   const t = useTranslations("analysisFlow.forms");
   const common = useTranslations("common");
@@ -43,6 +45,13 @@ export default function GeneralAnalysisForm({
       context.additionalContext = additionalContext.trim();
 
     onSubmit(context, selectedModel);
+  };
+
+  const handleExternalChat = () => {
+    const context: AIContext = {};
+    if (additionalContext.trim())
+      context.additionalContext = additionalContext.trim();
+    onAnalyzeWithExternalChat(context);
   };
 
   return (
@@ -116,25 +125,35 @@ export default function GeneralAnalysisForm({
           </div>
         </div>
 
-        {/* Submit */}
-        <button
-          onClick={handleSubmit}
-          disabled={loading || !hasAIApiKey}
-          className="flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold text-sm bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-xl shadow-violet-900/30 transition-all active:scale-[0.97] disabled:opacity-60 disabled:cursor-not-allowed h-fit shrink-0 w-full sm:w-auto"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              {common("states.analyzing")}
-            </>
-          ) : (
-            <>
-              <Sparkles className="w-4 h-4" />
-              {t("analyzeCV")}
-              <ArrowRight className="w-4 h-4" />
-            </>
-          )}
-        </button>
+        <div className="flex w-full flex-col gap-2 sm:w-auto">
+          <button
+            onClick={handleSubmit}
+            disabled={loading || !hasAIApiKey}
+            className="flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold text-sm bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-xl shadow-violet-900/30 transition-all active:scale-[0.97] disabled:opacity-60 disabled:cursor-not-allowed h-fit shrink-0 w-full"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                {common("states.analyzing")}
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-4 h-4" />
+                {t("analyzeCV")}
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={handleExternalChat}
+            disabled={loading}
+            className="flex items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-6 py-3 text-sm font-semibold text-zinc-200 transition-all hover:bg-white/[0.07] disabled:opacity-60"
+          >
+            <MessageSquare className="h-4 w-4" />
+            {t("analyzeWithExternalChat")}
+          </button>
+        </div>
       </div>
 
       {!hasAIApiKey && (

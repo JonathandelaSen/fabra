@@ -3,6 +3,7 @@ import { CVAnalysis } from "../../domain/entities/cv-analysis.entity";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 import type { CVScoringAIServiceFactory } from "../../domain/repositories/cv-scoring-ai.service";
 import { CVAnalysisId } from "../../domain/value-objects/cv-analysis-id.value-object";
+import { selectBestCVAnalysisText } from "../services/cv-analysis-text";
 
 export interface ScoreCVAnalysisInput {
   id: string;
@@ -28,13 +29,7 @@ export class ScoreCVAnalysisUseCase {
     if (!current) return null;
 
     const primitives = current.toPrimitives();
-    const text =
-      primitives.extractedText.textPython ||
-      primitives.extractedText.textPdfjs ||
-      primitives.extractedText.textNode;
-    if (!text) {
-      throw new Error("No extracted text available for this analysis.");
-    }
+    const text = selectBestCVAnalysisText(current);
 
     const aiService = this.deps.aiServiceFactory.create({
       provider: input.provider,

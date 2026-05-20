@@ -18,3 +18,30 @@ You must respond ONLY with valid JSON using this exact format:
   "improvements": ["<specific, actionable improvement in Spanish>", ...]
 }`;
 }
+
+export function buildCVScoringCopyPastePrompt(input: {
+  text: string;
+  additionalContext?: string | null;
+}): string {
+  const systemTask = buildGeneralScoringPrompt(input.additionalContext);
+
+  return `${systemTask}
+
+Copy Paste transport instructions:
+- Return only valid JSON.
+- Do not include Markdown, comments, or explanation outside the JSON object.
+- Use this exact envelope:
+{
+  "workflowId": "cv_analysis.score",
+  "schemaVersion": "1",
+  "result": {
+    "score": <number from 0 to 100>,
+    "feedback": "<Comprehensive summary of strengths and weaknesses. Be specific, actionable, and reply in Spanish.>",
+    "keywords": ["<relevant keyword or skill found in the CV>", ...],
+    "improvements": ["<specific, actionable improvement in Spanish>", ...]
+  }
+}
+
+Analyze this extracted CV text:
+${input.text}`;
+}

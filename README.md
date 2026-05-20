@@ -2,7 +2,7 @@
 
 # 🚀 JulyLog
 
-**Your intelligent Work Journal and Career Toolkit. Track your progress, build your CV, and land your next job with AI.**
+**Your intelligent Work Journal and Career Toolkit. Track your progress, build your CV, and land your next job with AI or with practical manual workflows when you prefer.**
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Local_Ready-green?logo=supabase)](https://supabase.com/)
@@ -23,6 +23,7 @@ It's not just a CV parser; it's a complete operating system for your career:
 - 🎨 **AI-Powered Templates:** Choose from professional designs and let the AI automatically structure and fill them with your CV data.
 - ✍️ **Intelligent CV Editor:** Refine your resume with natural language instructions. Shorten sections, improve clarity, or change the tone instantly with AI.
 - 📚 **Smart CV Library:** Upload, preview (PDF support), and manage multiple versions of your resume seamlessly.
+- 🤝 **Flexible Assistance:** Use integrated AI, bring your own provider key, run local models when supported, copy prompts into an external chat and paste results back, or complete supported workflows manually.
 
 ---
 
@@ -96,7 +97,7 @@ A modern, robust, and scalable foundation:
 
 - **Frontend:** Next.js 16 (App Router), React 19, TailwindCSS 4, Framer Motion
 - **Backend & DB:** Supabase (Auth, Postgres DB, Edge Storage)
-- **AI Integrations:** Google GenAI (Gemini)
+- **AI Integrations:** Google GenAI (Gemini), with an architecture designed for integrated providers, external chat Copy Paste workflows, local models, and manual alternatives where practical.
 - **File Processing:** `pdf-parse`, `pdfjs-dist`, Python `pdfminer.six`
 
 ## Python Parser Deployment

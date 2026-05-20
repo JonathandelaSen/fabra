@@ -27,6 +27,16 @@ AI model calls must follow the provider-aware factory pattern documented in `doc
 - Frontend and API contracts must use provider-agnostic names: `provider`, `apiKey`, and `model`. Do not introduce or preserve new `geminiApiKey` fallbacks when migrating AI routes.
 - Observability for AI-backed backend actions must include `provider` and `model` metadata.
 
+## Assisted workflows
+
+The app is AI driven but not AI restricted. AI-backed product actions should follow the assisted workflow model documented in `docs/architecture/assisted-workflows.md`.
+
+- Classify each AI-backed action by supported assistance modes: `manual`, `copy_paste`, and `integrated`.
+- `copy_paste` is an interaction mode, not an AI provider. It uses `prepare`, `preview`, and `apply` steps so users can run prompts in an external chat and paste the response back into the app.
+- `integrated` mode uses model providers such as `ollama`, `api_key`, `app_subscription`, or `mock`.
+- When an action cannot support `manual`, document the reason explicitly.
+- Structured Copy Paste responses must use the standard JSON envelope with `workflowId`, `schemaVersion`, and `result`.
+
 ## Git main branch
 
 Never push to `main`. Commit locally or push to a non-main branch if requested, but leave `main` pushes to the user unless they explicitly instruct otherwise in the same turn.
