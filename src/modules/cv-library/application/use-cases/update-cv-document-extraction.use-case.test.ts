@@ -13,7 +13,6 @@ describe("UpdateCVDocumentExtractionUseCase", () => {
       save: vi.fn(async (saved) => saved),
       delete: vi.fn(),
       deleteStoredPdf: vi.fn(),
-      listAnalysisUsage: vi.fn(),
     } satisfies CVDocumentRepository;
     const tracker = { record: vi.fn(async () => {}) };
 

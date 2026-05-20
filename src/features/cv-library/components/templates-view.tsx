@@ -28,7 +28,7 @@ import {
   getStoredAIProvider,
 } from "@/lib/browser-preferences";
 import { Button } from "@/components/ui/button";
-import { CopyPasteWorkflowTriggerButton } from "@/components/shared/copy-paste-workflow-trigger-button";
+import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import CVTemplatePreview from "./cv-template-preview";
 import CVProfileStructureCopyPasteModal from "./cv-profile-structure-copy-paste-modal";
 import { useCVDocumentList } from "../hooks/use-cv-library-queries";
@@ -51,6 +51,7 @@ export default function TemplatesView({
   const aiModel = getStoredAIModel();
   const hasAIApiKey = aiProvider === "mock" || aiApiKey.length > 0;
   const t = useTranslations("analysisFlow.templates");
+  const tf = useTranslations("analysisFlow.forms");
   const [selectedTemplate, setSelectedTemplate] =
     useState<CVTemplateDefinition | null>(null);
   const [selectedCvId, setSelectedCvId] = useState<string>("");
@@ -58,7 +59,13 @@ export default function TemplatesView({
   const [searchQuery, setSearchQuery] = useState("");
   const [creating, setCreating] = useState(false);
   const [copyPasteOpen, setCopyPasteOpen] = useState(false);
+  const [selectedModel, setSelectedModel] = useState("gemini-2.5-flash");
   const [error, setError] = useState<string | null>(null);
+
+  const models = [
+    { id: "gemini-2.5-flash", label: `Gemini 2.5 Flash (${tf("fast")})` },
+    { id: "gemini-3.1-pro-preview", label: `Gemini 3.1 Pro Preview (${tf("powerful")})` },
+  ];
 
   const filteredCvs = cvs.filter(
     (cv) =>
@@ -81,7 +88,7 @@ export default function TemplatesView({
           locale,
           provider: aiProvider,
           apiKey: aiApiKey,
-          model: aiModel,
+          model: selectedModel,
         }),
       });
 
@@ -310,31 +317,24 @@ export default function TemplatesView({
                       </div>
                     )}
 
-                    <div className="pt-2">
-                      <div className="mb-3 flex justify-end">
-                        <CopyPasteWorkflowTriggerButton
-                          label={t("structureWithExternalChat")}
-                          disabled={!selectedCvId}
-                          onClick={() => setCopyPasteOpen(true)}
-                        />
-                      </div>
-                      <Button
-                        disabled={!selectedCvId || creating || !hasAIApiKey}
-                        onClick={handleCreateVersion}
-                        className="w-full h-12 bg-teal-500 text-black font-semibold hover:bg-teal-400 disabled:opacity-50 transition-colors"
-                      >
-                        {creating ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            {t("structuring")}
-                          </>
-                        ) : (
-                          <>
-                            {t("createVersion")}
-                            <ChevronRight className="ml-2 h-4 w-4" />
-                          </>
-                        )}
-                      </Button>
+                    <div className="pt-2 flex justify-end">
+                      <AIActionLauncher
+                        actionLabel={t("createVersion")}
+                        loading={creating}
+                        disabled={!selectedCvId}
+                        integrated={{
+                          available: hasAIApiKey,
+                          selectedModelId: selectedModel,
+                          models,
+                          onModelChange: setSelectedModel,
+                          onRun: handleCreateVersion,
+                          onConfigure: onOpenSettings,
+                        }}
+                        copyPaste={{
+                          available: true,
+                          onOpenFlow: () => setCopyPasteOpen(true),
+                        }}
+                      />
                     </div>
                   </div>
                 </div>

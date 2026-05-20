@@ -4,15 +4,16 @@ import {
   type ListCVAnalysisUsageByDocumentResult,
 } from "@/modules/cv-analysis";
 import { ListJobMatchAnalysisUsageByDocumentQuery } from "@/modules/job-match-analysis";
-import type { QueryBus } from "@/modules/shared";
+import type { Query, QueryBus } from "@/modules/shared";
 import { documentRepo, tracker } from "./cv-library-test-helpers.test";
 import { DeleteCVDocumentUseCase } from "./delete-cv-document.use-case";
 
 function queryBus(
-  results: Partial<Record<string, ListCVAnalysisUsageByDocumentResult[]>> = {},
+  results: Record<string, unknown> = {},
 ) {
   return {
-    execute: async (query) => results[query.queryName] ?? [],
+    execute: async <TResult>(query: Query<unknown, TResult>): Promise<TResult> =>
+      (results[query.queryName] ?? []) as TResult,
   } satisfies QueryBus;
 }
 
@@ -63,9 +64,9 @@ describe("DeleteCVDocumentUseCase", () => {
     const executed: string[] = [];
     const repo = documentRepo();
     const bus = {
-      execute: async (query) => {
+      execute: async <TResult>(query: Query<unknown, TResult>): Promise<TResult> => {
         executed.push(query.queryName);
-        return [];
+        return [] as unknown as TResult;
       },
     } satisfies QueryBus;
 

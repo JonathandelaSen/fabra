@@ -17,7 +17,7 @@ import {
 import { getErrorMessage } from "@/lib/errors";
 import type { JobMatchAnalysisDetail } from "../api/job-match-analysis-api";
 import type { JobMatchAnalysisDetailResponse } from "@/app/api/job-match-analyses/responses";
-import { CopyPasteWorkflowTriggerButton } from "@/components/shared/copy-paste-workflow-trigger-button";
+import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import JobMatchForm from "./job-match-form";
 import JobMatchScoreCopyPasteModal from "./job-match-score-copy-paste-modal";
 
@@ -76,6 +76,12 @@ export default function JobMatchExtractionView({
   const [copyPasteOpen, setCopyPasteOpen] = useState(false);
   const [copyPasteJobDescription, setCopyPasteJobDescription] = useState("");
   const [copyPasteJobUrl, setCopyPasteJobUrl] = useState<string | null>(null);
+  const [selectedModel, setSelectedModel] = useState("gemini-2.5-flash");
+
+  const models = [
+    { id: "gemini-2.5-flash", label: `Gemini 2.5 Flash (${formsT("fast")})` },
+    { id: "gemini-3.1-pro-preview", label: `Gemini 3.1 Pro Preview (${formsT("powerful")})` },
+  ];
 
   const getTextForTab = (tab: ParserTab) => {
     switch (tab) {
@@ -188,12 +194,24 @@ export default function JobMatchExtractionView({
                 <span className="hidden xs:inline">{t("download")}</span>
               </a>
               {analysis.aiScore !== null && (
-                <CopyPasteWorkflowTriggerButton
-                  label={formsT("analyzeWithExternalChat")}
-                  onClick={() => {
-                    setCopyPasteJobDescription(analysis.jobDescription ?? "");
-                    setCopyPasteJobUrl(analysis.jobUrl ?? null);
-                    setCopyPasteOpen(true);
+                <AIActionLauncher
+                  actionLabel={formsT("compareOffer")}
+                  loading={loadingAI}
+                  integrated={{
+                    available: hasAIApiKey,
+                    selectedModelId: selectedModel,
+                    models,
+                    onModelChange: setSelectedModel,
+                    onRun: () => handleJobMatchAnalysis(analysis.jobDescription ?? "", analysis.jobUrl ?? "", selectedModel),
+                    onConfigure: onOpenSettings,
+                  }}
+                  copyPaste={{
+                    available: true,
+                    onOpenFlow: () => {
+                      setCopyPasteJobDescription(analysis.jobDescription ?? "");
+                      setCopyPasteJobUrl(analysis.jobUrl ?? null);
+                      setCopyPasteOpen(true);
+                    },
                   }}
                 />
               )}

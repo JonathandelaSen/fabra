@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { getErrorMessage } from "@/lib/errors";
 import type { AnalysisMode, AIContext } from "@/lib/analysis-types";
-import { CopyPasteWorkflowTriggerButton } from "@/components/shared/copy-paste-workflow-trigger-button";
+import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import AnalysisModeSelector from "./analysis-mode-selector";
 import CVScoreCopyPasteModal from "./cv-score-copy-paste-modal";
 import GeneralAnalysisForm from "./general-analysis-form";
@@ -108,6 +108,12 @@ export default function ExtractionView({
   const [aiError, setAiError] = useState<string | null>(null);
   const [copyPasteContext, setCopyPasteContext] = useState<string | null>(null);
   const [copyPasteOpen, setCopyPasteOpen] = useState(false);
+  const [selectedModel, setSelectedModel] = useState(aiModel || "gemini-2.5-flash");
+
+  const models = [
+    { id: "gemini-2.5-flash", label: `Gemini 2.5 Flash (${formsT("fast")})` },
+    { id: "gemini-3.1-pro-preview", label: `Gemini 3.1 Pro Preview (${formsT("powerful")})` },
+  ];
 
   const getTextForTab = (tab: ParserTab) => {
     switch (tab) {
@@ -271,11 +277,23 @@ export default function ExtractionView({
           {analysis.id && (
             <>
               {analysis.analysis_mode === "general" && analysis.ai_score !== null && (
-                <CopyPasteWorkflowTriggerButton
-                  label={formsT("analyzeWithExternalChat")}
-                  onClick={() => {
-                    setCopyPasteContext(null);
-                    setCopyPasteOpen(true);
+                <AIActionLauncher
+                  actionLabel={formsT("analyzeCV")}
+                  loading={loadingAI}
+                  integrated={{
+                    available: hasAIApiKey,
+                    selectedModelId: selectedModel,
+                    models,
+                    onModelChange: setSelectedModel,
+                    onRun: () => handleGeneralAnalysis({}, selectedModel),
+                    onConfigure: onOpenSettings,
+                  }}
+                  copyPaste={{
+                    available: true,
+                    onOpenFlow: () => {
+                      setCopyPasteContext(null);
+                      setCopyPasteOpen(true);
+                    },
                   }}
                 />
               )}

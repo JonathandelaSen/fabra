@@ -42,7 +42,7 @@ import {
   replaceWorkJournalEntryInCache,
 } from "../api/work-journal-entry-cache";
 import { getErrorMessage } from "@/lib/errors";
-import { CopyPasteWorkflowTriggerButton } from "@/components/shared/copy-paste-workflow-trigger-button";
+import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { WorkJournalSkeleton } from "./work-journal-skeleton";
 import { WorkJournalCopyPastePanel } from "./work-journal-copy-paste-panel";
 
@@ -92,6 +92,13 @@ export default function WorkJournalView({
   const [showForm, setShowForm] = useState(false);
   const [contextFilter, setContextFilter] = useState<string>("");
   const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
+  const [selectedModel, setSelectedModel] = useState(aiModel || "gemini-2.5-flash");
+  const formsT = useTranslations("analysisFlow.forms");
+
+  const models = [
+    { id: "gemini-2.5-flash", label: `Gemini 2.5 Flash (${formsT("fast")})` },
+    { id: "gemini-3.1-pro-preview", label: `Gemini 3.1 Pro Preview (${formsT("powerful")})` },
+  ];
 
   const contexts = contextsQuery.data?.contexts ?? [];
   const entries = entriesQuery.data ?? [];
@@ -220,7 +227,7 @@ export default function WorkJournalView({
       const data = await draftWorkJournalEntry({
         provider: aiProvider,
         apiKey: aiApiKey,
-        model: aiModel,
+        model: selectedModel,
         context_id: draft.context_id,
         date_start: draft.date_start,
         date_end: draft.date_end || null,
@@ -381,22 +388,24 @@ export default function WorkJournalView({
                     />
 
                     {draft.input_mode === "ai_assisted" && (
-                      <motion.div initial={{opacity:0}} animate={{opacity:1}} className="space-y-4 pt-4 border-t border-white/5">
-                        <div className="flex items-center gap-4">
-                          <button
-                            type="button"
-                            onClick={draftWithAI}
-                            disabled={aiLoading}
-                            className="inline-flex items-center gap-2 text-sm font-medium text-teal-400 hover:text-teal-300 transition-colors disabled:opacity-50"
-                          >
-                            {aiLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                            {t("generateProfessionalDraft")}
-                          </button>
-                          <CopyPasteWorkflowTriggerButton
-                            label={t("copyPaste.open")}
-                            onClick={() => setIsCopyPasteOpen((current) => !current)}
+                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4 pt-4 border-t border-white/5">
+                        <div className="flex justify-end">
+                          <AIActionLauncher
+                            actionLabel={t("generateProfessionalDraft")}
+                            loading={aiLoading}
                             disabled={!draft.raw_notes.trim() || !draft.context_id}
-                            className="border-transparent bg-transparent px-0 py-0 text-sm text-zinc-400 hover:bg-transparent hover:text-zinc-300"
+                            integrated={{
+                              available: hasAIApiKey,
+                              selectedModelId: selectedModel,
+                              models,
+                              onModelChange: setSelectedModel,
+                              onRun: draftWithAI,
+                              onConfigure: onOpenSettings,
+                            }}
+                            copyPaste={{
+                              available: true,
+                              onOpenFlow: () => setIsCopyPasteOpen((current) => !current),
+                            }}
                           />
                         </div>
 
@@ -422,14 +431,14 @@ export default function WorkJournalView({
                             <label htmlFor="work-journal-final-text" className={labelClass}>
                               {t("finalText")}
                             </label>
-                          <textarea
-                            id="work-journal-final-text"
-                            className="w-full bg-teal-950/20 text-teal-50/90 rounded-xl p-4 text-base leading-relaxed outline-none resize-none min-h-[160px] border border-teal-900/50"
-                            value={draft.final_text}
-                            onChange={(event) =>
-                              setDraft((current) => ({ ...current, final_text: event.target.value }))
-                            }
-                          />
+                            <textarea
+                              id="work-journal-final-text"
+                              className="w-full bg-teal-950/20 text-teal-50/90 rounded-xl p-4 text-base leading-relaxed outline-none resize-none min-h-[160px] border border-teal-900/50"
+                              value={draft.final_text}
+                              onChange={(event) =>
+                                setDraft((current) => ({ ...current, final_text: event.target.value }))
+                              }
+                            />
                           </div>
                         )}
                       </motion.div>
