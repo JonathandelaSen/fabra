@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { SupabaseEventTracker } from "@/modules/shared";
 import { CreateJobMatchAnalysisUseCase } from "./application/use-cases/create-job-match-analysis.use-case";
 import { DeleteJobMatchAnalysisUseCase } from "./application/use-cases/delete-job-match-analysis.use-case";
 import { GetJobMatchAnalysisByIdUseCase } from "./application/use-cases/get-job-match-analysis-by-id.use-case";
@@ -7,12 +8,17 @@ import { ListJobMatchAnalysisUsageByDocumentUseCase } from "./application/use-ca
 import { ScoreJobMatchAnalysisUseCase } from "./application/use-cases/score-job-match-analysis.use-case";
 import { UpdateJobMatchAnalysisAIResultUseCase } from "./application/use-cases/update-job-match-analysis-ai-result.use-case";
 import { UpdateJobMatchAnalysisJobUrlUseCase } from "./application/use-cases/update-job-match-analysis-job-url.use-case";
+import { PrepareJobMatchScoreCopyPasteUseCase } from "./application/use-cases/prepare-job-match-score-copy-paste.use-case";
+import { PreviewJobMatchScoreCopyPasteUseCase } from "./application/use-cases/preview-job-match-score-copy-paste.use-case";
+import { ApplyJobMatchScoreCopyPasteUseCase } from "./application/use-cases/apply-job-match-score-copy-paste.use-case";
 import { GeminiJobMatchScoringAIServiceFactory } from "./infrastructure/services/gemini-job-match-scoring-ai.service";
 import { MockJobMatchScoringAIServiceFactory } from "./infrastructure/services/mock-job-match-scoring-ai.service";
 import { ProviderJobMatchScoringAIServiceFactory } from "./infrastructure/services/provider-job-match-scoring-ai-service.factory";
+import { buildJobMatchScoringCopyPastePrompt } from "./infrastructure/services/job-match-scoring-prompts";
 import { SupabaseJobMatchAnalysisRepository } from "./infrastructure/repositories/supabase-job-match-analysis.repository";
 
 const repo = new SupabaseJobMatchAnalysisRepository();
+const tracker = new SupabaseEventTracker();
 const aiServiceFactory = new ProviderJobMatchScoringAIServiceFactory({
   geminiFactory: new GeminiJobMatchScoringAIServiceFactory(),
   mockFactory: new MockJobMatchScoringAIServiceFactory(),
@@ -36,6 +42,19 @@ function createUseCases() {
       repo,
     }),
     deleteJobMatchAnalysis: new DeleteJobMatchAnalysisUseCase({ repo }),
+    prepareJobMatchScoreCopyPaste: new PrepareJobMatchScoreCopyPasteUseCase({
+      repo,
+      tracker,
+      buildPrompt: buildJobMatchScoringCopyPastePrompt,
+    }),
+    previewJobMatchScoreCopyPaste: new PreviewJobMatchScoreCopyPasteUseCase({
+      repo,
+      tracker,
+    }),
+    applyJobMatchScoreCopyPaste: new ApplyJobMatchScoreCopyPasteUseCase({
+      repo,
+      tracker,
+    }),
   };
 }
 

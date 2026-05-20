@@ -1,10 +1,12 @@
 "use client";
 
 import { useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Sparkles } from "lucide-react";
 import type { OfferStatus } from "@/lib/analysis-types";
+import type { JobMatchAnalysisDetailResponse } from "@/app/api/job-match-analyses/responses";
 import type { InterviewQuestionSummary } from "../types";
 import { AnalysisDetailSkeleton } from "@/components/shared/skeletons";
 import {
@@ -13,6 +15,8 @@ import {
 } from "../hooks/use-job-match-analysis-queries";
 import { useJobMatchAnalysisMutations } from "../hooks/use-job-match-analysis-mutations";
 import { useJobMatchAnalysisRouteState } from "../hooks/use-job-match-analysis-route-state";
+import { jobMatchAnalysisQueryKeys } from "../api/job-match-analysis-query-keys";
+import type { ListJobMatchAnalysesResponse } from "@/app/api/job-match-analyses/responses";
 import JobMatchAnalysisList from "./job-match-analysis-list";
 import JobMatchAnalysisDetail from "./job-match-analysis-detail";
 import JobMatchExtractionView from "./job-match-extraction-view";
@@ -44,9 +48,11 @@ export default function JobMatchAnalysisView({
   onInterviewQuestionCreated,
 }: JobMatchAnalysisViewProps) {
   const t = useTranslations("analysisFlow.appShell");
+  const queryClient = useQueryClient();
   const routeState = useJobMatchAnalysisRouteState();
   const listQuery = useJobMatchAnalysisList();
   const mutations = useJobMatchAnalysisMutations();
+  const listKey = jobMatchAnalysisQueryKeys.lists();
 
   const {
     analysisId,
@@ -120,6 +126,27 @@ export default function JobMatchAnalysisView({
         jobUrl: input.jobUrl || null,
       },
     });
+    goToAnalysis("summary");
+  };
+
+  const handleCopyPasteApplied = (updated: JobMatchAnalysisDetailResponse) => {
+    queryClient.setQueryData(
+      jobMatchAnalysisQueryKeys.detail(updated.id),
+      updated,
+    );
+    queryClient.setQueryData<ListJobMatchAnalysesResponse>(
+      listKey,
+      (current) =>
+        current?.map((item) =>
+          item.id === updated.id
+            ? {
+                ...item,
+                aiScore: updated.aiScore,
+                aiAnalyzedAt: updated.aiAnalyzedAt,
+              }
+            : item,
+        ) ?? current,
+    );
     goToAnalysis("summary");
   };
 
@@ -240,6 +267,7 @@ export default function JobMatchAnalysisView({
               onScore={handleScore}
               hasAIApiKey={hasAIApiKey}
               onOpenSettings={onOpenSettings}
+              onCopyPasteApplied={handleCopyPasteApplied}
             />
           </motion.div>
         ) : hasScore ? (

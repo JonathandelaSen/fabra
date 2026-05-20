@@ -1,3 +1,8 @@
+import {
+  JOB_MATCH_SCORE_COPY_PASTE_SCHEMA_VERSION,
+  JOB_MATCH_SCORE_COPY_PASTE_WORKFLOW_ID,
+} from "../../domain/value-objects/job-match-copy-paste-constants";
+
 export function buildJobMatchScoringPrompt(
   jobDescription: string,
   jobUrl?: string | null,
@@ -39,4 +44,52 @@ You must respond ONLY with valid JSON using this exact format:
     "notablePoints": ["<brief relevant point, condition, warning, or differentiator>", ...]
   }
 }`;
+}
+
+export function buildJobMatchScoringCopyPastePrompt(input: {
+  text: string;
+  jobDescription: string;
+  jobUrl?: string | null;
+}): string {
+  const systemTask = buildJobMatchScoringPrompt(
+    input.jobDescription,
+    input.jobUrl,
+  );
+
+  return `${systemTask}
+
+Copy Paste transport instructions:
+- Return only valid JSON.
+- Do not include Markdown, comments, or explanation outside the JSON object.
+- Use this exact envelope:
+{
+  "workflowId": "${JOB_MATCH_SCORE_COPY_PASTE_WORKFLOW_ID}",
+  "schemaVersion": "${JOB_MATCH_SCORE_COPY_PASTE_SCHEMA_VERSION}",
+  "result": {
+    "score": <number from 0 to 100>,
+    "feedback": "<Detailed analysis in Spanish>",
+    "aiKeywords": ["<keyword from job description found in resume>", ...],
+    "jobKeywords": ["<important keyword from the job posting>", ...],
+    "cvKeywords": ["<relevant keyword found in the CV>", ...],
+    "matchingKeywords": ["<keyword present in both job posting and CV>", ...],
+    "missingKeywords": ["<important job keyword missing from the CV>", ...],
+    "improvements": ["<specific change to better match this job posting, in Spanish>", ...],
+    "jobKeyData": {
+      "title": "<job title or null>",
+      "company": "<company name or null>",
+      "location": "<location or null>",
+      "remote": "<remote/hybrid/onsite signal or null>",
+      "salary": "<salary/compensation if explicit or null>",
+      "seniority": "<seniority if explicit or inferable, or null>",
+      "contractType": "<contract type if explicit or null>",
+      "benefits": ["<benefit or empty>", ...],
+      "requirements": ["<key requirement>", ...],
+      "responsibilities": ["<key responsibility>", ...],
+      "notablePoints": ["<brief relevant point>", ...]
+    }
+  }
+}
+
+Analyze this extracted CV text:
+${input.text}`;
 }

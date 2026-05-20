@@ -19,6 +19,7 @@ import type { AnalysisMode, AIContext } from "@/lib/analysis-types";
 import { CopyPasteWorkflowTriggerButton } from "@/components/shared/copy-paste-workflow-trigger-button";
 import AnalysisModeSelector from "./analysis-mode-selector";
 import CVScoreCopyPasteModal from "./cv-score-copy-paste-modal";
+import { JobMatchScoreCopyPasteModal } from "@/features/job-match-analysis";
 import GeneralAnalysisForm from "./general-analysis-form";
 import JobMatchForm from "./job-match-form";
 import type { ScoreCVAnalysisInput } from "../hooks/use-cv-analysis-mutations";
@@ -108,6 +109,9 @@ export default function ExtractionView({
   const [aiError, setAiError] = useState<string | null>(null);
   const [copyPasteContext, setCopyPasteContext] = useState<string | null>(null);
   const [copyPasteOpen, setCopyPasteOpen] = useState(false);
+  const [jobMatchCopyPasteOpen, setJobMatchCopyPasteOpen] = useState(false);
+  const [jobMatchCopyPasteDesc, setJobMatchCopyPasteDesc] = useState("");
+  const [jobMatchCopyPasteUrl, setJobMatchCopyPasteUrl] = useState("");
 
   const getTextForTab = (tab: ParserTab) => {
     switch (tab) {
@@ -249,6 +253,17 @@ export default function ExtractionView({
         onClose={() => setCopyPasteOpen(false)}
         onApplied={() => {
           setCopyPasteOpen(false);
+          onAIAnalysisComplete();
+        }}
+      />
+      <JobMatchScoreCopyPasteModal
+        analysisId={analysis.id}
+        jobDescription={jobMatchCopyPasteDesc}
+        jobUrl={jobMatchCopyPasteUrl || null}
+        open={jobMatchCopyPasteOpen}
+        onClose={() => setJobMatchCopyPasteOpen(false)}
+        onApplied={(_) => {
+          setJobMatchCopyPasteOpen(false);
           onAIAnalysisComplete();
         }}
       />
@@ -520,6 +535,11 @@ export default function ExtractionView({
                 error={aiError}
                 hasAIApiKey={hasAIApiKey}
                 onOpenSettings={onOpenSettings}
+                onCopyPasteOpen={(desc, url) => {
+                  setJobMatchCopyPasteDesc(desc);
+                  setJobMatchCopyPasteUrl(url);
+                  setJobMatchCopyPasteOpen(true);
+                }}
               />
             )}
           </AnimatePresence>

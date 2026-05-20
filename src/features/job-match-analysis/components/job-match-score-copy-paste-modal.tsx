@@ -5,56 +5,61 @@ import CopyPasteWorkflowModal, {
   CopyPastePreviewItem,
 } from "@/components/shared/copy-paste-workflow-modal";
 import { useCopyPasteWorkflowState } from "@/components/shared/use-copy-paste-workflow-state";
-import type { CVAnalysisDetailResponse } from "@/app/api/cv-analyses/responses";
-import type {
-  CVAnalysisCopyPasteResult,
-  PreviewCVAnalysisCopyPasteResponse,
-} from "@/app/api/cv-analyses/[id]/score/copy-paste/preview/responses";
+import type { JobMatchAnalysisDetailResponse } from "@/app/api/job-match-analyses/responses";
+import type { PreviewJobMatchAnalysisCopyPasteResponse } from "@/app/api/job-match-analyses/[id]/score/copy-paste/preview/responses";
 import {
-  applyCVAnalysisCopyPaste,
-  prepareCVAnalysisCopyPaste,
-  previewCVAnalysisCopyPaste,
-} from "../api/cv-analysis-copy-paste-api";
+  applyJobMatchAnalysisCopyPaste,
+  prepareJobMatchAnalysisCopyPaste,
+  previewJobMatchAnalysisCopyPaste,
+} from "../api/job-match-analysis-copy-paste-api";
 
-const CV_CORRECTION_INSTRUCTIONS =
-  "Please return only the required JSON envelope. Do not include Markdown or explanation outside JSON. Keep workflowId as cv_analysis.score and schemaVersion as 1.";
+const JOB_MATCH_CORRECTION_INSTRUCTIONS =
+  "Please return only the required JSON envelope. Do not include Markdown or explanation outside JSON. Keep workflowId as job_match_analysis.score and schemaVersion as 1.";
 
-interface CVScoreCopyPasteModalProps {
+interface JobMatchScoreCopyPasteModalProps {
   analysisId: string;
-  additionalContext: string | null;
+  jobDescription: string;
+  jobUrl: string | null;
   open: boolean;
   onClose: () => void;
-  onApplied: (analysis: CVAnalysisDetailResponse) => void;
+  onApplied: (analysis: JobMatchAnalysisDetailResponse) => void;
 }
 
-export default function CVScoreCopyPasteModal({
+export default function JobMatchScoreCopyPasteModal({
   analysisId,
-  additionalContext,
+  jobDescription,
+  jobUrl,
   open,
   onClose,
   onApplied,
-}: CVScoreCopyPasteModalProps) {
+}: JobMatchScoreCopyPasteModalProps) {
   const t = useTranslations("analysisFlow.copyPaste");
+  const tJob = useTranslations("jobMatchCopyPaste");
 
   const state = useCopyPasteWorkflowState({
     open,
     prepare: () =>
-      prepareCVAnalysisCopyPaste(analysisId, { additionalContext }),
-    preview: (rawResponse) =>
-      previewCVAnalysisCopyPaste(analysisId, { rawResponse }),
-    apply: (previewData) =>
-      applyCVAnalysisCopyPaste(analysisId, {
-        parsedResult: previewData.parsedResult as CVAnalysisCopyPasteResult,
+      prepareJobMatchAnalysisCopyPaste(analysisId, {
+        jobDescription,
+        jobUrl,
       }),
-    getCorrectionInstructions: () => CV_CORRECTION_INSTRUCTIONS,
-    onApplied: (result) => onApplied(result as CVAnalysisDetailResponse),
+    preview: (rawResponse) =>
+      previewJobMatchAnalysisCopyPaste(analysisId, { rawResponse }),
+    apply: (previewData) =>
+      applyJobMatchAnalysisCopyPaste(analysisId, {
+        parsedResult: previewData.parsedResult,
+        jobDescription,
+        jobUrl,
+      }),
+    getCorrectionInstructions: () => JOB_MATCH_CORRECTION_INSTRUCTIONS,
+    onApplied: (result) => onApplied(result as JobMatchAnalysisDetailResponse),
     onClose,
   });
 
   return (
     <CopyPasteWorkflowModal<
       { prompt: string; privacyNotice: string },
-      PreviewCVAnalysisCopyPasteResponse
+      PreviewJobMatchAnalysisCopyPasteResponse
     >
       open={open}
       onClose={onClose}
@@ -73,7 +78,9 @@ export default function CVScoreCopyPasteModal({
       isPreviewing={state.isPreviewing}
       onValidateResponse={state.validateResponse}
       previewData={state.previewData}
-      renderPreview={(data) => <CVScoreCopyPastePreview data={data} />}
+      renderPreview={(data) => (
+        <JobMatchScoreCopyPastePreview data={data} />
+      )}
       getApplyLabel={(data) =>
         data.preview.willReplaceExistingResult
           ? t("replaceAnalysis")
@@ -82,19 +89,21 @@ export default function CVScoreCopyPasteModal({
       isApplying={state.isApplying}
       onApply={state.applyResult}
       error={state.error}
-      correctionInstructions={CV_CORRECTION_INSTRUCTIONS}
+      correctionInstructions={JOB_MATCH_CORRECTION_INSTRUCTIONS}
       copiedCorrection={state.copiedCorrection}
       onCopyCorrection={state.copyCorrection}
     />
   );
 }
 
-function CVScoreCopyPastePreview({
+function JobMatchScoreCopyPastePreview({
   data,
 }: {
-  data: PreviewCVAnalysisCopyPasteResponse;
+  data: PreviewJobMatchAnalysisCopyPasteResponse;
 }) {
   const t = useTranslations("analysisFlow.copyPaste");
+  const tJob = useTranslations("jobMatchCopyPaste");
+
   return (
     <div className="space-y-4">
       {data.preview.willReplaceExistingResult && (
@@ -112,12 +121,16 @@ function CVScoreCopyPastePreview({
           value={t("externalChat")}
         />
         <CopyPastePreviewItem
-          label={t("strengthsCount")}
-          value={data.preview.strengthsCount}
+          label={tJob("matchingKeywords")}
+          value={data.preview.matchingKeywordsCount}
         />
         <CopyPastePreviewItem
-          label={t("improvementAreasCount")}
-          value={data.preview.improvementAreasCount}
+          label={tJob("missingKeywords")}
+          value={data.preview.missingKeywordsCount}
+        />
+        <CopyPastePreviewItem
+          label={tJob("jobKeywords")}
+          value={data.preview.jobKeywordsCount}
         />
         <CopyPastePreviewItem
           label={t("recommendationsCount")}

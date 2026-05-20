@@ -16,13 +16,16 @@ import {
 } from "lucide-react";
 import { getErrorMessage } from "@/lib/errors";
 import type { JobMatchAnalysisDetail } from "../api/job-match-analysis-api";
+import type { JobMatchAnalysisDetailResponse } from "@/app/api/job-match-analyses/responses";
 import JobMatchForm from "./job-match-form";
+import JobMatchScoreCopyPasteModal from "./job-match-score-copy-paste-modal";
 
 interface JobMatchExtractionViewProps {
   analysis: JobMatchAnalysisDetail;
   onScore: (input: { jobDescription: string; jobUrl: string; model: string }) => Promise<void>;
   hasAIApiKey: boolean;
   onOpenSettings: () => void;
+  onCopyPasteApplied: (analysis: JobMatchAnalysisDetailResponse) => void;
 }
 
 type ParserTab = "python" | "pdfjs" | "node";
@@ -58,6 +61,7 @@ export default function JobMatchExtractionView({
   onScore,
   hasAIApiKey,
   onOpenSettings,
+  onCopyPasteApplied,
 }: JobMatchExtractionViewProps) {
   const t = useTranslations("analysisFlow.extraction");
   const [activeTab, setActiveTab] = useState<ParserTab>("python");
@@ -67,6 +71,9 @@ export default function JobMatchExtractionView({
 
   const [loadingAI, setLoadingAI] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
+  const [copyPasteOpen, setCopyPasteOpen] = useState(false);
+  const [copyPasteJobDescription, setCopyPasteJobDescription] = useState("");
+  const [copyPasteJobUrl, setCopyPasteJobUrl] = useState<string | null>(null);
 
   const getTextForTab = (tab: ParserTab) => {
     switch (tab) {
@@ -365,7 +372,6 @@ export default function JobMatchExtractionView({
           />
         )}
 
-        {/* AI Analysis Section - Job Match only */}
         {analysis.aiScore === null && (
           <JobMatchForm
             key="job-match-form"
@@ -375,8 +381,22 @@ export default function JobMatchExtractionView({
             error={aiError}
             hasAIApiKey={hasAIApiKey}
             onOpenSettings={onOpenSettings}
+            onCopyPasteOpen={(desc, url) => {
+              setCopyPasteJobDescription(desc);
+              setCopyPasteJobUrl(url || null);
+              setCopyPasteOpen(true);
+            }}
           />
         )}
+
+        <JobMatchScoreCopyPasteModal
+          analysisId={analysis.id}
+          jobDescription={copyPasteJobDescription}
+          jobUrl={copyPasteJobUrl}
+          open={copyPasteOpen}
+          onClose={() => setCopyPasteOpen(false)}
+          onApplied={onCopyPasteApplied}
+        />
       </div>
     </div>
   );

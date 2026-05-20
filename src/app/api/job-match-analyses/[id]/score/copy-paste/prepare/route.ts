@@ -1,0 +1,36 @@
+import { NextRequest } from "next/server";
+import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
+import { jobMatchAnalysisModule } from "@/lib/container";
+import { errorResponse, handleApiError, notFound, ok } from "@/modules/shared";
+import { parsePrepareJobMatchAnalysisCopyPasteRequest } from "./validation";
+import type { PrepareJobMatchAnalysisCopyPasteResponse } from "./responses";
+
+export async function POST(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const authContext = await getAuthenticatedRequestContext();
+    if (!authContext.ok) return authContext.response;
+    const { supabase, user } = authContext;
+
+    const body = await req.json();
+    const parsed = parsePrepareJobMatchAnalysisCopyPasteRequest(body);
+    if (!parsed.ok) return errorResponse(parsed.error);
+
+    const { id } = await params;
+    jobMatchAnalysisModule.bindRequest(supabase);
+    const result =
+      await jobMatchAnalysisModule.prepareJobMatchScoreCopyPaste.execute({
+        id,
+        userId: user.id,
+        jobDescription: parsed.value.jobDescription,
+        jobUrl: parsed.value.jobUrl,
+      });
+    if (!result) throw notFound("Analysis not found");
+
+    return ok(result satisfies PrepareJobMatchAnalysisCopyPasteResponse);
+  } catch (error: unknown) {
+    return handleApiError(error);
+  }
+}

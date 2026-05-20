@@ -1010,6 +1010,11 @@ export const messages = {
         archived: "Archived",
       },
     },
+    jobMatchCopyPaste: {
+      matchingKeywords: "Matching keywords",
+      missingKeywords: "Missing keywords",
+      jobKeywords: "Job keywords",
+    },
   },
   es: {
     common: {
@@ -2018,6 +2023,11 @@ export const messages = {
         default: "Por defecto",
         archived: "Archivado",
       },
+    },
+    jobMatchCopyPaste: {
+      matchingKeywords: "Keywords coincidentes",
+      missingKeywords: "Keywords faltantes",
+      jobKeywords: "Keywords de la oferta",
     },
   },
 } as const;

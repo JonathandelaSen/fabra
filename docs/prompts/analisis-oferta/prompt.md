@@ -2,9 +2,14 @@
 
 ## Source
 - Prompt source file: `src/modules/job-match-analysis/infrastructure/services/job-match-scoring-prompts.ts`
-- Prompt builder: `buildJobMatchScoringPrompt`
+- Integrated prompt builder: `buildJobMatchScoringPrompt`
+- Copy Paste prompt builder: `buildJobMatchScoringCopyPastePrompt`
 - Model controller: `src/modules/job-match-analysis/infrastructure/services/gemini-job-match-scoring-ai.service.ts`
-- Route: `POST /api/job-match-analyses/[id]/score`
+- Integrated route: `POST /api/job-match-analyses/[id]/score`
+- Copy Paste routes:
+  - `POST /api/job-match-analyses/[id]/score/copy-paste/prepare`
+  - `POST /api/job-match-analyses/[id]/score/copy-paste/preview`
+  - `POST /api/job-match-analyses/[id]/score/copy-paste/apply`
 
 ## Current Prompt
 ```text
@@ -58,5 +63,45 @@ If `job_url` is empty, the URL block is omitted.
 3. `GeminiJobMatchScoringAIService` builds this prompt with `buildJobMatchScoringPrompt` and sends the extracted CV text as the user message.
 4. The result is persisted on `job_match_analyses` and later powers offer tabs, tracking, interview questions, and offer chat.
 
+## Copy Paste Workflow
+
+### Envelope
+```json
+{
+  "workflowId": "job_match_analysis.score",
+  "schemaVersion": "1",
+  "result": { ... same fields as integrated result, using aiKeywords instead of keywordsFound ... }
+}
+```
+
+### Copy Paste Prompt
+`buildJobMatchScoringCopyPastePrompt` reuses the integrated system prompt from `buildJobMatchScoringPrompt` and appends:
+- JSON-only transport instructions
+- Envelope shape with `workflowId` and `schemaVersion`
+- Expected `result` schema
+- The extracted CV text
+
+### Copy Paste Runtime Flow
+1. `prepare`: Loads analysis, extracts CV text, builds copy-paste prompt, returns prompt + privacy notice.
+2. User copies prompt to external chat, runs it, gets JSON response.
+3. `preview`: Parses JSON, validates envelope and result schema, returns preview summary + parsed result.
+4. `apply`: Revalidates parsed result, persists with `aiModel: "external-chat"`, records observability with `assistanceMode: "copy_paste"`.
+
+### Data Included in Copy Paste Prompt
+- Extracted CV text (fallback: textPython > textPdfjs > textNode)
+- Job description
+- Job URL (if provided)
+
+### Privacy
+Non-blocking warning: "This prompt may include CV data and context you entered."
+
+### Validation
+- Strict JSON envelope: exact `workflowId` and `schemaVersion`
+- Score: number 0-100
+- Feedback: non-empty string
+- Array fields: arrays of strings
+- jobKeyData: object or null
+- Extra fields are preserved
+
 ## Maintenance
-When `buildJobMatchScoringPrompt`, its output JSON shape, or the offer fields sent to the model changes, update this document in the same change.
+When `buildJobMatchScoringPrompt`, `buildJobMatchScoringCopyPastePrompt`, their output JSON shapes, or the offer fields sent to the model change, update this document in the same change. Integrated and Copy Paste prompt semantics must stay aligned.
