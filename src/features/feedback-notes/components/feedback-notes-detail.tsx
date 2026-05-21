@@ -73,7 +73,7 @@ export function FeedbackNotesDetail({
 
   return (
     <div className="flex w-full max-w-[1600px] flex-col gap-5">
-      <section className="rounded-lg border border-white/[0.06] bg-white/[0.025] p-5">
+      <section className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-5">
         <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
           <div className="min-w-0 flex-1">
             {!isClosed && isEditing ? (

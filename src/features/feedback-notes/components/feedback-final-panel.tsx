@@ -80,7 +80,7 @@ export function FeedbackFinalPanel({
   };
 
   return (
-    <section className="min-w-0 rounded-lg border border-indigo-300/10 bg-[linear-gradient(135deg,rgba(99,102,241,0.08),rgba(255,255,255,0.02)_46%,rgba(16,185,129,0.04))] p-4">
+    <section className="min-w-0 rounded-lg border border-indigo-500/15 bg-[linear-gradient(135deg,rgba(99,102,241,0.12),rgba(255,255,255,0.01)_50%,rgba(16,185,129,0.06))] shadow-[0_4px_30px_rgba(99,102,241,0.03)] p-4">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="text-sm font-semibold text-zinc-100">{t("final.title")}</h2>

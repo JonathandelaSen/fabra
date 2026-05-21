@@ -60,7 +60,7 @@ export function FeedbackNotesSidebar({
   };
 
   return (
-    <aside className="flex min-h-0 w-full shrink-0 flex-col rounded-lg border border-white/[0.06] bg-white/[0.018]">
+    <aside className="flex min-h-0 w-full shrink-0 flex-col rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)]">
       <div className="border-b border-white/[0.06] px-4 py-3">
         <div className="mb-4 flex rounded-lg border border-white/[0.06] bg-white/[0.035] p-1">
           {(["active", "closed", "all"] as FeedbackFilter[]).map((item) => (

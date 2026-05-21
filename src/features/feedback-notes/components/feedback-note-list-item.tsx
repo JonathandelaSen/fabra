@@ -62,7 +62,7 @@ export function FeedbackNoteListItem({
             {feedback.activityContextName}
           </span>
         </div>
-        <span className="shrink-0 text-[10px] font-medium text-zinc-600 font-mono">
+        <span className="shrink-0 text-[11px] text-zinc-500">
           {formatDate(feedback.updatedAt)}
         </span>
       </div>

@@ -66,20 +66,17 @@ export function FeedbackEntriesPanel({
   };
 
   return (
-    <section className="min-w-0 rounded-lg border border-white/[0.06] bg-white/[0.02] p-4">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <div>
-          <h2 className="text-sm font-semibold text-zinc-100">{t("entries.title")}</h2>
-        </div>
-        {isClosed && (
+    <section className="min-w-0 space-y-4">
+      {isClosed && (
+        <div className="flex items-center justify-end">
           <span className="inline-flex items-center gap-1 text-xs text-zinc-500">
             <Lock className="h-3.5 w-3.5" />
             {t("status.closed")}
           </span>
-        )}
-      </div>
+        </div>
+      )}
       {!isClosed && isEditingMode && (
-        <div className="mb-4">
+        <div className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-3 mb-4">
           <label htmlFor="feedback-entry-draft" className="sr-only">
             {t("entries.placeholder")}
           </label>
@@ -90,7 +87,7 @@ export function FeedbackEntriesPanel({
             placeholder={t("entries.placeholder")}
             rows={4}
             disabled={isSaving}
-            className={textareaClass}
+            className="w-full resize-y border-transparent bg-transparent text-sm text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-0 focus-visible:border-transparent p-0 disabled:cursor-not-allowed disabled:opacity-60"
           />
           <div className="mt-2 flex justify-end">
             <Button
@@ -118,7 +115,7 @@ export function FeedbackEntriesPanel({
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
-              className="rounded-lg border border-white/[0.06] bg-[#101018] p-3"
+              className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-3"
             >
               <div className="mb-2 flex items-center justify-between gap-2">
                 <p className="text-xs text-zinc-500">{formatDate(entry.createdAt)}</p>
