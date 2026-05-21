@@ -452,10 +452,24 @@ export const messages = {
         extract: "Extract CV text",
       },
       extraction: {
+        banner: {
+          title: "How do companies read your CV?",
+          description: "Applicant Tracking Systems (ATS) don't see your PDF design; they extract and analyze the raw text. Below, you can simulate exactly how three of the most common reading methods interpret your CV to make sure your information is fully readable and organized.",
+        },
+        parserLabels: {
+          python: "Standard ATS Scanner",
+          pdfjs: "Visual Flow Scanner",
+          node: "Traditional ATS Scanner",
+        },
+        parserBadges: {
+          python: "Best Compatibility",
+          pdfjs: "Web Simulation",
+          node: "Rigorous Test",
+        },
         parserDescriptions: {
-          python: "Preserves layout better — used by most ATS",
-          pdfjs: "Browser PDF engine — simulates web reading",
-          node: "Lightweight Node.js parser — basic extraction",
+          python: "Analyzes layout structure and groups text by position. Simulates modern ATS interpreting multi-column resumes.",
+          pdfjs: "Extracts text following the rendering order of the PDF. Simulates how a browser processes reading hierarchy sequentially.",
+          node: "Extracts raw text line-by-line in the exact sequence it was written. Represents how simpler or legacy recruitment platforms read text.",
         },
         subtitle: "Text extracted with 3 different parsers",
         closePdf: "Close PDF",
@@ -1556,10 +1570,24 @@ export const messages = {
         extract: "Extraer texto del CV",
       },
       extraction: {
+        banner: {
+          title: "¿Cómo leen las empresas tu currículum?",
+          description: "Las plataformas de empleo automáticas (ATS) no ven el diseño visual de tu PDF; extraen y analizan el texto en bruto. Aquí puedes simular exactamente cómo interpretan tu CV tres de los métodos de lectura más comunes del mercado para asegurarte de que tu información sea legible y esté ordenada.",
+        },
+        parserLabels: {
+          python: "Lector ATS Estándar",
+          pdfjs: "Lector de Flujo Visual",
+          node: "Lector ATS Tradicional",
+        },
+        parserBadges: {
+          python: "Mayor compatibilidad",
+          pdfjs: "Simulación Web",
+          node: "Prueba Rigurosa",
+        },
         parserDescriptions: {
-          python: "Respeta mejor el layout — usado por la mayoría de ATS",
-          pdfjs: "Motor PDF del navegador — simula lectura web",
-          node: "Parser ligero de Node.js — extracción básica",
+          python: "Analiza la estructura visual del diseño y agrupa el texto por posición. Simula la lógica de los ATS modernos que interpretan currículums a doble columna.",
+          pdfjs: "Extrae el texto siguiendo el orden de renderizado del PDF. Simula cómo un navegador web procesa secuencialmente la estructura de lectura.",
+          node: "Extrae el texto plano directo en el orden en que fue escrito en el documento. Representa cómo los sistemas de reclutamiento más sencillos o antiguos leen el texto.",
         },
         subtitle: "Texto extraído con 3 parsers diferentes",
         closePdf: "Cerrar PDF",

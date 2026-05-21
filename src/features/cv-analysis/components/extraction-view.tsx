@@ -17,6 +17,7 @@ import {
 import { getErrorMessage } from "@/lib/errors";
 import type { AnalysisMode, AIContext } from "@/lib/analysis-types";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
+import HowAtsWorksEducationBanner from "@/components/shared/how-ats-works-education-banner";
 import AnalysisModeSelector from "./analysis-mode-selector";
 import CVScoreCopyPasteModal from "./cv-score-copy-paste-modal";
 import GeneralAnalysisForm from "./general-analysis-form";
@@ -61,27 +62,35 @@ type ParserTab = "python" | "pdfjs" | "node";
 
 const PARSERS: {
   key: ParserTab;
-  label: string;
+  labelKey: string;
   descriptionKey: "python" | "pdfjs" | "node";
   color: string;
+  badgeKey: string;
+  badgeColor: string;
 }[] = [
   {
     key: "python",
-    label: "Python (pdfminer)",
+    labelKey: "parserLabels.python",
     descriptionKey: "python",
-    color: "bg-blue-500",
+    color: "bg-emerald-500",
+    badgeKey: "parserBadges.python",
+    badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
   },
   {
     key: "pdfjs",
-    label: "Node (pdfjs-dist)",
+    labelKey: "parserLabels.pdfjs",
     descriptionKey: "pdfjs",
-    color: "bg-emerald-500",
+    color: "bg-sky-500",
+    badgeKey: "parserBadges.pdfjs",
+    badgeColor: "bg-sky-500/10 text-sky-400 border-sky-500/20",
   },
   {
     key: "node",
-    label: "Node (pdf-parse)",
+    labelKey: "parserLabels.node",
     descriptionKey: "node",
     color: "bg-amber-500",
+    badgeKey: "parserBadges.node",
+    badgeColor: "bg-amber-500/10 text-amber-400 border-amber-500/20",
   },
 ];
 
@@ -342,8 +351,11 @@ export default function ExtractionView({
 
       {/* Content */}
       <div className="flex-1 flex flex-col overflow-auto p-4 sm:p-6 gap-4 sm:gap-6">
+        {/* Educational Banner */}
+        <HowAtsWorksEducationBanner />
+
         {/* Parser Tabs */}
-        <div className="shrink-0 flex flex-col xs:flex-row gap-2">
+        <div className="shrink-0 flex flex-col md:flex-row gap-3">
           {PARSERS.map((parser) => {
             const text = getTextForTab(parser.key);
             const error = getErrorForTab(parser.key);
@@ -355,26 +367,33 @@ export default function ExtractionView({
                 key={parser.key}
                 onClick={() => setActiveTab(parser.key)}
                 className={`
-                  flex items-center gap-2.5 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl transition-all duration-200 text-left flex-1
+                  flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 text-left flex-1 border
                   ${
                     activeTab === parser.key
-                      ? "bg-white/[0.08] border border-white/[0.1] shadow-lg"
-                      : "bg-white/[0.02] border border-transparent hover:bg-white/[0.04] hover:border-white/[0.06]"
+                      ? "bg-white/[0.07] border-white/[0.12] shadow-xl ring-1 ring-white/[0.05]"
+                      : "bg-white/[0.015] border-transparent hover:bg-white/[0.035] hover:border-white/[0.05]"
                   }
                 `}
               >
                 <span
-                  className={`w-2.5 h-2.5 rounded-full shrink-0 ${parser.color} ${
-                    !hasContent && !hasError ? "opacity-30" : ""
+                  className={`w-2 h-2 rounded-full shrink-0 ${parser.color} ${
+                    !hasContent && !hasError ? "opacity-30" : "animate-pulse"
                   }`}
                 />
-                <div className="min-w-0">
-                  <p
-                    className={`text-xs sm:text-sm font-medium truncate ${activeTab === parser.key ? "text-zinc-100" : "text-zinc-400"}`}
-                  >
-                    {parser.label}
-                  </p>
-                  <p className="text-[10px] sm:text-[11px] text-zinc-600 truncate">
+                <div className="min-w-0 flex-1 flex flex-col gap-0.5">
+                  <div className="flex items-center justify-between gap-1.5 flex-wrap">
+                    <p
+                      className={`text-xs sm:text-sm font-semibold truncate ${
+                        activeTab === parser.key ? "text-zinc-50" : "text-zinc-400"
+                      }`}
+                    >
+                      {t(parser.labelKey)}
+                    </p>
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full border font-medium ${parser.badgeColor}`}>
+                      {t(parser.badgeKey)}
+                    </span>
+                  </div>
+                  <p className="text-[10px] sm:text-[11px] text-zinc-500 truncate">
                     {hasError
                       ? t("error")
                       : hasContent
@@ -401,6 +420,15 @@ export default function ExtractionView({
                 ${fullscreen ? "fixed inset-4 z-50" : "relative"}
               `}
             >
+              {/* Laser scan line animation */}
+              <motion.div
+                key={activeTab + "-scan"}
+                initial={{ top: "0%" }}
+                animate={{ top: "100%" }}
+                transition={{ duration: 1.4, ease: "easeInOut" }}
+                className="absolute left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-indigo-500/70 to-transparent shadow-[0_0_10px_rgba(99,102,241,0.7)] z-10 pointer-events-none"
+              />
+
               {/* Toolbar */}
               <div className="shrink-0 flex items-center justify-between px-3 sm:px-4 py-2 border-b border-white/[0.06] bg-white/[0.02]">
                 <div className="flex items-center gap-2 min-w-0">
