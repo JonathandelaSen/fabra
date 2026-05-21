@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { ChevronRight } from "lucide-react";
 import type { FeedbackListItem } from "../api/feedback-notes-api";
 
 interface FeedbackNoteListItemProps {
@@ -28,30 +29,41 @@ export function FeedbackNoteListItem({
     <button
       type="button"
       onClick={onSelect}
-      className={`mb-1 w-full rounded-lg px-3 py-3 text-left transition-colors ${
+      className={`group relative mb-2 w-full rounded-xl p-3.5 text-left border transition-all duration-200 ${
         isSelected
-          ? "bg-white/[0.08] text-zinc-100"
-          : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"
+          ? "bg-[#181825] border-indigo-500/20 text-zinc-100 shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
+          : "bg-transparent border-transparent text-zinc-400 hover:bg-[#13131c]/60 hover:border-white/[0.04] hover:text-zinc-200"
       }`}
     >
-      <div className="flex items-center justify-between gap-2">
-        <p className="truncate text-sm font-medium">{feedback.personName}</p>
-        <span
-          className={`rounded-md border px-1.5 py-0.5 text-[10px] font-semibold ${
-            feedback.status === "active"
-              ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-300"
-              : "border-zinc-500/20 bg-zinc-500/10 text-zinc-400"
-          }`}
-        >
-          {t(`status.${feedback.status}`)}
-        </span>
-      </div>
-      <div className="mt-2 flex items-center justify-between gap-2">
-        <p className="text-[10px] text-zinc-500">
-          {t("updated", { date: formatDate(feedback.updatedAt) })}
+      {/* Premium left indicator stripe when selected */}
+      {isSelected && (
+        <span className="absolute left-0 top-3.5 bottom-3.5 w-1 rounded-r-md bg-indigo-500 transition-all duration-200" />
+      )}
+
+      <div className="flex items-start justify-between gap-3">
+        <p className="min-w-0 truncate text-[14px] font-semibold tracking-tight text-zinc-100">
+          {feedback.personName}
         </p>
-        <span className="truncate text-[10px] font-medium text-zinc-600">
-          {feedback.activityContextName}
+        <ChevronRight
+          className={`mt-0.5 h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 ${
+            isSelected ? "text-indigo-400" : "text-zinc-600 group-hover:text-zinc-400"
+          }`}
+        />
+      </div>
+
+      <div className="mt-3 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 min-w-0">
+          {feedback.status === "closed" && (
+            <span className="shrink-0 rounded-full border border-rose-500/20 bg-rose-500/10 px-2 py-0.5 text-[9px] font-semibold tracking-wide uppercase text-rose-400">
+              {t("status.closed")}
+            </span>
+          )}
+          <span className="truncate text-[11px] font-medium text-zinc-500 bg-white/[0.03] border border-white/[0.05] rounded px-1.5 py-0.5">
+            {feedback.activityContextName}
+          </span>
+        </div>
+        <span className="shrink-0 text-[10px] font-medium text-zinc-600 font-mono">
+          {formatDate(feedback.updatedAt)}
         </span>
       </div>
     </button>

@@ -102,131 +102,146 @@ export default function FeedbackNotesView({
   };
 
   return (
-    <div className="flex h-full min-h-0 bg-[#09090f] text-zinc-100">
-      <FeedbackNotesSidebar
-        feedbacks={feedbacks}
-        contexts={contextsQuery.data?.contexts ?? []}
-        selectedId={selectedIdInCurrentList}
-        status={status}
-        isLoading={isInitialListLoading}
-        isCreating={mutations.createFeedback.isPending}
-        onStatusChange={setStatus}
-        onSelect={selectFeedback}
-        onRefresh={() => void mutations.refresh()}
-        onCreate={(personName, activityContextId) =>
-          void runMutation(async () => {
-            const feedback = await mutations.createFeedback.mutateAsync({
-              personName,
-              activityContextId,
-            });
-            replaceFeedback(feedback.id);
-          })
-        }
-      />
-
-      <main className="min-w-0 flex-1 overflow-y-auto">
-        {error && (
-          <div className="m-4 rounded-lg border border-rose-500/20 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">
-            {error}
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-[#09090f] text-zinc-100">
+      <header className="shrink-0 border-b border-white/[0.06] px-5 py-4">
+        <div className="mx-auto flex w-full max-w-[1560px] flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0">
+            <h1 className="text-2xl font-semibold tracking-tight text-zinc-50">
+              {t("title")}
+            </h1>
+            <p className="mt-1 text-sm text-zinc-500">{t("subtitle")}</p>
           </div>
-        )}
+        </div>
+      </header>
 
-        {isInitialListLoading || (feedbackId && detailQuery.isLoading) ? (
-          <FeedbackNotesDetailSkeleton />
-        ) : !selectedFeedback ? (
-          <div className="flex h-full items-center justify-center text-sm text-zinc-600">
-            {t("emptySelection")}
-          </div>
-        ) : (
-          <FeedbackNotesDetail
-            feedback={selectedFeedback}
-            entries={entries}
+      <div className="min-h-0 flex-1 overflow-hidden bg-[#09090f] p-4 lg:p-5 xl:p-6">
+        <div className="mx-auto grid h-full w-full max-w-[1560px] grid-cols-1 gap-4 lg:grid-cols-[320px_minmax(0,1fr)]">
+          <FeedbackNotesSidebar
+            feedbacks={feedbacks}
             contexts={contextsQuery.data?.contexts ?? []}
-            deletingEntryIds={deletingEntryIds}
-            isSaving={isSaving}
-            isGenerating={mutations.generateFinalFeedback.isPending}
-            hasAIApiKey={hasAIApiKey}
-            selectedModel={selectedModel}
-            onModelChange={setSelectedModel}
-            onUpdateFeedback={(updates) =>
-              void runMutation(() =>
-                mutations.updateFeedback.mutateAsync({
-                  feedbackId: selectedFeedback.id,
-                  updates,
-                })
-              )
-            }
-            onDeleteFeedback={() =>
+            selectedId={selectedIdInCurrentList}
+            status={status}
+            isLoading={isInitialListLoading}
+            isCreating={mutations.createFeedback.isPending}
+            onStatusChange={setStatus}
+            onSelect={selectFeedback}
+            onRefresh={() => void mutations.refresh()}
+            onCreate={(personName, activityContextId) =>
               void runMutation(async () => {
-                if (!confirm(t("confirmDeleteFeedback"))) return;
-                await mutations.deleteFeedback.mutateAsync(selectedFeedback.id);
-                clearSelection();
-              })
-            }
-            onCloseFeedback={() =>
-              void runMutation(() => mutations.closeFeedback.mutateAsync(selectedFeedback.id))
-            }
-            onReopenFeedback={() =>
-              void runMutation(() => mutations.reopenFeedback.mutateAsync(selectedFeedback.id))
-            }
-            onCreateEntry={(content) =>
-              void runMutation(() =>
-                mutations.createEntry.mutateAsync({
-                  feedbackId: selectedFeedback.id,
-                  content,
-                })
-              )
-            }
-            onUpdateEntry={(entryId, content) =>
-              void runMutation(() => mutations.updateEntry.mutateAsync({ entryId, content }))
-            }
-            onDeleteEntry={(entryId) =>
-              void runMutation(async () => {
-                if (!confirm(t("confirmDeleteEntry"))) return;
-                setDeletingEntryIds((prev) => new Set(prev).add(entryId));
-                try {
-                  await mutations.deleteEntry.mutateAsync({
-                    entryId,
-                    feedbackId: selectedFeedback.id,
-                  });
-                } finally {
-                  setDeletingEntryIds((prev) => {
-                    const next = new Set(prev);
-                    next.delete(entryId);
-                    return next;
-                  });
-                }
-              })
-            }
-            onGenerate={() =>
-              void runMutation(async () => {
-                if (!hasAIApiKey) {
-                  onOpenSettings?.();
-                  return;
-                }
-                if (entries.length === 0) {
-                  setError("Add at least one entry before generating feedback.");
-                  return;
-                }
-                if (
-                  selectedFeedback.finalFeedback?.trim() &&
-                  !confirm("This will replace your current final feedback.")
-                ) {
-                  return;
-                }
-                await mutations.generateFinalFeedback.mutateAsync({
-                  feedbackId: selectedFeedback.id,
-                  provider: aiProvider,
-                  apiKey: aiApiKey,
-                  model: aiModel,
+                const feedback = await mutations.createFeedback.mutateAsync({
+                  personName,
+                  activityContextId,
                 });
+                replaceFeedback(feedback.id);
               })
             }
-            onOpenCopyPaste={() => setIsCopyPasteOpen(true)}
-            onOpenSettings={onOpenSettings}
           />
-        )}
-      </main>
+
+          <main className="min-w-0 overflow-y-auto">
+            {error && (
+              <div className="mb-4 rounded-lg border border-rose-500/20 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">
+                {error}
+              </div>
+            )}
+
+            {isInitialListLoading || (feedbackId && detailQuery.isLoading) ? (
+              <FeedbackNotesDetailSkeleton />
+            ) : !selectedFeedback ? (
+              <div className="flex h-full items-center justify-center text-sm text-zinc-600">
+                {t("emptySelection")}
+              </div>
+            ) : (
+              <FeedbackNotesDetail
+                feedback={selectedFeedback}
+                entries={entries}
+                contexts={contextsQuery.data?.contexts ?? []}
+                deletingEntryIds={deletingEntryIds}
+                isSaving={isSaving}
+                isGenerating={mutations.generateFinalFeedback.isPending}
+                hasAIApiKey={hasAIApiKey}
+                selectedModel={selectedModel}
+                onModelChange={setSelectedModel}
+                onUpdateFeedback={(updates) =>
+                  void runMutation(() =>
+                    mutations.updateFeedback.mutateAsync({
+                      feedbackId: selectedFeedback.id,
+                      updates,
+                    })
+                  )
+                }
+                onDeleteFeedback={() =>
+                  void runMutation(async () => {
+                    if (!confirm(t("confirmDeleteFeedback"))) return;
+                    await mutations.deleteFeedback.mutateAsync(selectedFeedback.id);
+                    clearSelection();
+                  })
+                }
+                onCloseFeedback={() =>
+                  void runMutation(() => mutations.closeFeedback.mutateAsync(selectedFeedback.id))
+                }
+                onReopenFeedback={() =>
+                  void runMutation(() => mutations.reopenFeedback.mutateAsync(selectedFeedback.id))
+                }
+                onCreateEntry={(content) =>
+                  void runMutation(() =>
+                    mutations.createEntry.mutateAsync({
+                      feedbackId: selectedFeedback.id,
+                      content,
+                    })
+                  )
+                }
+                onUpdateEntry={(entryId, content) =>
+                  void runMutation(() => mutations.updateEntry.mutateAsync({ entryId, content }))
+                }
+                onDeleteEntry={(entryId) =>
+                  void runMutation(async () => {
+                    if (!confirm(t("confirmDeleteEntry"))) return;
+                    setDeletingEntryIds((prev) => new Set(prev).add(entryId));
+                    try {
+                      await mutations.deleteEntry.mutateAsync({
+                        entryId,
+                        feedbackId: selectedFeedback.id,
+                      });
+                    } finally {
+                      setDeletingEntryIds((prev) => {
+                        const next = new Set(prev);
+                        next.delete(entryId);
+                        return next;
+                      });
+                    }
+                  })
+                }
+                onGenerate={() =>
+                  void runMutation(async () => {
+                    if (!hasAIApiKey) {
+                      onOpenSettings?.();
+                      return;
+                    }
+                    if (entries.length === 0) {
+                      setError(t("errors.entriesRequiredForGeneration"));
+                      return;
+                    }
+                    if (
+                      selectedFeedback.finalFeedback?.trim() &&
+                      !confirm(t("confirmReplaceFinalFeedback"))
+                    ) {
+                      return;
+                    }
+                    await mutations.generateFinalFeedback.mutateAsync({
+                      feedbackId: selectedFeedback.id,
+                      provider: aiProvider,
+                      apiKey: aiApiKey,
+                      model: aiModel,
+                    });
+                  })
+                }
+                onOpenCopyPaste={() => setIsCopyPasteOpen(true)}
+                onOpenSettings={onOpenSettings}
+              />
+            )}
+          </main>
+        </div>
+      </div>
 
       {isCopyPasteOpen && selectedFeedback && (
         <FeedbackCopyPastePanel
