@@ -8,6 +8,8 @@ import { DeleteConversationUseCase } from "./application/use-cases/delete-conver
 import { GetAnalysisChatContextUseCase } from "./application/use-cases/get-analysis-chat-context.use-case";
 import { ListConversationsUseCase } from "./application/use-cases/list-conversations.use-case";
 import { ListMessagesUseCase } from "./application/use-cases/list-messages.use-case";
+import { ApplyOfferChatCopyPasteUseCase } from "./application/use-cases/apply-offer-chat-copy-paste.use-case";
+import { PrepareOfferChatCopyPasteUseCase } from "./application/use-cases/prepare-offer-chat-copy-paste.use-case";
 import { RenameConversationUseCase } from "./application/use-cases/rename-conversation.use-case";
 import { SendMessageUseCase } from "./application/use-cases/send-message.use-case";
 import { AnalysisChatContextRepository } from "./infrastructure/repositories/analysis-chat-context.repository";
@@ -49,6 +51,17 @@ function createUseCases(
       messageRepo,
       aiFactory,
       queryBus,
+      tracker,
+    }),
+    prepareOfferChatCopyPaste: new PrepareOfferChatCopyPasteUseCase({
+      conversationRepo,
+      messageRepo,
+      queryBus,
+      tracker,
+    }),
+    applyOfferChatCopyPaste: new ApplyOfferChatCopyPasteUseCase({
+      conversationRepo,
+      messageRepo,
       tracker,
     }),
     getAnalysisChatContext: new GetAnalysisChatContextUseCase({

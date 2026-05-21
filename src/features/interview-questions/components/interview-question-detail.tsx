@@ -3,15 +3,22 @@
 import { Briefcase, Loader2, Save, Trash2 } from "lucide-react";
 import { useRef } from "react";
 import { useTranslations } from "next-intl";
+import AIActionLauncher, {
+  type AIModelOption,
+} from "@/components/shared/ai-action-launcher";
 import type {
   InterviewQuestion,
   UpdateInterviewQuestionInput,
 } from "../api/interview-questions-api";
-import { InterviewQuestionAIPanel } from "./interview-question-ai-panel";
 import type {
   InterviewQuestionAnalysisOption,
   InterviewQuestionCVOption,
 } from "./interview-questions-types";
+
+const AI_MODELS: AIModelOption[] = [
+  { id: "gemini-3.1-pro-preview", label: "Gemini 3.1 Pro" },
+  { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash" },
+];
 
 interface InterviewQuestionDetailProps {
   question: InterviewQuestion;
@@ -27,6 +34,7 @@ interface InterviewQuestionDetailProps {
   onRunAI: (mode: "generate" | "edit", instruction: string) => void;
   onOpenSettings: () => void;
   onOpenAnalysis: (id: string) => void;
+  onOpenCopyPaste: () => void;
 }
 
 export function InterviewQuestionDetail({
@@ -43,6 +51,7 @@ export function InterviewQuestionDetail({
   onRunAI,
   onOpenSettings,
   onOpenAnalysis,
+  onOpenCopyPaste,
 }: InterviewQuestionDetailProps) {
   const t = useTranslations("interviewQuestions");
   const questionRef = useRef<HTMLTextAreaElement | null>(null);
@@ -155,15 +164,24 @@ export function InterviewQuestionDetail({
         </div>
       </div>
 
-      <InterviewQuestionAIPanel
-        question={question}
-        model={model}
-        hasAIApiKey={hasAIApiKey}
-        loadingMode={aiLoading}
-        onModelChange={onModelChange}
-        onRunAI={onRunAI}
-        onOpenSettings={onOpenSettings}
-      />
+      <div className="flex flex-wrap items-center gap-3">
+        <AIActionLauncher
+          actionLabel={t("generateWithAI")}
+          loading={aiLoading !== null}
+          integrated={{
+            available: hasAIApiKey,
+            selectedModelId: model,
+            models: AI_MODELS,
+            onModelChange: onModelChange,
+            onRun: () => onRunAI("generate", ""),
+            onConfigure: onOpenSettings,
+          }}
+          copyPaste={{
+            available: true,
+            onOpenFlow: onOpenCopyPaste,
+          }}
+        />
+      </div>
 
       <button
         type="button"

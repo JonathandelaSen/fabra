@@ -2,12 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Check, Clipboard, Copy, Loader2, Save, Sparkles } from "lucide-react";
-import {
-  buildFeedbackNotesFinalPrompt,
-  type FeedbackEntry,
-  type FeedbackListItem,
-} from "../api/feedback-notes-api";
+import { Check, Copy, Save } from "lucide-react";
+import AIActionLauncher, {
+  type AIModelOption,
+} from "@/components/shared/ai-action-launcher";
+import type { FeedbackEntry, FeedbackListItem } from "../api/feedback-notes-api";
+
+const AI_MODELS: AIModelOption[] = [
+  { id: "gemini-3.1-pro-preview", label: "Gemini 3.1 Pro Preview" },
+  { id: "gemini-3.1-flash-preview", label: "Gemini 3.1 Flash Preview" },
+  { id: "gemini-2.5-pro", label: "Gemini 2.5 Pro" },
+  { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash" },
+];
 
 const textareaClass =
   "w-full resize-none rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-600 outline-none transition-colors focus:border-zinc-300 focus:ring-0 disabled:cursor-not-allowed disabled:opacity-60";
@@ -18,9 +24,13 @@ interface FeedbackFinalPanelProps {
   isClosed: boolean;
   isSaving: boolean;
   isGenerating: boolean;
+  hasAIApiKey: boolean;
+  selectedModel: string;
+  onModelChange: (model: string) => void;
   onSaveFinalFeedback: (finalFeedback: string | null) => void;
-  onGenerate: (model: string) => void;
-  onCopyPrompt: (prompt: string) => void;
+  onGenerate: () => void;
+  onOpenCopyPaste: () => void;
+  onOpenSettings?: () => void;
 }
 
 export function FeedbackFinalPanel({
@@ -29,14 +39,17 @@ export function FeedbackFinalPanel({
   isClosed,
   isSaving,
   isGenerating,
+  hasAIApiKey,
+  selectedModel,
+  onModelChange,
   onSaveFinalFeedback,
   onGenerate,
-  onCopyPrompt,
+  onOpenCopyPaste,
+  onOpenSettings,
 }: FeedbackFinalPanelProps) {
   const t = useTranslations("feedbackNotes");
   const [finalDraft, setFinalDraft] = useState(feedback.finalFeedback ?? "");
   const [finalCopied, setFinalCopied] = useState(false);
-  const [selectedModel, setSelectedModel] = useState("gemini-3.1-pro-preview");
 
   useEffect(() => {
     setFinalDraft(feedback.finalFeedback ?? "");
@@ -49,37 +62,10 @@ export function FeedbackFinalPanel({
     setTimeout(() => setFinalCopied(false), 2000);
   };
 
-  const copyPrompt = async () => {
-    if (entries.length === 0) return;
-    const prompt = buildFeedbackNotesFinalPrompt({
-      personName: feedback.personName,
-      entries: entries.map((entry) => ({
-        content: entry.content,
-        createdAt: entry.createdAt,
-      })),
-    });
-    await navigator.clipboard.writeText(prompt);
-    onCopyPrompt(prompt);
-  };
-
   return (
     <div className="min-w-0">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-sm font-semibold text-zinc-200">{t("final.title")}</h2>
-        <div className="flex items-center gap-2">
-          <label className="text-xs text-zinc-500">{t("final.modelLabel")}</label>
-          <select
-            value={selectedModel}
-            onChange={(event) => setSelectedModel(event.target.value)}
-            disabled={isClosed || isGenerating}
-            className="rounded-md border border-white/10 bg-[#0d0d14] px-2 py-1 text-xs text-zinc-300 outline-none transition-colors focus:border-zinc-300 disabled:opacity-50"
-          >
-            <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview</option>
-            <option value="gemini-3.1-flash-preview">Gemini 3.1 Flash Preview</option>
-            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
-            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
-          </select>
-        </div>
       </div>
       <textarea
         value={finalDraft}
@@ -89,7 +75,7 @@ export function FeedbackFinalPanel({
         rows={14}
         className={textareaClass}
       />
-      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+      <div className="mt-3 flex flex-wrap items-center gap-2">
         {!isClosed && (
           <button
             type="button"
@@ -115,30 +101,26 @@ export function FeedbackFinalPanel({
           {finalCopied ? t("final.copied") : t("final.copy")}
         </button>
         {!isClosed && (
-          <button
-            type="button"
-            onClick={() => onGenerate(selectedModel)}
-            disabled={isGenerating || entries.length === 0}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
-          >
-            {isGenerating ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Sparkles className="h-4 w-4" />
-            )}
-            {t("final.generate")}
-          </button>
+          <AIActionLauncher
+            actionLabel={t("final.generate")}
+            loading={isGenerating}
+            disabled={entries.length === 0}
+            integrated={{
+              available: hasAIApiKey,
+              selectedModelId: selectedModel,
+              models: AI_MODELS,
+              onModelChange,
+              onRun: onGenerate,
+              onConfigure: onOpenSettings,
+            }}
+            copyPaste={{
+              available: true,
+              onOpenFlow: onOpenCopyPaste,
+            }}
+          />
         )}
-        <button
-          type="button"
-          onClick={() => void copyPrompt()}
-          disabled={entries.length === 0}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-white/[0.08] px-3 py-2 text-sm font-medium text-zinc-200 hover:bg-white/[0.12] disabled:opacity-50"
-        >
-          <Clipboard className="h-4 w-4" />
-          {t("final.copyPrompt")}
-        </button>
       </div>
     </div>
   );
 }
+

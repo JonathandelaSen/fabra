@@ -7,6 +7,7 @@ import { GenerateQuestionAnswerUseCase } from "./application/use-cases/generate-
 import { GetProcessQuestionUseCase } from "./application/use-cases/get-process-question.use-case";
 import { ListProcessQuestionsUseCase } from "./application/use-cases/list-process-questions.use-case";
 import { UpdateFollowUpByAnalysisUseCase } from "./application/use-cases/update-follow-up-by-analysis.use-case";
+import { PrepareQuestionAnswerCopyPasteUseCase } from "./application/use-cases/prepare-question-answer-copy-paste.use-case";
 import { UpdateProcessQuestionUseCase } from "./application/use-cases/update-process-question.use-case";
 import { SupabaseFollowUpRepository } from "./infrastructure/repositories/supabase-follow-up.repository";
 import { SupabaseProcessQuestionRepository } from "./infrastructure/repositories/supabase-process-question.repository";
@@ -49,6 +50,10 @@ function createUseCases() {
       tracker,
     }),
     deleteProcessQuestion: new DeleteProcessQuestionUseCase({
+      questionRepo,
+      tracker,
+    }),
+    prepareQuestionAnswerCopyPaste: new PrepareQuestionAnswerCopyPasteUseCase({
       questionRepo,
       tracker,
     }),

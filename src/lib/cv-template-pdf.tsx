@@ -898,7 +898,9 @@ function CVTemplateDocument({
 
         {/* Body */}
         <View style={s.body}>
-          {getOrderedRenderableSections(profile).map(renderSection)}
+          {getOrderedRenderableSections(profile)
+            .filter((section) => !profile.presentation?.hiddenSections?.includes(section))
+            .map(renderSection)}
         </View>
       </Page>
     </Document>

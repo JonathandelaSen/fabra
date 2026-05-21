@@ -41,6 +41,20 @@ export interface EditCVProfileHttpInput extends AIRequestConfig {
   locale?: string;
 }
 
+export interface PrepareCVEditorCopyPasteHttpInput {
+  instruction: string;
+  templateId?: string;
+  locale?: string;
+}
+
+export interface PreviewCVEditorCopyPasteHttpInput {
+  rawResponse: string;
+}
+
+export interface ApplyCVEditorCopyPasteHttpInput {
+  parsedResult: Record<string, unknown>;
+}
+
 export interface PrepareCVProfileCopyPasteHttpInput {
   templateId?: string;
   locale?: string;
@@ -185,6 +199,41 @@ export function parseApplyCVProfileCopyPasteRequest(
       createTemplateVersion: body.createTemplateVersion === true,
     },
   };
+}
+
+export function parsePrepareCVEditorCopyPasteRequest(
+  body: unknown
+): Result<PrepareCVEditorCopyPasteHttpInput, HttpValidationError> {
+  if (!isRecord(body)) return validationError("Request body must be a JSON object");
+  const instruction = text(body.instruction);
+  if (!instruction) return validationError("Escribe una instrucción para editar el CV.");
+  return {
+    ok: true,
+    value: {
+      instruction,
+      templateId: text(body.templateId) || undefined,
+      locale: text(body.locale) || undefined,
+    },
+  };
+}
+
+export function parsePreviewCVEditorCopyPasteRequest(
+  body: unknown
+): Result<PreviewCVEditorCopyPasteHttpInput, HttpValidationError> {
+  if (!isRecord(body)) return validationError("Request body must be a JSON object");
+  const rawResponse = text(body.rawResponse);
+  if (!rawResponse) return validationError("Paste the JSON response from the external chat.");
+  return { ok: true, value: { rawResponse } };
+}
+
+export function parseApplyCVEditorCopyPasteRequest(
+  body: unknown
+): Result<ApplyCVEditorCopyPasteHttpInput, HttpValidationError> {
+  if (!isRecord(body)) return validationError("Request body must be a JSON object");
+  if (!isRecord(body.parsedResult)) {
+    return validationError("The parsed profile result is required.");
+  }
+  return { ok: true, value: { parsedResult: body.parsedResult } };
 }
 
 export function parseTemplatePdfRequest(params: URLSearchParams) {

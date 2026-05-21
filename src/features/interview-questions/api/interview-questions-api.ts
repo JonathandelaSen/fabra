@@ -141,3 +141,37 @@ export async function editInterviewQuestionAnswer({
     "Could not edit answer."
   );
 }
+
+export interface PrepareInterviewQuestionCopyPasteInput {
+  mode: "generate" | "edit";
+  instruction?: string;
+}
+
+export interface PrepareInterviewQuestionCopyPasteResult {
+  workflowId: "interview_question.answer";
+  schemaVersion: "1";
+  prompt: string;
+  expectedResponse: { kind: "plain_text" };
+  privacyNotice: string;
+}
+
+export async function prepareInterviewQuestionCopyPaste({
+  id,
+  input,
+}: {
+  id: string;
+  input: PrepareInterviewQuestionCopyPasteInput;
+}) {
+  const res = await fetch(
+    `/api/interview-questions/${encodeURIComponent(id)}/copy-paste/prepare`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    },
+  );
+  return readJsonResponse<PrepareInterviewQuestionCopyPasteResult>(
+    res,
+    "Could not prepare copy-paste prompt.",
+  );
+}

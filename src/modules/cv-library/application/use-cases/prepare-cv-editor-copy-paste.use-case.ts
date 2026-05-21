@@ -1,0 +1,96 @@
+import { createRequestId } from "@/lib/observability";
+import { ASSISTANCE_MODE } from "@/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
+import { badRequest, UserId, type EventTracker } from "@/modules/shared";
+import type { StandardCVProfile } from "../../domain/cv-profile";
+import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
+import {
+  CV_EDITOR_COPY_PASTE_MODEL,
+  CV_EDITOR_COPY_PASTE_SCHEMA_VERSION,
+  CV_EDITOR_COPY_PASTE_WORKFLOW_ID,
+} from "../../domain/services/cv-editor-copy-paste-workflow";
+import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
+
+export interface PrepareCVEditorCopyPasteInput {
+  cvDocumentId: string;
+  userId: string;
+  instruction: string;
+  templateId?: string | null;
+  locale?: string | null;
+  recommendations?: string[];
+}
+
+export interface PrepareCVEditorCopyPasteResult {
+  workflowId: typeof CV_EDITOR_COPY_PASTE_WORKFLOW_ID;
+  schemaVersion: typeof CV_EDITOR_COPY_PASTE_SCHEMA_VERSION;
+  prompt: string;
+  expectedResponse: { kind: "json"; envelope: true };
+  privacyNotice: string;
+}
+
+export class PrepareCVEditorCopyPasteUseCase {
+  constructor(
+    private readonly deps: {
+      documentRepo: CVDocumentRepository;
+      tracker: EventTracker;
+      buildPrompt: (input: {
+        profile: StandardCVProfile;
+        instruction: string;
+        templateId?: string | null;
+        locale?: string | null;
+        recommendations?: string[];
+      }) => string;
+    },
+  ) {}
+
+  async execute(
+    input: PrepareCVEditorCopyPasteInput,
+  ): Promise<PrepareCVEditorCopyPasteResult | null> {
+    const document = await this.deps.documentRepo.findById(
+      CVDocumentId.fromPrimitives(input.cvDocumentId),
+      UserId.fromPrimitives(input.userId),
+    );
+    if (!document) return null;
+
+    const primitives = document.toPrimitives();
+    if (primitives.type !== "template") {
+      throw badRequest("Only template CVs support editing");
+    }
+    if (!primitives.profile) {
+      throw badRequest("CV has no profile to edit");
+    }
+
+    const prompt = this.deps.buildPrompt({
+      profile: primitives.profile as StandardCVProfile,
+      instruction: input.instruction,
+      templateId: input.templateId ?? primitives.templateId,
+      locale: input.locale ?? primitives.templateLocale,
+      recommendations: input.recommendations,
+    });
+
+    const requestId = createRequestId("cv_editor_copy_paste_prepare");
+    await this.deps.tracker.record({
+      userId: input.userId,
+      cvId: input.cvDocumentId,
+      requestId,
+      stage: "cv_editor_copy_paste_prompt_prepared",
+      status: "success",
+      source: "cv_library",
+      metadata: {
+        assistanceMode: ASSISTANCE_MODE.copyPaste,
+        workflowId: CV_EDITOR_COPY_PASTE_WORKFLOW_ID,
+        schemaVersion: CV_EDITOR_COPY_PASTE_SCHEMA_VERSION,
+        model: CV_EDITOR_COPY_PASTE_MODEL,
+        instruction: input.instruction,
+      },
+    });
+
+    return {
+      workflowId: CV_EDITOR_COPY_PASTE_WORKFLOW_ID,
+      schemaVersion: CV_EDITOR_COPY_PASTE_SCHEMA_VERSION,
+      prompt,
+      expectedResponse: { kind: "json", envelope: true },
+      privacyNotice:
+        "This prompt includes your full CV profile data. Paste it only into external tools you trust.",
+    };
+  }
+}

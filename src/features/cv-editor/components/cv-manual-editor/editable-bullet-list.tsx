@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, ArrowUp, ArrowDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 interface EditableBulletListProps {
@@ -23,6 +23,16 @@ export function EditableBulletList({ items, onChange, placeholder }: EditableBul
   };
 
   const add = () => onChange([...items, ""]);
+
+  const move = (index: number, direction: -1 | 1) => {
+    const nextIndex = index + direction;
+    if (nextIndex < 0 || nextIndex >= items.length) return;
+    const next = [...items];
+    const temp = next[index];
+    next[index] = next[nextIndex];
+    next[nextIndex] = temp;
+    onChange(next);
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
     if (e.key === "Enter") {
@@ -54,9 +64,33 @@ export function EditableBulletList({ items, onChange, placeholder }: EditableBul
             placeholder={inputPlaceholder}
             className="flex-1 rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-teal-500/30 focus:outline-none"
           />
-          <button type="button" onClick={() => remove(i)} className="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-rose-400 transition-all">
-            <Trash2 className="h-3.5 w-3.5" />
-          </button>
+          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all shrink-0">
+            <button
+              type="button"
+              onClick={() => move(i, -1)}
+              disabled={i === 0}
+              className="text-zinc-600 hover:text-teal-400 disabled:opacity-20 disabled:pointer-events-none p-1 transition-colors rounded hover:bg-white/5"
+              title={t("moveUp")}
+            >
+              <ArrowUp className="h-3.5 w-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => move(i, 1)}
+              disabled={i === items.length - 1}
+              className="text-zinc-600 hover:text-teal-400 disabled:opacity-20 disabled:pointer-events-none p-1 transition-colors rounded hover:bg-white/5"
+              title={t("moveDown")}
+            >
+              <ArrowDown className="h-3.5 w-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => remove(i)}
+              className="text-zinc-600 hover:text-rose-400 p-1 transition-colors rounded hover:bg-white/5"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
       ))}
       <button type="button" onClick={add} className="flex items-center gap-1.5 text-[11px] text-teal-400 hover:text-teal-300 pt-1">

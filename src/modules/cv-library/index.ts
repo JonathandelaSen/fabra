@@ -48,6 +48,11 @@ export {
   CV_PROFILE_COPY_PASTE_WORKFLOW_ID,
 } from "./domain/services/cv-profile-copy-paste-workflow";
 export {
+  CV_EDITOR_COPY_PASTE_MODEL,
+  CV_EDITOR_COPY_PASTE_SCHEMA_VERSION,
+  CV_EDITOR_COPY_PASTE_WORKFLOW_ID,
+} from "./domain/services/cv-editor-copy-paste-workflow";
+export {
   presentCVDocument,
   presentCVDocumentSummary,
   presentCVDocuments,

@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
-import { CopyPromptModal } from "@/components/shared/copy-prompt-modal";
 import { useFeedbackNotesMutations } from "../hooks/use-feedback-notes-mutations";
 import {
   useFeedbackEntries,
@@ -15,6 +14,7 @@ import { useActivityContexts } from "@/features/activity-context";
 import { FeedbackNotesDetailSkeleton } from "./feedback-notes-skeleton";
 import { FeedbackNotesDetail } from "./feedback-notes-detail";
 import { FeedbackNotesSidebar } from "./feedback-notes-sidebar";
+import { FeedbackCopyPastePanel } from "./feedback-copy-paste-panel";
 
 interface FeedbackNotesViewProps {
   aiProvider: "gemini" | "mock";
@@ -47,8 +47,8 @@ export default function FeedbackNotesView({
   const contextsQuery = useActivityContexts();
   const mutations = useFeedbackNotesMutations(status);
   const [error, setError] = useState<string | null>(null);
-  const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
-  const [copiedPromptContent, setCopiedPromptContent] = useState("");
+  const [selectedModel, setSelectedModel] = useState("gemini-3.1-pro-preview");
+  const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
   const [deletingEntryIds, setDeletingEntryIds] = useState<Set<string>>(new Set());
 
   const feedbacks = listQuery.data ?? [];
@@ -89,6 +89,16 @@ export default function FeedbackNotesView({
     } catch (err: unknown) {
       setError(getErrorMessage(err));
     }
+  };
+
+  const handleApplyCopyPasteText = (text: string) => {
+    if (!selectedFeedback) return;
+    void runMutation(() =>
+      mutations.updateFeedback.mutateAsync({
+        feedbackId: selectedFeedback.id,
+        updates: { finalFeedback: text },
+      })
+    );
   };
 
   return (
@@ -135,6 +145,9 @@ export default function FeedbackNotesView({
             deletingEntryIds={deletingEntryIds}
             isSaving={isSaving}
             isGenerating={mutations.generateFinalFeedback.isPending}
+            hasAIApiKey={hasAIApiKey}
+            selectedModel={selectedModel}
+            onModelChange={setSelectedModel}
             onUpdateFeedback={(updates) =>
               void runMutation(() =>
                 mutations.updateFeedback.mutateAsync({
@@ -185,7 +198,7 @@ export default function FeedbackNotesView({
                 }
               })
             }
-            onGenerate={(model) =>
+            onGenerate={() =>
               void runMutation(async () => {
                 if (!hasAIApiKey) {
                   onOpenSettings?.();
@@ -209,21 +222,20 @@ export default function FeedbackNotesView({
                 });
               })
             }
-            onCopyPrompt={(prompt) => {
-              setCopiedPromptContent(prompt);
-              setIsCopyModalOpen(true);
-            }}
+            onOpenCopyPaste={() => setIsCopyPasteOpen(true)}
+            onOpenSettings={onOpenSettings}
           />
         )}
       </main>
 
-      <CopyPromptModal
-        isOpen={isCopyModalOpen}
-        onClose={() => setIsCopyModalOpen(false)}
-        title={t("copyPrompt.title")}
-        message={t("copyPrompt.message")}
-        promptContent={copiedPromptContent}
-      />
+      {isCopyPasteOpen && selectedFeedback && (
+        <FeedbackCopyPastePanel
+          feedback={selectedFeedback}
+          entries={entries}
+          onApplyText={handleApplyCopyPasteText}
+          onClose={() => setIsCopyPasteOpen(false)}
+        />
+      )}
     </div>
   );
 }

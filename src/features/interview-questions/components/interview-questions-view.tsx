@@ -15,6 +15,7 @@ import {
   useInterviewQuestionsList,
 } from "../hooks/use-interview-questions-queries";
 import { useInterviewQuestionsRouteState } from "../hooks/use-interview-questions-route-state";
+import { InterviewQuestionCopyPastePanel } from "./interview-question-copy-paste-panel";
 import { InterviewQuestionDetail } from "./interview-question-detail";
 import { InterviewQuestionsSidebar } from "./interview-questions-sidebar";
 import { InterviewQuestionsSkeleton } from "./interview-questions-skeleton";
@@ -52,6 +53,7 @@ export default function InterviewQuestionsView({
   const mutations = useInterviewQuestionsMutations(filters);
   const [model, setModel] = useState("gemini-3.1-pro-preview");
   const [error, setError] = useState<string | null>(null);
+  const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
 
   const questions = useMemo(() => listQuery.data ?? [], [listQuery.data]);
   const cvs = optionsQuery.data?.cvs ?? [];
@@ -141,6 +143,11 @@ export default function InterviewQuestionsView({
     }
   };
 
+  const handlePasteAnswer = (answer: string) => {
+    if (!selected) return;
+    updateQuestion({ answer });
+  };
+
   if (listQuery.isLoading && questions.length === 0) {
     return <InterviewQuestionsSkeleton />;
   }
@@ -185,6 +192,7 @@ export default function InterviewQuestionsView({
               onRunAI={runAI}
               onOpenSettings={onOpenSettings}
               onOpenAnalysis={onOpenAnalysis}
+              onOpenCopyPaste={() => setIsCopyPasteOpen(true)}
             />
           ) : (
             <div className="flex h-72 items-center justify-center text-sm text-zinc-600">
@@ -193,6 +201,15 @@ export default function InterviewQuestionsView({
           )}
         </section>
       </motion.div>
+
+      {isCopyPasteOpen && selected && (
+        <InterviewQuestionCopyPastePanel
+          questionId={selected.id}
+          hasAnswer={!!selected.answer}
+          onPasteAnswer={handlePasteAnswer}
+          onClose={() => setIsCopyPasteOpen(false)}
+        />
+      )}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import {
   normalizeSectionOrder,
   normalizeSectionTitles,
   type CVRenderableSectionId,
+  isRenderableSectionId,
 } from "./cv-templates";
 
 export const CV_PROFILE_SCHEMA_VERSION = "cv-profile.v1";
@@ -70,6 +71,7 @@ export interface StandardCVPresentation {
   sectionOrder?: CVRenderableSectionId[];
   accentColor?: string;
   tagsColor?: string;
+  hiddenSections?: CVRenderableSectionId[];
 }
 
 export interface StandardCVProfile {
@@ -208,6 +210,12 @@ function normalizeNamedItem(value: unknown): StandardCVNamedItem {
   });
 }
 
+function normalizeHiddenSections(value: unknown): CVRenderableSectionId[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const sections = value.filter(isRenderableSectionId);
+  return sections.length > 0 ? sections : undefined;
+}
+
 function normalizePresentation(value: unknown): StandardCVPresentation | undefined {
   const raw = asRecord(value);
   const presentation = withDefined({
@@ -218,6 +226,7 @@ function normalizePresentation(value: unknown): StandardCVPresentation | undefin
         : normalizeSectionOrder(raw.sectionOrder),
     accentColor: normalizeAccentColor(raw.accentColor),
     tagsColor: normalizeAccentColor(raw.tagsColor),
+    hiddenSections: normalizeHiddenSections(raw.hiddenSections),
   });
   return Object.keys(presentation).length > 0 ? presentation : undefined;
 }

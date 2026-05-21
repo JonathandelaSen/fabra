@@ -12,10 +12,10 @@ import {
   MoreHorizontal,
   Pencil,
   Plus,
-  Send,
   Sparkles,
   Trash2,
   UserRound,
+  X,
 } from "lucide-react";
 import type {
   AnalysisChatConversation,
@@ -31,6 +31,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
+import AIActionLauncher from "@/components/shared/ai-action-launcher";
+import { CopyPasteTextPanel } from "@/components/shared/copy-paste-text-panel";
 
 interface TabChatOfertaProps {
   analysisId: string;
@@ -237,6 +239,11 @@ export default function TabChatOferta({
   const [isLoadingConversations, setIsLoadingConversations] = useState(true);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
+  const [copyPastePrompt, setCopyPastePrompt] = useState("");
+  const [copyPastePrivacyNotice, setCopyPastePrivacyNotice] = useState("");
+  const [isPreparingCopyPaste, setIsPreparingCopyPaste] = useState(false);
+  const [isApplyingCopyPaste, setIsApplyingCopyPaste] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -373,8 +380,24 @@ export default function TabChatOferta({
     }
   };
 
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
+  const ensureConversation = async () => {
+    if (activeConversationId) return activeConversationId;
+
+    const res = await fetch(`/api/job-match-analyses/${analysisId}/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "create_conversation" }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || t("createConversationFailed"));
+    const conv = data.conversation as AnalysisChatConversation;
+    setConversations((prev) => [conv, ...prev]);
+    setActiveConversationId(conv.id);
+    return conv.id;
+  };
+
+  const handleSubmit = async (event?: FormEvent) => {
+    event?.preventDefault();
     const message = draft.trim();
     if (!message || isSending) return;
     if (!hasAIApiKey) {
@@ -382,33 +405,10 @@ export default function TabChatOferta({
       return;
     }
 
-    let conversationId = activeConversationId;
-
-    if (!conversationId) {
-      try {
-        const res = await fetch(`/api/job-match-analyses/${analysisId}/chat`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "create_conversation" }),
-        });
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok)
-          throw new Error(data.error || t("createConversationFailed"));
-        const conv = data.conversation as AnalysisChatConversation;
-        setConversations((prev) => [conv, ...prev]);
-        setActiveConversationId(conv.id);
-        conversationId = conv.id;
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : t("createConversationFailed"),
-        );
-        return;
-      }
-    }
-
     setIsSending(true);
     setError(null);
     try {
+      const conversationId = await ensureConversation();
       const res = await fetch(`/api/job-match-analyses/${analysisId}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -435,6 +435,74 @@ export default function TabChatOferta({
       );
     } finally {
       setIsSending(false);
+    }
+  };
+
+  const openCopyPasteFlow = async () => {
+    const message = draft.trim();
+    if (!message || isPreparingCopyPaste) return;
+
+    setIsPreparingCopyPaste(true);
+    setError(null);
+    try {
+      const conversationId = await ensureConversation();
+      const res = await fetch(
+        `/api/job-match-analyses/${analysisId}/chat/copy-paste/prepare`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ conversationId, message }),
+        },
+      );
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || t("copyPaste.prepareFailed"));
+      }
+      setCopyPastePrompt(data.prompt ?? "");
+      setCopyPastePrivacyNotice(data.privacyNotice ?? t("copyPaste.privacyNotice"));
+      setIsCopyPasteOpen(true);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : t("copyPaste.prepareFailed"),
+      );
+    } finally {
+      setIsPreparingCopyPaste(false);
+    }
+  };
+
+  const applyCopyPasteText = async (assistantResponse: string) => {
+    const message = draft.trim();
+    if (!message || !activeConversationId || isApplyingCopyPaste) return;
+
+    setIsApplyingCopyPaste(true);
+    setError(null);
+    try {
+      const res = await fetch(
+        `/api/job-match-analyses/${analysisId}/chat/copy-paste/apply`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            conversationId: activeConversationId,
+            userMessage: message,
+            assistantResponse,
+          }),
+        },
+      );
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || t("copyPaste.applyFailed"));
+      setMessages((current) => [
+        ...current,
+        data.userMessage,
+        data.assistantMessage,
+      ]);
+      setDraft("");
+      setIsCopyPasteOpen(false);
+      setCopyPastePrompt("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("copyPaste.applyFailed"));
+    } finally {
+      setIsApplyingCopyPaste(false);
     }
   };
 
@@ -480,15 +548,7 @@ export default function TabChatOferta({
               </p>
             </div>
           </div>
-          <select
-            value={model}
-            onChange={(event) => setModel(event.target.value)}
-            aria-label={t("modelLabel")}
-            className="h-8 rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 text-[11px] text-zinc-400 outline-none transition-colors hover:border-white/[0.12] focus:border-cyan-500/30"
-          >
-            <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro</option>
-            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
-          </select>
+          <span className="text-[11px] text-zinc-600">{t("modelLabel")}</span>
         </div>
 
         {/* Messages */}
@@ -569,22 +629,105 @@ export default function TabChatOferta({
               rows={1}
               className="min-h-[40px] max-h-[120px] flex-1 resize-none rounded-xl border-white/[0.08] bg-white/[0.03] px-3.5 py-2.5 text-sm text-zinc-200 placeholder:text-zinc-600 focus-visible:ring-cyan-500/20"
             />
-            <Button
-              type="submit"
-              size="icon"
-              disabled={isSending || !draft.trim()}
-              className="size-10 shrink-0 rounded-xl bg-cyan-500 text-white hover:bg-cyan-400 disabled:opacity-30"
-            >
-              {isSending ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                <Send className="size-4" />
-              )}
-            </Button>
+            <AIActionLauncher
+              actionLabel={t("sendAction")}
+              loading={isSending || isPreparingCopyPaste}
+              disabled={!draft.trim()}
+              integrated={{
+                available: hasAIApiKey,
+                selectedModelId: model || aiModel,
+                models: [
+                  { id: "gemini-3.1-pro-preview", label: "Gemini 3.1 Pro" },
+                  { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash" },
+                ],
+                onModelChange: setModel,
+                onRun: () => void handleSubmit(),
+                unavailableReason: t("missingApiKey"),
+              }}
+              copyPaste={{
+                available: true,
+                onOpenFlow: () => void openCopyPasteFlow(),
+              }}
+            />
           </form>
         </div>
       </div>
+      <OfferChatCopyPasteModal
+        isOpen={isCopyPasteOpen}
+        isApplying={isApplyingCopyPaste}
+        prompt={copyPastePrompt}
+        privacyNotice={copyPastePrivacyNotice}
+        onClose={() => setIsCopyPasteOpen(false)}
+        onApplyText={applyCopyPasteText}
+      />
     </motion.div>
+  );
+}
+
+function OfferChatCopyPasteModal({
+  isOpen,
+  isApplying,
+  prompt,
+  privacyNotice,
+  onClose,
+  onApplyText,
+}: {
+  isOpen: boolean;
+  isApplying: boolean;
+  prompt: string;
+  privacyNotice: string;
+  onClose: () => void;
+  onApplyText: (text: string) => void;
+}) {
+  const t = useTranslations("analysisDetail.chat.copyPaste");
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.97, y: 12 }}
+            className="fixed left-1/2 top-1/2 z-50 max-h-[86vh] w-[min(760px,calc(100vw-32px))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl border border-white/10 bg-[#101018] p-5 shadow-2xl"
+          >
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label={t("close")}
+              className="absolute right-4 top-4 rounded-md p-1 text-zinc-500 hover:bg-white/10 hover:text-zinc-200"
+            >
+              <X className="size-4" />
+            </button>
+            <div className="mb-4 pr-8">
+              <h3 className="text-base font-semibold text-zinc-100">
+                {t("title")}
+              </h3>
+              <p className="mt-1 text-sm text-zinc-500">{t("intro")}</p>
+            </div>
+            <CopyPasteTextPanel
+              title={t("panelTitle")}
+              privacyNotice={privacyNotice}
+              prompt={prompt}
+              copyLabel={t("copyPrompt")}
+              copiedLabel={t("promptCopied")}
+              pastedTextLabel={t("pasteResponseLabel")}
+              pastedTextPlaceholder={t("pasteResponsePlaceholder")}
+              applyLabel={isApplying ? t("applying") : t("insertResponse")}
+              emptyResponseError={t("emptyResponse")}
+              onApplyText={onApplyText}
+            />
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 }
 

@@ -12,11 +12,13 @@ import {
   useCVDocumentList,
   type CVDocumentListItem,
 } from "@/features/cv-library";
+import type { ApplyCVEditorCopyPasteResponse } from "@/app/api/cvs/[id]/edit/copy-paste/apply/responses";
 import {
   applyInstruction as applyInstructionApi,
   saveAsCV as saveAsCVApi,
   updateLocale as updateLocaleApi,
   updatePublicSettings as updatePublicSettingsApi,
+  normalizeCVResponse,
 } from "../api/cv-editor-api";
 
 interface UseCVEditorMutationsInput {
@@ -121,6 +123,30 @@ export function useCVEditorMutations({
     ],
   );
 
+  const handleCopyPasteApplied = useCallback(
+    (result: ApplyCVEditorCopyPasteResponse) => {
+      if (result.version) {
+        const normalized = normalizeCVResponse(result.version);
+        const profile = normalized.profile ?? null;
+        if (profile) {
+          savedProfileJsonRef.current = serializeProfile(profile);
+          setProfile(profile, "instant");
+        }
+        setEditedVersion(normalized);
+        setEditInstruction("");
+        reloadPreview();
+        void listQuery.refetch();
+      }
+    },
+    [
+      savedProfileJsonRef,
+      setProfile,
+      setEditedVersion,
+      reloadPreview,
+      listQuery,
+    ],
+  );
+
   const saveAsCV = useCallback(
     async (name: string) => {
       if (!currentVersionId || !name.trim()) return;
@@ -205,6 +231,7 @@ export function useCVEditorMutations({
     savingLocale,
     savingPublicSettings,
     applyInstruction,
+    handleCopyPasteApplied,
     saveAsCV,
     updateLocale,
     updatePublicSettings,

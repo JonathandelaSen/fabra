@@ -317,7 +317,9 @@ export default function CVTemplatePreview({
       </header>
 
       <main className="cvp-body">
-        {getOrderedRenderableSections(profile).map(renderSection)}
+        {getOrderedRenderableSections(profile)
+          .filter((section) => !profile.presentation?.hiddenSections?.includes(section))
+          .map(renderSection)}
       </main>
     </div>
   );

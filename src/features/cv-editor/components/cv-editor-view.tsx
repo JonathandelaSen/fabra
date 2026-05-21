@@ -21,12 +21,15 @@ import {
   Settings,
   Sparkles,
   Undo2,
-  Wand2,
 } from "lucide-react";
 import { getCVTemplate } from "@/lib/cv-templates";
 
 import { Button } from "@/components/ui/button";
+import AIActionLauncher, {
+  type AIModelOption,
+} from "@/components/shared/ai-action-launcher/ai-action-launcher";
 import { ManualEditor } from "./cv-manual-editor/manual-editor";
+import CVEditorCopyPasteModal from "./cv-editor-copy-paste-modal";
 import { useCVEditorMutations } from "../hooks/use-cv-editor-mutations";
 import { useCVEditorState } from "../hooks/use-cv-editor-state";
 
@@ -49,6 +52,13 @@ interface CVEditorViewProps {
   onStartAnalysis: () => void;
   onBackToLibrary?: () => void;
 }
+
+const AI_MODELS: AIModelOption[] = [
+  { id: "gemini-3.1-pro-preview", label: "Gemini 3.1 Pro Preview" },
+  { id: "gemini-3.1-flash-preview", label: "Gemini 3.1 Flash Preview" },
+  { id: "gemini-2.5-pro", label: "Gemini 2.5 Pro" },
+  { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash" },
+];
 
 function safeParseArray(value: string | null | undefined): string[] {
   try {
@@ -75,6 +85,7 @@ export default function CVEditorView({
   const [saveName, setSaveName] = useState("");
   const [publicCopied, setPublicCopied] = useState(false);
   const [editorTab, setEditorTab] = useState<"ai" | "manual">("ai");
+  const [copyPasteOpen, setCopyPasteOpen] = useState(false);
 
   const editorState = useCVEditorState(activeVersionId);
   const {
@@ -120,6 +131,7 @@ export default function CVEditorView({
     savingLocale,
     savingPublicSettings,
     applyInstruction,
+    handleCopyPasteApplied,
     saveAsCV,
     updateLocale,
     updatePublicSettings,
@@ -368,27 +380,13 @@ export default function CVEditorView({
 
                   {editorTab === "ai" && (
                     <section>
-                      <header className="mb-4 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-500/10 text-teal-400">
-                            <Sparkles className="h-4 w-4" />
-                          </div>
-                          <h3 className="text-sm font-semibold text-white">
-                            Editor IA
-                          </h3>
+                      <header className="mb-4 flex items-center gap-2">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-500/10 text-teal-400">
+                          <Sparkles className="h-4 w-4" />
                         </div>
-                        <select
-                          value={selectedModel}
-                          onChange={(e) => setSelectedModel(e.target.value)}
-                          className="bg-transparent text-[11px] font-medium text-zinc-500 focus:outline-none cursor-pointer"
-                        >
-                          <option value="gemini-3.1-pro-preview">
-                            Gemini 3.1 Pro
-                          </option>
-                          <option value="gemini-2.5-flash">
-                            Gemini 2.5 Flash
-                          </option>
-                        </select>
+                        <h3 className="text-sm font-semibold text-white">
+                          Editor IA
+                        </h3>
                       </header>
 
                       {error && (
@@ -398,29 +396,33 @@ export default function CVEditorView({
                       )}
 
                       <div className="space-y-4">
-                        <div className="relative">
-                          <textarea
-                            value={editInstruction}
-                            onChange={(e) => setEditInstruction(e.target.value)}
-                            placeholder="Describe los cambios que quieres hacer..."
-                            className="h-32 w-full resize-none rounded-2xl border border-white/5 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:border-teal-500/30 focus:outline-none transition-colors"
-                          />
-                          <Button
-                            disabled={
-                              !editInstruction.trim() ||
-                              editingProfile ||
-                              !hasAIApiKey
-                            }
-                            onClick={() => applyInstruction()}
-                            className="absolute bottom-3 right-3 h-8 rounded-lg bg-teal-500 px-3 text-xs font-bold text-black hover:bg-teal-400 disabled:opacity-30"
-                          >
-                            {editingProfile ? (
-                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                            ) : (
-                              <Wand2 className="h-3.5 w-3.5" />
-                            )}
-                          </Button>
-                        </div>
+                        <textarea
+                          value={editInstruction}
+                          onChange={(e) => setEditInstruction(e.target.value)}
+                          placeholder="Describe los cambios que quieres hacer..."
+                          className="h-32 w-full resize-none rounded-2xl border border-white/5 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:border-teal-500/30 focus:outline-none transition-colors"
+                        />
+
+                        <AIActionLauncher
+                          actionLabel={t("aiEditorAction")}
+                          loading={editingProfile}
+                          disabled={!editInstruction.trim()}
+                          integrated={{
+                            available: hasAIApiKey,
+                            selectedModelId: selectedModel,
+                            models: AI_MODELS,
+                            onModelChange: setSelectedModel,
+                            onRun: () => applyInstruction(),
+                            unavailableReason: hasAIApiKey
+                              ? undefined
+                              : t("errors.missingApiKey"),
+                            onConfigure: onOpenSettings,
+                          }}
+                          copyPaste={{
+                            available: true,
+                            onOpenFlow: () => setCopyPasteOpen(true),
+                          }}
+                        />
 
                         <div className="flex flex-wrap gap-2">
                           {[
@@ -431,10 +433,7 @@ export default function CVEditorView({
                           ].map((hint) => (
                             <button
                               key={hint}
-                              onClick={() => {
-                                setEditInstruction(hint);
-                                void applyInstruction(hint);
-                              }}
+                              onClick={() => setEditInstruction(hint)}
                               className="rounded-full border border-white/5 bg-white/5 px-3 py-1 text-[11px] text-zinc-400 hover:border-white/10 hover:bg-white/10 hover:text-zinc-200 transition-colors"
                             >
                               {hint}
@@ -789,6 +788,19 @@ export default function CVEditorView({
           </div>
         )}
       </AnimatePresence>
+
+      {currentVersion && (
+        <CVEditorCopyPasteModal
+          cvId={currentVersion.id}
+          instruction={editInstruction}
+          open={copyPasteOpen}
+          onClose={() => setCopyPasteOpen(false)}
+          onApplied={(result) => {
+            handleCopyPasteApplied(result);
+            setCopyPasteOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }

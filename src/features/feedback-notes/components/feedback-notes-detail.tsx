@@ -16,6 +16,9 @@ interface FeedbackNotesDetailProps {
   deletingEntryIds: Set<string>;
   isSaving: boolean;
   isGenerating: boolean;
+  hasAIApiKey: boolean;
+  selectedModel: string;
+  onModelChange: (model: string) => void;
   onUpdateFeedback: (
     updates: {
       personName?: string;
@@ -29,8 +32,9 @@ interface FeedbackNotesDetailProps {
   onCreateEntry: (content: string) => void;
   onUpdateEntry: (entryId: string, content: string) => void;
   onDeleteEntry: (entryId: string) => void;
-  onGenerate: (model: string) => void;
-  onCopyPrompt: (prompt: string) => void;
+  onGenerate: () => void;
+  onOpenCopyPaste: () => void;
+  onOpenSettings?: () => void;
 }
 
 export function FeedbackNotesDetail({
@@ -48,7 +52,11 @@ export function FeedbackNotesDetail({
   onUpdateEntry,
   onDeleteEntry,
   onGenerate,
-  onCopyPrompt,
+  onOpenCopyPaste,
+  onOpenSettings,
+  hasAIApiKey,
+  selectedModel,
+  onModelChange,
 }: FeedbackNotesDetailProps) {
   const t = useTranslations("feedbackNotes");
   const router = useRouter();
@@ -169,9 +177,13 @@ export function FeedbackNotesDetail({
           isClosed={isClosed}
           isSaving={isSaving}
           isGenerating={isGenerating}
+          hasAIApiKey={hasAIApiKey}
+          selectedModel={selectedModel}
+          onModelChange={onModelChange}
           onSaveFinalFeedback={(finalFeedback) => onUpdateFeedback({ finalFeedback })}
           onGenerate={onGenerate}
-          onCopyPrompt={onCopyPrompt}
+          onOpenCopyPaste={onOpenCopyPaste}
+          onOpenSettings={onOpenSettings}
         />
       </section>
     </div>

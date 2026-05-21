@@ -20,6 +20,7 @@ export interface CVPresentationInput {
     sectionTitles?: Partial<Record<CVRenderableSectionId, string>>;
     sectionOrder?: CVRenderableSectionId[];
     accentColor?: string;
+    hiddenSections?: CVRenderableSectionId[];
   };
 }
 
