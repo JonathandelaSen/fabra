@@ -35,11 +35,6 @@ export function FeedbackNoteListItem({
           : "bg-transparent border-transparent text-zinc-400 hover:bg-[#13131c]/60 hover:border-white/[0.04] hover:text-zinc-200"
       }`}
     >
-      {/* Premium left indicator stripe when selected */}
-      {isSelected && (
-        <span className="absolute left-0 top-3.5 bottom-3.5 w-1 rounded-r-md bg-indigo-500 transition-all duration-200" />
-      )}
-
       <div className="flex items-start justify-between gap-3">
         <p className="min-w-0 truncate text-[14px] font-semibold tracking-tight text-zinc-100">
           {feedback.personName}
