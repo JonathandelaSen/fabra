@@ -107,10 +107,7 @@ export function InterviewQuestionDetail({
       <section className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-5 animate-fade-in">
         <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold uppercase tracking-wide text-zinc-600">
-              {t("detail")}
-            </p>
-            <h2 className="mt-1 text-2xl font-bold tracking-tight text-zinc-100 line-clamp-2">
+            <h2 className="text-2xl font-bold tracking-tight text-zinc-100 line-clamp-2">
               {question.question}
             </h2>
             <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-zinc-500">
@@ -193,7 +190,7 @@ export function InterviewQuestionDetail({
         <div className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-5 flex flex-col gap-4 animate-fade-in">
           <h3 className="text-sm font-semibold tracking-tight text-zinc-300 flex items-center gap-2">
             <MessageSquare className="h-4 w-4 text-indigo-400" />
-            {t("detail")}
+            {t("question")}
           </h3>
           {isEditing ? (
             <div className="flex flex-col gap-4">
