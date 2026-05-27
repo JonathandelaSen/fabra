@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import type { ProcessingEventResponse } from "@/app/api/admin/processing-events/responses";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
+import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import {
   ObservabilityDetailSkeleton,
   ObservabilityListSkeleton,
@@ -113,19 +114,19 @@ export function AdminObservabilityView({
   }, [events]);
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col bg-[#09090f] px-5 py-5 text-zinc-100">
-      <header className="flex shrink-0 flex-col gap-4 border-b border-white/[0.06] pb-5 md:flex-row md:items-center md:justify-between">
-        <div className="flex items-center gap-4">
-          <div>
-            <div className="mb-1 flex items-center gap-2 text-xs font-medium text-emerald-300">
-              <ShieldCheck className="h-3.5 w-3.5" />
-              {userEmail ?? t("adminFallback")}
-            </div>
-            <h1 className="text-2xl font-semibold tracking-normal">
-              {t("title")}
-            </h1>
+    <FeatureScreenShell
+      title={
+        <div>
+          <div className="mb-1 flex items-center gap-2 text-xs font-medium text-emerald-300">
+            <ShieldCheck className="h-3.5 w-3.5" />
+            {userEmail ?? t("adminFallback")}
           </div>
+          <h1 className="text-2xl font-semibold tracking-tight text-zinc-50">
+            {t("title")}
+          </h1>
         </div>
+      }
+      actions={
         <button
           type="button"
           onClick={() => void eventsQuery.refetch()}
@@ -135,9 +136,10 @@ export function AdminObservabilityView({
           <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           {t("refresh")}
         </button>
-      </header>
-
-      <section className="grid min-h-0 flex-1 gap-4 py-5 lg:grid-cols-[420px_1fr]">
+      }
+      bodyClassName="overflow-hidden"
+    >
+      <section className="grid min-h-0 h-full gap-4 lg:grid-cols-[420px_1fr]">
           <aside className="flex min-h-[420px] flex-col overflow-hidden rounded-lg border border-white/[0.06] bg-white/[0.02]">
             <ObservabilityFilters
               filters={filters}
@@ -193,6 +195,6 @@ export function AdminObservabilityView({
             )}
           </section>
       </section>
-    </div>
+    </FeatureScreenShell>
   );
 }

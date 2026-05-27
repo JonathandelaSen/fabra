@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { LayoutTemplate } from "lucide-react";
 import { getErrorMessage } from "@/lib/errors";
 import {
   CV_TEMPLATES,
@@ -13,6 +12,7 @@ import {
   getStoredAIApiKey,
   getStoredAIProvider,
 } from "@/lib/browser-preferences";
+import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { useCVDocumentList } from "../hooks/use-cv-library-queries";
 import TemplateCard from "./template-card";
 import TemplateConfigurationModal from "./template-configuration-modal";
@@ -93,28 +93,18 @@ export default function TemplatesView({
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#050509]">
-      <div className="mx-auto max-w-7xl p-6 md:p-10">
-        <header className="mb-12">
-          <div className="inline-flex items-center gap-2 rounded-full border border-teal-500/20 bg-teal-500/10 px-3 py-1.5 text-xs font-medium text-teal-300">
-            <LayoutTemplate className="h-3.5 w-3.5" />
-            {t("badge")}
-          </div>
-          <h1 className="mt-4 text-4xl font-bold tracking-tight text-white">
-            {t("title")}
-          </h1>
-          <p className="mt-3 max-w-2xl text-lg text-zinc-400">
-            {t("description")}
-          </p>
-        </header>
-
+    <FeatureScreenShell
+      title={t("title")}
+      bodyClassName="overflow-y-auto"
+    >
+      <div className="pb-10">
         {error && (
           <div className="mb-8 rounded-xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm text-rose-300">
             {error}
           </div>
         )}
 
-        <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-2">
+        <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
           {CV_TEMPLATES.map((template) => (
             <TemplateCard
               key={template.templateId}
@@ -155,6 +145,6 @@ export default function TemplatesView({
           }
         }}
       />
-    </div>
+    </FeatureScreenShell>
   );
 }

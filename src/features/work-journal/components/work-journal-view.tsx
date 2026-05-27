@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { Plus, X } from "lucide-react";
 import type {
 
   WorkJournalEntryInputMode,
@@ -27,6 +28,8 @@ import {
   replaceWorkJournalEntryInCache,
 } from "../api/work-journal-entry-cache";
 import { getErrorMessage } from "@/lib/errors";
+import { Button } from "@/components/ui/button";
+import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { WorkJournalTimeline } from "./work-journal-timeline";
 import { WorkJournalHeader } from "./work-journal-header";
 import { WorkJournalForm } from "./work-journal-form";
@@ -270,16 +273,34 @@ export default function WorkJournalView({
   };
 
   return (
-    <div className="flex-1 overflow-y-auto px-6 md:px-16 lg:px-24 py-12 pb-32">
-      <div className="flex flex-col w-full">
+    <FeatureScreenShell
+      title={t("title")}
+      actions={
+        <Button
+          type="button"
+          onClick={() => setShowForm(!showForm)}
+          className={
+            showForm
+              ? "bg-white/10 text-white hover:bg-white/20 font-semibold transition-colors"
+              : "bg-indigo-300 text-indigo-950 font-semibold hover:bg-indigo-200 transition-colors shadow-[0_0_30px_rgba(129,140,248,0.15)]"
+          }
+        >
+          {showForm ? (
+            <><X className="mr-1.5 h-4 w-4" />{t("close")}</>
+          ) : (
+            <><Plus className="mr-1.5 h-4 w-4" />{t("newEntry")}</>
+          )}
+        </Button>
+      }
+      bodyClassName="overflow-y-auto"
+    >
+      <div className="flex flex-col w-full mx-auto max-w-4xl px-0 pb-24">
         <WorkJournalHeader
           search={search}
           setSearch={setSearch}
           contextFilter={contextFilter}
           setContextFilter={setContextFilter}
           activeContexts={activeContexts}
-          showForm={showForm}
-          setShowForm={setShowForm}
         />
 
         {visibleError && (
@@ -328,6 +349,6 @@ export default function WorkJournalView({
           onDelete={deleteEntry}
         />
       </div>
-    </div>
+    </FeatureScreenShell>
   );
 }

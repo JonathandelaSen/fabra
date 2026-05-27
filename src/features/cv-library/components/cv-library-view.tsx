@@ -14,6 +14,7 @@ import {
   useInterviewQuestionsForLibrary,
 } from "../hooks/use-cv-library-queries";
 import { useCVLibraryRouteState } from "../hooks/use-cv-library-route-state";
+import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { CVLibraryDetail } from "./cv-library-detail";
 import { CVLibrarySidebar } from "./cv-library-sidebar";
 import { CVLibrarySkeleton } from "./cv-library-skeleton";
@@ -45,6 +46,7 @@ export default function CVLibraryView({
   onOpenQuestions,
 }: CVLibraryViewProps) {
   const t = useTranslations("analysisFlow.cvLibrary");
+  const navT = useTranslations("navigation");
   const routeState = useCVLibraryRouteState();
   const listQuery = useCVDocumentList();
   const detailQuery = useCVDocumentDetail(routeState.cvId);
@@ -127,7 +129,10 @@ export default function CVLibraryView({
   }
 
   return (
-    <div className="flex-1 overflow-hidden bg-[#09090f] p-6 text-zinc-100 md:p-8">
+    <FeatureScreenShell
+      title={navT("cvLibrary")}
+      bodyClassName="overflow-hidden"
+    >
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
@@ -161,6 +166,6 @@ export default function CVLibraryView({
           onOpenQuestions={onOpenQuestions}
         />
       </motion.div>
-    </div>
+    </FeatureScreenShell>
   );
 }
