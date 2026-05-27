@@ -1,12 +1,12 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Plus } from "lucide-react";
 import type { WorkJournalContextLegacy as WorkJournalContext } from "../api/work-journal-types";
+import { ActivityContextSelector } from "@/features/activity-context";
 
 const inputClass =
-  "w-full bg-transparent border-b border-white/10 px-0 py-2 text-sm text-zinc-100 placeholder:text-zinc-600 outline-none transition-colors focus:border-zinc-300 focus:ring-0";
-const labelClass = "text-xs font-medium text-zinc-500 mb-1 block";
+  "w-full bg-transparent border-b border-white/10 px-0 py-2 text-[15px] font-medium text-zinc-100 placeholder:text-zinc-600 outline-none transition-colors focus:border-indigo-500/50 focus:ring-0";
+const labelClass = "text-xs font-medium text-zinc-500 mb-1.5 block uppercase tracking-wider";
 
 interface WorkJournalFormMetadataProps {
   contextId: string;
@@ -36,34 +36,20 @@ export function WorkJournalFormMetadata({
   const t = useTranslations("workJournal");
 
   return (
-    <div className="space-y-8">
-      <div>
-        <label htmlFor="work-journal-context" className={labelClass}>
-          {t("context")}
-        </label>
-        <select
+    <div className="space-y-6">
+      <div className="-mx-1">
+        <ActivityContextSelector
           id="work-journal-context"
-          className={inputClass}
+          label={t("context")}
+          manageLabel={t("manageContexts")}
           value={contextId}
-          onChange={(event) => onContextChange(event.target.value)}
-        >
-          <option value="" disabled className="bg-zinc-900 text-zinc-500">
-            {t("selectContext")}
-          </option>
-          {activeContexts.map((context) => (
-            <option
-              key={`form-ctx-${context.id}`}
-              value={context.id}
-              className="bg-zinc-900 text-zinc-200"
-            >
-              {context.name}{" "}
-              {context.type === "project" ? t("projectSuffix") : ""}
-            </option>
-          ))}
-        </select>
+          onChange={onContextChange}
+          contexts={activeContexts}
+          onManageClick={onManageContexts}
+        />
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 gap-6 pt-4 border-t border-white/5">
         <div>
           <label className={labelClass}>{t("dateFrom")}</label>
           <input
@@ -92,17 +78,6 @@ export function WorkJournalFormMetadata({
           value={topic}
           onChange={(event) => onTopicChange(event.target.value)}
         />
-      </div>
-
-      <div className="pt-6 border-t border-white/5">
-        <button
-          type="button"
-          onClick={onManageContexts}
-          className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
-        >
-          <Plus className="h-4 w-4" />
-          {t("manageContexts")}
-        </button>
       </div>
     </div>
   );

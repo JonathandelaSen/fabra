@@ -67,9 +67,9 @@ export function WorkJournalForm({
   const t = useTranslations("workJournal");
 
   return (
-    <div className="pb-16 pt-4 mb-8 border-b border-white/5 text-left">
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12 lg:gap-24">
-        <div className="space-y-6">
+    <div className="text-left w-full">
+      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_340px] gap-6">
+        <div className="w-full bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 md:p-8 space-y-6">
           <WorkJournalInputModeTabs
             value={draft.input_mode}
             onChange={(mode) =>
@@ -78,7 +78,7 @@ export function WorkJournalForm({
           />
 
           <textarea
-            className="w-full bg-transparent text-xl font-light leading-relaxed text-zinc-200 placeholder:text-zinc-700 outline-none resize-none min-h-[160px]"
+            className="w-full bg-transparent text-[17px] md:text-lg font-light leading-relaxed text-zinc-200 placeholder:text-zinc-700 outline-none resize-none min-h-[240px]"
             placeholder={t("notesPlaceholder")}
             value={draft.raw_notes}
             onChange={(event) =>
@@ -90,55 +90,61 @@ export function WorkJournalForm({
           />
 
           {draft.input_mode === "ai_assisted" && (
-            <WorkJournalAISection
-              rawNotes={draft.raw_notes}
-              contextId={draft.context_id}
-              finalText={draft.final_text}
-              onFinalTextChange={(text) =>
-                setDraft((current) => ({ ...current, final_text: text }))
-              }
-              aiLoading={aiLoading}
-              hasAIApiKey={hasAIApiKey}
-              onOpenSettings={onOpenSettings}
-              selectedModel={selectedModel}
-              setSelectedModel={setSelectedModel}
-              models={models}
-              isCopyPasteOpen={isCopyPasteOpen}
-              setIsCopyPasteOpen={setIsCopyPasteOpen}
-              contexts={contexts}
-              dateStart={draft.date_start}
-              dateEnd={draft.date_end}
-              topic={draft.topic}
-              onDraftWithAI={draftWithAI}
-            />
+            <div className="pt-6 border-t border-white/5">
+              <WorkJournalAISection
+                rawNotes={draft.raw_notes}
+                contextId={draft.context_id}
+                finalText={draft.final_text}
+                onFinalTextChange={(text) =>
+                  setDraft((current) => ({ ...current, final_text: text }))
+                }
+                aiLoading={aiLoading}
+                hasAIApiKey={hasAIApiKey}
+                onOpenSettings={onOpenSettings}
+                selectedModel={selectedModel}
+                setSelectedModel={setSelectedModel}
+                models={models}
+                isCopyPasteOpen={isCopyPasteOpen}
+                setIsCopyPasteOpen={setIsCopyPasteOpen}
+                contexts={contexts}
+                dateStart={draft.date_start}
+                dateEnd={draft.date_end}
+                topic={draft.topic}
+                onDraftWithAI={draftWithAI}
+              />
+            </div>
           )}
 
-          <WorkJournalFormActions
-            onSave={saveEntry}
-            onCancel={() => setShowForm(false)}
-          />
+          <div className="pt-6 border-t border-white/5">
+            <WorkJournalFormActions
+              onSave={saveEntry}
+              onCancel={() => setShowForm(false)}
+            />
+          </div>
         </div>
 
-        <WorkJournalFormMetadata
-          contextId={draft.context_id}
-          onContextChange={(id) =>
-            setDraft((current) => ({ ...current, context_id: id }))
-          }
-          dateStart={draft.date_start}
-          onDateStartChange={(date) =>
-            setDraft((current) => ({ ...current, date_start: date }))
-          }
-          dateEnd={draft.date_end}
-          onDateEndChange={(date) =>
-            setDraft((current) => ({ ...current, date_end: date }))
-          }
-          topic={draft.topic}
-          onTopicChange={(topic) =>
-            setDraft((current) => ({ ...current, topic }))
-          }
-          activeContexts={activeContexts}
-          onManageContexts={openActivityContextManager}
-        />
+        <div className="w-full bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 md:p-8 self-start">
+          <WorkJournalFormMetadata
+            contextId={draft.context_id}
+            onContextChange={(id) =>
+              setDraft((current) => ({ ...current, context_id: id }))
+            }
+            dateStart={draft.date_start}
+            onDateStartChange={(date) =>
+              setDraft((current) => ({ ...current, date_start: date }))
+            }
+            dateEnd={draft.date_end}
+            onDateEndChange={(date) =>
+              setDraft((current) => ({ ...current, date_end: date }))
+            }
+            topic={draft.topic}
+            onTopicChange={(topic) =>
+              setDraft((current) => ({ ...current, topic }))
+            }
+            activeContexts={activeContexts}
+            onManageContexts={openActivityContextManager}
+          />
+        </div>
       </div>
     </div>
   );
