@@ -1,4 +1,4 @@
-import { FolderKanban, Loader2, Save, X } from "lucide-react";
+import { Settings2, Loader2, Save, X } from "lucide-react";
 import type {
   ObjectiveContext,
   ObjectivePriority,
@@ -78,9 +78,9 @@ export function ObjectiveFormPanel({
             />
           </label>
 
-          <div className="grid gap-4 sm:grid-cols-3">
-            <label className="space-y-1.5 sm:col-span-2 block">
-              <span className="text-xs font-semibold text-zinc-400">{t("fields.context")}</span>
+          <div className="flex flex-col gap-1.5">
+            <span className="text-xs font-semibold text-zinc-400">{t("fields.context")}</span>
+            <div className="flex flex-col gap-2">
               <Select
                 value={form.contextId}
                 onChange={(e) => onFormChange({ ...form, contextId: e.target.value })}
@@ -91,17 +91,18 @@ export function ObjectiveFormPanel({
                   </option>
                 ))}
               </Select>
-            </label>
-            <div className="flex items-end">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onManageContexts}
-                className="w-full gap-2 h-9 text-xs border-white/[0.06] hover:bg-white/[0.04]"
-              >
-                <FolderKanban className="h-3.5 w-3.5" />
-                {t("actions.manageContexts")}
-              </Button>
+              <div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={onManageContexts}
+                  className="px-0 text-xs text-zinc-500 hover:bg-transparent hover:text-indigo-300"
+                >
+                  <Settings2 className="mr-1.5 h-3.5 w-3.5" />
+                  {t("actions.manageContexts")}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
