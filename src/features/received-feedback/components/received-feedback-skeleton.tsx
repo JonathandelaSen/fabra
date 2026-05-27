@@ -9,7 +9,7 @@ export function ReceivedFeedbackListSkeleton() {
           className="rounded-xl border border-white/5 bg-white/[0.01] p-3.5 space-y-2.5"
         >
           <div className="flex justify-between items-center">
-            <Skeleton className="h-4 w-2/5" />
+            <Skeleton className="h-4 w-3/4" />
             <Skeleton className="h-3 w-16" />
           </div>
           <Skeleton className="h-3 w-4/5" />
@@ -31,8 +31,8 @@ export function ReceivedFeedbackDetailSkeleton() {
           <div className="min-w-0 flex-1 flex items-center gap-3">
             <Skeleton className="h-11 w-11 rounded-xl" />
             <div className="space-y-2">
-              <Skeleton className="h-5 w-32" />
-              <Skeleton className="h-3.5 w-24" />
+              <Skeleton className="h-5 w-48" />
+              <Skeleton className="h-3.5 w-32" />
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">

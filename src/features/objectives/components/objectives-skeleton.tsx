@@ -47,7 +47,7 @@ export function ObjectivesDetailSkeleton() {
               <Skeleton className="h-5.5 w-24 rounded-full bg-white/[0.04]" />
               <Skeleton className="h-5.5 w-20 rounded-full bg-white/[0.04]" />
             </div>
-            <Skeleton className="h-8 w-2/3 bg-white/[0.04]" />
+            <Skeleton className="h-8 w-3/4 bg-white/[0.04]" />
             <Skeleton className="h-4 w-4/5 bg-white/[0.04]" />
           </div>
           <div className="flex shrink-0 gap-2">

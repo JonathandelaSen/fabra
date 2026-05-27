@@ -49,7 +49,7 @@ export function ObservabilityDetailSkeleton() {
               key={index}
               className="rounded-lg border border-white/[0.06] bg-[#101018] p-3"
             >
-              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-4 w-3/4" />
               <Skeleton className="mt-1 h-3 w-1/3" />
               <div className="mt-3 grid gap-2 sm:grid-cols-3">
                 <Skeleton className="h-3 w-16" />

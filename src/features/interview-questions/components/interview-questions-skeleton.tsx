@@ -44,7 +44,7 @@ export function InterviewQuestionsSkeleton() {
           <section className="flex flex-col gap-4 rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0 flex-1">
               <Skeleton className="mb-2 h-3.5 w-24 rounded" />
-              <Skeleton className="h-8 w-2/3 rounded-md" />
+              <Skeleton className="h-8 w-3/4 rounded-md" />
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <Skeleton className="h-9 w-24 rounded-lg" />
