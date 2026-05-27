@@ -104,7 +104,11 @@ export default function FeedbackNotesView({
   };
 
   return (
-    <FeatureScreenShell title={t("title")}>
+    <FeatureScreenShell
+      title={t("title")}
+      contentClassName="max-w-[1560px] mx-auto"
+      bodyContentClassName="max-w-[1560px] mx-auto"
+    >
       <FeatureTwoPaneLayout
         sidebar={
           <FeedbackNotesSidebar

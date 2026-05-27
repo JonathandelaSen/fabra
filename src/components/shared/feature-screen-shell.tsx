@@ -11,6 +11,7 @@ interface FeatureScreenShellProps {
   headerClassName?: string;
   bodyClassName?: string;
   contentClassName?: string;
+  bodyContentClassName?: string;
 }
 
 export function FeatureScreenShell({
@@ -21,6 +22,7 @@ export function FeatureScreenShell({
   headerClassName,
   bodyClassName,
   contentClassName,
+  bodyContentClassName,
 }: FeatureScreenShellProps) {
   return (
     <div
@@ -64,7 +66,9 @@ export function FeatureScreenShell({
           bodyClassName
         )}
       >
-        {children}
+        <div className={cn("h-full w-full", bodyContentClassName)}>
+          {children}
+        </div>
       </div>
     </div>
   );

@@ -262,6 +262,14 @@ export const messages = {
       saving: "Saving...",
       selectOrCreate: "Select or create a question.",
       selectQuestion: "Select a question.",
+      noContextSpecified: "No context specified.",
+      noAnswerGenerated: "No answer generated yet. Click 'Edit' to generate with AI or write a manual answer.",
+      copyAnswer: "Copy answer",
+      copied: "Copied!",
+      actions: {
+        editMode: "Edit question",
+        viewMode: "Done",
+      },
       copyPaste: {
         title: "External AI — Interview Answer",
         close: "Close",
@@ -1404,6 +1412,14 @@ export const messages = {
       saving: "Guardando...",
       selectOrCreate: "Selecciona o crea una pregunta.",
       selectQuestion: "Selecciona una pregunta.",
+      noContextSpecified: "Sin contexto especificado.",
+      noAnswerGenerated: "Aún no hay respuesta generada. Haz clic en 'Editar' para generar con IA o escribir una respuesta manual.",
+      copyAnswer: "Copiar respuesta",
+      copied: "¡Copiado!",
+      actions: {
+        editMode: "Editar pregunta",
+        viewMode: "Listo",
+      },
       copyPaste: {
         title: "IA externa — Respuesta de entrevista",
         close: "Cerrar",
