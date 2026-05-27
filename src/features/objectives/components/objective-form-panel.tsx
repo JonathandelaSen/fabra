@@ -5,15 +5,11 @@ import type {
   ObjectiveSource,
   ObjectiveStatus,
 } from "../api/objectives-api";
-import {
-  statusLabels,
-  type ObjectiveForm,
-} from "./objectives-ui";
+import { type ObjectiveForm } from "./objectives-ui";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select } from "@/components/ui/select";
-import { ActivityContextSelector } from "@/features/activity-context";
+import { ObjectiveIdentitySection } from "./objective-identity-section";
+import { ObjectivePlanningSection } from "./objective-planning-section";
+import { ObjectiveNarrativeSection } from "./objective-narrative-section";
 
 interface ObjectiveFormPanelProps {
   contexts: ObjectiveContext[];
@@ -63,161 +59,28 @@ export function ObjectiveFormPanel({
 
       {/* Panel Body */}
       <div className="p-5 flex flex-col gap-6">
-        {/* Section 1: Identity */}
-        <div className="space-y-4">
-          <h3 className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest border-b border-white/[0.04] pb-1">
-            Identity & Context
-          </h3>
-          <label className="block space-y-1.5">
-            <span className="text-xs font-semibold text-zinc-400">{t("fields.title")}</span>
-            <Input
-              value={form.title}
-              onChange={(e) => onFormChange({ ...form, title: e.target.value })}
-              maxLength={160}
-              placeholder="e.g. Lead the migration of frontend components"
-              className="bg-zinc-950 border-white/[0.06] focus-visible:ring-emerald-500/20"
-            />
-          </label>
+        <ObjectiveIdentitySection
+          contexts={contexts}
+          form={form}
+          onFormChange={onFormChange}
+          onManageContexts={onManageContexts}
+          t={t}
+        />
 
-          <ActivityContextSelector
-            label={t("fields.context")}
-            manageLabel={t("actions.manageContexts")}
-            value={form.contextId}
-            onChange={(val) => onFormChange({ ...form, contextId: val })}
-            contexts={contexts}
-            onManageClick={onManageContexts}
-          />
-        </div>
+        <ObjectivePlanningSection
+          form={form}
+          onFormChange={onFormChange}
+          priorityLabel={priorityLabel}
+          sourceLabel={sourceLabel}
+          statusLabel={statusLabel}
+          t={t}
+        />
 
-        {/* Section 2: Planning & Attributes */}
-        <div className="space-y-4">
-          <h3 className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest border-b border-white/[0.04] pb-1">
-            Planning & Attributes
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <label className="space-y-1.5 block">
-              <span className="text-xs font-semibold text-zinc-400">{t("fields.source")}</span>
-              <Select
-                value={form.source}
-                onChange={(e) =>
-                  onFormChange({ ...form, source: e.target.value as ObjectiveSource })
-                }
-              >
-                {["manager", "self", "company", "project", "other"].map((source) => (
-                  <option key={source} value={source} className="bg-[#101018] text-zinc-100">
-                    {sourceLabel(source as ObjectiveSource)}
-                  </option>
-                ))}
-              </Select>
-            </label>
-            <label className="space-y-1.5 block">
-              <span className="text-xs font-semibold text-zinc-400">{t("fields.status")}</span>
-              <Select
-                value={form.status}
-                onChange={(e) =>
-                  onFormChange({ ...form, status: e.target.value as ObjectiveStatus })
-                }
-              >
-                {Object.keys(statusLabels).map((status) => (
-                  <option key={status} value={status} className="bg-[#101018] text-zinc-100">
-                    {statusLabel(status as ObjectiveStatus)}
-                  </option>
-                ))}
-              </Select>
-            </label>
-            <label className="space-y-1.5 block">
-              <span className="text-xs font-semibold text-zinc-400">
-                {t("fields.priority")}
-              </span>
-              <Select
-                value={form.priority}
-                onChange={(e) =>
-                  onFormChange({
-                    ...form,
-                    priority: e.target.value as "" | ObjectivePriority,
-                  })
-                }
-              >
-                <option value="" className="bg-[#101018] text-zinc-100">{t("priority.none")}</option>
-                <option value="low" className="bg-[#101018] text-zinc-100">{priorityLabel("low")}</option>
-                <option value="medium" className="bg-[#101018] text-zinc-100">{priorityLabel("medium")}</option>
-                <option value="high" className="bg-[#101018] text-zinc-100">{priorityLabel("high")}</option>
-              </Select>
-            </label>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <label className="space-y-1.5 block">
-              <span className="text-xs font-semibold text-zinc-400">
-                {t("fields.startDate")}
-              </span>
-              <Input
-                type="date"
-                value={form.startDate}
-                onChange={(e) => onFormChange({ ...form, startDate: e.target.value })}
-                className="bg-zinc-950 border-white/[0.06] focus-visible:ring-emerald-500/20 py-2 h-auto text-sm"
-              />
-            </label>
-            <label className="space-y-1.5 block">
-              <span className="text-xs font-semibold text-zinc-400">
-                {t("fields.targetDate")}
-              </span>
-              <Input
-                type="date"
-                value={form.targetDate}
-                onChange={(e) => onFormChange({ ...form, targetDate: e.target.value })}
-                className="bg-zinc-950 border-white/[0.06] focus-visible:ring-emerald-500/20 py-2 h-auto text-sm"
-              />
-            </label>
-          </div>
-        </div>
-
-        {/* Section 3: Narrative & Reflection */}
-        <div className="space-y-4">
-          <h3 className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest border-b border-white/[0.04] pb-1">
-            Narrative & Success Criteria
-          </h3>
-          <label className="block space-y-1.5">
-            <span className="text-xs font-semibold text-zinc-400">
-              {t("fields.description")}
-            </span>
-            <Textarea
-              rows={3}
-              value={form.description}
-              onChange={(e) => onFormChange({ ...form, description: e.target.value })}
-              placeholder="What are the details of this objective?"
-              className="bg-zinc-950 border-white/[0.06] focus-visible:ring-emerald-500/20 text-sm py-2"
-            />
-          </label>
-
-          <label className="block space-y-1.5">
-            <span className="text-xs font-semibold text-zinc-400">
-              {t("fields.successCriteria")}
-            </span>
-            <Textarea
-              rows={2.5}
-              value={form.successCriteria}
-              onChange={(e) =>
-                onFormChange({ ...form, successCriteria: e.target.value })
-              }
-              placeholder={t("placeholders.successCriteria")}
-              className="bg-zinc-950 border-white/[0.06] focus-visible:ring-emerald-500/20 text-sm py-2"
-            />
-          </label>
-
-          <label className="block space-y-1.5">
-            <span className="text-xs font-semibold text-amber-400/80">
-              {t("fields.resultNotes")}
-            </span>
-            <Textarea
-              rows={2.5}
-              value={form.resultNotes}
-              onChange={(e) => onFormChange({ ...form, resultNotes: e.target.value })}
-              placeholder={t("placeholders.resultNotes")}
-              className="bg-zinc-950 border-white/[0.06] focus-visible:ring-amber-500/20 text-sm py-2"
-            />
-          </label>
-        </div>
+        <ObjectiveNarrativeSection
+          form={form}
+          onFormChange={onFormChange}
+          t={t}
+        />
 
         {/* Footer Actions */}
         <div className="mt-4 flex justify-end gap-3 border-t border-white/[0.06] pt-4">

@@ -22,6 +22,7 @@ import AnalysisModeSelector from "./analysis-mode-selector";
 import CVScoreCopyPasteModal from "./cv-score-copy-paste-modal";
 import GeneralAnalysisForm from "./general-analysis-form";
 import JobMatchForm from "./job-match-form";
+import { CvExtractionTextPanel } from "./cv-extraction-text-panel";
 import type { ScoreCVAnalysisInput } from "../hooks/use-cv-analysis-mutations";
 
 interface ExtractionData {
@@ -408,94 +409,17 @@ export default function ExtractionView({
 
         {/* Text Content Area & PDF Preview Side-by-Side */}
         <div className="flex-1 flex flex-col lg:flex-row gap-4 sm:gap-6 min-h-0">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.15 }}
-              className={`
-                flex-1 flex flex-col rounded-2xl border border-white/[0.06] bg-[#0a0a12] overflow-hidden min-h-[300px] lg:min-h-0
-                ${fullscreen ? "fixed inset-4 z-50" : "relative"}
-              `}
-            >
-              {/* Laser scan line animation */}
-              <motion.div
-                key={activeTab + "-scan"}
-                initial={{ top: "0%" }}
-                animate={{ top: "100%" }}
-                transition={{ duration: 1.4, ease: "easeInOut" }}
-                className="absolute left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-indigo-500/70 to-transparent shadow-[0_0_10px_rgba(99,102,241,0.7)] z-10 pointer-events-none"
-              />
-
-              {/* Toolbar */}
-              <div className="shrink-0 flex items-center justify-between px-3 sm:px-4 py-2 border-b border-white/[0.06] bg-white/[0.02]">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span
-                    className={`w-2 h-2 rounded-full shrink-0 ${PARSERS.find((p) => p.key === activeTab)?.color}`}
-                  />
-                  <span className="text-[10px] sm:text-xs text-zinc-400 font-medium truncate">
-                    {t(`parserDescriptions.${PARSERS.find((p) => p.key === activeTab)?.descriptionKey ?? "python"}`)}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1 shrink-0">
-                  <button
-                    onClick={handleCopy}
-                    disabled={!currentText}
-                    className="flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg text-xs text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06] transition-all disabled:opacity-30"
-                  >
-                    {copied ? (
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    ) : (
-                      <Copy className="w-3.5 h-3.5" />
-                    )}
-                    <span className="hidden xs:inline">
-                      {copied ? t("copied") : t("copy")}
-                    </span>
-                  </button>
-                  <button
-                    onClick={() => setFullscreen(!fullscreen)}
-                    className="flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg text-xs text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06] transition-all"
-                  >
-                    {fullscreen ? (
-                      <Minimize2 className="w-3.5 h-3.5" />
-                    ) : (
-                      <Maximize2 className="w-3.5 h-3.5" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Text */}
-              <div className="flex-1 overflow-auto p-4 sm:p-5">
-                {currentError && !currentText ? (
-                  <div className="flex items-start gap-3 text-rose-300">
-                    <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-medium text-sm">
-                        {t("extractionError")}
-                      </p>
-                      <p className="text-xs text-rose-400/70 mt-1 font-mono break-all">
-                        {currentError}
-                      </p>
-                    </div>
-                  </div>
-                ) : currentText ? (
-                  <pre className="text-xs sm:text-sm text-zinc-300 font-mono whitespace-pre-wrap leading-relaxed">
-                    {currentText}
-                  </pre>
-                ) : (
-                  <div className="flex flex-col items-center justify-center h-full py-10 text-zinc-600">
-                    <FileText className="w-8 h-8 sm:w-10 sm:h-10 mb-3 opacity-30" />
-                    <p className="text-xs sm:text-sm text-center px-4">
-                      {t("noText")}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </AnimatePresence>
+          <CvExtractionTextPanel
+            activeTab={activeTab}
+            currentText={currentText}
+            currentError={currentError}
+            copied={copied}
+            fullscreen={fullscreen}
+            parserColor={PARSERS.find((p) => p.key === activeTab)?.color}
+            parserDescriptionKey={PARSERS.find((p) => p.key === activeTab)?.descriptionKey ?? "python"}
+            onCopy={handleCopy}
+            onToggleFullscreen={() => setFullscreen(!fullscreen)}
+          />
 
           {/* PDF Previewer Panel */}
           <AnimatePresence>
