@@ -3,11 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Plus, X } from "lucide-react";
 import type {
-
   WorkJournalEntryInputMode,
   WorkJournalEntryLegacy as WorkJournalEntry,
 } from "../api/work-journal-types";
@@ -30,8 +28,9 @@ import {
 import { getErrorMessage } from "@/lib/errors";
 import { Button } from "@/components/ui/button";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import { WorkJournalTimeline } from "./work-journal-timeline";
-import { WorkJournalHeader } from "./work-journal-header";
+import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
+import { WorkJournalSidebar } from "./work-journal-sidebar";
+import { WorkJournalDetail } from "./work-journal-detail";
 import { WorkJournalForm } from "./work-journal-form";
 
 interface WorkJournalViewProps {
@@ -69,10 +68,14 @@ export default function WorkJournalView({
   const entriesQuery = useWorkJournalEntries();
   const [draft, setDraft] = useState(emptyEntryDraft);
   const [search, setSearch] = useState("");
-  const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
+  
+  // Selection and editing state
+  const [selectedEntryId, setSelectedEntryId] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  
   const [aiLoading, setAiLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false);
   const [contextFilter, setContextFilter] = useState<string>("");
   const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState(aiModel || "gemini-2.5-flash");
@@ -96,7 +99,13 @@ export default function WorkJournalView({
 
   const filteredEntries = useMemo(() => {
     const needle = search.trim().toLowerCase();
-    return entries.filter((entry) => {
+    
+    // Sort entries newest first to match UI expectations
+    const sorted = [...entries].sort((a, b) => 
+      new Date(b.date_start).getTime() - new Date(a.date_start).getTime()
+    );
+    
+    return sorted.filter((entry) => {
       if (contextFilter && entry.context_id !== contextFilter) return false;
       if (!needle) return true;
       return [entry.topic, entry.raw_notes, entry.final_text, entry.context?.name]
@@ -105,10 +114,23 @@ export default function WorkJournalView({
     });
   }, [contextFilter, entries, search]);
 
+  const selectedEntry = useMemo(() => {
+    return entries.find(e => e.id === selectedEntryId) ?? null;
+  }, [entries, selectedEntryId]);
+
+  // Auto-select first item when loading finishes or filters change
+  useEffect(() => {
+    if (!selectedEntryId && !showForm && filteredEntries.length > 0) {
+      setSelectedEntryId(filteredEntries[0].id);
+    }
+  }, [filteredEntries, selectedEntryId, showForm]);
+
   useEffect(() => {
     const selectedContextId = searchParams.get("activityContextId");
     if (selectedContextId) {
       setDraft((current) => ({ ...current, context_id: selectedContextId }));
+      setShowForm(true);
+      setSelectedEntryId(null);
       return;
     }
     const defaultContext =
@@ -161,6 +183,8 @@ export default function WorkJournalView({
       date_start: today(),
     }));
     setShowForm(false);
+    setSelectedEntryId(optimisticEntry.id);
+    
     try {
       const entry = await createWorkJournalEntry({
         ...draft,
@@ -178,6 +202,7 @@ export default function WorkJournalView({
                 entry
               )
       );
+      setSelectedEntryId(entry.id);
     } catch (err: unknown) {
       queryClient.setQueryData(workJournalQueryKeys.entries(), previousEntries);
       setError(getErrorMessage(err) || t("errors.saveEntry"));
@@ -191,6 +216,7 @@ export default function WorkJournalView({
         final_text: draft.final_text,
       });
       setShowForm(true);
+      setSelectedEntryId(null);
     }
   };
 
@@ -240,7 +266,7 @@ export default function WorkJournalView({
           updated_at: new Date().toISOString(),
         })
     );
-    setEditingEntryId(null);
+    setIsEditing(false);
     try {
       const updatedEntry = await updateWorkJournalEntry({ id: entry.id, updates });
       queryClient.setQueryData(
@@ -250,7 +276,7 @@ export default function WorkJournalView({
       );
     } catch (err: unknown) {
       queryClient.setQueryData(workJournalQueryKeys.entries(), previousEntries);
-      setEditingEntryId(entry.id);
+      setIsEditing(true);
       setError(getErrorMessage(err) || t("errors.updateEntry"));
     }
   };
@@ -259,16 +285,57 @@ export default function WorkJournalView({
     if (!confirm(t("errors.confirmDelete"))) return;
     const previousEntries =
       queryClient.getQueryData<WorkJournalEntry[]>(workJournalQueryKeys.entries()) ?? [];
+      
+    // Handle selection shift
+    const currentIndex = filteredEntries.findIndex(e => e.id === entry.id);
+    const nextSelection = 
+      filteredEntries[currentIndex + 1]?.id ?? 
+      filteredEntries[currentIndex - 1]?.id ?? 
+      null;
+      
     queryClient.setQueryData(
       workJournalQueryKeys.entries(),
       (current: WorkJournalEntry[] | undefined) =>
         removeWorkJournalEntryFromCache(current, entry.id)
     );
+    
+    if (selectedEntryId === entry.id) {
+      setSelectedEntryId(nextSelection);
+      setIsEditing(false);
+    }
+    
     try {
       await deleteWorkJournalEntry(entry.id);
     } catch (err: unknown) {
       queryClient.setQueryData(workJournalQueryKeys.entries(), previousEntries);
       setError(getErrorMessage(err));
+    }
+  };
+
+  const handleSelectEntry = (id: string) => {
+    setSelectedEntryId(id);
+    setShowForm(false);
+    setIsEditing(false);
+    setError(null);
+  };
+
+  const handleToggleForm = () => {
+    if (showForm) {
+      setShowForm(false);
+      if (filteredEntries.length > 0 && !selectedEntryId) {
+        setSelectedEntryId(filteredEntries[0].id);
+      }
+    } else {
+      setShowForm(true);
+      setSelectedEntryId(null);
+      setIsEditing(false);
+      setError(null);
+      // Ensure we have a default context selected when opening the form
+      const defaultContext = contexts.find((c) => c.is_default && c.status === "active") 
+        ?? contexts.find((c) => c.status === "active");
+      if (defaultContext && !draft.context_id) {
+        setDraft((current) => ({ ...current, context_id: defaultContext.id }));
+      }
     }
   };
 
@@ -278,7 +345,7 @@ export default function WorkJournalView({
       actions={
         <Button
           type="button"
-          onClick={() => setShowForm(!showForm)}
+          onClick={handleToggleForm}
           className={
             showForm
               ? "bg-white/10 text-white hover:bg-white/20 font-semibold transition-colors"
@@ -292,32 +359,33 @@ export default function WorkJournalView({
           )}
         </Button>
       }
-      bodyClassName="overflow-y-auto"
+      contentClassName="max-w-[1560px] mx-auto"
+      bodyContentClassName="max-w-[1560px] mx-auto h-full"
     >
-      <div className="flex flex-col w-full mx-auto max-w-4xl px-0 pb-24">
-        <WorkJournalHeader
-          search={search}
-          setSearch={setSearch}
-          contextFilter={contextFilter}
-          setContextFilter={setContextFilter}
-          activeContexts={activeContexts}
-        />
+      <FeatureTwoPaneLayout
+        sidebar={
+          <WorkJournalSidebar
+            entries={filteredEntries}
+            contexts={contexts}
+            selectedId={selectedEntryId}
+            isLoading={loading}
+            search={search}
+            setSearch={setSearch}
+            contextFilter={contextFilter}
+            setContextFilter={setContextFilter}
+            onSelect={handleSelectEntry}
+          />
+        }
+      >
+        <div className="flex flex-col gap-4">
+          {visibleError && (
+            <div className="mb-8 text-sm text-rose-400 bg-rose-500/10 px-4 py-3 rounded-lg border border-rose-500/20">
+              {visibleError}
+            </div>
+          )}
 
-        {visibleError && (
-          <div className="mb-8 text-sm text-rose-400 bg-rose-500/10 px-4 py-3 rounded-lg border border-rose-500/20">
-            {visibleError}
-          </div>
-        )}
-
-        <AnimatePresence>
-          {showForm && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="overflow-hidden"
-            >
+          {showForm ? (
+            <div className="px-2 md:px-6 py-4">
               <WorkJournalForm
                 draft={draft}
                 setDraft={setDraft}
@@ -336,19 +404,18 @@ export default function WorkJournalView({
                 openActivityContextManager={openActivityContextManager}
                 setShowForm={setShowForm}
               />
-            </motion.div>
+            </div>
+          ) : (
+            <WorkJournalDetail
+              entry={selectedEntry}
+              isEditing={isEditing}
+              setIsEditing={setIsEditing}
+              onSave={patchEntry}
+              onDelete={deleteEntry}
+            />
           )}
-        </AnimatePresence>
-
-        <WorkJournalTimeline
-          loading={loading}
-          filteredEntries={filteredEntries}
-          editingEntryId={editingEntryId}
-          setEditingEntryId={setEditingEntryId}
-          onSave={patchEntry}
-          onDelete={deleteEntry}
-        />
-      </div>
+        </div>
+      </FeatureTwoPaneLayout>
     </FeatureScreenShell>
   );
 }

@@ -12,29 +12,20 @@ import type { WorkJournalEntryLegacy as WorkJournalEntry } from "../api/work-jou
 
 interface TimelineEntryDisplayProps {
   entry: WorkJournalEntry;
-  isLast: boolean;
   onEdit: () => void;
   onDelete: () => void;
 }
 
-export function TimelineEntryDisplay({
+export function WorkJournalEntryDisplay({
   entry,
-  isLast,
   onEdit,
   onDelete,
 }: TimelineEntryDisplayProps) {
   const t = useTranslations("workJournal");
 
   return (
-    <article className="relative pl-10 md:pl-16 pb-16 group w-full text-left">
-      {!isLast && (
-        <div className="absolute left-[11px] md:left-[19px] top-6 bottom-[-1rem] w-px bg-white/[0.08]" />
-      )}
-      <div className="absolute left-0 md:left-2 top-1.5 h-6 w-6 rounded-full bg-black border-[3px] border-zinc-800 flex items-center justify-center z-10 transition-colors group-hover:border-zinc-600">
-        <div className="h-1.5 w-1.5 rounded-full bg-zinc-700 group-hover:bg-zinc-400 transition-colors" />
-      </div>
-
-      <div className="flex items-center justify-between mb-3 w-full gap-4">
+    <article className="group w-full text-left">
+      <div className="flex items-center justify-between mb-6 w-full gap-4">
         <TimelineEntryMeta entry={entry} />
         <TimelineEntryActions
           onEdit={onEdit}
@@ -44,15 +35,20 @@ export function TimelineEntryDisplay({
         />
       </div>
 
-      <div className="relative w-full">
+      <div className="relative w-full bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 md:p-8">
         <p className="text-[17px] md:text-lg font-light text-zinc-200 leading-[1.7] whitespace-pre-wrap w-full">
           {entry.final_text}
         </p>
 
         {entry.raw_notes !== entry.final_text && (
-          <p className="mt-6 border-l-2 border-white/5 pl-4 text-[14px] leading-relaxed text-zinc-500 whitespace-pre-wrap w-full">
-            {entry.raw_notes}
-          </p>
+          <div className="mt-8 pt-6 border-t border-white/5">
+            <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-4">
+              {t("rawNotes")}
+            </h4>
+            <p className="text-[14px] leading-relaxed text-zinc-400 whitespace-pre-wrap w-full bg-black/20 p-4 rounded-xl border border-white/[0.02]">
+              {entry.raw_notes}
+            </p>
+          </div>
         )}
       </div>
     </article>

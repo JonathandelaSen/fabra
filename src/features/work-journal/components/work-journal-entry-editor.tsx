@@ -6,14 +6,12 @@ import type { WorkJournalEntryLegacy as WorkJournalEntry } from "../api/work-jou
 
 interface TimelineEntryEditorProps {
   entry: WorkJournalEntry;
-  isLast: boolean;
   onSave: (updates: Partial<WorkJournalEntry>) => void;
   onCancel: () => void;
 }
 
-export function TimelineEntryEditor({
+export function WorkJournalEntryEditor({
   entry,
-  isLast,
   onSave,
   onCancel,
 }: TimelineEntryEditorProps) {
@@ -22,13 +20,8 @@ export function TimelineEntryEditor({
   const [edit, setEdit] = useState(entry);
 
   return (
-    <div className="relative pl-10 md:pl-16 pb-12 group text-left">
-      {!isLast && (
-        <div className="absolute left-[11px] md:left-[19px] top-6 bottom-[-2rem] w-px bg-white/5" />
-      )}
-      <div className="absolute left-0 md:left-2 top-1.5 h-6 w-6 rounded-full bg-black border-[3px] border-zinc-800 flex items-center justify-center z-10" />
-
-      <div className="space-y-6 w-full">
+    <div className="group text-left">
+      <div className="space-y-6 w-full bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 md:p-8">
         <div className="flex flex-wrap gap-4">
           <input
             type="date"
