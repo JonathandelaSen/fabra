@@ -5,8 +5,10 @@ import type {
   ObjectiveWithRelations,
 } from "../api/objectives-api";
 import type { ObjectivesFilter } from "../hooks/use-objectives-route-state";
+import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
 import { ObjectivesSidebarSkeleton } from "./objectives-skeleton";
 import { statusClass } from "./objectives-ui";
+import { ObjectiveListItem } from "./objective-list-item";
 
 interface ObjectivesSidebarProps {
   contexts: ObjectiveContext[];
@@ -55,9 +57,9 @@ export function ObjectivesSidebar({
   ];
 
   return (
-    <aside className="flex w-full shrink-0 flex-col border-b border-white/[0.06] bg-[#0d0d14]/80 lg:w-[340px] lg:border-b-0 lg:border-r">
-      <div className="border-b border-white/[0.06] p-4">
-        <div className="flex rounded-lg bg-white/[0.04] p-1">
+    <FeatureSidebarPanel
+      header={
+        <div className="flex rounded-lg border border-white/[0.06] bg-[#101018]/40 p-1">
           {(["open", "closed", "all"] as const).map((item) => (
             <button
               key={item}
@@ -73,65 +75,37 @@ export function ObjectivesSidebar({
             </button>
           ))}
         </div>
-      </div>
-      <div className="min-h-0 flex-1 overflow-y-auto p-2">
-        {!hasLoadedWorkspace ? (
-          <ObjectivesSidebarSkeleton />
-        ) : (
-          groups.map((group) => {
-            if (group.commitments.length === 0) return null;
-            return (
-              <section key={group.id} className="mb-4">
-                <div className="mb-1 flex items-center justify-between px-3 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-600">
-                  <span>{group.name}</span>
-                  <span>{group.commitments.length}</span>
-                </div>
-                <div>
-                  {group.commitments.map((commitment) => {
-                    const active = commitment.id === selectedId;
-                    const done = commitment.items.filter(
-                      (item) => item.status === "done"
-                    ).length;
-                    return (
-                      <button
-                        key={commitment.id}
-                        onClick={() => onSelect(commitment.id)}
-                        className={`mb-1 w-full rounded-lg px-3 py-3 text-left transition-colors ${
-                          active
-                            ? "bg-white/[0.08] text-zinc-100"
-                            : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <p className="line-clamp-2 text-sm font-semibold text-zinc-100">
-                            {commitment.title}
-                          </p>
-                          <ChevronRight
-                            className={`mt-0.5 h-4 w-4 shrink-0 ${
-                              active ? "text-zinc-300" : "text-zinc-700"
-                            }`}
-                          />
-                        </div>
-                        <div className="mt-2 flex items-center justify-between text-xs text-zinc-600">
-                          <span className={statusClass(commitment.status)}>
-                            {statusLabel(commitment.status)}
-                          </span>
-                          <span>
-                            {t("doneCount", {
-                              done,
-                              total: commitment.items.length,
-                            })}
-                          </span>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
-            );
-          })
-        )}
-      </div>
-    </aside>
+      }
+    >
+      {!hasLoadedWorkspace ? (
+        <ObjectivesSidebarSkeleton />
+      ) : (
+        groups.map((group) => {
+          if (group.commitments.length === 0) return null;
+          return (
+            <section key={group.id} className="mb-5 last:mb-0">
+              <div className="mb-2.5 flex items-center justify-between px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">
+                <span>{group.name}</span>
+                <span className="rounded-full bg-white/[0.04] border border-white/[0.02] px-2 py-0.5 text-zinc-400">
+                  {group.commitments.length}
+                </span>
+              </div>
+              <div className="space-y-1">
+                {group.commitments.map((commitment) => (
+                  <ObjectiveListItem
+                    key={commitment.id}
+                    commitment={commitment}
+                    active={commitment.id === selectedId}
+                    onSelect={onSelect}
+                    statusLabel={statusLabel}
+                    t={t}
+                  />
+                ))}
+              </div>
+            </section>
+          );
+        })
+      )}
+    </FeatureSidebarPanel>
   );
 }

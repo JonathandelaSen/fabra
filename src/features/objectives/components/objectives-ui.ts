@@ -72,10 +72,10 @@ export const itemStatusLabels: Record<ObjectiveItemStatus, string> = {
   cancelled: "Cancelled",
 };
 
-export function formatDate(d: string | null): string {
+export function formatDate(d: string | null, locale = "en-GB"): string {
   if (!d) return "";
   const date = new Date(`${d}T00:00:00`);
-  return date.toLocaleDateString("en-GB", {
+  return date.toLocaleDateString(locale, {
     day: "numeric",
     month: "short",
     year: "numeric",

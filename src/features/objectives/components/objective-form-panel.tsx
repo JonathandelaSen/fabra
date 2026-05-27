@@ -6,12 +6,12 @@ import type {
   ObjectiveStatus,
 } from "../api/objectives-api";
 import {
-  inputClass,
-  selectClass,
   statusLabels,
-  textareaClass,
   type ObjectiveForm,
 } from "./objectives-ui";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ObjectiveFormPanelProps {
   contexts: ObjectiveContext[];
@@ -43,195 +43,221 @@ export function ObjectiveFormPanel({
   t,
 }: ObjectiveFormPanelProps) {
   return (
-    <section className="rounded-xl border border-emerald-200/10 bg-white/[0.035] p-6 shadow-2xl shadow-black/20">
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">
+    <div className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] flex flex-col overflow-hidden">
+      {/* Panel Header */}
+      <div className="border-b border-white/[0.06] px-5 py-4 flex items-center justify-between bg-white/[0.01]">
+        <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-200">
           {isCreating ? t("newObjective") : t("editObjective")}
         </h2>
-        <button
+        <Button
+          variant="ghost"
+          size="icon-xs"
           onClick={onCancel}
-          className="rounded-md p-2 text-zinc-500 hover:bg-white/5 hover:text-zinc-200"
+          className="h-7 w-7 text-zinc-500 hover:text-zinc-200"
         >
           <X className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
 
-      <div className="space-y-5">
-        <label className="block space-y-1.5">
-          <span className="text-xs font-medium text-zinc-500">{t("fields.title")}</span>
-          <input
-            className={inputClass}
-            value={form.title}
-            onChange={(e) => onFormChange({ ...form, title: e.target.value })}
-            maxLength={160}
-          />
-        </label>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <label className="space-y-1.5">
-            <span className="text-xs font-medium text-zinc-500">{t("fields.context")}</span>
-            <select
-              className={`${selectClass} w-full`}
-              value={form.contextId}
-              onChange={(e) => onFormChange({ ...form, contextId: e.target.value })}
-            >
-              {contexts.map((ctx) => (
-                <option key={ctx.id} value={ctx.id}>
-                  {ctx.name}
-                </option>
-              ))}
-            </select>
+      {/* Panel Body */}
+      <div className="p-5 flex flex-col gap-6">
+        {/* Section 1: Identity */}
+        <div className="space-y-4">
+          <h3 className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest border-b border-white/[0.04] pb-1">
+            Identity & Context
+          </h3>
+          <label className="block space-y-1.5">
+            <span className="text-xs font-semibold text-zinc-400">{t("fields.title")}</span>
+            <Input
+              value={form.title}
+              onChange={(e) => onFormChange({ ...form, title: e.target.value })}
+              maxLength={160}
+              placeholder="e.g. Lead the migration of frontend components"
+              className="bg-zinc-950 border-white/[0.06] focus-visible:ring-emerald-500/20"
+            />
           </label>
-          <div className="flex items-end">
-            <button
-              type="button"
-              onClick={onManageContexts}
-              className="inline-flex h-10 items-center gap-2 rounded-md border border-white/10 px-3 text-sm text-zinc-300 hover:bg-white/5"
-            >
-              <FolderKanban className="h-4 w-4" />
-              {t("actions.manageContexts")}
-            </button>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            <label className="space-y-1.5 sm:col-span-2 block">
+              <span className="text-xs font-semibold text-zinc-400">{t("fields.context")}</span>
+              <select
+                className="w-full rounded-lg border border-white/[0.06] bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none transition-colors focus:border-emerald-500/30"
+                value={form.contextId}
+                onChange={(e) => onFormChange({ ...form, contextId: e.target.value })}
+              >
+                {contexts.map((ctx) => (
+                  <option key={ctx.id} value={ctx.id} className="bg-zinc-950">
+                    {ctx.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <div className="flex items-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onManageContexts}
+                className="w-full gap-2 h-9 text-xs border-white/[0.06] hover:bg-white/[0.04]"
+              >
+                <FolderKanban className="h-3.5 w-3.5" />
+                {t("actions.manageContexts")}
+              </Button>
+            </div>
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <label className="space-y-1.5">
-            <span className="text-xs font-medium text-zinc-500">{t("fields.source")}</span>
-            <select
-              className={`${selectClass} w-full`}
-              value={form.source}
-              onChange={(e) =>
-                onFormChange({ ...form, source: e.target.value as ObjectiveSource })
-              }
-            >
-              {["manager", "self", "company", "project", "other"].map((source) => (
-                <option key={source} value={source}>
-                  {sourceLabel(source as ObjectiveSource)}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="space-y-1.5">
-            <span className="text-xs font-medium text-zinc-500">{t("fields.status")}</span>
-            <select
-              className={`${selectClass} w-full`}
-              value={form.status}
-              onChange={(e) =>
-                onFormChange({ ...form, status: e.target.value as ObjectiveStatus })
-              }
-            >
-              {Object.keys(statusLabels).map((status) => (
-                <option key={status} value={status}>
-                  {statusLabel(status as ObjectiveStatus)}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="space-y-1.5">
-            <span className="text-xs font-medium text-zinc-500">
-              {t("fields.priority")}
-            </span>
-            <select
-              className={`${selectClass} w-full`}
-              value={form.priority}
-              onChange={(e) =>
-                onFormChange({
-                  ...form,
-                  priority: e.target.value as "" | ObjectivePriority,
-                })
-              }
-            >
-              <option value="">{t("priority.none")}</option>
-              <option value="low">{priorityLabel("low")}</option>
-              <option value="medium">{priorityLabel("medium")}</option>
-              <option value="high">{priorityLabel("high")}</option>
-            </select>
-          </label>
-          <div />
+        {/* Section 2: Planning & Attributes */}
+        <div className="space-y-4">
+          <h3 className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest border-b border-white/[0.04] pb-1">
+            Planning & Attributes
+          </h3>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <label className="space-y-1.5 block">
+              <span className="text-xs font-semibold text-zinc-400">{t("fields.source")}</span>
+              <select
+                className="w-full rounded-lg border border-white/[0.06] bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none transition-colors focus:border-emerald-500/30"
+                value={form.source}
+                onChange={(e) =>
+                  onFormChange({ ...form, source: e.target.value as ObjectiveSource })
+                }
+              >
+                {["manager", "self", "company", "project", "other"].map((source) => (
+                  <option key={source} value={source} className="bg-zinc-950">
+                    {sourceLabel(source as ObjectiveSource)}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="space-y-1.5 block">
+              <span className="text-xs font-semibold text-zinc-400">{t("fields.status")}</span>
+              <select
+                className="w-full rounded-lg border border-white/[0.06] bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none transition-colors focus:border-emerald-500/30"
+                value={form.status}
+                onChange={(e) =>
+                  onFormChange({ ...form, status: e.target.value as ObjectiveStatus })
+                }
+              >
+                {Object.keys(statusLabels).map((status) => (
+                  <option key={status} value={status} className="bg-zinc-950">
+                    {statusLabel(status as ObjectiveStatus)}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="space-y-1.5 block">
+              <span className="text-xs font-semibold text-zinc-400">
+                {t("fields.priority")}
+              </span>
+              <select
+                className="w-full rounded-lg border border-white/[0.06] bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none transition-colors focus:border-emerald-500/30"
+                value={form.priority}
+                onChange={(e) =>
+                  onFormChange({
+                    ...form,
+                    priority: e.target.value as "" | ObjectivePriority,
+                  })
+                }
+              >
+                <option value="" className="bg-zinc-950">{t("priority.none")}</option>
+                <option value="low" className="bg-zinc-950">{priorityLabel("low")}</option>
+                <option value="medium" className="bg-zinc-950">{priorityLabel("medium")}</option>
+                <option value="high" className="bg-zinc-950">{priorityLabel("high")}</option>
+              </select>
+            </label>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="space-y-1.5 block">
+              <span className="text-xs font-semibold text-zinc-400">
+                {t("fields.startDate")}
+              </span>
+              <Input
+                type="date"
+                value={form.startDate}
+                onChange={(e) => onFormChange({ ...form, startDate: e.target.value })}
+                className="bg-zinc-950 border-white/[0.06] focus-visible:ring-emerald-500/20 py-2 h-auto text-sm"
+              />
+            </label>
+            <label className="space-y-1.5 block">
+              <span className="text-xs font-semibold text-zinc-400">
+                {t("fields.targetDate")}
+              </span>
+              <Input
+                type="date"
+                value={form.targetDate}
+                onChange={(e) => onFormChange({ ...form, targetDate: e.target.value })}
+                className="bg-zinc-950 border-white/[0.06] focus-visible:ring-emerald-500/20 py-2 h-auto text-sm"
+              />
+            </label>
+          </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <label className="space-y-1.5">
-            <span className="text-xs font-medium text-zinc-500">
-              {t("fields.startDate")}
+        {/* Section 3: Narrative & Reflection */}
+        <div className="space-y-4">
+          <h3 className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest border-b border-white/[0.04] pb-1">
+            Narrative & Success Criteria
+          </h3>
+          <label className="block space-y-1.5">
+            <span className="text-xs font-semibold text-zinc-400">
+              {t("fields.description")}
             </span>
-            <input
-              type="date"
-              className={inputClass}
-              value={form.startDate}
-              onChange={(e) => onFormChange({ ...form, startDate: e.target.value })}
+            <Textarea
+              rows={3}
+              value={form.description}
+              onChange={(e) => onFormChange({ ...form, description: e.target.value })}
+              placeholder="What are the details of this objective?"
+              className="bg-zinc-950 border-white/[0.06] focus-visible:ring-emerald-500/20 text-sm py-2"
             />
           </label>
-          <label className="space-y-1.5">
-            <span className="text-xs font-medium text-zinc-500">
-              {t("fields.targetDate")}
+
+          <label className="block space-y-1.5">
+            <span className="text-xs font-semibold text-zinc-400">
+              {t("fields.successCriteria")}
             </span>
-            <input
-              type="date"
-              className={inputClass}
-              value={form.targetDate}
-              onChange={(e) => onFormChange({ ...form, targetDate: e.target.value })}
+            <Textarea
+              rows={2.5}
+              value={form.successCriteria}
+              onChange={(e) =>
+                onFormChange({ ...form, successCriteria: e.target.value })
+              }
+              placeholder={t("placeholders.successCriteria")}
+              className="bg-zinc-950 border-white/[0.06] focus-visible:ring-emerald-500/20 text-sm py-2"
+            />
+          </label>
+
+          <label className="block space-y-1.5">
+            <span className="text-xs font-semibold text-amber-400/80">
+              {t("fields.resultNotes")}
+            </span>
+            <Textarea
+              rows={2.5}
+              value={form.resultNotes}
+              onChange={(e) => onFormChange({ ...form, resultNotes: e.target.value })}
+              placeholder={t("placeholders.resultNotes")}
+              className="bg-zinc-950 border-white/[0.06] focus-visible:ring-amber-500/20 text-sm py-2"
             />
           </label>
         </div>
 
-        <label className="block space-y-1.5">
-          <span className="text-xs font-medium text-zinc-500">
-            {t("fields.description")}
-          </span>
-          <textarea
-            className={textareaClass}
-            rows={3}
-            value={form.description}
-            onChange={(e) => onFormChange({ ...form, description: e.target.value })}
-          />
-        </label>
-
-        <label className="block space-y-1.5">
-          <span className="text-xs font-medium text-zinc-500">
-            {t("fields.successCriteria")}
-          </span>
-          <textarea
-            className={textareaClass}
-            rows={2}
-            value={form.successCriteria}
-            onChange={(e) =>
-              onFormChange({ ...form, successCriteria: e.target.value })
-            }
-            placeholder={t("placeholders.successCriteria")}
-          />
-        </label>
-
-        <label className="block space-y-1.5">
-          <span className="text-xs font-medium text-amber-300/80">
-            {t("fields.resultNotes")}
-          </span>
-          <textarea
-            className={textareaClass}
-            rows={2}
-            value={form.resultNotes}
-            onChange={(e) => onFormChange({ ...form, resultNotes: e.target.value })}
-            placeholder={t("placeholders.resultNotes")}
-          />
-        </label>
+        {/* Footer Actions */}
+        <div className="mt-4 flex justify-end gap-3 border-t border-white/[0.06] pt-4">
+          <Button
+            variant="ghost"
+            onClick={onCancel}
+            className="h-9 px-4 text-zinc-400 hover:bg-white/[0.04]"
+          >
+            {t("actions.cancel")}
+          </Button>
+          <Button
+            onClick={onSave}
+            disabled={saving}
+            className="h-9 px-4 bg-emerald-500 text-emerald-950 hover:bg-emerald-400 font-bold gap-2"
+          >
+            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+            {t("actions.save")}
+          </Button>
+        </div>
       </div>
-
-      <div className="mt-6 flex justify-end gap-3">
-        <button
-          onClick={onCancel}
-          className="rounded-md px-4 py-2 text-sm text-zinc-400 hover:bg-white/5"
-        >
-          {t("actions.cancel")}
-        </button>
-        <button
-          onClick={onSave}
-          disabled={saving}
-          className="inline-flex items-center gap-2 rounded-md bg-emerald-300 px-4 py-2 text-sm font-semibold text-emerald-950 hover:bg-emerald-200 disabled:opacity-60"
-        >
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          {t("actions.save")}
-        </button>
-      </div>
-    </section>
+    </div>
   );
 }

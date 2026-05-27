@@ -19,10 +19,13 @@ import { getErrorMessage } from "@/lib/errors";
 import { useObjectivesMutations } from "../hooks/use-objectives-mutations";
 import { useObjectivesWorkspace } from "../hooks/use-objectives-queries";
 import { useObjectivesRouteState } from "../hooks/use-objectives-route-state";
+import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
+import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import { ObjectiveDetail } from "./objective-detail";
 import { ObjectiveFormPanel } from "./objective-form-panel";
 import { ObjectivesDetailSkeleton } from "./objectives-skeleton";
 import { ObjectivesSidebar } from "./objectives-sidebar";
+import { ObjectiveConfirmDialog } from "./objective-confirm-dialog";
 import type {
   ItemEditForm,
   ObjectiveForm,
@@ -55,6 +58,11 @@ export default function ObjectivesView() {
   const [itemForm, setItemForm] = useState<ItemEditForm | null>(null);
   const [editingOutcomeId, setEditingOutcomeId] = useState<string | null>(null);
   const [outcomeForm, setOutcomeForm] = useState<OutcomeEditForm | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<{
+    type: "objective" | "item" | "outcome";
+    item?: ObjectiveItem;
+    outcome?: ObjectiveOutcome;
+  } | null>(null);
 
   const contexts = workspaceQuery.data?.contexts ?? [];
   const commitments = workspaceQuery.data?.commitments ?? [];
@@ -328,7 +336,11 @@ export default function ObjectivesView() {
   };
 
   const deleteItem = async (item: ObjectiveItem) => {
-    if (isEmpty || !window.confirm("Delete this action item?")) return;
+    if (isEmpty) return;
+    setConfirmDelete({ type: "item", item });
+  };
+
+  const confirmDeleteItem = async (item: ObjectiveItem) => {
     await runMutation(
       () => mutations.deleteItem.mutateAsync(item.id),
       t("errors.saveChanges")
@@ -336,7 +348,11 @@ export default function ObjectivesView() {
   };
 
   const deleteOutcome = async (outcome: ObjectiveOutcome) => {
-    if (isEmpty || !window.confirm("Delete this outcome?")) return;
+    if (isEmpty) return;
+    setConfirmDelete({ type: "outcome", outcome });
+  };
+
+  const confirmDeleteOutcome = async (outcome: ObjectiveOutcome) => {
     await runMutation(
       () => mutations.deleteOutcome.mutateAsync(outcome.id),
       t("errors.saveChanges")
@@ -344,7 +360,12 @@ export default function ObjectivesView() {
   };
 
   const deleteObjective = async () => {
-    if (!selected || isEmpty || !window.confirm("Delete this objective?")) return;
+    if (!selected || isEmpty) return;
+    setConfirmDelete({ type: "objective" });
+  };
+
+  const confirmDeleteObjective = async () => {
+    if (!selected) return;
     const deletedId = selected.id;
     const currentIndex = filteredCommitments.findIndex((item) => item.id === deletedId);
     const nextObjective =
@@ -401,113 +422,147 @@ export default function ObjectivesView() {
   const sourceLabel = (source: ObjectiveSource) => t(`source.${source}`);
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden text-zinc-100">
-      <header className="shrink-0 border-b border-white/[0.06] px-5 py-4">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight text-zinc-50">
-            <Target className="h-6 w-6 text-zinc-400" />
-            {t("title")}
-          </h1>
-          <button
-            type="button"
-            onClick={startCreate}
-            disabled={saving}
-            className="inline-flex items-center gap-2 rounded-md bg-emerald-300 px-3 py-2 text-sm font-semibold text-emerald-950 shadow-[0_0_30px_rgba(110,231,183,0.18)] transition-colors hover:bg-emerald-200 disabled:opacity-60"
-          >
-            <Plus className="h-4 w-4" />
-            {t("newObjective")}
-          </button>
-        </div>
-      </header>
+    <FeatureScreenShell
+      title={
+        <span className="flex items-center gap-2">
+          <Target className="h-6 w-6 text-zinc-400" />
+          {t("title")}
+        </span>
+      }
+      actions={
+        <button
+          type="button"
+          onClick={startCreate}
+          disabled={saving}
+          className="inline-flex items-center gap-2 rounded-md bg-emerald-300 px-3 py-2 text-sm font-semibold text-emerald-950 shadow-[0_0_30px_rgba(110,231,183,0.18)] transition-colors hover:bg-emerald-200 disabled:opacity-60"
+        >
+          <Plus className="h-4 w-4" />
+          {t("newObjective")}
+        </button>
+      }
+      contentClassName="max-w-[1560px] mx-auto"
+      bodyContentClassName="max-w-[1560px] mx-auto"
+    >
+      <FeatureTwoPaneLayout
+        sidebar={
+          <ObjectivesSidebar
+            contexts={contexts}
+            commitments={filteredCommitments}
+            filter={status}
+            hasLoadedWorkspace={hasLoadedWorkspace}
+            selectedId={selectedIdInCurrentList}
+            onFilterChange={setStatus}
+            onSelect={(id) => {
+              selectObjective(id);
+              clearInlineEdits();
+            }}
+            statusLabel={statusLabel}
+            t={t}
+          />
+        }
+      >
+        {visibleError && (
+          <div className="mb-4 rounded-lg border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-300 shadow-[0_4px_12px_rgba(244,63,94,0.05)]">
+            {visibleError}
+          </div>
+        )}
 
-      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-        <ObjectivesSidebar
-          contexts={contexts}
-          commitments={filteredCommitments}
-          filter={status}
-          hasLoadedWorkspace={hasLoadedWorkspace}
-          selectedId={selectedIdInCurrentList}
-          onFilterChange={setStatus}
-          onSelect={(id) => {
-            selectObjective(id);
-            clearInlineEdits();
+        {!hasLoadedWorkspace ? (
+          <ObjectivesDetailSkeleton />
+        ) : form ? (
+          <ObjectiveFormPanel
+            contexts={contexts}
+            form={form}
+            isCreating={isCreating}
+            saving={saving}
+            onCancel={() => setForm(null)}
+            onFormChange={setForm}
+            onManageContexts={manageContexts}
+            onSave={saveObjective}
+            priorityLabel={priorityLabel}
+            sourceLabel={sourceLabel}
+            statusLabel={statusLabel}
+            t={t}
+          />
+        ) : selected ? (
+          <ObjectiveDetail
+            editingItemId={editingItemId}
+            editingOutcomeId={editingOutcomeId}
+            isEmpty={isEmpty}
+            itemForm={itemForm}
+            newItemTitle={newItemTitle}
+            newOutcomeTitle={newOutcomeTitle}
+            newOutcomeType={newOutcomeType}
+            outcomeForm={outcomeForm}
+            saving={saving}
+            selected={selected}
+            selectedContext={selectedContext}
+            onCreateItem={createItem}
+            onCreateOutcome={createOutcome}
+            onDeleteItem={deleteItem}
+            onDeleteObjective={deleteObjective}
+            onDeleteOutcome={deleteOutcome}
+            onEditItem={startEditItem}
+            onEditObjective={startEdit}
+            onEditOutcome={startEditOutcome}
+            onItemFormChange={setItemForm}
+            onItemTitleChange={setNewItemTitle}
+            onNewOutcomeTitleChange={setNewOutcomeTitle}
+            onNewOutcomeTypeChange={setNewOutcomeType}
+            onOutcomeFormChange={setOutcomeForm}
+            onSaveItem={saveItem}
+            onSaveOutcome={saveOutcome}
+            onStopEditingItem={stopEditingItem}
+            onStopEditingOutcome={stopEditingOutcome}
+            onUpdateItemStatus={updateItemStatus}
+            onUpdateOutcomeStatus={updateOutcomeStatus}
+            itemStatusLabel={itemStatusLabel}
+            outcomeLabel={outcomeLabel}
+            outcomeStatusLabel={outcomeStatusLabel}
+            priorityLabel={priorityLabel}
+            sourceLabel={sourceLabel}
+            statusLabel={statusLabel}
+            t={t}
+          />
+        ) : (
+          <div className="py-20 text-center">
+            <p className="text-sm text-zinc-500">{t("emptySelection")}</p>
+          </div>
+        )}
+      </FeatureTwoPaneLayout>
+
+      {confirmDelete && (
+        <ObjectiveConfirmDialog
+          title={
+            confirmDelete.type === "objective"
+              ? t("confirmDeleteObjectiveTitle")
+              : confirmDelete.type === "item"
+                ? t("confirmDeleteItemTitle")
+                : t("confirmDeleteOutcomeTitle")
+          }
+          description={
+            confirmDelete.type === "objective"
+              ? t("confirmDeleteObjectiveDescription")
+              : confirmDelete.type === "item"
+                ? t("confirmDeleteItemDescription")
+                : t("confirmDeleteOutcomeDescription")
+          }
+          confirmLabel={t("actions.delete") || "Delete"}
+          cancelLabel={t("actions.cancel") || "Cancel"}
+          onConfirm={() => {
+            if (confirmDelete.type === "objective") {
+              void confirmDeleteObjective();
+            } else if (confirmDelete.type === "item" && confirmDelete.item) {
+              void confirmDeleteItem(confirmDelete.item);
+            } else if (confirmDelete.type === "outcome" && confirmDelete.outcome) {
+              void confirmDeleteOutcome(confirmDelete.outcome);
+            }
+            setConfirmDelete(null);
           }}
-          statusLabel={statusLabel}
-          t={t}
+          onCancel={() => setConfirmDelete(null)}
         />
-
-        <main className="min-w-0 flex-1 overflow-y-auto p-5 lg:p-8">
-          {visibleError && (
-            <div className="mb-4 rounded-md border border-rose-500/20 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">
-              {visibleError}
-            </div>
-          )}
-
-          {!hasLoadedWorkspace ? (
-            <ObjectivesDetailSkeleton />
-          ) : form ? (
-            <ObjectiveFormPanel
-              contexts={contexts}
-              form={form}
-              isCreating={isCreating}
-              saving={saving}
-              onCancel={() => setForm(null)}
-              onFormChange={setForm}
-              onManageContexts={manageContexts}
-              onSave={saveObjective}
-              priorityLabel={priorityLabel}
-              sourceLabel={sourceLabel}
-              statusLabel={statusLabel}
-              t={t}
-            />
-          ) : selected ? (
-            <ObjectiveDetail
-              editingItemId={editingItemId}
-              editingOutcomeId={editingOutcomeId}
-              isEmpty={isEmpty}
-              itemForm={itemForm}
-              newItemTitle={newItemTitle}
-              newOutcomeTitle={newOutcomeTitle}
-              newOutcomeType={newOutcomeType}
-              outcomeForm={outcomeForm}
-              saving={saving}
-              selected={selected}
-              selectedContext={selectedContext}
-              onCreateItem={createItem}
-              onCreateOutcome={createOutcome}
-              onDeleteItem={deleteItem}
-              onDeleteObjective={deleteObjective}
-              onDeleteOutcome={deleteOutcome}
-              onEditItem={startEditItem}
-              onEditObjective={startEdit}
-              onEditOutcome={startEditOutcome}
-              onItemFormChange={setItemForm}
-              onItemTitleChange={setNewItemTitle}
-              onNewOutcomeTitleChange={setNewOutcomeTitle}
-              onNewOutcomeTypeChange={setNewOutcomeType}
-              onOutcomeFormChange={setOutcomeForm}
-              onSaveItem={saveItem}
-              onSaveOutcome={saveOutcome}
-              onStopEditingItem={stopEditingItem}
-              onStopEditingOutcome={stopEditingOutcome}
-              onUpdateItemStatus={updateItemStatus}
-              onUpdateOutcomeStatus={updateOutcomeStatus}
-              itemStatusLabel={itemStatusLabel}
-              outcomeLabel={outcomeLabel}
-              outcomeStatusLabel={outcomeStatusLabel}
-              priorityLabel={priorityLabel}
-              sourceLabel={sourceLabel}
-              statusLabel={statusLabel}
-              t={t}
-            />
-          ) : (
-            <div className="py-20 text-center">
-              <p className="text-sm text-zinc-500">{t("emptySelection")}</p>
-            </div>
-          )}
-        </main>
-      </div>
-    </div>
+      )}
+    </FeatureScreenShell>
   );
 }
 
