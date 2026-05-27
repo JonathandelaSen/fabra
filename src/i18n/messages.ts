@@ -229,6 +229,7 @@ export const messages = {
       },
     },
     interviewQuestions: {
+      title: "Interview questions",
       searchPlaceholder: "Search questions",
       allCvs: "All CVs",
       allOffers: "All offers",
@@ -1379,6 +1380,7 @@ export const messages = {
       },
     },
     interviewQuestions: {
+      title: "Preguntas de entrevista",
       searchPlaceholder: "Buscar preguntas",
       allCvs: "Todos los CVs",
       allOffers: "Todas las ofertas",
