@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
+import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
+import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import { useFeedbackNotesMutations } from "../hooks/use-feedback-notes-mutations";
 import {
   useFeedbackEntries,
@@ -102,19 +104,9 @@ export default function FeedbackNotesView({
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-[#09090f] text-zinc-100">
-      <header className="shrink-0 border-b border-white/[0.06] px-5 py-4">
-        <div className="mx-auto flex w-full max-w-[1560px] flex-wrap items-center justify-between gap-3">
-          <div className="min-w-0">
-            <h1 className="text-2xl font-semibold tracking-tight text-zinc-50">
-              {t("title")}
-            </h1>
-          </div>
-        </div>
-      </header>
-
-      <div className="min-h-0 flex-1 overflow-hidden bg-[#09090f] p-4 lg:p-5 xl:p-6">
-        <div className="mx-auto grid h-full w-full max-w-[1560px] grid-cols-1 gap-4 lg:grid-cols-[320px_minmax(0,1fr)]">
+    <FeatureScreenShell title={t("title")}>
+      <FeatureTwoPaneLayout
+        sidebar={
           <FeedbackNotesSidebar
             feedbacks={feedbacks}
             contexts={contextsQuery.data?.contexts ?? []}
@@ -135,112 +127,110 @@ export default function FeedbackNotesView({
               })
             }
           />
+        }
+      >
+        {error && (
+          <div className="mb-4 rounded-lg border border-rose-500/20 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">
+            {error}
+          </div>
+        )}
 
-          <main className="min-w-0 overflow-y-auto">
-            {error && (
-              <div className="mb-4 rounded-lg border border-rose-500/20 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">
-                {error}
-              </div>
-            )}
-
-            {isInitialListLoading || (feedbackId && detailQuery.isLoading) ? (
-              <FeedbackNotesDetailSkeleton />
-            ) : !selectedFeedback ? (
-              <div className="flex h-full items-center justify-center text-sm text-zinc-600">
-                {t("emptySelection")}
-              </div>
-            ) : (
-              <FeedbackNotesDetail
-                feedback={selectedFeedback}
-                entries={entries}
-                contexts={contextsQuery.data?.contexts ?? []}
-                deletingEntryIds={deletingEntryIds}
-                isSaving={isSaving}
-                isGenerating={mutations.generateFinalFeedback.isPending}
-                hasAIApiKey={hasAIApiKey}
-                selectedModel={selectedModel}
-                onModelChange={setSelectedModel}
-                onUpdateFeedback={(updates) =>
-                  void runMutation(() =>
-                    mutations.updateFeedback.mutateAsync({
-                      feedbackId: selectedFeedback.id,
-                      updates,
-                    })
-                  )
+        {isInitialListLoading || (feedbackId && detailQuery.isLoading) ? (
+          <FeedbackNotesDetailSkeleton />
+        ) : !selectedFeedback ? (
+          <div className="flex h-full items-center justify-center text-sm text-zinc-600">
+            {t("emptySelection")}
+          </div>
+        ) : (
+          <FeedbackNotesDetail
+            feedback={selectedFeedback}
+            entries={entries}
+            contexts={contextsQuery.data?.contexts ?? []}
+            deletingEntryIds={deletingEntryIds}
+            isSaving={isSaving}
+            isGenerating={mutations.generateFinalFeedback.isPending}
+            hasAIApiKey={hasAIApiKey}
+            selectedModel={selectedModel}
+            onModelChange={setSelectedModel}
+            onUpdateFeedback={(updates) =>
+              void runMutation(() =>
+                mutations.updateFeedback.mutateAsync({
+                  feedbackId: selectedFeedback.id,
+                  updates,
+                })
+              )
+            }
+            onDeleteFeedback={() =>
+              void runMutation(async () => {
+                if (!confirm(t("confirmDeleteFeedback"))) return;
+                await mutations.deleteFeedback.mutateAsync(selectedFeedback.id);
+                clearSelection();
+              })
+            }
+            onCloseFeedback={() =>
+              void runMutation(() => mutations.closeFeedback.mutateAsync(selectedFeedback.id))
+            }
+            onReopenFeedback={() =>
+              void runMutation(() => mutations.reopenFeedback.mutateAsync(selectedFeedback.id))
+            }
+            onCreateEntry={(content) =>
+              void runMutation(() =>
+                mutations.createEntry.mutateAsync({
+                  feedbackId: selectedFeedback.id,
+                  content,
+                })
+              )
+            }
+            onUpdateEntry={(entryId, content) =>
+              void runMutation(() => mutations.updateEntry.mutateAsync({ entryId, content }))
+            }
+            onDeleteEntry={(entryId) =>
+              void runMutation(async () => {
+                if (!confirm(t("confirmDeleteEntry"))) return;
+                setDeletingEntryIds((prev) => new Set(prev).add(entryId));
+                try {
+                  await mutations.deleteEntry.mutateAsync({
+                    entryId,
+                    feedbackId: selectedFeedback.id,
+                  });
+                } finally {
+                  setDeletingEntryIds((prev) => {
+                    const next = new Set(prev);
+                    next.delete(entryId);
+                    return next;
+                  });
                 }
-                onDeleteFeedback={() =>
-                  void runMutation(async () => {
-                    if (!confirm(t("confirmDeleteFeedback"))) return;
-                    await mutations.deleteFeedback.mutateAsync(selectedFeedback.id);
-                    clearSelection();
-                  })
+              })
+            }
+            onGenerate={() =>
+              void runMutation(async () => {
+                if (!hasAIApiKey) {
+                   onOpenSettings?.();
+                  return;
                 }
-                onCloseFeedback={() =>
-                  void runMutation(() => mutations.closeFeedback.mutateAsync(selectedFeedback.id))
+                if (entries.length === 0) {
+                  setError(t("errors.entriesRequiredForGeneration"));
+                  return;
                 }
-                onReopenFeedback={() =>
-                  void runMutation(() => mutations.reopenFeedback.mutateAsync(selectedFeedback.id))
+                if (
+                  selectedFeedback.finalFeedback?.trim() &&
+                  !confirm(t("confirmReplaceFinalFeedback"))
+                ) {
+                  return;
                 }
-                onCreateEntry={(content) =>
-                  void runMutation(() =>
-                    mutations.createEntry.mutateAsync({
-                      feedbackId: selectedFeedback.id,
-                      content,
-                    })
-                  )
-                }
-                onUpdateEntry={(entryId, content) =>
-                  void runMutation(() => mutations.updateEntry.mutateAsync({ entryId, content }))
-                }
-                onDeleteEntry={(entryId) =>
-                  void runMutation(async () => {
-                    if (!confirm(t("confirmDeleteEntry"))) return;
-                    setDeletingEntryIds((prev) => new Set(prev).add(entryId));
-                    try {
-                      await mutations.deleteEntry.mutateAsync({
-                        entryId,
-                        feedbackId: selectedFeedback.id,
-                      });
-                    } finally {
-                      setDeletingEntryIds((prev) => {
-                        const next = new Set(prev);
-                        next.delete(entryId);
-                        return next;
-                      });
-                    }
-                  })
-                }
-                onGenerate={() =>
-                  void runMutation(async () => {
-                    if (!hasAIApiKey) {
-                      onOpenSettings?.();
-                      return;
-                    }
-                    if (entries.length === 0) {
-                      setError(t("errors.entriesRequiredForGeneration"));
-                      return;
-                    }
-                    if (
-                      selectedFeedback.finalFeedback?.trim() &&
-                      !confirm(t("confirmReplaceFinalFeedback"))
-                    ) {
-                      return;
-                    }
-                    await mutations.generateFinalFeedback.mutateAsync({
-                      feedbackId: selectedFeedback.id,
-                      provider: aiProvider,
-                      apiKey: aiApiKey,
-                      model: aiModel,
-                    });
-                  })
-                }
-                onOpenCopyPaste={() => setIsCopyPasteOpen(true)}
-                onOpenSettings={onOpenSettings}
-              />
-            )}
-          </main>
-        </div>
-      </div>
+                await mutations.generateFinalFeedback.mutateAsync({
+                  feedbackId: selectedFeedback.id,
+                  provider: aiProvider,
+                  apiKey: aiApiKey,
+                  model: aiModel,
+                });
+              })
+            }
+            onOpenCopyPaste={() => setIsCopyPasteOpen(true)}
+            onOpenSettings={onOpenSettings}
+          />
+        )}
+      </FeatureTwoPaneLayout>
 
       {isCopyPasteOpen && selectedFeedback && (
         <FeedbackCopyPastePanel
@@ -250,6 +240,6 @@ export default function FeedbackNotesView({
           onClose={() => setIsCopyPasteOpen(false)}
         />
       )}
-    </div>
+    </FeatureScreenShell>
   );
 }

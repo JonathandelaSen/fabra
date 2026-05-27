@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
+import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
+import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import type {
   InterviewQuestion,
   UpdateInterviewQuestionInput,
@@ -153,54 +154,49 @@ export default function InterviewQuestionsView({
   }
 
   return (
-    <div className="flex-1 overflow-hidden p-6 md:p-8">
-      <motion.div
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35 }}
-        className="grid h-full w-full gap-6 xl:grid-cols-[380px_1fr]"
+    <FeatureScreenShell title={t("title")}>
+      <FeatureTwoPaneLayout
+        sidebar={
+          <InterviewQuestionsSidebar
+            questions={questions}
+            selectedId={questionId}
+            filters={filters}
+            cvs={cvs}
+            analyses={analyses}
+            onSelect={selectQuestion}
+            onFiltersChange={setFilters}
+          />
+        }
       >
-        <InterviewQuestionsSidebar
-          questions={questions}
-          selectedId={questionId}
-          filters={filters}
-          cvs={cvs}
-          analyses={analyses}
-          onSelect={selectQuestion}
-          onFiltersChange={setFilters}
-        />
+        {error && (
+          <div className="mb-4 rounded-lg border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
+            {error}
+          </div>
+        )}
 
-        <section className="min-h-0 overflow-y-auto rounded-xl border border-white/[0.06] bg-white/[0.02]">
-          {error && (
-            <div className="m-4 rounded-lg border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
-              {error}
-            </div>
-          )}
-
-          {selected ? (
-            <InterviewQuestionDetail
-              question={selected as InterviewQuestion}
-              cvs={cvs}
-              analyses={analyses}
-              model={model}
-              isSaving={isSaving}
-              aiLoading={aiLoading}
-              hasAIApiKey={hasAIApiKey}
-              onModelChange={setModel}
-              onUpdate={updateQuestion}
-              onDelete={deleteQuestion}
-              onRunAI={runAI}
-              onOpenSettings={onOpenSettings}
-              onOpenAnalysis={onOpenAnalysis}
-              onOpenCopyPaste={() => setIsCopyPasteOpen(true)}
-            />
-          ) : (
-            <div className="flex h-72 items-center justify-center text-sm text-zinc-600">
-              {t("selectQuestion")}
-            </div>
-          )}
-        </section>
-      </motion.div>
+        {selected ? (
+          <InterviewQuestionDetail
+            question={selected as InterviewQuestion}
+            cvs={cvs}
+            analyses={analyses}
+            model={model}
+            isSaving={isSaving}
+            aiLoading={aiLoading}
+            hasAIApiKey={hasAIApiKey}
+            onModelChange={setModel}
+            onUpdate={updateQuestion}
+            onDelete={deleteQuestion}
+            onRunAI={runAI}
+            onOpenSettings={onOpenSettings}
+            onOpenAnalysis={onOpenAnalysis}
+            onOpenCopyPaste={() => setIsCopyPasteOpen(true)}
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center text-sm text-zinc-600 min-h-[300px]">
+            {t("selectQuestion")}
+          </div>
+        )}
+      </FeatureTwoPaneLayout>
 
       {isCopyPasteOpen && selected && (
         <InterviewQuestionCopyPastePanel
@@ -210,6 +206,6 @@ export default function InterviewQuestionsView({
           onClose={() => setIsCopyPasteOpen(false)}
         />
       )}
-    </div>
+    </FeatureScreenShell>
   );
 }
