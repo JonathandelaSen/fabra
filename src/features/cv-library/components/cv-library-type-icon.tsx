@@ -15,7 +15,7 @@ export function CVLibraryTypeIcon({
     <div
       className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors ${
         selected
-          ? "bg-teal-500/10 text-teal-300"
+          ? "bg-indigo-500/10 text-indigo-300"
           : "bg-zinc-800/50 text-zinc-500 group-hover:bg-zinc-800/80 group-hover:text-zinc-300"
       }`}
     >

@@ -46,14 +46,14 @@ export function CVLibraryDetailHeader({
                 if (event.key === "Enter") onSaveName();
                 if (event.key === "Escape") onCancelEditing();
               }}
-              className="h-9 w-full rounded-lg border border-white/[0.08] bg-[#0a0a12] px-3 text-sm text-zinc-100 focus:border-teal-500/40 focus:outline-none"
+              className="h-9 w-full rounded-lg border border-white/[0.08] bg-[#0a0a12] px-3 text-sm text-zinc-100 focus:border-indigo-500/40 focus:outline-none"
               autoFocus
             />
             <Button
               type="button"
               onClick={onSaveName}
               disabled={saving || !draftName.trim()}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-teal-600 p-0 text-white hover:bg-teal-500 disabled:opacity-50"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-600 p-0 text-white hover:bg-indigo-500 disabled:opacity-50"
               title={t("save")}
             >
               {saving ? (

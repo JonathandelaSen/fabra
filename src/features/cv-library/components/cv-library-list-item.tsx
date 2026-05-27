@@ -30,7 +30,7 @@ export function CVLibraryListItem({
       }}
       className={`group relative mb-2 w-full rounded-xl p-3.5 text-left border transition-all duration-200 cursor-pointer ${
         selected
-          ? "bg-[#181825] border-teal-500/20 text-zinc-100 shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
+          ? "bg-[#181825] border-indigo-500/20 text-zinc-100 shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
           : "bg-transparent border-transparent text-zinc-400 hover:bg-[#13131c]/60 hover:border-white/[0.04] hover:text-zinc-200"
       }`}
     >
@@ -39,13 +39,13 @@ export function CVLibraryListItem({
 
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="truncate text-sm font-semibold text-zinc-100 transition-colors group-hover:text-teal-300">
+            <h3 className="truncate text-sm font-semibold text-zinc-100 transition-colors group-hover:text-indigo-300">
               {cv.name}
             </h3>
             
             <ChevronRight
               className={`mt-0.5 h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 ${
-                selected ? "text-teal-400" : "text-zinc-600 group-hover:text-zinc-400"
+                selected ? "text-indigo-400" : "text-zinc-600 group-hover:text-zinc-400"
               }`}
             />
           </div>
