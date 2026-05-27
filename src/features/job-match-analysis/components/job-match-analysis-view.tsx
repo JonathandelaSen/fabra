@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Plus, Sparkles } from "lucide-react";
+import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { JobMatchAnalysisDetailResponse } from "@/app/api/job-match-analyses/responses";
 import type { InterviewQuestionSummary } from "../types";
@@ -237,36 +238,14 @@ export default function JobMatchAnalysisView({
           </div>
         ) : (
           <div className="flex h-full min-h-0 flex-col overflow-hidden">
-            <div className="shrink-0 flex items-center gap-1 px-4 sm:px-6 pt-4">
-              <button
-                onClick={goToExtraction}
-                className={`
-                  flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
-                  ${
-                    !isAnalysisView
-                      ? "bg-white/[0.08] text-zinc-100 shadow-sm"
-                      : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]"
-                  }
-                `}
-              >
-                <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                {t("extractionTab")}
-              </button>
-              <button
-                onClick={() => goToAnalysis()}
-                className={`
-                  flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
-                  ${
-                    isAnalysisView
-                      ? "bg-white/[0.08] text-zinc-100 shadow-sm"
-                      : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]"
-                  }
-                `}
-              >
-                <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                {t("analysisTab")}
-              </button>
-            </div>
+            <FeatureDetailTabBar
+              tabs={[
+                { id: "extraction" as const, label: t("extractionTab"), icon: <FileText /> },
+                { id: "analysis" as const, label: t("analysisTab"), icon: <Sparkles /> },
+              ]}
+              activeTab={isAnalysisView ? "analysis" : "extraction"}
+              onTabChange={(tab) => tab === "analysis" ? goToAnalysis() : goToExtraction()}
+            />
 
             <AnimatePresence mode="wait">
               {!isAnalysisView ? (

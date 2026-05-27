@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { FileText, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
 import type {
   AIContext,
   AnalysisMode,
@@ -114,41 +115,21 @@ export default function CVAnalysisDetailView({
     );
   }
 
+  const tabs = [
+    { id: "extraction" as const, label: t("extractionTab"), icon: <FileText /> },
+    { id: "analysis" as const, label: t("analysisTab"), icon: <Sparkles /> },
+  ];
+
   return (
     <div
       key={analysis.id}
       className="flex-1 flex flex-col overflow-hidden min-h-0"
     >
-      <div className="shrink-0 flex items-center gap-1 px-4 sm:px-6 pt-4">
-        <button
-          onClick={() => onTabChange("extraction")}
-          className={`
-            flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
-            ${
-              activeTab === "extraction"
-                ? "bg-white/[0.08] text-zinc-100 shadow-sm"
-                : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]"
-            }
-          `}
-        >
-          <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          {t("extractionTab")}
-        </button>
-        <button
-          onClick={() => onTabChange("analysis")}
-          className={`
-            flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
-            ${
-              activeTab === "analysis"
-                ? "bg-white/[0.08] text-zinc-100 shadow-sm"
-                : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]"
-            }
-          `}
-        >
-          <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          {t("analysisTab")}
-        </button>
-      </div>
+      <FeatureDetailTabBar
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabChange={onTabChange}
+      />
 
       <AnimatePresence mode="wait">
         {activeTab === "extraction" ? (
