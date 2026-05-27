@@ -6,7 +6,7 @@ export function CVAnalysesListSkeleton() {
       {Array.from({ length: 6 }).map((_, index) => (
         <div
           key={index}
-          className="flex w-full items-center gap-3 rounded-lg border border-white/[0.06] bg-white/[0.03] px-3 py-3"
+          className="flex w-full items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] p-3.5"
         >
           <Skeleton className="h-9 w-9 shrink-0 rounded-lg bg-indigo-500/10" />
           <div className="min-w-0 flex-1">

@@ -101,19 +101,26 @@ export default function CVAnalysesListView({
                 }
               }}
               className={cn(
-                "group flex w-full cursor-pointer items-start gap-3 rounded-lg border px-3 py-3 text-left transition-all",
+                "group flex w-full cursor-pointer items-start gap-3 rounded-xl border p-3.5 text-left transition-all duration-200",
                 selectedId === analysis.id
-                  ? "border-indigo-500/30 bg-indigo-500/10"
-                  : "border-white/[0.06] bg-white/[0.03] hover:border-white/[0.10] hover:bg-white/[0.06]",
+                  ? "bg-[#181825] border-indigo-500/20 text-zinc-100 shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
+                  : "bg-transparent border-transparent text-zinc-400 hover:bg-[#13131c]/60 hover:border-white/[0.04] hover:text-zinc-200",
               )}
             >
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-indigo-500/20 bg-indigo-500/10">
-                <FileSearch className="h-4 w-4 text-indigo-400" />
+              <div
+                className={cn(
+                  "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border transition-colors",
+                  selectedId === analysis.id
+                    ? "border-indigo-500/20 bg-indigo-500/10 text-indigo-300"
+                    : "border-transparent bg-zinc-800/50 text-zinc-500 group-hover:bg-zinc-800/80 group-hover:text-zinc-300"
+                )}
+              >
+                <FileSearch className="h-4 w-4" />
               </div>
 
               <div className="min-w-0 flex-1">
                 <div className="flex min-w-0 items-start gap-2">
-                  <p className="min-w-0 flex-1 truncate text-sm font-medium text-zinc-200">
+                  <p className="min-w-0 flex-1 truncate text-sm font-semibold text-zinc-100 transition-colors group-hover:text-indigo-300">
                     {analysis.title || analysis.filename.replace(/\.pdf$/i, "")}
                   </p>
                   {analysis.ai_score !== null ? (

@@ -40,9 +40,9 @@ function JobAnalysesListSkeleton() {
       {Array.from({ length: 6 }).map((_, index) => (
         <div
           key={index}
-          className="flex w-full items-center gap-3 rounded-lg border border-white/[0.06] bg-white/[0.03] px-3 py-3"
+          className="flex w-full items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] p-3.5"
         >
-          <Skeleton className="h-9 w-9 shrink-0 rounded-lg bg-emerald-500/10" />
+          <Skeleton className="h-9 w-9 shrink-0 rounded-lg bg-indigo-500/10" />
           <div className="min-w-0 flex-1">
             <Skeleton className="h-4 w-3/4" />
             <div className="mt-2 flex items-center gap-3">
@@ -99,7 +99,7 @@ export default function JobMatchAnalysisList({
               placeholder={t("searchOffers")}
               value={searchQuery}
               onChange={(event) => onSearchChange(event.target.value)}
-              className="h-9 w-full rounded-lg border border-white/10 bg-white/[0.03] pl-9 pr-3 py-1.5 text-xs text-zinc-200 outline-none placeholder:text-zinc-600 focus:border-emerald-500/40"
+              className="h-9 w-full rounded-lg border border-white/10 bg-white/[0.03] pl-9 pr-3 py-1.5 text-xs text-zinc-200 outline-none placeholder:text-zinc-600 focus:border-indigo-500/40"
             />
           </label>
         </div>
@@ -109,8 +109,8 @@ export default function JobMatchAnalysisList({
         <JobAnalysesListSkeleton />
       ) : analyses.length === 0 ? (
         <div className="px-4 py-12 text-center">
-          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-emerald-500/10">
-            <Briefcase className="h-5 w-5 text-emerald-400" />
+          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-500/10">
+            <Briefcase className="h-5 w-5 text-indigo-400" />
           </div>
           <p className="text-sm font-medium text-zinc-400">
             {searchQuery ? t("noMatches") : t("jobEmptyTitle")}
@@ -136,19 +136,26 @@ export default function JobMatchAnalysisList({
                 }
               }}
               className={cn(
-                "group flex w-full cursor-pointer items-start gap-3 rounded-lg border px-3 py-3 text-left transition-all",
+                "group flex w-full cursor-pointer items-start gap-3 rounded-xl border p-3.5 text-left transition-all duration-200",
                 selectedId === analysis.id
-                  ? "border-emerald-500/30 bg-emerald-500/10"
-                  : "border-white/[0.06] bg-white/[0.03] hover:border-white/[0.10] hover:bg-white/[0.06]",
+                  ? "bg-[#181825] border-indigo-500/20 text-zinc-100 shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
+                  : "bg-transparent border-transparent text-zinc-400 hover:bg-[#13131c]/60 hover:border-white/[0.04] hover:text-zinc-200",
               )}
             >
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-emerald-500/20 bg-emerald-500/10">
-                <Briefcase className="h-4 w-4 text-emerald-400" />
+              <div
+                className={cn(
+                  "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border transition-colors",
+                  selectedId === analysis.id
+                    ? "border-indigo-500/20 bg-indigo-500/10 text-indigo-300"
+                    : "border-transparent bg-zinc-800/50 text-zinc-500 group-hover:bg-zinc-800/80 group-hover:text-zinc-300"
+                )}
+              >
+                <Briefcase className="h-4 w-4" />
               </div>
 
               <div className="min-w-0 flex-1">
                 <div className="flex min-w-0 items-start gap-2">
-                  <p className="min-w-0 flex-1 truncate text-sm font-medium text-zinc-200">
+                  <p className="min-w-0 flex-1 truncate text-sm font-semibold text-zinc-100 transition-colors group-hover:text-indigo-300">
                     {analysis.title || analysis.filename.replace(/\.pdf$/i, "")}
                   </p>
                   {analysis.aiScore !== null ? (
