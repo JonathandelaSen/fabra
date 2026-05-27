@@ -310,6 +310,9 @@ export const messages = {
         jobEmptyDescription: "Analyze how your CV fits a job offer",
         cvCount: "{count, plural, =0 {No analyses} one {# analysis} other {# analyses}}",
         jobCount: "{count, plural, =0 {No analyses} one {# offer} other {# offers}}",
+        searchOffers: "Search offers...",
+        noMatches: "No matches found.",
+        deleteOffer: "Delete offer",
       },
       modeSelector: {
         step: "Step 2 — Choose analysis type",
@@ -1467,6 +1470,9 @@ export const messages = {
         jobEmptyDescription: "Analiza cómo encaja tu CV con una oferta de empleo",
         cvCount: "{count, plural, =0 {Sin análisis} one {# análisis} other {# análisis}}",
         jobCount: "{count, plural, =0 {Sin análisis} one {# oferta} other {# ofertas}}",
+        searchOffers: "Buscar ofertas...",
+        noMatches: "No hay coincidencias.",
+        deleteOffer: "Borrar oferta",
       },
       modeSelector: {
         step: "Fase 2 — Elige el tipo de análisis",

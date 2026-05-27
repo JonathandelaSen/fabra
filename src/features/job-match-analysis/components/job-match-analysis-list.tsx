@@ -1,11 +1,13 @@
 "use client";
 
-import { Briefcase, Clock, Sparkles, Trash2, Plus, FileText } from "lucide-react";
+import { Briefcase, Clock, Search, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
+import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { JobMatchAnalysisSummary } from "../api/job-match-analysis-api";
 import type { JobMatchAnalysisOfferStatus } from "@/app/api/job-match-analyses/responses";
+import { cn } from "@/lib/utils";
 
 const OFFER_STATUS_BADGE_CLASS: Record<JobMatchAnalysisOfferStatus, string> = {
   interesante: "border-sky-500/20 bg-sky-500/10 text-sky-300",
@@ -38,9 +40,9 @@ function JobAnalysesListSkeleton() {
       {Array.from({ length: 6 }).map((_, index) => (
         <div
           key={index}
-          className="flex w-full items-center gap-4 rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3.5"
+          className="flex w-full items-center gap-3 rounded-lg border border-white/[0.06] bg-white/[0.03] px-3 py-3"
         >
-          <Skeleton className="h-10 w-10 shrink-0 rounded-xl bg-emerald-500/10" />
+          <Skeleton className="h-9 w-9 shrink-0 rounded-lg bg-emerald-500/10" />
           <div className="min-w-0 flex-1">
             <Skeleton className="h-4 w-1/2" />
             <div className="mt-2 flex items-center gap-3">
@@ -58,16 +60,20 @@ function JobAnalysesListSkeleton() {
 
 interface JobMatchAnalysisListProps {
   analyses: JobMatchAnalysisSummary[];
+  selectedId: string | null;
+  searchQuery: string;
   onSelect: (id: string) => void;
-  onNewAnalysis: () => void;
+  onSearchChange: (value: string) => void;
   onDelete: (id: string) => void;
   isLoading?: boolean;
 }
 
 export default function JobMatchAnalysisList({
   analyses,
+  selectedId,
+  searchQuery,
   onSelect,
-  onNewAnalysis,
+  onSearchChange,
   onDelete,
   isLoading = false,
 }: JobMatchAnalysisListProps) {
@@ -78,119 +84,122 @@ export default function JobMatchAnalysisList({
   const dateLocale = locale === "es" ? "es-ES" : "en-US";
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden min-h-0">
-      {/* Header */}
-      <div className="shrink-0 px-6 pt-6 pb-4 border-b border-white/[0.06]">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/15 flex items-center justify-center">
-              <Briefcase className="w-5 h-5 text-emerald-400" />
-            </div>
-            <div>
-              <h1 className="text-lg font-semibold text-zinc-100">{t("jobTitle")}</h1>
-              <p className="text-xs text-zinc-500">
-                {t("jobCount", { count: analyses.length })}
-              </p>
-            </div>
+    <FeatureSidebarPanel
+      header={
+        <div className="flex flex-col gap-3">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-[0.08em] text-zinc-500">
+              {t("jobCount", { count: analyses.length })}
+            </p>
           </div>
-          <button
-            onClick={onNewAnalysis}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-lg shadow-emerald-900/30 active:scale-[0.97] transition-all"
-          >
-            <Plus className="w-4 h-4" />
-            {t("newOffer")}
-          </button>
+          <label className="relative block">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-600" />
+            <input
+              type="search"
+              placeholder={t("searchOffers")}
+              value={searchQuery}
+              onChange={(event) => onSearchChange(event.target.value)}
+              className="h-9 w-full rounded-lg border border-white/10 bg-white/[0.03] pl-9 pr-3 py-1.5 text-xs text-zinc-200 outline-none placeholder:text-zinc-600 focus:border-emerald-500/40"
+            />
+          </label>
         </div>
-      </div>
-
-      {/* List */}
-      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-2">
-        {isLoading ? (
-          <JobAnalysesListSkeleton />
-        ) : analyses.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-64 gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-zinc-800/50 flex items-center justify-center">
-              <FileText className="w-8 h-8 text-zinc-600" />
-            </div>
-            <div className="text-center">
-              <p className="text-sm font-medium text-zinc-400">{t("jobEmptyTitle")}</p>
-              <p className="text-xs text-zinc-600 mt-1">
-                {t("jobEmptyDescription")}
-              </p>
-            </div>
-            <button
-              onClick={onNewAnalysis}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white transition-all"
-            >
-              <Plus className="w-4 h-4" />
-              {t("newOffer")}
-            </button>
+      }
+    >
+      {isLoading ? (
+        <JobAnalysesListSkeleton />
+      ) : analyses.length === 0 ? (
+        <div className="px-4 py-12 text-center">
+          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-emerald-500/10">
+            <Briefcase className="h-5 w-5 text-emerald-400" />
           </div>
-        ) : (
-          analyses.map((a) => (
+          <p className="text-sm font-medium text-zinc-400">
+            {searchQuery ? t("noMatches") : t("jobEmptyTitle")}
+          </p>
+          {!searchQuery && (
+            <p className="mt-1 text-xs text-zinc-600">
+              {t("jobEmptyDescription")}
+            </p>
+          )}
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {analyses.map((analysis) => (
             <div
-              key={a.id}
+              key={analysis.id}
               role="button"
               tabIndex={0}
-              onClick={() => onSelect(a.id)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  onSelect(a.id);
+              onClick={() => onSelect(analysis.id)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  onSelect(analysis.id);
                 }
               }}
-              className="group w-full flex items-center gap-4 px-4 py-3.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] hover:border-white/[0.10] transition-all text-left cursor-pointer"
+              className={cn(
+                "group flex w-full cursor-pointer items-start gap-3 rounded-lg border px-3 py-3 text-left transition-all",
+                selectedId === analysis.id
+                  ? "border-emerald-500/30 bg-emerald-500/10"
+                  : "border-white/[0.06] bg-white/[0.03] hover:border-white/[0.10] hover:bg-white/[0.06]",
+              )}
             >
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-                <Briefcase className="w-5 h-5 text-emerald-400" />
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-emerald-500/20 bg-emerald-500/10">
+                <Briefcase className="h-4 w-4 text-emerald-400" />
               </div>
 
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-zinc-200 truncate">
-                  {a.title || a.filename.replace(/\.pdf$/i, "")}
-                </p>
-                <div className="flex items-center gap-3 mt-1">
-                  <span className="text-[11px] text-zinc-500 flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {formatDate(a.createdAt, dateLocale)}
-                  </span>
-                  {a.offerStatus && (
+              <div className="min-w-0 flex-1">
+                <div className="flex min-w-0 items-start gap-2">
+                  <p className="min-w-0 flex-1 truncate text-sm font-medium text-zinc-200">
+                    {analysis.title || analysis.filename.replace(/\.pdf$/i, "")}
+                  </p>
+                  {analysis.aiScore !== null ? (
                     <span
-                      className={`rounded-md border px-1.5 py-0.5 text-[10px] font-semibold ${OFFER_STATUS_BADGE_CLASS[a.offerStatus]}`}
+                      className={`shrink-0 rounded-md border px-2 py-0.5 text-xs font-bold ${getScoreColor(analysis.aiScore)}`}
                     >
-                      {navigation(`offerStatuses.${a.offerStatus}`)}
+                      {analysis.aiScore}
+                    </span>
+                  ) : (
+                    <span className="shrink-0 rounded-md bg-zinc-800/70 px-1.5 py-0.5 text-[10px] text-zinc-500">
+                      {common("states.pending")}
+                    </span>
+                  )}
+                </div>
+                <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                  <span className="flex items-center gap-1 text-[11px] text-zinc-500">
+                    <Clock className="h-3 w-3" />
+                    {formatDate(analysis.createdAt, dateLocale)}
+                  </span>
+                  {analysis.offerStatus && (
+                    <span
+                      className={`rounded-md border px-1.5 py-0.5 text-[10px] font-semibold ${OFFER_STATUS_BADGE_CLASS[analysis.offerStatus]}`}
+                    >
+                      {navigation(`offerStatuses.${analysis.offerStatus}`)}
                     </span>
                   )}
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
-                {a.aiScore !== null ? (
-                  <span
-                    className={`text-xs font-bold px-2.5 py-1 rounded-lg border ${getScoreColor(a.aiScore)}`}
-                  >
-                    {a.aiScore}
-                  </span>
-                ) : (
-                  <span className="text-[11px] text-zinc-600 flex items-center gap-1 px-2 py-1 rounded-lg bg-zinc-800/50">
-                    <Sparkles className="w-3 h-3" />
-                    {common("states.pending")}
-                  </span>
-                )}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDelete(a.id);
-                  }}
-                  className="opacity-0 group-hover:opacity-100 w-7 h-7 rounded-lg flex items-center justify-center text-zinc-500 hover:text-rose-400 hover:bg-rose-500/10 transition-all"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onDelete(analysis.id);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    onDelete(analysis.id);
+                  }
+                }}
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-zinc-600 opacity-0 transition-all hover:bg-rose-500/10 hover:text-rose-400 group-hover:opacity-100 group-focus-visible:opacity-100"
+                aria-label={t("deleteOffer")}
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
             </div>
-          ))
-        )}
-      </div>
-    </div>
+          ))}
+        </div>
+      )}
+    </FeatureSidebarPanel>
   );
 }
