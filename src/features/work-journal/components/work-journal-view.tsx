@@ -412,6 +412,8 @@ export default function WorkJournalView({
               setIsEditing={setIsEditing}
               onSave={patchEntry}
               onDelete={deleteEntry}
+              activeContexts={activeContexts}
+              onManageContexts={openActivityContextManager}
             />
           )}
         </div>

@@ -2,19 +2,24 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import type { WorkJournalEntryLegacy as WorkJournalEntry } from "../api/work-journal-types";
+import type { WorkJournalContextLegacy as WorkJournalContext, WorkJournalEntryLegacy as WorkJournalEntry } from "../api/work-journal-types";
+import { ActivityContextSelector } from "@/features/activity-context";
 
-interface TimelineEntryEditorProps {
+interface WorkJournalEntryEditorProps {
   entry: WorkJournalEntry;
   onSave: (updates: Partial<WorkJournalEntry>) => void;
   onCancel: () => void;
+  activeContexts: WorkJournalContext[];
+  onManageContexts: () => void;
 }
 
 export function WorkJournalEntryEditor({
   entry,
   onSave,
   onCancel,
-}: TimelineEntryEditorProps) {
+  activeContexts,
+  onManageContexts,
+}: WorkJournalEntryEditorProps) {
   const t = useTranslations("workJournal");
   const common = useTranslations("common.actions");
   const [edit, setEdit] = useState(entry);
@@ -22,29 +27,41 @@ export function WorkJournalEntryEditor({
   return (
     <div className="group text-left">
       <div className="space-y-6 w-full bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 md:p-8">
-        <div className="flex flex-wrap gap-4">
-          <input
-            type="date"
-            className="bg-transparent border-b border-zinc-700 text-sm text-zinc-200 outline-none pb-1"
-            value={edit.date_start}
-            onChange={(e) => setEdit({ ...edit, date_start: e.target.value })}
-          />
-          <input
-            type="date"
-            className="bg-transparent border-b border-zinc-700 text-sm text-zinc-200 outline-none pb-1"
-            value={edit.date_end || ""}
-            onChange={(e) =>
-              setEdit({ ...edit, date_end: e.target.value || null })
-            }
-          />
-          <input
-            placeholder={t("editTopicPlaceholder")}
-            className="bg-transparent border-b border-zinc-700 text-sm text-zinc-200 outline-none pb-1 flex-1 min-w-[200px]"
-            value={edit.topic || ""}
-            onChange={(e) =>
-              setEdit({ ...edit, topic: e.target.value || null })
-            }
-          />
+        <div className="flex flex-wrap gap-4 items-start">
+          <div className="w-full sm:w-auto min-w-[240px] mb-2 sm:mb-0">
+            <ActivityContextSelector
+              id="edit-entry-context"
+              manageLabel={t("manageContexts")}
+              value={edit.context_id || ""}
+              onChange={(val) => setEdit({ ...edit, context_id: val })}
+              contexts={activeContexts}
+              onManageClick={onManageContexts}
+            />
+          </div>
+          <div className="flex flex-wrap gap-4 flex-1 items-end">
+            <input
+              type="date"
+              className="bg-transparent border-b border-zinc-700 text-sm text-zinc-200 outline-none pb-1"
+              value={edit.date_start}
+              onChange={(e) => setEdit({ ...edit, date_start: e.target.value })}
+            />
+            <input
+              type="date"
+              className="bg-transparent border-b border-zinc-700 text-sm text-zinc-200 outline-none pb-1"
+              value={edit.date_end || ""}
+              onChange={(e) =>
+                setEdit({ ...edit, date_end: e.target.value || null })
+              }
+            />
+            <input
+              placeholder={t("editTopicPlaceholder")}
+              className="bg-transparent border-b border-zinc-700 text-sm text-zinc-200 outline-none pb-1 flex-1 min-w-[200px]"
+              value={edit.topic || ""}
+              onChange={(e) =>
+                setEdit({ ...edit, topic: e.target.value || null })
+              }
+            />
+          </div>
         </div>
 
         <div className="space-y-4">

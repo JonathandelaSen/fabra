@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { WorkJournalEntryLegacy as WorkJournalEntry } from "../api/work-journal-types";
+import type { WorkJournalEntryLegacy as WorkJournalEntry, WorkJournalContextLegacy as WorkJournalContext } from "../api/work-journal-types";
 import { WorkJournalEntryDisplay } from "./work-journal-entry-display";
 import { WorkJournalEntryEditor } from "./work-journal-entry-editor";
 import { WorkJournalEmptyState } from "./work-journal-empty-state";
@@ -13,6 +13,8 @@ interface WorkJournalDetailProps {
   setIsEditing: (b: boolean) => void;
   onSave: (entry: WorkJournalEntry, updates: Partial<WorkJournalEntry>) => void;
   onDelete: (entry: WorkJournalEntry) => void;
+  activeContexts: WorkJournalContext[];
+  onManageContexts: () => void;
 }
 
 export function WorkJournalDetail({
@@ -21,6 +23,8 @@ export function WorkJournalDetail({
   setIsEditing,
   onSave,
   onDelete,
+  activeContexts,
+  onManageContexts,
 }: WorkJournalDetailProps) {
   const t = useTranslations("workJournal");
 
@@ -35,6 +39,8 @@ export function WorkJournalDetail({
           entry={entry}
           onSave={(updates) => onSave(entry, updates)}
           onCancel={() => setIsEditing(false)}
+          activeContexts={activeContexts}
+          onManageContexts={onManageContexts}
         />
       ) : (
         <WorkJournalEntryDisplay
