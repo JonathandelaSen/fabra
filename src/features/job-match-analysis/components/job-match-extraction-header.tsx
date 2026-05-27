@@ -1,0 +1,122 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+import { Download, Eye, FileText } from "lucide-react";
+import AIActionLauncher from "@/components/shared/ai-action-launcher";
+
+interface JobMatchExtractionHeaderProps {
+  filename: string;
+  analysisId: string;
+  aiScore: number | null;
+  showPdfPreview: boolean;
+  onTogglePdfPreview: () => void;
+  pdfUrl: string;
+  wordCount: number;
+  charCount: number;
+  reAnalysis: {
+    loading: boolean;
+    hasAIApiKey: boolean;
+    selectedModel: string;
+    models: { id: string; label: string }[];
+    onModelChange: (model: string) => void;
+    onRun: () => void;
+    onConfigure: () => void;
+    onOpenCopyPaste: () => void;
+  };
+}
+
+export default function JobMatchExtractionHeader({
+  filename,
+  analysisId,
+  aiScore,
+  showPdfPreview,
+  onTogglePdfPreview,
+  pdfUrl,
+  wordCount,
+  charCount,
+  reAnalysis,
+}: JobMatchExtractionHeaderProps) {
+  const t = useTranslations("analysisFlow.extraction");
+  const formsT = useTranslations("analysisFlow.forms");
+
+  return (
+    <div className="shrink-0 px-4 sm:px-6 py-4 border-b border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex items-center gap-3">
+        <div className="w-9 h-9 rounded-xl bg-indigo-500/15 flex items-center justify-center shrink-0">
+          <FileText className="w-4.5 h-4.5 text-indigo-400" />
+        </div>
+        <div className="min-w-0">
+          <h2 className="text-base sm:text-lg font-semibold text-zinc-100 truncate">
+            {filename}
+          </h2>
+          <p className="text-[10px] sm:text-xs text-zinc-500 truncate">
+            {t("subtitle")}
+          </p>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
+        {analysisId && (
+          <>
+            {aiScore !== null && (
+              <AIActionLauncher
+                actionLabel={formsT("compareOffer")}
+                loading={reAnalysis.loading}
+                integrated={{
+                  available: reAnalysis.hasAIApiKey,
+                  selectedModelId: reAnalysis.selectedModel,
+                  models: reAnalysis.models,
+                  onModelChange: reAnalysis.onModelChange,
+                  onRun: reAnalysis.onRun,
+                  onConfigure: reAnalysis.onConfigure,
+                }}
+                copyPaste={{
+                  available: true,
+                  onOpenFlow: reAnalysis.onOpenCopyPaste,
+                }}
+              />
+            )}
+            <button
+              onClick={onTogglePdfPreview}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                showPdfPreview
+                  ? "bg-indigo-500 text-white"
+                  : "text-zinc-400 bg-zinc-800/60 hover:bg-zinc-800 hover:text-zinc-200"
+              }`}
+            >
+              <Eye className="w-3.5 h-3.5" />
+              <span className="hidden xs:inline">
+                {showPdfPreview ? t("closePdf") : t("viewPdf")}
+              </span>
+              <span className="xs:hidden">
+                {showPdfPreview ? t("close") : "PDF"}
+              </span>
+            </button>
+            <a
+              href={pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 transition-all"
+              title={t("viewPdf")}
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span className="hidden xs:inline">{t("download")}</span>
+            </a>
+          </>
+        )}
+        <div className="flex items-center gap-1.5 ml-auto sm:ml-0">
+          <span className="text-[10px] sm:text-xs text-zinc-500 bg-zinc-800/60 px-2 py-1 rounded-md whitespace-nowrap">
+            {wordCount.toLocaleString()}{" "}
+            <span className="hidden xs:inline">{t("words")}</span>
+            <span className="xs:hidden">w</span>
+          </span>
+          <span className="text-[10px] sm:text-xs text-zinc-500 bg-zinc-800/60 px-2 py-1 rounded-md whitespace-nowrap">
+            {charCount.toLocaleString()}{" "}
+            <span className="hidden xs:inline">{t("characters")}</span>
+            <span className="xs:hidden">ch</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -8,16 +8,9 @@ import {
   Plus,
   ChevronLeft,
   ChevronRight,
-  ChevronDown,
-  Trash2,
-  Sparkles,
-  Clock,
-  UserCircle,
   FileSearch,
   Briefcase,
   FolderOpen,
-  Settings,
-  ShieldCheck,
   Menu,
   LayoutTemplate,
   Wand2,
@@ -33,6 +26,9 @@ import type {
   OfferStatus,
 } from "@/lib/analysis-types";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
+import SidebarNavSection from "./sidebar-nav-section";
+import SidebarFooter from "./sidebar-footer";
+import type { SidebarActiveView } from "./sidebar-types";
 
 const OFFER_STATUS_BADGE_CLASS: Record<OfferStatus, string> = {
   interesante: "border-sky-500/20 bg-sky-500/10 text-sky-300",
@@ -47,22 +43,7 @@ interface SidebarProps {
   generalAnalyses: AnalysisSummary[];
   jobMatchAnalyses: AnalysisSummary[];
   activeId: string | null;
-  activeView:
-    | "new"
-    | "analysis"
-    | "cv-analyses"
-    | "job-analyses"
-    | "cvs"
-    | "templates"
-    | "editor"
-    | "questions"
-    | "journal"
-    | "objectives"
-    | "received-feedback"
-    | "activity-context"
-    | "feedback-notes"
-    | "settings"
-    | "admin";
+  activeView: SidebarActiveView;
   onSelect: (id: string) => void;
   onNewAnalysis: () => void;
   onOpenCVAnalyses: () => void;
@@ -201,7 +182,6 @@ export default function Sidebar({
           isMobile ? "fixed left-0 top-0 bottom-0" : "relative"
         }`}
       >
-        {/* Header */}
         <div className="flex items-center justify-between p-3 h-14 shrink-0">
           <AnimatePresence mode="wait">
             {!collapsed && (
@@ -232,7 +212,6 @@ export default function Sidebar({
           </button>
         </div>
 
-        {/* New Analysis Button */}
         <div className="px-2 pb-2 shrink-0">
           <button
             onClick={onNewAnalysis}
@@ -248,218 +227,48 @@ export default function Sidebar({
           </button>
         </div>
 
-        {/* Nav Sections */}
         <div className="px-2 pb-2 shrink-0 space-y-1">
-          {/* ── Sección: Tu CV ── */}
-          {!collapsed && (
-            <button
-              onClick={() => setCvSectionOpen((o) => !o)}
-              className="w-full flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-zinc-500 hover:text-zinc-400 hover:bg-white/[0.03] transition-colors"
-            >
-              <FolderOpen className="w-3 h-3 shrink-0" />
-              <span className="flex-1 text-left">{t("cvSection")}</span>
-              <ChevronDown
-                className={`w-3 h-3 shrink-0 transition-transform duration-200 ${cvSectionOpen ? "" : "-rotate-90"}`}
-              />
-            </button>
-          )}
-          <AnimatePresence initial={false}>
-            {(collapsed || cvSectionOpen) && (
-              <motion.div
-                key="cv-section"
-                initial={collapsed ? false : { height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.15, ease: "easeInOut" }}
-                className="overflow-hidden"
-              >
-                <div className={`space-y-0.5 ${!collapsed ? "pl-2" : ""}`}>
-                  <button
-                    onClick={onOpenCVAnalyses}
-                    className={`
-                    w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
-                    ${activeView === "cv-analyses" ? "bg-white/[0.08] text-zinc-100" : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"}
-                    ${collapsed ? "justify-center p-2" : "px-3 py-2 text-sm"}
-                  `}
-                  >
-                    <FileSearch className="w-4 h-4 shrink-0" />
-                    {!collapsed && (
-                      <span className="flex-1 text-left">{t("cvAnalyses")}</span>
-                    )}
-                  </button>
-                  <button
-                    onClick={onOpenCVs}
-                    className={`
-                    w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
-                    ${activeView === "cvs" ? "bg-white/[0.08] text-zinc-100" : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"}
-                    ${collapsed ? "justify-center p-2" : "px-3 py-2 text-sm"}
-                  `}
-                  >
-                    <FolderOpen className="w-4 h-4 shrink-0" />
-                    {!collapsed && <span>{t("cvLibrary")}</span>}
-                  </button>
-                  <button
-                    onClick={onOpenTemplates}
-                    className={`
-                    w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
-                    ${activeView === "templates" ? "bg-white/[0.08] text-zinc-100" : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"}
-                    ${collapsed ? "justify-center p-2" : "px-3 py-2 text-sm"}
-                  `}
-                  >
-                    <LayoutTemplate className="w-4 h-4 shrink-0" />
-                    {!collapsed && <span>{t("templates")}</span>}
-                  </button>
-                  <button
-                    onClick={onOpenEditor}
-                    className={`
-                    w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
-                    ${activeView === "editor" ? "bg-white/[0.08] text-zinc-100" : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"}
-                    ${collapsed ? "justify-center p-2" : "px-3 py-2 text-sm"}
-                  `}
-                  >
-                    <Wand2 className="w-4 h-4 shrink-0" />
-                    {!collapsed && <span>{t("cvEditor")}</span>}
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* ── Sección: Carrera Profesional ── */}
-          {!collapsed && (
-            <button
-              onClick={() => setJobSectionOpen((o) => !o)}
-              className="w-full flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-zinc-500 hover:text-zinc-400 hover:bg-white/[0.03] transition-colors mt-1"
-            >
-              <Briefcase className="w-3 h-3 shrink-0" />
-              <span className="flex-1 text-left">{t("careerSection")}</span>
-              <ChevronDown
-                className={`w-3 h-3 shrink-0 transition-transform duration-200 ${jobSectionOpen ? "" : "-rotate-90"}`}
-              />
-            </button>
-          )}
-          <AnimatePresence initial={false}>
-            {(collapsed || jobSectionOpen) && (
-              <motion.div
-                key="job-section"
-                initial={collapsed ? false : { height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.15, ease: "easeInOut" }}
-                className="overflow-hidden"
-              >
-                <div className={`space-y-0.5 ${!collapsed ? "pl-2" : ""}`}>
-                  <button
-                    onClick={onOpenJobAnalyses}
-                    className={`
-                    w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
-                    ${activeView === "job-analyses" ? "bg-white/[0.08] text-zinc-100" : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"}
-                    ${collapsed ? "justify-center p-2" : "px-3 py-2 text-sm"}
-                  `}
-                  >
-                    <Briefcase className="w-4 h-4 shrink-0" />
-                    {!collapsed && (
-                      <span className="flex-1 text-left">{t("jobAnalyses")}</span>
-                    )}
-                  </button>
-                  <button
-                    onClick={onOpenQuestions}
-                    className={`
-                    w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
-                    ${activeView === "questions" ? "bg-white/[0.08] text-zinc-100" : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"}
-                    ${collapsed ? "justify-center p-2" : "px-3 py-2 text-sm"}
-                  `}
-                  >
-                    <MessageSquareQuote className="w-4 h-4 shrink-0" />
-                    {!collapsed && <span>{t("interviewQuestions")}</span>}
-                  </button>
-                  <button
-                    onClick={onOpenJournal}
-                    className={`
-                    w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
-                    ${activeView === "journal" ? "bg-white/[0.08] text-zinc-100" : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"}
-                    ${collapsed ? "justify-center p-2" : "px-3 py-2 text-sm"}
-                  `}
-                  >
-                    <BookOpenText className="w-4 h-4 shrink-0" />
-                    {!collapsed && <span>{t("workJournal")}</span>}
-                  </button>
-                  <button
-                    onClick={onOpenObjectives}
-                    className={`
-                    w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
-                    ${activeView === "objectives" ? "bg-white/[0.08] text-zinc-100" : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"}
-                    ${collapsed ? "justify-center p-2" : "px-3 py-2 text-sm"}
-                  `}
-                  >
-                    <Target className="w-4 h-4 shrink-0" />
-                    {!collapsed && <span>{t("objectives")}</span>}
-                  </button>
-                  <button
-                    onClick={onOpenReceivedFeedback}
-                    className={`
-                    w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
-                    ${activeView === "received-feedback" ? "bg-white/[0.08] text-zinc-100" : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"}
-                    ${collapsed ? "justify-center p-2" : "px-3 py-2 text-sm"}
-                  `}
-                  >
-                    <Inbox className="w-4 h-4 shrink-0" />
-                    {!collapsed && <span>{t("receivedFeedback")}</span>}
-                  </button>
-                  <button
-                    onClick={onOpenFeedbackNotes}
-                    className={`
-                    w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
-                    ${activeView === "feedback-notes" ? "bg-white/[0.08] text-zinc-100" : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"}
-                    ${collapsed ? "justify-center p-2" : "px-3 py-2 text-sm"}
-                  `}
-                  >
-                    <NotebookPen className="w-4 h-4 shrink-0" />
-                    {!collapsed && <span>{t("feedbackNotes")}</span>}
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <SidebarNavSection
+            id="cv-section"
+            icon={FolderOpen}
+            label={t("cvSection")}
+            collapsed={collapsed}
+            open={cvSectionOpen}
+            onToggle={() => setCvSectionOpen((open) => !open)}
+            items={[
+              { icon: FileSearch, label: t("cvAnalyses"), active: activeView === "cv-analyses", onClick: onOpenCVAnalyses },
+              { icon: FolderOpen, label: t("cvLibrary"), active: activeView === "cvs", onClick: onOpenCVs },
+              { icon: LayoutTemplate, label: t("templates"), active: activeView === "templates", onClick: onOpenTemplates },
+              { icon: Wand2, label: t("cvEditor"), active: activeView === "editor", onClick: onOpenEditor },
+            ]}
+          />
+          <SidebarNavSection
+            id="job-section"
+            icon={Briefcase}
+            label={t("careerSection")}
+            collapsed={collapsed}
+            open={jobSectionOpen}
+            onToggle={() => setJobSectionOpen((open) => !open)}
+            items={[
+              { icon: Briefcase, label: t("jobAnalyses"), active: activeView === "job-analyses", onClick: onOpenJobAnalyses },
+              { icon: MessageSquareQuote, label: t("interviewQuestions"), active: activeView === "questions", onClick: onOpenQuestions },
+              { icon: BookOpenText, label: t("workJournal"), active: activeView === "journal", onClick: onOpenJournal },
+              { icon: Target, label: t("objectives"), active: activeView === "objectives", onClick: onOpenObjectives },
+              { icon: Inbox, label: t("receivedFeedback"), active: activeView === "received-feedback", onClick: onOpenReceivedFeedback },
+              { icon: NotebookPen, label: t("feedbackNotes"), active: activeView === "feedback-notes", onClick: onOpenFeedbackNotes },
+            ]}
+          />
         </div>
-        {/* Footer */}
-        <div className="px-3 py-3 border-t border-white/[0.06] shrink-0 space-y-3">
-          <button
-            onClick={onOpenSettings}
-            className={`
-            w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
-            ${activeView === "settings" ? "bg-white/[0.08] text-zinc-100" : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"}
-            ${collapsed ? "justify-center p-2" : "px-3 py-2.5 text-sm"}
-          `}
-            title={t("settings")}
-          >
-            <Settings className="w-4 h-4 shrink-0" />
-            {!collapsed && <span>{t("settings")}</span>}
-          </button>
-          {isAdmin && (
-            <button
-              type="button"
-              onClick={onOpenAdmin}
-              className={`
-              w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
-              ${activeView === "admin" ? "bg-emerald-500/10 text-emerald-200" : "text-emerald-300 hover:bg-emerald-500/10 hover:text-emerald-200"}
-              ${collapsed ? "justify-center p-2" : "px-3 py-2.5 text-sm"}
-            `}
-              title={t("observability")}
-            >
-              <ShieldCheck className="w-4 h-4 shrink-0" />
-              {!collapsed && <span>{t("observability")}</span>}
-            </button>
-          )}
-          {!collapsed && (
-            <div className="flex items-center justify-between gap-2 px-1">
-              <div className="flex items-center gap-2 min-w-0 text-[11px] text-zinc-500">
-                <UserCircle className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate">{userEmail}</span>
-              </div>
-            </div>
-          )}
-        </div>
+        <SidebarFooter
+          activeView={activeView}
+          collapsed={collapsed}
+          isAdmin={isAdmin}
+          userEmail={userEmail}
+          settingsLabel={t("settings")}
+          observabilityLabel={t("observability")}
+          onOpenSettings={onOpenSettings}
+          onOpenAdmin={onOpenAdmin}
+        />
       </motion.aside>
     </>
   );

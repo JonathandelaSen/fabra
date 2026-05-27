@@ -4,23 +4,10 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import type { AnalysisSummary } from "@/lib/analysis-types";
 import Sidebar from "@/components/shell/sidebar";
-import { CVEditorView } from "@/features/cv-editor";
-import { CVLibraryView, TemplatesView } from "@/features/cv-library";
 import {
-  CVAnalysisDetailView,
-  CVAnalysisView,
   type CVAnalysisDetail,
   type CVAnalysisDetailTab,
 } from "@/features/cv-analysis";
-import { InterviewQuestionsView } from "@/features/interview-questions";
-import { WorkJournalView } from "@/features/work-journal";
-import { ObjectivesView } from "@/features/objectives";
-import { FeedbackNotesView } from "@/features/feedback-notes";
-import { ReceivedFeedbackView } from "@/features/received-feedback";
-import { ActivityContextView } from "@/features/activity-context";
-import { AdminObservabilityView } from "@/features/admin-observability";
-import { JobMatchAnalysisView } from "@/features/job-match-analysis";
-import { SettingsView } from "@/features/settings";
 import { createClient } from "@/lib/supabase/client";
 import { normalizeAnalysisSummaries } from "@/components/shell/analysis-summary-normalizer";
 import type { ListCVDocumentsResponse } from "@/app/api/cvs/responses";
@@ -31,6 +18,7 @@ import {
   getStoredAIProvider,
   type StoredAIProvider,
 } from "@/lib/browser-preferences";
+import AppShellContent from "./app-shell-content";
 
 let userEmailRequest: Promise<string | null> | null = null;
 let adminStatusRequest: Promise<boolean> | null = null;
@@ -835,13 +823,11 @@ export default function AppShell({
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#09090f]">
-      {/* Background ambient gradient */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
         <div className="absolute top-[-20%] left-[10%] w-[600px] h-[600px] bg-indigo-600/[0.07] rounded-full blur-[150px]" />
         <div className="absolute bottom-[-10%] right-[15%] w-[500px] h-[500px] bg-violet-600/[0.05] rounded-full blur-[130px]" />
       </div>
 
-      {/* Sidebar */}
       <Sidebar
         generalAnalyses={analyses.filter(
           (analysis) => analysis.analysis_mode === "general",
@@ -871,189 +857,37 @@ export default function AppShell({
         isForceCollapsed={activeView === "editor"}
       />
 
-      {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden min-w-0 min-h-0">
-        {activeView === "new" ? (
-          <div key="new-analysis" className="flex-1 flex flex-col min-h-0">
-            <CVAnalysisView
-              aiProvider={aiProvider}
-              aiApiKey={aiApiKey}
-              aiModel={aiModel}
-              hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
-              onOpenSettings={handleOpenSettings}
-              onOpenQuestions={(options) => handleOpenQuestions(options)}
-            />
-          </div>
-        ) : activeView === "cv-analyses" ? (
-          <div
-            key="cv-analyses-list"
-            className="flex-1 flex flex-col overflow-hidden min-h-0"
-          >
-            <CVAnalysisView
-              aiProvider={aiProvider}
-              aiApiKey={aiApiKey}
-              aiModel={aiModel}
-              hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
-              onOpenSettings={handleOpenSettings}
-              onOpenQuestions={(options) => handleOpenQuestions(options)}
-            />
-          </div>
-        ) : activeView === "job-analyses" ? (
-          <div
-            key="job-analyses-list"
-            className="flex-1 flex flex-col overflow-hidden min-h-0"
-          >
-            <JobMatchAnalysisView
-              aiProvider={aiProvider}
-              aiApiKey={aiApiKey}
-              aiModel={aiModel}
-              hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
-              onOpenSettings={handleOpenSettings}
-              onNewAnalysis={handleNewAnalysis}
-              onOpenQuestions={(options) => handleOpenQuestions(options)}
-              interviewQuestions={interviewQuestions}
-              onInterviewQuestionCreated={fetchInterviewQuestions}
-            />
-          </div>
-        ) : activeView === "cvs" ? (
-          <div
-            key="cv-library"
-            className="flex-1 flex flex-col overflow-hidden min-h-0"
-          >
-            <CVLibraryView
-              onOpenAnalysis={handleSelect}
-              onOpenEditor={handleOpenEditor}
-              onOpenQuestions={(cvId) => handleOpenQuestions({ cvId })}
-            />
-          </div>
-        ) : activeView === "templates" ? (
-          <div
-            key="templates"
-            className="flex-1 flex flex-col overflow-hidden min-h-0"
-          >
-            <TemplatesView
-              onOpenSettings={handleOpenSettings}
-              onOpenEditor={handleOpenEditor}
-              onOpenUpload={handleNewAnalysis}
-            />
-          </div>
-        ) : activeView === "editor" ? (
-          <div
-            key="editor"
-            className="flex-1 flex flex-col overflow-hidden min-h-0"
-          >
-            <CVEditorView
-              activeVersionId={activeEditorCvId}
-              onOpenTemplates={handleOpenTemplates}
-              onOpenSettings={handleOpenSettings}
-              onStartAnalysis={handleNewAnalysis}
-              onBackToLibrary={handleOpenCVs}
-            />
-          </div>
-        ) : activeView === "questions" ? (
-          <div
-            key="interview-questions"
-            className="flex-1 flex flex-col overflow-hidden min-h-0"
-          >
-            <InterviewQuestionsView
-              aiProvider={aiProvider}
-              aiApiKey={aiApiKey}
-              aiModel={aiModel}
-              hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
-              onOpenSettings={handleOpenSettings}
-              onOpenAnalysis={handleSelect}
-            />
-          </div>
-        ) : activeView === "journal" ? (
-          <div
-            key="work-journal"
-            className="flex-1 flex flex-col overflow-hidden min-h-0"
-          >
-            <WorkJournalView
-              aiProvider={aiProvider}
-              aiApiKey={aiApiKey}
-              aiModel={aiModel}
-              hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
-              onOpenSettings={handleOpenSettings}
-            />
-          </div>
-        ) : activeView === "objectives" ? (
-          <div
-            key="objectives"
-            className="flex-1 flex flex-col overflow-hidden min-h-0"
-          >
-            <ObjectivesView />
-          </div>
-        ) : activeView === "feedback-notes" ? (
-          <div
-            key="feedback-notes"
-            className="flex-1 flex flex-col overflow-hidden min-h-0"
-          >
-            <FeedbackNotesView
-              aiProvider={aiProvider}
-              aiApiKey={aiApiKey}
-              aiModel={aiModel}
-              hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
-              onOpenSettings={handleOpenSettings}
-            />
-          </div>
-        ) : activeView === "received-feedback" ? (
-          <div
-            key="received-feedback"
-            className="flex-1 flex flex-col overflow-hidden min-h-0"
-          >
-            <ReceivedFeedbackView />
-          </div>
-        ) : activeView === "activity-context" ? (
-          <div
-            key="activity-context"
-            className="flex-1 flex flex-col overflow-hidden min-h-0"
-          >
-            <ActivityContextView />
-          </div>
-        ) : activeView === "settings" ? (
-          <div
-            key="settings"
-            className="flex-1 flex flex-col overflow-hidden min-h-0"
-          >
-            <SettingsView
-              aiProvider={aiProvider}
-              aiApiKey={aiApiKey}
-              aiModel={aiModel}
-              onAISettingsChange={(settings) => {
-                setAIProvider(settings.provider);
-                setAIApiKey(settings.apiKey);
-                setAIModel(settings.model);
-              }}
-              userEmail={userEmail}
-            />
-          </div>
-        ) : activeView === "admin" && isAdmin ? (
-          <div
-            key="admin-observability"
-            className="flex-1 flex flex-col overflow-hidden min-h-0"
-          >
-            <AdminObservabilityView userEmail={userEmail} />
-          </div>
-        ) : (
-          <CVAnalysisDetailView
-            analysis={activeAnalysis}
-            loading={loadingDetail}
-            activeTab={viewTab}
-            aiProvider={aiProvider}
-            aiApiKey={aiApiKey}
-            aiModel={aiModel}
-            hasAIApiKey={aiProvider === "mock" || aiApiKey.length > 0}
-            interviewQuestions={interviewQuestions}
-            onTabChange={setViewTab}
-            onAIAnalysisComplete={handleAIComplete}
-            onDelete={handleDelete}
-            onUpdate={fetchAnalysisDetail}
-            onInterviewQuestionCreated={fetchInterviewQuestions}
-            onOpenQuestions={handleOpenQuestions}
-            onOpenSettings={handleOpenSettings}
-          />
-        )}
+        <AppShellContent
+          activeView={activeView}
+          activeEditorCvId={activeEditorCvId}
+          activeAnalysis={activeAnalysis}
+          loadingDetail={loadingDetail}
+          viewTab={viewTab}
+          aiProvider={aiProvider}
+          aiApiKey={aiApiKey}
+          aiModel={aiModel}
+          userEmail={userEmail}
+          isAdmin={isAdmin}
+          interviewQuestions={interviewQuestions}
+          onOpenSettings={handleOpenSettings}
+          onOpenQuestions={handleOpenQuestions}
+          onNewAnalysis={handleNewAnalysis}
+          onOpenAnalysis={handleSelect}
+          onOpenEditor={handleOpenEditor}
+          onOpenTemplates={handleOpenTemplates}
+          onOpenCVs={handleOpenCVs}
+          onTabChange={setViewTab}
+          onAIAnalysisComplete={handleAIComplete}
+          onDelete={handleDelete}
+          onUpdateAnalysis={fetchAnalysisDetail}
+          onInterviewQuestionCreated={fetchInterviewQuestions}
+          onAISettingsChange={(settings) => {
+            setAIProvider(settings.provider);
+            setAIApiKey(settings.apiKey);
+            setAIModel(settings.model);
+          }}
+        />
       </main>
     </div>
   );

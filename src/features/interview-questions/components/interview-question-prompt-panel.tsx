@@ -1,0 +1,100 @@
+"use client";
+
+import type { RefObject } from "react";
+import { MessageSquare } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Textarea } from "@/components/ui/textarea";
+import type { InterviewQuestion, UpdateInterviewQuestionInput } from "../api/interview-questions-api";
+
+interface InterviewQuestionPromptPanelProps {
+  question: InterviewQuestion;
+  isEditing: boolean;
+  questionRef: RefObject<HTMLTextAreaElement | null>;
+  contextRef: RefObject<HTMLTextAreaElement | null>;
+  shouldSkipBlurSave: () => boolean;
+  onUpdate: (updates: Partial<UpdateInterviewQuestionInput>) => void;
+}
+
+export default function InterviewQuestionPromptPanel({
+  question,
+  isEditing,
+  questionRef,
+  contextRef,
+  shouldSkipBlurSave,
+  onUpdate,
+}: InterviewQuestionPromptPanelProps) {
+  const t = useTranslations("interviewQuestions");
+
+  return (
+    <div className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-5 flex flex-col gap-4 animate-fade-in">
+      <h3 className="text-sm font-semibold tracking-tight text-zinc-300 flex items-center gap-2">
+        <MessageSquare className="h-4 w-4 text-indigo-400" />
+        {t("question")}
+      </h3>
+      {isEditing ? (
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="question-textarea" className="text-xs font-medium text-zinc-500">
+              {t("question")}
+            </label>
+            <Textarea
+              id="question-textarea"
+              ref={questionRef}
+              defaultValue={question.question}
+              key={`question-${question.id}-${question.updatedAt}`}
+              onBlur={(event) =>
+                !shouldSkipBlurSave() &&
+                event.target.value.trim() !== question.question &&
+                onUpdate({ question: event.target.value })
+              }
+              className="min-h-24 bg-white/[0.01] border-white/[0.08] focus-visible:ring-indigo-500/50"
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="context-textarea" className="text-xs font-medium text-zinc-500">
+              {t("context")}
+            </label>
+            <Textarea
+              id="context-textarea"
+              ref={contextRef}
+              defaultValue={question.context ?? ""}
+              key={`context-${question.id}-${question.updatedAt}`}
+              onBlur={(event) =>
+                !shouldSkipBlurSave() &&
+                event.target.value !== (question.context ?? "") &&
+                onUpdate({ context: event.target.value || null })
+              }
+              className="min-h-24 bg-white/[0.01] border-white/[0.08] focus-visible:ring-indigo-500/50"
+              placeholder={t("aiContext")}
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <span className="text-xs font-medium text-zinc-500">
+              {t("question")}
+            </span>
+            <div className="rounded-lg border border-white/[0.04] bg-white/[0.01] p-3.5 text-sm leading-relaxed text-zinc-100 min-h-[5.5rem] whitespace-pre-wrap">
+              {question.question}
+            </div>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <span className="text-xs font-medium text-zinc-500">
+              {t("context")}
+            </span>
+            {question.context ? (
+              <div className="rounded-lg border border-white/[0.04] bg-white/[0.01] p-3.5 text-sm leading-relaxed text-zinc-300 min-h-[6rem] whitespace-pre-wrap">
+                {question.context}
+              </div>
+            ) : (
+              <div className="flex rounded-lg border border-dashed border-white/[0.08] bg-white/[0.005] p-3.5 text-sm italic text-zinc-500 min-h-[6rem] items-center justify-center">
+                {t("noContextSpecified")}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

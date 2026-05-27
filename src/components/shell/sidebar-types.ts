@@ -1,0 +1,16 @@
+export type SidebarActiveView =
+  | "new"
+  | "analysis"
+  | "cv-analyses"
+  | "job-analyses"
+  | "cvs"
+  | "templates"
+  | "editor"
+  | "questions"
+  | "journal"
+  | "objectives"
+  | "received-feedback"
+  | "activity-context"
+  | "feedback-notes"
+  | "settings"
+  | "admin";

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import {
   Clock,
@@ -18,6 +17,7 @@ import {
   Pencil,
 } from "lucide-react";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
+import AnalysisScoreCircle from "@/components/shared/analysis-score-circle";
 
 interface ScoreHeroProps {
   score: number;
@@ -119,42 +119,11 @@ export default function ScoreHero({
       className={`rounded-2xl border ${colors.border} ${colors.bg} p-6 backdrop-blur-sm`}
     >
       <div className="flex flex-col md:flex-row items-center gap-6">
-        {/* Score Circle */}
-        <div className="relative shrink-0 w-32 h-32">
-          <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-            <circle
-              cx="50"
-              cy="50"
-              r="42"
-              className="fill-none stroke-white/[0.06]"
-              strokeWidth="6"
-            />
-            <motion.circle
-              cx="50"
-              cy="50"
-              r="42"
-              className={`fill-none ${colors.stroke}`}
-              strokeWidth="6"
-              strokeLinecap="round"
-              initial={{ strokeDasharray: "0 264" }}
-              animate={{ strokeDasharray: `${score * 2.64} 264` }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
-            />
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <motion.span
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, duration: 0.4 }}
-              className={`text-4xl font-black ${colors.text}`}
-            >
-              {score}
-            </motion.span>
-            <span className="text-zinc-500 text-[10px] font-semibold tracking-wider mt-0.5">
-              / 100
-            </span>
-          </div>
-        </div>
+        <AnalysisScoreCircle
+          score={score}
+          textClassName={colors.text}
+          strokeClassName={colors.stroke}
+        />
 
         {/* Score Info */}
         <div className="flex-1 text-center md:text-left space-y-2 min-w-0">

@@ -1,21 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
-import {
-  ArrowLeft,
-  Check,
-  ChevronRight,
-  FileText,
-  KeyRound,
-  LayoutTemplate,
-  Loader2,
-  Plus,
-  Search,
-  Sparkles,
-  X,
-} from "lucide-react";
+import { LayoutTemplate } from "lucide-react";
 import { getErrorMessage } from "@/lib/errors";
 import {
   CV_TEMPLATES,
@@ -27,11 +14,9 @@ import {
   getStoredAIModel,
   getStoredAIProvider,
 } from "@/lib/browser-preferences";
-import { Button } from "@/components/ui/button";
-import AIActionLauncher from "@/components/shared/ai-action-launcher";
-import CVTemplatePreview from "./cv-template-preview";
-import CVProfileStructureCopyPasteModal from "./cv-profile-structure-copy-paste-modal";
 import { useCVDocumentList } from "../hooks/use-cv-library-queries";
+import TemplateCard from "./template-card";
+import TemplateConfigurationModal from "./template-configuration-modal";
 
 interface TemplatesViewProps {
   onOpenSettings: () => void;
@@ -132,233 +117,45 @@ export default function TemplatesView({
 
         <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-2">
           {CV_TEMPLATES.map((template) => (
-            <motion.div
+            <TemplateCard
               key={template.templateId}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.02] transition-all hover:border-teal-500/30 hover:bg-white/[0.04]"
-            >
-              <div className="w-full bg-zinc-900 p-6 sm:p-8 flex items-center justify-center">
-                <svg
-                  className="w-full h-auto max-w-full rounded-sm shadow-2xl transition-transform duration-300 ease-out group-hover:scale-[1.02]"
-                  viewBox="0 0 794 1123"
-                  preserveAspectRatio="xMidYMid meet"
-                >
-                  <foreignObject width="794" height="1123">
-                    <div className="w-[794px] h-[1123px] bg-white overflow-hidden">
-                      <CVTemplatePreview
-                        profile={template.fixtureProfile}
-                        templateId={template.templateId}
-                        locale="es"
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-              </div>
-
-              <div className="flex flex-1 flex-col p-6">
-                <h3 className="text-xl font-semibold text-white">
-                  {template.name}
-                </h3>
-                <p className="mt-2 text-sm text-zinc-400">
-                  {template.description}
-                </p>
-                <div className="mt-auto pt-6">
-                  <Button
-                    onClick={() => setSelectedTemplate(template)}
-                    className="w-full bg-white text-black hover:bg-zinc-200"
-                  >
-                    {t("useTemplate")}
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
+              template={template}
+              onSelect={setSelectedTemplate}
+            />
           ))}
         </div>
       </div>
 
-      <AnimatePresence>
-        {selectedTemplate && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-white/10 bg-[#0a0a12] shadow-2xl"
-            >
-              <div className="flex items-center justify-between border-b border-white/5 p-6">
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => setSelectedTemplate(null)}
-                    className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-white/5 text-zinc-400"
-                  >
-                    <ArrowLeft className="h-5 w-5" />
-                  </button>
-                  <div>
-                    <h2 className="text-xl font-semibold text-white">
-                      {t("configureVersion")}
-                    </h2>
-                    <p className="text-sm text-zinc-500">
-                      {t("connectWithCv", { template: selectedTemplate.name })}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setSelectedTemplate(null)}
-                  className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-white/5 text-zinc-400"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-
-              <div className="p-6">
-                <div className="grid gap-8 md:grid-cols-2 items-start">
-                  <div>
-                    <label className="mb-4 block text-sm font-medium text-zinc-300">
-                      {t("chooseSourceCv")}
-                    </label>
-                    <div className="relative">
-                      <Search className="absolute left-3 top-3 h-4 w-4 text-zinc-500" />
-                      <input
-                        type="text"
-                        placeholder={t("searchCv")}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="h-10 w-full rounded-xl border border-white/10 bg-white/5 pl-9 pr-4 text-sm text-white placeholder:text-zinc-600 focus:border-teal-500/50 focus:outline-none"
-                      />
-                    </div>
-
-                    <div className="mt-4 max-h-[300px] space-y-2 overflow-y-auto pr-2">
-                      {filteredCvs.length > 0 ? (
-                        filteredCvs.map((cv) => (
-                          <button
-                            key={cv.id}
-                            onClick={() => setSelectedCvId(cv.id)}
-                            className={`flex w-full items-center justify-between rounded-xl border p-3 text-left transition-all ${
-                              selectedCvId === cv.id
-                                ? "border-teal-500/50 bg-teal-500/10 text-teal-300"
-                                : "border-white/5 bg-white/[0.02] text-zinc-400 hover:border-white/20 hover:bg-white/5"
-                            }`}
-                          >
-                            <div className="flex items-center gap-3 min-w-0 mr-2">
-                              <FileText
-                                className={`h-4 w-4 shrink-0 ${selectedCvId === cv.id ? "text-teal-400" : "text-zinc-500"}`}
-                              />
-                              <span className="text-sm font-medium truncate">
-                                {cv.name}
-                              </span>
-                            </div>
-                            {selectedCvId === cv.id && (
-                              <Check className="h-4 w-4 shrink-0" />
-                            )}
-                          </button>
-                        ))
-                      ) : (
-                        <div className="flex flex-col items-center justify-center py-8 text-center">
-                          <p className="text-sm text-zinc-500">
-                            {t("noCvs")}
-                          </p>
-                          <Button
-                            variant="link"
-                            className="mt-2 text-teal-400"
-                            onClick={onOpenUpload}
-                          >
-                            <Plus className="mr-2 h-4 w-4" /> {t("uploadFirstCv")}
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="space-y-6">
-                    <div>
-                      <label className="mb-4 block text-sm font-medium text-zinc-300">
-                        {t("outputLanguage")}
-                      </label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {(["es", "en"] as const).map((l) => (
-                          <button
-                            key={l}
-                            onClick={() => setLocale(l)}
-                            className={`flex h-10 items-center justify-center rounded-xl border text-sm font-medium transition-all ${
-                              locale === l
-                                ? "border-teal-500/50 bg-teal-500/10 text-teal-300"
-                                : "border-white/5 bg-white/[0.02] text-zinc-500 hover:border-white/20 hover:bg-white/5"
-                            }`}
-                          >
-                            {l === "es" ? t("spanish") : t("english")}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {!hasAIApiKey && selectedCvId && (
-                      <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-4">
-                        <div className="flex gap-3">
-                          <KeyRound className="h-5 w-5 shrink-0 text-amber-400" />
-                          <div>
-                            <p className="text-xs leading-relaxed text-amber-200">
-                              {t("missingApiKey")}
-                            </p>
-                            <Button
-                              variant="link"
-                              className="h-auto p-0 mt-2 text-xs font-bold text-amber-400 hover:text-amber-300"
-                              onClick={onOpenSettings}
-                            >
-                              {t("configureNow")}
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="pt-2 flex justify-end">
-                      <AIActionLauncher
-                        actionLabel={t("createVersion")}
-                        loading={creating}
-                        disabled={!selectedCvId}
-                        integrated={{
-                          available: hasAIApiKey,
-                          selectedModelId: selectedModel,
-                          models,
-                          onModelChange: setSelectedModel,
-                          onRun: handleCreateVersion,
-                          onConfigure: onOpenSettings,
-                        }}
-                        copyPaste={{
-                          available: true,
-                          onOpenFlow: () => setCopyPasteOpen(true),
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-            {selectedCvId && (
-              <CVProfileStructureCopyPasteModal
-                cvId={selectedCvId}
-                templateId={selectedTemplate.templateId}
-                locale={locale}
-                open={copyPasteOpen}
-                onClose={() => setCopyPasteOpen(false)}
-                onApplied={(result) => {
-                  void listQuery.refetch();
-                  if (result.version) {
-                    setSelectedTemplate(null);
-                    onOpenEditor(result.version.id);
-                  }
-                }}
-              />
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <TemplateConfigurationModal
+        template={selectedTemplate}
+        cvs={cvs}
+        filteredCvs={filteredCvs}
+        selectedCvId={selectedCvId}
+        locale={locale}
+        searchQuery={searchQuery}
+        hasAIApiKey={hasAIApiKey}
+        selectedModel={selectedModel}
+        models={models}
+        creating={creating}
+        copyPasteOpen={copyPasteOpen}
+        onClose={() => setSelectedTemplate(null)}
+        onSelectCv={setSelectedCvId}
+        onLocaleChange={setLocale}
+        onSearchChange={setSearchQuery}
+        onOpenUpload={onOpenUpload}
+        onOpenSettings={onOpenSettings}
+        onModelChange={setSelectedModel}
+        onCreateVersion={handleCreateVersion}
+        onOpenCopyPaste={() => setCopyPasteOpen(true)}
+        onCloseCopyPaste={() => setCopyPasteOpen(false)}
+        onApplied={(result) => {
+          void listQuery.refetch();
+          if (result.version) {
+            setSelectedTemplate(null);
+            onOpenEditor(result.version.id);
+          }
+        }}
+      />
     </div>
   );
 }
