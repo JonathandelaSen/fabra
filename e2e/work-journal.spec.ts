@@ -4,7 +4,6 @@ import { createConfirmedUser } from "./helpers/supabase";
 import { messages } from "../src/i18n/messages";
 
 const t = messages.en.workJournal;
-const c = messages.en.common;
 
 test("user can create, edit, and delete work journal entries", async ({ page }) => {
   const user = await createConfirmedUser("journal");

@@ -20,7 +20,7 @@ interface ObjectiveItemsProps {
   onCreateItem: () => void;
   onDeleteItem: (item: ObjectiveItem) => void;
   onEditItem: (item: ObjectiveItem) => void;
-  onItemFormChange: (form: any) => void;
+  onItemFormChange: (form: ItemEditForm | null) => void;
   onItemTitleChange: (title: string) => void;
   onSaveItem: () => void;
   onStopEditingItem: () => void;

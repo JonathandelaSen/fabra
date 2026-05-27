@@ -34,7 +34,6 @@ export default function JobMatchScoreCopyPasteModal({
   onApplied,
 }: JobMatchScoreCopyPasteModalProps) {
   const t = useTranslations("analysisFlow.copyPaste");
-  const tJob = useTranslations("jobMatchCopyPaste");
 
   const state = useCopyPasteWorkflowState({
     open,
@@ -57,17 +56,14 @@ export default function JobMatchScoreCopyPasteModal({
   });
 
   return (
-    <CopyPasteWorkflowModal<
-      { prompt: string; privacyNotice: string },
-      PreviewJobMatchAnalysisCopyPasteResponse
-    >
+    <CopyPasteWorkflowModal<PreviewJobMatchAnalysisCopyPasteResponse>
       open={open}
       onClose={onClose}
       title={t("title")}
       intro={t("intro")}
       step={state.step}
       onStepChange={state.setStep}
-      prepareData={state.prepareData}
+
       isPreparing={state.isPreparing}
       prompt={state.prompt}
       privacyNotice={state.privacyNotice}
@@ -89,7 +85,7 @@ export default function JobMatchScoreCopyPasteModal({
       isApplying={state.isApplying}
       onApply={state.applyResult}
       error={state.error}
-      correctionInstructions={JOB_MATCH_CORRECTION_INSTRUCTIONS}
+
       copiedCorrection={state.copiedCorrection}
       onCopyCorrection={state.copyCorrection}
     />

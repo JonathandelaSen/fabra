@@ -120,7 +120,6 @@ export default function FeedbackNotesView({
             isCreating={mutations.createFeedback.isPending}
             onStatusChange={setStatus}
             onSelect={selectFeedback}
-            onRefresh={() => void mutations.refresh()}
             onCreate={(personName, activityContextId) =>
               void runMutation(async () => {
                 const feedback = await mutations.createFeedback.mutateAsync({

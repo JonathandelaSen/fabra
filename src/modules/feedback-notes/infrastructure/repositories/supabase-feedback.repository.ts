@@ -1,7 +1,6 @@
 import { BoundSupabaseRepository } from "@/modules/shared";
 import {
   Feedback,
-  type FeedbackPrimitives,
   type FeedbackStatus,
 } from "../../domain/entities/feedback.entity";
 import type {

@@ -39,7 +39,6 @@ interface JobMatchAnalysisViewProps {
 export default function JobMatchAnalysisView({
   aiProvider,
   aiApiKey,
-  aiModel,
   hasAIApiKey,
   onOpenSettings,
   onNewAnalysis,

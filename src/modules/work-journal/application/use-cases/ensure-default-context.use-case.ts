@@ -3,7 +3,6 @@ import { WorkJournalContext } from "../../domain/entities/journal-context.entity
 import type { WorkJournalContextRepository } from "../../domain/repositories/work-journal-context.repository";
 import type { CVDataRepository } from "../../domain/repositories/cv-data.repository";
 import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
-import { suggestWorkJournalContextsFromCVs, contextKey } from "../../domain/services/suggest-contexts.service";
 import { createRequestId } from "@/lib/observability";
 import { WorkJournalContextId } from "../../domain/value-objects/work-journal-context-id.value-object";
 import { WorkJournalContextName } from "../../domain/value-objects/work-journal-context-name.value-object";

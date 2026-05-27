@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import type {
-  WorkJournalContextLegacy as WorkJournalContext,
+
   WorkJournalEntryInputMode,
   WorkJournalEntryLegacy as WorkJournalEntry,
 } from "../api/work-journal-types";
@@ -59,7 +59,6 @@ export default function WorkJournalView({
   onOpenSettings,
 }: WorkJournalViewProps) {
   const t = useTranslations("workJournal");
-  const common = useTranslations("common.actions");
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();

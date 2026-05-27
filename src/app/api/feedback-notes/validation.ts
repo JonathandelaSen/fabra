@@ -26,7 +26,7 @@ export interface FeedbackEntryContentHttpInput {
   content: string;
 }
 
-export interface GenerateFeedbackHttpInput extends AIRequestConfig {}
+export type GenerateFeedbackHttpInput = AIRequestConfig;
 
 function validationError(message: string): Result<never, HttpValidationError> {
   return { ok: false, error: { message, status: 400 } };

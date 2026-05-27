@@ -1,4 +1,3 @@
-import { ChevronRight } from "lucide-react";
 import type {
   ObjectiveContext,
   ObjectiveStatus,
@@ -7,7 +6,6 @@ import type {
 import type { ObjectivesFilter } from "../hooks/use-objectives-route-state";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
 import { ObjectivesSidebarSkeleton } from "./objectives-skeleton";
-import { statusClass } from "./objectives-ui";
 import { ObjectiveListItem } from "./objective-list-item";
 
 interface ObjectivesSidebarProps {

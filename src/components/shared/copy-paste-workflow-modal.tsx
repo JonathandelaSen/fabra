@@ -7,7 +7,7 @@ import CopyPasteWorkflowSteps from "./copy-paste-workflow-steps";
 
 type Step = "copy" | "paste" | "review";
 
-export interface CopyPasteWorkflowModalProps<TPrepare, TPreview> {
+export interface CopyPasteWorkflowModalProps<TPreview> {
   open: boolean;
   onClose: () => void;
   title: string;
@@ -16,7 +16,6 @@ export interface CopyPasteWorkflowModalProps<TPrepare, TPreview> {
   step: Step;
   onStepChange: (step: Step) => void;
 
-  prepareData: TPrepare | null;
   isPreparing: boolean;
   prompt: string;
   privacyNotice: string;
@@ -35,19 +34,17 @@ export interface CopyPasteWorkflowModalProps<TPrepare, TPreview> {
   onApply: () => void;
 
   error: string | null;
-  correctionInstructions: string;
   copiedCorrection: boolean;
   onCopyCorrection: () => void;
 }
 
-export default function CopyPasteWorkflowModal<TPrepare, TPreview>({
+export default function CopyPasteWorkflowModal<TPreview>({
   open,
   onClose,
   title,
   intro,
   step,
   onStepChange,
-  prepareData,
   isPreparing,
   prompt,
   privacyNotice,
@@ -63,10 +60,9 @@ export default function CopyPasteWorkflowModal<TPrepare, TPreview>({
   isApplying,
   onApply,
   error,
-  correctionInstructions,
   copiedCorrection,
   onCopyCorrection,
-}: CopyPasteWorkflowModalProps<TPrepare, TPreview>) {
+}: CopyPasteWorkflowModalProps<TPreview>) {
   const t = useTranslations("analysisFlow.copyPaste");
 
   if (!open) return null;

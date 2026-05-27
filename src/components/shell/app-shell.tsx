@@ -109,7 +109,6 @@ export default function AppShell({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [analyses, setAnalyses] = useState<AnalysisSummary[]>([]);
-  const [analysesLoading, setAnalysesLoading] = useState(true);
   const [cvs, setCVs] = useState<CVSummary[]>([]);
   const [interviewQuestions, setInterviewQuestions] = useState<
     InterviewQuestionSummary[]
@@ -155,7 +154,7 @@ export default function AppShell({
   // Fetch analyses list
   const fetchAnalyses = useCallback(
     async (includeJobMatches: boolean = false) => {
-      setAnalysesLoading(true);
+
       try {
         const requests = [fetch("/api/cv-analyses")];
         if (includeJobMatches) {
@@ -188,7 +187,7 @@ export default function AppShell({
       } catch {
         // silent
       } finally {
-        setAnalysesLoading(false);
+
       }
     },
     [],
@@ -773,21 +772,6 @@ export default function AppShell({
     window.history.replaceState(null, "", "/admin");
   };
 
-  // Handle analysis creation complete
-  const handleAnalysisCreated = (id: string) => {
-    setActiveAnalysisId(id);
-    setActiveView("cv-analyses");
-    window.history.replaceState(
-      null,
-      "",
-      `/cv-analysis/${encodeURIComponent(id)}`,
-    );
-    fetchAnalysisDetail(id);
-    fetchAnalyses(hasLoadedAnalysesRef.current);
-    fetchCVs();
-    fetchInterviewQuestions();
-  };
-
   // Handle AI analysis complete
   const handleAIComplete = () => {
     if (activeAnalysisId) {
@@ -829,15 +813,7 @@ export default function AppShell({
       </div>
 
       <Sidebar
-        generalAnalyses={analyses.filter(
-          (analysis) => analysis.analysis_mode === "general",
-        )}
-        jobMatchAnalyses={analyses.filter(
-          (analysis) => analysis.analysis_mode === "job_match",
-        )}
-        activeId={activeAnalysisId}
         activeView={activeView}
-        onSelect={handleSelect}
         onNewAnalysis={handleNewAnalysis}
         onOpenCVAnalyses={handleOpenCVAnalyses}
         onOpenJobAnalyses={handleOpenJobAnalyses}
@@ -851,7 +827,6 @@ export default function AppShell({
         onOpenFeedbackNotes={handleOpenFeedbackNotes}
         onOpenSettings={handleOpenSettings}
         onOpenAdmin={handleOpenAdmin}
-        onDelete={handleDelete}
         userEmail={userEmail}
         isAdmin={isAdmin}
         isForceCollapsed={activeView === "editor"}

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
 import { Sparkles, ChevronDown, Loader2 } from "lucide-react";
 import {
   Popover,
@@ -47,7 +46,6 @@ export default function AIActionLauncher({
   loading = false,
   disabled = false,
 }: AIActionLauncherProps) {
-  const t = useTranslations("aiLauncher");
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {

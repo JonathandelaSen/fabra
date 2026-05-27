@@ -55,17 +55,14 @@ export default function CVProfileStructureCopyPasteModal({
   });
 
   return (
-    <CopyPasteWorkflowModal<
-      { prompt: string; privacyNotice: string },
-      PreviewCVProfileCopyPasteResponse
-    >
+    <CopyPasteWorkflowModal<PreviewCVProfileCopyPasteResponse>
       open={open}
       onClose={onClose}
       title={tProfile("title")}
       intro={tProfile("intro")}
       step={state.step}
       onStepChange={state.setStep}
-      prepareData={state.prepareData}
+
       isPreparing={state.isPreparing}
       prompt={state.prompt}
       privacyNotice={state.privacyNotice}
@@ -81,7 +78,7 @@ export default function CVProfileStructureCopyPasteModal({
       isApplying={state.isApplying}
       onApply={state.applyResult}
       error={state.error}
-      correctionInstructions={CV_PROFILE_CORRECTION_INSTRUCTIONS}
+
       copiedCorrection={state.copiedCorrection}
       onCopyCorrection={state.copyCorrection}
     />

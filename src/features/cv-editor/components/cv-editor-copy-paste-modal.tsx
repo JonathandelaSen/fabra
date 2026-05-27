@@ -49,17 +49,14 @@ export default function CVEditorCopyPasteModal({
   });
 
   return (
-    <CopyPasteWorkflowModal<
-      { prompt: string; privacyNotice: string },
-      PreviewCVEditorCopyPasteResponse
-    >
+    <CopyPasteWorkflowModal<PreviewCVEditorCopyPasteResponse>
       open={open}
       onClose={onClose}
       title={t("title")}
       intro={t("intro")}
       step={state.step}
       onStepChange={state.setStep}
-      prepareData={state.prepareData}
+
       isPreparing={state.isPreparing}
       prompt={state.prompt}
       privacyNotice={state.privacyNotice}
@@ -75,7 +72,7 @@ export default function CVEditorCopyPasteModal({
       isApplying={state.isApplying}
       onApply={state.applyResult}
       error={state.error}
-      correctionInstructions={CORRECTION_INSTRUCTIONS}
+
       copiedCorrection={state.copiedCorrection}
       onCopyCorrection={state.copyCorrection}
     />

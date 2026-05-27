@@ -11,7 +11,6 @@ import {
 } from "@/lib/cv-templates";
 import {
   getStoredAIApiKey,
-  getStoredAIModel,
   getStoredAIProvider,
 } from "@/lib/browser-preferences";
 import { useCVDocumentList } from "../hooks/use-cv-library-queries";
@@ -33,7 +32,7 @@ export default function TemplatesView({
   const cvs = listQuery.data ?? [];
   const aiProvider = getStoredAIProvider();
   const aiApiKey = getStoredAIApiKey();
-  const aiModel = getStoredAIModel();
+  
   const hasAIApiKey = aiProvider === "mock" || aiApiKey.length > 0;
   const t = useTranslations("analysisFlow.templates");
   const tf = useTranslations("analysisFlow.forms");

@@ -19,7 +19,7 @@ interface ObjectiveOutcomesProps {
   onEditOutcome: (outcome: ObjectiveOutcome) => void;
   onNewOutcomeTitleChange: (title: string) => void;
   onNewOutcomeTypeChange: (type: ObjectiveOutcomeType) => void;
-  onOutcomeFormChange: (form: any) => void;
+  onOutcomeFormChange: (form: OutcomeEditForm | null) => void;
   onSaveOutcome: () => void;
   onStopEditingOutcome: () => void;
   onUpdateOutcomeStatus: (

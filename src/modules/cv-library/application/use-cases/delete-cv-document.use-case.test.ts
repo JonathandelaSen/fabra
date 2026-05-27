@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
   ListCVAnalysisUsageByDocumentQuery,
-  type ListCVAnalysisUsageByDocumentResult,
 } from "@/modules/cv-analysis";
 import { ListJobMatchAnalysisUsageByDocumentQuery } from "@/modules/job-match-analysis";
 import type { Query, QueryBus } from "@/modules/shared";

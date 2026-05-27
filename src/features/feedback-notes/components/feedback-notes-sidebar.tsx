@@ -21,7 +21,6 @@ interface FeedbackNotesSidebarProps {
   isCreating: boolean;
   onStatusChange: (status: FeedbackFilter) => void;
   onSelect: (feedbackId: string) => void;
-  onRefresh: () => void;
   onCreate: (personName: string, activityContextId: string) => void;
 }
 
@@ -34,7 +33,7 @@ export function FeedbackNotesSidebar({
   isCreating,
   onStatusChange,
   onSelect,
-  onRefresh,
+// onRefresh,
   onCreate,
 }: FeedbackNotesSidebarProps) {
   const t = useTranslations("feedbackNotes");

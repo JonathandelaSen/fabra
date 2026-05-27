@@ -4,7 +4,7 @@ import { feedbackNotesModule } from "@/lib/container";
 import {
   presentFeedback,
 } from "@/modules/feedback-notes";
-import { ok, errorResponse, handleApiError, notFound } from "@/modules/shared";
+import { ok, errorResponse, handleApiError } from "@/modules/shared";
 import { parseUpdateFeedbackRequest } from "../../validation";
 import {
   toFeedbackResponse,

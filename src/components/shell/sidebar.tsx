@@ -20,31 +20,13 @@ import {
   Inbox,
   Target,
 } from "lucide-react";
-import type {
-  AnalysisMode,
-  AnalysisSummary,
-  OfferStatus,
-} from "@/lib/analysis-types";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import SidebarNavSection from "./sidebar-nav-section";
 import SidebarFooter from "./sidebar-footer";
 import type { SidebarActiveView } from "./sidebar-types";
 
-const OFFER_STATUS_BADGE_CLASS: Record<OfferStatus, string> = {
-  interesante: "border-sky-500/20 bg-sky-500/10 text-sky-300",
-  aplicado: "border-indigo-500/20 bg-indigo-500/10 text-indigo-300",
-  entrevista: "border-amber-500/20 bg-amber-500/10 text-amber-300",
-  oferta: "border-emerald-500/20 bg-emerald-500/10 text-emerald-300",
-  rechazado: "border-rose-500/20 bg-rose-500/10 text-rose-300",
-  descartado: "border-zinc-500/20 bg-zinc-500/10 text-zinc-400",
-};
-
 interface SidebarProps {
-  generalAnalyses: AnalysisSummary[];
-  jobMatchAnalyses: AnalysisSummary[];
-  activeId: string | null;
   activeView: SidebarActiveView;
-  onSelect: (id: string) => void;
   onNewAnalysis: () => void;
   onOpenCVAnalyses: () => void;
   onOpenJobAnalyses: () => void;
@@ -58,18 +40,13 @@ interface SidebarProps {
   onOpenFeedbackNotes: () => void;
   onOpenSettings: () => void;
   onOpenAdmin: () => void;
-  onDelete: (id: string) => void;
   userEmail: string | null;
   isAdmin?: boolean;
   isForceCollapsed?: boolean;
 }
 
 export default function Sidebar({
-  generalAnalyses,
-  jobMatchAnalyses,
-  activeId,
   activeView,
-  onSelect,
   onNewAnalysis,
   onOpenCVAnalyses,
   onOpenJobAnalyses,
@@ -83,14 +60,13 @@ export default function Sidebar({
   onOpenFeedbackNotes,
   onOpenSettings,
   onOpenAdmin,
-  onDelete,
   userEmail,
   isAdmin = false,
   isForceCollapsed = false,
 }: SidebarProps) {
   const t = useTranslations("navigation");
   const common = useTranslations("common");
-  const { locale } = useInterfaceLanguage();
+  useInterfaceLanguage();
   const [internalCollapsed, setInternalCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [cvSectionOpen, setCvSectionOpen] = useState(true);
@@ -116,32 +92,9 @@ export default function Sidebar({
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const hasAnalyses = generalAnalyses.length > 0 || jobMatchAnalyses.length > 0;
+  
 
-  const formatDate = (dateStr: string) => {
-    const d = new Date(dateStr);
-    const now = new Date();
-    const diff = now.getTime() - d.getTime();
-    const mins = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
 
-    if (mins < 1) return t("now");
-    if (mins < 60) return `${mins}m`;
-    if (hours < 24) return `${hours}h`;
-    if (days < 7) return `${days}d`;
-    return d.toLocaleDateString(locale === "es" ? "es-ES" : "en-US", {
-      day: "numeric",
-      month: "short",
-    });
-  };
-
-  const getScoreColor = (score: number | null) => {
-    if (score === null) return "";
-    if (score >= 80) return "text-emerald-400 bg-emerald-500/15";
-    if (score >= 60) return "text-amber-400 bg-amber-500/15";
-    return "text-rose-400 bg-rose-500/15";
-  };
 
   return (
     <>

@@ -6,7 +6,6 @@ import {
   MessageSquareQuote,
   Pencil,
   Trash2,
-  User,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
@@ -43,19 +42,9 @@ export function ReceivedFeedbackDetail({
       <section className="rounded-xl border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-6">
         <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between border-b border-white/[0.04] pb-5">
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
-                <User className="h-5 w-5" />
-              </div>
-              <div className="min-w-0">
-                <h2 className="text-xl font-bold tracking-tight text-zinc-50 truncate">
-                  {item.giverName}
-                </h2>
-                <p className="text-xs text-zinc-500 mt-0.5">
-                  Received feedback provider
-                </p>
-              </div>
-            </div>
+            <h2 className="truncate text-xl font-bold tracking-tight text-zinc-50">
+              {item.giverName}
+            </h2>
 
             <div className="mt-4 flex flex-wrap items-center gap-3">
               <span className="inline-flex items-center rounded-md bg-indigo-500/10 px-2.5 py-1 text-xs font-semibold text-indigo-300 ring-1 ring-inset ring-indigo-500/20">
@@ -97,9 +86,6 @@ export function ReceivedFeedbackDetail({
 
         <div className="mt-6 flex flex-col gap-6">
           <div className="relative overflow-hidden rounded-xl border border-white/[0.04] bg-white/[0.015] p-6 shadow-inner">
-            <div className="absolute top-4 right-4 text-white/[0.02]">
-              <MessageSquareQuote className="h-24 w-24 -mt-6 -mr-4" />
-            </div>
             <div className="relative">
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-3">
                 <MessageSquareQuote className="h-4 w-4" />

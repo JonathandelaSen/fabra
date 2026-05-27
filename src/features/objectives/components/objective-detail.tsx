@@ -1,4 +1,3 @@
-import { Calendar, Trash2 } from "lucide-react";
 import type {
   ObjectiveContext,
   ObjectiveItem,
@@ -12,8 +11,6 @@ import type {
   ObjectiveWithRelations,
 } from "../api/objectives-api";
 import {
-  formatDate,
-  statusClass,
   type ItemEditForm,
   type OutcomeEditForm,
 } from "./objectives-ui";
@@ -41,11 +38,11 @@ interface ObjectiveDetailProps {
   onEditItem: (item: ObjectiveItem) => void;
   onEditObjective: (objective: ObjectiveWithRelations) => void;
   onEditOutcome: (outcome: ObjectiveOutcome) => void;
-  onItemFormChange: (form: ItemEditForm) => void;
+  onItemFormChange: (form: ItemEditForm | null) => void;
   onItemTitleChange: (title: string) => void;
   onNewOutcomeTitleChange: (title: string) => void;
   onNewOutcomeTypeChange: (type: ObjectiveOutcomeType) => void;
-  onOutcomeFormChange: (form: OutcomeEditForm) => void;
+  onOutcomeFormChange: (form: OutcomeEditForm | null) => void;
   onSaveItem: () => void;
   onSaveOutcome: () => void;
   onUpdateItemStatus: (item: ObjectiveItem, status: ObjectiveItemStatus) => void;

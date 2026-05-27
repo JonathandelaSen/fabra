@@ -30,7 +30,7 @@ function makeUseCase() {
 describe("EnsureDefaultContextUseCase", () => {
   it("creates General for a user without contexts", async () => {
     const user = await createTestUser("wj-ensure-empty");
-    const { contextRepo, useCase } = makeUseCase();
+    const { useCase } = makeUseCase();
 
     await expect(useCase.execute(user.id).then((context) => context?.toPrimitives())).resolves.toMatchObject({
       name: "General",

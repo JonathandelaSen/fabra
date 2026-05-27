@@ -28,7 +28,7 @@ const profileStructuringAI = new ProviderCVProfileStructuringAIServiceFactory({
 });
 const tracker: EventTracker = new SupabaseEventTracker();
 
-function createE2EUseCases(queryBus: QueryBus) {
+function createE2EUseCases(_queryBus: QueryBus) {
   return {
     listCVDocuments: new ListCVDocumentsUseCase({ documentRepo }),
     getCVDocument: new GetCVDocumentUseCase({ documentRepo }),
@@ -75,3 +75,4 @@ export function createCVLibraryE2EModule(
     },
   };
 }
+

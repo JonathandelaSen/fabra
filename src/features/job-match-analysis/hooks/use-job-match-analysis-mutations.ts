@@ -2,7 +2,6 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type {
-  JobMatchAnalysisSummary,
   UpdateJobMatchAnalysisInput,
   ScoreJobMatchAnalysisInput,
   JobMatchAnalysisDetail,

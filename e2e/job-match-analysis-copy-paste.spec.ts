@@ -142,7 +142,7 @@ test("user can score a job match analysis with Copy Paste", async ({
 test("replacement warning appears when analysis already has a score", async ({
   page,
 }) => {
-  const { analysis } = await createJobMatchAnalysisFixture(page);
+  await createJobMatchAnalysisFixture(page);
 
   const jobDescription = "Senior React Developer";
   const jobDescriptionInput = page.locator("textarea").first();

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { Archive, Check, ChevronDown, Pencil, RefreshCw, Save, Trash2 } from "lucide-react";
+import { Archive, Check, Pencil, RefreshCw, Save, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { FeedbackEntry, FeedbackListItem } from "../api/feedback-notes-api";
