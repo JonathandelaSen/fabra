@@ -109,7 +109,7 @@ export default function AppShell({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [analyses, setAnalyses] = useState<AnalysisSummary[]>([]);
-  const [cvs, setCVs] = useState<CVSummary[]>([]);
+  const [, setCVs] = useState<CVSummary[]>([]);
   const [interviewQuestions, setInterviewQuestions] = useState<
     InterviewQuestionSummary[]
   >([]);
@@ -422,18 +422,11 @@ export default function AppShell({
         });
       });
     } else if (pathname.startsWith("/cv-analysis/")) {
-      const id = pathname.split("/cv-analysis/")[1];
-      if (id) {
-        queueMicrotask(() => {
-          setActiveView("analysis");
-          setActiveAnalysisId((prevId) => {
-            if (prevId !== id) {
-              void fetchAnalysisDetail(id);
-            }
-            return id;
-          });
-        });
-      }
+      queueMicrotask(() => {
+        setActiveView("cv-analyses");
+        setActiveAnalysisId(null);
+        setActiveAnalysis(null);
+      });
     } else if (view === "cvs") {
       queueMicrotask(() => {
         router.replace("/cvs");
@@ -728,7 +721,8 @@ export default function AppShell({
     setActiveView("cv-analyses");
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
-    router.push(lastCVAnalysesHrefRef.current);
+    lastCVAnalysesHrefRef.current = "/cv-analysis";
+    router.push("/cv-analysis");
   };
 
   const handleOpenJobAnalyses = () => {

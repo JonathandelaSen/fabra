@@ -32,6 +32,7 @@ export function useCVAnalysisRouteState(): CVAnalysisRouteState & {
   goToList: () => void;
   goToNew: () => void;
   goToDetail: (analysisId: string, tab?: CVAnalysisRouteTab) => void;
+  replaceDetail: (analysisId: string, tab?: CVAnalysisRouteTab) => void;
   setTab: (tab: CVAnalysisRouteTab) => void;
 } {
   const pathname = usePathname();
@@ -57,6 +58,8 @@ export function useCVAnalysisRouteState(): CVAnalysisRouteState & {
     goToNew: () => push(buildHref("new", null, "extraction")),
     goToDetail: (nextAnalysisId, nextTab = "extraction") =>
       push(buildHref("detail", nextAnalysisId, nextTab)),
+    replaceDetail: (nextAnalysisId, nextTab = "extraction") =>
+      replace(buildHref("detail", nextAnalysisId, nextTab)),
     setTab: (nextTab) => {
       if (mode === "detail" && analysisId) {
         replace(buildHref("detail", analysisId, nextTab));

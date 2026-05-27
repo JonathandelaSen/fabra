@@ -48,6 +48,7 @@ interface ExtractionViewProps {
   hasAIApiKey: boolean;
   onOpenSettings: () => void;
   onScoreAnalysis?: (id: string, input: ScoreCVAnalysisInput) => Promise<void>;
+  hideAnalysisSelector?: boolean;
 }
 
 type ParserTab = "python" | "pdfjs" | "node";
@@ -95,6 +96,7 @@ export default function ExtractionView({
   hasAIApiKey,
   onOpenSettings,
   onScoreAnalysis,
+  hideAnalysisSelector = false,
 }: ExtractionViewProps) {
   const t = useTranslations("analysisFlow.extraction");
   const formsT = useTranslations("analysisFlow.forms");
@@ -328,7 +330,7 @@ export default function ExtractionView({
         )}
 
         {/* Phase 2 - AI Analysis Section */}
-        {analysis.ai_score === null && (
+        {analysis.ai_score === null && !hideAnalysisSelector && (
           <AnimatePresence mode="wait">
             {selectedMode === null ? (
               <AnalysisModeSelector

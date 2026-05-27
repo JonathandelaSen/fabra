@@ -19,6 +19,7 @@ interface JobMatchExtractionViewProps {
   hasAIApiKey: boolean;
   onOpenSettings: () => void;
   onCopyPasteApplied: (analysis: JobMatchAnalysisDetailResponse) => void;
+  hideAnalysisSelector?: boolean;
 }
 
 type ParserTab = "python" | "pdfjs" | "node";
@@ -63,6 +64,7 @@ export default function JobMatchExtractionView({
   hasAIApiKey,
   onOpenSettings,
   onCopyPasteApplied,
+  hideAnalysisSelector = false,
 }: JobMatchExtractionViewProps) {
   const t = useTranslations("analysisFlow.extraction");
   const formsT = useTranslations("analysisFlow.forms");
@@ -218,7 +220,7 @@ export default function JobMatchExtractionView({
           />
         )}
 
-        {analysis.aiScore === null && (
+        {analysis.aiScore === null && !hideAnalysisSelector && (
           <JobMatchForm
             key="job-match-form"
             onSubmit={handleJobMatchAnalysis}

@@ -1,10 +1,14 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { FileText, Sparkles } from "lucide-react";
+import { FileText, Plus, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { InterviewQuestionResponse as InterviewQuestionSummary } from "@/app/api/interview-questions/responses";
+import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
+import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import { AnalysisDetailSkeleton } from "@/components/shared/skeletons";
+import { Button } from "@/components/ui/button";
 import type { AIContext, Analysis } from "@/lib/analysis-types";
 import {
   useCreateCVAnalysis,
@@ -83,7 +87,9 @@ export default function CVAnalysisView({
   onOpenQuestions,
 }: CVAnalysisViewProps) {
   const t = useTranslations("analysisFlow.appShell");
+  const listT = useTranslations("analysisFlow.lists");
   const route = useCVAnalysisRouteState();
+  const [searchQuery, setSearchQuery] = useState("");
   const analysesQuery = useCVAnalysesList();
   const cvOptionsQuery = useCVAnalysisCVOptions();
   const detailQuery = useCVAnalysisDetail(route.analysisId);
@@ -95,9 +101,25 @@ export default function CVAnalysisView({
   const scoreAnalysis = useScoreCVAnalysis();
   const deleteAnalysis = useDeleteCVAnalysis();
 
-  const analyses = analysesQuery.data ?? [];
+  const analyses = useMemo(() => analysesQuery.data ?? [], [analysesQuery.data]);
+  const filteredAnalyses = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return analyses;
+    return analyses.filter((analysis) => {
+      const title = analysis.title || analysis.filename.replace(/\.pdf$/i, "");
+      return title.toLowerCase().includes(query);
+    });
+  }, [analyses, searchQuery]);
   const selectedAnalysis = detailQuery.data ?? null;
+  const selectedIdInCurrentList =
+    filteredAnalyses.find((analysis) => analysis.id === route.analysisId)?.id ?? null;
   const isLoadingList = analysesQuery.isLoading && analyses.length === 0;
+
+  useEffect(() => {
+    if (route.mode === "list" && analyses[0]?.id) {
+      route.replaceDetail(analyses[0].id);
+    }
+  }, [analyses, route]);
 
   const handleCreateCV = async (file: File, name: string) => {
     const cv = await uploadCV.mutateAsync({ file, name });
@@ -123,149 +145,198 @@ export default function CVAnalysisView({
     const currentIndex = analyses.findIndex((analysis) => analysis.id === id);
     const nextAnalysis =
       analyses[currentIndex + 1] ?? analyses[currentIndex - 1] ?? null;
+    await deleteAnalysis.mutateAsync(id);
     if (route.analysisId === id) {
       if (nextAnalysis) {
-        route.goToDetail(nextAnalysis.id);
+        route.replaceDetail(nextAnalysis.id);
       } else {
         route.goToList();
       }
     }
-    await deleteAnalysis.mutateAsync(id);
-  };
-
-  if (route.mode === "new") {
-    return (
-      <NewAnalysisFlow
-        cvs={cvOptionsQuery.data ?? []}
-        onCreateCV={handleCreateCV}
-        onCreateAnalysis={handleCreateAnalysis}
-        onAnalysisCreated={(analysisId) => route.goToDetail(analysisId)}
-      />
-    );
-  }
-
-  if (route.mode === "list") {
-    return (
-      <CVAnalysesListView
-        analyses={analyses}
-        isLoading={isLoadingList}
-        onSelect={(id) => route.goToDetail(id)}
-        onNewAnalysis={route.goToNew}
-        onDelete={handleDelete}
-      />
-    );
-  }
-
-  if (detailQuery.isLoading || !selectedAnalysis) {
-    return (
-      <div className="flex-1 overflow-y-auto p-6">
-        <AnalysisDetailSkeleton />
-      </div>
-    );
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden min-h-0">
-      {selectedAnalysis.ai_score !== null && (
-        <div className="shrink-0 flex items-center gap-1 px-4 sm:px-6 pt-4">
-          <button
-            onClick={() => route.setTab("extraction")}
-            className={`
-              flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
-              ${
-                route.tab === "extraction"
-                  ? "bg-white/[0.08] text-zinc-100 shadow-sm"
-                  : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]"
-              }
-            `}
-          >
-            <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            {t("extractionTab")}
-          </button>
-          <button
-            onClick={() => route.setTab("analysis")}
-            className={`
-              flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
-              ${
-                route.tab === "analysis"
-                  ? "bg-white/[0.08] text-zinc-100 shadow-sm"
-                  : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]"
-              }
-            `}
-          >
-            <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            {t("analysisTab")}
-          </button>
-        </div>
-      )}
+    <FeatureScreenShell
+      title={listT("cvTitle")}
+      actions={
+        <Button
+          type="button"
+          onClick={route.goToNew}
+          className="bg-indigo-300 text-indigo-950 font-semibold hover:bg-indigo-200 transition-colors shadow-[0_0_30px_rgba(129,140,248,0.15)]"
+        >
+          <Plus className="mr-1.5 h-4 w-4" />
+          {listT("newAnalysis")}
+        </Button>
+      }
+      contentClassName="max-w-[1560px] mx-auto"
+      bodyContentClassName="max-w-[1560px] mx-auto h-full"
+    >
+      <FeatureTwoPaneLayout
+        sidebar={
+          <CVAnalysesListView
+            analyses={filteredAnalyses}
+            selectedId={selectedIdInCurrentList}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            isLoading={isLoadingList}
+            onSelect={(id) => route.goToDetail(id)}
+            onDelete={(id) => void handleDelete(id)}
+          />
+        }
+        mainClassName="overflow-hidden"
+      >
+        {route.mode === "new" ? (
+          <NewAnalysisFlow
+            cvs={cvOptionsQuery.data ?? []}
+            onCreateCV={handleCreateCV}
+            onCreateAnalysis={handleCreateAnalysis}
+            onAnalysisCreated={(analysisId) => route.goToDetail(analysisId)}
+          />
+        ) : isLoadingList || (route.mode === "detail" && detailQuery.isLoading) ? (
+          <div className="h-full overflow-y-auto p-6">
+            <AnalysisDetailSkeleton />
+          </div>
+        ) : !selectedAnalysis ? (
+          <div className="flex h-full items-center justify-center text-sm text-zinc-600">
+            {t("empty")}
+          </div>
+        ) : (
+          <div className="flex h-full min-h-0 flex-col overflow-hidden">
+            <div className="shrink-0 flex items-center gap-1 px-4 sm:px-6 pt-4">
+              <button
+                onClick={() => route.setTab("extraction")}
+                className={`
+                  flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
+                  ${
+                    route.tab === "extraction"
+                      ? "bg-white/[0.08] text-zinc-100 shadow-sm"
+                      : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]"
+                  }
+                `}
+              >
+                <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                {t("extractionTab")}
+              </button>
+              <button
+                onClick={() => route.setTab("analysis")}
+                className={`
+                  flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all
+                  ${
+                    route.tab === "analysis"
+                      ? "bg-white/[0.08] text-zinc-100 shadow-sm"
+                      : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]"
+                  }
+                `}
+              >
+                <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                {t("analysisTab")}
+              </button>
+            </div>
 
-      <AnimatePresence mode="wait">
-        {route.tab === "extraction" ? (
-          <motion.div
-            key="extraction-view"
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 10 }}
-            transition={{ duration: 0.15 }}
-            className="flex-1 flex flex-col overflow-hidden min-h-0"
-          >
-            <ExtractionView
-              analysis={{
-                ...selectedAnalysis,
-                cv: selectedAnalysis.cv
-                  ? {
-                      id: selectedAnalysis.cv.id,
-                      name: selectedAnalysis.cv.name,
-                      filename: selectedAnalysis.cv.filename ?? "",
-                      type: selectedAnalysis.cv.type,
+            <AnimatePresence mode="wait">
+              {route.tab === "extraction" ? (
+                <motion.div
+                  key="extraction-view"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                  transition={{ duration: 0.15 }}
+                  className="flex-1 flex flex-col overflow-hidden min-h-0"
+                >
+                  <ExtractionView
+                    analysis={{
+                      ...selectedAnalysis,
+                      cv: selectedAnalysis.cv
+                        ? {
+                            id: selectedAnalysis.cv.id,
+                            name: selectedAnalysis.cv.name,
+                            filename: selectedAnalysis.cv.filename ?? "",
+                            type: selectedAnalysis.cv.type,
+                          }
+                        : null,
+                    }}
+                    onAIAnalysisComplete={() => {
+                      void detailQuery.refetch();
+                      route.setTab("analysis");
+                    }}
+                    aiProvider={aiProvider}
+                    aiApiKey={aiApiKey}
+                    aiModel={aiModel}
+                    hasAIApiKey={hasAIApiKey}
+                    onOpenSettings={onOpenSettings}
+                    onScoreAnalysis={handleScoreAnalysis}
+                    hideAnalysisSelector={true}
+                  />
+                </motion.div>
+              ) : selectedAnalysis.ai_score !== null ? (
+                <motion.div
+                  key="analysis-view"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={{ duration: 0.15 }}
+                  className="flex-1 flex flex-col overflow-hidden min-h-0"
+                >
+                  <AIAnalysisView
+                    analysis={toAIAnalysisProps(selectedAnalysis)}
+                    aiProvider={aiProvider}
+                    aiApiKey={aiApiKey}
+                    aiModel={aiModel}
+                    hasAIApiKey={hasAIApiKey}
+                    onDelete={handleDelete}
+                    onUpdate={() => void detailQuery.refetch()}
+                    interviewQuestions={
+                      (interviewQuestionsQuery.data ?? []) as InterviewQuestionSummary[]
                     }
-                  : null,
-              }}
-              onAIAnalysisComplete={() => {
-                void detailQuery.refetch();
-                route.setTab("analysis");
-              }}
-              aiProvider={aiProvider}
-              aiApiKey={aiApiKey}
-              aiModel={aiModel}
-              hasAIApiKey={hasAIApiKey}
-              onOpenSettings={onOpenSettings}
-              onScoreAnalysis={handleScoreAnalysis}
-            />
-          </motion.div>
-        ) : selectedAnalysis.ai_score !== null ? (
-          <motion.div
-            key="analysis-view"
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
-            transition={{ duration: 0.15 }}
-            className="flex-1 flex flex-col overflow-hidden min-h-0"
-          >
-            <AIAnalysisView
-              analysis={toAIAnalysisProps(selectedAnalysis)}
-              aiProvider={aiProvider}
-              aiApiKey={aiApiKey}
-              aiModel={aiModel}
-              hasAIApiKey={hasAIApiKey}
-              onDelete={handleDelete}
-              onUpdate={() => void detailQuery.refetch()}
-              interviewQuestions={
-                (interviewQuestionsQuery.data ?? []) as InterviewQuestionSummary[]
-              }
-              onInterviewQuestionCreated={() => {
-                void interviewQuestionsQuery.refetch();
-              }}
-              onOpenQuestions={() =>
-                onOpenQuestions({
-                  cvId: selectedAnalysis.cv_id,
-                  analysisId: selectedAnalysis.id,
-                })
-              }
-            />
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-    </div>
+                    onInterviewQuestionCreated={() => {
+                      void interviewQuestionsQuery.refetch();
+                    }}
+                    onOpenQuestions={() =>
+                      onOpenQuestions({
+                        cvId: selectedAnalysis.cv_id,
+                        analysisId: selectedAnalysis.id,
+                      })
+                    }
+                  />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="analysis-selector-view"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={{ duration: 0.15 }}
+                  className="flex-1 flex flex-col overflow-hidden min-h-0"
+                >
+                  <ExtractionView
+                    analysis={{
+                      ...selectedAnalysis,
+                      cv: selectedAnalysis.cv
+                        ? {
+                            id: selectedAnalysis.cv.id,
+                            name: selectedAnalysis.cv.name,
+                            filename: selectedAnalysis.cv.filename ?? "",
+                            type: selectedAnalysis.cv.type,
+                          }
+                        : null,
+                    }}
+                    onAIAnalysisComplete={() => {
+                      void detailQuery.refetch();
+                      route.setTab("analysis");
+                    }}
+                    aiProvider={aiProvider}
+                    aiApiKey={aiApiKey}
+                    aiModel={aiModel}
+                    hasAIApiKey={hasAIApiKey}
+                    onOpenSettings={onOpenSettings}
+                    onScoreAnalysis={handleScoreAnalysis}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
+      </FeatureTwoPaneLayout>
+    </FeatureScreenShell>
   );
 }
