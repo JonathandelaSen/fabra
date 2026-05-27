@@ -3,12 +3,11 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { Archive, Check, ChevronDown, Pencil, RefreshCw, Save, Settings2, Trash2 } from "lucide-react";
+import { Archive, Check, ChevronDown, Pencil, RefreshCw, Save, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Select } from "@/components/ui/select";
 import type { FeedbackEntry, FeedbackListItem } from "../api/feedback-notes-api";
-import type { ActivityContext } from "@/features/activity-context";
+import { ActivityContextSelector, type ActivityContext } from "@/features/activity-context";
 import { FeedbackEntriesPanel } from "./feedback-entries-panel";
 import { FeedbackFinalPanel } from "./feedback-final-panel";
 
@@ -95,39 +94,21 @@ export function FeedbackNotesDetail({
                   />
                 </div>
                 <div className="flex min-w-0 flex-col gap-1.5">
-                  <label
-                    htmlFor="feedback-detail-context"
-                    className="text-xs font-medium text-zinc-500"
-                  >
-                    {t("fields.activityContext")}
-                  </label>
-                  <div className="flex flex-col gap-2">
-                      <Select
-                        id="feedback-detail-context"
-                        value={feedback.activityContextId}
-                        onChange={(e) =>
-                          onUpdateFeedback({ activityContextId: e.target.value })
-                        }
-                      >
-                        {contexts.map((context) => (
-                          <option key={context.id} value={context.id} className="bg-[#101018] text-zinc-100">
-                            {context.name}
-                          </option>
-                        ))}
-                      </Select>
-                    <div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => router.push(`/activity-contexts?source=feedback-notes&returnTo=${encodeURIComponent("/feedback-notes")}`)}
-                        className="px-0 text-xs text-zinc-500 hover:bg-transparent hover:text-indigo-300"
-                      >
-                        <Settings2 className="mr-1.5 h-3.5 w-3.5" />
-                        {t("actions.manageContexts")}
-                      </Button>
-                    </div>
-                  </div>
+                  <ActivityContextSelector
+                    id="feedback-detail-context"
+                    label={t("fields.activityContext")}
+                    manageLabel={t("actions.manageContexts")}
+                    value={feedback.activityContextId}
+                    onChange={(val) => onUpdateFeedback({ activityContextId: val })}
+                    contexts={contexts}
+                    onManageClick={() =>
+                      router.push(
+                        `/activity-contexts?source=feedback-notes&returnTo=${encodeURIComponent(
+                          "/feedback-notes"
+                        )}`
+                      )
+                    }
+                  />
                 </div>
               </div>
             ) : (

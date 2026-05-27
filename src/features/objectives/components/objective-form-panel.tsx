@@ -1,4 +1,4 @@
-import { Settings2, Loader2, Save, X } from "lucide-react";
+import { Loader2, Save, X } from "lucide-react";
 import type {
   ObjectiveContext,
   ObjectivePriority,
@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
+import { ActivityContextSelector } from "@/features/activity-context";
 
 interface ObjectiveFormPanelProps {
   contexts: ObjectiveContext[];
@@ -78,33 +79,14 @@ export function ObjectiveFormPanel({
             />
           </label>
 
-          <div className="flex flex-col gap-1.5">
-            <span className="text-xs font-semibold text-zinc-400">{t("fields.context")}</span>
-            <div className="flex flex-col gap-2">
-              <Select
-                value={form.contextId}
-                onChange={(e) => onFormChange({ ...form, contextId: e.target.value })}
-              >
-                {contexts.map((ctx) => (
-                  <option key={ctx.id} value={ctx.id} className="bg-[#101018] text-zinc-100">
-                    {ctx.name}
-                  </option>
-                ))}
-              </Select>
-              <div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={onManageContexts}
-                  className="px-0 text-xs text-zinc-500 hover:bg-transparent hover:text-indigo-300"
-                >
-                  <Settings2 className="mr-1.5 h-3.5 w-3.5" />
-                  {t("actions.manageContexts")}
-                </Button>
-              </div>
-            </div>
-          </div>
+          <ActivityContextSelector
+            label={t("fields.context")}
+            manageLabel={t("actions.manageContexts")}
+            value={form.contextId}
+            onChange={(val) => onFormChange({ ...form, contextId: val })}
+            contexts={contexts}
+            onManageClick={onManageContexts}
+          />
         </div>
 
         {/* Section 2: Planning & Attributes */}

@@ -4,12 +4,11 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { Plus, RefreshCw, Settings2 } from "lucide-react";
+import { Plus, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Select } from "@/components/ui/select";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
 import type { FeedbackFilter, FeedbackListItem } from "../api/feedback-notes-api";
-import type { ActivityContext } from "@/features/activity-context";
+import { ActivityContextSelector, type ActivityContext } from "@/features/activity-context";
 import { FeedbackNotesListSkeleton } from "./feedback-notes-skeleton";
 import { FeedbackNoteListItem } from "./feedback-note-list-item";
 
@@ -127,31 +126,16 @@ export function FeedbackNotesSidebar({
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="feedback-activity-context" className="text-xs font-medium text-zinc-500">
-                      {t("fields.activityContext")}
-                    </label>
-                    <Select
+                    <ActivityContextSelector
                       id="feedback-activity-context"
+                      label={t("fields.activityContext")}
+                      manageLabel={t("actions.manageContexts")}
                       value={selectedContextId || defaultContextId}
-                      onChange={(e) => setSelectedContextId(e.target.value)}
-                    >
-                      {contexts.map((context) => (
-                        <option key={context.id} value={context.id} className="bg-[#1a1a24] text-zinc-100">
-                          {context.name}
-                        </option>
-                      ))}
-                    </Select>
-                    <div className="mt-2 flex items-center justify-between gap-3">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={openActivityContextManager}
-                        className="px-0 text-xs text-zinc-500 hover:bg-transparent hover:text-indigo-300"
-                      >
-                        <Settings2 className="h-3 w-3" />
-                        {t("actions.manageContexts")}
-                      </Button>
+                      onChange={setSelectedContextId}
+                      contexts={contexts}
+                      onManageClick={openActivityContextManager}
+                    />
+                    <div className="mt-1 flex justify-end">
                       <button
                         type="button"
                         onClick={submit}

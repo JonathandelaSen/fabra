@@ -1,4 +1,6 @@
 export { ActivityContextView } from "./components/activity-context-view";
+export { ActivityContextSelector } from "./components/activity-context-selector";
+export type { ActivityContextSelectorProps } from "./components/activity-context-selector";
 export type {
   ActivityContext,
   ActivityContextSuggestion,
