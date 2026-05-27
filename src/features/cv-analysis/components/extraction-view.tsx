@@ -1,23 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
-import {
-  FileText,
-  Copy,
-  Check,
-  Maximize2,
-  Minimize2,
-  AlertCircle,
-  Download,
-  Eye,
-  X,
-} from "lucide-react";
 import { getErrorMessage } from "@/lib/errors";
 import type { AnalysisMode, AIContext } from "@/lib/analysis-types";
-import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import HowAtsWorksEducationBanner from "@/components/shared/how-ats-works-education-banner";
+import ExtractionHeader from "./extraction-header";
+import ExtractionParserTabs from "./extraction-parser-tabs";
+import ExtractionPdfPreview from "./extraction-pdf-preview";
 import AnalysisModeSelector from "./analysis-mode-selector";
 import CVScoreCopyPasteModal from "./cv-score-copy-paste-modal";
 import GeneralAnalysisForm from "./general-analysis-form";
@@ -268,144 +259,43 @@ export default function ExtractionView({
           onAIAnalysisComplete();
         }}
       />
-      {/* Header bar */}
-      <div className="shrink-0 px-4 sm:px-6 py-4 border-b border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-indigo-500/15 flex items-center justify-center shrink-0">
-            <FileText className="w-4.5 h-4.5 text-indigo-400" />
-          </div>
-          <div className="min-w-0">
-            <h2 className="text-base sm:text-lg font-semibold text-zinc-100 truncate">
-              {analysis.filename}
-            </h2>
-            <p className="text-[10px] sm:text-xs text-zinc-500 truncate">
-              {t("subtitle")}
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          {analysis.id && (
-            <>
-              {analysis.analysis_mode === "general" && analysis.ai_score !== null && (
-                <AIActionLauncher
-                  actionLabel={formsT("analyzeCV")}
-                  loading={loadingAI}
-                  integrated={{
-                    available: hasAIApiKey,
-                    selectedModelId: selectedModel,
-                    models,
-                    onModelChange: setSelectedModel,
-                    onRun: () => handleGeneralAnalysis({}, selectedModel),
-                    onConfigure: onOpenSettings,
-                  }}
-                  copyPaste={{
-                    available: true,
-                    onOpenFlow: () => {
-                      setCopyPasteContext(null);
-                      setCopyPasteOpen(true);
-                    },
-                  }}
-                />
-              )}
-              <button
-                onClick={() => setShowPdfPreview(!showPdfPreview)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                  showPdfPreview
-                    ? "bg-indigo-500 text-white"
-                    : "text-zinc-400 bg-zinc-800/60 hover:bg-zinc-800 hover:text-zinc-200"
-                }`}
-              >
-                <Eye className="w-3.5 h-3.5" />
-                <span className="hidden xs:inline">
-                  {showPdfPreview ? t("closePdf") : t("viewPdf")}
-                </span>
-                <span className="xs:hidden">
-                  {showPdfPreview ? t("close") : "PDF"}
-                </span>
-              </button>
-              <a
-                href={pdfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 transition-all"
-                title={t("viewPdf")}
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span className="hidden xs:inline">{t("download")}</span>
-              </a>
-            </>
-          )}
-          <div className="flex items-center gap-1.5 ml-auto sm:ml-0">
-            <span className="text-[10px] sm:text-xs text-zinc-500 bg-zinc-800/60 px-2 py-1 rounded-md whitespace-nowrap">
-              {wordCount.toLocaleString()}{" "}
-              <span className="hidden xs:inline">{t("words")}</span>
-              <span className="xs:hidden">w</span>
-            </span>
-            <span className="text-[10px] sm:text-xs text-zinc-500 bg-zinc-800/60 px-2 py-1 rounded-md whitespace-nowrap">
-              {charCount.toLocaleString()}{" "}
-              <span className="hidden xs:inline">{t("characters")}</span>
-              <span className="xs:hidden">ch</span>
-            </span>
-          </div>
-        </div>
-      </div>
+      <ExtractionHeader
+        filename={analysis.filename}
+        analysisId={analysis.id}
+        analysisMode={analysis.analysis_mode}
+        aiScore={analysis.ai_score}
+        showPdfPreview={showPdfPreview}
+        onTogglePdfPreview={() => setShowPdfPreview(!showPdfPreview)}
+        pdfUrl={pdfUrl}
+        wordCount={wordCount}
+        charCount={charCount}
+        reAnalysis={{
+          loading: loadingAI,
+          hasAIApiKey,
+          selectedModel,
+          models,
+          onModelChange: setSelectedModel,
+          onRun: () => handleGeneralAnalysis({}, selectedModel),
+          onConfigure: onOpenSettings,
+          onOpenCopyPaste: () => {
+            setCopyPasteContext(null);
+            setCopyPasteOpen(true);
+          },
+        }}
+      />
 
       {/* Content */}
       <div className="flex-1 flex flex-col overflow-auto p-4 sm:p-6 gap-4 sm:gap-6">
         {/* Educational Banner */}
         <HowAtsWorksEducationBanner />
 
-        {/* Parser Tabs */}
-        <div className="shrink-0 flex flex-col md:flex-row gap-3">
-          {PARSERS.map((parser) => {
-            const text = getTextForTab(parser.key);
-            const error = getErrorForTab(parser.key);
-            const hasContent = !!text;
-            const hasError = !!error;
-
-            return (
-              <button
-                key={parser.key}
-                onClick={() => setActiveTab(parser.key)}
-                className={`
-                  flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 text-left flex-1 border
-                  ${
-                    activeTab === parser.key
-                      ? "bg-white/[0.07] border-white/[0.12] shadow-xl ring-1 ring-white/[0.05]"
-                      : "bg-white/[0.015] border-transparent hover:bg-white/[0.035] hover:border-white/[0.05]"
-                  }
-                `}
-              >
-                <span
-                  className={`w-2 h-2 rounded-full shrink-0 ${parser.color} ${
-                    !hasContent && !hasError ? "opacity-30" : "animate-pulse"
-                  }`}
-                />
-                <div className="min-w-0 flex-1 flex flex-col gap-0.5">
-                  <div className="flex items-center justify-between gap-1.5 flex-wrap">
-                    <p
-                      className={`text-xs sm:text-sm font-semibold truncate ${
-                        activeTab === parser.key ? "text-zinc-50" : "text-zinc-400"
-                      }`}
-                    >
-                      {t(parser.labelKey)}
-                    </p>
-                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full border font-medium ${parser.badgeColor}`}>
-                      {t(parser.badgeKey)}
-                    </span>
-                  </div>
-                  <p className="text-[10px] sm:text-[11px] text-zinc-500 truncate">
-                    {hasError
-                      ? t("error")
-                      : hasContent
-                        ? `${(text?.length || 0).toLocaleString()} chars`
-                        : t("noResult")}
-                  </p>
-                </div>
-              </button>
-            );
-          })}
-        </div>
+        <ExtractionParserTabs
+          parsers={PARSERS}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          getTextForTab={getTextForTab}
+          getErrorForTab={getErrorForTab}
+        />
 
         {/* Text Content Area & PDF Preview Side-by-Side */}
         <div className="flex-1 flex flex-col lg:flex-row gap-4 sm:gap-6 min-h-0">
@@ -421,37 +311,12 @@ export default function ExtractionView({
             onToggleFullscreen={() => setFullscreen(!fullscreen)}
           />
 
-          {/* PDF Previewer Panel */}
-          <AnimatePresence>
-            {showPdfPreview && !fullscreen && (
-              <motion.div
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: "auto" }}
-                exit={{ opacity: 0, width: 0 }}
-                className="flex flex-col flex-1 rounded-2xl border border-white/[0.06] bg-[#0a0a12] overflow-hidden shadow-2xl min-h-[400px] lg:min-h-0"
-              >
-                <div className="shrink-0 flex items-center justify-between px-4 py-2 border-b border-white/[0.06] bg-indigo-500/5">
-                  <div className="flex items-center gap-2">
-                    <FileText className="w-3.5 h-3.5 text-indigo-400" />
-                    <span className="text-xs font-semibold text-zinc-200">
-                      {t("pdfPreview")}
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => setShowPdfPreview(false)}
-                    className="p-1 rounded-lg hover:bg-white/10 text-zinc-400 transition-colors"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-                <iframe
-                  src={`${pdfUrl}#toolbar=0`}
-                  className="w-full h-full border-none"
-                  title="PDF Preview"
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <ExtractionPdfPreview
+            showPdfPreview={showPdfPreview}
+            fullscreen={fullscreen}
+            pdfUrl={pdfUrl}
+            onClose={() => setShowPdfPreview(false)}
+          />
         </div>
 
         {/* Fullscreen backdrop */}

@@ -4,21 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   Activity,
-  AlertTriangle,
-  Check,
-  CheckCircle2,
-  Clock3,
-  Copy,
-  Filter,
   RefreshCw,
-  Search,
   ShieldCheck,
-  XCircle,
 } from "lucide-react";
-import type {
-  ProcessingEventResponse,
-  ProcessingEventStatus,
-} from "@/app/api/admin/processing-events/responses";
+import type { ProcessingEventResponse } from "@/app/api/admin/processing-events/responses";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import {
   ObservabilityDetailSkeleton,
@@ -26,39 +15,13 @@ import {
 } from "./observability-skeleton";
 import { useProcessingEventsQuery } from "../hooks/use-admin-observability-queries";
 import { useAdminObservabilityRouteState } from "../hooks/use-admin-observability-route-state";
+import { ObservabilityFilters } from "./observability-filters";
+import { ObservabilityEventItem } from "./observability-event-item";
+import { ObservabilityEventDetail } from "./observability-event-detail";
 
 interface AdminObservabilityViewProps {
   userEmail: string | null;
 }
-
-const STATUS_OPTIONS = ["", "started", "success", "warning", "error"];
-const STAGE_OPTIONS = [
-  "",
-  "cv_upload",
-  "cv_text_extraction",
-  "pdf_parser",
-  "pdf_extraction",
-  "storage_upload",
-  "analysis_preflight",
-  "ai_analysis",
-  "ai_response_parse",
-  "analysis_persist",
-  "analysis_request",
-];
-
-const statusStyle: Record<ProcessingEventStatus, string> = {
-  started: "border-sky-500/20 bg-sky-500/10 text-sky-300",
-  success: "border-emerald-500/20 bg-emerald-500/10 text-emerald-300",
-  warning: "border-amber-500/20 bg-amber-500/10 text-amber-300",
-  error: "border-rose-500/20 bg-rose-500/10 text-rose-300",
-};
-
-const statusIcon = {
-  started: Clock3,
-  success: CheckCircle2,
-  warning: AlertTriangle,
-  error: XCircle,
-};
 
 export function AdminObservabilityView({
   userEmail,
@@ -93,6 +56,14 @@ export function AdminObservabilityView({
     } catch (err) {
       console.error("Failed to copy:", err);
     }
+  };
+
+  const handleCopyTimeline = () => {
+    navigator.clipboard.writeText(
+      JSON.stringify(timelineEvents, null, 2),
+    );
+    setCopiedId("timeline");
+    setTimeout(() => setCopiedId(null), 2000);
   };
 
   const timelineEvents = useMemo(() => {
@@ -168,48 +139,13 @@ export function AdminObservabilityView({
 
       <section className="grid min-h-0 flex-1 gap-4 py-5 lg:grid-cols-[420px_1fr]">
           <aside className="flex min-h-[420px] flex-col overflow-hidden rounded-lg border border-white/[0.06] bg-white/[0.02]">
-            <div className="shrink-0 border-b border-white/[0.06] p-3">
-              <div className="mb-3 grid gap-2 sm:grid-cols-2">
-                <label className="relative block">
-                  <Filter className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
-                  <select
-                    value={filters.status}
-                    onChange={(event) =>
-                      setStatus(
-                        event.target.value as ProcessingEventStatus | "",
-                      )
-                    }
-                    className="h-9 w-full appearance-none rounded-lg border border-white/[0.06] bg-[#0d0d14] pl-9 pr-3 text-sm text-zinc-200 outline-none focus:border-indigo-500/50"
-                  >
-                    {STATUS_OPTIONS.map((option) => (
-                      <option key={option || "all"} value={option}>
-                        {option || t("all")}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <select
-                  value={filters.stage}
-                  onChange={(event) => setStage(event.target.value)}
-                  className="h-9 rounded-lg border border-white/[0.06] bg-[#0d0d14] px-3 text-sm text-zinc-200 outline-none focus:border-indigo-500/50"
-                >
-                  {STAGE_OPTIONS.map((option) => (
-                    <option key={option || "all"} value={option}>
-                      {option || t("allStages")}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <label className="relative block">
-                <Search className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
-                <input
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder={t("searchPlaceholder")}
-                  className="h-9 w-full rounded-lg border border-white/[0.06] bg-[#0d0d14] pl-9 pr-3 text-sm text-zinc-200 outline-none placeholder:text-zinc-600 focus:border-indigo-500/50"
-                />
-              </label>
-            </div>
+            <ObservabilityFilters
+              filters={filters}
+              onStatusChange={setStatus}
+              onStageChange={setStage}
+              query={query}
+              onQueryChange={setQuery}
+            />
 
             <div className="min-h-0 flex-1 overflow-y-auto p-2">
               {error && (
@@ -226,34 +162,13 @@ export function AdminObservabilityView({
                 </div>
               ) : (
                 filteredEvents.map((event) => (
-                  <button
+                  <ObservabilityEventItem
                     key={event.id}
-                    type="button"
+                    event={event}
+                    isSelected={selectedEvent?.id === event.id}
                     onClick={() => setSelectedId(event.id)}
-                    className={`mb-2 w-full rounded-lg border p-3 text-left transition ${
-                      selectedEvent?.id === event.id
-                        ? "border-indigo-500/40 bg-indigo-500/10"
-                        : "border-white/[0.06] bg-[#101018] hover:bg-white/[0.04]"
-                    }`}
-                  >
-                    <div className="mb-2 flex items-center justify-between gap-2">
-                      <StatusBadge status={event.status} />
-                      <span className="shrink-0 text-[11px] text-zinc-500">
-                        {formatTime(event.createdAt, dateLocale)}
-                      </span>
-                    </div>
-                    <p className="truncate text-sm font-medium text-zinc-100">
-                      {event.stage}
-                    </p>
-                    <p className="mt-1 truncate text-xs text-zinc-500">
-                      {event.source || t("noSource")} · {event.requestId}
-                    </p>
-                    {event.errorCode && (
-                      <p className="mt-2 truncate text-xs text-rose-300">
-                        {event.errorCode}
-                      </p>
-                    )}
-                  </button>
+                    dateLocale={dateLocale}
+                  />
                 ))
               )}
             </div>
@@ -263,171 +178,14 @@ export function AdminObservabilityView({
             {loading ? (
               <ObservabilityDetailSkeleton />
             ) : selectedEvent ? (
-              <div className="flex h-full min-h-0 flex-col">
-                <div className="shrink-0 border-b border-white/[0.06] p-5">
-                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <StatusBadge status={selectedEvent.status} />
-                      <span className="rounded-md border border-white/[0.06] bg-white/[0.03] px-2 py-1 text-xs text-zinc-400">
-                        {selectedEvent.stage}
-                      </span>
-                      {selectedEvent.source && (
-                        <span className="rounded-md border border-white/[0.06] bg-white/[0.03] px-2 py-1 text-xs text-zinc-400">
-                          {selectedEvent.source}
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleCopy(selectedEvent)}
-                      className="inline-flex h-7 items-center gap-1.5 rounded-md border border-white/[0.06] bg-white/[0.03] px-2 text-[11px] font-medium text-zinc-300 transition hover:bg-white/[0.06] hover:text-white"
-                    >
-                      {copiedId === selectedEvent.id ? (
-                        <>
-                          <Check className="h-3 w-3 text-emerald-400" />
-                          {t("copied")}
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="h-3 w-3" />
-                          {t("copyJson")}
-                        </>
-                      )}
-                    </button>
-                  </div>
-                  <div className="grid gap-3 text-xs text-zinc-500 md:grid-cols-2 xl:grid-cols-4">
-                    <Metric
-                      label={t("request")}
-                      value={selectedEvent.requestId}
-                    />
-                    <Metric label={t("cv")} value={selectedEvent.cvId ?? "-"} />
-                    <Metric
-                      label={t("analysis")}
-                      value={selectedEvent.analysisId ?? "-"}
-                    />
-                    <Metric
-                      label={t("duration")}
-                      value={
-                        selectedEvent.durationMs === null
-                          ? "-"
-                          : `${selectedEvent.durationMs} ms`
-                      }
-                    />
-                  </div>
-                </div>
-
-                <div className="grid min-h-0 flex-1 overflow-hidden lg:grid-cols-[1fr_340px]">
-                  <div className="min-h-0 overflow-y-auto p-5">
-                    <div className="mb-4 flex items-center justify-between gap-2">
-                      <h2 className="text-sm font-semibold text-zinc-300">
-                        {t("attemptTimeline")}
-                      </h2>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          navigator.clipboard.writeText(
-                            JSON.stringify(timelineEvents, null, 2),
-                          );
-                          setCopiedId("timeline");
-                          setTimeout(() => setCopiedId(null), 2000);
-                        }}
-                        className="inline-flex h-7 items-center gap-1.5 rounded-md border border-white/[0.06] bg-white/[0.03] px-2 text-[11px] font-medium text-zinc-300 transition hover:bg-white/[0.06] hover:text-white"
-                      >
-                        {copiedId === "timeline" ? (
-                          <>
-                            <Check className="h-3 w-3 text-emerald-400" />
-                            {t("flowCopied")}
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="h-3 w-3" />
-                            {t("copyFlow")}
-                          </>
-                        )}
-                      </button>
-                    </div>
-                    <ol className="relative space-y-3 border-l border-white/[0.08] pl-4">
-                      {timelineEvents.map((event) => (
-                        <li key={event.id} className="relative">
-                          <span
-                            className={`absolute -left-[23px] top-1 h-3 w-3 rounded-full border ${
-                              event.status === "error"
-                                ? "border-rose-300 bg-rose-500"
-                                : event.status === "warning"
-                                  ? "border-amber-300 bg-amber-500"
-                                  : event.status === "success"
-                                    ? "border-emerald-300 bg-emerald-500"
-                                    : "border-sky-300 bg-sky-500"
-                            }`}
-                          />
-                          <div className="rounded-lg border border-white/[0.06] bg-[#101018] p-3">
-                            <div className="flex items-start justify-between gap-3">
-                              <div className="min-w-0">
-                                <p className="truncate text-sm font-medium text-zinc-100">
-                                  {event.stage}
-                                  {event.source ? ` · ${event.source}` : ""}
-                                </p>
-                                <p className="mt-1 text-xs text-zinc-500">
-                                  {formatDateTime(event.createdAt, dateLocale)}
-                                </p>
-                              </div>
-                              <div className="flex shrink-0 items-center gap-2">
-                                <button
-                                  type="button"
-                                  onClick={() => handleCopy(event)}
-                                  className="flex h-6 w-6 items-center justify-center rounded-md border border-white/[0.06] bg-white/[0.03] text-zinc-400 transition hover:bg-white/[0.06] hover:text-white"
-                                  title={t("copyEventJson")}
-                                >
-                                  {copiedId === event.id ? (
-                                    <Check className="h-3 w-3 text-emerald-400" />
-                                  ) : (
-                                    <Copy className="h-3 w-3" />
-                                  )}
-                                </button>
-                                <StatusBadge status={event.status} />
-                              </div>
-                            </div>
-                            <div className="mt-3 grid gap-2 text-xs text-zinc-500 sm:grid-cols-3">
-                              <span>
-                                {t("text")}: {event.textLength ?? "-"}
-                              </span>
-                              <span>
-                                {t("file")}: {formatBytes(event.fileSize)}
-                              </span>
-                              <span>
-                                {event.durationMs === null
-                                  ? `${t("duration")}: -`
-                                  : `${t("duration")}: ${event.durationMs} ms`}
-                              </span>
-                            </div>
-                            {(event.errorCode || event.errorMessage) && (
-                              <div className="mt-3 rounded-md border border-rose-500/20 bg-rose-500/10 p-2 text-xs text-rose-200">
-                                <p className="font-medium">
-                                  {event.errorCode ?? t("errorFallback")}
-                                </p>
-                                {event.errorMessage && (
-                                  <p className="mt-1 text-rose-100/80">
-                                    {event.errorMessage}
-                                  </p>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-
-                  <aside className="min-h-0 overflow-y-auto border-t border-white/[0.06] p-5 lg:border-l lg:border-t-0">
-                    <h2 className="mb-4 text-sm font-semibold text-zinc-300">
-                      {t("metadata")}
-                    </h2>
-                    <pre className="overflow-x-auto rounded-lg border border-white/[0.06] bg-[#08080d] p-3 text-xs leading-5 text-zinc-400">
-                      {JSON.stringify(selectedEvent.metadata ?? {}, null, 2)}
-                    </pre>
-                  </aside>
-                </div>
-              </div>
+              <ObservabilityEventDetail
+                selectedEvent={selectedEvent}
+                timelineEvents={timelineEvents}
+                copiedId={copiedId}
+                onCopy={handleCopy}
+                onCopyTimeline={handleCopyTimeline}
+                dateLocale={dateLocale}
+              />
             ) : (
               <div className="flex h-full min-h-[520px] items-center justify-center text-sm text-zinc-500">
                 {t("selectEvent")}
@@ -437,46 +195,4 @@ export function AdminObservabilityView({
       </section>
     </div>
   );
-}
-
-function StatusBadge({ status }: { status: ProcessingEventStatus }) {
-  const Icon = statusIcon[status];
-  return (
-    <span
-      className={`inline-flex h-6 shrink-0 items-center gap-1.5 rounded-md border px-2 text-[11px] font-medium ${statusStyle[status]}`}
-    >
-      <Icon className="h-3.5 w-3.5" />
-      {status}
-    </span>
-  );
-}
-
-function Metric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="min-w-0 rounded-lg border border-white/[0.06] bg-[#101018] p-3">
-      <p className="mb-1 text-[11px] uppercase text-zinc-600">{label}</p>
-      <p className="truncate font-mono text-[11px] text-zinc-300">{value}</p>
-    </div>
-  );
-}
-
-function formatTime(value: string, locale: string) {
-  return new Date(value).toLocaleTimeString(locale, {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
-function formatDateTime(value: string, locale: string) {
-  return new Date(value).toLocaleString(locale, {
-    dateStyle: "medium",
-    timeStyle: "medium",
-  });
-}
-
-function formatBytes(value: number | null) {
-  if (value === null) return "-";
-  if (value < 1024) return `${value} B`;
-  if (value < 1024 * 1024) return `${(value / 1024).toFixed(1)} KB`;
-  return `${(value / 1024 / 1024).toFixed(1)} MB`;
 }
