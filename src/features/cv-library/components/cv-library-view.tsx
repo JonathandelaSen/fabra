@@ -131,29 +131,23 @@ export default function CVLibraryView({
   return (
     <FeatureScreenShell
       title={navT("cvLibrary")}
+      contentClassName="max-w-[1560px] mx-auto"
+      bodyContentClassName="max-w-[1560px] mx-auto"
       bodyClassName="overflow-hidden"
     >
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
-        className="grid h-full w-full gap-6 lg:grid-cols-[360px_1fr]"
+        className="grid h-full w-full gap-6 lg:grid-cols-[320px_1fr]"
       >
         <CVLibrarySidebar
           cvs={cvs}
           selectedId={selected?.id ?? null}
-          editingId={editingId}
-          draftName={draftName}
-          loadingId={loadingId}
           analysesByCv={analysesByCv}
           error={error ?? queryError}
           blockingAnalyses={blockingAnalyses}
           onSelect={routeState.selectCV}
-          onStartEditing={startEditing}
-          onDraftNameChange={setDraftName}
-          onSaveName={saveName}
-          onCancelEditing={() => setEditingId(null)}
-          onDelete={deleteCv}
           onOpenAnalysis={onOpenAnalysis}
         />
         <CVLibraryDetail
@@ -161,6 +155,14 @@ export default function CVLibraryView({
           cvs={cvs}
           analyses={selectedAnalyses}
           questions={selectedQuestions}
+          editing={selected ? editingId === selected.id : false}
+          draftName={draftName}
+          saving={selected ? loadingId === selected.id : false}
+          onStartEditing={() => selected && startEditing(selected)}
+          onDraftNameChange={setDraftName}
+          onSaveName={() => selected && saveName(selected.id)}
+          onCancelEditing={() => setEditingId(null)}
+          onDelete={() => selected && deleteCv(selected.id)}
           onOpenAnalysis={onOpenAnalysis}
           onOpenEditor={onOpenEditor}
           onOpenQuestions={onOpenQuestions}
