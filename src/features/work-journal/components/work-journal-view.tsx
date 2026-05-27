@@ -5,21 +5,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
-import type { LucideIcon } from "lucide-react";
-import {
-  BriefcaseBusiness,
-  CalendarDays,
-  FilePenLine,
-  FolderKanban,
-  Loader2,
-  Pencil,
-  Plus,
-  Save,
-  Search,
-  Sparkles,
-  Trash2,
-  X,
-} from "lucide-react";
 import type {
   WorkJournalContextLegacy as WorkJournalContext,
   WorkJournalEntryInputMode,
@@ -65,10 +50,6 @@ const emptyEntryDraft = {
   raw_notes: "",
   final_text: "",
 };
-
-const inputClass =
-  "w-full bg-transparent border-b border-white/10 px-0 py-2 text-sm text-zinc-100 placeholder:text-zinc-600 outline-none transition-colors focus:border-zinc-300 focus:ring-0";
-const labelClass = "text-xs font-medium text-zinc-500 mb-1 block";
 
 export default function WorkJournalView({
   aiProvider,
