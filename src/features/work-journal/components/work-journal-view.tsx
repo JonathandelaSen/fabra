@@ -42,10 +42,9 @@ import {
   replaceWorkJournalEntryInCache,
 } from "../api/work-journal-entry-cache";
 import { getErrorMessage } from "@/lib/errors";
-import AIActionLauncher from "@/components/shared/ai-action-launcher";
-import { WorkJournalSkeleton } from "./work-journal-skeleton";
-import { WorkJournalCopyPastePanel } from "./work-journal-copy-paste-panel";
 import { WorkJournalTimeline } from "./work-journal-timeline";
+import { WorkJournalHeader } from "./work-journal-header";
+import { WorkJournalForm } from "./work-journal-form";
 
 interface WorkJournalViewProps {
   aiProvider: "gemini" | "mock";
@@ -293,49 +292,15 @@ export default function WorkJournalView({
   return (
     <div className="flex-1 overflow-y-auto px-6 md:px-16 lg:px-24 py-12 pb-32">
       <div className="flex flex-col w-full">
-        {/* Header */}
-        <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between border-b border-white/5 pb-8 mb-8">
-          <div>
-            <h1 className="text-3xl lg:text-4xl font-light tracking-tight text-zinc-50">
-              {t("title")}
-            </h1>
-          </div>
-          
-          <div className="flex flex-wrap items-center gap-4 lg:gap-6">
-            <div className="relative group">
-              <Search className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-600 transition-colors group-focus-within:text-zinc-300" />
-              <input 
-                placeholder={t("searchPlaceholder")}
-                className="pl-7 pr-4 py-2 bg-transparent border-b border-transparent text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-white/20 outline-none w-48 transition-all focus:w-64"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-            
-            <div className="h-4 w-px bg-white/10 hidden md:block" />
-
-            <select
-              className="bg-transparent text-sm font-medium text-zinc-400 hover:text-zinc-200 border-none focus:ring-0 outline-none cursor-pointer transition-colors"
-              value={contextFilter}
-              onChange={(e) => setContextFilter(e.target.value)}
-            >
-              <option value="" className="bg-zinc-900">{t("allContexts")}</option>
-              {activeContexts.map((context) => (
-                <option key={`filter-${context.id}`} value={context.id} className="bg-zinc-900">
-                  {context.name}
-                </option>
-              ))}
-            </select>
-
-            <button
-              onClick={() => setShowForm(!showForm)}
-              className={`flex items-center gap-2 text-sm font-medium transition-colors px-4 py-2 rounded-full ${showForm ? "bg-white/10 text-white hover:bg-white/20" : "bg-white text-black hover:bg-zinc-200"}`}
-            >
-              {showForm ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-              {showForm ? t("close") : t("newEntry")}
-            </button>
-          </div>
-        </header>
+        <WorkJournalHeader
+          search={search}
+          setSearch={setSearch}
+          contextFilter={contextFilter}
+          setContextFilter={setContextFilter}
+          activeContexts={activeContexts}
+          showForm={showForm}
+          setShowForm={setShowForm}
+        />
 
         {visibleError && (
           <div className="mb-8 text-sm text-rose-400 bg-rose-500/10 px-4 py-3 rounded-lg border border-rose-500/20">
@@ -343,7 +308,6 @@ export default function WorkJournalView({
           </div>
         )}
 
-        {/* Animated Form */}
         <AnimatePresence>
           {showForm && (
             <motion.div
@@ -353,182 +317,24 @@ export default function WorkJournalView({
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="overflow-hidden"
             >
-              <div className="pb-16 pt-4 mb-8 border-b border-white/5">
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-12 lg:gap-24">
-                  
-                  {/* Left Col: Editor */}
-                  <div className="space-y-6">
-                    <div className="flex gap-4 mb-2">
-                      {(["manual", "ai_assisted"] as WorkJournalEntryInputMode[]).map(
-                        (mode) => (
-                          <button
-                            key={`mode-${mode}`}
-                            type="button"
-                            onClick={() =>
-                              setDraft((current) => ({ ...current, input_mode: mode }))
-                            }
-                            className={`text-sm font-medium transition-colors pb-1 border-b-2 ${
-                              draft.input_mode === mode
-                                ? "text-zinc-100 border-zinc-100"
-                                : "text-zinc-600 border-transparent hover:text-zinc-400"
-                            }`}
-                          >
-                            {mode === "manual" ? t("freeWriting") : t("aiWriting")}
-                          </button>
-                        )
-                      )}
-                    </div>
-
-                    <textarea
-                      className="w-full bg-transparent text-xl font-light leading-relaxed text-zinc-200 placeholder:text-zinc-700 outline-none resize-none min-h-[160px]"
-                      placeholder={t("notesPlaceholder")}
-                      value={draft.raw_notes}
-                      onChange={(event) =>
-                        setDraft((current) => ({ ...current, raw_notes: event.target.value }))
-                      }
-                    />
-
-                    {draft.input_mode === "ai_assisted" && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4 pt-4 border-t border-white/5">
-                        <div className="flex justify-end">
-                          <AIActionLauncher
-                            actionLabel={t("generateProfessionalDraft")}
-                            loading={aiLoading}
-                            disabled={!draft.raw_notes.trim() || !draft.context_id}
-                            integrated={{
-                              available: hasAIApiKey,
-                              selectedModelId: selectedModel,
-                              models,
-                              onModelChange: setSelectedModel,
-                              onRun: draftWithAI,
-                              onConfigure: onOpenSettings,
-                            }}
-                            copyPaste={{
-                              available: true,
-                              onOpenFlow: () => setIsCopyPasteOpen((current) => !current),
-                            }}
-                          />
-                        </div>
-
-                        {isCopyPasteOpen && (
-                          <WorkJournalCopyPastePanel
-                            context={
-                              contexts.find((context) => context.id === draft.context_id) ??
-                              null
-                            }
-                            dateStart={draft.date_start}
-                            dateEnd={draft.date_end || null}
-                            topic={draft.topic || null}
-                            notes={draft.raw_notes}
-                            onPasteText={(finalText) =>
-                              setDraft((current) => ({ ...current, final_text: finalText }))
-                            }
-                            onClose={() => setIsCopyPasteOpen(false)}
-                          />
-                        )}
-                        
-                        {draft.final_text && (
-                          <div>
-                            <label htmlFor="work-journal-final-text" className={labelClass}>
-                              {t("finalText")}
-                            </label>
-                            <textarea
-                              id="work-journal-final-text"
-                              className="w-full bg-teal-950/20 text-teal-50/90 rounded-xl p-4 text-base leading-relaxed outline-none resize-none min-h-[160px] border border-teal-900/50"
-                              value={draft.final_text}
-                              onChange={(event) =>
-                                setDraft((current) => ({ ...current, final_text: event.target.value }))
-                              }
-                            />
-                          </div>
-                        )}
-                      </motion.div>
-                    )}
-
-                    <div className="flex items-center gap-4 pt-6">
-                      <button
-                        type="button"
-                        onClick={saveEntry}
-                        className="px-6 py-2 bg-white text-black text-sm font-medium rounded-full hover:bg-zinc-200 transition-colors flex items-center gap-2"
-                      >
-                        <Save className="h-4 w-4" />
-                        {t("saveEntry")}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setShowForm(false)}
-                        className="px-4 py-2 text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
-                      >
-                        {common("cancel")}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Right Col: Metadata & Context */}
-                  <div className="space-y-8">
-                    <div>
-                      <label htmlFor="work-journal-context" className={labelClass}>{t("context")}</label>
-                      <select
-                        id="work-journal-context"
-                        className={inputClass}
-                        value={draft.context_id}
-                        onChange={(event) =>
-                          setDraft((current) => ({ ...current, context_id: event.target.value }))
-                        }
-                      >
-                        <option value="" disabled className="bg-zinc-900 text-zinc-500">{t("selectContext")}</option>
-                        {activeContexts.map((context) => (
-                          <option key={`form-ctx-${context.id}`} value={context.id} className="bg-zinc-900 text-zinc-200">
-                            {context.name} {context.type === 'project' ? t("projectSuffix") : ''}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-6">
-                      <div>
-                        <label className={labelClass}>{t("dateFrom")}</label>
-                        <input
-                          type="date"
-                          className={inputClass}
-                          value={draft.date_start}
-                          onChange={(event) => setDraft((current) => ({ ...current, date_start: event.target.value }))}
-                        />
-                      </div>
-                      <div>
-                        <label className={labelClass}>{t("dateTo")}</label>
-                        <input
-                          type="date"
-                          className={inputClass}
-                          value={draft.date_end}
-                          onChange={(event) => setDraft((current) => ({ ...current, date_end: event.target.value }))}
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className={labelClass}>{t("topic")}</label>
-                      <input
-                        className={inputClass}
-                        placeholder={t("topicPlaceholder")}
-                        value={draft.topic}
-                        onChange={(event) => setDraft((current) => ({ ...current, topic: event.target.value }))}
-                      />
-                    </div>
-
-                    <div className="pt-6 border-t border-white/5">
-                      <button
-                        type="button"
-                        onClick={openActivityContextManager}
-                        className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
-                      >
-                        <Plus className="h-4 w-4" />
-                        {t("manageContexts")}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <WorkJournalForm
+                draft={draft}
+                setDraft={setDraft}
+                saveEntry={saveEntry}
+                draftWithAI={draftWithAI}
+                aiLoading={aiLoading}
+                hasAIApiKey={hasAIApiKey}
+                onOpenSettings={onOpenSettings}
+                selectedModel={selectedModel}
+                setSelectedModel={setSelectedModel}
+                models={models}
+                isCopyPasteOpen={isCopyPasteOpen}
+                setIsCopyPasteOpen={setIsCopyPasteOpen}
+                contexts={contexts}
+                activeContexts={activeContexts}
+                openActivityContextManager={openActivityContextManager}
+                setShowForm={setShowForm}
+              />
             </motion.div>
           )}
         </AnimatePresence>
