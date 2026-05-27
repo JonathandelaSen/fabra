@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Plus, RefreshCw, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
 import type { FeedbackFilter, FeedbackListItem } from "../api/feedback-notes-api";
 import type { ActivityContext } from "@/features/activity-context";
@@ -129,18 +130,17 @@ export function FeedbackNotesSidebar({
                     <label htmlFor="feedback-activity-context" className="text-xs font-medium text-zinc-500">
                       {t("fields.activityContext")}
                     </label>
-                    <select
+                    <Select
                       id="feedback-activity-context"
                       value={selectedContextId || defaultContextId}
                       onChange={(e) => setSelectedContextId(e.target.value)}
-                      className="h-9 w-full cursor-pointer appearance-none rounded-lg border border-input bg-white/[0.03] px-2.5 py-1 text-sm text-zinc-100 outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                     >
                       {contexts.map((context) => (
                         <option key={context.id} value={context.id} className="bg-[#1a1a24] text-zinc-100">
                           {context.name}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                     <div className="mt-2 flex items-center justify-between gap-3">
                       <Button
                         type="button"

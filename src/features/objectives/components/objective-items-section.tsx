@@ -5,6 +5,7 @@ import { formatDate, itemStatusLabels, type ItemEditForm } from "./objectives-ui
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select } from "@/components/ui/select";
 
 interface ObjectiveItemsProps {
   completion: number;
@@ -114,8 +115,7 @@ export function ObjectiveItems({
                           <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             {t("fields.status")}
                           </span>
-                          <select
-                            className="w-full rounded-lg border border-white/[0.06] bg-zinc-950 px-3 py-1.5 text-xs text-zinc-100 outline-none transition-colors focus:border-emerald-500/30"
+                          <Select
                             value={itemForm.status}
                             onChange={(e) =>
                               onItemFormChange({
@@ -125,11 +125,11 @@ export function ObjectiveItems({
                             }
                           >
                             {Object.keys(itemStatusLabels).map((key) => (
-                              <option key={key} value={key} className="bg-zinc-950">
+                              <option key={key} value={key} className="bg-[#101018] text-zinc-100">
                                 {itemStatusLabel(key as ObjectiveItemStatus)}
                               </option>
                             ))}
-                          </select>
+                          </Select>
                         </label>
                         <label className="space-y-1 block">
                           <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">

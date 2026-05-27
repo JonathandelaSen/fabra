@@ -4,6 +4,7 @@ import { outcomeLabels, type OutcomeEditForm } from "./objectives-ui";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select } from "@/components/ui/select";
 
 interface ObjectiveOutcomesProps {
   editingOutcomeId: string | null;
@@ -107,8 +108,7 @@ export function ObjectiveOutcomes({
                           <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             {t("fields.type")}
                           </span>
-                          <select
-                            className="w-full rounded-lg border border-white/[0.06] bg-zinc-950 px-3 py-1.5 text-xs text-zinc-100 outline-none transition-colors focus:border-amber-500/30"
+                          <Select
                             value={outcomeForm.type}
                             onChange={(e) =>
                               onOutcomeFormChange({
@@ -118,18 +118,17 @@ export function ObjectiveOutcomes({
                             }
                           >
                             {Object.keys(outcomeLabels).map((key) => (
-                              <option key={key} value={key} className="bg-zinc-950">
+                              <option key={key} value={key} className="bg-[#101018] text-zinc-100">
                                 {outcomeLabel(key as ObjectiveOutcomeType)}
                               </option>
                             ))}
-                          </select>
+                          </Select>
                         </label>
                         <label className="space-y-1 block">
                           <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
                             {t("fields.status")}
                           </span>
-                          <select
-                            className="w-full rounded-lg border border-white/[0.06] bg-zinc-950 px-3 py-1.5 text-xs text-zinc-100 outline-none transition-colors focus:border-amber-500/30"
+                          <Select
                             value={outcomeForm.status}
                             onChange={(e) =>
                               onOutcomeFormChange({
@@ -139,11 +138,11 @@ export function ObjectiveOutcomes({
                             }
                           >
                             {["expected", "achieved", "missed"].map((status) => (
-                              <option key={status} value={status} className="bg-zinc-950">
+                              <option key={status} value={status} className="bg-[#101018] text-zinc-100">
                                 {outcomeStatusLabel(status as ObjectiveOutcomeStatus)}
                               </option>
                             ))}
-                          </select>
+                          </Select>
                         </label>
                       </div>
                       {(outcomeForm.type === "money" || outcomeForm.amount) && (
@@ -250,8 +249,8 @@ export function ObjectiveOutcomes({
                         </div>
                       </div>
                       <div className="flex shrink-0 items-center gap-1.5">
-                        <select
-                          className="rounded-lg border border-white/[0.06] bg-zinc-950 px-2.5 py-1 text-xs font-semibold text-zinc-300 outline-none transition-colors focus:border-amber-500/30"
+                        <Select
+                          className="h-8 py-0.5 text-xs font-semibold w-auto px-2"
                           value={outcome.status}
                           onChange={(e) =>
                             onUpdateOutcomeStatus(
@@ -262,11 +261,11 @@ export function ObjectiveOutcomes({
                           disabled={isEmpty}
                         >
                           {["expected", "achieved", "missed"].map((status) => (
-                            <option key={status} value={status} className="bg-zinc-950">
+                            <option key={status} value={status} className="bg-[#101018] text-zinc-100">
                               {outcomeStatusLabel(status as ObjectiveOutcomeStatus)}
                             </option>
                           ))}
-                        </select>
+                        </Select>
                         <div className="flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
                           <Button
                             variant="ghost"
@@ -296,8 +295,8 @@ export function ObjectiveOutcomes({
 
         {/* Add Outcome input bar */}
         <div className="mt-2 flex gap-2 border-t border-white/[0.04] pt-4">
-          <select
-            className="rounded-lg border border-white/[0.06] bg-zinc-950 px-3 py-1.5 text-xs text-zinc-300 outline-none shrink-0"
+          <Select
+            className="w-32 py-1 h-9 text-xs shrink-0"
             value={newOutcomeType}
             onChange={(e) =>
               onNewOutcomeTypeChange(e.target.value as ObjectiveOutcomeType)
@@ -305,11 +304,11 @@ export function ObjectiveOutcomes({
             disabled={isEmpty}
           >
             {Object.keys(outcomeLabels).map((key) => (
-              <option key={key} value={key} className="bg-zinc-950">
+              <option key={key} value={key} className="bg-[#101018] text-zinc-100">
                 {outcomeLabel(key as ObjectiveOutcomeType)}
               </option>
             ))}
-          </select>
+          </Select>
           <Input
             placeholder={t("outcomes.addPlaceholder")}
             value={newOutcomeTitle}

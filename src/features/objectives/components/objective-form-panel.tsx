@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select } from "@/components/ui/select";
 
 interface ObjectiveFormPanelProps {
   contexts: ObjectiveContext[];
@@ -80,17 +81,16 @@ export function ObjectiveFormPanel({
           <div className="grid gap-4 sm:grid-cols-3">
             <label className="space-y-1.5 sm:col-span-2 block">
               <span className="text-xs font-semibold text-zinc-400">{t("fields.context")}</span>
-              <select
-                className="w-full rounded-lg border border-white/[0.06] bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none transition-colors focus:border-emerald-500/30"
+              <Select
                 value={form.contextId}
                 onChange={(e) => onFormChange({ ...form, contextId: e.target.value })}
               >
                 {contexts.map((ctx) => (
-                  <option key={ctx.id} value={ctx.id} className="bg-zinc-950">
+                  <option key={ctx.id} value={ctx.id} className="bg-[#101018] text-zinc-100">
                     {ctx.name}
                   </option>
                 ))}
-              </select>
+              </Select>
             </label>
             <div className="flex items-end">
               <Button
@@ -114,42 +114,39 @@ export function ObjectiveFormPanel({
           <div className="grid gap-4 sm:grid-cols-3">
             <label className="space-y-1.5 block">
               <span className="text-xs font-semibold text-zinc-400">{t("fields.source")}</span>
-              <select
-                className="w-full rounded-lg border border-white/[0.06] bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none transition-colors focus:border-emerald-500/30"
+              <Select
                 value={form.source}
                 onChange={(e) =>
                   onFormChange({ ...form, source: e.target.value as ObjectiveSource })
                 }
               >
                 {["manager", "self", "company", "project", "other"].map((source) => (
-                  <option key={source} value={source} className="bg-zinc-950">
+                  <option key={source} value={source} className="bg-[#101018] text-zinc-100">
                     {sourceLabel(source as ObjectiveSource)}
                   </option>
                 ))}
-              </select>
+              </Select>
             </label>
             <label className="space-y-1.5 block">
               <span className="text-xs font-semibold text-zinc-400">{t("fields.status")}</span>
-              <select
-                className="w-full rounded-lg border border-white/[0.06] bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none transition-colors focus:border-emerald-500/30"
+              <Select
                 value={form.status}
                 onChange={(e) =>
                   onFormChange({ ...form, status: e.target.value as ObjectiveStatus })
                 }
               >
                 {Object.keys(statusLabels).map((status) => (
-                  <option key={status} value={status} className="bg-zinc-950">
+                  <option key={status} value={status} className="bg-[#101018] text-zinc-100">
                     {statusLabel(status as ObjectiveStatus)}
                   </option>
                 ))}
-              </select>
+              </Select>
             </label>
             <label className="space-y-1.5 block">
               <span className="text-xs font-semibold text-zinc-400">
                 {t("fields.priority")}
               </span>
-              <select
-                className="w-full rounded-lg border border-white/[0.06] bg-zinc-950 px-3 py-2 text-sm text-zinc-100 outline-none transition-colors focus:border-emerald-500/30"
+              <Select
                 value={form.priority}
                 onChange={(e) =>
                   onFormChange({
@@ -158,11 +155,11 @@ export function ObjectiveFormPanel({
                   })
                 }
               >
-                <option value="" className="bg-zinc-950">{t("priority.none")}</option>
-                <option value="low" className="bg-zinc-950">{priorityLabel("low")}</option>
-                <option value="medium" className="bg-zinc-950">{priorityLabel("medium")}</option>
-                <option value="high" className="bg-zinc-950">{priorityLabel("high")}</option>
-              </select>
+                <option value="" className="bg-[#101018] text-zinc-100">{t("priority.none")}</option>
+                <option value="low" className="bg-[#101018] text-zinc-100">{priorityLabel("low")}</option>
+                <option value="medium" className="bg-[#101018] text-zinc-100">{priorityLabel("medium")}</option>
+                <option value="high" className="bg-[#101018] text-zinc-100">{priorityLabel("high")}</option>
+              </Select>
             </label>
           </div>
 

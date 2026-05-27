@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Archive, Check, ChevronDown, Pencil, RefreshCw, Save, Settings2, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
 import type { FeedbackEntry, FeedbackListItem } from "../api/feedback-notes-api";
 import type { ActivityContext } from "@/features/activity-context";
 import { FeedbackEntriesPanel } from "./feedback-entries-panel";
@@ -101,23 +102,19 @@ export function FeedbackNotesDetail({
                     {t("fields.activityContext")}
                   </label>
                   <div className="flex flex-col gap-2">
-                    <div className="group relative min-w-0 max-w-xs">
-                      <select
+                      <Select
                         id="feedback-detail-context"
                         value={feedback.activityContextId}
                         onChange={(e) =>
                           onUpdateFeedback({ activityContextId: e.target.value })
                         }
-                        className="h-9 w-full cursor-pointer appearance-none rounded-lg border border-input bg-white/[0.03] px-2.5 py-1 pr-8 text-sm text-zinc-200 outline-none transition-colors hover:bg-white/[0.05] focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                       >
                         {contexts.map((context) => (
-                          <option key={context.id} value={context.id} className="bg-[#1a1a24] text-zinc-100">
+                          <option key={context.id} value={context.id} className="bg-[#101018] text-zinc-100">
                             {context.name}
                           </option>
                         ))}
-                      </select>
-                      <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-500 transition-colors group-hover:text-zinc-300" />
-                    </div>
+                      </Select>
                     <div>
                       <Button
                         type="button"
