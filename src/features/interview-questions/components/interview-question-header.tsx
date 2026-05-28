@@ -2,7 +2,7 @@
 
 import { Briefcase, Check, CheckCircle2, FileText } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { EditButton, DeleteButton } from "@/components/shared/action-buttons";
+import { DeleteButton, EditButton, IconTextButton } from "@/components/shared/action-buttons";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { Button } from "@/components/ui/button";
 import type { InterviewQuestion } from "../api/interview-questions-api";
@@ -60,15 +60,13 @@ export default function InterviewQuestionHeader({
         </div>
         <div className="flex flex-wrap items-center gap-2 xl:justify-end shrink-0">
           {question.analysisId && (
-            <Button
+            <IconTextButton
               type="button"
-              variant="secondary"
               onClick={() => onOpenAnalysis(question.analysisId!)}
-              className="bg-indigo-600/15 text-indigo-300 hover:bg-indigo-600/25 border border-indigo-500/20 hover:text-indigo-200"
+              icon={Briefcase}
             >
-              <Briefcase className="h-4 w-4" />
               {t("openLinkedOffer")}
-            </Button>
+            </IconTextButton>
           )}
           {isEditing ? (
             <Button
