@@ -2,25 +2,18 @@
 
 import {
   CalendarDays,
+  FolderKanban,
   Lock,
   MessageSquareQuote,
-  Pencil,
-  Trash2,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
+import { DeleteButton, EditButton } from "@/components/shared/action-buttons";
+import { IconLabelBadge } from "@/components/shared/icon-label-badge";
+import { formatDate } from "@/lib/format";
 import type {
   ActivityContext,
   ReceivedFeedbackItem,
 } from "../api/received-feedback-api";
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleDateString("en", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-}
 
 interface ReceivedFeedbackDetailProps {
   item: ReceivedFeedbackItem;
@@ -36,6 +29,9 @@ export function ReceivedFeedbackDetail({
   onDelete,
 }: ReceivedFeedbackDetailProps) {
   const t = useTranslations("receivedFeedback");
+  const contextName =
+    contexts.find((context) => context.id === item.activityContextId)?.name ||
+    t("labels.general");
 
   return (
     <div className="flex flex-col gap-5">
@@ -47,40 +43,24 @@ export function ReceivedFeedbackDetail({
             </h2>
 
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <span className="inline-flex items-center rounded-md bg-action-soft px-2.5 py-1 text-xs font-semibold text-action-text ring-1 ring-inset ring-action-border">
-                {contexts.find((c) => c.id === item.activityContextId)?.name ||
-                  t("labels.general")}
-              </span>
-
-              <span className="inline-flex items-center gap-1.5 rounded-md bg-panel-hover px-2.5 py-1 text-xs font-medium text-text-muted ring-1 ring-inset ring-line">
-                <CalendarDays className="h-3.5 w-3.5 text-text-muted" />
-                {formatDate(item.receivedDate)}
-              </span>
+              <IconLabelBadge icon={FolderKanban} text={contextName} />
+              <IconLabelBadge
+                icon={CalendarDays}
+                text={formatDate(item.receivedDate)}
+              />
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 md:justify-end">
-            <Button
+            <EditButton
               type="button"
               onClick={onEdit}
-              variant="secondary"
-              size="sm"
-              className="bg-action-soft text-action-text hover:bg-action-soft border border-action-border font-medium transition-colors"
-            >
-              <Pencil className="h-3.5 w-3.5" />
-              {t("actions.edit")}
-            </Button>
+            />
 
-            <Button
+            <DeleteButton
               type="button"
               onClick={onDelete}
-              variant="destructive"
-              size="sm"
-              className="bg-danger-soft text-danger-text hover:bg-danger-soft border border-danger-border transition-colors"
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-              {t("actions.delete")}
-            </Button>
+            />
           </div>
         </div>
 
