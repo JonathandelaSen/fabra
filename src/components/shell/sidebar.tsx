@@ -170,8 +170,8 @@ export default function Sidebar({
             onClick={onNewAnalysis}
             className={`
             w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
-            bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500
-            text-white shadow-lg shadow-indigo-900/30 active:scale-[0.97]
+            bg-gradient-to-r from-primary-1 to-primary-2 text-white shadow-lg shadow-primary-1/30
+            hover:brightness-110 active:scale-[0.97]
             ${collapsed ? "justify-center p-2" : "px-3 py-2.5 text-sm"}
           `}
           >
