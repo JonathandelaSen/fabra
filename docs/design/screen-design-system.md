@@ -134,20 +134,28 @@ Use these tokens for new or migrated application UI:
 
 | Intent | Tailwind token | CSS variable |
 | --- | --- | --- |
-| App background | `bg-app` | `--ui-bg-app` |
-| App header background | `bg-app-header` | `--ui-bg-app-header` |
-| Base surface | `bg-surface` | `--ui-surface` |
-| Raised panel surface | `bg-surface-raised` | `--ui-surface-raised` |
-| Overlay surface | `bg-surface-overlay` | `--ui-surface-overlay` |
-| Hover surface | `bg-surface-hover` | `--ui-surface-hover` |
-| Active surface | `bg-surface-active` | `--ui-surface-active` |
-| Primary text | `text-app-primary` | `--ui-text-primary` |
-| Secondary text | `text-app-secondary` | `--ui-text-secondary` |
-| Muted text | `text-app-muted` | `--ui-text-muted` |
-| Faint text | `text-app-faint` | `--ui-text-faint` |
-| Inverse text | `text-app-inverse` | `--ui-text-inverse` |
-| Subtle border | `border-app-border` | `--ui-border-subtle` |
-| Strong border | `border-app-border-strong` | `--ui-border-strong` |
+| App background | `bg-canvas` | `--ui-bg-app` |
+| App header background | `bg-canvas-header` | `--ui-bg-app-header` |
+| Base panel surface | `bg-panel-base` | `--ui-surface` |
+| Raised panel surface | `bg-panel` | `--ui-surface-raised` |
+| Overlay surface | `bg-panel-overlay` | `--ui-surface-overlay` |
+| Hover surface | `bg-panel-hover` | `--ui-surface-hover` |
+| Active surface | `bg-panel-active` | `--ui-surface-active` |
+| Subtle surface tint | `bg-panel-subtle` | `--ui-surface-subtle` |
+| Control surface tint | `bg-panel-control` | `--ui-surface-control` |
+| Modal surface | `bg-modal` | `--ui-surface-modal` |
+| Field surface | `bg-field` | `--ui-field` |
+| Strong field surface | `bg-field-strong` | `--ui-field-strong` |
+| Code field surface | `bg-field-code` | `--ui-field-code` |
+| Overlay scrim | `bg-scrim` | `--ui-scrim` |
+| Primary text | `text-text-main` | `--ui-text-primary` |
+| Secondary text | `text-text-soft` | `--ui-text-secondary` |
+| Muted text | `text-text-muted` | `--ui-text-muted` |
+| Faint text | `text-text-faint` | `--ui-text-faint` |
+| Inverse text | `text-text-inverse` | `--ui-text-inverse` |
+| Subtle border | `border-line` | `--ui-border-subtle` |
+| Default border | `border-line-default` | `--ui-border-default` |
+| Strong border | `border-line-strong` | `--ui-border-strong` |
 
 Primary action tokens:
 

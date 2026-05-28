@@ -3,8 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export function AnalysisDetailSkeleton() {
   return (
     <div className="w-full space-y-5">
-      {/* Score Hero */}
-      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
+      <div className="rounded-2xl border border-line bg-panel-subtle p-6">
         <div className="flex flex-col md:flex-row items-center gap-6">
           <Skeleton className="shrink-0 w-32 h-32 rounded-full" />
           <div className="flex-1 space-y-3 min-w-0 w-full">
@@ -24,7 +23,6 @@ export function AnalysisDetailSkeleton() {
         </div>
       </div>
 
-      {/* Tab bar */}
       <div className="flex items-center gap-1">
         <Skeleton className="h-10 w-28 rounded-2xl" />
         <Skeleton className="h-10 w-24 rounded-2xl" />
@@ -33,9 +31,8 @@ export function AnalysisDetailSkeleton() {
         <Skeleton className="h-10 w-32 rounded-2xl" />
       </div>
 
-      {/* Tab content */}
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 space-y-4">
+        <div className="space-y-4 rounded-2xl border border-line bg-panel-subtle p-6">
           <Skeleton className="h-5 w-40" />
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="flex items-start gap-3">
@@ -47,7 +44,7 @@ export function AnalysisDetailSkeleton() {
             </div>
           ))}
         </div>
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 space-y-4">
+        <div className="space-y-4 rounded-2xl border border-line bg-panel-subtle p-6">
           <Skeleton className="h-5 w-36" />
           <div className="flex flex-wrap gap-2">
             {Array.from({ length: 8 }).map((_, i) => (

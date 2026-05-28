@@ -50,10 +50,10 @@ export function CopyPasteTextPanel({
   };
 
   return (
-    <section className="space-y-4 rounded-lg border border-white/10 bg-white/[0.03] p-4">
+    <section className="space-y-4 rounded-lg border border-line-default bg-panel-subtle p-4">
       <div>
-        <h3 className="text-sm font-semibold text-zinc-100">{title}</h3>
-        <p className="mt-2 rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs leading-relaxed text-amber-100">
+        <h3 className="text-sm font-semibold text-text-main">{title}</h3>
+        <p className="mt-2 rounded-lg border border-warning-border bg-warning-soft px-3 py-2 text-xs leading-relaxed text-warning-text">
           {privacyNotice}
         </p>
       </div>
@@ -69,7 +69,7 @@ export function CopyPasteTextPanel({
       <div className="space-y-2">
         <label
           htmlFor="work-journal-copy-paste-response"
-          className="block text-xs font-medium text-zinc-400"
+          className="block text-xs font-medium text-text-muted"
         >
           {pastedTextLabel}
         </label>
@@ -78,9 +78,9 @@ export function CopyPasteTextPanel({
           value={pastedText}
           onChange={(event) => setPastedText(event.target.value)}
           placeholder={pastedTextPlaceholder}
-          className="min-h-32 w-full resize-y rounded-lg border border-white/10 bg-black/20 p-3 text-sm leading-relaxed text-zinc-200 outline-none placeholder:text-zinc-600 focus:border-zinc-300"
+          className="min-h-32 w-full resize-y rounded-lg border border-line-default bg-field p-3 text-sm leading-relaxed text-text-soft outline-none placeholder:text-text-faint focus:border-text-soft"
         />
-        {error && <p className="text-xs text-rose-300">{error}</p>}
+        {error && <p className="text-xs text-danger-text">{error}</p>}
       </div>
 
       <div className="flex justify-end">

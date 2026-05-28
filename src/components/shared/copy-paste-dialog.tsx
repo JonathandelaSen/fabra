@@ -25,28 +25,28 @@ export function CopyPasteDialog({
 }: CopyPasteDialogProps) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 animate-fade-in"
+      className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-scrim p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby={labelledById}
     >
       <div
         className={cn(
-          "flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-950 shadow-2xl animate-in fade-in-50 zoom-in-95 duration-200",
+          "flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-line-default bg-modal shadow-2xl animate-in fade-in-50 zoom-in-95 duration-200",
           className
         )}
       >
-        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+        <div className="flex items-center justify-between border-b border-line-default px-5 py-4">
           <h2
             id={labelledById}
-            className="text-lg font-semibold text-zinc-100"
+            className="text-lg font-semibold text-text-main"
           >
             {title}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-zinc-500 transition-colors hover:bg-white/10 hover:text-zinc-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50"
+            className="rounded-lg p-2 text-text-muted transition-colors hover:bg-panel-active hover:text-text-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/50"
             aria-label={closeLabel}
           >
             <X className="h-4 w-4" />

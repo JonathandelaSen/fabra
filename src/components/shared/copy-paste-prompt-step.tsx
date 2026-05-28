@@ -22,13 +22,13 @@ export function CopyPastePromptStep({
       <textarea
         readOnly
         value={prompt}
-        className="h-44 w-full resize-none rounded-lg border border-white/10 bg-black/30 p-3 text-xs leading-relaxed text-zinc-300 outline-none"
+        className="h-44 w-full resize-none rounded-lg border border-line-default bg-field-strong p-3 text-xs leading-relaxed text-text-soft outline-none"
       />
       <button
         type="button"
         onClick={onCopyPrompt}
         disabled={!prompt}
-        className="inline-flex items-center gap-2 rounded-lg bg-zinc-100 px-3 py-2 text-xs font-semibold text-zinc-950 transition-colors hover:bg-white disabled:opacity-50"
+        className="inline-flex items-center gap-2 rounded-lg bg-text-main px-3 py-2 text-xs font-semibold text-text-inverse transition-colors hover:bg-white disabled:opacity-50"
       >
         {copiedPrompt ? (
           <Check className="h-3.5 w-3.5" />

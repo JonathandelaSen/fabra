@@ -14,16 +14,16 @@ export default function CopyPasteWorkflowSteps({
   const t = useTranslations("analysisFlow.copyPaste");
 
   return (
-    <div className="flex gap-2 border-b border-white/10 px-5 py-3 text-xs text-zinc-500">
-      <span className={step === "copy" ? "text-indigo-300" : ""}>
+    <div className="flex gap-2 border-b border-line-default px-5 py-3 text-xs text-text-muted">
+      <span className={step === "copy" ? "text-action-text" : ""}>
         {t("stepCopy")}
       </span>
       <span>/</span>
-      <span className={step === "paste" ? "text-indigo-300" : ""}>
+      <span className={step === "paste" ? "text-action-text" : ""}>
         {t("stepPaste")}
       </span>
       <span>/</span>
-      <span className={step === "review" ? "text-indigo-300" : ""}>
+      <span className={step === "review" ? "text-action-text" : ""}>
         {t("stepReview")}
       </span>
     </div>

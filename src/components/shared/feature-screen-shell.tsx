@@ -27,25 +27,25 @@ export function FeatureScreenShell({
   return (
     <div
       className={cn(
-        "flex h-full min-h-0 w-full flex-col overflow-hidden bg-[#09090f] text-zinc-100",
+        "flex h-full min-h-0 w-full flex-col overflow-hidden bg-canvas text-text-main",
         className
       )}
     >
       <header
         className={cn(
-          "shrink-0 border-b border-white/[0.06] px-5 py-4 bg-[#09090f]",
+          "shrink-0 border-b border-line bg-canvas-header px-5 py-4",
           headerClassName
         )}
       >
         <div
           className={cn(
-            "flex w-full flex-wrap items-center justify-between gap-3",
+            "mx-auto flex w-full max-w-[1560px] flex-wrap items-center justify-between gap-3",
             contentClassName
           )}
         >
           <div className="min-w-0">
             {typeof title === "string" ? (
-              <h1 className="text-2xl font-semibold tracking-tight text-zinc-50">
+              <h1 className="text-2xl font-semibold tracking-tight text-text-main">
                 {title}
               </h1>
             ) : (
@@ -62,11 +62,11 @@ export function FeatureScreenShell({
 
       <div
         className={cn(
-          "min-h-0 flex-1 overflow-hidden bg-[#09090f] p-4 lg:p-5 xl:p-6",
+          "min-h-0 flex-1 overflow-hidden bg-canvas p-4 lg:p-5 xl:p-6",
           bodyClassName
         )}
       >
-        <div className={cn("h-full w-full", bodyContentClassName)}>
+        <div className={cn("mx-auto h-full w-full max-w-[1560px]", bodyContentClassName)}>
           {children}
         </div>
       </div>
