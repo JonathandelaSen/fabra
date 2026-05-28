@@ -126,6 +126,41 @@ Use when the user asks the app to transform, draft, evaluate, or summarize.
 - Typography: keep font weight restrained; avoid very light hero-like type in operational screens.
 - Motion: use short transitions for insertion/removal and state changes, not page spectacle.
 
+## Surface Types
+
+Reusable product surfaces are centralized in `src/components/shared/feature-visual-system.ts`.
+
+| Intent | Use for |
+| --- | --- |
+| `featureSurfaces.panel` | Main raised panels such as sidebars and detail containers |
+| `featureSurfaces.section` | Functional sections inside a detail view |
+| `featureSurfaces.row` | Idle selectable list rows |
+| `featureSurfaces.selectedRow` | Selected durable resources in sidebars/lists |
+| `featureSurfaces.field` | Inputs, textareas, and selects |
+| `featureSurfaces.modal` | Dialog bodies and overlays |
+| `featureSurfaces.aiPanel` | AI-assisted controls and output areas |
+| `featureSurfaces.tag` | Metadata pills and compact labels |
+
+Use the surface by meaning, not by current color. If two surfaces look similar today, they should still remain semantically separate so the theme can evolve safely.
+
+## Visual States
+
+Reusable visual states also live in `src/components/shared/feature-visual-system.ts`.
+
+| State | Meaning |
+| --- | --- |
+| `selected` | The durable resource currently selected by route or local navigation |
+| `idle` | Default non-selected interactive state |
+| `hover` | Hover affordance for interactive rows and controls |
+| `disabled` | Temporarily unavailable action or control |
+| `loading` | Skeleton/pending state |
+| `success` | Positive completion or active-good state |
+| `warning` | Caution, pending review, or private-note emphasis |
+| `danger` | Destructive, closed, failed, or removal state |
+| `info` | Neutral informational emphasis |
+
+List-detail item rows should use `featureListItemClassName()` and `featureListItemIconClassName()` instead of hand-rolling selected/hover classes.
+
 ## Color Tokens
 
 The app uses Tailwind v4 and shadcn CSS variables from `src/app/globals.css`. Product UI should use semantic tokens instead of hard-coded hex values or raw Tailwind color families when the color describes reusable application chrome.

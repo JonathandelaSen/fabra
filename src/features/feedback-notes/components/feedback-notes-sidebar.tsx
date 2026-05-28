@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Plus, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
+import { SegmentedControl } from "@/components/shared/segmented-control";
 import type { FeedbackFilter, FeedbackListItem } from "../api/feedback-notes-api";
 import { ActivityContextSelector, type ActivityContext } from "@/features/activity-context";
 import { FeedbackNotesListSkeleton } from "./feedback-notes-skeleton";
@@ -63,22 +64,15 @@ export function FeedbackNotesSidebar({
     <FeatureSidebarPanel
       header={
         <>
-          <div className="mb-4 flex rounded-lg border border-white/[0.06] bg-white/[0.035] p-1">
-            {(["active", "closed", "all"] as FeedbackFilter[]).map((item) => (
-              <button
-                key={item}
-                type="button"
-                onClick={() => onStatusChange(item)}
-                className={`flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-                  status === item
-                    ? "bg-white/[0.10] text-zinc-100"
-                    : "text-zinc-500 hover:text-zinc-300"
-                }`}
-              >
-                {t(`filters.${item}`)}
-              </button>
-            ))}
-          </div>
+          <SegmentedControl
+            options={(["active", "closed", "all"] as FeedbackFilter[]).map((item) => ({
+              value: item,
+              label: t(`filters.${item}`),
+            }))}
+            value={status}
+            onChange={onStatusChange}
+            className="mb-4"
+          />
           <div className="mb-2">
             <Button
               type="button"

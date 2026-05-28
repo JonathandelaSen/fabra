@@ -7,17 +7,10 @@ import { Loader2, Lock, Pencil, Plus, Save, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import type { FeedbackEntry } from "../api/feedback-notes-api";
+import { formatDate } from "@/lib/format";
 
 const textareaClass =
   "w-full resize-y border-white/10 bg-white/[0.03] text-sm text-zinc-100 placeholder:text-zinc-600 focus-visible:border-zinc-300 disabled:cursor-not-allowed disabled:opacity-60";
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleDateString("en", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-}
 
 interface FeedbackEntriesPanelProps {
   entries: FeedbackEntry[];

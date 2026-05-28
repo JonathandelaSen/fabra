@@ -4,6 +4,7 @@ import { Briefcase, Check, CheckCircle2, FileText, Pencil, Trash2 } from "lucide
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import type { InterviewQuestion } from "../api/interview-questions-api";
+import { StatusBadge } from "@/components/shared/status-badge";
 
 interface InterviewQuestionHeaderProps {
   question: InterviewQuestion;
@@ -38,14 +39,9 @@ export default function InterviewQuestionHeader({
           </h2>
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-zinc-500">
             {question.answer ? (
-              <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300 ring-1 ring-inset ring-emerald-500/20">
-                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
-                {t("answered")}
-              </span>
+              <StatusBadge label={t("answered")} color="emerald" size="md" icon={CheckCircle2} />
             ) : (
-              <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/10 px-2.5 py-1 text-[11px] font-semibold text-amber-300 ring-1 ring-inset ring-amber-500/20">
-                {t("pending")}
-              </span>
+              <StatusBadge label={t("pending")} color="amber" size="md" />
             )}
             {question.cvId && (
               <span className="inline-flex items-center gap-1 rounded-md bg-white/[0.03] border border-white/[0.05] px-2.5 py-1 text-[11px] font-medium text-zinc-400">

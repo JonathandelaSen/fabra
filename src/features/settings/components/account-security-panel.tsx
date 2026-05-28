@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
 import { AlertCircle, Check, Loader2, LockKeyhole, LogOut, Save, UserX } from "lucide-react";
+import { SettingsSectionPanel } from "@/components/shared/settings-section-panel";
 import {
   changePasswordWithCurrent,
   signOut,
@@ -21,14 +22,7 @@ export function AccountSecurityPanel() {
   );
 
   return (
-    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
-      <div className="mb-5">
-        <h2 className="flex items-center gap-2 text-lg font-semibold text-zinc-100">
-          <UserX className="h-5 w-5 text-zinc-400" />
-          {t("title")}
-        </h2>
-      </div>
-
+    <SettingsSectionPanel title={t("title")} icon={UserX}>
       <div className="space-y-5">
         <form
           action={signOut}
@@ -121,6 +115,6 @@ export function AccountSecurityPanel() {
           </button>
         </form>
       </div>
-    </div>
+    </SettingsSectionPanel>
   );
 }

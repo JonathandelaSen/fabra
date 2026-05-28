@@ -4,6 +4,7 @@ import { Pencil, Save, X, Trash2, Loader2, Sparkles, Download } from "lucide-rea
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import type { CVDocumentListItem } from "../api/cv-library-api";
+import { StatusBadge } from "@/components/shared/status-badge";
 
 interface CVLibraryDetailHeaderProps {
   selected: CVDocumentListItem;
@@ -77,15 +78,10 @@ export function CVLibraryDetailHeader({
               <h2 className="truncate text-base font-semibold text-zinc-100">
                 {selected.name}
               </h2>
-              {selected.type === "template" ? (
-                <span className="shrink-0 rounded border border-teal-500/25 bg-teal-500/10 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide uppercase text-teal-400">
-                  {t("typeTemplate")}
-                </span>
-              ) : (
-                <span className="shrink-0 rounded border border-zinc-500/20 bg-zinc-500/10 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide uppercase text-zinc-400">
-                  {t("typeOriginal")}
-                </span>
-              )}
+              <StatusBadge
+                label={selected.type === "template" ? t("typeTemplate") : t("typeOriginal")}
+                color={selected.type === "template" ? "teal" : "zinc"}
+              />
             </div>
             <p className="mt-1 truncate text-xs text-zinc-500">
               {selected.filename || "—"}

@@ -1,5 +1,6 @@
 import { Calendar, Trash2, Edit } from "lucide-react";
 import { useLocale } from "next-intl";
+import { StatusBadge } from "@/components/shared/status-badge";
 import type {
   ObjectiveContext,
   ObjectivePriority,
@@ -50,9 +51,10 @@ export function ObjectiveSummaryPanel({
               {statusLabel(selected.status)}
             </span>
             {selected.priority && (
-              <span className="rounded-full border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-amber-300 font-semibold text-[11px]">
-                {t("priorityBadge", { priority: priorityLabel(selected.priority) })}
-              </span>
+              <StatusBadge
+                label={t("priorityBadge", { priority: priorityLabel(selected.priority) })}
+                color="amber"
+              />
             )}
             {selectedContext && (
               <span className="rounded-full border border-white/[0.06] bg-white/[0.02] px-2 py-0.5 text-zinc-400 font-medium text-[11px]">

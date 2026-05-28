@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { Globe2 } from "lucide-react";
+import { SettingsSectionPanel } from "@/components/shared/settings-section-panel";
 import type { InterfaceLanguage } from "@/i18n/config";
 import { useLanguagePreference } from "../hooks/use-language-preference";
 
@@ -10,16 +11,7 @@ export function LanguageSettingsPanel() {
   const { locale, saved, error, changeLanguage } = useLanguagePreference();
 
   return (
-    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
-      <div className="mb-5">
-        <h2 className="flex items-center gap-2 text-lg font-semibold text-zinc-100">
-          <Globe2 className="h-5 w-5 text-sky-300" />
-          {t("title")}
-        </h2>
-        <p className="mt-2 text-sm leading-6 text-zinc-500">
-          {t("description")}
-        </p>
-      </div>
+    <SettingsSectionPanel title={t("title")} icon={Globe2} description={t("description")}>
       <label
         className="block text-sm font-medium text-zinc-300"
         htmlFor="interface-language"
@@ -42,6 +34,6 @@ export function LanguageSettingsPanel() {
           {error ? t("error") : t("saved")}
         </p>
       )}
-    </div>
+    </SettingsSectionPanel>
   );
 }

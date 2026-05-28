@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { ArrowLeft, Check, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
+import { ErrorBanner } from "@/components/shared/error-banner";
 import {
   useActivityContexts,
   useCreateActivityContext,
@@ -160,9 +161,7 @@ export function ActivityContextView() {
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
         <section className="space-y-4">
           {visibleError && (
-            <div className="rounded-lg border border-rose-500/20 bg-rose-500/[0.06] px-4 py-2.5 text-sm text-rose-200">
-              {visibleError}
-            </div>
+            <ErrorBanner message={visibleError} />
           )}
 
           {lastCreated && hasReturnTo && (
