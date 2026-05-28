@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import AIActionLauncher, {
   type AIModelOption,
 } from "@/components/shared/ai-action-launcher";
+import { EditButton } from "@/components/shared/action-buttons";
 import type { FeedbackEntry, FeedbackListItem } from "../api/feedback-notes-api";
 
 const AI_MODELS: AIModelOption[] = [
@@ -132,14 +133,9 @@ export function FeedbackFinalPanel({
           </Button>
         )}
         {!isClosed && isEditingMode && !isEditing && (
-          <Button
-            type="button"
+          <EditButton
             onClick={() => setIsEditing(true)}
-            variant="secondary"
-          >
-            <Pencil className="h-4 w-4" />
-            {t("actions.edit")}
-          </Button>
+          />
         )}
         <Button
           type="button"

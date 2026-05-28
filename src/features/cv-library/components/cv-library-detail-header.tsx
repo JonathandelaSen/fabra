@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import type { CVDocumentListItem } from "../api/cv-library-api";
 import { StatusBadge } from "@/components/shared/status-badge";
+import { EditButton, DeleteButton } from "@/components/shared/action-buttons";
 
 interface CVLibraryDetailHeaderProps {
   selected: CVDocumentListItem;
@@ -92,28 +93,8 @@ export function CVLibraryDetailHeader({
       <div className="flex shrink-0 items-center gap-2 flex-wrap">
         {!editing && (
           <>
-            <Button
-              type="button"
-              onClick={onStartEditing}
-              variant="secondary"
-              className="h-9 bg-white/[0.03] text-zinc-300 hover:bg-white/5 border border-white/[0.08] hover:text-zinc-100"
-            >
-              <Pencil className="h-3.5 w-3.5 text-zinc-400 group-hover:text-zinc-200" />
-              {t("rename")}
-            </Button>
-            <Button
-              type="button"
-              onClick={onDelete}
-              variant="destructive"
-              className="h-9 bg-rose-600/15 text-rose-300 hover:bg-rose-600/25 border border-rose-500/20 hover:text-white"
-            >
-              {saving ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <Trash2 className="h-3.5 w-3.5" />
-              )}
-              {t("delete")}
-            </Button>
+            <EditButton onClick={onStartEditing} />
+            <DeleteButton onClick={onDelete} disabled={saving} />
           </>
         )}
         {selected.type === "template" && (

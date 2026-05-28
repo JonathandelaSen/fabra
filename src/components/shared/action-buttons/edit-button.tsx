@@ -5,9 +5,10 @@ import { cn } from "@/lib/utils";
 
 export interface EditButtonProps extends ComponentProps<typeof Button> {}
 
-export function EditButton({ className, children, ...props }: EditButtonProps) {
+export function EditButton({ className, children, type = "button", ...props }: EditButtonProps) {
   return (
     <Button
+      type={type}
       variant="outline"
       size="sm"
       className={cn("h-9", children ? "px-3 gap-1.5" : "w-9 px-0", className)}

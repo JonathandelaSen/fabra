@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import type { FeedbackEntry } from "../api/feedback-notes-api";
 import { formatDate } from "@/lib/format";
+import { EditButton, DeleteButton } from "@/components/shared/action-buttons";
 
 const textareaClass =
   "w-full resize-y border-white/10 bg-white/[0.03] text-sm text-zinc-100 placeholder:text-zinc-600 focus-visible:border-zinc-300 disabled:cursor-not-allowed disabled:opacity-60";
@@ -114,35 +115,19 @@ export function FeedbackEntriesPanel({
                 <p className="text-xs text-zinc-500">{formatDate(entry.createdAt)}</p>
                 {!isClosed && isEditingMode && (
                   <div className="flex items-center gap-1">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon-xs"
+                    <EditButton
                       onClick={() => {
                         setEditingEntryId(entry.id);
                         setEntryEditDraft(entry.content);
                       }}
                       disabled={deletingEntryIds.has(entry.id)}
-                      className="text-zinc-500 hover:text-zinc-100"
                       aria-label={t("entries.edit")}
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon-xs"
+                    />
+                    <DeleteButton
                       onClick={() => onDeleteEntry(entry.id)}
                       disabled={deletingEntryIds.has(entry.id)}
-                      className="text-zinc-500 hover:bg-rose-500/10 hover:text-rose-300"
                       aria-label={t("actions.delete")}
-                    >
-                      {deletingEntryIds.has(entry.id) ? (
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                      ) : (
-                          <Trash2 className="h-3.5 w-3.5" />
-                      )}
-                    </Button>
+                    />
                   </div>
                 )}
               </div>

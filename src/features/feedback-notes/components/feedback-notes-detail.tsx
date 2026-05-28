@@ -10,6 +10,7 @@ import type { FeedbackEntry, FeedbackListItem } from "../api/feedback-notes-api"
 import { ActivityContextSelector, type ActivityContext } from "@/features/activity-context";
 import { FeedbackEntriesPanel } from "./feedback-entries-panel";
 import { FeedbackFinalPanel } from "./feedback-final-panel";
+import { EditButton, DeleteButton } from "@/components/shared/action-buttons";
 
 interface FeedbackNotesDetailProps {
   feedback: FeedbackListItem;
@@ -164,15 +165,9 @@ export function FeedbackNotesDetail({
                   {t("actions.viewMode")}
                 </Button>
               ) : (
-                <Button
-                  type="button"
+                <EditButton
                   onClick={() => setIsEditing(true)}
-                  variant="secondary"
-                  className="bg-indigo-600/15 text-indigo-300 hover:bg-indigo-600/25 border border-indigo-500/20"
-                >
-                  <Pencil className="h-4 w-4" />
-                  {t("actions.editMode")}
-                </Button>
+                />
               )
             )}
             {isClosed ? (
@@ -196,15 +191,9 @@ export function FeedbackNotesDetail({
                 {t("actions.close")}
               </Button>
             )}
-            <Button
-              type="button"
+            <DeleteButton
               onClick={onDeleteFeedback}
-              variant="destructive"
-              className="bg-rose-600/15 text-rose-300 hover:bg-rose-600/25 border border-rose-500/20 hover:text-white transition-colors"
-            >
-              <Trash2 className="h-4 w-4" />
-              {t("actions.delete")}
-            </Button>
+            />
           </div>
         </div>
       </section>
