@@ -251,6 +251,31 @@ export default function WorkJournalView({
     }
   };
 
+  const draftEditWithAI = async (
+    contextId: string,
+    dateStart: string,
+    dateEnd: string | null,
+    topic: string | null,
+    notes: string,
+    modelId: string
+  ): Promise<string> => {
+    if (!hasAIApiKey) {
+      onOpenSettings();
+      throw new Error("Missing API Key");
+    }
+    const data = await draftWorkJournalEntry({
+      provider: aiProvider,
+      apiKey: aiApiKey,
+      model: modelId,
+      context_id: contextId,
+      date_start: dateStart,
+      date_end: dateEnd,
+      topic: topic,
+      notes,
+    });
+    return data.finalText;
+  };
+
   const patchEntry = async (
     entry: WorkJournalEntry,
     updates: Partial<WorkJournalEntry>
@@ -359,8 +384,6 @@ export default function WorkJournalView({
           )}
         </Button>
       }
-      contentClassName="max-w-[1560px] mx-auto"
-      bodyContentClassName="max-w-[1560px] mx-auto h-full"
     >
       <FeatureTwoPaneLayout
         sidebar={
@@ -414,6 +437,12 @@ export default function WorkJournalView({
               onDelete={deleteEntry}
               activeContexts={activeContexts}
               onManageContexts={openActivityContextManager}
+              hasAIApiKey={hasAIApiKey}
+              onOpenSettings={onOpenSettings}
+              selectedModel={selectedModel}
+              setSelectedModel={setSelectedModel}
+              models={models}
+              onDraftEditWithAI={draftEditWithAI}
             />
           )}
         </div>

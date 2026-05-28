@@ -440,8 +440,6 @@ export default function ObjectivesView() {
           {t("newObjective")}
         </button>
       }
-      contentClassName="max-w-[1560px] mx-auto"
-      bodyContentClassName="max-w-[1560px] mx-auto"
     >
       <FeatureTwoPaneLayout
         sidebar={

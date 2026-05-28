@@ -249,8 +249,6 @@ export default function ReceivedFeedbackView() {
           {t("newFeedback")}
         </Button>
       }
-      contentClassName="max-w-[1560px] mx-auto"
-      bodyContentClassName="max-w-[1560px] mx-auto h-full"
     >
       <FeatureTwoPaneLayout
         sidebar={

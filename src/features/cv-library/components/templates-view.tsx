@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
 import {
   CV_TEMPLATES,
-  type CVTemplateDefinition,
   type CVTemplateLocale,
 } from "@/lib/cv-templates";
 import {
@@ -14,8 +13,9 @@ import {
 } from "@/lib/browser-preferences";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { useCVDocumentList } from "../hooks/use-cv-library-queries";
-import TemplateCard from "./template-card";
-import TemplateConfigurationModal from "./template-configuration-modal";
+import { TemplatesSidebar } from "./templates-sidebar";
+import { TemplateDetail } from "./template-detail";
+import { motion } from "framer-motion";
 
 interface TemplatesViewProps {
   onOpenSettings: () => void;
@@ -36,14 +36,14 @@ export default function TemplatesView({
   const hasAIApiKey = aiProvider === "mock" || aiApiKey.length > 0;
   const t = useTranslations("analysisFlow.templates");
   const tf = useTranslations("analysisFlow.forms");
-  const [selectedTemplate, setSelectedTemplate] =
-    useState<CVTemplateDefinition | null>(null);
+  
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>(CV_TEMPLATES[0]?.templateId ?? "");
   const [selectedCvId, setSelectedCvId] = useState<string>("");
   const [locale, setLocale] = useState<CVTemplateLocale>("es");
   const [searchQuery, setSearchQuery] = useState("");
   const [creating, setCreating] = useState(false);
   const [copyPasteOpen, setCopyPasteOpen] = useState(false);
-  const [selectedModel, setSelectedModel] = useState("gemini-2.5-flash");
+  const [selectedModel, setSelectedModel] = useState("gemini-3.1-pro-preview");
   const [error, setError] = useState<string | null>(null);
 
   const models = [
@@ -56,6 +56,8 @@ export default function TemplatesView({
       cv.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (cv.filename ?? "").toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
+  const selectedTemplate = CV_TEMPLATES.find((t) => t.templateId === selectedTemplateId) ?? null;
 
   const handleCreateVersion = async () => {
     if (!selectedTemplate || !selectedCvId) return;
@@ -95,56 +97,50 @@ export default function TemplatesView({
   return (
     <FeatureScreenShell
       title={t("title")}
-      bodyClassName="overflow-y-auto"
+      bodyClassName="overflow-hidden"
     >
-      <div className="pb-10">
-        {error && (
-          <div className="mb-8 rounded-xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm text-rose-300">
-            {error}
-          </div>
-        )}
-
-        <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-          {CV_TEMPLATES.map((template) => (
-            <TemplateCard
-              key={template.templateId}
-              template={template}
-              onSelect={setSelectedTemplate}
-            />
-          ))}
-        </div>
-      </div>
-
-      <TemplateConfigurationModal
-        template={selectedTemplate}
-        cvs={cvs}
-        filteredCvs={filteredCvs}
-        selectedCvId={selectedCvId}
-        locale={locale}
-        searchQuery={searchQuery}
-        hasAIApiKey={hasAIApiKey}
-        selectedModel={selectedModel}
-        models={models}
-        creating={creating}
-        copyPasteOpen={copyPasteOpen}
-        onClose={() => setSelectedTemplate(null)}
-        onSelectCv={setSelectedCvId}
-        onLocaleChange={setLocale}
-        onSearchChange={setSearchQuery}
-        onOpenUpload={onOpenUpload}
-        onOpenSettings={onOpenSettings}
-        onModelChange={setSelectedModel}
-        onCreateVersion={handleCreateVersion}
-        onOpenCopyPaste={() => setCopyPasteOpen(true)}
-        onCloseCopyPaste={() => setCopyPasteOpen(false)}
-        onApplied={(result) => {
-          void listQuery.refetch();
-          if (result.version) {
-            setSelectedTemplate(null);
-            onOpenEditor(result.version.id);
-          }
-        }}
-      />
+      <motion.div
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35 }}
+        className="grid h-full w-full gap-6 lg:grid-cols-[320px_1fr]"
+      >
+        <TemplatesSidebar
+          templates={CV_TEMPLATES}
+          selectedId={selectedTemplateId}
+          onSelect={setSelectedTemplateId}
+        />
+        
+        <TemplateDetail
+          template={selectedTemplate}
+          cvs={cvs}
+          filteredCvs={filteredCvs}
+          selectedCvId={selectedCvId}
+          locale={locale}
+          searchQuery={searchQuery}
+          hasAIApiKey={hasAIApiKey}
+          selectedModel={selectedModel}
+          models={models}
+          creating={creating}
+          copyPasteOpen={copyPasteOpen}
+          error={error}
+          onSelectCv={setSelectedCvId}
+          onLocaleChange={setLocale}
+          onSearchChange={setSearchQuery}
+          onOpenUpload={onOpenUpload}
+          onOpenSettings={onOpenSettings}
+          onModelChange={setSelectedModel}
+          onCreateVersion={handleCreateVersion}
+          onOpenCopyPaste={() => setCopyPasteOpen(true)}
+          onCloseCopyPaste={() => setCopyPasteOpen(false)}
+          onApplied={(result) => {
+            void listQuery.refetch();
+            if (result.version) {
+              onOpenEditor(result.version.id);
+            }
+          }}
+        />
+      </motion.div>
     </FeatureScreenShell>
   );
 }

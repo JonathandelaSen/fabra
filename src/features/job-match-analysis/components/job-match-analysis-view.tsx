@@ -205,8 +205,6 @@ export default function JobMatchAnalysisView({
           {listT("newOffer")}
         </Button>
       }
-      contentClassName="max-w-[1560px] mx-auto"
-      bodyContentClassName="max-w-[1560px] mx-auto h-full"
     >
       <FeatureTwoPaneLayout
         sidebar={

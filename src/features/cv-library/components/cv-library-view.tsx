@@ -131,8 +131,6 @@ export default function CVLibraryView({
   return (
     <FeatureScreenShell
       title={navT("cvLibrary")}
-      contentClassName="max-w-[1560px] mx-auto"
-      bodyContentClassName="max-w-[1560px] mx-auto"
       bodyClassName="overflow-hidden"
     >
       <motion.div

@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import type { WorkJournalContextLegacy as WorkJournalContext, WorkJournalEntryLegacy as WorkJournalEntry } from "../api/work-journal-types";
 import { ActivityContextSelector } from "@/features/activity-context";
+import AIActionLauncher from "@/components/shared/ai-action-launcher";
+import { getErrorMessage } from "@/lib/errors";
 
 interface WorkJournalEntryEditorProps {
   entry: WorkJournalEntry;
@@ -11,6 +13,19 @@ interface WorkJournalEntryEditorProps {
   onCancel: () => void;
   activeContexts: WorkJournalContext[];
   onManageContexts: () => void;
+  hasAIApiKey: boolean;
+  onOpenSettings: () => void;
+  selectedModel: string;
+  setSelectedModel: (s: string) => void;
+  models: { id: string; label: string }[];
+  onDraftEditWithAI: (
+    contextId: string,
+    dateStart: string,
+    dateEnd: string | null,
+    topic: string | null,
+    notes: string,
+    modelId: string
+  ) => Promise<string>;
 }
 
 export function WorkJournalEntryEditor({
@@ -19,10 +34,42 @@ export function WorkJournalEntryEditor({
   onCancel,
   activeContexts,
   onManageContexts,
+  hasAIApiKey,
+  onOpenSettings,
+  selectedModel,
+  setSelectedModel,
+  models,
+  onDraftEditWithAI,
 }: WorkJournalEntryEditorProps) {
   const t = useTranslations("workJournal");
   const common = useTranslations("common.actions");
   const [edit, setEdit] = useState(entry);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleGenerate = async () => {
+    if (!edit.context_id || !edit.raw_notes.trim()) {
+      setError(t("errors.aiDraftRequired"));
+      return;
+    }
+    setAiLoading(true);
+    setError(null);
+    try {
+      const newText = await onDraftEditWithAI(
+        edit.context_id,
+        edit.date_start,
+        edit.date_end,
+        edit.topic,
+        edit.raw_notes,
+        selectedModel
+      );
+      setEdit((current) => ({ ...current, final_text: newText }));
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   return (
     <div className="group text-left">
@@ -92,19 +139,47 @@ export function WorkJournalEntryEditor({
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        {error && (
+          <div className="text-sm text-rose-400 bg-rose-500/10 px-4 py-3 rounded-lg border border-rose-500/20">
+            {error}
+          </div>
+        )}
+
+        <div className="flex flex-wrap items-center gap-3">
           <button
             onClick={() => onSave(edit)}
-            className="px-4 py-2 bg-white text-black text-sm font-medium rounded-full hover:bg-zinc-200 transition-colors"
+            disabled={aiLoading}
+            className="px-4 py-2 bg-white text-black text-sm font-medium rounded-full hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {t("saveChanges")}
           </button>
           <button
             onClick={onCancel}
-            className="px-4 py-2 text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+            disabled={aiLoading}
+            className="px-4 py-2 text-sm text-zinc-500 hover:text-zinc-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {common("cancel")}
           </button>
+
+          <div className="ml-auto">
+            <AIActionLauncher
+              actionLabel={t("generateProfessionalDraft")}
+              loading={aiLoading}
+              disabled={!edit.raw_notes.trim() || !edit.context_id}
+              integrated={{
+                available: hasAIApiKey,
+                selectedModelId: selectedModel,
+                models,
+                onModelChange: setSelectedModel,
+                onRun: handleGenerate,
+                onConfigure: onOpenSettings,
+              }}
+              copyPaste={{
+                available: false, // Omitted for simplicity in edit mode
+                onOpenFlow: () => {},
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>

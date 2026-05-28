@@ -15,6 +15,19 @@ interface WorkJournalDetailProps {
   onDelete: (entry: WorkJournalEntry) => void;
   activeContexts: WorkJournalContext[];
   onManageContexts: () => void;
+  hasAIApiKey: boolean;
+  onOpenSettings: () => void;
+  selectedModel: string;
+  setSelectedModel: (s: string) => void;
+  models: { id: string; label: string }[];
+  onDraftEditWithAI: (
+    contextId: string,
+    dateStart: string,
+    dateEnd: string | null,
+    topic: string | null,
+    notes: string,
+    modelId: string
+  ) => Promise<string>;
 }
 
 export function WorkJournalDetail({
@@ -25,6 +38,12 @@ export function WorkJournalDetail({
   onDelete,
   activeContexts,
   onManageContexts,
+  hasAIApiKey,
+  onOpenSettings,
+  selectedModel,
+  setSelectedModel,
+  models,
+  onDraftEditWithAI,
 }: WorkJournalDetailProps) {
   const t = useTranslations("workJournal");
 
@@ -41,6 +60,12 @@ export function WorkJournalDetail({
           onCancel={() => setIsEditing(false)}
           activeContexts={activeContexts}
           onManageContexts={onManageContexts}
+          hasAIApiKey={hasAIApiKey}
+          onOpenSettings={onOpenSettings}
+          selectedModel={selectedModel}
+          setSelectedModel={setSelectedModel}
+          models={models}
+          onDraftEditWithAI={onDraftEditWithAI}
         />
       ) : (
         <WorkJournalEntryDisplay

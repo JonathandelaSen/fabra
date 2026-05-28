@@ -2,14 +2,12 @@
 
 import { useTranslations } from "next-intl";
 import type {
-
   WorkJournalContextLegacy as WorkJournalContext,
   WorkJournalEntryInputMode,
 } from "../api/work-journal-types";
-import { WorkJournalInputModeTabs } from "./work-journal-input-mode-tabs";
-import { WorkJournalAISection } from "./work-journal-ai-section";
-import { WorkJournalFormActions } from "./work-journal-form-actions";
 import { WorkJournalFormMetadata } from "./work-journal-form-metadata";
+import { WorkJournalCopyPastePanel } from "./work-journal-copy-paste-panel";
+import AIActionLauncher from "@/components/shared/ai-action-launcher";
 
 interface WorkJournalFormProps {
   draft: {
@@ -65,61 +63,100 @@ export function WorkJournalForm({
   setShowForm,
 }: WorkJournalFormProps) {
   const t = useTranslations("workJournal");
+  const common = useTranslations("common.actions");
+  
+  const currentContext =
+    contexts.find((context) => context.id === draft.context_id) ?? null;
 
   return (
     <div className="text-left w-full">
       <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_340px] gap-6">
         <div className="w-full bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 md:p-8 space-y-6">
-          <WorkJournalInputModeTabs
-            value={draft.input_mode}
-            onChange={(mode) =>
-              setDraft((current) => ({ ...current, input_mode: mode }))
-            }
-          />
-
-          <textarea
-            className="w-full bg-transparent text-[17px] md:text-lg font-light leading-relaxed text-zinc-200 placeholder:text-zinc-700 outline-none resize-none min-h-[240px]"
-            placeholder={t("notesPlaceholder")}
-            value={draft.raw_notes}
-            onChange={(event) =>
-              setDraft((current) => ({
-                ...current,
-                raw_notes: event.target.value,
-              }))
-            }
-          />
-
-          {draft.input_mode === "ai_assisted" && (
-            <div className="pt-6 border-t border-white/5">
-              <WorkJournalAISection
-                rawNotes={draft.raw_notes}
-                contextId={draft.context_id}
-                finalText={draft.final_text}
-                onFinalTextChange={(text) =>
-                  setDraft((current) => ({ ...current, final_text: text }))
+          <div className="space-y-4">
+            <div>
+              <label className="text-xs font-medium text-zinc-500 mb-2 block">
+                {t("finalText")}
+              </label>
+              <textarea
+                className="w-full bg-transparent text-[17px] md:text-lg font-light leading-relaxed text-zinc-200 placeholder:text-zinc-700 outline-none resize-y min-h-[240px] border border-white/10 rounded-xl p-4 focus:border-white/20 transition-colors"
+                placeholder={t("notesPlaceholder")}
+                value={draft.final_text}
+                onChange={(event) =>
+                  setDraft((current) => ({
+                    ...current,
+                    final_text: event.target.value,
+                  }))
                 }
-                aiLoading={aiLoading}
-                hasAIApiKey={hasAIApiKey}
-                onOpenSettings={onOpenSettings}
-                selectedModel={selectedModel}
-                setSelectedModel={setSelectedModel}
-                models={models}
-                isCopyPasteOpen={isCopyPasteOpen}
-                setIsCopyPasteOpen={setIsCopyPasteOpen}
-                contexts={contexts}
+              />
+            </div>
+
+            <div>
+              <label className="text-xs font-medium text-zinc-500 mb-2 block">
+                {t("rawNotes")}
+              </label>
+              <textarea
+                className="w-full bg-transparent text-[15px] font-light leading-relaxed text-zinc-400 placeholder:text-zinc-700 outline-none resize-y min-h-[120px] border border-white/5 rounded-xl p-4 focus:border-white/20 transition-colors"
+                placeholder={t("aiNotesPlaceholder")}
+                value={draft.raw_notes}
+                onChange={(event) =>
+                  setDraft((current) => ({
+                    ...current,
+                    raw_notes: event.target.value,
+                  }))
+                }
+              />
+            </div>
+          </div>
+
+          {isCopyPasteOpen && (
+            <div className="pt-2">
+              <WorkJournalCopyPastePanel
+                context={currentContext}
                 dateStart={draft.date_start}
-                dateEnd={draft.date_end}
-                topic={draft.topic}
-                onDraftWithAI={draftWithAI}
+                dateEnd={draft.date_end || null}
+                topic={draft.topic || null}
+                notes={draft.raw_notes}
+                onPasteText={(text) => setDraft((current) => ({ ...current, final_text: text }))}
+                onClose={() => setIsCopyPasteOpen(false)}
               />
             </div>
           )}
 
-          <div className="pt-6 border-t border-white/5">
-            <WorkJournalFormActions
-              onSave={saveEntry}
-              onCancel={() => setShowForm(false)}
-            />
+          <div className="flex flex-wrap items-center gap-3 pt-6 border-t border-white/5">
+            <button
+              onClick={saveEntry}
+              disabled={aiLoading}
+              className="px-4 py-2 bg-white text-black text-sm font-medium rounded-full hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {t("saveChanges")}
+            </button>
+            <button
+              onClick={() => setShowForm(false)}
+              disabled={aiLoading}
+              className="px-4 py-2 text-sm text-zinc-500 hover:text-zinc-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {common("cancel")}
+            </button>
+
+            <div className="ml-auto">
+              <AIActionLauncher
+                actionLabel={t("generateProfessionalDraft")}
+                loading={aiLoading}
+                disabled={!draft.raw_notes.trim() || !draft.context_id}
+                integrated={{
+                  available: hasAIApiKey,
+                  selectedModelId: selectedModel,
+                  models,
+                  onModelChange: setSelectedModel,
+                  onRun: draftWithAI,
+                  onConfigure: onOpenSettings,
+                }}
+                copyPaste={{
+                  available: true,
+                  onOpenFlow: () => setIsCopyPasteOpen(!isCopyPasteOpen),
+                }}
+              />
+            </div>
           </div>
         </div>
 

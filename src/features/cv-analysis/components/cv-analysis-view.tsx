@@ -169,8 +169,6 @@ export default function CVAnalysisView({
           {listT("newAnalysis")}
         </Button>
       }
-      contentClassName="max-w-[1560px] mx-auto"
-      bodyContentClassName="max-w-[1560px] mx-auto h-full"
     >
       <FeatureTwoPaneLayout
         sidebar={
