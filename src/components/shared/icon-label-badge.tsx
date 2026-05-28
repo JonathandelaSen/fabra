@@ -2,7 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface IconLabelBadgeProps {
-  icon: LucideIcon;
+  icon?: LucideIcon;
   text: string;
   className?: string;
 }
@@ -19,7 +19,7 @@ export function IconLabelBadge({
         className,
       )}
     >
-      <Icon className="h-3.5 w-3.5 text-zinc-500" />
+      {Icon && <Icon className="h-3.5 w-3.5 text-zinc-500" />}
       {text}
     </span>
   );

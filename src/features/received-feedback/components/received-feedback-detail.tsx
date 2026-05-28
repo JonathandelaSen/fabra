@@ -2,7 +2,6 @@
 
 import {
   CalendarDays,
-  FolderKanban,
   Lock,
   MessageSquareQuote,
 } from "lucide-react";
@@ -43,7 +42,7 @@ export function ReceivedFeedbackDetail({
             </h2>
 
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <IconLabelBadge icon={FolderKanban} text={contextName} />
+              <IconLabelBadge text={contextName} />
               <IconLabelBadge
                 icon={CalendarDays}
                 text={formatDate(item.receivedDate)}

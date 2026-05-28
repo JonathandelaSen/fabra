@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { featureMetaPillClassName } from "@/components/shared/feature-visual-system";
+import { IconLabelBadge } from "@/components/shared/icon-label-badge";
 import { SidebarListItem } from "@/components/shared/sidebar-list-item";
 import { formatDate } from "@/lib/format";
 import type { ReceivedFeedbackItem } from "../api/received-feedback-api";
@@ -33,9 +33,10 @@ export function ReceivedFeedbackListItem({
       }
       footer={
         <>
-          <span className={`text-[10px] ${featureMetaPillClassName}`}>
-            {contextName || t("labels.general")}
-          </span>
+          <IconLabelBadge
+            text={contextName || t("labels.general")}
+            className="max-w-[150px] truncate px-1.5 py-0.5 text-[10px]"
+          />
           <span className="shrink-0 text-[10px] text-text-muted">
             {formatDate(item.receivedDate)}
           </span>
