@@ -3,6 +3,7 @@
 import { Briefcase, Check, CheckCircle2, FileText } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { DeleteButton, EditButton, IconTextButton } from "@/components/shared/action-buttons";
+import { IconLabelBadge } from "@/components/shared/icon-label-badge";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { Button } from "@/components/ui/button";
 import type { InterviewQuestion } from "../api/interview-questions-api";
@@ -45,16 +46,16 @@ export default function InterviewQuestionHeader({
               <StatusBadge label={t("pending")} color="amber" size="md" />
             )}
             {question.cvId && (
-              <span className="inline-flex items-center gap-1 rounded-md bg-white/[0.03] border border-white/[0.05] px-2.5 py-1 text-[11px] font-medium text-zinc-400">
-                <FileText className="h-3.5 w-3.5 text-zinc-500" />
-                {linkedCvName}
-              </span>
+              <IconLabelBadge
+                icon={FileText}
+                text={linkedCvName}
+              />
             )}
             {question.analysisId && (
-              <span className="inline-flex items-center gap-1 rounded-md bg-white/[0.03] border border-white/[0.05] px-2.5 py-1 text-[11px] font-medium text-zinc-400">
-                <Briefcase className="h-3.5 w-3.5 text-zinc-500" />
-                {linkedOfferTitle}
-              </span>
+              <IconLabelBadge
+                icon={Briefcase}
+                text={linkedOfferTitle}
+              />
             )}
           </div>
         </div>
