@@ -148,11 +148,11 @@
   --ui-border-subtle: oklch(1 0 0 / 6%);
   --ui-border-default: oklch(1 0 0 / 10%);
   --ui-border-strong: oklch(1 0 0 / 14%);
-  --ui-action: oklch(0.55 0.22 264);
-  --ui-action-hover: oklch(0.62 0.22 264);
-  --ui-action-soft: oklch(0.55 0.22 264 / 0.1);
-  --ui-action-border: oklch(0.55 0.22 264 / 0.24);
-  --ui-action-text: oklch(0.78 0.16 264);
+  --ui-action: var(--primary-1);
+  --ui-action-hover: var(--primary-2);
+  --ui-action-soft: color-mix(in oklch, var(--primary-2) 10%, transparent);
+  --ui-action-border: color-mix(in oklch, var(--primary-2) 24%, transparent);
+  --ui-action-text: oklch(67.3% 0.182 276.935);
   --ui-success: oklch(0.7 0.15 160);
   --ui-success-soft: oklch(0.7 0.15 160 / 0.1);
   --ui-success-border: oklch(0.7 0.15 160 / 0.22);

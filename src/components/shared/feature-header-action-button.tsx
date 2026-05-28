@@ -16,7 +16,7 @@ interface FeatureHeaderActionButtonProps {
 }
 
 const defaultClassName =
-  "bg-primary-2 text-primary-foreground font-semibold hover:brightness-110 transition-all shadow-[0_0_30px_oklch(0.6_0.2_300_/_0.18)]";
+  "bg-primary-2 text-primary-foreground font-semibold hover:brightness-110 transition-all";
 
 const defaultActiveClassName =
   "bg-white/10 text-white hover:bg-white/20 font-semibold transition-colors";
