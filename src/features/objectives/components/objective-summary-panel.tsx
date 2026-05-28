@@ -5,10 +5,9 @@ import type {
   ObjectiveContext,
   ObjectivePriority,
   ObjectiveSource,
-  ObjectiveStatus,
   ObjectiveWithRelations,
 } from "../api/objectives-api";
-import { formatDate, statusClass } from "./objectives-ui";
+import { formatDate } from "./objectives-ui";
 import { Button } from "@/components/ui/button";
 
 interface ObjectiveSummaryPanelProps {
@@ -22,7 +21,6 @@ interface ObjectiveSummaryPanelProps {
   onDeleteObjective: () => void;
   priorityLabel: (priority: ObjectivePriority) => string;
   sourceLabel: (source: ObjectiveSource) => string;
-  statusLabel: (status: ObjectiveStatus) => string;
   t: (key: string, values?: Record<string, number | string>) => string;
 }
 
@@ -37,7 +35,6 @@ export function ObjectiveSummaryPanel({
   onDeleteObjective,
   priorityLabel,
   sourceLabel,
-  statusLabel,
   t,
 }: ObjectiveSummaryPanelProps) {
   const locale = useLocale();
@@ -47,9 +44,6 @@ export function ObjectiveSummaryPanel({
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2 text-xs">
-            <span className={statusClass(selected.status)}>
-              {statusLabel(selected.status)}
-            </span>
             {selected.priority && (
               <StatusBadge
                 label={t("priorityBadge", { priority: priorityLabel(selected.priority) })}
@@ -80,7 +74,6 @@ export function ObjectiveSummaryPanel({
             className="h-9 px-3 gap-1.5"
           >
             <Edit className="h-3.5 w-3.5" />
-            {t("actions.edit")}
           </Button>
           <Button
             variant="destructive"

@@ -7,7 +7,6 @@ import type {
   ObjectiveOutcomeType,
   ObjectivePriority,
   ObjectiveSource,
-  ObjectiveStatus,
   ObjectiveWithRelations,
 } from "../api/objectives-api";
 import {
@@ -57,7 +56,6 @@ interface ObjectiveDetailProps {
   outcomeStatusLabel: (status: ObjectiveOutcomeStatus) => string;
   priorityLabel: (priority: ObjectivePriority) => string;
   sourceLabel: (source: ObjectiveSource) => string;
-  statusLabel: (status: ObjectiveStatus) => string;
   t: (key: string, values?: Record<string, number | string>) => string;
 }
 
@@ -97,7 +95,6 @@ export function ObjectiveDetail({
   outcomeStatusLabel,
   priorityLabel,
   sourceLabel,
-  statusLabel,
   t,
 }: ObjectiveDetailProps) {
   const doneCount = selected.items.filter((item) => item.status === "done").length;
@@ -118,7 +115,6 @@ export function ObjectiveDetail({
         onDeleteObjective={onDeleteObjective}
         priorityLabel={priorityLabel}
         sourceLabel={sourceLabel}
-        statusLabel={statusLabel}
         t={t}
       />
 

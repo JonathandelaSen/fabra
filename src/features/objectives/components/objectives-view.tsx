@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Target } from "lucide-react";
@@ -13,7 +13,6 @@ import type {
   ObjectiveOutcomeType,
   ObjectivePriority,
   ObjectiveSource,
-  ObjectiveStatus,
   ObjectiveWithRelations,
 } from "../api/objectives-api";
 import { getErrorMessage } from "@/lib/errors";
@@ -45,8 +44,6 @@ export default function ObjectivesView() {
     objectiveId,
     replaceObjective,
     selectObjective,
-    setStatus,
-    status,
   } = routeState;
   const [error, setError] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -71,20 +68,12 @@ export default function ObjectivesView() {
   const saving = Object.values(mutations).some((mutation) => mutation.isPending);
   const hasLoadedWorkspace = !loading || commitments.length > 0 || contexts.length > 0;
   const isEmpty = commitments.length === 0;
-  const filteredCommitments = useMemo(
-    () =>
-      commitments.filter((commitment) => {
-        if (status === "all") return true;
-        const closed = ["achieved", "missed", "cancelled"].includes(commitment.status);
-        return status === "closed" ? closed : !closed;
-      }),
-    [commitments, status]
-  );
+
   const selected =
     commitments.find((item) => item.id === objectiveId) ??
-    (objectiveId ? null : filteredCommitments[0] ?? null);
+    (objectiveId ? null : commitments[0] ?? null);
   const selectedIdInCurrentList =
-    filteredCommitments.find((item) => item.id === objectiveId)?.id ?? null;
+    commitments.find((item) => item.id === objectiveId)?.id ?? null;
   const selectedContext = selected
     ? contexts.find((context) => context.id === selected.contextId) ?? null
     : null;
@@ -94,10 +83,10 @@ export default function ObjectivesView() {
   const visibleError = error ?? queryError;
 
   useEffect(() => {
-    if (!objectiveId && filteredCommitments[0]?.id) {
-      replaceObjective(filteredCommitments[0].id);
+    if (!objectiveId && commitments[0]?.id) {
+      replaceObjective(commitments[0].id);
     }
-  }, [filteredCommitments, objectiveId, replaceObjective]);
+  }, [commitments, objectiveId, replaceObjective]);
 
   useEffect(() => {
     const activityContextId = searchParams.get("activityContextId");
@@ -368,11 +357,11 @@ export default function ObjectivesView() {
   const confirmDeleteObjective = async () => {
     if (!selected) return;
     const deletedId = selected.id;
-    const currentIndex = filteredCommitments.findIndex((item) => item.id === deletedId);
+    const currentIndex = commitments.findIndex((item) => item.id === deletedId);
     const nextObjective =
-      filteredCommitments[currentIndex + 1] ??
-      filteredCommitments[currentIndex - 1] ??
-      filteredCommitments.find((item) => item.id !== deletedId) ??
+      commitments[currentIndex + 1] ??
+      commitments[currentIndex - 1] ??
+      commitments.find((item) => item.id !== deletedId) ??
       null;
 
     clearInlineEdits();
@@ -414,7 +403,6 @@ export default function ObjectivesView() {
     }
   };
 
-  const statusLabel = (status: ObjectiveStatus) => t(`status.${status}`);
   const itemStatusLabel = (status: ObjectiveItemStatus) => t(`itemStatus.${status}`);
   const outcomeLabel = (type: ObjectiveOutcomeType) => t(`outcomeTypes.${type}`);
   const outcomeStatusLabel = (status: ObjectiveOutcomeStatus) =>
@@ -442,16 +430,13 @@ export default function ObjectivesView() {
         sidebar={
           <ObjectivesSidebar
             contexts={contexts}
-            commitments={filteredCommitments}
-            filter={status}
+            commitments={commitments}
             hasLoadedWorkspace={hasLoadedWorkspace}
             selectedId={selectedIdInCurrentList}
-            onFilterChange={setStatus}
             onSelect={(id) => {
               selectObjective(id);
               clearInlineEdits();
             }}
-            statusLabel={statusLabel}
             t={t}
           />
         }
@@ -476,7 +461,6 @@ export default function ObjectivesView() {
             onSave={saveObjective}
             priorityLabel={priorityLabel}
             sourceLabel={sourceLabel}
-            statusLabel={statusLabel}
             t={t}
           />
         ) : selected ? (
@@ -516,7 +500,6 @@ export default function ObjectivesView() {
             outcomeStatusLabel={outcomeStatusLabel}
             priorityLabel={priorityLabel}
             sourceLabel={sourceLabel}
-            statusLabel={statusLabel}
             t={t}
           />
         ) : (

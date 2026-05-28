@@ -3,7 +3,6 @@ import type {
   ObjectiveContext,
   ObjectivePriority,
   ObjectiveSource,
-  ObjectiveStatus,
 } from "../api/objectives-api";
 import { type ObjectiveForm } from "./objectives-ui";
 import { Button } from "@/components/ui/button";
@@ -22,7 +21,6 @@ interface ObjectiveFormPanelProps {
   onSave: () => void;
   priorityLabel: (priority: ObjectivePriority) => string;
   sourceLabel: (source: ObjectiveSource) => string;
-  statusLabel: (status: ObjectiveStatus) => string;
   t: (key: string) => string;
 }
 
@@ -37,7 +35,6 @@ export function ObjectiveFormPanel({
   onSave,
   priorityLabel,
   sourceLabel,
-  statusLabel,
   t,
 }: ObjectiveFormPanelProps) {
   return (
@@ -72,7 +69,6 @@ export function ObjectiveFormPanel({
           onFormChange={onFormChange}
           priorityLabel={priorityLabel}
           sourceLabel={sourceLabel}
-          statusLabel={statusLabel}
           t={t}
         />
 

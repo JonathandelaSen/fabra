@@ -1,11 +1,8 @@
 import type {
   ObjectiveContext,
-  ObjectiveStatus,
   ObjectiveWithRelations,
 } from "../api/objectives-api";
-import type { ObjectivesFilter } from "../hooks/use-objectives-route-state";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
-import { SegmentedControl } from "@/components/shared/segmented-control";
 import { SectionGroupHeader } from "@/components/shared/section-group-header";
 import { ObjectivesSidebarSkeleton } from "./objectives-skeleton";
 import { ObjectiveListItem } from "./objective-list-item";
@@ -13,24 +10,18 @@ import { ObjectiveListItem } from "./objective-list-item";
 interface ObjectivesSidebarProps {
   contexts: ObjectiveContext[];
   commitments: ObjectiveWithRelations[];
-  filter: ObjectivesFilter;
   hasLoadedWorkspace: boolean;
   selectedId: string | null;
-  onFilterChange: (filter: ObjectivesFilter) => void;
   onSelect: (id: string) => void;
-  statusLabel: (status: ObjectiveStatus) => string;
   t: (key: string, values?: Record<string, number>) => string;
 }
 
 export function ObjectivesSidebar({
   contexts,
   commitments,
-  filter,
   hasLoadedWorkspace,
   selectedId,
-  onFilterChange,
   onSelect,
-  statusLabel,
   t,
 }: ObjectivesSidebarProps) {
   const contextIds = new Set(contexts.map((context) => context.id));
@@ -57,18 +48,7 @@ export function ObjectivesSidebar({
   ];
 
   return (
-    <FeatureSidebarPanel
-      header={
-        <SegmentedControl
-          options={(["open", "closed", "all"] as const).map((item) => ({
-            value: item,
-            label: t(`filters.${item}`),
-          }))}
-          value={filter}
-          onChange={onFilterChange}
-        />
-      }
-    >
+    <FeatureSidebarPanel>
       {!hasLoadedWorkspace ? (
         <ObjectivesSidebarSkeleton />
       ) : (
@@ -84,7 +64,6 @@ export function ObjectivesSidebar({
                     commitment={commitment}
                     active={commitment.id === selectedId}
                     onSelect={onSelect}
-                    statusLabel={statusLabel}
                     t={t}
                   />
                 ))}
