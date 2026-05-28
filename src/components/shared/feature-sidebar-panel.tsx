@@ -21,12 +21,12 @@ export function FeatureSidebarPanel({
   return (
     <aside
       className={cn(
-        "flex h-full min-h-0 w-full shrink-0 flex-col rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)]",
+        "flex h-full min-h-0 w-full shrink-0 flex-col rounded-lg border border-app-border bg-surface-raised shadow-[0_4px_20px_rgba(0,0,0,0.15)]",
         className
       )}
     >
       {header && (
-        <div className={cn("border-b border-white/[0.06] px-4 py-3", headerClassName)}>
+        <div className={cn("border-b border-app-border px-4 py-3", headerClassName)}>
           {header}
         </div>
       )}

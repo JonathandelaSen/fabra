@@ -36,8 +36,8 @@ export function FeatureDetailTabBar<T extends string = string>({
           className={cn(
             "flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all",
             activeTab === tab.id
-              ? "bg-white/[0.08] text-zinc-100 shadow-sm"
-              : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]",
+              ? "bg-surface-active text-app-primary shadow-sm"
+              : "text-app-muted hover:bg-surface-hover hover:text-app-secondary",
           )}
         >
           <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex items-center justify-center">

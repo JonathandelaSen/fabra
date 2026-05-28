@@ -27,13 +27,13 @@ export function FeatureScreenShell({
   return (
     <div
       className={cn(
-        "flex h-full min-h-0 w-full flex-col overflow-hidden bg-[#09090f] text-zinc-100",
+        "flex h-full min-h-0 w-full flex-col overflow-hidden bg-app text-app-primary",
         className
       )}
     >
       <header
         className={cn(
-          "shrink-0 border-b border-white/[0.06] px-5 py-4 bg-[#09090f]",
+          "shrink-0 border-b border-app-border bg-app-header px-5 py-4",
           headerClassName
         )}
       >
@@ -45,7 +45,7 @@ export function FeatureScreenShell({
         >
           <div className="min-w-0">
             {typeof title === "string" ? (
-              <h1 className="text-2xl font-semibold tracking-tight text-zinc-50">
+              <h1 className="text-2xl font-semibold tracking-tight text-app-primary">
                 {title}
               </h1>
             ) : (
@@ -62,7 +62,7 @@ export function FeatureScreenShell({
 
       <div
         className={cn(
-          "min-h-0 flex-1 overflow-hidden bg-[#09090f] p-4 lg:p-5 xl:p-6",
+          "min-h-0 flex-1 overflow-hidden bg-app p-4 lg:p-5 xl:p-6",
           bodyClassName
         )}
       >

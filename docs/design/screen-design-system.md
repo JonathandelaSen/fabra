@@ -126,6 +126,55 @@ Use when the user asks the app to transform, draft, evaluate, or summarize.
 - Typography: keep font weight restrained; avoid very light hero-like type in operational screens.
 - Motion: use short transitions for insertion/removal and state changes, not page spectacle.
 
+## Color Tokens
+
+The app uses Tailwind v4 and shadcn CSS variables from `src/app/globals.css`. Product UI should use semantic tokens instead of hard-coded hex values or raw Tailwind color families when the color describes reusable application chrome.
+
+Use these tokens for new or migrated application UI:
+
+| Intent | Tailwind token | CSS variable |
+| --- | --- | --- |
+| App background | `bg-app` | `--ui-bg-app` |
+| App header background | `bg-app-header` | `--ui-bg-app-header` |
+| Base surface | `bg-surface` | `--ui-surface` |
+| Raised panel surface | `bg-surface-raised` | `--ui-surface-raised` |
+| Overlay surface | `bg-surface-overlay` | `--ui-surface-overlay` |
+| Hover surface | `bg-surface-hover` | `--ui-surface-hover` |
+| Active surface | `bg-surface-active` | `--ui-surface-active` |
+| Primary text | `text-app-primary` | `--ui-text-primary` |
+| Secondary text | `text-app-secondary` | `--ui-text-secondary` |
+| Muted text | `text-app-muted` | `--ui-text-muted` |
+| Faint text | `text-app-faint` | `--ui-text-faint` |
+| Inverse text | `text-app-inverse` | `--ui-text-inverse` |
+| Subtle border | `border-app-border` | `--ui-border-subtle` |
+| Strong border | `border-app-border-strong` | `--ui-border-strong` |
+
+Primary action tokens:
+
+| Intent | Tailwind token |
+| --- | --- |
+| Primary action fill | `bg-action` |
+| Primary action hover | `bg-action-hover` |
+| Soft action fill | `bg-action-soft` |
+| Action border | `border-action-border` |
+| Action text | `text-action-text` |
+
+Status tokens:
+
+| Status | Fill | Soft fill | Border | Text |
+| --- | --- | --- | --- | --- |
+| Success | `bg-success` | `bg-success-soft` | `border-success-border` | `text-success-text` |
+| Warning | `bg-warning` | `bg-warning-soft` | `border-warning-border` | `text-warning-text` |
+| Danger | `bg-danger` | `bg-danger-soft` | `border-danger-border` | `text-danger-text` |
+| Info | `bg-info` | `bg-info-soft` | `border-info-border` | `text-info-text` |
+
+Current migration rule:
+
+- Shared app structure should use semantic tokens first.
+- Feature-specific accent colors may still use explicit families while the feature is being migrated.
+- CV templates, public CV rendering, generated/exportable documents, charts, and score visualizations may use literal colors when the output is intentionally separate from the app chrome.
+- Avoid adding new `bg-[#...]`, `text-zinc-*`, `border-white/[...]`, or raw `indigo/violet/emerald/amber/rose` combinations to reusable components unless there is a documented reason.
+
 ## Frontend Conventions
 
 - New substantial feature UI belongs under `src/features/<feature-name>/`.
@@ -147,7 +196,7 @@ The pilot should prove:
 - The detail region can separate summary, raw entries, and final AI-assisted output.
 - AI controls can feel integrated rather than bolted on.
 
-## PR Checklist
+## Iteration Checklist
 
 - Does the screen use a recognizable product anatomy?
 - Is the primary action in a predictable location?
