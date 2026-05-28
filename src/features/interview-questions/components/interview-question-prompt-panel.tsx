@@ -28,7 +28,7 @@ export default function InterviewQuestionPromptPanel({
   return (
     <div className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-5 flex flex-col gap-4 animate-fade-in">
       <h3 className="text-sm font-semibold tracking-tight text-zinc-300 flex items-center gap-2">
-        <MessageSquare className="h-4 w-4 text-indigo-400" />
+        <MessageSquare className="h-4 w-4 text-primary-2" />
         {t("question")}
       </h3>
       {isEditing ? (
