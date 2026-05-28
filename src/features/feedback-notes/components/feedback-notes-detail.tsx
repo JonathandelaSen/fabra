@@ -10,7 +10,7 @@ import type { FeedbackEntry, FeedbackListItem } from "../api/feedback-notes-api"
 import { ActivityContextSelector, type ActivityContext } from "@/features/activity-context";
 import { FeedbackEntriesPanel } from "./feedback-entries-panel";
 import { FeedbackFinalPanel } from "./feedback-final-panel";
-import { EditButton, DeleteButton } from "@/components/shared/action-buttons";
+import { EditButton, DeleteButton, IconTextButton } from "@/components/shared/action-buttons";
 
 interface FeedbackNotesDetailProps {
   feedback: FeedbackListItem;
@@ -171,25 +171,21 @@ export function FeedbackNotesDetail({
               )
             )}
             {isClosed ? (
-              <Button
+              <IconTextButton
                 type="button"
                 onClick={onReopenFeedback}
-                variant="secondary"
-                className="bg-amber-600/15 text-amber-300 hover:bg-amber-600/25 border border-amber-500/20 transition-colors"
+                icon={RefreshCw}
               >
-                <RefreshCw className="h-4 w-4" />
                 {t("actions.reopen")}
-              </Button>
+              </IconTextButton>
             ) : (
-              <Button
+              <IconTextButton
                 type="button"
                 onClick={onCloseFeedback}
-                variant="secondary"
-                className="bg-zinc-600/15 text-zinc-300 hover:bg-zinc-600/25 border border-zinc-500/20 hover:text-zinc-100 transition-colors"
+                icon={Archive}
               >
-                <Archive className="h-4 w-4" />
                 {t("actions.close")}
-              </Button>
+              </IconTextButton>
             )}
             <DeleteButton
               onClick={onDeleteFeedback}
