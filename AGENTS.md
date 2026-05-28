@@ -380,31 +380,13 @@ Use React local state for UI-only state:
 
 Do not create view models that are 1:1 copies of API response types. Prefer frontend-friendly camelCase response contracts, derived aliases such as `Response[number]`, and mappers only when the UI needs a genuinely different shape.
 
-### Feedback Notes pilot
-
-`feedback-notes` is the pilot for the new frontend architecture. It should be migrated completely to `src/features/feedback-notes`.
-
-Target route contract:
-
-```
-/feedback-notes
-/feedback-notes/[feedbackId]
-/feedback-notes/[feedbackId]?status=active|closed|all
-```
-
-Rules:
-
-1. `feedback-notes` is a real route segment, not `/?view=feedback-notes`.
-2. The existing global `AppShell`/sidebar remains the app chrome.
-3. `feedbackId` in the path controls the detail resource.
-4. `status` query param controls only the sidebar tab/list. If missing, default to `active`.
-5. If there is no `feedbackId`, load the current tab, select the first feedback note, and `router.replace` to its detail URL.
-6. If the path feedback note is not present in the selected tab, keep the detail open but do not mark any sidebar item as selected.
-7. Selecting a sidebar item uses `router.push` and preserves the current `status`.
-
 ### Build verification
 
 After any change under `src/modules/`, `src/lib/`, `src/app/`, `src/components/`, `src/features/`, or `src/frontend/`, run `npm run build` before finishing. Type-checking alone (`tsc --noEmit`) does not catch Next.js server/client boundary errors — only the full build does.
+
+### Agent check
+
+After touching code, always run `npm run agent:check` before handing work back. This is the standard guard command for agents and contributors: it runs the code-related architecture checks and the production build with compact success output. If a check fails, the command prints the failing script output and exits non-zero.
 
 ### Architecture verification
 
@@ -422,13 +404,16 @@ Frontend boundary checks should be automated alongside the existing DDD checks. 
 ## Agent Test User
 
 Use the following credentials when a test user is required for automated or manual agent actions:
+
 - **Email:** `agent-test@example.com`
 - **Password:** `agent-test-password`
 
 To seed the local database with a complete set of mock entities specifically for this user (CVs, Analyses, Opportunities, Work Journal, Feedback Notes, Objectives, etc.), run the following command:
+
 ```bash
 npm run supabase:seed-agent
 ```
+
 Running this command is completely idempotent: it automatically finds or creates the user and cleans up any existing mock records under their ID before inserting a fresh set of beautiful, high-quality mock data.
 
 ## Avoid Real AI API Usage

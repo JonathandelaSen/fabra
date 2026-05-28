@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "npm run ddd:check",
+    "agent:check": "node scripts/agent-check.mjs",
     "frontend:check": "node scripts/verify-frontend-boundaries.mjs",
     "test:backend": "node scripts/test-backend.mjs",
     "ddd:check": "node scripts/verify-ddd.mjs",
