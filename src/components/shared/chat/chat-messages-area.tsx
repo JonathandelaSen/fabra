@@ -1,33 +1,33 @@
 "use client";
 
-import { RefObject } from "react";
+import type { RefObject } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Bot, Loader2 } from "lucide-react";
-import type { AnalysisChatMessage } from "../types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChatBubble } from "./chat-bubble";
 import { ChatEmptyState } from "./chat-empty-state";
 import { ChatEmptyChat } from "./chat-empty-chat";
+import type { ChatMessage } from "./chat-types";
 
 interface ChatMessagesAreaProps {
+  messages: ChatMessage[];
   isLoading: boolean;
-  activeConversationId: string | null;
-  messages: AnalysisChatMessage[];
   isSending: boolean;
+  activeConversationId: string | null;
+  onNewConversation: () => void;
   formatTime: (d: string) => string;
   scrollRef: RefObject<HTMLDivElement | null>;
-  onNewConversation: () => void;
 }
 
 export function ChatMessagesArea({
-  isLoading,
-  activeConversationId,
   messages,
+  isLoading,
   isSending,
+  activeConversationId,
+  onNewConversation,
   formatTime,
   scrollRef,
-  onNewConversation,
 }: ChatMessagesAreaProps) {
   const t = useTranslations("analysisDetail.chat");
 

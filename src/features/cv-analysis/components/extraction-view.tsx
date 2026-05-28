@@ -6,14 +6,14 @@ import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
 import type { AnalysisMode, AIContext } from "@/lib/analysis-types";
 import HowAtsWorksEducationBanner from "@/components/shared/how-ats-works-education-banner";
-import ExtractionHeader from "./extraction-header";
-import ExtractionParserTabs from "./extraction-parser-tabs";
+import ExtractionHeader from "@/components/shared/extraction/extraction-header";
+import ExtractionParserTabs from "@/components/shared/extraction/extraction-parser-tabs";
 import ExtractionPdfPreview from "./extraction-pdf-preview";
 import AnalysisModeSelector from "./analysis-mode-selector";
 import CVScoreCopyPasteModal from "./cv-score-copy-paste-modal";
 import GeneralAnalysisForm from "./general-analysis-form";
 import JobMatchForm from "./job-match-form";
-import { CvExtractionTextPanel } from "./cv-extraction-text-panel";
+import { ExtractionTextPanel as CvExtractionTextPanel } from "@/components/shared/extraction/extraction-text-panel";
 import type { ScoreCVAnalysisInput } from "../hooks/use-cv-analysis-mutations";
 
 interface ExtractionData {
@@ -264,7 +264,8 @@ export default function ExtractionView({
       <ExtractionHeader
         filename={analysis.filename}
         analysisId={analysis.id}
-        analysisMode={analysis.analysis_mode}
+        actionLabel={formsT("analyzeCV")}
+        showReAnalysis={analysis.analysis_mode === "general"}
         aiScore={analysis.ai_score}
         showPdfPreview={showPdfPreview}
         onTogglePdfPreview={() => setShowPdfPreview(!showPdfPreview)}

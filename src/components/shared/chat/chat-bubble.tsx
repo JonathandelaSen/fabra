@@ -1,11 +1,11 @@
 "use client";
 
 import { Bot, UserRound } from "lucide-react";
-import type { AnalysisChatMessage } from "../types";
 import { ChatMarkdown } from "./chat-markdown";
+import type { ChatMessage } from "./chat-types";
 
 interface ChatBubbleProps {
-  message: AnalysisChatMessage;
+  message: ChatMessage;
   formatTime: (d: string) => string;
 }
 

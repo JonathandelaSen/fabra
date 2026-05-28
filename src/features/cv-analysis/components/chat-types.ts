@@ -1,9 +1,6 @@
-export interface AnalysisChatMessage {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-  created_at: string;
-}
+import type { ChatMessage } from "@/components/shared/chat/chat-types";
+
+export type AnalysisChatMessage = ChatMessage;
 
 export interface AnalysisChatConversation {
   id: string;

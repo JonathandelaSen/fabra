@@ -8,9 +8,9 @@ import type { JobMatchAnalysisDetailResponse } from "@/app/api/job-match-analyse
 import HowAtsWorksEducationBanner from "@/components/shared/how-ats-works-education-banner";
 import JobMatchForm from "./job-match-form";
 import JobMatchScoreCopyPasteModal from "./job-match-score-copy-paste-modal";
-import { JobMatchExtractionTextPanel } from "./job-match-extraction-text-panel";
-import JobMatchExtractionHeader from "./job-match-extraction-header";
-import JobMatchExtractionParserTabs from "./job-match-extraction-parser-tabs";
+import { ExtractionTextPanel as JobMatchExtractionTextPanel } from "@/components/shared/extraction/extraction-text-panel";
+import JobMatchExtractionHeader from "@/components/shared/extraction/extraction-header";
+import JobMatchExtractionParserTabs from "@/components/shared/extraction/extraction-parser-tabs";
 import JobMatchExtractionPdfPreview from "./job-match-extraction-pdf-preview";
 
 interface JobMatchExtractionViewProps {
@@ -154,6 +154,8 @@ export default function JobMatchExtractionView({
       <JobMatchExtractionHeader
         filename={analysis.filename}
         analysisId={analysis.id}
+        actionLabel={formsT("compareOffer")}
+        showReAnalysis={true}
         aiScore={analysis.aiScore}
         showPdfPreview={showPdfPreview}
         onTogglePdfPreview={() => setShowPdfPreview(!showPdfPreview)}

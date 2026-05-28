@@ -2,13 +2,13 @@
 
 import { useTranslations } from "next-intl";
 import { FileText, Download, Eye } from "lucide-react";
-import type { AnalysisMode } from "@/lib/analysis-types";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
 
 interface ExtractionHeaderProps {
   filename: string;
   analysisId: string;
-  analysisMode: AnalysisMode;
+  actionLabel: string;
+  showReAnalysis: boolean;
   aiScore: number | null;
   showPdfPreview: boolean;
   onTogglePdfPreview: () => void;
@@ -30,7 +30,8 @@ interface ExtractionHeaderProps {
 export default function ExtractionHeader({
   filename,
   analysisId,
-  analysisMode,
+  actionLabel,
+  showReAnalysis,
   aiScore,
   showPdfPreview,
   onTogglePdfPreview,
@@ -40,7 +41,6 @@ export default function ExtractionHeader({
   reAnalysis,
 }: ExtractionHeaderProps) {
   const t = useTranslations("analysisFlow.extraction");
-  const formsT = useTranslations("analysisFlow.forms");
 
   return (
     <div className="shrink-0 px-4 sm:px-6 py-4 border-b border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -60,9 +60,9 @@ export default function ExtractionHeader({
       <div className="flex flex-wrap items-center gap-2">
         {analysisId && (
           <>
-            {analysisMode === "general" && aiScore !== null && (
+            {showReAnalysis && aiScore !== null && (
               <AIActionLauncher
-                actionLabel={formsT("analyzeCV")}
+                actionLabel={actionLabel}
                 loading={reAnalysis.loading}
                 integrated={{
                   available: reAnalysis.hasAIApiKey,

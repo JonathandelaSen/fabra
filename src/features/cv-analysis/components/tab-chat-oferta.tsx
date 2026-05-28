@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import { ConversationList } from "./conversation-list";
 import { ChatHeader } from "./chat-header";
-import { ChatMessagesArea } from "./chat-messages-area";
+import { ChatMessagesArea } from "@/components/shared/chat/chat-messages-area";
 import { ChatInput } from "./chat-input";
 import type { AnalysisChatConversation, AnalysisChatMessage } from "./chat-types";
 

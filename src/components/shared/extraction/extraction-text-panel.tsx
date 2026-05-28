@@ -11,7 +11,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-interface CvExtractionTextPanelProps {
+interface ExtractionTextPanelProps {
   activeTab: "python" | "pdfjs" | "node";
   currentText: string | null;
   currentError: string | null;
@@ -23,7 +23,7 @@ interface CvExtractionTextPanelProps {
   onToggleFullscreen: () => void;
 }
 
-export function CvExtractionTextPanel({
+export function ExtractionTextPanel({
   activeTab,
   currentText,
   currentError,
@@ -33,7 +33,7 @@ export function CvExtractionTextPanel({
   parserDescriptionKey,
   onCopy,
   onToggleFullscreen,
-}: CvExtractionTextPanelProps) {
+}: ExtractionTextPanelProps) {
   const t = useTranslations("analysisFlow.extraction");
 
   return (
@@ -48,7 +48,6 @@ export function CvExtractionTextPanel({
         ${fullscreen ? "fixed inset-4 z-50" : "relative"}
       `}
     >
-      {/* Laser scan line animation */}
       <motion.div
         key={activeTab + "-scan"}
         initial={{ top: "0%" }}
@@ -57,7 +56,6 @@ export function CvExtractionTextPanel({
         className="absolute left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-indigo-500/70 to-transparent shadow-[0_0_10px_rgba(99,102,241,0.7)] z-10 pointer-events-none"
       />
 
-      {/* Toolbar */}
       <div className="shrink-0 flex items-center justify-between px-3 sm:px-4 py-2 border-b border-white/[0.06] bg-white/[0.02]">
         <div className="flex items-center gap-2 min-w-0">
           <span className={`w-2 h-2 rounded-full shrink-0 ${parserColor}`} />
@@ -93,7 +91,6 @@ export function CvExtractionTextPanel({
         </div>
       </div>
 
-      {/* Text */}
       <div className="flex-1 overflow-auto p-4 sm:p-5">
         {currentError && !currentText ? (
           <div className="flex items-start gap-3 text-rose-300">
