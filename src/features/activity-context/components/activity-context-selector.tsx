@@ -1,7 +1,7 @@
 import React from "react";
 import { Settings2 } from "lucide-react";
 import { Select } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 
 export interface ActivityContextSelectorProps {
   id?: string;
@@ -42,16 +42,13 @@ export function ActivityContextSelector({
           ))}
         </Select>
         <div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
+          <IconTextButton
+            icon={Settings2}
             onClick={onManageClick}
-            className="px-0 text-xs text-zinc-500 hover:bg-transparent hover:text-indigo-300"
+            className="px-0 hover:bg-transparent"
           >
-            <Settings2 className="mr-1.5 h-3.5 w-3.5" />
             {manageLabel}
-          </Button>
+          </IconTextButton>
         </div>
       </div>
     </div>

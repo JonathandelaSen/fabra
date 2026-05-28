@@ -1,7 +1,8 @@
-import { Loader2, Pencil, Save, Trash2, Trophy, X, Plus } from "lucide-react";
+import { Pencil, Save, Trash2, Trophy, X, Plus } from "lucide-react";
 import type { ObjectiveOutcome, ObjectiveOutcomeStatus, ObjectiveOutcomeType } from "../api/objectives-api";
 import { outcomeLabels, type OutcomeEditForm } from "./objectives-ui";
 import { Button } from "@/components/ui/button";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
@@ -208,19 +209,15 @@ export function ObjectiveOutcomes({
                         >
                           {t("actions.cancel")}
                         </Button>
-                        <Button
-                          size="sm"
+                        <IconTextButton
+                          icon={Save}
+                          loading={saving}
+                          tone={ICON_TEXT_BUTTON_TONES.WARNING}
                           onClick={onSaveOutcome}
                           disabled={saving}
-                          className="h-8 bg-amber-500 text-amber-950 hover:bg-amber-400 font-semibold gap-1.5"
                         >
-                          {saving ? (
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                          ) : (
-                            <Save className="h-3.5 w-3.5" />
-                          )}
                           {t("actions.save")}
-                        </Button>
+                        </IconTextButton>
                       </div>
                     </div>
                   ) : (
@@ -319,14 +316,14 @@ export function ObjectiveOutcomes({
             disabled={isEmpty}
             className="bg-zinc-950 border-white/[0.06] text-sm h-9 focus-visible:ring-amber-500/20"
           />
-          <Button
+          <IconTextButton
+            icon={Plus}
+            tone={ICON_TEXT_BUTTON_TONES.WARNING}
             onClick={onCreateOutcome}
             disabled={saving || isEmpty}
-            className="h-9 shrink-0 bg-amber-500 text-amber-950 hover:bg-amber-400 font-semibold gap-1.5 px-3.5"
           >
-            <Plus className="h-3.5 w-3.5 stroke-[2.5]" />
             {t("actions.add")}
-          </Button>
+          </IconTextButton>
         </div>
       </div>
     </div>

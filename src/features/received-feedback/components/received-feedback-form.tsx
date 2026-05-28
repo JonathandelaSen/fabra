@@ -1,8 +1,9 @@
 "use client";
 
-import { Loader2, Save, X } from "lucide-react";
+import { Save, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 import { ActivityContextSelector } from "@/features/activity-context";
 import type { ActivityContext } from "../api/received-feedback-api";
 
@@ -142,18 +143,15 @@ export function ReceivedFeedbackForm({
         >
           {t("actions.cancel")}
         </Button>
-        <Button
+        <IconTextButton
+          icon={Save}
+          loading={saving}
+          tone={ICON_TEXT_BUTTON_TONES.PRIMARY}
           onClick={onSave}
           disabled={saving}
-          className="bg-action hover:bg-action-hover text-text-main font-medium"
         >
-          {saving ? (
-            <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />
-          ) : (
-            <Save className="mr-1.5 h-4 w-4" />
-          )}
           {t("actions.save")}
-        </Button>
+        </IconTextButton>
       </div>
     </section>
   );

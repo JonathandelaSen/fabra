@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { MessageCircle, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 
 interface ChatEmptyStateProps {
   onNew: () => void;
@@ -24,15 +24,14 @@ export function ChatEmptyState({ onNew }: ChatEmptyStateProps) {
           {t("startDescription")}
         </p>
       </div>
-      <Button
-        variant="outline"
-        size="sm"
+      <IconTextButton
+        icon={Plus}
+        tone={ICON_TEXT_BUTTON_TONES.INFO}
         onClick={onNew}
-        className="mt-1 border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/10 hover:text-cyan-300"
+        className="mt-1"
       >
-        <Plus className="mr-1.5 size-3.5" />
         {t("newConversation")}
-      </Button>
+      </IconTextButton>
     </div>
   );
 }

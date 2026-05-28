@@ -3,12 +3,11 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Check, Copy, Pencil, Save, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import AIActionLauncher, {
   type AIModelOption,
 } from "@/components/shared/ai-action-launcher";
-import { EditButton } from "@/components/shared/action-buttons";
+import { EditButton, IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 import type { FeedbackEntry, FeedbackListItem } from "../api/feedback-notes-api";
 
 const AI_MODELS: AIModelOption[] = [
@@ -116,41 +115,33 @@ export function FeedbackFinalPanel({
       )}
       <div className="mt-3 flex flex-wrap items-center gap-2">
         {!isClosed && isEditingMode && isEditing && (
-          <Button
-            type="button"
+          <IconTextButton
+            icon={Save}
+            tone={ICON_TEXT_BUTTON_TONES.SUCCESS}
             onClick={saveFinalFeedback}
             disabled={isSaving}
-            variant="secondary"
           >
-            <Save className="h-4 w-4" />
             {t("final.save")}
-          </Button>
+          </IconTextButton>
         )}
         {!isClosed && isEditingMode && isEditing && hasFinalFeedback && (
-          <Button type="button" onClick={cancelEdit} variant="ghost">
-            <X className="h-4 w-4" />
+          <IconTextButton icon={X} onClick={cancelEdit}>
             {t("actions.cancel")}
-          </Button>
+          </IconTextButton>
         )}
         {!isClosed && isEditingMode && !isEditing && (
           <EditButton
             onClick={() => setIsEditing(true)}
           />
         )}
-        <Button
-          type="button"
+        <IconTextButton
+          icon={finalCopied ? Check : Copy}
+          tone={finalCopied ? ICON_TEXT_BUTTON_TONES.SUCCESS : ICON_TEXT_BUTTON_TONES.DEFAULT}
           onClick={() => void copyFinalFeedback()}
           disabled={!finalDraft.trim()}
-          variant="secondary"
-          className="hover:border-indigo-300/25 hover:bg-indigo-300/10 hover:text-zinc-50"
         >
-          {finalCopied ? (
-            <Check className="h-4 w-4 text-emerald-400" />
-          ) : (
-            <Copy className="h-4 w-4" />
-          )}
           {finalCopied ? t("final.copied") : t("final.copy")}
-        </Button>
+        </IconTextButton>
         {!isClosed && isEditingMode && (
           <AIActionLauncher
             actionLabel={t("final.generate")}

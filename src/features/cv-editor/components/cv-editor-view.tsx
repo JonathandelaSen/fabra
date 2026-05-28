@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { KeyRound, Loader2, PenLine, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 import { type AIModelOption } from "@/components/shared/ai-action-launcher/ai-action-launcher";
 import { ManualEditor } from "./cv-manual-editor/manual-editor";
 import CVEditorCopyPasteModal from "./cv-editor-copy-paste-modal";
@@ -282,14 +282,14 @@ export default function CVEditorView({
                   />
 
                   {!hasAIApiKey && (
-                    <Button
-                      variant="secondary"
+                    <IconTextButton
+                      icon={KeyRound}
+                      tone={ICON_TEXT_BUTTON_TONES.WARNING}
                       onClick={onOpenSettings}
-                      className="w-full h-10 text-xs bg-amber-500 text-black hover:bg-amber-400"
+                      className="w-full"
                     >
-                      <KeyRound className="mr-2 h-3.5 w-3.5" />
                       {t("settings.configureApiKey")}
-                    </Button>
+                    </IconTextButton>
                   )}
                 </div>
 

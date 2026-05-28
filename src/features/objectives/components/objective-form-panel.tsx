@@ -1,4 +1,4 @@
-import { Loader2, Save, X } from "lucide-react";
+import { Save, X } from "lucide-react";
 import type {
   ObjectiveContext,
   ObjectivePriority,
@@ -6,6 +6,7 @@ import type {
 } from "../api/objectives-api";
 import { type ObjectiveForm } from "./objectives-ui";
 import { Button } from "@/components/ui/button";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 import { ObjectiveIdentitySection } from "./objective-identity-section";
 import { ObjectivePlanningSection } from "./objective-planning-section";
 import { ObjectiveNarrativeSection } from "./objective-narrative-section";
@@ -87,14 +88,15 @@ export function ObjectiveFormPanel({
           >
             {t("actions.cancel")}
           </Button>
-          <Button
+          <IconTextButton
+            icon={Save}
+            loading={saving}
+            tone={ICON_TEXT_BUTTON_TONES.SUCCESS}
             onClick={onSave}
             disabled={saving}
-            className="h-9 px-4 bg-emerald-500 text-emerald-950 hover:bg-emerald-400 font-bold gap-2"
           >
-            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             {t("actions.save")}
-          </Button>
+          </IconTextButton>
         </div>
       </div>
     </div>

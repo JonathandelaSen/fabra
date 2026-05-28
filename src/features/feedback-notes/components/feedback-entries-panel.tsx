@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { Loader2, Lock, Pencil, Plus, Save, Trash2, X } from "lucide-react";
+import { Lock, Pencil, Plus, Save, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import type { FeedbackEntry } from "../api/feedback-notes-api";
 import { formatDate } from "@/lib/format";
-import { EditButton, DeleteButton } from "@/components/shared/action-buttons";
+import { EditButton, DeleteButton, IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 
 const textareaClass =
   "w-full resize-y border-white/10 bg-white/[0.03] text-sm text-zinc-100 placeholder:text-zinc-600 focus-visible:border-zinc-300 disabled:cursor-not-allowed disabled:opacity-60";
@@ -84,19 +84,16 @@ export function FeedbackEntriesPanel({
             className="w-full resize-y border-transparent bg-transparent text-sm text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-0 focus-visible:border-transparent p-0 disabled:cursor-not-allowed disabled:opacity-60"
           />
           <div className="mt-2 flex justify-end">
-            <Button
-              type="button"
+            <IconTextButton
+              icon={Plus}
+              loading={isSaving}
+              tone={ICON_TEXT_BUTTON_TONES.PRIMARY}
               onClick={submitEntry}
               disabled={isSaving || !entryDraft.trim()}
-              className="min-w-[6.75rem] bg-indigo-600 text-white hover:bg-indigo-500"
+              className="min-w-[6.75rem]"
             >
-              {isSaving ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Plus className="h-4 w-4" />
-              )}
               {t("entries.add")}
-            </Button>
+            </IconTextButton>
           </div>
         </div>
       )}

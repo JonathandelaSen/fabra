@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Loader2, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 import type { ActivityContextType } from "../api/activity-context-api";
 
 const TYPE_OPTIONS: [ActivityContextType, string][] = [
@@ -52,19 +52,16 @@ export function CreateContextForm({ isPending, hasReturnTo, onCreate }: CreateCo
           if (e.key === "Enter") handleCreate();
         }}
       />
-      <Button
-        size="default"
+      <IconTextButton
+        icon={Plus}
+        loading={isPending}
+        tone={ICON_TEXT_BUTTON_TONES.PRIMARY}
         onClick={handleCreate}
         disabled={isPending || !name.trim()}
-        className="shrink-0 gap-1.5"
+        className="shrink-0"
       >
-        {isPending ? (
-          <Loader2 className="h-3.5 w-3.5 animate-spin" />
-        ) : (
-          <Plus className="h-3.5 w-3.5" />
-        )}
         {hasReturnTo ? t("createAndReturn") : t("create")}
-      </Button>
+      </IconTextButton>
     </div>
   );
 }

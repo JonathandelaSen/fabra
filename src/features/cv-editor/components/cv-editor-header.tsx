@@ -10,6 +10,7 @@ import {
   Undo2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 
 interface CVEditorHeaderProps {
   versionName: string;
@@ -99,14 +100,13 @@ export function CVEditorHeader({
           </Button>
         </div>
 
-        <Button
+        <IconTextButton
+          icon={Sparkles}
+          tone={ICON_TEXT_BUTTON_TONES.INFO}
           onClick={onSaveNewVersion}
-          variant="ghost"
-          className="h-9 gap-2 border border-teal-500/20 bg-teal-500/5 text-xs text-teal-400 hover:bg-teal-500/10"
         >
-          <Sparkles className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">{t("saveNewVersion")}</span>{" "}
-        </Button>
+        </IconTextButton>
 
         <div className="hidden h-4 w-[1px] bg-white/10 md:block" />
 

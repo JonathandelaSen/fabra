@@ -1,4 +1,5 @@
 import { type ComponentProps, type ElementType } from "react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +17,7 @@ export type IconTextButtonTone =
 
 export interface IconTextButtonProps extends Omit<ComponentProps<typeof Button>, "variant"> {
   icon: ElementType<{ className?: string }>;
+  loading?: boolean;
   tone?: IconTextButtonTone;
 }
 
@@ -33,8 +35,10 @@ export function IconTextButton({
   className,
   children,
   icon: Icon,
+  loading = false,
   tone = ICON_TEXT_BUTTON_TONES.DEFAULT,
   type = "button",
+  disabled,
   ...props
 }: IconTextButtonProps) {
   return (
@@ -42,10 +46,15 @@ export function IconTextButton({
       type={type}
       variant="ghost"
       size="sm"
+      disabled={disabled || loading}
       className={cn("h-9 px-3 gap-1.5", TONE_CLASS_NAMES[tone], className)}
       {...props}
     >
-      <Icon className="h-3.5 w-3.5" />
+      {loading ? (
+        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+      ) : (
+        <Icon className="h-3.5 w-3.5" />
+      )}
       {children}
     </Button>
   );

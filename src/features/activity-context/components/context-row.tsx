@@ -16,6 +16,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -159,15 +160,13 @@ export function ContextRow({
 
       <div className="flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
         {hasReturnTo && context.status === "active" && (
-          <Button
-            size="sm"
-            variant="ghost"
+          <IconTextButton
+            icon={Check}
+            tone={ICON_TEXT_BUTTON_TONES.SUCCESS}
             onClick={() => onSelect(context)}
-            className="gap-1 text-zinc-400 hover:text-emerald-300"
           >
-            <Check className="h-3.5 w-3.5" />
             {t("selectAndReturn")}
-          </Button>
+          </IconTextButton>
         )}
 
         <DropdownMenu>

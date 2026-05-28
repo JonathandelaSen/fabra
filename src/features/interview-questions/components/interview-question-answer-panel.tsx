@@ -3,7 +3,7 @@
 import type { RefObject } from "react";
 import { CheckCircle2, Copy, Loader2, Save } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 import { Textarea } from "@/components/ui/textarea";
 import AIActionLauncher, { type AIModelOption } from "@/components/shared/ai-action-launcher";
 import type { InterviewQuestion, UpdateInterviewQuestionInput } from "../api/interview-questions-api";
@@ -105,20 +105,16 @@ export default function InterviewQuestionAnswerPanel({
                   {t("saving")}
                 </p>
               )}
-              <Button
-                type="button"
+              <IconTextButton
+                icon={Save}
+                loading={isSaving}
+                tone={ICON_TEXT_BUTTON_TONES.PRIMARY}
                 onMouseDown={onMarkSaveIntent}
                 onClick={onSaveManualDetail}
                 disabled={isSaving}
-                className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md shadow-indigo-600/10"
               >
-                {isSaving ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Save className="h-4 w-4" />
-                )}
                 {t("saveManualChanges")}
-              </Button>
+              </IconTextButton>
             </div>
           </div>
         </>
@@ -141,24 +137,13 @@ export default function InterviewQuestionAnswerPanel({
 
           <div className="mt-4 flex flex-wrap items-center justify-end gap-3 pt-3 border-t border-white/[0.04]">
             {question.answer && (
-              <Button
-                type="button"
+              <IconTextButton
+                icon={copied ? CheckCircle2 : Copy}
+                tone={copied ? ICON_TEXT_BUTTON_TONES.SUCCESS : ICON_TEXT_BUTTON_TONES.DEFAULT}
                 onClick={onCopy}
-                variant="secondary"
-                className="bg-white/[0.03] text-zinc-300 hover:bg-white/[0.08] hover:text-white border border-white/[0.05]"
               >
-                {copied ? (
-                  <>
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                    {t("copied")}
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-4 w-4" />
-                    {t("copyAnswer")}
-                  </>
-                )}
-              </Button>
+                {copied ? t("copied") : t("copyAnswer")}
+              </IconTextButton>
             )}
           </div>
         </>

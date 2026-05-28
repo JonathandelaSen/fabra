@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, Check, Loader2, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { ErrorBanner } from "@/components/shared/error-banner";
 import {
@@ -170,15 +170,14 @@ export function ActivityContextView() {
               <p className="flex-1 text-sm text-zinc-200">
                 {t("created", { name: lastCreated.name })}
               </p>
-              <Button
-                size="sm"
-                variant="outline"
+              <IconTextButton
+                icon={ArrowLeft}
+                tone={ICON_TEXT_BUTTON_TONES.SUCCESS}
                 onClick={() => router.push(buildReturnUrl(returnTo, lastCreated.id))}
-                className="shrink-0 gap-1.5 border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/10 hover:text-emerald-200"
+                className="shrink-0"
               >
-                <ArrowLeft className="h-3.5 w-3.5" />
                 {t("selectAndReturn")}
-              </Button>
+              </IconTextButton>
             </div>
           )}
 

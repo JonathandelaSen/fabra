@@ -1,8 +1,9 @@
-import { Calendar, Check, Circle, Loader2, Pencil, Save, Trash2, X, Plus } from "lucide-react";
+import { Calendar, Check, Circle, Pencil, Save, Trash2, X, Plus } from "lucide-react";
 import { useLocale } from "next-intl";
 import type { ObjectiveItem, ObjectiveItemStatus } from "../api/objectives-api";
 import { formatDate, itemStatusLabels, type ItemEditForm } from "./objectives-ui";
 import { Button } from "@/components/ui/button";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
@@ -185,19 +186,15 @@ export function ObjectiveItems({
                         >
                           {t("actions.cancel")}
                         </Button>
-                        <Button
-                          size="sm"
+                        <IconTextButton
+                          icon={Save}
+                          loading={saving}
+                          tone={ICON_TEXT_BUTTON_TONES.SUCCESS}
                           onClick={onSaveItem}
                           disabled={saving}
-                          className="h-8 bg-emerald-500 text-emerald-950 hover:bg-emerald-400 font-semibold gap-1.5"
                         >
-                          {saving ? (
-                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                          ) : (
-                            <Save className="h-3.5 w-3.5" />
-                          )}
                           {t("actions.save")}
-                        </Button>
+                        </IconTextButton>
                       </div>
                     </div>
                   ) : (
@@ -291,14 +288,14 @@ export function ObjectiveItems({
             disabled={isEmpty}
             className="bg-zinc-950 border-white/[0.06] text-sm h-9 focus-visible:ring-emerald-500/20"
           />
-          <Button
+          <IconTextButton
+            icon={Plus}
+            tone={ICON_TEXT_BUTTON_TONES.SUCCESS}
             onClick={onCreateItem}
             disabled={saving || isEmpty}
-            className="h-9 shrink-0 bg-emerald-500 text-emerald-950 hover:bg-emerald-400 font-semibold gap-1.5 px-3.5"
           >
-            <Plus className="h-3.5 w-3.5 stroke-[2.5]" />
             {t("actions.add")}
-          </Button>
+          </IconTextButton>
         </div>
       </div>
     </div>

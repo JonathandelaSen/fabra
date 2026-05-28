@@ -2,7 +2,7 @@
 
 import { MessageSquareQuote, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 import { FeatureEmptyState } from "@/components/shared/feature-empty-state";
 
 interface ReceivedFeedbackEmptyStateProps {
@@ -20,13 +20,13 @@ export function ReceivedFeedbackEmptyState({
       title={t("empty")}
       description={t("emptySelection")}
       action={
-        <Button
+        <IconTextButton
+          icon={Plus}
+          tone={ICON_TEXT_BUTTON_TONES.PRIMARY}
           onClick={onCreate}
-          className="bg-action hover:bg-action-hover text-text-main"
         >
-          <Plus className="mr-1.5 h-4 w-4" />
           {t("newFeedback")}
-        </Button>
+        </IconTextButton>
       }
     />
   );
