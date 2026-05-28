@@ -1,6 +1,7 @@
-import { Calendar, Trash2, Edit } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { useLocale } from "next-intl";
 import { StatusBadge } from "@/components/shared/status-badge";
+import { EditButton, DeleteButton } from "@/components/shared/action-buttons";
 import type {
   ObjectiveContext,
   ObjectivePriority,
@@ -8,7 +9,6 @@ import type {
   ObjectiveWithRelations,
 } from "../api/objectives-api";
 import { formatDate } from "./objectives-ui";
-import { Button } from "@/components/ui/button";
 
 interface ObjectiveSummaryPanelProps {
   selected: ObjectiveWithRelations;
@@ -66,24 +66,14 @@ export function ObjectiveSummaryPanel({
           )}
         </div>
         <div className="flex shrink-0 gap-2">
-          <Button
-            variant="outline"
-            size="sm"
+          <EditButton
             onClick={() => onEditObjective(selected)}
             disabled={isEmpty}
-            className="h-9 px-3 gap-1.5"
-          >
-            <Edit className="h-3.5 w-3.5" />
-          </Button>
-          <Button
-            variant="destructive"
-            size="sm"
+          />
+          <DeleteButton
             onClick={onDeleteObjective}
             disabled={isEmpty}
-            className="h-9 w-9 px-0"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-          </Button>
+          />
         </div>
       </div>
 
