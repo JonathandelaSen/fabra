@@ -2,14 +2,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { FileText, Plus, Sparkles } from "lucide-react";
+import { FileText, Sparkles } from "lucide-react";
+import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
 import { useTranslations } from "next-intl";
 import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
 import type { InterviewQuestionResponse as InterviewQuestionSummary } from "@/app/api/interview-questions/responses";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import { AnalysisDetailSkeleton } from "@/components/shared/skeletons";
-import { Button } from "@/components/ui/button";
 import type { AIContext, Analysis } from "@/lib/analysis-types";
 import {
   useCreateCVAnalysis,
@@ -160,14 +160,10 @@ export default function CVAnalysisView({
     <FeatureScreenShell
       title={listT("cvTitle")}
       actions={
-        <Button
-          type="button"
+        <FeatureHeaderActionButton
+          label={listT("newAnalysis")}
           onClick={route.goToNew}
-          className="bg-indigo-300 text-indigo-950 font-semibold hover:bg-indigo-200 transition-colors shadow-[0_0_30px_rgba(129,140,248,0.15)]"
-        >
-          <Plus className="mr-1.5 h-4 w-4" />
-          {listT("newAnalysis")}
-        </Button>
+        />
       }
     >
       <FeatureTwoPaneLayout

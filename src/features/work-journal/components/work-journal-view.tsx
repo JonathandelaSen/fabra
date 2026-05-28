@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Plus, X } from "lucide-react";
+import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
 import type {
   WorkJournalEntryInputMode,
   WorkJournalEntryLegacy as WorkJournalEntry,
@@ -26,7 +26,6 @@ import {
   replaceWorkJournalEntryInCache,
 } from "../api/work-journal-entry-cache";
 import { getErrorMessage } from "@/lib/errors";
-import { Button } from "@/components/ui/button";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import { WorkJournalSidebar } from "./work-journal-sidebar";
@@ -368,21 +367,12 @@ export default function WorkJournalView({
     <FeatureScreenShell
       title={t("title")}
       actions={
-        <Button
-          type="button"
+        <FeatureHeaderActionButton
+          label={t("newEntry")}
           onClick={handleToggleForm}
-          className={
-            showForm
-              ? "bg-white/10 text-white hover:bg-white/20 font-semibold transition-colors"
-              : "bg-indigo-300 text-indigo-950 font-semibold hover:bg-indigo-200 transition-colors shadow-[0_0_30px_rgba(129,140,248,0.15)]"
-          }
-        >
-          {showForm ? (
-            <><X className="mr-1.5 h-4 w-4" />{t("close")}</>
-          ) : (
-            <><Plus className="mr-1.5 h-4 w-4" />{t("newEntry")}</>
-          )}
-        </Button>
+          isActive={showForm}
+          cancelLabel={t("close")}
+        />
       }
     >
       <FeatureTwoPaneLayout

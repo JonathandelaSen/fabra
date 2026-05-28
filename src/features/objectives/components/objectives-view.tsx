@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Plus, Target } from "lucide-react";
+import { Target } from "lucide-react";
+import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
 import type {
   ObjectiveItem,
   ObjectiveItemStatus,
@@ -430,15 +431,11 @@ export default function ObjectivesView() {
         </span>
       }
       actions={
-        <button
-          type="button"
+        <FeatureHeaderActionButton
+          label={t("newObjective")}
           onClick={startCreate}
           disabled={saving}
-          className="inline-flex items-center gap-2 rounded-md bg-emerald-300 px-3 py-2 text-sm font-semibold text-emerald-950 shadow-[0_0_30px_rgba(110,231,183,0.18)] transition-colors hover:bg-emerald-200 disabled:opacity-60"
-        >
-          <Plus className="h-4 w-4" />
-          {t("newObjective")}
-        </button>
+        />
       }
     >
       <FeatureTwoPaneLayout

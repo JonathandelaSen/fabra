@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Plus, Sparkles } from "lucide-react";
+import { FileText, Sparkles } from "lucide-react";
+import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
 import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { JobMatchAnalysisDetailResponse } from "@/app/api/job-match-analyses/responses";
@@ -12,7 +13,6 @@ import type { InterviewQuestionSummary } from "../types";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import { AnalysisDetailSkeleton } from "@/components/shared/skeletons";
-import { Button } from "@/components/ui/button";
 import {
   useJobMatchAnalysisList,
   useJobMatchAnalysisDetail,
@@ -196,14 +196,10 @@ export default function JobMatchAnalysisView({
     <FeatureScreenShell
       title={listT("jobTitle")}
       actions={
-        <Button
-          type="button"
+        <FeatureHeaderActionButton
+          label={listT("newOffer")}
           onClick={onNewAnalysis}
-          className="bg-emerald-300 text-emerald-950 font-semibold hover:bg-emerald-200 transition-colors shadow-[0_0_30px_rgba(110,231,183,0.15)]"
-        >
-          <Plus className="mr-1.5 h-4 w-4" />
-          {listT("newOffer")}
-        </Button>
+        />
       }
     >
       <FeatureTwoPaneLayout

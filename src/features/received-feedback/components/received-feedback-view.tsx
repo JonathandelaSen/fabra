@@ -2,13 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Plus } from "lucide-react";
+import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
 import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
-import { Button } from "@/components/ui/button";
 import type {
   ActivityContext,
   ReceivedFeedbackItem,
@@ -239,15 +238,11 @@ export default function ReceivedFeedbackView() {
     <FeatureScreenShell
       title={t("title")}
       actions={
-        <Button
-          type="button"
+        <FeatureHeaderActionButton
+          label={t("newFeedback")}
           onClick={startCreate}
           disabled={saving}
-          className="bg-emerald-300 text-emerald-950 font-semibold hover:bg-emerald-200 transition-colors shadow-[0_0_30px_rgba(110,231,183,0.15)]"
-        >
-          <Plus className="mr-1.5 h-4 w-4" />
-          {t("newFeedback")}
-        </Button>
+        />
       }
     >
       <FeatureTwoPaneLayout
