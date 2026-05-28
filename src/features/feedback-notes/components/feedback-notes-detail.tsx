@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Archive, Check, Pencil, RefreshCw, Save, Trash2 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { LabelBadge, LABEL_BADGE_TONES } from "@/components/shared/label-badge";
 import type { FeedbackEntry, FeedbackListItem } from "../api/feedback-notes-api";
 import { ActivityContextSelector, type ActivityContext } from "@/features/activity-context";
 import { FeedbackEntriesPanel } from "./feedback-entries-panel";
@@ -119,16 +119,15 @@ export function FeedbackNotesDetail({
                 </h2>
                 <div className="flex flex-wrap items-center gap-2 text-xs text-zinc-500">
                   {isClosed && (
-                    <Badge
-                      variant="outline"
-                      className="border-zinc-500/20 bg-zinc-500/10 text-zinc-400"
-                    >
-                      {t(`status.${feedback.status}`)}
-                    </Badge>
+                    <LabelBadge
+                      label={t(`status.${feedback.status}`)}
+                      tone={LABEL_BADGE_TONES.NEUTRAL}
+                    />
                   )}
-                  <span className="inline-flex items-center rounded-md bg-indigo-500/10 px-2.5 py-1 text-sm font-medium text-indigo-300 ring-1 ring-inset ring-indigo-500/20">
-                    {contexts.find((c) => c.id === feedback.activityContextId)?.name || t("fields.activityContext")}
-                  </span>
+                  <LabelBadge
+                    label={contexts.find((c) => c.id === feedback.activityContextId)?.name || t("fields.activityContext")}
+                    tone={LABEL_BADGE_TONES.INDIGO}
+                  />
                   <span className="text-zinc-700">•</span>
                   <span>
                     {t("updated", { date: formatDate(feedback.updatedAt) })}

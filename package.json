@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "npm run ddd:check",
+    "frontend:check": "node scripts/verify-frontend-boundaries.mjs",
     "test:backend": "node scripts/test-backend.mjs",
     "ddd:check": "node scripts/verify-ddd.mjs",
     "test:e2e:local": "node scripts/e2e/run-local.mjs",

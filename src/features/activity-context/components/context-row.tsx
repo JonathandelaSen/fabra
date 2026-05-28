@@ -17,7 +17,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
-import { Badge } from "@/components/ui/badge";
+import {
+  LabelBadge,
+  LABEL_BADGE_SIZES,
+  LABEL_BADGE_TONES,
+} from "@/components/shared/label-badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -137,20 +141,19 @@ export function ContextRow({
             {context.name}
           </span>
           {context.isDefault && (
-            <Badge
-              variant="outline"
-              className="border-sky-500/30 px-1.5 py-0 text-[10px] text-sky-300"
-            >
-              {t("badges.default")}
-            </Badge>
+            <LabelBadge
+              label={t("badges.default")}
+              size={LABEL_BADGE_SIZES.XS}
+              tone={LABEL_BADGE_TONES.INFO}
+            />
           )}
           {context.status === "archived" && (
-            <Badge
-              variant="outline"
-              className="border-zinc-600/40 px-1.5 py-0 text-[10px] text-zinc-500"
-            >
-              {t("badges.archived")}
-            </Badge>
+            <LabelBadge
+              label={t("badges.archived")}
+              size={LABEL_BADGE_SIZES.XS}
+              tone={LABEL_BADGE_TONES.NEUTRAL}
+              className="border-zinc-600/40 text-zinc-500"
+            />
           )}
         </div>
         <span className="text-xs text-zinc-600">

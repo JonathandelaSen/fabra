@@ -1,10 +1,20 @@
 import { readFileSync } from "node:fs";
-import { join, relative } from "node:path";
+import { dirname, join, normalize } from "node:path";
 import { spawnSync } from "node:child_process";
 
 const root = process.cwd();
 const frontendRoots = ["src/features", "src/frontend"];
 const responseFiles = "src/app/api/**/responses.ts";
+const restrictedPrimitiveRoots = ["src/app", "src/components", "src/features", "src/frontend"];
+
+const restrictedPrimitiveImports = [
+  {
+    name: "Badge primitive",
+    modulePath: "src/components/ui/badge.tsx",
+    allowedImporters: ["src/components/shared/label-badge.tsx"],
+    replacement: "@/components/shared/label-badge",
+  },
+];
 
 function listFiles(patterns) {
   const result = spawnSync("rg", ["--files", ...patterns], {
@@ -30,6 +40,31 @@ function extractImports(source) {
     }
   }
   return imports;
+}
+
+function normalizePath(filePath) {
+  return filePath.split(/[\\/]/).join("/");
+}
+
+function withoutKnownExtension(filePath) {
+  return filePath.replace(/\.(tsx|ts|jsx|js|mjs|cjs)$/, "");
+}
+
+function resolveImportPath(importer, specifier) {
+  if (specifier.startsWith("@/")) {
+    return withoutKnownExtension(`src/${specifier.slice(2)}.tsx`);
+  }
+
+  if (specifier.startsWith("src/")) {
+    return withoutKnownExtension(specifier);
+  }
+
+  if (specifier.startsWith(".")) {
+    const resolved = normalize(join(dirname(importer), specifier));
+    return withoutKnownExtension(normalizePath(resolved));
+  }
+
+  return null;
 }
 
 function featureName(filePath) {
@@ -92,6 +127,28 @@ for (const file of listFiles(["-g", responseFiles])) {
     if (forbiddenResponseImports.some((forbidden) => specifier.includes(forbidden))) {
       violations.push(
         `${file}: responses.ts must be frontend-import-safe (${specifier})`
+      );
+    }
+  }
+}
+
+const restrictedPrimitiveFiles = listFiles(
+  restrictedPrimitiveRoots.flatMap((dir) => ["-g", `${dir}/**/*.{ts,tsx}`])
+);
+
+for (const file of restrictedPrimitiveFiles) {
+  const source = readFileSync(join(root, file), "utf8");
+  for (const specifier of extractImports(source)) {
+    const resolvedImport = resolveImportPath(file, specifier);
+    if (!resolvedImport) continue;
+
+    for (const rule of restrictedPrimitiveImports) {
+      const restrictedPath = withoutKnownExtension(rule.modulePath);
+      const allowedImporters = new Set(rule.allowedImporters);
+      if (resolvedImport !== restrictedPath || allowedImporters.has(file)) continue;
+
+      violations.push(
+        `${file}: ${rule.name} must only be imported by ${rule.allowedImporters.join(", ")}; use ${rule.replacement} instead (${specifier})`
       );
     }
   }
