@@ -37,31 +37,29 @@ export function PDFPreview({ url }: PDFPreviewProps) {
 
   return (
     <div className="relative flex h-full w-full flex-col">
-      {/* Zoom Toolbar */}
-      <div className="absolute bottom-6 right-6 z-10 flex items-center gap-2 rounded-full bg-[#1a1a24]/80 backdrop-blur-md border border-white/10 p-1.5 shadow-xl">
+      <div className="absolute bottom-6 right-6 z-10 flex items-center gap-2 rounded-full border border-line-default bg-floating-toolbar p-1.5 shadow-xl backdrop-blur-md">
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 rounded-full text-zinc-400 hover:text-white hover:bg-white/10"
+          className="h-8 w-8 rounded-full text-text-muted hover:bg-panel-active hover:text-white"
           onClick={() => setScale((s) => Math.max(0.5, s - 0.1))}
         >
           <ZoomOut className="h-4 w-4" />
         </Button>
-        <span className="w-12 text-center text-xs font-medium text-zinc-300">
+        <span className="w-12 text-center text-xs font-medium text-text-soft">
           {Math.round(scale * 100)}%
         </span>
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 rounded-full text-zinc-400 hover:text-white hover:bg-white/10"
+          className="h-8 w-8 rounded-full text-text-muted hover:bg-panel-active hover:text-white"
           onClick={() => setScale((s) => Math.min(2, s + 0.1))}
         >
           <ZoomIn className="h-4 w-4" />
         </Button>
       </div>
 
-      {/* PDF Container */}
-      <div className="flex-1 overflow-auto bg-[#050509] scrollbar-thin pb-20">
+      <div className="flex-1 overflow-auto bg-pdf-canvas pb-20 scrollbar-thin">
         <div className="grid min-h-full items-start justify-center p-8">
           {urls.map((u, i) => {
             const isLatest = i === urls.length - 1;
@@ -84,7 +82,7 @@ export function PDFPreview({ url }: PDFPreviewProps) {
                   externalLinkTarget="_blank"
                   loading={
                     urls.length === 1 ? (
-                      <div className="flex items-center justify-center p-12 text-zinc-500">
+                      <div className="flex items-center justify-center p-12 text-text-muted">
                         <Loader2 className="h-8 w-8 animate-spin" />
                       </div>
                     ) : null
@@ -94,7 +92,7 @@ export function PDFPreview({ url }: PDFPreviewProps) {
                   {Array.from(new Array(pagesToRender), (el, index) => (
                     <div 
                       key={`page_${index + 1}`} 
-                      className="shadow-[0_0_40px_rgba(0,0,0,0.5)] border border-white/5 bg-white overflow-hidden relative"
+                      className="relative overflow-hidden border border-line bg-white shadow-[0_0_40px_rgba(0,0,0,0.5)]"
                     >
                       <Page
                         pageNumber={index + 1}
@@ -103,7 +101,7 @@ export function PDFPreview({ url }: PDFPreviewProps) {
                         renderTextLayer={false}
                         loading={
                           urls.length === 1 ? (
-                            <div className="flex items-center justify-center p-12 text-zinc-500" style={{ width: 595 * scale, height: 842 * scale }}>
+                            <div className="flex items-center justify-center p-12 text-text-muted" style={{ width: 595 * scale, height: 842 * scale }}>
                               <Loader2 className="h-8 w-8 animate-spin" />
                             </div>
                           ) : null

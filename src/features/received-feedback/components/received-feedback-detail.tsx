@@ -39,21 +39,21 @@ export function ReceivedFeedbackDetail({
 
   return (
     <div className="flex flex-col gap-5">
-      <section className="rounded-xl border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-6">
-        <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between border-b border-white/[0.04] pb-5">
+      <section className="rounded-xl border border-line bg-panel shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-6">
+        <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between border-b border-line pb-5">
           <div className="min-w-0 flex-1">
-            <h2 className="truncate text-xl font-bold tracking-tight text-zinc-50">
+            <h2 className="truncate text-xl font-bold tracking-tight text-text-main">
               {item.giverName}
             </h2>
 
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <span className="inline-flex items-center rounded-md bg-indigo-500/10 px-2.5 py-1 text-xs font-semibold text-indigo-300 ring-1 ring-inset ring-indigo-500/20">
+              <span className="inline-flex items-center rounded-md bg-action-soft px-2.5 py-1 text-xs font-semibold text-action-text ring-1 ring-inset ring-action-border">
                 {contexts.find((c) => c.id === item.activityContextId)?.name ||
-                  "General"}
+                  t("labels.general")}
               </span>
 
-              <span className="inline-flex items-center gap-1.5 rounded-md bg-white/[0.04] px-2.5 py-1 text-xs font-medium text-zinc-400 ring-1 ring-inset ring-white/[0.06]">
-                <CalendarDays className="h-3.5 w-3.5 text-zinc-500" />
+              <span className="inline-flex items-center gap-1.5 rounded-md bg-panel-hover px-2.5 py-1 text-xs font-medium text-text-muted ring-1 ring-inset ring-line">
+                <CalendarDays className="h-3.5 w-3.5 text-text-muted" />
                 {formatDate(item.receivedDate)}
               </span>
             </div>
@@ -65,10 +65,10 @@ export function ReceivedFeedbackDetail({
               onClick={onEdit}
               variant="secondary"
               size="sm"
-              className="bg-indigo-600/15 text-indigo-300 hover:bg-indigo-600/25 border border-indigo-500/20 font-medium transition-colors"
+              className="bg-action-soft text-action-text hover:bg-action-soft border border-action-border font-medium transition-colors"
             >
               <Pencil className="h-3.5 w-3.5" />
-              Edit
+              {t("actions.edit")}
             </Button>
 
             <Button
@@ -76,34 +76,34 @@ export function ReceivedFeedbackDetail({
               onClick={onDelete}
               variant="destructive"
               size="sm"
-              className="bg-rose-600/10 text-rose-400 hover:bg-rose-600/25 border border-rose-500/20 transition-colors"
+              className="bg-danger-soft text-danger-text hover:bg-danger-soft border border-danger-border transition-colors"
             >
               <Trash2 className="h-3.5 w-3.5" />
-              Delete
+              {t("actions.delete")}
             </Button>
           </div>
         </div>
 
         <div className="mt-6 flex flex-col gap-6">
-          <div className="relative overflow-hidden rounded-xl border border-white/[0.04] bg-white/[0.015] p-6 shadow-inner">
+          <div className="relative overflow-hidden rounded-xl border border-line bg-panel-subtle p-6 shadow-inner">
             <div className="relative">
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-3">
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-action-text mb-3">
                 <MessageSquareQuote className="h-4 w-4" />
-                Feedback content
+                {t("sections.feedbackContent")}
               </div>
-              <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-200">
+              <p className="whitespace-pre-wrap text-sm leading-relaxed text-text-soft">
                 {item.feedbackText}
               </p>
             </div>
           </div>
 
           {item.userNote && (
-            <div className="rounded-xl border border-amber-500/10 bg-amber-500/5 p-5">
-              <div className="mb-2.5 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-amber-400/90">
+            <div className="rounded-xl border border-warning-border bg-warning-soft p-5">
+              <div className="mb-2.5 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-warning-text">
                 <Lock className="h-3.5 w-3.5" />
                 {t("fields.privateNote")}
               </div>
-              <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-300">
+              <p className="whitespace-pre-wrap text-sm leading-relaxed text-text-soft">
                 {item.userNote}
               </p>
             </div>

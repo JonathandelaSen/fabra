@@ -36,8 +36,8 @@ export default function EducationalBanner({
         </div>
       )}
       <div className="flex-1 min-w-0 pr-6">
-        <h3 className="text-sm font-semibold text-zinc-200">{title}</h3>
-        <p className="text-xs text-zinc-400 leading-relaxed mt-0.5">
+        <h3 className="text-sm font-semibold text-text-soft">{title}</h3>
+        <p className="mt-0.5 text-xs leading-relaxed text-text-muted">
           {description}
         </p>
         {cta && <div className="mt-3">{cta}</div>}
@@ -45,7 +45,7 @@ export default function EducationalBanner({
       {onClose && (
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 p-1 rounded-md text-zinc-500 hover:text-zinc-300 hover:bg-white/5 opacity-0 group-hover:opacity-100 transition-all duration-200"
+          className="absolute right-3 top-3 rounded-md p-1 text-text-muted opacity-0 transition-all duration-200 hover:bg-panel-subtle hover:text-text-soft group-hover:opacity-100"
           aria-label="Close"
         >
           <X className="w-3.5 h-3.5" />

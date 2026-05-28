@@ -252,10 +252,10 @@ export default function ReceivedFeedbackView() {
               <div className="flex flex-col gap-3">
                 <input
                   type="text"
-                  placeholder="Search feedback..."
+                  placeholder={t("placeholders.search")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-9 w-full rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-zinc-200 outline-none placeholder:text-zinc-600 focus:border-indigo-500/40"
+                  className="h-9 w-full rounded-lg border border-line-default bg-panel-subtle px-3 py-1.5 text-xs text-text-soft outline-none placeholder:text-text-faint focus:border-action-border"
                 />
               </div>
             }
@@ -263,8 +263,8 @@ export default function ReceivedFeedbackView() {
             {loading ? (
               <ReceivedFeedbackListSkeleton />
             ) : items.length === 0 ? (
-              <div className="px-4 py-12 text-center text-xs text-zinc-600">
-                {searchQuery ? "No matches found." : t("empty")}
+              <div className="px-4 py-12 text-center text-xs text-text-faint">
+                {searchQuery ? t("emptySearch") : t("empty")}
               </div>
             ) : (
               <div className="flex flex-col gap-2">
@@ -287,7 +287,7 @@ export default function ReceivedFeedbackView() {
       >
         <div className="flex flex-col gap-4">
           {visibleError && (
-            <div className="rounded-lg border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
+            <div className="rounded-lg border border-danger-border bg-danger-soft px-4 py-3 text-sm text-danger-text">
               {visibleError}
             </div>
           )}
@@ -305,7 +305,7 @@ export default function ReceivedFeedbackView() {
               onCancel={cancelAction}
               onManageContexts={manageContexts}
               title={t("newFeedback")}
-              subtitle="Capture a new piece of feedback you received."
+              subtitle={t("subtitles.create")}
             />
           ) : selectedItem ? (
             isEditing ? (
@@ -319,7 +319,7 @@ export default function ReceivedFeedbackView() {
                 onCancel={cancelAction}
                 onManageContexts={manageContexts}
                 title={t("editFeedback")}
-                subtitle="Update details for this feedback record."
+                subtitle={t("subtitles.edit")}
               />
             ) : (
               <ReceivedFeedbackDetail

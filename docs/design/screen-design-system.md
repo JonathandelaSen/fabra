@@ -138,9 +138,12 @@ Use these tokens for new or migrated application UI:
 | App header background | `bg-canvas-header` | `--ui-bg-app-header` |
 | Base panel surface | `bg-panel-base` | `--ui-surface` |
 | Raised panel surface | `bg-panel` | `--ui-surface-raised` |
+| Elevated panel surface | `bg-panel-elevated` | `--ui-surface-elevated` |
 | Overlay surface | `bg-panel-overlay` | `--ui-surface-overlay` |
 | Hover surface | `bg-panel-hover` | `--ui-surface-hover` |
 | Active surface | `bg-panel-active` | `--ui-surface-active` |
+| Selected list item surface | `bg-panel-selected` | `--ui-surface-selected` |
+| List row hover surface | `bg-panel-row-hover` | `--ui-surface-row-hover` |
 | Subtle surface tint | `bg-panel-subtle` | `--ui-surface-subtle` |
 | Control surface tint | `bg-panel-control` | `--ui-surface-control` |
 | Modal surface | `bg-modal` | `--ui-surface-modal` |
@@ -148,6 +151,9 @@ Use these tokens for new or migrated application UI:
 | Strong field surface | `bg-field-strong` | `--ui-field-strong` |
 | Code field surface | `bg-field-code` | `--ui-field-code` |
 | Overlay scrim | `bg-scrim` | `--ui-scrim` |
+| Soft overlay scrim | `bg-scrim-soft` | `--ui-scrim-soft` |
+| PDF preview canvas | `bg-pdf-canvas` | `--ui-pdf-canvas` |
+| Floating toolbar surface | `bg-floating-toolbar` | `--ui-floating-toolbar` |
 | Primary text | `text-text-main` | `--ui-text-primary` |
 | Secondary text | `text-text-soft` | `--ui-text-secondary` |
 | Muted text | `text-text-muted` | `--ui-text-muted` |

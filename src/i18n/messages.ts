@@ -737,8 +737,13 @@ export const messages = {
       actions: {
         add: "Add",
         cancel: "Cancel",
+        delete: "Delete",
+        edit: "Edit",
         save: "Save",
         manageContexts: "Manage contexts",
+      },
+      sections: {
+        feedbackContent: "Feedback content",
       },
       fields: {
         activityContext: "Activity context",
@@ -752,6 +757,16 @@ export const messages = {
         feedback: "What did they say?",
         privateNote: "Optional note for yourself",
         newContext: "New context",
+        search: "Search feedback...",
+      },
+      subtitles: {
+        create: "Capture a new piece of feedback you received.",
+        edit: "Update details for this feedback record.",
+      },
+      emptySearch: "No matches found.",
+      emptySelection: "Select an existing feedback card or create a new one to begin.",
+      labels: {
+        general: "General",
       },
       contextTypes: {
         project: "Project",
@@ -1922,8 +1937,13 @@ export const messages = {
       actions: {
         add: "Añadir",
         cancel: "Cancelar",
+        delete: "Eliminar",
+        edit: "Editar",
         save: "Guardar",
         manageContexts: "Gestionar contextos",
+      },
+      sections: {
+        feedbackContent: "Contenido del feedback",
       },
       fields: {
         activityContext: "Contexto de actividad",
@@ -1937,6 +1957,16 @@ export const messages = {
         feedback: "¿Qué te dijeron?",
         privateNote: "Nota opcional para ti",
         newContext: "Nuevo contexto",
+        search: "Buscar feedback...",
+      },
+      subtitles: {
+        create: "Captura una nueva pieza de feedback recibido.",
+        edit: "Actualiza los detalles de este registro de feedback.",
+      },
+      emptySearch: "No se encontraron resultados.",
+      emptySelection: "Selecciona una tarjeta de feedback o crea una nueva para empezar.",
+      labels: {
+        general: "General",
       },
       contextTypes: {
         project: "Proyecto",

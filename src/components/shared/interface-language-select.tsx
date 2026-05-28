@@ -21,14 +21,14 @@ export function InterfaceLanguageSelect({ compact = false }: { compact?: boolean
   }
 
   return (
-    <label className={`flex items-center gap-2 ${compact ? "text-xs" : "text-sm"} text-zinc-400`}>
+    <label className={`flex items-center gap-2 ${compact ? "text-xs" : "text-sm"} text-text-muted`}>
       <Globe2 className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} />
       <span className="sr-only">{t("label")}</span>
       <select
         value={locale}
         disabled={pending}
         onChange={(event) => void handleChange(event.target.value as InterfaceLanguage)}
-        className="rounded-lg border border-white/[0.08] bg-white/[0.04] px-2 py-1.5 text-zinc-200 outline-none transition-colors focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10 disabled:opacity-60"
+        className="rounded-lg border border-line-default bg-panel-hover px-2 py-1.5 text-text-soft outline-none transition-colors focus:border-action-border focus:ring-2 focus:ring-action-soft disabled:opacity-60"
       >
         <option value="en">{t("options.en")}</option>
         <option value="es">{t("options.es")}</option>
