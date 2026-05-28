@@ -3,14 +3,7 @@
 import { ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReceivedFeedbackItem } from "../api/received-feedback-api";
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleDateString("en", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-}
+import { formatDate } from "@/lib/format";
 
 interface ReceivedFeedbackListItemProps {
   item: ReceivedFeedbackItem;

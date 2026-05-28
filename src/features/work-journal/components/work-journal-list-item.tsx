@@ -3,19 +3,12 @@
 import { useTranslations } from "next-intl";
 import { ChevronRight } from "lucide-react";
 import type { WorkJournalEntryLegacy as WorkJournalEntry } from "../api/work-journal-types";
+import { formatDate } from "@/lib/format";
 
 interface WorkJournalListItemProps {
   entry: WorkJournalEntry;
   isSelected: boolean;
   onClick: () => void;
-}
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleDateString("en", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
 }
 
 export function WorkJournalListItem({
