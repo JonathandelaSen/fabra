@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { featureMetaPillClassName } from "@/components/shared/feature-visual-system";
 import { SidebarListItem } from "@/components/shared/sidebar-list-item";
-import { StatusBadge } from "@/components/shared/status-badge";
+import { LabelBadge } from "@/components/shared/label-badge";
 import { formatDate } from "@/lib/format";
 import type { FeedbackListItem } from "../api/feedback-notes-api";
 
@@ -29,7 +29,9 @@ export function FeedbackNoteListItem({
         <>
           <div className="flex items-center gap-1.5 min-w-0">
             {feedback.status === "closed" && (
-              <StatusBadge label={t("status.closed")} color="rose" />
+              <LabelBadge tone="danger" size="xs" className="uppercase" strong>
+                {t("status.closed")}
+              </LabelBadge>
             )}
             <span className={`text-[11px] ${featureMetaPillClassName}`}>
               {feedback.activityContextName}

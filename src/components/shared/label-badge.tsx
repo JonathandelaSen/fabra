@@ -47,6 +47,7 @@ export interface LabelBadgeProps extends Omit<ComponentProps<typeof Badge>, "var
   label?: string;
   size?: LabelBadgeSize;
   tone?: LabelBadgeTone;
+  strong?: boolean;
 }
 
 export function LabelBadge({
@@ -56,13 +57,15 @@ export function LabelBadge({
   label,
   size = LABEL_BADGE_SIZES.SM,
   tone = LABEL_BADGE_TONES.NEUTRAL,
+  strong = false,
   ...props
 }: LabelBadgeProps) {
   return (
     <Badge
       variant="outline"
       className={cn(
-        "shrink-0 gap-1 font-medium normal-case tracking-normal",
+        "shrink-0 gap-1 normal-case tracking-normal",
+        strong ? "font-semibold" : "font-medium",
         TONE_CLASS_NAMES[tone],
         SIZE_CLASS_NAMES[size],
         className

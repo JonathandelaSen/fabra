@@ -4,7 +4,7 @@ import { Briefcase, Check, CheckCircle2, FileText } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { DeleteButton, EditButton, IconTextButton } from "@/components/shared/action-buttons";
 import { IconLabelBadge } from "@/components/shared/icon-label-badge";
-import { StatusBadge } from "@/components/shared/status-badge";
+import { LabelBadge } from "@/components/shared/label-badge";
 import { Button } from "@/components/ui/button";
 import type { InterviewQuestion } from "../api/interview-questions-api";
 
@@ -41,9 +41,13 @@ export default function InterviewQuestionHeader({
           </h2>
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-zinc-500">
             {question.answer ? (
-              <StatusBadge label={t("answered")} color="emerald" size="md" icon={CheckCircle2} />
+              <LabelBadge tone="success" size="md" icon={CheckCircle2} className="uppercase" strong>
+                {t("answered")}
+              </LabelBadge>
             ) : (
-              <StatusBadge label={t("pending")} color="amber" size="md" />
+              <LabelBadge tone="warning" size="md" className="uppercase" strong>
+                {t("pending")}
+              </LabelBadge>
             )}
             {question.cvId && (
               <IconLabelBadge
