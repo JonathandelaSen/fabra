@@ -9,8 +9,12 @@ import {
   KeyRound,
   Save,
   ShieldCheck,
-  Trash2,
 } from "lucide-react";
+import {
+  DeleteButton,
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import { useAISettingsDraft } from "../hooks/use-ai-settings-draft";
 
@@ -144,33 +148,23 @@ export function AISettingsPanel({
                 )}
               </button>
             </div>
-            <button
-              type="button"
+            <IconTextButton
+              icon={saved ? Check : Save}
               onClick={save}
               disabled={draftProvider !== "mock" && !inputValue.trim()}
-              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-5 text-sm font-semibold text-white shadow-lg shadow-indigo-900/30 transition-all hover:from-indigo-500 hover:to-violet-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+              tone={ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT}
+              className="h-11"
             >
-              {saved ? (
-                <>
-                  <Check className="h-4 w-4" />
-                  {common("actions.saved")}
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4" />
-                  {common("actions.save")}
-                </>
-              )}
-            </button>
-            <button
+              {saved ? common("actions.saved") : common("actions.save")}
+            </IconTextButton>
+            <DeleteButton
               type="button"
               onClick={remove}
               disabled={!aiApiKey && !inputValue}
-              className="flex h-11 items-center justify-center gap-2 rounded-xl border border-rose-500/20 bg-rose-500/10 px-5 text-sm font-semibold text-rose-300 transition-all hover:bg-rose-500/15 hover:text-rose-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+              className="h-11"
             >
-              <Trash2 className="h-4 w-4" />
               {common("actions.delete")}
-            </button>
+            </DeleteButton>
           </div>
         </div>
       </div>
