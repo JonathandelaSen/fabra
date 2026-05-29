@@ -4,13 +4,17 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Archive, Check, Pencil, RefreshCw, Save, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { LabelBadge, LABEL_BADGE_TONES } from "@/components/shared/label-badge";
 import type { FeedbackEntry, FeedbackListItem } from "../api/feedback-notes-api";
 import { ActivityContextSelector, type ActivityContext } from "@/features/activity-context";
 import { FeedbackEntriesPanel } from "./feedback-entries-panel";
 import { FeedbackFinalPanel } from "./feedback-final-panel";
-import { EditButton, DeleteButton, IconTextButton } from "@/components/shared/action-buttons";
+import {
+  EditButton,
+  DeleteButton,
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 
 interface FeedbackNotesDetailProps {
   feedback: FeedbackListItem;
@@ -138,31 +142,30 @@ export function FeedbackNotesDetail({
           </div>
           <div className="flex flex-wrap items-center gap-2 xl:justify-end">
             {!isClosed && isEditing && personNameDraft !== feedback.personName && (
-              <Button
+              <IconTextButton
                 type="button"
                 onClick={() => onUpdateFeedback({ personName: personNameDraft })}
-                variant="secondary"
+                icon={Save}
+                tone={ICON_TEXT_BUTTON_TONES.SUCCESS}
               >
-                <Save className="h-4 w-4" />
                 {t("actions.saveName")}
-              </Button>
+              </IconTextButton>
             )}
             {!isClosed && (
               isEditing ? (
-                <Button
+                <IconTextButton
                   type="button"
+                  icon={Check}
+                  tone={ICON_TEXT_BUTTON_TONES.SUCCESS}
                   onClick={() => {
                     if (personNameDraft.trim() !== feedback.personName) {
                       onUpdateFeedback({ personName: personNameDraft });
                     }
                     setIsEditing(false);
                   }}
-                  variant="secondary"
-                  className="bg-emerald-600/15 text-emerald-300 hover:bg-emerald-600/25 border border-emerald-500/20"
                 >
-                  <Check className="h-4 w-4" />
                   {t("actions.viewMode")}
-                </Button>
+                </IconTextButton>
               ) : (
                 <EditButton
                   onClick={() => setIsEditing(true)}

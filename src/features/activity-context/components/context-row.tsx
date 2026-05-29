@@ -7,7 +7,6 @@ import {
   Briefcase,
   Check,
   FolderOpen,
-  Loader2,
   MoreHorizontal,
   Pencil,
   RotateCcw,
@@ -15,8 +14,12 @@ import {
   User,
   X,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import {
+  ActionIconButton,
+  ACTION_ICON_BUTTON_TONES,
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 import {
   LabelBadge,
   LABEL_BADGE_SIZES,
@@ -104,27 +107,18 @@ export function ContextRow({
           }}
           autoFocus
         />
-        <Button
-          size="icon-sm"
-          variant="ghost"
+        <ActionIconButton
+          icon={Check}
+          loading={isUpdating}
+          tone={ACTION_ICON_BUTTON_TONES.SUCCESS}
           onClick={() => void handleSaveEdit()}
           disabled={isUpdating || !editState.name.trim()}
-          className="shrink-0 text-emerald-400 hover:text-emerald-300"
-        >
-          {isUpdating ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-          ) : (
-            <Check className="h-3.5 w-3.5" />
-          )}
-        </Button>
-        <Button
-          size="icon-sm"
-          variant="ghost"
+        />
+        <ActionIconButton
+          icon={X}
+          tone={ACTION_ICON_BUTTON_TONES.MUTED}
           onClick={() => setEditState(null)}
-          className="shrink-0 text-zinc-500 hover:text-zinc-300"
-        >
-          <X className="h-3.5 w-3.5" />
-        </Button>
+        />
       </div>
     );
   }
@@ -175,15 +169,12 @@ export function ContextRow({
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
-              <Button
-                size="icon-sm"
-                variant="ghost"
-                className="text-zinc-500 hover:text-zinc-200"
+              <ActionIconButton
+                icon={MoreHorizontal}
+                tone={ACTION_ICON_BUTTON_TONES.MUTED}
               />
             }
-          >
-            <MoreHorizontal className="h-3.5 w-3.5" />
-          </DropdownMenuTrigger>
+          />
           <DropdownMenuContent align="end" sideOffset={4}>
             <DropdownMenuItem
               onClick={() =>

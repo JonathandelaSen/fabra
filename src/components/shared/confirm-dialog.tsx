@@ -1,7 +1,12 @@
 "use client";
 
 import { AlertTriangle, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {
+  ActionIconButton,
+  DeleteButton,
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -42,14 +47,10 @@ export function ConfirmDialog({
             <AlertTriangle className="h-4.5 w-4.5" />
             <span>Confirm Action</span>
           </div>
-          <Button
-            variant="ghost"
-            size="icon-xs"
+          <ActionIconButton
+            icon={X}
             onClick={onCancel}
-            className="h-7 w-7 text-zinc-500 hover:text-zinc-200"
-          >
-            <X className="h-4 w-4" />
-          </Button>
+          />
         </div>
 
         <div className="p-5 space-y-2">
@@ -60,24 +61,27 @@ export function ConfirmDialog({
         </div>
 
         <div className="flex justify-end gap-2.5 border-t border-white/[0.06] bg-white/[0.01] px-5 py-3.5">
-          <Button
-            variant="ghost"
+          <IconTextButton
+            icon={X}
             onClick={onCancel}
-            className="h-8.5 px-4 text-xs font-semibold text-zinc-400 hover:bg-white/[0.04]"
+            strong
           >
             {cancelLabel}
-          </Button>
-          <Button
-            variant={variant === "danger" ? "destructive" : "default"}
-            onClick={onConfirm}
-            className={`h-8.5 px-4 text-xs font-semibold ${
-              variant === "danger"
-                ? "bg-rose-500 hover:bg-rose-400 text-white"
-                : ""
-            }`}
-          >
-            {confirmLabel}
-          </Button>
+          </IconTextButton>
+          {variant === "danger" ? (
+            <DeleteButton onClick={onConfirm} strong>
+              {confirmLabel}
+            </DeleteButton>
+          ) : (
+            <IconTextButton
+              icon={AlertTriangle}
+              tone={ICON_TEXT_BUTTON_TONES.PRIMARY}
+              onClick={onConfirm}
+              strong
+            >
+              {confirmLabel}
+            </IconTextButton>
+          )}
         </div>
       </div>
     </div>

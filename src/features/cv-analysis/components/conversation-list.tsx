@@ -9,7 +9,10 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {
+  ActionIconButton,
+  ACTION_ICON_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   DropdownMenu,
@@ -59,14 +62,11 @@ export function ConversationList({
         <span className="text-xs font-medium uppercase tracking-wider text-zinc-500">
           {t("conversations")}
         </span>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="size-7 text-zinc-400 hover:text-cyan-300"
+        <ActionIconButton
+          icon={Plus}
+          tone={ACTION_ICON_BUTTON_TONES.MUTED}
           onClick={onNew}
-        >
-          <Plus className="size-3.5" />
-        </Button>
+        />
       </div>
       <ScrollArea className="flex-1">
         <div className="space-y-0.5 p-2">

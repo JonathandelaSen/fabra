@@ -1,7 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
+import { LayoutTemplate } from "lucide-react";
+import { IconTextButton } from "@/components/shared/action-buttons";
 
 interface CVEditorSettingsSectionProps {
   locale: string;
@@ -49,13 +50,12 @@ export function CVEditorSettingsSection({
 
         <div className="flex items-center justify-between">
           <span className="text-xs text-zinc-500">{t("settings.design")}</span>
-          <Button
-            variant="link"
+          <IconTextButton
+            icon={LayoutTemplate}
             onClick={onOpenTemplates}
-            className="h-auto p-0 text-xs text-teal-400"
           >
             {t("settings.changeTemplate")}
-          </Button>
+          </IconTextButton>
         </div>
       </div>
     </section>

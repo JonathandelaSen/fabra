@@ -10,6 +10,7 @@ import {
   Save,
   ShieldCheck,
 } from "lucide-react";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import {
   DeleteButton,
   IconTextButton,
@@ -77,19 +78,9 @@ export function AISettingsPanel({
       </div>
 
       <div className="space-y-5">
-        <div className="rounded-xl border border-amber-500/25 bg-amber-500/[0.08] p-4">
-          <div className="flex gap-3">
-            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" />
-            <div>
-              <h3 className="text-sm font-semibold text-amber-100">
-                {t("warningTitle")}
-              </h3>
-              <p className="mt-1 text-sm leading-6 text-amber-100/75">
-                {t("warningBody")}
-              </p>
-            </div>
-          </div>
-        </div>
+        <AlertBanner tone={ALERT_BANNER_TONES.WARNING} icon={AlertTriangle} title={t("warningTitle")}>
+          {t("warningBody")}
+        </AlertBanner>
 
         <div className="rounded-xl border border-white/[0.06] bg-[#0a0a12] p-4">
           <p className="mb-4 flex items-center gap-2 text-sm font-medium text-zinc-200">

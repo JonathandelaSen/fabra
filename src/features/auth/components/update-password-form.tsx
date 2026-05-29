@@ -1,9 +1,12 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { AlertCircle, KeyRound, Loader2 } from "lucide-react";
+import { AlertCircle, KeyRound } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import {
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
@@ -76,18 +79,18 @@ export function UpdatePasswordForm() {
           </Alert>
         )}
 
-        <Button
+        <IconTextButton
           type="submit"
+          icon={KeyRound}
+          loading={pending}
+          tone={ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT}
+          fullWidth
+          strong
           disabled={pending}
-          className="h-11 w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-900/30 hover:from-indigo-500 hover:to-violet-500"
+          className="h-11"
         >
-          {pending ? (
-            <Loader2 className="animate-spin" />
-          ) : (
-            <KeyRound />
-          )}
           {t("submit")}
-        </Button>
+        </IconTextButton>
       </form>
     </div>
   );

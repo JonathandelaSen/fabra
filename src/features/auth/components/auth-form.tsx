@@ -7,13 +7,15 @@ import {
   Eye,
   EyeOff,
   KeyRound,
-  Loader2,
   LogIn,
   MailCheck,
   UserPlus,
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import {
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
@@ -172,45 +174,39 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
           </Alert>
         )}
 
-        <Button
+        <IconTextButton
           type="submit"
+          icon={isRecover ? KeyRound : isSignup ? UserPlus : LogIn}
+          loading={pending}
+          tone={ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT}
+          fullWidth
+          strong
           disabled={pending}
-          className="w-full h-11 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-lg shadow-indigo-900/30"
+          className="h-11"
         >
-          {pending ? (
-            <Loader2 className="animate-spin" />
-          ) : isRecover ? (
-            <KeyRound />
-          ) : isSignup ? (
-            <UserPlus />
-          ) : (
-            <LogIn />
-          )}
           {isRecover
             ? t("recover.submit")
             : isSignup
               ? t("signup.submit")
               : t("login.submit")}
-        </Button>
+        </IconTextButton>
       </form>
 
       {showResendConfirmation && (
         <form action={resendAction} className="mt-4">
           <input type="hidden" name="email" value={resendEmail} />
           <input type="hidden" name="interfaceLanguage" value={locale} />
-          <Button
+          <IconTextButton
             type="submit"
-            variant="outline"
+            icon={MailCheck}
+            loading={resendPending}
+            tone={ICON_TEXT_BUTTON_TONES.WARNING}
+            fullWidth
             disabled={resendPending || !resendEmail}
-            className="h-10 w-full border-amber-400/20 bg-amber-400/10 text-amber-100 hover:bg-amber-400/15"
+            className="h-10"
           >
-            {resendPending ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              <MailCheck />
-            )}
             {t("resendConfirmation")}
-          </Button>
+          </IconTextButton>
         </form>
       )}
 

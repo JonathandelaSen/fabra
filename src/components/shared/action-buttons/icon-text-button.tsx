@@ -17,6 +17,7 @@ export type IconTextButtonTone =
   (typeof ICON_TEXT_BUTTON_TONES)[keyof typeof ICON_TEXT_BUTTON_TONES];
 
 export interface IconTextButtonProps extends Omit<ComponentProps<typeof Button>, "variant"> {
+  fullWidth?: boolean;
   icon: ElementType<{ className?: string }>;
   loading?: boolean;
   strong?: boolean;
@@ -38,6 +39,7 @@ const TONE_CLASS_NAMES = {
 export function IconTextButton({
   className,
   children,
+  fullWidth = false,
   icon: Icon,
   loading = false,
   strong = false,
@@ -54,6 +56,7 @@ export function IconTextButton({
       disabled={disabled || loading}
       className={cn(
         "h-9 px-3 gap-1.5",
+        fullWidth && "w-full",
         strong ? "font-semibold" : "font-medium",
         TONE_CLASS_NAMES[tone],
         className,

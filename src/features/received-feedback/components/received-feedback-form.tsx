@@ -2,8 +2,12 @@
 
 import { Save, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
-import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import {
+  ActionIconButton,
+  ACTION_ICON_BUTTON_TONES,
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 import { ActivityContextSelector } from "@/features/activity-context";
 import type { ActivityContext } from "../api/received-feedback-api";
 
@@ -55,15 +59,12 @@ export function ReceivedFeedbackForm({
           <h2 className="text-lg font-semibold text-text-main">{title}</h2>
           <p className="text-xs text-text-muted mt-1">{subtitle}</p>
         </div>
-        <Button
+        <ActionIconButton
+          icon={X}
           onClick={onCancel}
-          variant="ghost"
-          size="icon-sm"
-          className="text-text-muted hover:text-text-soft"
+          tone={ACTION_ICON_BUTTON_TONES.MUTED}
           disabled={saving}
-        >
-          <X className="h-4 w-4" />
-        </Button>
+        />
       </div>
 
       <div className="grid gap-5 md:grid-cols-2">
@@ -135,14 +136,13 @@ export function ReceivedFeedbackForm({
       </div>
 
       <div className="mt-6 flex justify-end gap-2 border-t border-line pt-4">
-        <Button
+        <IconTextButton
+          icon={X}
           onClick={onCancel}
-          variant="ghost"
           disabled={saving}
-          className="text-text-muted hover:text-text-soft"
         >
           {t("actions.cancel")}
-        </Button>
+        </IconTextButton>
         <IconTextButton
           icon={Save}
           loading={saving}

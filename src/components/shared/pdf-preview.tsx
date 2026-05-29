@@ -3,7 +3,10 @@
 import { useEffect, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { ZoomIn, ZoomOut, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {
+  ActionIconButton,
+  ACTION_ICON_BUTTON_SIZES,
+} from "@/components/shared/action-buttons";
 
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
@@ -38,25 +41,19 @@ export function PDFPreview({ url }: PDFPreviewProps) {
   return (
     <div className="relative flex h-full w-full flex-col">
       <div className="absolute bottom-6 right-6 z-10 flex items-center gap-2 rounded-full border border-line-default bg-floating-toolbar p-1.5 shadow-xl backdrop-blur-md">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 rounded-full text-text-muted hover:bg-panel-active hover:text-white"
+        <ActionIconButton
+          icon={ZoomOut}
+          buttonSize={ACTION_ICON_BUTTON_SIZES.MD}
           onClick={() => setScale((s) => Math.max(0.5, s - 0.1))}
-        >
-          <ZoomOut className="h-4 w-4" />
-        </Button>
+        />
         <span className="w-12 text-center text-xs font-medium text-text-soft">
           {Math.round(scale * 100)}%
         </span>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 rounded-full text-text-muted hover:bg-panel-active hover:text-white"
+        <ActionIconButton
+          icon={ZoomIn}
+          buttonSize={ACTION_ICON_BUTTON_SIZES.MD}
           onClick={() => setScale((s) => Math.min(2, s + 0.1))}
-        >
-          <ZoomIn className="h-4 w-4" />
-        </Button>
+        />
       </div>
 
       <div className="flex-1 overflow-auto bg-pdf-canvas pb-20 scrollbar-thin">

@@ -4,11 +4,17 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Lock, Pencil, Plus, Save, Trash2, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import type { FeedbackEntry } from "../api/feedback-notes-api";
 import { formatDate } from "@/lib/format";
-import { EditButton, DeleteButton, IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import {
+  ActionIconButton,
+  ACTION_ICON_BUTTON_TONES,
+  EditButton,
+  DeleteButton,
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 
 const textareaClass =
   "w-full resize-y border-white/10 bg-white/[0.03] text-sm text-zinc-100 placeholder:text-zinc-600 focus-visible:border-zinc-300 disabled:cursor-not-allowed disabled:opacity-60";
@@ -137,25 +143,20 @@ export function FeedbackEntriesPanel({
                     className={textareaClass}
                   />
                   <div className="mt-2 flex justify-end gap-2">
-                    <Button
+                    <ActionIconButton
                       type="button"
-                      variant="ghost"
-                      size="icon-sm"
+                      icon={X}
                       onClick={() => setEditingEntryId(null)}
-                      className="text-zinc-400"
+                      tone={ACTION_ICON_BUTTON_TONES.MUTED}
                       aria-label={t("actions.cancel")}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                    <Button
+                    />
+                    <ActionIconButton
                       type="button"
-                      variant="secondary"
-                      size="icon-sm"
+                      icon={Save}
+                      tone={ACTION_ICON_BUTTON_TONES.SUCCESS}
                       onClick={() => submitEdit(entry.id)}
                       aria-label={t("actions.save")}
-                    >
-                      <Save className="h-4 w-4" />
-                    </Button>
+                    />
                   </div>
                 </div>
               ) : (

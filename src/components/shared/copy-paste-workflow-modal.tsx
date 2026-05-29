@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import { Check, Clipboard, Copy, Loader2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import CopyPasteWorkflowSteps from "./copy-paste-workflow-steps";
+import { AlertBanner, ALERT_BANNER_TONES } from "./alert-banner";
 
 type Step = "copy" | "paste" | "review";
 
@@ -82,9 +83,9 @@ export default function CopyPasteWorkflowModal<TPreview>({
 
         <div className="min-h-0 flex-1 overflow-y-auto p-5">
           {privacyNotice && (
-            <div className="mb-4 rounded-lg border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+            <AlertBanner tone={ALERT_BANNER_TONES.WARNING} className="mb-4">
               {t("privacyNotice")}
-            </div>
+            </AlertBanner>
           )}
 
           {error && (
@@ -184,7 +185,7 @@ function CopyPasteWorkflowError({
 }) {
   const t = useTranslations("analysisFlow.copyPaste");
   return (
-    <div className="mb-4 rounded-lg border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+    <AlertBanner tone={ALERT_BANNER_TONES.DANGER} className="mb-4">
       <p>{error}</p>
       {step === "paste" && (
         <button
@@ -196,7 +197,7 @@ function CopyPasteWorkflowError({
           {copiedCorrection ? t("correctionCopied") : t("copyCorrection")}
         </button>
       )}
-    </div>
+    </AlertBanner>
   );
 }
 

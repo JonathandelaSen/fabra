@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import type {
@@ -171,9 +172,9 @@ export default function InterviewQuestionsView({
         }
       >
         {error && (
-          <div className="mb-4 rounded-lg border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
+          <AlertBanner tone={ALERT_BANNER_TONES.DANGER} className="mb-4">
             {error}
-          </div>
+          </AlertBanner>
         )}
 
         {selected ? (

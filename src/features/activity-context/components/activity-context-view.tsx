@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { ArrowLeft, Check, Loader2, Sparkles } from "lucide-react";
 import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import { ErrorBanner } from "@/components/shared/error-banner";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import {
   useActivityContexts,
   useCreateActivityContext,
@@ -161,7 +161,7 @@ export function ActivityContextView() {
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
         <section className="space-y-4">
           {visibleError && (
-            <ErrorBanner message={visibleError} />
+            <AlertBanner tone={ALERT_BANNER_TONES.DANGER}>{visibleError}</AlertBanner>
           )}
 
           {lastCreated && hasReturnTo && (

@@ -13,6 +13,7 @@ import {
   Zap,
 } from "lucide-react";
 import { getErrorMessage } from "@/lib/errors";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import type { CVDocumentSummaryResponse as CVSummary } from "@/app/api/cvs/responses";
 import type { CreateCVAnalysisInput } from "../hooks/use-cv-analysis-mutations";
 
@@ -263,9 +264,9 @@ export default function NewAnalysisFlow({
         </section>
 
         {error && (
-          <div className="rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
+          <AlertBanner tone={ALERT_BANNER_TONES.DANGER}>
             {error}
-          </div>
+          </AlertBanner>
         )}
 
         <button

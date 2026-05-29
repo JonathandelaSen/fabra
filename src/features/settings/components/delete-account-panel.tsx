@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { AlertCircle, Trash2 } from "lucide-react";
 import { deleteAccount, type AuthFormState } from "@/app/login/actions";
 import { DeleteButton } from "@/components/shared/action-buttons";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 
 const INITIAL_STATE: AuthFormState = {};
@@ -57,10 +58,9 @@ export function DeleteAccountPanel({ userEmail }: DeleteAccountPanelProps) {
       </div>
 
       {deleteState.error && (
-        <div className="mt-3 flex gap-2 rounded-xl border border-rose-500/20 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">
-          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-          <span>{deleteState.error}</span>
-        </div>
+        <AlertBanner tone={ALERT_BANNER_TONES.DANGER} icon={AlertCircle} compact className="mt-3">
+          {deleteState.error}
+        </AlertBanner>
       )}
 
       <DeleteButton

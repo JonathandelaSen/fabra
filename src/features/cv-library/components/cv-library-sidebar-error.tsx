@@ -2,6 +2,7 @@
 
 import { FileSearch, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import type { AnalysisSummary } from "@/lib/analysis-types";
 
 interface CVLibrarySidebarErrorProps {
@@ -20,11 +21,11 @@ export function CVLibrarySidebarError({
   if (!error) return null;
 
   return (
-    <div className="rounded-lg border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
+    <AlertBanner tone={ALERT_BANNER_TONES.DANGER}>
       <p>{error}</p>
       {blockingAnalyses.length > 0 && (
-        <div className="mt-3 space-y-2 border-t border-rose-500/20 pt-3">
-          <p className="text-xs font-semibold text-rose-200">
+        <div className="mt-3 space-y-2 border-t border-danger-border pt-3">
+          <p className="text-xs font-semibold">
             {t("associatedAnalyses")}
           </p>
           {blockingAnalyses.map((analysis) => (
@@ -41,7 +42,7 @@ export function CVLibrarySidebarError({
               }}
               className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-[#0a0a12]/70 px-3 py-2 text-left text-xs text-zinc-300 transition-colors hover:border-rose-400/30 hover:bg-rose-500/10 hover:text-rose-100"
             >
-              <FileSearch className="h-3.5 w-3.5 shrink-0 text-rose-300" />
+              <FileSearch className="h-3.5 w-3.5 shrink-0 text-danger-text" />
               <span className="min-w-0 flex-1 truncate">
                 {analysis.title || analysis.filename.replace(/\.pdf$/i, "")}
               </span>
@@ -50,6 +51,6 @@ export function CVLibrarySidebarError({
           ))}
         </div>
       )}
-    </div>
+    </AlertBanner>
   );
 }

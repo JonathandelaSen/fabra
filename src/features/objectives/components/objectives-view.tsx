@@ -16,6 +16,7 @@ import type {
   ObjectiveWithRelations,
 } from "../api/objectives-api";
 import { getErrorMessage } from "@/lib/errors";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import { useObjectivesMutations } from "../hooks/use-objectives-mutations";
 import { useObjectivesWorkspace } from "../hooks/use-objectives-queries";
 import { useObjectivesRouteState } from "../hooks/use-objectives-route-state";
@@ -442,9 +443,9 @@ export default function ObjectivesView() {
         }
       >
         {visibleError && (
-          <div className="mb-4 rounded-lg border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-300 shadow-[0_4px_12px_rgba(244,63,94,0.05)]">
+          <AlertBanner tone={ALERT_BANNER_TONES.DANGER} className="mb-4">
             {visibleError}
-          </div>
+          </AlertBanner>
         )}
 
         {!hasLoadedWorkspace ? (

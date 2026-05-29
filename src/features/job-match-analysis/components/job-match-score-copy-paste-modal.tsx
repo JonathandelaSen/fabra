@@ -5,6 +5,7 @@ import CopyPasteWorkflowModal, {
   CopyPastePreviewItem,
 } from "@/components/shared/copy-paste-workflow-modal";
 import { useCopyPasteWorkflowState } from "@/components/shared/use-copy-paste-workflow-state";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import type { JobMatchAnalysisDetailResponse } from "@/app/api/job-match-analyses/responses";
 import type { PreviewJobMatchAnalysisCopyPasteResponse } from "@/app/api/job-match-analyses/[id]/score/copy-paste/preview/responses";
 import {
@@ -103,9 +104,9 @@ function JobMatchScoreCopyPastePreview({
   return (
     <div className="space-y-4">
       {data.preview.willReplaceExistingResult && (
-        <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+        <AlertBanner tone={ALERT_BANNER_TONES.WARNING}>
           {t("replacementWarning")}
-        </div>
+        </AlertBanner>
       )}
       <div className="grid gap-3 sm:grid-cols-2">
         <CopyPastePreviewItem

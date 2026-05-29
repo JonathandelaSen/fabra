@@ -2,8 +2,12 @@
 
 import { FormEvent, RefObject } from "react";
 import { useTranslations } from "next-intl";
-import { Loader2, Send } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Send } from "lucide-react";
+import {
+  ActionIconButton,
+  ACTION_ICON_BUTTON_SIZES,
+  ACTION_ICON_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 import { Textarea } from "@/components/ui/textarea";
 
 interface ChatInputProps {
@@ -40,18 +44,14 @@ export function ChatInput({
           rows={1}
           className="min-h-[40px] max-h-[120px] flex-1 resize-none rounded-xl border-white/[0.08] bg-white/[0.03] px-3.5 py-2.5 text-sm text-zinc-200 placeholder:text-zinc-600 focus-visible:ring-cyan-500/20"
         />
-        <Button
+        <ActionIconButton
           type="submit"
-          size="icon"
+          icon={Send}
+          loading={isSending}
+          buttonSize={ACTION_ICON_BUTTON_SIZES.LG}
+          tone={ACTION_ICON_BUTTON_TONES.PRIMARY}
           disabled={isSending || !draft.trim()}
-          className="size-10 shrink-0 rounded-xl bg-cyan-500 text-white hover:bg-cyan-400 disabled:opacity-30"
-        >
-          {isSending ? (
-            <Loader2 className="size-4 animate-spin" />
-          ) : (
-            <Send className="size-4" />
-          )}
-        </Button>
+        />
       </form>
     </div>
   );

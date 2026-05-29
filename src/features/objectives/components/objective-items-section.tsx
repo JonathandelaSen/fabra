@@ -2,8 +2,13 @@ import { Calendar, Check, Circle, Pencil, Save, Trash2, X, Plus } from "lucide-r
 import { useLocale } from "next-intl";
 import type { ObjectiveItem, ObjectiveItemStatus } from "../api/objectives-api";
 import { formatDate, itemStatusLabels, type ItemEditForm } from "./objectives-ui";
-import { Button } from "@/components/ui/button";
-import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import {
+  ActionIconButton,
+  ACTION_ICON_BUTTON_SIZES,
+  ACTION_ICON_BUTTON_TONES,
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
@@ -94,14 +99,12 @@ export function ObjectiveItems({
                         <span className="text-[11px] font-bold text-indigo-400 uppercase tracking-wider">
                           {t("items.edit")}
                         </span>
-                        <Button
-                          variant="ghost"
-                          size="icon-xs"
+                        <ActionIconButton
+                          icon={X}
+                          buttonSize={ACTION_ICON_BUTTON_SIZES.XS}
+                          tone={ACTION_ICON_BUTTON_TONES.MUTED}
                           onClick={onStopEditingItem}
-                          className="h-5 w-5 text-zinc-500 hover:text-zinc-200"
-                        >
-                          <X className="h-3.5 w-3.5" />
-                        </Button>
+                        />
                       </div>
                       <Input
                         value={itemForm.title}
@@ -178,14 +181,13 @@ export function ObjectiveItems({
                         />
                       </label>
                       <div className="flex justify-end gap-2 pt-1 border-t border-white/[0.04]">
-                        <Button
-                          variant="ghost"
-                          size="sm"
+                        <IconTextButton
+                          icon={X}
                           onClick={onStopEditingItem}
-                          className="h-8 text-zinc-400 hover:bg-white/[0.04]"
+                          className="h-8"
                         >
                           {t("actions.cancel")}
-                        </Button>
+                        </IconTextButton>
                         <IconTextButton
                           icon={Save}
                           loading={saving}
@@ -199,23 +201,18 @@ export function ObjectiveItems({
                     </div>
                   ) : (
                     <div className="flex items-start gap-3 p-3.5">
-                      <Button
-                        variant="ghost"
-                        size="icon"
+                      <ActionIconButton
+                        icon={item.status === "done" ? Check : Circle}
+                        buttonSize={ACTION_ICON_BUTTON_SIZES.XS}
+                        tone={ACTION_ICON_BUTTON_TONES.SUCCESS}
                         onClick={() =>
                           onUpdateItemStatus(
                             item,
                             item.status === "done" ? "todo" : "done"
                           )
                         }
-                        className="mt-0.5 h-5 w-5 rounded-full p-0 shrink-0 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 focus-visible:ring-emerald-500/20"
-                      >
-                        {item.status === "done" ? (
-                          <Check className="h-3.5 w-3.5 stroke-[2.5]" />
-                        ) : (
-                          <Circle className="h-3.5 w-3.5 stroke-[2]" />
-                        )}
-                      </Button>
+                        className="mt-0.5"
+                      />
                       <div className="min-w-0 flex-1">
                         <p
                           className={`text-sm font-semibold transition-all ${
@@ -251,22 +248,16 @@ export function ObjectiveItems({
                         )}
                       </div>
                       <div className="flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                        <Button
-                          variant="ghost"
-                          size="icon-xs"
+                        <ActionIconButton
+                          icon={Pencil}
+                          tone={ACTION_ICON_BUTTON_TONES.MUTED}
                           onClick={() => onEditItem(item)}
-                          className="h-7 w-7 text-zinc-500 hover:bg-white/[0.04] hover:text-zinc-200"
-                        >
-                          <Pencil className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon-xs"
+                        />
+                        <ActionIconButton
+                          icon={Trash2}
+                          tone={ACTION_ICON_BUTTON_TONES.DANGER}
                           onClick={() => onDeleteItem(item)}
-                          className="h-7 w-7 text-zinc-500 hover:bg-rose-500/10 hover:text-rose-400"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
+                        />
                       </div>
                     </div>
                   )}

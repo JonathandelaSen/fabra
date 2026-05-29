@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export interface DeleteButtonProps extends ComponentProps<typeof Button> {
+  fullWidth?: boolean;
   loading?: boolean;
   strong?: boolean;
 }
@@ -11,6 +12,7 @@ export interface DeleteButtonProps extends ComponentProps<typeof Button> {
 export function DeleteButton({
   className,
   children,
+  fullWidth = false,
   loading = false,
   strong = false,
   disabled,
@@ -23,6 +25,7 @@ export function DeleteButton({
       disabled={disabled || loading}
       className={cn(
         "h-9",
+        fullWidth && "w-full",
         children ? "px-3 gap-1.5" : "w-9 px-0",
         strong ? "font-semibold" : "font-medium",
         className,

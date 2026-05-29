@@ -9,8 +9,13 @@ import {
   Sparkles,
   Undo2,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import {
+  ActionIconButton,
+  ACTION_ICON_BUTTON_SIZES,
+  ACTION_ICON_BUTTON_TONES,
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 
 interface CVEditorHeaderProps {
   versionName: string;
@@ -46,14 +51,12 @@ export function CVEditorHeader({
   return (
     <header className="z-20 flex h-14 shrink-0 items-center justify-between border-b border-white/5 bg-[#0a0a12]/80 px-4 backdrop-blur-md">
       <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="icon"
+        <ActionIconButton
+          icon={ArrowLeft}
+          buttonSize={ACTION_ICON_BUTTON_SIZES.MD}
+          tone={ACTION_ICON_BUTTON_TONES.MUTED}
           onClick={onBackToLibrary}
-          className="h-8 w-8 text-zinc-400"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
+        />
         <div className="h-4 w-[1px] bg-white/10" />
         <div className="min-w-0">
           <div className="flex items-center gap-2">
@@ -78,26 +81,20 @@ export function CVEditorHeader({
 
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1 rounded-md border border-white/5 bg-white/5 p-1">
-          <Button
-            variant="ghost"
-            size="icon"
+          <ActionIconButton
+            icon={Undo2}
             disabled={!canUndo}
             onClick={onUndo}
-            className="h-7 w-7 text-zinc-400 hover:text-white disabled:opacity-30"
+            tone={ACTION_ICON_BUTTON_TONES.MUTED}
             title={t("undo")}
-          >
-            <Undo2 className="h-3.5 w-3.5" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
+          />
+          <ActionIconButton
+            icon={Redo2}
             disabled={!canRedo}
             onClick={onRedo}
-            className="h-7 w-7 text-zinc-400 hover:text-white disabled:opacity-30"
+            tone={ACTION_ICON_BUTTON_TONES.MUTED}
             title={t("redo")}
-          >
-            <Redo2 className="h-3.5 w-3.5" />
-          </Button>
+          />
         </div>
 
         <IconTextButton
@@ -121,14 +118,12 @@ export function CVEditorHeader({
           <span className="sm:hidden">PDF</span>
         </a>
 
-        <Button
-          variant="ghost"
-          size="icon"
+        <ActionIconButton
+          icon={Settings}
+          buttonSize={ACTION_ICON_BUTTON_SIZES.MD}
           onClick={onTogglePanel}
-          className={`h-9 w-9 transition-colors ${isPanelOpen ? "text-teal-400" : "text-zinc-500"}`}
-        >
-          <Settings className="h-4 w-4" />
-        </Button>
+          tone={isPanelOpen ? ACTION_ICON_BUTTON_TONES.SUCCESS : ACTION_ICON_BUTTON_TONES.MUTED}
+        />
       </div>
     </header>
   );

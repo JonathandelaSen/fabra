@@ -5,6 +5,7 @@ import { Sparkles } from "lucide-react";
 import AIActionLauncher, {
   type AIModelOption,
 } from "@/components/shared/ai-action-launcher/ai-action-launcher";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 
 interface CVEditorAIPanelProps {
   editInstruction: string;
@@ -47,9 +48,9 @@ export function CVEditorAIPanel({
       </header>
 
       {error && (
-        <div className="mb-4 rounded-xl border border-rose-500/20 bg-rose-500/10 p-3 text-xs text-rose-300">
+        <AlertBanner tone={ALERT_BANNER_TONES.DANGER} compact className="mb-4">
           {error}
-        </div>
+        </AlertBanner>
       )}
 
       <div className="space-y-4">

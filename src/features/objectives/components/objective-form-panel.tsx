@@ -5,8 +5,12 @@ import type {
   ObjectiveSource,
 } from "../api/objectives-api";
 import { type ObjectiveForm } from "./objectives-ui";
-import { Button } from "@/components/ui/button";
-import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import {
+  ActionIconButton,
+  ACTION_ICON_BUTTON_TONES,
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 import { ObjectiveIdentitySection } from "./objective-identity-section";
 import { ObjectivePlanningSection } from "./objective-planning-section";
 import { ObjectiveNarrativeSection } from "./objective-narrative-section";
@@ -45,14 +49,11 @@ export function ObjectiveFormPanel({
         <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-200">
           {isCreating ? t("newObjective") : t("editObjective")}
         </h2>
-        <Button
-          variant="ghost"
-          size="icon-xs"
+        <ActionIconButton
+          icon={X}
           onClick={onCancel}
-          className="h-7 w-7 text-zinc-500 hover:text-zinc-200"
-        >
-          <X className="h-4 w-4" />
-        </Button>
+          tone={ACTION_ICON_BUTTON_TONES.MUTED}
+        />
       </div>
 
       {/* Panel Body */}
@@ -81,13 +82,12 @@ export function ObjectiveFormPanel({
 
         {/* Footer Actions */}
         <div className="mt-4 flex justify-end gap-3 border-t border-white/[0.06] pt-4">
-          <Button
-            variant="ghost"
+          <IconTextButton
+            icon={X}
             onClick={onCancel}
-            className="h-9 px-4 text-zinc-400 hover:bg-white/[0.04]"
           >
             {t("actions.cancel")}
-          </Button>
+          </IconTextButton>
           <IconTextButton
             icon={Save}
             loading={saving}

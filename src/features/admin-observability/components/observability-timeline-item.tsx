@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { Check, Copy } from "lucide-react";
 import type { ProcessingEventResponse } from "@/app/api/admin/processing-events/responses";
 import { StatusBadge, formatDateTime, formatBytes } from "./observability-primitives";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 
 interface ObservabilityTimelineItemProps {
   event: ProcessingEventResponse;
@@ -74,16 +75,16 @@ export function ObservabilityTimelineItem({
           </span>
         </div>
         {(event.errorCode || event.errorMessage) && (
-          <div className="mt-3 rounded-md border border-rose-500/20 bg-rose-500/10 p-2 text-xs text-rose-200">
-            <p className="font-medium">
-              {event.errorCode ?? t("errorFallback")}
-            </p>
+          <AlertBanner
+            tone={ALERT_BANNER_TONES.DANGER}
+            title={event.errorCode ?? t("errorFallback")}
+            compact
+            className="mt-3"
+          >
             {event.errorMessage && (
-              <p className="mt-1 text-rose-100/80">
-                {event.errorMessage}
-              </p>
+              <p>{event.errorMessage}</p>
             )}
-          </div>
+          </AlertBanner>
         )}
       </div>
     </li>

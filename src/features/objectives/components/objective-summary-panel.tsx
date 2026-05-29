@@ -1,6 +1,6 @@
 import { Calendar } from "lucide-react";
 import { useLocale } from "next-intl";
-import { LabelBadge } from "@/components/shared/label-badge";
+import { LabelBadge, LABEL_BADGE_TONES } from "@/components/shared/label-badge";
 import { EditButton, DeleteButton } from "@/components/shared/action-buttons";
 import type {
   ObjectiveContext,
@@ -45,7 +45,7 @@ export function ObjectiveSummaryPanel({
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2 text-xs">
             {selected.priority && (
-              <LabelBadge tone="warning" size="xs" className="uppercase" strong>
+              <LabelBadge tone={LABEL_BADGE_TONES.WARNING} size="xs" className="uppercase" strong>
                 {t("priorityBadge", { priority: priorityLabel(selected.priority) })}
               </LabelBadge>
             )}

@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import {
   CopyPastePreviewItem,
 } from "@/components/shared/copy-paste-workflow-modal";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import type { PreviewCVProfileCopyPasteResponse } from "@/app/api/cvs/[id]/structured-profile/copy-paste/preview/responses";
 
 interface CVProfileCopyPastePreviewProps {
@@ -38,16 +39,13 @@ export default function CVProfileCopyPastePreview({
       </div>
 
       {data.preview.missingImportantFields.length > 0 && (
-        <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-4">
-          <p className="mb-2 text-xs font-medium uppercase text-amber-200">
-            {t("missingFields")}
-          </p>
-          <ul className="space-y-1 text-sm text-amber-100">
+        <AlertBanner tone={ALERT_BANNER_TONES.WARNING} title={t("missingFields")}>
+          <ul className="space-y-1">
             {data.preview.missingImportantFields.map((field) => (
               <li key={field}>{field}</li>
             ))}
           </ul>
-        </div>
+        </AlertBanner>
       )}
     </div>
   );

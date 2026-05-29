@@ -6,9 +6,13 @@ import {
   Copy,
   ExternalLink,
   Globe2,
-  Loader2,
+  Save,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {
+  DeleteButton,
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 
 interface CVEditorPublicSectionProps {
   publicEnabled: boolean;
@@ -64,24 +68,27 @@ export function CVEditorPublicSection({
           </div>
         </div>
         {publicEnabled ? (
-          <Button
-            variant="ghost"
+          <DeleteButton
             disabled={savingPublicSettings}
             onClick={onUnpublish}
-            className="h-8 border border-rose-500/20 bg-rose-500/5 px-3 text-[11px] text-rose-300 hover:bg-rose-500/10"
+            className="h-8"
+            strong
           >
             {t("publicPage.unpublish")}
-          </Button>
+          </DeleteButton>
         ) : (
-          <Button
+          <IconTextButton
+            icon={Globe2}
+            tone={ICON_TEXT_BUTTON_TONES.PRIMARY}
             disabled={
               savingPublicSettings || !normalizedPublicSlug
             }
             onClick={onPublish}
-            className="h-8 bg-sky-500 px-3 text-[11px] font-bold text-black hover:bg-sky-400"
+            className="h-8"
+            strong
           >
             {t("publicPage.publish")}
-          </Button>
+          </IconTextButton>
         )}
       </div>
 
@@ -119,34 +126,31 @@ export function CVEditorPublicSection({
       {publicEnabled && publicUrl && (
         <div className="space-y-2">
           {hasPublicSlugChanges && (
-            <Button
+            <IconTextButton
+              icon={Save}
+              loading={savingPublicSettings}
+              tone={ICON_TEXT_BUTTON_TONES.PRIMARY}
               disabled={
                 savingPublicSettings || !normalizedPublicSlug
               }
               onClick={onSaveUrl}
-              className="h-8 w-full bg-sky-500 px-3 text-[11px] font-bold text-black hover:bg-sky-400"
+              fullWidth
+              strong
+              className="h-8"
             >
-              {savingPublicSettings ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                t("publicPage.saveUrl")
-              )}
-            </Button>
+              {t("publicPage.saveUrl")}
+            </IconTextButton>
           )}
           <div className="flex gap-2">
-            <Button
-              variant="ghost"
+            <IconTextButton
+              icon={publicCopied ? Check : Copy}
               disabled={savingPublicSettings}
               onClick={onCopyPublicUrl}
-              className="h-8 flex-1 border border-white/5 bg-white/5 text-xs text-zinc-300 hover:bg-white/10"
+              fullWidth
+              className="h-8"
             >
-              {publicCopied ? (
-                <Check className="mr-2 h-3.5 w-3.5 text-emerald-400" />
-              ) : (
-                <Copy className="mr-2 h-3.5 w-3.5" />
-              )}
               {publicCopied ? t("publicPage.copied") : t("publicPage.copyUrl")}
-            </Button>
+            </IconTextButton>
             <a
               href={publicUrl}
               target="_blank"

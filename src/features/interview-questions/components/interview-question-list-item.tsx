@@ -4,7 +4,7 @@ import { Briefcase, CheckCircle2, FileText } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { featureMetaPillClassName } from "@/components/shared/feature-visual-system";
 import { SidebarListItem } from "@/components/shared/sidebar-list-item";
-import { LabelBadge } from "@/components/shared/label-badge";
+import { LabelBadge, LABEL_BADGE_TONES } from "@/components/shared/label-badge";
 import type { InterviewQuestion } from "../api/interview-questions-api";
 
 interface InterviewQuestionListItemProps {
@@ -29,11 +29,11 @@ export function InterviewQuestionListItem({
       footer={
         <div className="flex flex-wrap items-center gap-1.5 min-w-0">
           {question.answer ? (
-            <LabelBadge tone="success" size="xs" icon={CheckCircle2} className="uppercase" strong>
+            <LabelBadge tone={LABEL_BADGE_TONES.SUCCESS} size="xs" icon={CheckCircle2} className="uppercase" strong>
               {t("answered")}
             </LabelBadge>
           ) : (
-            <LabelBadge tone="warning" size="xs" className="uppercase" strong>
+            <LabelBadge tone={LABEL_BADGE_TONES.WARNING} size="xs" className="uppercase" strong>
               {t("pending")}
             </LabelBadge>
           )}

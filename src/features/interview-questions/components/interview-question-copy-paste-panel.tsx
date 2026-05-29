@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { ClipboardList } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { CopyPasteTextPanel } from "@/components/shared/copy-paste-text-panel";
 import { CopyPasteDialog } from "@/components/shared/copy-paste-dialog";
-import { Button } from "@/components/ui/button";
+import {
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 import {
   prepareInterviewQuestionCopyPaste,
   type PrepareInterviewQuestionCopyPasteResult,
@@ -108,15 +111,17 @@ export function InterviewQuestionCopyPastePanel({
             <p className="text-xs text-rose-300">{error}</p>
           )}
 
-          <Button
+          <IconTextButton
             type="button"
+            icon={ClipboardList}
+            loading={preparing}
+            tone={ICON_TEXT_BUTTON_TONES.PRIMARY}
             onClick={handlePrepare}
             disabled={preparing || (mode === "edit" && !instruction.trim())}
-            className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md shadow-indigo-600/10"
+            strong
           >
-            {preparing && <Loader2 className="h-4 w-4 animate-spin" />}
             {t("preparePrompt")}
-          </Button>
+          </IconTextButton>
         </div>
       ) : (
         <CopyPasteTextPanel
@@ -138,4 +143,3 @@ export function InterviewQuestionCopyPastePanel({
     </CopyPasteDialog>
   );
 }
-

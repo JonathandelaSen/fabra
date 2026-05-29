@@ -7,6 +7,7 @@ import {
   RefreshCw,
   ShieldCheck,
 } from "lucide-react";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import type { ProcessingEventResponse } from "@/app/api/admin/processing-events/responses";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
@@ -151,9 +152,9 @@ export function AdminObservabilityView({
 
             <div className="min-h-0 flex-1 overflow-y-auto p-2">
               {error && (
-                <div className="mb-2 rounded-lg border border-rose-500/20 bg-rose-500/10 p-3 text-sm text-rose-200">
+                <AlertBanner tone={ALERT_BANNER_TONES.DANGER} compact className="mb-2">
                   {error}
-                </div>
+                </AlertBanner>
               )}
               {loading ? (
                 <ObservabilityListSkeleton />

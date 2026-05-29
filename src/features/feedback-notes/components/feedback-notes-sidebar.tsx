@@ -5,7 +5,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Plus, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
 import { SegmentedControl } from "@/components/shared/segmented-control";
 import type { FeedbackFilter, FeedbackListItem } from "../api/feedback-notes-api";
@@ -74,23 +77,20 @@ export function FeedbackNotesSidebar({
             className="mb-4"
           />
           <div className="mb-2">
-            <Button
+            <IconTextButton
               type="button"
-              variant="ghost"
-              onClick={() => setIsCreateOpen(!isCreateOpen)}
-              className={`w-full justify-start gap-2 text-xs font-semibold border transition-all duration-200 ${
+              icon={Plus}
+              tone={
                 isCreateOpen
-                  ? "bg-rose-500/10 border-rose-500/20 text-rose-300 hover:bg-rose-500/20 hover:text-rose-200"
-                  : "bg-indigo-600/5 text-indigo-300/90 border-indigo-500/10 hover:bg-indigo-600/15 hover:text-indigo-200 hover:border-indigo-500/25"
-              }`}
+                  ? ICON_TEXT_BUTTON_TONES.DANGER
+                  : ICON_TEXT_BUTTON_TONES.PRIMARY
+              }
+              fullWidth
+              strong
+              onClick={() => setIsCreateOpen(!isCreateOpen)}
             >
-              <Plus
-                className={`h-4 w-4 transition-transform duration-200 ${
-                  isCreateOpen ? "rotate-45 text-rose-400" : "text-indigo-400"
-                }`}
-              />
               {isCreateOpen ? t("actions.cancel") : t("actions.newNote")}
-            </Button>
+            </IconTextButton>
           </div>
 
           <AnimatePresence initial={false}>

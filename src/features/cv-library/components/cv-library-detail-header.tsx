@@ -1,11 +1,18 @@
 "use client";
 
-import { Pencil, Save, X, Trash2, Loader2, Sparkles, Download } from "lucide-react";
+import { Pencil, Save, X, Trash2, Sparkles, Download } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
 import type { CVDocumentListItem } from "../api/cv-library-api";
-import { LabelBadge } from "@/components/shared/label-badge";
-import { EditButton, DeleteButton } from "@/components/shared/action-buttons";
+import { LabelBadge, LABEL_BADGE_TONES } from "@/components/shared/label-badge";
+import {
+  ActionIconButton,
+  ACTION_ICON_BUTTON_SIZES,
+  ACTION_ICON_BUTTON_TONES,
+  EditButton,
+  DeleteButton,
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 
 interface CVLibraryDetailHeaderProps {
   selected: CVDocumentListItem;
@@ -51,27 +58,23 @@ export function CVLibraryDetailHeader({
               className="h-9 w-full rounded-lg border border-white/[0.08] bg-[#0a0a12] px-3 text-sm text-zinc-100 focus:border-indigo-500/40 focus:outline-none"
               autoFocus
             />
-            <Button
+            <ActionIconButton
               type="button"
+              icon={Save}
+              loading={saving}
+              buttonSize={ACTION_ICON_BUTTON_SIZES.MD}
+              tone={ACTION_ICON_BUTTON_TONES.PRIMARY}
               onClick={onSaveName}
               disabled={saving || !draftName.trim()}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-600 p-0 text-white hover:bg-indigo-500 disabled:opacity-50"
               title={t("save")}
-            >
-              {saving ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Save className="h-4 w-4" />
-              )}
-            </Button>
-            <Button
+            />
+            <ActionIconButton
               type="button"
+              icon={X}
+              buttonSize={ACTION_ICON_BUTTON_SIZES.MD}
+              tone={ACTION_ICON_BUTTON_TONES.MUTED}
               onClick={onCancelEditing}
-              variant="ghost"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/[0.04] bg-white/[0.02] p-0 text-zinc-400 hover:bg-white/5 hover:text-zinc-200 transition-colors"
-            >
-              <X className="h-4 w-4" />
-            </Button>
+            />
           </div>
         ) : (
           <>
@@ -79,7 +82,7 @@ export function CVLibraryDetailHeader({
               <h2 className="truncate text-base font-semibold text-zinc-100">
                 {selected.name}
               </h2>
-              <LabelBadge tone={selected.type === "template" ? "teal" : "neutral"} size="xs" className="uppercase" strong>
+              <LabelBadge tone={selected.type === "template" ? LABEL_BADGE_TONES.TEAL : LABEL_BADGE_TONES.NEUTRAL} size="xs" className="uppercase" strong>
                 {selected.type === "template" ? t("typeTemplate") : t("typeOriginal")}
               </LabelBadge>
             </div>
@@ -97,14 +100,15 @@ export function CVLibraryDetailHeader({
           </>
         )}
         {selected.type === "template" && (
-          <button
+          <IconTextButton
             type="button"
             onClick={() => onOpenEditor(selected.id)}
-            className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-teal-500/25 bg-teal-500/10 px-3.5 text-xs font-semibold text-teal-300 transition-all hover:bg-teal-500/20 focus:outline-none"
+            icon={Sparkles}
+            tone={ICON_TEXT_BUTTON_TONES.SUCCESS}
+            strong
           >
-            <Sparkles className="h-3.5 w-3.5" />
             {t("editWithAI")}
-          </button>
+          </IconTextButton>
         )}
         <a
           href={pdfPath}

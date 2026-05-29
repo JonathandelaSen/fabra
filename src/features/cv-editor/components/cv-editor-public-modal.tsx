@@ -2,8 +2,12 @@
 
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { AlertTriangle, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AlertTriangle, X } from "lucide-react";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
+import {
+  DeleteButton,
+  IconTextButton,
+} from "@/components/shared/action-buttons";
 
 interface CVEditorPublicModalProps {
   publicDraftUrl: string | null;
@@ -39,31 +43,29 @@ export function CVEditorPublicModal({
         <p className="mt-3 text-sm leading-relaxed text-zinc-400">
           {t("publicModal.description")}
         </p>
-        <div className="mt-4 rounded-2xl border border-rose-500/15 bg-rose-500/10 p-3 text-xs leading-relaxed text-rose-200">
+        <AlertBanner tone={ALERT_BANNER_TONES.DANGER} compact className="mt-4">
           {t("publicModal.warning")}
-        </div>
+        </AlertBanner>
         <div className="mt-6 rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-xs text-zinc-300">
           {publicDraftUrl || `/cv/id/${normalizedPublicSlug}`}
         </div>
         <div className="mt-6 flex gap-3">
-          <Button
-            variant="ghost"
+          <IconTextButton
+            icon={X}
             onClick={onClose}
-            className="flex-1 text-zinc-400 hover:bg-white/5"
+            fullWidth
           >
             {t("actions.cancel")}
-          </Button>
-          <Button
+          </IconTextButton>
+          <DeleteButton
             disabled={savingPublicSettings || !normalizedPublicSlug}
+            loading={savingPublicSettings}
             onClick={onConfirm}
-            className="flex-1 bg-rose-500 text-white hover:bg-rose-400"
+            fullWidth
+            strong
           >
-            {savingPublicSettings ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              t("publicModal.confirm")
-            )}
-          </Button>
+            {t("publicModal.confirm")}
+          </DeleteButton>
         </div>
       </motion.div>
     </div>

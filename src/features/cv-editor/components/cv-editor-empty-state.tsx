@@ -3,7 +3,10 @@
 import { useTranslations } from "next-intl";
 import { LayoutTemplate } from "lucide-react";
 import { getCVTemplate } from "@/lib/cv-templates";
-import { Button } from "@/components/ui/button";
+import {
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 
 interface TemplateCv {
   id: string;
@@ -65,12 +68,14 @@ export function CVEditorEmptyState({
             <p className="text-zinc-500 mb-6">
               {t("empty.noTemplateCvs")}
             </p>
-            <Button
+            <IconTextButton
+              icon={LayoutTemplate}
+              tone={ICON_TEXT_BUTTON_TONES.SUCCESS}
               onClick={onOpenTemplates}
-              className="bg-teal-500 text-black hover:bg-teal-400"
+              strong
             >
               {t("empty.openTemplates")}
-            </Button>
+            </IconTextButton>
           </div>
         )}
       </div>

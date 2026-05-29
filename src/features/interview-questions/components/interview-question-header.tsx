@@ -2,10 +2,14 @@
 
 import { Briefcase, Check, CheckCircle2, FileText } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { DeleteButton, EditButton, IconTextButton } from "@/components/shared/action-buttons";
+import {
+  DeleteButton,
+  EditButton,
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 import { IconLabelBadge } from "@/components/shared/icon-label-badge";
-import { LabelBadge } from "@/components/shared/label-badge";
-import { Button } from "@/components/ui/button";
+import { LabelBadge, LABEL_BADGE_TONES } from "@/components/shared/label-badge";
 import type { InterviewQuestion } from "../api/interview-questions-api";
 
 interface InterviewQuestionHeaderProps {
@@ -41,11 +45,11 @@ export default function InterviewQuestionHeader({
           </h2>
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-zinc-500">
             {question.answer ? (
-              <LabelBadge tone="success" size="md" icon={CheckCircle2} className="uppercase" strong>
+              <LabelBadge tone={LABEL_BADGE_TONES.SUCCESS} size="md" icon={CheckCircle2} className="uppercase" strong>
                 {t("answered")}
               </LabelBadge>
             ) : (
-              <LabelBadge tone="warning" size="md" className="uppercase" strong>
+              <LabelBadge tone={LABEL_BADGE_TONES.WARNING} size="md" className="uppercase" strong>
                 {t("pending")}
               </LabelBadge>
             )}
@@ -74,15 +78,15 @@ export default function InterviewQuestionHeader({
             </IconTextButton>
           )}
           {isEditing ? (
-            <Button
+            <IconTextButton
               type="button"
               onClick={onSaveAndView}
-              variant="secondary"
-              className="bg-emerald-600/15 text-emerald-300 hover:bg-emerald-600/25 border border-emerald-500/20 hover:text-white"
+              icon={Check}
+              tone={ICON_TEXT_BUTTON_TONES.SUCCESS}
+              strong
             >
-              <Check className="h-4 w-4" />
               {t("actions.viewMode")}
-            </Button>
+            </IconTextButton>
           ) : (
             <EditButton
               type="button"

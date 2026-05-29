@@ -2,8 +2,11 @@
 
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Save, X } from "lucide-react";
+import {
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 
 interface CVEditorSaveModalProps {
   saveName: string;
@@ -51,24 +54,24 @@ export function CVEditorSaveModal({
             />
           </div>
           <div className="flex gap-3 pt-2">
-            <Button
-              variant="ghost"
+            <IconTextButton
+              icon={X}
               onClick={onClose}
-              className="flex-1 text-zinc-400 hover:bg-white/5"
+              fullWidth
             >
               {t("actions.cancel")}
-            </Button>
-            <Button
+            </IconTextButton>
+            <IconTextButton
+              icon={Save}
+              loading={savingAsCv}
+              tone={ICON_TEXT_BUTTON_TONES.SUCCESS}
               onClick={onSave}
               disabled={!saveName.trim() || savingAsCv}
-              className="flex-1 bg-teal-500 text-black hover:bg-teal-400"
+              fullWidth
+              strong
             >
-              {savingAsCv ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                t("actions.save")
-              )}
-            </Button>
+              {t("actions.save")}
+            </IconTextButton>
           </div>
         </div>
       </motion.div>

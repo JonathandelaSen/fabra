@@ -2,7 +2,11 @@
 
 import { useTranslations } from "next-intl";
 import { KeyRound } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 
 interface CVTemplateApiKeyAlertProps {
   hasAIApiKey: boolean;
@@ -22,22 +26,17 @@ export function CVTemplateApiKeyAlert({
   }
 
   return (
-    <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-4">
-      <div className="flex gap-3">
-        <KeyRound className="h-5 w-5 shrink-0 text-amber-400" />
-        <div>
-          <p className="text-xs leading-relaxed text-amber-200">
-            {t("missingApiKey")}
-          </p>
-          <Button
-            variant="link"
-            className="h-auto p-0 mt-2 text-xs font-bold text-amber-400 hover:text-amber-300"
-            onClick={onOpenSettings}
-          >
-            {t("configureNow")}
-          </Button>
-        </div>
-      </div>
-    </div>
+    <AlertBanner tone={ALERT_BANNER_TONES.WARNING} icon={KeyRound}>
+      <p className="text-xs leading-relaxed">{t("missingApiKey")}</p>
+      <IconTextButton
+        icon={KeyRound}
+        tone={ICON_TEXT_BUTTON_TONES.WARNING}
+        strong
+        className="mt-2"
+        onClick={onOpenSettings}
+      >
+        {t("configureNow")}
+      </IconTextButton>
+    </AlertBanner>
   );
 }

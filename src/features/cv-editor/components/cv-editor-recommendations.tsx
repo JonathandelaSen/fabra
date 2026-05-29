@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { Lightbulb } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { IconTextButton } from "@/components/shared/action-buttons";
 
 function safeParseArray(value: string | null | undefined): string[] {
   try {
@@ -86,14 +86,13 @@ export function CVEditorRecommendations({
           <p className="text-xs text-zinc-500 mb-3">
             {t("recommendations.empty")}
           </p>
-          <Button
-            variant="outline"
-            size="sm"
+          <IconTextButton
+            icon={Lightbulb}
             onClick={onStartAnalysis}
-            className="h-8 text-[11px] border-white/10 text-zinc-400 hover:text-white"
+            className="h-8"
           >
             {t("recommendations.analyzeNow")}
-          </Button>
+          </IconTextButton>
         </div>
       )}
     </section>

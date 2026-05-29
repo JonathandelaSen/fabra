@@ -2,7 +2,10 @@
 
 import { useTranslations } from "next-intl";
 import { Check, FileText, Plus, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 import type { CVDocumentListItem } from "@/features/cv-library";
 
 interface CVTemplateCvSelectorProps {
@@ -72,14 +75,14 @@ export function CVTemplateCvSelector({
             <p className="text-sm text-zinc-500">
               {cvs.length === 0 ? t("noCvs") : t("noCvs")}
             </p>
-            <Button
-              variant="link"
-              className="mt-2 text-indigo-400 hover:text-indigo-300"
+            <IconTextButton
+              icon={Plus}
+              tone={ICON_TEXT_BUTTON_TONES.PRIMARY}
+              className="mt-2"
               onClick={onOpenUpload}
             >
-              <Plus className="mr-2 h-4 w-4" />
               {t("uploadFirstCv")}
-            </Button>
+            </IconTextButton>
           </div>
         )}
       </div>

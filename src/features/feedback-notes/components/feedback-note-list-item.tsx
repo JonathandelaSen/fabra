@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { featureMetaPillClassName } from "@/components/shared/feature-visual-system";
 import { SidebarListItem } from "@/components/shared/sidebar-list-item";
-import { LabelBadge } from "@/components/shared/label-badge";
+import { LabelBadge, LABEL_BADGE_TONES } from "@/components/shared/label-badge";
 import { formatDate } from "@/lib/format";
 import type { FeedbackListItem } from "../api/feedback-notes-api";
 
@@ -29,7 +29,7 @@ export function FeedbackNoteListItem({
         <>
           <div className="flex items-center gap-1.5 min-w-0">
             {feedback.status === "closed" && (
-              <LabelBadge tone="danger" size="xs" className="uppercase" strong>
+              <LabelBadge tone={LABEL_BADGE_TONES.DANGER} size="xs" className="uppercase" strong>
                 {t("status.closed")}
               </LabelBadge>
             )}

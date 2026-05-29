@@ -1,8 +1,13 @@
 import { Pencil, Save, Trash2, Trophy, X, Plus } from "lucide-react";
 import type { ObjectiveOutcome, ObjectiveOutcomeStatus, ObjectiveOutcomeType } from "../api/objectives-api";
 import { outcomeLabels, type OutcomeEditForm } from "./objectives-ui";
-import { Button } from "@/components/ui/button";
-import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import {
+  ActionIconButton,
+  ACTION_ICON_BUTTON_SIZES,
+  ACTION_ICON_BUTTON_TONES,
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
@@ -84,14 +89,12 @@ export function ObjectiveOutcomes({
                         <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider">
                           {t("outcomes.edit")}
                         </span>
-                        <Button
-                          variant="ghost"
-                          size="icon-xs"
+                        <ActionIconButton
+                          icon={X}
+                          buttonSize={ACTION_ICON_BUTTON_SIZES.XS}
+                          tone={ACTION_ICON_BUTTON_TONES.MUTED}
                           onClick={onStopEditingOutcome}
-                          className="h-5 w-5 text-zinc-500 hover:text-zinc-200"
-                        >
-                          <X className="h-3.5 w-3.5" />
-                        </Button>
+                        />
                       </div>
                       <Input
                         value={outcomeForm.title}
@@ -201,14 +204,13 @@ export function ObjectiveOutcomes({
                         />
                       </label>
                       <div className="flex justify-end gap-2 pt-1 border-t border-white/[0.04]">
-                        <Button
-                          variant="ghost"
-                          size="sm"
+                        <IconTextButton
+                          icon={X}
                           onClick={onStopEditingOutcome}
-                          className="h-8 text-zinc-400 hover:bg-white/[0.04]"
+                          className="h-8"
                         >
                           {t("actions.cancel")}
-                        </Button>
+                        </IconTextButton>
                         <IconTextButton
                           icon={Save}
                           loading={saving}
@@ -264,22 +266,16 @@ export function ObjectiveOutcomes({
                           ))}
                         </Select>
                         <div className="flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
-                          <Button
-                            variant="ghost"
-                            size="icon-xs"
+                          <ActionIconButton
+                            icon={Pencil}
+                            tone={ACTION_ICON_BUTTON_TONES.MUTED}
                             onClick={() => onEditOutcome(outcome)}
-                            className="h-7 w-7 text-zinc-500 hover:bg-white/[0.04] hover:text-zinc-200"
-                          >
-                            <Pencil className="h-3.5 w-3.5" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon-xs"
+                          />
+                          <ActionIconButton
+                            icon={Trash2}
+                            tone={ACTION_ICON_BUTTON_TONES.DANGER}
                             onClick={() => onDeleteOutcome(outcome)}
-                            className="h-7 w-7 text-zinc-500 hover:bg-rose-500/10 hover:text-rose-400"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
+                          />
                         </div>
                       </div>
                     </div>

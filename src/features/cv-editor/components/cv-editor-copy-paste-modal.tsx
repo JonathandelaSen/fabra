@@ -5,6 +5,7 @@ import CopyPasteWorkflowModal, {
   CopyPastePreviewItem,
 } from "@/components/shared/copy-paste-workflow-modal";
 import { useCopyPasteWorkflowState } from "@/components/shared/use-copy-paste-workflow-state";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import type { PreviewCVEditorCopyPasteResponse } from "@/app/api/cvs/[id]/edit/copy-paste/preview/responses";
 import type { ApplyCVEditorCopyPasteResponse } from "@/app/api/cvs/[id]/edit/copy-paste/apply/responses";
 import {
@@ -88,9 +89,9 @@ function CVEditorCopyPastePreview({
   return (
     <div className="space-y-4">
       {data.warnings.length > 0 && (
-        <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+        <AlertBanner tone={ALERT_BANNER_TONES.WARNING}>
           {data.warnings[0]}
-        </div>
+        </AlertBanner>
       )}
       <div className="grid gap-3 sm:grid-cols-2">
         <CopyPastePreviewItem

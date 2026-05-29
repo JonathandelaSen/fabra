@@ -1,8 +1,13 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Check, EyeOff, Loader2, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Check, EyeOff, Sparkles } from "lucide-react";
+import {
+  ActionIconButton,
+  ACTION_ICON_BUTTON_TONES,
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 import type { ActivityContextSuggestion } from "../api/activity-context-api";
 
 interface SuggestionRowProps {
@@ -35,30 +40,22 @@ export function SuggestionRow({
       </div>
 
       <div className="flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
-        <Button
-          size="sm"
-          variant="ghost"
+        <IconTextButton
+          icon={Check}
+          loading={isPending}
+          tone={ICON_TEXT_BUTTON_TONES.SUCCESS}
           onClick={() => onPromote(suggestion)}
           disabled={isPending}
-          className="gap-1.5 text-emerald-400 hover:text-emerald-300"
         >
-          {isPending ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-          ) : (
-            <Check className="h-3.5 w-3.5" />
-          )}
           {hasReturnTo ? t("selectAndReturn") : t("create")}
-        </Button>
-        <Button
-          size="icon-sm"
-          variant="ghost"
+        </IconTextButton>
+        <ActionIconButton
+          icon={EyeOff}
+          tone={ACTION_ICON_BUTTON_TONES.MUTED}
           onClick={() => onHide(suggestion)}
           disabled={isPending}
-          className="text-zinc-600 hover:text-zinc-400"
           title={t("hide")}
-        >
-          <EyeOff className="h-3.5 w-3.5" />
-        </Button>
+        />
       </div>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import type { ApplyCVProfileCopyPasteResponse } from "@/app/api/cvs/[id]/structured-profile/copy-paste/apply/responses";
 import type { CVTemplateDefinition, CVTemplateLocale } from "@/lib/cv-templates";
 import type { CVDocumentListItem } from "@/features/cv-library";
@@ -87,9 +88,9 @@ export function CVTemplateDetail({
         </div>
 
         {error && (
-          <div className="m-6 mb-0 rounded-xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm text-rose-300">
+          <AlertBanner tone={ALERT_BANNER_TONES.DANGER} className="m-6 mb-0">
             {error}
-          </div>
+          </AlertBanner>
         )}
 
         <div className="p-6 grid gap-8 xl:grid-cols-2 items-start flex-1">

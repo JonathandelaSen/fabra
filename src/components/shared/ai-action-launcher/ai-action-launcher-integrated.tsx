@@ -6,6 +6,7 @@ import { Cpu, ChevronDown, Check, KeyRound, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import type { AIModelOption } from "./ai-action-launcher";
+import { AlertBanner, ALERT_BANNER_TONES } from "../alert-banner";
 
 interface AIActionLauncherIntegratedProps {
   available: boolean;
@@ -146,10 +147,9 @@ export default function AIActionLauncherIntegrated({
         </>
       ) : (
         <div className="flex flex-col gap-2 mt-1">
-          <div className="flex items-center gap-2 rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs text-amber-200">
-            <KeyRound className="w-3.5 h-3.5 shrink-0 text-amber-400" />
-            <span>{t("configureAI")}</span>
-          </div>
+          <AlertBanner tone={ALERT_BANNER_TONES.WARNING} icon={KeyRound}compact>
+            {t("configureAI")}
+          </AlertBanner>
           {onConfigure && (
             <button
               type="button"
