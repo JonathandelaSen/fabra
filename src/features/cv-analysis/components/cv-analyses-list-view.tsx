@@ -4,6 +4,7 @@ import { Clock, FileSearch, Search, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
+import { IconBox, ICON_BOX_TONES } from "@/components/shared/icon-box";
 import { CVAnalysesListSkeleton } from "./cv-analyses-list-skeleton";
 import type { AnalysisSummary } from "@/lib/analysis-types";
 import { cn } from "@/lib/utils";
@@ -107,16 +108,14 @@ export default function CVAnalysesListView({
                   : "bg-transparent border-transparent text-zinc-400 hover:bg-[#13131c]/60 hover:border-white/[0.04] hover:text-zinc-200",
               )}
             >
-              <div
-                className={cn(
-                  "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border transition-colors",
+              <IconBox
+                icon={FileSearch}
+                tone={
                   selectedId === analysis.id
-                    ? "border-action-border bg-action-soft text-action-text"
-                    : "border-transparent bg-zinc-800/50 text-zinc-500 group-hover:bg-zinc-800/80 group-hover:text-zinc-300"
-                )}
-              >
-                <FileSearch className="h-4 w-4" />
-              </div>
+                    ? ICON_BOX_TONES.ACTION
+                    : ICON_BOX_TONES.NEUTRAL
+                }
+              />
 
               <div className="min-w-0 flex-1">
                 <div className="flex min-w-0 items-start gap-2">

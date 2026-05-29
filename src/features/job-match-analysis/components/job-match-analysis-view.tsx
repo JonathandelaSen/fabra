@@ -210,7 +210,6 @@ export default function JobMatchAnalysisView({
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             onSelect={handleSelect}
-            onDelete={(id) => void handleDelete(id)}
             isLoading={listQuery.isLoading}
           />
         }
