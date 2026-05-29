@@ -29,11 +29,11 @@ export function InterviewQuestionListItem({
       footer={
         <div className="flex flex-wrap items-center gap-1.5 min-w-0">
           {question.answer ? (
-            <LabelBadge tone={LABEL_BADGE_TONES.SUCCESS} size="xs" icon={CheckCircle2} className="uppercase" strong>
+            <LabelBadge tone={LABEL_BADGE_TONES.SUCCESS} size="xs" icon={CheckCircle2} >
               {t("answered")}
             </LabelBadge>
           ) : (
-            <LabelBadge tone={LABEL_BADGE_TONES.WARNING} size="xs" className="uppercase" strong>
+            <LabelBadge tone={LABEL_BADGE_TONES.WARNING} size="xs" >
               {t("pending")}
             </LabelBadge>
           )}

@@ -56,12 +56,14 @@ export default function InterviewQuestionHeader({
             )}
             {question.cvId && (
               <IconLabelBadge
+              size="md" 
                 icon={FileText}
                 text={linkedCvName}
               />
             )}
             {question.analysisId && (
               <IconLabelBadge
+              size="md" 
                 icon={Briefcase}
                 text={linkedOfferTitle}
               />

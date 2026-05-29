@@ -36,10 +36,16 @@ const TONE_CLASS_NAMES = {
     "border-transparent bg-indigo-500/10 text-indigo-300 ring-1 ring-inset ring-indigo-500/20",
 } satisfies Record<LabelBadgeTone, string>;
 
-const SIZE_CLASS_NAMES = {
-  [LABEL_BADGE_SIZES.XS]: "h-auto rounded-md px-1.5 py-0 text-xs",
+export const LABEL_BADGE_SIZE_CLASS_NAMES = {
+  [LABEL_BADGE_SIZES.XS]: "h-auto rounded-md px-2 py-0.5 text-xs",
   [LABEL_BADGE_SIZES.SM]: "h-auto rounded-md px-2.5 py-1 text-sm",
   [LABEL_BADGE_SIZES.MD]: "h-auto rounded-md px-3 py-1.5 text-md",
+} satisfies Record<LabelBadgeSize, string>;
+
+export const LABEL_BADGE_ICON_SIZE_CLASS_NAMES = {
+  [LABEL_BADGE_SIZES.XS]: "h-2.5 w-2.5",
+  [LABEL_BADGE_SIZES.SM]: "h-2.5 w-2.5",
+  [LABEL_BADGE_SIZES.MD]: "h-3.5 w-3.5",
 } satisfies Record<LabelBadgeSize, string>;
 
 export interface LabelBadgeProps extends Omit<ComponentProps<typeof Badge>, "variant"> {
@@ -67,14 +73,14 @@ export function LabelBadge({
         "shrink-0 gap-1 normal-case tracking-normal",
         strong ? "font-semibold" : "font-medium",
         TONE_CLASS_NAMES[tone],
-        SIZE_CLASS_NAMES[size],
+        LABEL_BADGE_SIZE_CLASS_NAMES[size],
         className
       )}
       {...props}
     >
       {Icon && (
         <Icon
-          className={size === LABEL_BADGE_SIZES.MD ? "h-3.5 w-3.5" : "h-2.5 w-2.5"}
+          className={LABEL_BADGE_ICON_SIZE_CLASS_NAMES[size]}
         />
       )}
       {children ?? label}
