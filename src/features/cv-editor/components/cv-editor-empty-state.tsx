@@ -14,13 +14,13 @@ interface TemplateCv {
 
 interface CVEditorEmptyStateProps {
   templateCvs: TemplateCv[];
-  setManuallySelectedVersionId: (id: string) => void;
+  onSelectVersion: (id: string) => void;
   onOpenTemplates: () => void;
 }
 
 export function CVEditorEmptyState({
   templateCvs,
-  setManuallySelectedVersionId,
+  onSelectVersion,
   onOpenTemplates,
 }: CVEditorEmptyStateProps) {
   const t = useTranslations("cvEditor");
@@ -43,7 +43,7 @@ export function CVEditorEmptyState({
             {templateCvs.map((cv) => (
               <button
                 key={cv.id}
-                onClick={() => setManuallySelectedVersionId(cv.id)}
+                onClick={() => onSelectVersion(cv.id)}
                 className="flex flex-col items-start rounded-xl border border-white/5 bg-white/5 p-4 hover:border-teal-500/30 hover:bg-white/10 transition-colors"
               >
                 <span className="font-semibold text-white truncate w-full">

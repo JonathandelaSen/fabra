@@ -35,7 +35,7 @@ export default function SettingsView({
       title={t("title")}
       bodyClassName="overflow-auto"
     >
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-6">
+      <div className="flex w-full flex-col gap-6">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}

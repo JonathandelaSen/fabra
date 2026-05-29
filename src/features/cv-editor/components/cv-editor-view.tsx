@@ -37,6 +37,7 @@ interface CVEditorViewProps {
   onOpenTemplates: () => void;
   onOpenSettings: () => void;
   onStartAnalysis: () => void;
+  onOpenVersion: (cvId: string) => void;
   onBackToLibrary?: () => void;
 }
 
@@ -52,6 +53,7 @@ export default function CVEditorView({
   onOpenTemplates,
   onOpenSettings,
   onStartAnalysis,
+  onOpenVersion,
   onBackToLibrary,
 }: CVEditorViewProps) {
   const t = useTranslations("cvEditor");
@@ -84,7 +86,6 @@ export default function CVEditorView({
     selectedModel,
     setSelectedModel,
     setEditedVersion,
-    setManuallySelectedVersionId,
     setProfile,
     saveProfileToApi,
     reloadPreview,
@@ -152,7 +153,7 @@ export default function CVEditorView({
     return (
       <CVEditorEmptyState
         templateCvs={templateCvs}
-        setManuallySelectedVersionId={setManuallySelectedVersionId}
+        onSelectVersion={onOpenVersion}
         onOpenTemplates={onOpenTemplates}
       />
     );

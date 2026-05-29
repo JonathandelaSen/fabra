@@ -36,7 +36,6 @@ export function useCVEditorState(activeVersionId: string | null) {
   const aiModel = getStoredAIModel();
   const hasAIApiKey = aiProvider === "mock" || aiApiKey.length > 0;
 
-  const [manuallySelectedVersionId, setManuallySelectedVersionId] = useState<string | null>(null);
   const [editedVersion, setEditedVersion] = useState<CVDocumentListItem | null>(null);
   const [selectedModel, setSelectedModel] = useState("gemini-3.1-pro-preview");
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved">("idle");
@@ -47,7 +46,7 @@ export function useCVEditorState(activeVersionId: string | null) {
   const savedProfileJsonRef = useRef<string | null>(null);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const currentVersionId = manuallySelectedVersionId ?? activeVersionId;
+  const currentVersionId = activeVersionId;
   const currentVersionFromList = useMemo(
     () => currentVersionId ? (templateCvs.find((v) => v.id === currentVersionId) ?? null) : null,
     [templateCvs, currentVersionId],
@@ -190,7 +189,6 @@ export function useCVEditorState(activeVersionId: string | null) {
     setSelectedModel,
     editedVersion,
     setEditedVersion,
-    setManuallySelectedVersionId,
     setProfile,
     saveProfileToApi,
     reloadPreview,

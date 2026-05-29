@@ -432,6 +432,14 @@ export default function AppShell({
       queueMicrotask(() => {
         router.replace("/cvs");
       });
+    } else if (pathname.startsWith("/cvs/editor")) {
+      queueMicrotask(() => {
+        const editorCvId = pathname.split("/").filter(Boolean)[2] ?? null;
+        setActiveView("editor");
+        setActiveAnalysisId(null);
+        setActiveAnalysis(null);
+        setActiveEditorCvId(editorCvId ? decodeURIComponent(editorCvId) : null);
+      });
     } else if (pathname.startsWith("/cvs")) {
       queueMicrotask(() => {
         setActiveView("cvs");
@@ -450,10 +458,12 @@ export default function AppShell({
       });
     } else if (view === "editor") {
       queueMicrotask(() => {
-        setActiveView("editor");
-        setActiveAnalysisId(null);
-        setActiveAnalysis(null);
-        setActiveEditorCvId(searchParams.get("cv"));
+        const legacyCvId = searchParams.get("cv");
+        router.replace(
+          legacyCvId
+            ? `/cvs/editor/${encodeURIComponent(legacyCvId)}`
+            : "/cvs/editor",
+        );
       });
     } else if (view === "questions") {
       queueMicrotask(() => {
@@ -636,8 +646,9 @@ export default function AppShell({
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
     setActiveEditorCvId(targetCvId);
-    const suffix = targetCvId ? `&cv=${encodeURIComponent(targetCvId)}` : "";
-    window.history.replaceState(null, "", `/?view=editor${suffix}`);
+    router.push(
+      targetCvId ? `/cvs/editor/${encodeURIComponent(targetCvId)}` : "/cvs/editor",
+    );
   };
 
   const handleOpenQuestions = (options?: {

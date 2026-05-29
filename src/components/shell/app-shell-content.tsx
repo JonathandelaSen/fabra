@@ -161,6 +161,7 @@ export default function AppShellContent({
           onOpenTemplates={onOpenTemplates}
           onOpenSettings={onOpenSettings}
           onStartAnalysis={onNewAnalysis}
+          onOpenVersion={onOpenEditor}
           onBackToLibrary={onOpenCVs}
         />
       </ViewFrame>
