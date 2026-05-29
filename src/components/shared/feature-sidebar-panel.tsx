@@ -2,6 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
+import { BasicPanel } from "./basic-panel";
 
 interface FeatureSidebarPanelProps {
   header?: React.ReactNode;
@@ -19,9 +20,11 @@ export function FeatureSidebarPanel({
   bodyClassName,
 }: FeatureSidebarPanelProps) {
   return (
-    <aside
+    <BasicPanel
+      as="aside"
+      radius="lg"
       className={cn(
-        "flex h-full min-h-0 w-full shrink-0 flex-col rounded-lg border border-line bg-panel shadow-[0_4px_20px_rgba(0,0,0,0.15)]",
+        "flex h-full min-h-0 w-full shrink-0 flex-col",
         className
       )}
     >
@@ -33,6 +36,6 @@ export function FeatureSidebarPanel({
       <div className={cn("min-h-0 flex-1 overflow-y-auto px-2 py-3", bodyClassName)}>
         {children}
       </div>
-    </aside>
+    </BasicPanel>
   );
 }

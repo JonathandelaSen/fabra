@@ -7,7 +7,8 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { DeleteButton, EditButton } from "@/components/shared/action-buttons";
-import { AlertBanner } from "@/components/shared/alert-banner";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
+import { BasicPanel } from "@/components/shared/basic-panel";
 import { IconLabelBadge } from "@/components/shared/icon-label-badge";
 import { formatDate } from "@/lib/format";
 import type {
@@ -35,7 +36,7 @@ export function ReceivedFeedbackDetail({
 
   return (
     <div className="flex flex-col gap-5">
-      <section className="rounded-xl border border-line bg-panel shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-6">
+      <BasicPanel as="section" className="p-6">
         <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between border-b border-line pb-5">
           <div className="min-w-0 flex-1">
             <h2 className="truncate text-xl font-bold tracking-tight text-text-main">
@@ -79,7 +80,7 @@ export function ReceivedFeedbackDetail({
 
           {item.userNote && (
             <AlertBanner
-              tone="warning"
+              tone={ALERT_BANNER_TONES.WARNING}
               icon={Lock}
               title={t("fields.privateNote")}
             >
@@ -87,7 +88,7 @@ export function ReceivedFeedbackDetail({
             </AlertBanner>
           )}
         </div>
-      </section>
+      </BasicPanel>
     </div>
   );
 }
