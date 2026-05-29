@@ -27,6 +27,7 @@ import TabEntrevista from "./tab-entrevista";
 import TabSeguimiento from "./tab-seguimiento";
 import TabChatOferta from "./tab-chat-oferta";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
+import { formatDisplayDate } from "@/lib/date-format";
 
 interface AIAnalysisViewProps {
   analysis: {
@@ -143,17 +144,6 @@ export default function AIAnalysisView({
   const missingKeywords = safeParseArray(analysis.missing_keywords);
   const jobKeyData = safeParseJobKeyData(analysis.job_key_data);
 
-  const formatDate = (dateStr: string) => {
-    const d = new Date(dateStr);
-    return d.toLocaleDateString(dateLocale, {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
   const handleExport = () => {
     const cvName = analysis.cv?.name ?? analysis.filename;
     const cvUrl = analysis.cv
@@ -167,7 +157,7 @@ ${t("export.name")}: ${analysis.title}
 ${t("export.cvUsed")}: ${cvName}
 ${cvUrl ? `${t("export.cvLink")}: ${cvUrl}` : ""}
 ${t("export.analysisId")}: ${analysis.id}
-${t("export.date")}: ${formatDate(analysis.ai_analyzed_at)}
+${t("export.date")}: ${formatDisplayDate(analysis.ai_analyzed_at, { locale: dateLocale, variant: "dateTime" })}
 ${t("export.model")}: ${analysis.ai_model}
 
 ${t("export.score")}: ${analysis.ai_score}/100

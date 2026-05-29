@@ -1,7 +1,6 @@
 "use client";
 
-import { Clock } from "lucide-react";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
+import { FormattedDate } from "@/components/shared/formatted-date";
 import { cn } from "@/lib/utils";
 import type { JobMatchAnalysisSummary } from "../api/job-match-analysis-api";
 import { JobMatchAnalysisScoreBadge } from "./job-match-analysis-score-badge";
@@ -13,23 +12,11 @@ interface JobMatchAnalysisListItemProps {
   onSelect: () => void;
 }
 
-const formatDate = (dateStr: string, locale: string) => {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString(locale, {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-};
-
 export function JobMatchAnalysisListItem({
   analysis,
   selected,
   onSelect,
 }: JobMatchAnalysisListItemProps) {
-  const { locale } = useInterfaceLanguage();
-  const dateLocale = locale === "es" ? "es-ES" : "en-US";
-
   return (
     <div
       role="button"
@@ -56,10 +43,7 @@ export function JobMatchAnalysisListItem({
           <JobMatchAnalysisScoreBadge score={analysis.aiScore} />
         </div>
         <div className="mt-1.5 flex flex-wrap items-center gap-2">
-          <span className="flex items-center gap-1 text-[11px] text-zinc-500">
-            <Clock className="h-3 w-3" />
-            {formatDate(analysis.createdAt, dateLocale)}
-          </span>
+          <FormattedDate value={analysis.createdAt} />
           {analysis.offerStatus && (
             <JobMatchAnalysisStatusBadge status={analysis.offerStatus} />
           )}

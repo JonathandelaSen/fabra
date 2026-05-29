@@ -22,6 +22,7 @@ import TabEntrevista from "./tab-entrevista";
 import TabSeguimiento from "./tab-seguimiento";
 import TabChatOferta from "./tab-chat-oferta";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
+import { formatDisplayDate } from "@/lib/date-format";
 
 type DetailTab = "summary" | "offer" | "questions" | "chat" | "tracking";
 
@@ -133,17 +134,6 @@ export default function JobMatchAnalysisDetail({
   const missingKeywords = safeParseArray(analysis.missingKeywords);
   const jobKeyData = safeParseJobKeyData(analysis.jobKeyData);
 
-  const formatDate = (dateStr: string) => {
-    const d = new Date(dateStr);
-    return d.toLocaleDateString(dateLocale, {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
   const handleExport = () => {
     const cvName = analysis.cv?.name ?? analysis.filename;
     const cvUrl = analysis.cv
@@ -157,7 +147,7 @@ ${t("export.name")}: ${analysis.title}
 ${t("export.cvUsed")}: ${cvName}
 ${cvUrl ? `${t("export.cvLink")}: ${cvUrl}` : ""}
 ${t("export.analysisId")}: ${analysis.id}
-${t("export.date")}: ${formatDate(analysis.aiAnalyzedAt!)}
+${t("export.date")}: ${formatDisplayDate(analysis.aiAnalyzedAt, { locale: dateLocale, variant: "dateTime" })}
 ${t("export.model")}: ${analysis.aiModel}
 
 ${t("export.score")}: ${analysis.aiScore}/100

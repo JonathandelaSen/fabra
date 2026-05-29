@@ -1,8 +1,8 @@
 "use client";
 
-import { Clock, FileSearch, Search, Trash2 } from "lucide-react";
+import { FileSearch, Search, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
+import { FormattedDate } from "@/components/shared/formatted-date";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
 import { IconBox, ICON_BOX_TONES } from "@/components/shared/icon-box";
 import { CVAnalysesListSkeleton } from "./cv-analyses-list-skeleton";
@@ -26,15 +26,6 @@ const getScoreColor = (score: number | null) => {
   return "text-rose-400 bg-rose-500/15 border-rose-500/20";
 };
 
-const formatDate = (dateStr: string, locale: string) => {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString(locale, {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-};
-
 export default function CVAnalysesListView({
   analyses,
   selectedId,
@@ -46,8 +37,6 @@ export default function CVAnalysesListView({
 }: CVAnalysesListViewProps) {
   const t = useTranslations("analysisFlow.lists");
   const common = useTranslations("common");
-  const { locale } = useInterfaceLanguage();
-  const dateLocale = locale === "es" ? "es-ES" : "en-US";
 
   return (
     <FeatureSidebarPanel
@@ -135,10 +124,7 @@ export default function CVAnalysesListView({
                   )}
                 </div>
                 <div className="mt-1.5 flex flex-wrap items-center gap-2">
-                  <span className="flex items-center gap-1 text-[11px] text-zinc-500">
-                    <Clock className="h-3 w-3" />
-                    {formatDate(analysis.created_at, dateLocale)}
-                  </span>
+                  <FormattedDate value={analysis.created_at} />
                 </div>
               </div>
 

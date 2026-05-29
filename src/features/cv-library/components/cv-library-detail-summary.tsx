@@ -4,7 +4,6 @@ import { FileSearch, MessageSquareQuote, Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { AnalysisSummary } from "@/lib/analysis-types";
 import type { InterviewQuestionResponse } from "@/app/api/interview-questions/responses";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import type { CVDocumentListItem } from "../api/cv-library-api";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CVLibraryAtsScoreCircle } from "./cv-library-ats-score-circle";
@@ -34,15 +33,6 @@ export function CVLibraryDetailSummary({
   onOpenEditor,
 }: CVLibraryDetailSummaryProps) {
   const t = useTranslations("analysisFlow.cvLibrary");
-  const { locale } = useInterfaceLanguage();
-  const dateLocale = locale === "es" ? "es-ES" : "en-US";
-
-  const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleDateString(dateLocale, {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
 
   return (
     <div className="grid gap-5 border-b border-white/[0.06] bg-white/[0.015] p-5 lg:grid-cols-[auto_1fr]">
@@ -79,7 +69,6 @@ export function CVLibraryDetailSummary({
             <CVLibraryAssociatedAnalyses
               analyses={analyses}
               onOpenAnalysis={onOpenAnalysis}
-              formatDate={formatDate}
             />
           </TabsContent>
 
@@ -95,7 +84,6 @@ export function CVLibraryDetailSummary({
             <CVLibraryTemplateVersions
               templateVersions={templateVersions}
               onOpenEditor={onOpenEditor}
-              formatDate={formatDate}
             />
           </TabsContent>
         </Tabs>
@@ -103,4 +91,3 @@ export function CVLibraryDetailSummary({
     </div>
   );
 }
-

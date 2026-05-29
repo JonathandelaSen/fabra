@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import {
-  Clock,
   Cpu,
   Briefcase,
   FileDown,
@@ -18,8 +17,8 @@ import {
   Pencil,
 } from "lucide-react";
 import type { AnalysisMode } from "@/lib/analysis-types";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import AnalysisScoreCircle from "@/components/shared/analysis-score-circle";
+import { FormattedDate } from "@/components/shared/formatted-date";
 import { getScoreColor } from "@/lib/format";
 
 interface ScoreHeroProps {
@@ -47,17 +46,6 @@ function getScoreLabelKey(score: number) {
   return "needsWork";
 }
 
-function formatDate(dateStr: string, locale: string) {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString(locale, {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
 export default function ScoreHero({
   score,
   title,
@@ -78,8 +66,6 @@ export default function ScoreHero({
 }: ScoreHeroProps) {
   const t = useTranslations("analysisDetail.score");
   const common = useTranslations("common.actions");
-  const { locale } = useInterfaceLanguage();
-  const dateLocale = locale === "es" ? "es-ES" : "en-US";
   const colors = getScoreColor(score);
   const [isEditingUrl, setIsEditingUrl] = useState(false);
   const [editedUrl, setEditedUrl] = useState(jobUrl || "");
@@ -145,10 +131,11 @@ export default function ScoreHero({
               <Cpu className="w-3 h-3" />
               {model}
             </span>
-            <span className="inline-flex items-center gap-1.5 text-[11px] text-zinc-500 bg-zinc-800/50 px-2 py-1 rounded-md">
-              <Clock className="w-3 h-3" />
-              {formatDate(analyzedAt, dateLocale)}
-            </span>
+            <FormattedDate
+              value={analyzedAt}
+              variant="dateTime"
+              className="gap-1.5 bg-zinc-800/50 px-2 py-1 rounded-md"
+            />
             {jobDescription && (
               <span className="inline-flex items-center gap-1.5 text-[11px] text-zinc-500 bg-zinc-800/50 px-2 py-1 rounded-md">
                 <Briefcase className="w-3 h-3" />

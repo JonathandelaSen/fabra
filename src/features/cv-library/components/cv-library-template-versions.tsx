@@ -1,19 +1,18 @@
 "use client";
 
-import { Clock, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { FormattedDate } from "@/components/shared/formatted-date";
 import type { CVDocumentListItem } from "../api/cv-library-api";
 
 interface CVLibraryTemplateVersionsProps {
   templateVersions: CVDocumentListItem[];
   onOpenEditor: (cvId: string) => void;
-  formatDate: (dateStr: string) => string;
 }
 
 export function CVLibraryTemplateVersions({
   templateVersions,
   onOpenEditor,
-  formatDate,
 }: CVLibraryTemplateVersionsProps) {
   const t = useTranslations("analysisFlow.cvLibrary");
 
@@ -41,10 +40,11 @@ export function CVLibraryTemplateVersions({
             <span className="block truncate text-xs font-semibold text-zinc-200 group-hover:text-zinc-100">
               {template.name}
             </span>
-            <span className="mt-0.5 flex items-center gap-1 text-[10px] text-zinc-500">
-              <Clock className="h-2.5 w-2.5" />
-              {formatDate(template.createdAt)}
-            </span>
+            <FormattedDate
+              value={template.createdAt}
+              className="mt-0.5 text-[10px]"
+              iconClassName="h-2.5 w-2.5"
+            />
           </span>
         </button>
       ))}

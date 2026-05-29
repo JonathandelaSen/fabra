@@ -1,19 +1,18 @@
 "use client";
 
-import { Briefcase, FileSearch, Clock, ExternalLink } from "lucide-react";
+import { Briefcase, FileSearch, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { FormattedDate } from "@/components/shared/formatted-date";
 import type { AnalysisSummary } from "@/lib/analysis-types";
 
 interface CVLibraryAssociatedAnalysesProps {
   analyses: AnalysisSummary[];
   onOpenAnalysis: (id: string) => void;
-  formatDate: (dateStr: string) => string;
 }
 
 export function CVLibraryAssociatedAnalyses({
   analyses,
   onOpenAnalysis,
-  formatDate,
 }: CVLibraryAssociatedAnalysesProps) {
   const t = useTranslations("analysisFlow.cvLibrary");
 
@@ -52,10 +51,11 @@ export function CVLibraryAssociatedAnalyses({
             <span className="block truncate text-xs font-semibold text-zinc-200 group-hover:text-zinc-100">
               {analysis.title || analysis.filename.replace(/\.pdf$/i, "")}
             </span>
-            <span className="mt-0.5 flex items-center gap-1 text-[10px] text-zinc-500">
-              <Clock className="h-2.5 w-2.5" />
-              {formatDate(analysis.created_at)}
-            </span>
+            <FormattedDate
+              value={analysis.created_at}
+              className="mt-0.5 text-[10px]"
+              iconClassName="h-2.5 w-2.5"
+            />
           </span>
           <ExternalLink className="h-3.5 w-3.5 shrink-0 text-zinc-600 group-hover:text-teal-400 transition-colors" />
         </a>

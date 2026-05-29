@@ -1,3 +1,4 @@
+import { formatDisplayDate } from "@/lib/date-format";
 import type {
   ObjectiveItemStatus,
   ObjectiveOutcomeStatus,
@@ -73,13 +74,7 @@ export const itemStatusLabels: Record<ObjectiveItemStatus, string> = {
 };
 
 export function formatDate(d: string | null, locale = "en-GB"): string {
-  if (!d) return "";
-  const date = new Date(`${d}T00:00:00`);
-  return date.toLocaleDateString(locale, {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+  return formatDisplayDate(d, { locale });
 }
 
 export function statusClass(status: ObjectiveStatus): string {

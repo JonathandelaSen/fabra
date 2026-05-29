@@ -1,9 +1,7 @@
+import { formatDisplayDate } from "@/lib/date-format";
+
 export function formatDate(value: string): string {
-  return new Date(value).toLocaleDateString("en", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+  return formatDisplayDate(value);
 }
 
 export function getScoreColor(score: number) {
