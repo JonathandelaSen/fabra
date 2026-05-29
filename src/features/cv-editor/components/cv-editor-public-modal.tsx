@@ -43,7 +43,7 @@ export function CVEditorPublicModal({
         <p className="mt-3 text-sm leading-relaxed text-zinc-400">
           {t("publicModal.description")}
         </p>
-        <AlertBanner tone={ALERT_BANNER_TONES.DANGER} compact className="mt-4">
+        <AlertBanner tone={ALERT_BANNER_TONES.DANGER} className="mt-4">
           {t("publicModal.warning")}
         </AlertBanner>
         <div className="mt-6 rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-xs text-zinc-300">

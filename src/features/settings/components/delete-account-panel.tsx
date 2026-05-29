@@ -58,7 +58,7 @@ export function DeleteAccountPanel({ userEmail }: DeleteAccountPanelProps) {
       </div>
 
       {deleteState.error && (
-        <AlertBanner tone={ALERT_BANNER_TONES.DANGER} icon={AlertCircle} compact className="mt-3">
+        <AlertBanner tone={ALERT_BANNER_TONES.DANGER} icon={AlertCircle} className="mt-3">
           {deleteState.error}
         </AlertBanner>
       )}

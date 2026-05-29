@@ -147,7 +147,7 @@ export default function AIActionLauncherIntegrated({
         </>
       ) : (
         <div className="flex flex-col gap-2 mt-1">
-          <AlertBanner tone={ALERT_BANNER_TONES.WARNING} icon={KeyRound}compact>
+          <AlertBanner tone={ALERT_BANNER_TONES.WARNING} icon={KeyRound}>
             {t("configureAI")}
           </AlertBanner>
           {onConfigure && (

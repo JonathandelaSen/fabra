@@ -78,7 +78,6 @@ export function ObservabilityTimelineItem({
           <AlertBanner
             tone={ALERT_BANNER_TONES.DANGER}
             title={event.errorCode ?? t("errorFallback")}
-            compact
             className="mt-3"
           >
             {event.errorMessage && (

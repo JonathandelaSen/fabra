@@ -152,7 +152,7 @@ export function AdminObservabilityView({
 
             <div className="min-h-0 flex-1 overflow-y-auto p-2">
               {error && (
-                <AlertBanner tone={ALERT_BANNER_TONES.DANGER} compact className="mb-2">
+                <AlertBanner tone={ALERT_BANNER_TONES.DANGER} className="mb-2">
                   {error}
                 </AlertBanner>
               )}

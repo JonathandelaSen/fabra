@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { DeleteButton, EditButton } from "@/components/shared/action-buttons";
+import { AlertBanner } from "@/components/shared/alert-banner";
 import { IconLabelBadge } from "@/components/shared/icon-label-badge";
 import { formatDate } from "@/lib/format";
 import type {
@@ -77,15 +78,13 @@ export function ReceivedFeedbackDetail({
           </div>
 
           {item.userNote && (
-            <div className="rounded-xl border border-warning-border bg-warning-soft p-5">
-              <div className="mb-2.5 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-warning-text">
-                <Lock className="h-3.5 w-3.5" />
-                {t("fields.privateNote")}
-              </div>
-              <p className="whitespace-pre-wrap text-sm leading-relaxed text-text-soft">
-                {item.userNote}
-              </p>
-            </div>
+            <AlertBanner
+              tone="warning"
+              icon={Lock}
+              title={t("fields.privateNote")}
+            >
+              <div className="text-white whitespace-pre-wrap">{item.userNote}</div>
+            </AlertBanner>
           )}
         </div>
       </section>

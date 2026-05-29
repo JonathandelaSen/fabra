@@ -43,7 +43,6 @@ interface AlertBannerProps {
   icon?: React.ComponentType<{ className?: string }>;
   title?: React.ReactNode;
   children: React.ReactNode;
-  compact?: boolean;
   className?: string;
 }
 
@@ -52,7 +51,6 @@ export function AlertBanner({
   icon: Icon,
   title,
   children,
-  compact = false,
   className,
 }: AlertBannerProps) {
   const t = TONES[tone];
@@ -61,7 +59,7 @@ export function AlertBanner({
     <div
       className={cn(
         "rounded-xl border",
-        compact ? "px-3 py-2" : "p-4",
+        "p-4",
         t.container,
         className,
       )}
@@ -71,7 +69,7 @@ export function AlertBanner({
           <Icon
             className={cn(
               "shrink-0",
-              compact ? "mt-0.5 h-4 w-4" : "mt-0.5 h-5 w-5",
+              "mt-0.5 h-5 w-5",
               t.icon,
             )}
           />
@@ -81,7 +79,7 @@ export function AlertBanner({
             <h3
               className={cn(
                 "font-semibold",
-                compact ? "text-xs" : "text-sm",
+                "text-sm",
                 t.title,
               )}
             >
@@ -90,7 +88,7 @@ export function AlertBanner({
           )}
           <div
             className={cn(
-              compact ? "text-xs leading-5" : "text-sm leading-6",
+              "text-sm leading-6",
               title && "mt-1",
               t.body,
             )}

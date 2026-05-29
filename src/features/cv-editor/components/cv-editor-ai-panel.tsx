@@ -48,7 +48,7 @@ export function CVEditorAIPanel({
       </header>
 
       {error && (
-        <AlertBanner tone={ALERT_BANNER_TONES.DANGER} compact className="mb-4">
+        <AlertBanner tone={ALERT_BANNER_TONES.DANGER} className="mb-4">
           {error}
         </AlertBanner>
       )}
