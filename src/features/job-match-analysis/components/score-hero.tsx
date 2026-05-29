@@ -9,7 +9,6 @@ import {
   FileDown,
   FileText,
   ExternalLink,
-  Trash2,
   Loader2,
   Check,
   X,
@@ -32,8 +31,6 @@ interface ScoreHeroProps {
   cvId: string | null;
   filename: string;
   onExport: () => void;
-  onDelete: () => void;
-  isDeleting: boolean;
   onSaveUrl: (url: string) => Promise<void>;
   isSavingUrl: boolean;
 }
@@ -67,13 +64,10 @@ export default function ScoreHero({
   cvId,
   filename,
   onExport,
-  onDelete,
-  isDeleting,
   onSaveUrl,
   isSavingUrl,
 }: ScoreHeroProps) {
   const t = useTranslations("analysisDetail.score");
-  const common = useTranslations("common.actions");
   const { locale } = useInterfaceLanguage();
   const dateLocale = locale === "es" ? "es-ES" : "en-US";
   const colors = getScoreColor(score);
@@ -230,7 +224,6 @@ export default function ScoreHero({
             </>
           </div>
 
-          {/* Actions row */}
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={onExport}
@@ -238,18 +231,6 @@ export default function ScoreHero({
             >
               <FileDown className="w-3.5 h-3.5" />
               {t("export")}
-            </button>
-            <button
-              onClick={onDelete}
-              disabled={isDeleting}
-              className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 px-2.5 py-1 rounded-md transition-all disabled:opacity-50"
-            >
-              {isDeleting ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              ) : (
-                <Trash2 className="w-3.5 h-3.5" />
-              )}
-              {isDeleting ? common("deleting") : common("delete")}
             </button>
           </div>
         </div>

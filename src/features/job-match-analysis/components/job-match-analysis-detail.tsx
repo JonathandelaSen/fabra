@@ -43,7 +43,6 @@ interface JobMatchAnalysisDetailProps {
     offerNextAction: string;
     offerNextActionAt: string;
   }) => Promise<void>;
-  onDelete: (id: string) => Promise<void>;
 }
 
 function safeParseArray(value: string | null): string[] {
@@ -103,12 +102,10 @@ export default function JobMatchAnalysisDetail({
   onOpenQuestions,
   onUpdateUrl,
   onUpdateTracking,
-  onDelete,
 }: JobMatchAnalysisDetailProps) {
   const t = useTranslations("analysisDetail");
   const { locale } = useInterfaceLanguage();
   const dateLocale = locale === "es" ? "es-ES" : "en-US";
-  const [isDeleting, setIsDeleting] = useState(false);
   const [isSavingUrl, setIsSavingUrl] = useState(false);
   const [offerStatus, setOfferStatus] = useState<OfferStatus>(
     analysis.offerStatus ?? "interesante",
@@ -195,25 +192,6 @@ ${analysis.jobDescription ? `${t("export.jobDescription")}:\n${analysis.jobDescr
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  };
-
-  const handleDelete = async () => {
-    if (
-      !confirm(
-        t("alerts.confirmDelete"),
-      )
-    ) {
-      return;
-    }
-    setIsDeleting(true);
-    try {
-      await onDelete(analysis.id);
-    } catch (error) {
-      console.error("Error deleting analysis:", error);
-      alert(t("alerts.deleteFailed"));
-    } finally {
-      setIsDeleting(false);
-    }
   };
 
   const handleSaveUrl = async (url: string) => {
@@ -317,7 +295,6 @@ ${analysis.jobDescription ? `${t("export.jobDescription")}:\n${analysis.jobDescr
     >
       <div className="flex flex-1 min-h-0">
         <div className="w-full space-y-5">
-          {/* Score Hero */}
           <ScoreHero
             score={analysis.aiScore!}
             title={analysis.title}
@@ -330,13 +307,10 @@ ${analysis.jobDescription ? `${t("export.jobDescription")}:\n${analysis.jobDescr
             cvId={analysis.cvId}
             filename={analysis.filename}
             onExport={handleExport}
-            onDelete={handleDelete}
-            isDeleting={isDeleting}
             onSaveUrl={handleSaveUrl}
             isSavingUrl={isSavingUrl}
           />
 
-          {/* Tabs */}
           <Tabs
             value={TAB_URL_TO_INTERNAL[activeTab] ?? "resumen"}
             onValueChange={(val) => {

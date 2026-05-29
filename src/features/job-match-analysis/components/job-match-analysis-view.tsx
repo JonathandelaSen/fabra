@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Sparkles } from "lucide-react";
 import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
 import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
+import { DeleteButton } from "@/components/shared/action-buttons";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { JobMatchAnalysisDetailResponse } from "@/app/api/job-match-analyses/responses";
 import type { InterviewQuestionSummary } from "../types";
@@ -52,6 +53,8 @@ export default function JobMatchAnalysisView({
 }: JobMatchAnalysisViewProps) {
   const t = useTranslations("analysisFlow.appShell");
   const listT = useTranslations("analysisFlow.lists");
+  const alertsT = useTranslations("analysisFlow.alerts");
+  const commonT = useTranslations("common.actions");
   const queryClient = useQueryClient();
   const routeState = useJobMatchAnalysisRouteState();
   const listQuery = useJobMatchAnalysisList();
@@ -106,6 +109,18 @@ export default function JobMatchAnalysisView({
       } else {
         clearSelection();
       }
+    }
+  };
+
+  const handleDeleteSelected = async () => {
+    if (!analysisId) return;
+    if (!confirm(alertsT("confirmDelete"))) return;
+
+    try {
+      await handleDelete(analysisId);
+    } catch (error) {
+      console.error("Error deleting analysis:", error);
+      alert(alertsT("deleteFailed"));
     }
   };
 
@@ -196,10 +211,19 @@ export default function JobMatchAnalysisView({
     <FeatureScreenShell
       title={listT("jobTitle")}
       actions={
-        <FeatureHeaderActionButton
-          label={listT("newOffer")}
-          onClick={onNewAnalysis}
-        />
+        <>
+          <FeatureHeaderActionButton
+            label={listT("newOffer")}
+            onClick={onNewAnalysis}
+          />
+          {analysisId && (
+            <DeleteButton
+              onClick={() => void handleDeleteSelected()}
+              disabled={mutations.deleteAnalysis.isPending}
+              aria-label={listT("deleteOffer")}
+            />
+          )}
+        </>
       }
     >
       <FeatureTwoPaneLayout
@@ -279,7 +303,6 @@ export default function JobMatchAnalysisView({
                     onOpenQuestions={handleOpenQuestions}
                     onUpdateUrl={handleUpdateUrl}
                     onUpdateTracking={handleUpdateTracking}
-                    onDelete={handleDelete}
                   />
                 </motion.div>
               ) : (
