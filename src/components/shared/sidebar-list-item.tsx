@@ -46,7 +46,7 @@ export function SidebarListItem({
       {subtitle && <div className="mt-1.5 min-w-0">{subtitle}</div>}
 
       {footer && (
-        <div className="mt-3 flex items-center justify-between gap-2">
+        <div className="mt-3 flex min-w-0 items-center justify-between gap-2">
           {footer}
         </div>
       )}

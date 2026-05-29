@@ -2,8 +2,8 @@
 
 import { Briefcase, CheckCircle2, FileText } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { featureMetaPillClassName } from "@/components/shared/feature-visual-system";
 import { SidebarListItem } from "@/components/shared/sidebar-list-item";
+import { IconLabelBadge } from "@/components/shared/icon-label-badge";
 import { LabelBadge, LABEL_BADGE_TONES } from "@/components/shared/label-badge";
 import type { InterviewQuestion } from "../api/interview-questions-api";
 
@@ -38,16 +38,18 @@ export function InterviewQuestionListItem({
             </LabelBadge>
           )}
           {question.cv && (
-            <span className={`inline-flex items-center gap-1 text-[11px] ${featureMetaPillClassName}`}>
-              <FileText className="h-3 w-3 text-text-faint" />
-              <span className="truncate max-w-[80px]">{question.cv.name}</span>
-            </span>
+            <IconLabelBadge
+              icon={FileText}
+              size="xs"
+              text={question.cv.name}
+            />
           )}
           {question.analysis && (
-            <span className={`inline-flex items-center gap-1 text-[11px] ${featureMetaPillClassName}`}>
-              <Briefcase className="h-3 w-3 text-text-faint" />
-              <span className="truncate max-w-[80px]">{t("offer")}</span>
-            </span>
+            <IconLabelBadge
+              icon={Briefcase}
+              size="xs"
+              text={question.analysis.title}
+            />
           )}
         </div>
       }
