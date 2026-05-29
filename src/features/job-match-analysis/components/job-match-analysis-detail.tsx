@@ -23,6 +23,7 @@ import TabSeguimiento from "./tab-seguimiento";
 import TabChatOferta from "./tab-chat-oferta";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import { formatDisplayDate } from "@/lib/date-format";
+import { useQuickInterviewQuestion } from "../hooks/use-quick-interview-question";
 
 type DetailTab = "summary" | "offer" | "questions" | "chat" | "tracking";
 
@@ -119,12 +120,14 @@ export default function JobMatchAnalysisDetail({
     toDateTimeLocalValue(analysis.offerNextActionAt),
   );
   const [isSavingTracking, setIsSavingTracking] = useState(false);
-  const [quickQuestion, setQuickQuestion] = useState("");
-  const [quickQuestionContext, setQuickQuestionContext] = useState("");
-  const [isCreatingQuestion, setIsCreatingQuestion] = useState(false);
-  const [quickQuestionModel, setQuickQuestionModel] = useState(
-    "gemini-3.1-pro-preview",
-  );
+  const quickInterviewQuestion = useQuickInterviewQuestion({
+    analysisId: analysis.id,
+    cvId: analysis.cvId ?? null,
+    aiProvider,
+    aiApiKey,
+    hasAIApiKey,
+    onCreated: onInterviewQuestionCreated,
+  });
 
   const keywords = safeParseArray(analysis.aiKeywords);
   const improvements = safeParseArray(analysis.aiImprovements);
@@ -213,69 +216,6 @@ ${analysis.jobDescription ? `${t("export.jobDescription")}:\n${analysis.jobDescr
     }
   };
 
-  const handleCreateInterviewQuestion = async (generateAfter = false) => {
-    if (!quickQuestion.trim()) return;
-    if (generateAfter && !hasAIApiKey) {
-      alert(t("alerts.missingApiKeyForAnswer"));
-      return;
-    }
-    if (generateAfter && !quickQuestionContext.trim()) {
-      alert(t("alerts.missingContextForAnswer"));
-      return;
-    }
-    setIsCreatingQuestion(true);
-    try {
-      const res = await fetch("/api/interview-questions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          question: quickQuestion.trim(),
-          context: quickQuestionContext.trim() || null,
-          cv_id: analysis.cvId ?? null,
-          analysis_id: analysis.id,
-        }),
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || t("alerts.createQuestionFailed"));
-      }
-      const created = await res.json();
-      if (generateAfter) {
-        const generateRes = await fetch(
-          `/api/interview-questions/${created.id}/generate`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              provider: aiProvider,
-              apiKey: aiApiKey,
-              model: quickQuestionModel,
-              context: quickQuestionContext,
-              cv_id: analysis.cvId,
-              analysis_id: analysis.id,
-            }),
-          },
-        );
-        if (!generateRes.ok) {
-          const data = await generateRes.json().catch(() => ({}));
-          throw new Error(data.error || t("alerts.generateAnswerFailed"));
-        }
-      }
-      setQuickQuestion("");
-      setQuickQuestionContext("");
-      onInterviewQuestionCreated?.();
-    } catch (err) {
-      console.error(err);
-      alert(
-        err instanceof Error
-          ? err.message
-          : t("alerts.createLinkedQuestionFailed"),
-      );
-    } finally {
-      setIsCreatingQuestion(false);
-    }
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -342,7 +282,7 @@ ${analysis.jobDescription ? `${t("export.jobDescription")}:\n${analysis.jobDescr
                   className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                 >
                   <MessageCircle className="size-4" />
-                  Chat
+                  {t("tabs.chat")}
                 </TabsTrigger>
                 <TabsTrigger
                   value="seguimiento"
@@ -377,14 +317,14 @@ ${analysis.jobDescription ? `${t("export.jobDescription")}:\n${analysis.jobDescr
                 <TabEntrevista
                   interviewQuestions={interviewQuestions}
                   onOpenQuestions={onOpenQuestions}
-                  quickQuestion={quickQuestion}
-                  onQuickQuestionChange={setQuickQuestion}
-                  quickQuestionContext={quickQuestionContext}
-                  onQuickQuestionContextChange={setQuickQuestionContext}
-                  quickQuestionModel={quickQuestionModel}
-                  onQuickQuestionModelChange={setQuickQuestionModel}
-                  isCreatingQuestion={isCreatingQuestion}
-                  onCreateQuestion={handleCreateInterviewQuestion}
+                  quickQuestion={quickInterviewQuestion.question}
+                  onQuickQuestionChange={quickInterviewQuestion.setQuestion}
+                  quickQuestionContext={quickInterviewQuestion.context}
+                  onQuickQuestionContextChange={quickInterviewQuestion.setContext}
+                  quickQuestionModel={quickInterviewQuestion.model}
+                  onQuickQuestionModelChange={quickInterviewQuestion.setModel}
+                  isCreatingQuestion={quickInterviewQuestion.isCreating}
+                  onCreateQuestion={quickInterviewQuestion.create}
                 />
               </TabsContent>
 
