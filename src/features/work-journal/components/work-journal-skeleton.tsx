@@ -19,3 +19,18 @@ export function WorkJournalSkeleton() {
     </div>
   );
 }
+
+export function WorkJournalSidebarSkeleton() {
+  return (
+    <div className="space-y-3 px-2">
+      {Array.from({ length: 5 }).map((_, index) => (
+        <Skeleton
+          key={index}
+          className="h-20 w-full rounded-xl bg-white/[0.03]"
+        />
+      ))}
+    </div>
+  );
+}
+
+

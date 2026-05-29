@@ -1,8 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { featureMetaPillClassName } from "@/components/shared/feature-visual-system";
 import { SidebarListItem } from "@/components/shared/sidebar-list-item";
+import { LabelBadge } from "@/components/shared/label-badge";
 import { formatDate } from "@/lib/format";
 import type { WorkJournalEntryLegacy as WorkJournalEntry } from "../api/work-journal-types";
 
@@ -35,9 +35,9 @@ export function WorkJournalListItem({
       footer={
         <>
           <div className="flex items-center gap-1.5 min-w-0">
-            <span className={`text-[11px] ${featureMetaPillClassName}`}>
+            <LabelBadge size="xs" >
               {entry.context?.name || t("context")}
-            </span>
+            </LabelBadge>
           </div>
           <span className="shrink-0 text-[11px] text-text-muted">
             {formatDate(entry.date_start)}

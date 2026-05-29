@@ -6,8 +6,9 @@ import type {
   WorkJournalEntryLegacy as WorkJournalEntry,
   WorkJournalContextLegacy as WorkJournalContext,
 } from "../api/work-journal-types";
-import { WorkJournalSkeleton } from "./work-journal-skeleton";
+import { WorkJournalSidebarSkeleton } from "./work-journal-skeleton";
 import { WorkJournalListItem } from "./work-journal-list-item";
+
 
 interface WorkJournalSidebarProps {
   entries: WorkJournalEntry[];
@@ -62,14 +63,7 @@ export function WorkJournalSidebar({
       }
     >
       {isLoading ? (
-        <div className="px-2">
-          {/* Reusing skeleton styles but simplified for sidebar */}
-          <div className="space-y-3">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="h-20 w-full rounded-xl bg-white/[0.03] animate-pulse" />
-            ))}
-          </div>
-        </div>
+        <WorkJournalSidebarSkeleton />
       ) : entries.length === 0 ? (
         <div className="px-4 py-10 text-center text-sm text-zinc-600">
           {search || contextFilter ? "No matches found." : t("empty")}

@@ -70,7 +70,7 @@ export function LabelBadge({
     <Badge
       variant="outline"
       className={cn(
-        "shrink-0 gap-1 normal-case tracking-normal",
+        "min-w-0 max-w-full shrink gap-1 overflow-hidden normal-case tracking-normal",
         strong ? "font-semibold" : "font-medium",
         TONE_CLASS_NAMES[tone],
         LABEL_BADGE_SIZE_CLASS_NAMES[size],
@@ -80,10 +80,10 @@ export function LabelBadge({
     >
       {Icon && (
         <Icon
-          className={LABEL_BADGE_ICON_SIZE_CLASS_NAMES[size]}
+          className={cn(LABEL_BADGE_ICON_SIZE_CLASS_NAMES[size], "shrink-0")}
         />
       )}
-      {children ?? label}
+      <span className="min-w-0 truncate">{children ?? label}</span>
     </Badge>
   );
 }

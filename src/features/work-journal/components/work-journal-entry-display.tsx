@@ -36,7 +36,7 @@ export function WorkJournalEntryDisplay({
       </div>
 
       <div className="relative w-full bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 md:p-8">
-        <p className="text-[17px] md:text-lg font-light text-zinc-200 leading-[1.7] whitespace-pre-wrap w-full">
+        <p className="text-zinc-200 leading-[1.7] whitespace-pre-wrap w-full">
           {entry.final_text}
         </p>
 
