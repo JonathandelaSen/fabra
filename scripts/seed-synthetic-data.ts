@@ -28,7 +28,6 @@ import { createReceivedFeedbackModule } from "@/modules/received-feedback";
 import { createWorkJournalModule } from "@/modules/work-journal";
 import { createCommitmentsModule } from "@/modules/commitments";
 import { createSelectionProcessModule } from "@/modules/selection-process";
-import { ActivityContextFixture } from "@/modules/activity-context/test-helpers/activity-context.fixture";
 import { CVDocumentFixture } from "@/modules/cv-library/test-helpers/cv-document.fixture";
 import { CVAnalysisFixture } from "@/modules/cv-analysis/test-helpers/cv-analysis.fixture";
 import { JobMatchAnalysisFixture } from "@/modules/job-match-analysis/test-helpers/job-match-analysis.fixture";
@@ -41,8 +40,18 @@ import { SelectionProcessFixture } from "@/modules/selection-process/test-helper
 // ---------------------------------------------------------------------------
 // Config
 // ---------------------------------------------------------------------------
-const EMAIL = "agent-test@example.com";
-const PASSWORD = "agent-test-password";
+function parseArgs(): { email: string; password: string } {
+  const args = process.argv.slice(2);
+  let email = "agent-test@example.com";
+  let password = "agent-test-password";
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === "--email" && args[i + 1]) email = args[++i];
+    else if (args[i] === "--password" && args[i + 1]) password = args[++i];
+  }
+  return { email, password };
+}
+
+const { email: EMAIL, password: PASSWORD } = parseArgs();
 
 const COUNTS = {
   activityContexts: 8,
@@ -103,8 +112,8 @@ function bindAll(client: SupabaseClient) {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-function log(step: string, msg: string) {
-  console.log(`[${step}] ${msg}`);
+function log(msg: string) {
+  process.stdout.write(`  ${msg}\n`);
 }
 
 function getFixtureCVPaths(): string[] {
@@ -115,6 +124,18 @@ function getFixtureCVPaths(): string[] {
     .filter((f) => f.endsWith(".pdf"))
     .map((f) => path.join(dir, f));
 }
+
+// Suppress structured JSON logs from EventTracker/observability
+const _origLog = console.log;
+const _origError = console.error;
+console.log = (...args: unknown[]) => {
+  if (typeof args[0] === "string" && args[0].startsWith('{"event"')) return;
+  _origLog(...args);
+};
+console.error = (...args: unknown[]) => {
+  if (typeof args[0] === "string" && args[0].startsWith('{"event"')) return;
+  _origError(...args);
+};
 
 // ---------------------------------------------------------------------------
 // Main
@@ -140,7 +161,8 @@ async function main() {
   // -----------------------------------------------------------------------
   // 1. Ensure test user
   // -----------------------------------------------------------------------
-  log("1/9", `Ensuring test user: ${EMAIL}...`);
+  console.log(`\nSeeding synthetic data for ${EMAIL}\n`);
+  log("Ensuring test user...");
   let userId: string;
   {
     let foundUser = null;
@@ -171,9 +193,9 @@ async function main() {
         process.exit(1);
       }
       foundUser = data.user;
-      log("1/9", `User created: ${foundUser.id}`);
+      log(`User created: ${foundUser.id}`);
     } else {
-      log("1/9", `User found: ${foundUser.id}`);
+      log(`User found: ${foundUser.id}`);
     }
     userId = foundUser.id;
   }
@@ -181,7 +203,7 @@ async function main() {
   // -----------------------------------------------------------------------
   // 2. Cleanup previous data
   // -----------------------------------------------------------------------
-  log("2/9", "Cleaning up old data...");
+  log("Cleaning up old data...");
   const deletionOrder = [
     "analysis_chat_messages",
     "analysis_chat_conversations",
@@ -205,12 +227,12 @@ async function main() {
   for (const table of deletionOrder) {
     await adminClient.from(table).delete().eq("user_id", userId);
   }
-  log("2/9", "Cleanup complete.");
+  ;
 
   // -----------------------------------------------------------------------
   // 3. Sign in as user (RLS-safe client)
   // -----------------------------------------------------------------------
-  log("3/9", "Signing in as test user...");
+  log("Signing in as test user...");
   const userClient = createClient(url, anonKey, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
@@ -233,7 +255,7 @@ async function main() {
   // -----------------------------------------------------------------------
   // 4. Activity Contexts
   // -----------------------------------------------------------------------
-  log("4/9", `Creating ${COUNTS.activityContexts} activity contexts...`);
+  log("Creating activity contexts...");
   const contextIds: string[] = [];
 
   // Default context is auto-created by some modules; create named ones
@@ -262,12 +284,12 @@ async function main() {
   const defaultCtx = allContexts.find((c) => c.toPrimitives().isDefault);
   if (defaultCtx) contextIds.unshift(defaultCtx.toPrimitives().id);
 
-  log("4/9", `${contextIds.length} contexts created (including default).`);
+  log(`  ${contextIds.length} contexts`);
 
   // -----------------------------------------------------------------------
   // 5. CVs + Analyses
   // -----------------------------------------------------------------------
-  log("5/9", `Creating ${COUNTS.cvs} CVs with analyses...`);
+  log("Creating CVs + analyses...");
   const cvPaths = getFixtureCVPaths();
   const cvIds: string[] = [];
   const structuredProfileIds: string[] = [];
@@ -350,12 +372,12 @@ async function main() {
       });
     }
   }
-  log("5/9", `${cvIds.length} CVs, ${cvIds.length} profiles, ${cvIds.length * COUNTS.cvAnalysesPerCV} CV analyses created.`);
+  log(`  ${cvIds.length} CVs, ${cvIds.length * COUNTS.cvAnalysesPerCV} analyses`);
 
   // -----------------------------------------------------------------------
   // 6. Job Opportunities + Match Analyses + FollowUps + Questions
   // -----------------------------------------------------------------------
-  log("6/9", `Creating ${COUNTS.jobOpportunities} job opportunities with cascades...`);
+  log("Creating job opportunities + cascades...");
   let totalMatches = 0;
   let totalFollowUps = 0;
   let totalQuestions = 0;
@@ -487,18 +509,15 @@ async function main() {
       totalQuestions++;
     }
   }
-  log(
-    "6/9",
-    `${COUNTS.jobOpportunities} opportunities, ${totalMatches} matches, ${totalFollowUps} follow-ups, ${totalQuestions} questions, ${totalChats} chat conversations.`,
-  );
+  log(`  ${totalMatches} matches, ${totalFollowUps} follow-ups, ${totalQuestions} questions, ${totalChats} chats`);
 
   // -----------------------------------------------------------------------
   // 7. Feedback Notes + Received Feedback
   // -----------------------------------------------------------------------
-  log("7/9", `Creating ${COUNTS.feedbackNotes} feedback notes and ${COUNTS.receivedFeedback} received feedback...`);
+  log("Creating feedback notes...");
 
   for (let i = 0; i < COUNTS.feedbackNotes; i++) {
-    const fbInput = FeedbackFixture.createInput({ user_id: userId });
+    const fbInput = FeedbackFixture.createInput({ user_id: userId, activity_context_id: faker.helpers.arrayElement(contextIds) });
     const fb = await feedbackNotesModule.createFeedback.execute(fbInput);
     const fbId = fb.toPrimitives().id;
 
@@ -527,12 +546,12 @@ async function main() {
       }),
     );
   }
-  log("7/9", "Feedback notes and received feedback created.");
+  ;
 
   // -----------------------------------------------------------------------
   // 8. Work Journal Entries
   // -----------------------------------------------------------------------
-  log("8/9", `Creating ${COUNTS.workJournalEntries} work journal entries...`);
+  log("Creating work journal entries...");
 
   const wjDefaultCtx = allContexts.find((context) => context.toPrimitives().isDefault);
   if (!wjDefaultCtx && contextIds.length === 0) {
@@ -560,12 +579,12 @@ async function main() {
       }),
     );
   }
-  log("8/9", `${COUNTS.workJournalEntries} work journal entries created.`);
+  ;
 
   // -----------------------------------------------------------------------
   // 9. Commitments
   // -----------------------------------------------------------------------
-  log("9/9", "Creating commitments...");
+  log("Creating commitments...");
   let totalCommitments = 0;
   let totalItems = 0;
   let totalOutcomes = 0;
@@ -618,16 +637,9 @@ async function main() {
       }
     }
   }
-  log(
-    "9/9",
-    `${totalCommitments} commitments, ${totalItems} items, ${totalOutcomes} outcomes.`,
-  );
+  log(`  ${totalCommitments} commitments, ${totalItems} items, ${totalOutcomes} outcomes`);
 
-  // -----------------------------------------------------------------------
-  console.log("\n=======================================================");
-  console.log("SYNTHETIC SEED COMPLETE!");
-  console.log(`User: ${EMAIL} / ${PASSWORD}`);
-  console.log("=======================================================");
+  console.log(`\n  Done! User: ${EMAIL}\n`);
 }
 
 main().catch((err) => {

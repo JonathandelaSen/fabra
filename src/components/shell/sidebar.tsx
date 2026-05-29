@@ -42,7 +42,6 @@ interface SidebarProps {
   onOpenAdmin: () => void;
   userEmail: string | null;
   isAdmin?: boolean;
-  isForceCollapsed?: boolean;
 }
 
 export default function Sidebar({
@@ -62,7 +61,6 @@ export default function Sidebar({
   onOpenAdmin,
   userEmail,
   isAdmin = false,
-  isForceCollapsed = false,
 }: SidebarProps) {
   const t = useTranslations("navigation");
   const common = useTranslations("common");
@@ -72,10 +70,9 @@ export default function Sidebar({
   const [cvSectionOpen, setCvSectionOpen] = useState(true);
   const [jobSectionOpen, setJobSectionOpen] = useState(true);
 
-  const collapsed = isForceCollapsed || internalCollapsed;
+  const collapsed = internalCollapsed;
 
   const setCollapsed = (val: boolean) => {
-    if (isForceCollapsed) return;
     setInternalCollapsed(val);
   };
 

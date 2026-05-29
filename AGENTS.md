@@ -412,9 +412,11 @@ To seed the local database with a complete set of mock entities specifically for
 
 ```bash
 npm run supabase:seed-agent
+# Or with custom credentials:
+npm run supabase:seed-agent -- --email custom@example.com --password mypass
 ```
 
-Running this command is completely idempotent: it automatically finds or creates the user and cleans up any existing mock records under their ID before inserting a fresh set of beautiful, high-quality mock data.
+Running this command is completely idempotent: it automatically finds or creates the user and cleans up any existing mock records under their ID before inserting a fresh set of synthetic mock data.
 
 ## Avoid Real AI API Usage
 

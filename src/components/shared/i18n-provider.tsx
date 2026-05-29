@@ -53,7 +53,7 @@ export function I18nProvider({
 
   return (
     <InterfaceLanguageContext.Provider value={value}>
-      <NextIntlClientProvider locale={locale} messages={messages}>
+      <NextIntlClientProvider locale={locale} messages={messages} timeZone={Intl.DateTimeFormat().resolvedOptions().timeZone}>
         {children}
       </NextIntlClientProvider>
     </InterfaceLanguageContext.Provider>

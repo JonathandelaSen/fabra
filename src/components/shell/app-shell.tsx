@@ -829,7 +829,6 @@ export default function AppShell({
         onOpenAdmin={handleOpenAdmin}
         userEmail={userEmail}
         isAdmin={isAdmin}
-        isForceCollapsed={activeView === "editor"}
       />
 
       <main className="flex-1 flex flex-col overflow-hidden min-w-0 min-h-0">
