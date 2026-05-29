@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText,
-  Plus,
   ChevronLeft,
   ChevronRight,
   FileSearch,
@@ -27,7 +26,6 @@ import type { SidebarActiveView } from "./sidebar-types";
 
 interface SidebarProps {
   activeView: SidebarActiveView;
-  onNewAnalysis: () => void;
   onOpenCVAnalyses: () => void;
   onOpenJobAnalyses: () => void;
   onOpenCVs: () => void;
@@ -46,7 +44,6 @@ interface SidebarProps {
 
 export default function Sidebar({
   activeView,
-  onNewAnalysis,
   onOpenCVAnalyses,
   onOpenJobAnalyses,
   onOpenCVs,
@@ -159,21 +156,6 @@ export default function Sidebar({
             ) : (
               <ChevronLeft className="w-4 h-4" />
             )}
-          </button>
-        </div>
-
-        <div className="px-2 pb-2 shrink-0">
-          <button
-            onClick={onNewAnalysis}
-            className={`
-            w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
-            bg-gradient-to-r from-primary-1 to-primary-2 text-white shadow-lg shadow-primary-1/30
-            hover:brightness-110 active:scale-[0.97]
-            ${collapsed ? "justify-center p-2" : "px-3 py-2.5 text-sm"}
-          `}
-          >
-            <Plus className="w-4 h-4 shrink-0" />
-            {!collapsed && <span>{t("newAnalysis")}</span>}
           </button>
         </div>
 

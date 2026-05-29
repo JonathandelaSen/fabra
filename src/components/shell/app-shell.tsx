@@ -825,7 +825,6 @@ export default function AppShell({
 
       <Sidebar
         activeView={activeView}
-        onNewAnalysis={handleNewAnalysis}
         onOpenCVAnalyses={handleOpenCVAnalyses}
         onOpenJobAnalyses={handleOpenJobAnalyses}
         onOpenCVs={handleOpenCVs}
