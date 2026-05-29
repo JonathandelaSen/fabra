@@ -26,6 +26,14 @@ import { useJobMatchAnalysisExport } from "../hooks/use-job-match-analysis-expor
 
 type DetailTab = "summary" | "offer" | "questions" | "chat" | "tracking";
 
+const DETAIL_TABS = {
+  summary: "summary",
+  offer: "offer",
+  questions: "questions",
+  chat: "chat",
+  tracking: "tracking",
+} as const satisfies Record<DetailTab, DetailTab>;
+
 interface JobMatchAnalysisDetailProps {
   analysis: JobMatchAnalysisDetailType;
   aiProvider?: "gemini" | "mock";
@@ -66,21 +74,6 @@ function safeParseJobKeyData(value: string | null): JobKeyData | null {
   }
 }
 
-const TAB_URL_TO_INTERNAL: Record<string, string> = {
-  summary: "resumen",
-  offer: "oferta",
-  questions: "entrevista",
-  chat: "chat",
-  tracking: "seguimiento",
-};
-
-const TAB_INTERNAL_TO_URL: Record<string, DetailTab> = {
-  resumen: "summary",
-  oferta: "offer",
-  entrevista: "questions",
-  chat: "chat",
-  seguimiento: "tracking",
-};
 
 function toDateTimeLocalValue(value: string | null) {
   if (!value) return "";
@@ -96,7 +89,7 @@ export default function JobMatchAnalysisDetail({
   aiApiKey = "",
   aiModel = "gemini-3.1-pro-preview",
   hasAIApiKey = false,
-  activeTab = "summary",
+  activeTab = DETAIL_TABS.summary,
   onTabChange,
   interviewQuestions = [],
   onInterviewQuestionCreated,
@@ -197,31 +190,30 @@ export default function JobMatchAnalysisDetail({
           />
 
           <Tabs
-            value={TAB_URL_TO_INTERNAL[activeTab] ?? "resumen"}
+            value={activeTab}
             onValueChange={(val) => {
-              const urlTab = TAB_INTERNAL_TO_URL[val];
-              if (urlTab) onTabChange?.(urlTab);
+              onTabChange?.(val as DetailTab);
             }}
             className="w-full"
           >
             <div className="sticky top-[-24px] z-20 -mx-6 px-6 py-4 backdrop-blur-md mb-8">
               <TabsList className="bg-white/[0.03] border-white/[0.05] p-1 rounded-2xl gap-1">
                 <TabsTrigger
-                  value="resumen"
+                  value={DETAIL_TABS.summary}
                   className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                 >
                   <Sparkles className="size-4" />
                   {t("tabs.summary")}
                 </TabsTrigger>
                 <TabsTrigger
-                  value="oferta"
+                  value={DETAIL_TABS.offer}
                   className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                 >
                   <Briefcase className="size-4" />
                   {t("tabs.offer")}
                 </TabsTrigger>
                 <TabsTrigger
-                  value="entrevista"
+                  value={DETAIL_TABS.questions}
                   className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                 >
                   <MessageSquareQuote className="size-4" />
@@ -233,14 +225,14 @@ export default function JobMatchAnalysisDetail({
                   )}
                 </TabsTrigger>
                 <TabsTrigger
-                  value="chat"
+                  value={DETAIL_TABS.chat}
                   className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                 >
                   <MessageCircle className="size-4" />
                   {t("tabs.chat")}
                 </TabsTrigger>
                 <TabsTrigger
-                  value="seguimiento"
+                  value={DETAIL_TABS.tracking}
                   className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                 >
                   <CalendarClock className="size-4" />
@@ -250,7 +242,7 @@ export default function JobMatchAnalysisDetail({
             </div>
 
             <div className="min-h-0">
-              <TabsContent value="resumen">
+              <TabsContent value={DETAIL_TABS.summary}>
                 <TabResumen
                   improvements={improvements}
                   keywords={keywords}
@@ -261,14 +253,14 @@ export default function JobMatchAnalysisDetail({
                 />
               </TabsContent>
 
-              <TabsContent value="oferta">
+              <TabsContent value={DETAIL_TABS.offer}>
                 <TabOferta
                   jobKeyData={jobKeyData}
                   jobDescription={analysis.jobDescription}
                 />
               </TabsContent>
 
-              <TabsContent value="entrevista">
+              <TabsContent value={DETAIL_TABS.questions}>
                 <TabEntrevista
                   interviewQuestions={interviewQuestions}
                   onOpenQuestions={onOpenQuestions}
@@ -283,7 +275,7 @@ export default function JobMatchAnalysisDetail({
                 />
               </TabsContent>
 
-              <TabsContent value="chat">
+              <TabsContent value={DETAIL_TABS.chat}>
                 <TabChatOferta
                   analysisId={analysis.id}
                   aiProvider={aiProvider ?? "gemini"}
@@ -293,7 +285,7 @@ export default function JobMatchAnalysisDetail({
                 />
               </TabsContent>
 
-              <TabsContent value="seguimiento">
+              <TabsContent value={DETAIL_TABS.tracking}>
                 <TabSeguimiento
                   offerStatus={offerStatus}
                   onOfferStatusChange={setOfferStatus}
