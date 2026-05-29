@@ -22,7 +22,6 @@ export function FeatureSidebarPanel({
   return (
     <BasicPanel
       as="aside"
-      radius="lg"
       className={cn(
         "flex h-full min-h-0 w-full shrink-0 flex-col",
         className

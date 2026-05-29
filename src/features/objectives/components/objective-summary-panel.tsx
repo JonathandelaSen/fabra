@@ -2,6 +2,7 @@ import { Calendar } from "lucide-react";
 import { useLocale } from "next-intl";
 import { LabelBadge, LABEL_BADGE_TONES } from "@/components/shared/label-badge";
 import { EditButton, DeleteButton } from "@/components/shared/action-buttons";
+import { BasicPanel } from "@/components/shared/basic-panel";
 import type {
   ObjectiveContext,
   ObjectivePriority,
@@ -40,7 +41,7 @@ export function ObjectiveSummaryPanel({
   const locale = useLocale();
 
   return (
-    <div className="rounded-lg border border-white/[0.06] bg-[#101018] p-5 shadow-[0_4px_20px_rgba(0,0,0,0.15)] flex flex-col gap-5">
+    <BasicPanel className="p-5 flex flex-col gap-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2 text-xs">
@@ -144,6 +145,6 @@ export function ObjectiveSummaryPanel({
           )}
         </div>
       )}
-    </div>
+    </BasicPanel>
   );
 }

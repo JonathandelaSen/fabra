@@ -15,6 +15,7 @@ import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
 } from "@/components/shared/action-buttons";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 const textareaClass =
   "w-full resize-y border-white/10 bg-white/[0.03] text-sm text-zinc-100 placeholder:text-zinc-600 focus-visible:border-zinc-300 disabled:cursor-not-allowed disabled:opacity-60";
@@ -76,7 +77,7 @@ export function FeedbackEntriesPanel({
         </div>
       )}
       {!isClosed && isEditingMode && (
-        <div className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-3 mb-4">
+        <BasicPanel className="p-3 mb-4">
           <label htmlFor="feedback-entry-draft" className="sr-only">
             {t("entries.placeholder")}
           </label>
@@ -101,18 +102,19 @@ export function FeedbackEntriesPanel({
               {t("entries.add")}
             </IconTextButton>
           </div>
-        </div>
+        </BasicPanel>
       )}
 
       <div className="space-y-2">
         <AnimatePresence initial={false}>
           {entries.map((entry) => (
-            <motion.div
+            <BasicPanel
+              as={motion.div}
               key={entry.id}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
-              className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-3"
+              className="p-3"
             >
               <div className="mb-2 flex items-center justify-between gap-2">
                 <p className="text-xs text-zinc-500">{formatDate(entry.createdAt)}</p>
@@ -164,7 +166,7 @@ export function FeedbackEntriesPanel({
                   {entry.content}
                 </p>
               )}
-            </motion.div>
+            </BasicPanel>
           ))}
         </AnimatePresence>
       </div>

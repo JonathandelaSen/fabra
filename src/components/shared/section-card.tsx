@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
+import { BasicPanel } from "./basic-panel";
+import { cn } from "@/lib/utils";
 
 interface SectionCardProps {
   title?: string;
@@ -19,11 +21,7 @@ export function SectionCard({
   noPadding = false,
 }: SectionCardProps) {
   return (
-    <div
-      className={`rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] ${
-        noPadding ? "" : "p-5"
-      } ${className}`}
-    >
+    <BasicPanel className={cn(!noPadding && "p-5", className)}>
       {(title || actions) && (
         <div className="mb-4 flex items-center justify-between">
           {title && (
@@ -36,6 +34,6 @@ export function SectionCard({
         </div>
       )}
       {children}
-    </div>
+    </BasicPanel>
   );
 }

@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 import { Textarea } from "@/components/ui/textarea";
 import AIActionLauncher, { type AIModelOption } from "@/components/shared/ai-action-launcher";
+import { BasicPanel } from "@/components/shared/basic-panel";
 import type { InterviewQuestion, UpdateInterviewQuestionInput } from "../api/interview-questions-api";
 
 interface InterviewQuestionAnswerPanelProps {
@@ -52,7 +53,7 @@ export default function InterviewQuestionAnswerPanel({
   const t = useTranslations("interviewQuestions");
 
   return (
-    <div className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-5 flex flex-col gap-4 animate-fade-in">
+    <BasicPanel className="p-5 flex flex-col gap-4 animate-fade-in">
       <h3 className="text-sm font-semibold tracking-tight text-zinc-300 flex items-center gap-2">
         <CheckCircle2 className="h-4 w-4 text-emerald-400" />
         {t("answer")}
@@ -148,6 +149,6 @@ export default function InterviewQuestionAnswerPanel({
           </div>
         </>
       )}
-    </div>
+    </BasicPanel>
   );
 }

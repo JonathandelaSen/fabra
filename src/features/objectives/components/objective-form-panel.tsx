@@ -14,6 +14,7 @@ import {
 import { ObjectiveIdentitySection } from "./objective-identity-section";
 import { ObjectivePlanningSection } from "./objective-planning-section";
 import { ObjectiveNarrativeSection } from "./objective-narrative-section";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 interface ObjectiveFormPanelProps {
   contexts: ObjectiveContext[];
@@ -43,8 +44,7 @@ export function ObjectiveFormPanel({
   t,
 }: ObjectiveFormPanelProps) {
   return (
-    <div className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] flex flex-col overflow-hidden">
-      {/* Panel Header */}
+    <BasicPanel className="flex flex-col overflow-hidden">
       <div className="border-b border-white/[0.06] px-5 py-4 flex items-center justify-between bg-white/[0.01]">
         <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-200">
           {isCreating ? t("newObjective") : t("editObjective")}
@@ -56,7 +56,6 @@ export function ObjectiveFormPanel({
         />
       </div>
 
-      {/* Panel Body */}
       <div className="p-5 flex flex-col gap-6">
         <ObjectiveIdentitySection
           contexts={contexts}
@@ -80,7 +79,6 @@ export function ObjectiveFormPanel({
           t={t}
         />
 
-        {/* Footer Actions */}
         <div className="mt-4 flex justify-end gap-3 border-t border-white/[0.06] pt-4">
           <IconTextButton
             icon={X}
@@ -99,6 +97,6 @@ export function ObjectiveFormPanel({
           </IconTextButton>
         </div>
       </div>
-    </div>
+    </BasicPanel>
   );
 }

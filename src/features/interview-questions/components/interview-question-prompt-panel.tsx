@@ -4,6 +4,7 @@ import type { RefObject } from "react";
 import { MessageSquare } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Textarea } from "@/components/ui/textarea";
+import { BasicPanel } from "@/components/shared/basic-panel";
 import type { InterviewQuestion, UpdateInterviewQuestionInput } from "../api/interview-questions-api";
 
 interface InterviewQuestionPromptPanelProps {
@@ -26,7 +27,7 @@ export default function InterviewQuestionPromptPanel({
   const t = useTranslations("interviewQuestions");
 
   return (
-    <div className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-5 flex flex-col gap-4 animate-fade-in">
+    <BasicPanel className="p-5 flex flex-col gap-4 animate-fade-in">
       <h3 className="text-sm font-semibold tracking-tight text-zinc-300 flex items-center gap-2">
         <MessageSquare className="h-4 w-4 text-primary-2" />
         {t("question")}
@@ -95,6 +96,6 @@ export default function InterviewQuestionPromptPanel({
           </div>
         </div>
       )}
-    </div>
+    </BasicPanel>
   );
 }

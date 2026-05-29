@@ -6,6 +6,7 @@ import {
   Clock3,
   XCircle,
 } from "lucide-react";
+import { BasicPanel } from "@/components/shared/basic-panel";
 import type { ProcessingEventStatus } from "@/app/api/admin/processing-events/responses";
 
 export const statusStyle: Record<ProcessingEventStatus, string> = {
@@ -36,10 +37,10 @@ export function StatusBadge({ status }: { status: ProcessingEventStatus }) {
 
 export function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="min-w-0 rounded-lg border border-white/[0.06] bg-[#101018] p-3">
+    <BasicPanel className="min-w-0 p-3">
       <p className="mb-1 text-[11px] uppercase text-zinc-600">{label}</p>
       <p className="truncate font-mono text-[11px] text-zinc-300">{value}</p>
-    </div>
+    </BasicPanel>
   );
 }
 

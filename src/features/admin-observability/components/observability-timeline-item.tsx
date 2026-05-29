@@ -5,6 +5,7 @@ import { Check, Copy } from "lucide-react";
 import type { ProcessingEventResponse } from "@/app/api/admin/processing-events/responses";
 import { StatusBadge, formatDateTime, formatBytes } from "./observability-primitives";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 interface ObservabilityTimelineItemProps {
   event: ProcessingEventResponse;
@@ -34,7 +35,7 @@ export function ObservabilityTimelineItem({
                 : "border-sky-300 bg-sky-500"
         }`}
       />
-      <div className="rounded-lg border border-white/[0.06] bg-[#101018] p-3">
+      <BasicPanel className="p-3">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="truncate text-sm font-medium text-zinc-100">
@@ -85,7 +86,7 @@ export function ObservabilityTimelineItem({
             )}
           </AlertBanner>
         )}
-      </div>
+      </BasicPanel>
     </li>
   );
 }

@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 export function ReceivedFeedbackListSkeleton() {
   return (
@@ -26,7 +27,7 @@ export function ReceivedFeedbackListSkeleton() {
 export function ReceivedFeedbackDetailSkeleton() {
   return (
     <div className="flex w-full flex-col gap-5">
-      <section className="rounded-xl border border-line bg-panel shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-6">
+      <BasicPanel as="section" className="p-6">
         <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between border-b border-line pb-5">
           <div className="min-w-0 flex-1 flex items-center gap-3">
             <Skeleton className="h-11 w-11 rounded-xl" />
@@ -55,7 +56,7 @@ export function ReceivedFeedbackDetailSkeleton() {
             <Skeleton className="h-4 w-2/3 bg-warning-soft" />
           </div>
         </div>
-      </section>
+      </BasicPanel>
     </div>
   );
 }

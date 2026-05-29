@@ -20,7 +20,7 @@ export function BasicPanel<TElement extends ElementType = "div">({
   as,
   children,
   className,
-  radius = "xl",
+  radius = "lg",
   ...props
 }: BasicPanelProps<TElement>) {
   const Component = as || "div";

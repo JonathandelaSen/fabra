@@ -10,6 +10,7 @@ import {
 } from "@/components/shared/action-buttons";
 import { IconLabelBadge } from "@/components/shared/icon-label-badge";
 import { LabelBadge, LABEL_BADGE_TONES } from "@/components/shared/label-badge";
+import { BasicPanel } from "@/components/shared/basic-panel";
 import type { InterviewQuestion } from "../api/interview-questions-api";
 
 interface InterviewQuestionHeaderProps {
@@ -37,7 +38,7 @@ export default function InterviewQuestionHeader({
   const tCommon = useTranslations("common.actions");
 
   return (
-    <section className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-5 animate-fade-in">
+    <BasicPanel as="section" className="p-5 animate-fade-in">
       <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
         <div className="min-w-0 flex-1">
           <h2 className="text-2xl font-bold tracking-tight text-zinc-100 line-clamp-2">
@@ -45,11 +46,11 @@ export default function InterviewQuestionHeader({
           </h2>
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-zinc-500">
             {question.answer ? (
-              <LabelBadge tone={LABEL_BADGE_TONES.SUCCESS} size="md" icon={CheckCircle2} className="uppercase" strong>
+              <LabelBadge tone={LABEL_BADGE_TONES.SUCCESS} size="md" icon={CheckCircle2}  >
                 {t("answered")}
               </LabelBadge>
             ) : (
-              <LabelBadge tone={LABEL_BADGE_TONES.WARNING} size="md" className="uppercase" strong>
+              <LabelBadge tone={LABEL_BADGE_TONES.WARNING} size="md" >
                 {t("pending")}
               </LabelBadge>
             )}
@@ -99,6 +100,6 @@ export default function InterviewQuestionHeader({
           />
         </div>
       </div>
-    </section>
+    </BasicPanel>
   );
 }

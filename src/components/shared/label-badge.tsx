@@ -37,9 +37,9 @@ const TONE_CLASS_NAMES = {
 } satisfies Record<LabelBadgeTone, string>;
 
 const SIZE_CLASS_NAMES = {
-  [LABEL_BADGE_SIZES.XS]: "h-auto rounded-md px-1.5 py-0 text-[10px]",
+  [LABEL_BADGE_SIZES.XS]: "h-auto rounded-md px-1.5 py-0 text-xs",
   [LABEL_BADGE_SIZES.SM]: "h-auto rounded-md px-2.5 py-1 text-sm",
-  [LABEL_BADGE_SIZES.MD]: "h-auto rounded-md px-3 py-1.5 text-sm",
+  [LABEL_BADGE_SIZES.MD]: "h-auto rounded-md px-3 py-1.5 text-md",
 } satisfies Record<LabelBadgeSize, string>;
 
 export interface LabelBadgeProps extends Omit<ComponentProps<typeof Badge>, "variant"> {

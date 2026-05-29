@@ -15,6 +15,7 @@ import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
 } from "@/components/shared/action-buttons";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 interface FeedbackNotesDetailProps {
   feedback: FeedbackListItem;
@@ -78,7 +79,7 @@ export function FeedbackNotesDetail({
 
   return (
     <div className="flex w-full max-w-[1600px] mx-auto flex-col gap-5">
-      <section className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-5">
+      <BasicPanel as="section" className="p-5">
         <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
           <div className="min-w-0 flex-1">
             {!isClosed && isEditing ? (
@@ -194,7 +195,7 @@ export function FeedbackNotesDetail({
             />
           </div>
         </div>
-      </section>
+      </BasicPanel>
 
       <section className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(340px,440px)]">
         <FeedbackEntriesPanel

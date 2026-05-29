@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 interface ObjectiveOutcomesProps {
   editingOutcomeId: string | null;
@@ -59,8 +60,7 @@ export function ObjectiveOutcomes({
   t,
 }: ObjectiveOutcomesProps) {
   return (
-    <div className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] flex flex-col overflow-hidden">
-      {/* Panel Header */}
+    <BasicPanel className="flex flex-col overflow-hidden">
       <div className="border-b border-white/[0.06] px-5 py-4 flex items-center gap-2.5 bg-white/[0.01]">
         <Trophy className="h-4.5 w-4.5 text-amber-400" />
         <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider">
@@ -68,7 +68,6 @@ export function ObjectiveOutcomes({
         </h3>
       </div>
 
-      {/* Panel Body */}
       <div className="p-5 flex flex-col gap-4">
         {outcomes.length === 0 ? (
           <div className="py-8 text-center text-xs text-zinc-600 italic">
@@ -322,6 +321,6 @@ export function ObjectiveOutcomes({
           </IconTextButton>
         </div>
       </div>
-    </div>
+    </BasicPanel>
   );
 }

@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 interface ObjectiveItemsProps {
   completion: number;
@@ -59,8 +60,7 @@ export function ObjectiveItems({
   const locale = useLocale();
 
   return (
-    <div className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] flex flex-col overflow-hidden">
-      {/* Panel Header */}
+    <BasicPanel className="flex flex-col overflow-hidden">
       <div className="border-b border-white/[0.06] px-5 py-4 flex flex-wrap items-center justify-between gap-3 bg-white/[0.01]">
         <div>
           <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider">
@@ -78,7 +78,6 @@ export function ObjectiveItems({
         </div>
       </div>
 
-      {/* Panel Body */}
       <div className="p-5 flex flex-col gap-4">
         {items.length === 0 ? (
           <div className="py-8 text-center text-xs text-zinc-600 italic">
@@ -289,6 +288,6 @@ export function ObjectiveItems({
           </IconTextButton>
         </div>
       </div>
-    </div>
+    </BasicPanel>
   );
 }

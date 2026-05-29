@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 export function ObjectivesSidebarSkeleton() {
   return (
@@ -38,8 +39,7 @@ export function ObjectivesSidebarSkeleton() {
 export function ObjectivesDetailSkeleton() {
   return (
     <div className="w-full space-y-6">
-      {/* Header Panel Skeleton */}
-      <div className="rounded-lg border border-white/[0.06] bg-[#101018] p-5 shadow-[0_4px_20px_rgba(0,0,0,0.15)] space-y-5">
+      <BasicPanel className="p-5 space-y-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0 flex-1 space-y-3">
             <div className="flex flex-wrap items-center gap-2">
@@ -56,7 +56,6 @@ export function ObjectivesDetailSkeleton() {
           </div>
         </div>
 
-        {/* Progress row */}
         <div className="border-t border-white/[0.06] pt-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex-1 space-y-2">
             <div className="flex items-center justify-between">
@@ -70,10 +69,9 @@ export function ObjectivesDetailSkeleton() {
             <Skeleton className="h-4 w-28 bg-white/[0.04]" />
           </div>
         </div>
-      </div>
+      </BasicPanel>
 
-      {/* Checklist Panel Skeleton */}
-      <div className="rounded-lg border border-white/[0.06] bg-[#101018] shadow-[0_4px_20px_rgba(0,0,0,0.15)] overflow-hidden">
+      <BasicPanel className="overflow-hidden">
         <div className="border-b border-white/[0.06] px-5 py-4 flex items-center justify-between bg-white/[0.01]">
           <div className="space-y-1.5">
             <Skeleton className="h-4 w-24 bg-white/[0.04]" />
@@ -96,7 +94,7 @@ export function ObjectivesDetailSkeleton() {
             </div>
           ))}
         </div>
-      </div>
+      </BasicPanel>
     </div>
   );
 }

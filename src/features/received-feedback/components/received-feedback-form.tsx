@@ -8,6 +8,7 @@ import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
 } from "@/components/shared/action-buttons";
+import { BasicPanel } from "@/components/shared/basic-panel";
 import { ActivityContextSelector } from "@/features/activity-context";
 import type { ActivityContext } from "../api/received-feedback-api";
 
@@ -53,7 +54,7 @@ export function ReceivedFeedbackForm({
   const t = useTranslations("receivedFeedback");
 
   return (
-    <section className="rounded-xl border border-line bg-panel shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-6">
+    <BasicPanel as="section" className="p-6">
       <div className="mb-6 flex items-center justify-between gap-3 border-b border-line pb-4">
         <div>
           <h2 className="text-lg font-semibold text-text-main">{title}</h2>
@@ -153,6 +154,6 @@ export function ReceivedFeedbackForm({
           {t("actions.save")}
         </IconTextButton>
       </div>
-    </section>
+    </BasicPanel>
   );
 }

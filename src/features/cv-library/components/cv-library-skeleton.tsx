@@ -1,11 +1,12 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 export function CVLibrarySkeleton() {
   return (
     <div className="grid h-full w-full gap-6 p-6 md:p-8 lg:grid-cols-[360px_1fr]">
-      <div className="space-y-3 rounded-xl border border-white/[0.06] bg-[#101018] p-4 shadow-[0_4px_20px_rgba(0,0,0,0.15)]">
+      <BasicPanel className="space-y-3 p-4">
         <div className="mb-4 flex items-center justify-between">
           <Skeleton className="h-6 w-32 rounded-md" />
           <Skeleton className="h-9 w-9 rounded-lg" />
@@ -25,8 +26,8 @@ export function CVLibrarySkeleton() {
             </div>
           </div>
         ))}
-      </div>
-      <div className="flex w-full flex-col gap-6 rounded-xl border border-white/[0.06] bg-[#101018] p-6 shadow-[0_4px_20px_rgba(0,0,0,0.15)]">
+      </BasicPanel>
+      <BasicPanel className="flex w-full flex-col gap-6 p-6">
         <div className="flex flex-col gap-4 border-b border-white/[0.04] pb-6 md:flex-row md:items-end md:justify-between">
           <div className="space-y-3 flex-1">
             <Skeleton className="h-3 w-24" />
@@ -42,7 +43,7 @@ export function CVLibrarySkeleton() {
           <Skeleton className="h-32 w-full rounded-xl" />
           <Skeleton className="h-64 w-full rounded-xl" />
         </div>
-      </div>
+      </BasicPanel>
     </div>
   );
 }
