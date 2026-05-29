@@ -3,15 +3,28 @@ import { Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export interface EditButtonProps extends ComponentProps<typeof Button> {}
+export interface EditButtonProps extends ComponentProps<typeof Button> {
+  strong?: boolean;
+}
 
-export function EditButton({ className, children, type = "button", ...props }: EditButtonProps) {
+export function EditButton({
+  className,
+  children,
+  strong = false,
+  type = "button",
+  ...props
+}: EditButtonProps) {
   return (
     <Button
       type={type}
       variant="outline"
       size="sm"
-      className={cn("h-9", children ? "px-3 gap-1.5" : "w-9 px-0", className)}
+      className={cn(
+        "h-9",
+        children ? "px-3 gap-1.5" : "w-9 px-0",
+        strong ? "font-semibold" : "font-medium",
+        className,
+      )}
       {...props}
     >
       <Edit className="h-3.5 w-3.5" />

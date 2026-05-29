@@ -19,6 +19,7 @@ export type IconTextButtonTone =
 export interface IconTextButtonProps extends Omit<ComponentProps<typeof Button>, "variant"> {
   icon: ElementType<{ className?: string }>;
   loading?: boolean;
+  strong?: boolean;
   tone?: IconTextButtonTone;
 }
 
@@ -39,6 +40,7 @@ export function IconTextButton({
   children,
   icon: Icon,
   loading = false,
+  strong = false,
   tone = ICON_TEXT_BUTTON_TONES.DEFAULT,
   type = "button",
   disabled,
@@ -50,7 +52,12 @@ export function IconTextButton({
       variant="ghost"
       size="sm"
       disabled={disabled || loading}
-      className={cn("h-9 px-3 gap-1.5", TONE_CLASS_NAMES[tone], className)}
+      className={cn(
+        "h-9 px-3 gap-1.5",
+        strong ? "font-semibold" : "font-medium",
+        TONE_CLASS_NAMES[tone],
+        className,
+      )}
       {...props}
     >
       {loading ? (

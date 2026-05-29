@@ -2,7 +2,11 @@
 
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
-import { AlertCircle, Check, Loader2, LockKeyhole, LogOut, Save, UserX } from "lucide-react";
+import { AlertCircle, Check, LockKeyhole, LogOut, Save, UserX } from "lucide-react";
+import {
+  IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
+} from "@/components/shared/action-buttons";
 import { SettingsSectionPanel } from "@/components/shared/settings-section-panel";
 import {
   changePasswordWithCurrent,
@@ -34,13 +38,14 @@ export function AccountSecurityPanel() {
               {t("signOut")}
             </p>
           </div>
-          <button
+          <IconTextButton
             type="submit"
-            className="flex h-10 items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 text-sm font-semibold text-zinc-200 transition-all hover:bg-white/[0.07] active:scale-[0.98]"
+            icon={LogOut}
+            strong
+            className="h-10"
           >
-            <LogOut className="h-4 w-4" />
             {t("signOut")}
-          </button>
+          </IconTextButton>
         </form>
 
         <form
@@ -101,18 +106,16 @@ export function AccountSecurityPanel() {
             </div>
           )}
 
-          <button
+          <IconTextButton
             type="submit"
-            disabled={passwordPending}
-            className="mt-4 flex h-10 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-4 text-sm font-semibold text-white shadow-lg shadow-indigo-900/30 transition-all hover:from-indigo-500 hover:to-violet-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+            icon={Save}
+            loading={passwordPending}
+            tone={ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT}
+            strong
+            className="mt-4 h-10"
           >
-            {passwordPending ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Save className="h-4 w-4" />
-            )}
             {t("changePassword")}
-          </button>
+          </IconTextButton>
         </form>
       </div>
     </SettingsSectionPanel>

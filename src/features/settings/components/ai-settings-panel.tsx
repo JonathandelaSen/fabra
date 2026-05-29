@@ -153,6 +153,7 @@ export function AISettingsPanel({
               onClick={save}
               disabled={draftProvider !== "mock" && !inputValue.trim()}
               tone={ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT}
+              strong
               className="h-11"
             >
               {saved ? common("actions.saved") : common("actions.save")}
@@ -161,6 +162,7 @@ export function AISettingsPanel({
               type="button"
               onClick={remove}
               disabled={!aiApiKey && !inputValue}
+              strong
               className="h-11"
             >
               {common("actions.delete")}
