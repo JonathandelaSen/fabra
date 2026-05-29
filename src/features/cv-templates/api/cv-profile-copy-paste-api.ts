@@ -1,7 +1,15 @@
 import type { ApplyCVProfileCopyPasteResponse } from "@/app/api/cvs/[id]/structured-profile/copy-paste/apply/responses";
 import type { PrepareCVProfileCopyPasteResponse } from "@/app/api/cvs/[id]/structured-profile/copy-paste/prepare/responses";
 import type { PreviewCVProfileCopyPasteResponse } from "@/app/api/cvs/[id]/structured-profile/copy-paste/preview/responses";
-import { readJsonResponse } from "./cv-library-api";
+
+async function readJsonResponse<T>(
+  res: Response,
+  fallbackMessage: string
+): Promise<T> {
+  const data = (await res.json().catch(() => ({}))) as { error?: string } & T;
+  if (!res.ok) throw new Error(data.error || fallbackMessage);
+  return data;
+}
 
 interface CVProfileCopyPasteContext {
   templateId?: string | null;

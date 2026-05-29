@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Download } from "lucide-react";
 import { notFound } from "next/navigation";
 import { cache } from "react";
-import { CVTemplatePreview } from "@/features/cv-library";
+import { CVTemplatePreview } from "@/features/cv-templates";
 import { cvLibraryModule } from "@/lib/container";
 import { buildPublicCVPath } from "@/modules/cv-library";
 import { createAdminClient } from "@/lib/supabase/admin";

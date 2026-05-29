@@ -2,7 +2,8 @@
 
 import type { ReactNode } from "react";
 import { CVEditorView } from "@/features/cv-editor";
-import { CVLibraryView, TemplatesView } from "@/features/cv-library";
+import { CVLibraryView } from "@/features/cv-library";
+import { CVTemplatesView } from "@/features/cv-templates";
 import {
   CVAnalysisDetailView,
   CVAnalysisView,
@@ -143,7 +144,7 @@ export default function AppShellContent({
   if (activeView === "templates") {
     return (
       <ViewFrame frameKey="templates">
-        <TemplatesView
+        <CVTemplatesView
           onOpenSettings={onOpenSettings}
           onOpenEditor={onOpenEditor}
           onOpenUpload={onNewAnalysis}

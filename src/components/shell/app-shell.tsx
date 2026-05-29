@@ -18,6 +18,7 @@ import {
   getStoredAIProvider,
   type StoredAIProvider,
 } from "@/lib/browser-preferences";
+import { CV_TEMPLATES } from "@/lib/cv-templates";
 import AppShellContent from "./app-shell-content";
 
 let userEmailRequest: Promise<string | null> | null = null;
@@ -439,6 +440,10 @@ export default function AppShell({
       });
     } else if (view === "templates") {
       queueMicrotask(() => {
+        router.replace("/templates");
+      });
+    } else if (pathname.startsWith("/templates")) {
+      queueMicrotask(() => {
         setActiveView("templates");
         setActiveAnalysisId(null);
         setActiveAnalysis(null);
@@ -616,7 +621,8 @@ export default function AppShell({
     setActiveView("templates");
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
-    window.history.replaceState(null, "", "/?view=templates");
+    const firstTemplateId = CV_TEMPLATES[0]?.templateId;
+    router.push(firstTemplateId ? `/templates/${firstTemplateId}` : "/templates");
   };
 
   const handleOpenEditor = (cvId?: string | null) => {
