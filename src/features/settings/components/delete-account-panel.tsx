@@ -2,8 +2,9 @@
 
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
-import { AlertCircle, Loader2, Trash2 } from "lucide-react";
+import { AlertCircle, Trash2 } from "lucide-react";
 import { deleteAccount, type AuthFormState } from "@/app/login/actions";
+import { DeleteButton } from "@/components/shared/action-buttons";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 
 const INITIAL_STATE: AuthFormState = {};
@@ -62,18 +63,14 @@ export function DeleteAccountPanel({ userEmail }: DeleteAccountPanelProps) {
         </div>
       )}
 
-      <button
+      <DeleteButton
         type="submit"
-        disabled={deletePending}
-        className="mt-4 flex h-10 items-center justify-center gap-2 rounded-xl border border-rose-400/30 bg-rose-500/15 px-4 text-sm font-semibold text-rose-100 transition-all hover:bg-rose-500/25 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+        loading={deletePending}
+        strong
+        className="mt-4 h-10"
       >
-        {deletePending ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <Trash2 className="h-4 w-4" />
-        )}
         {t("deleteForever")}
-      </button>
+      </DeleteButton>
     </form>
   );
 }
