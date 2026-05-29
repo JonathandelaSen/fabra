@@ -105,11 +105,11 @@ export class SelectionProcessFixture {
 
   static createFollowUpRow(userId: string, jobOpportunityId: string) {
     const STATUSES = [
-      "aplicado",
-      "entrevista",
-      "oferta",
-      "rechazado",
-      "descartado",
+      "applied",
+      "interview",
+      "offer",
+      "rejected",
+      "discarded",
     ];
     return {
       user_id: userId,

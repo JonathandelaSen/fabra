@@ -5,12 +5,12 @@ import type { JobMatchAnalysisOfferStatus } from "@/app/api/job-match-analyses/r
 import { LabelBadge, LABEL_BADGE_TONES, LABEL_BADGE_SIZES, type LabelBadgeTone } from "@/components/shared/label-badge";
 
 const STATUS_TONES: Record<JobMatchAnalysisOfferStatus, LabelBadgeTone> = {
-  interesante: LABEL_BADGE_TONES.INFO,
-  aplicado: LABEL_BADGE_TONES.INDIGO,
-  entrevista: LABEL_BADGE_TONES.WARNING,
-  oferta: LABEL_BADGE_TONES.SUCCESS,
-  rechazado: LABEL_BADGE_TONES.DANGER,
-  descartado: LABEL_BADGE_TONES.NEUTRAL,
+  interesting: LABEL_BADGE_TONES.INFO,
+  applied: LABEL_BADGE_TONES.INDIGO,
+  interview: LABEL_BADGE_TONES.WARNING,
+  offer: LABEL_BADGE_TONES.SUCCESS,
+  rejected: LABEL_BADGE_TONES.DANGER,
+  discarded: LABEL_BADGE_TONES.NEUTRAL,
 };
 
 interface JobMatchAnalysisStatusBadgeProps {

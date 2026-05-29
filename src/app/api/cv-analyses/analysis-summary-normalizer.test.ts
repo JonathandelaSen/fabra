@@ -26,7 +26,7 @@ describe("normalizeAnalysisSummaries", () => {
         aiScore: 72,
         aiAnalyzedAt: "2026-05-06T15:01:38.481+00:00",
         jobUrl: "https://example.com/job",
-        offerStatus: "interesante",
+        offerStatus: "interesting",
         offerNextActionAt: null,
       },
     ]);
@@ -55,7 +55,7 @@ describe("normalizeAnalysisSummaries", () => {
         ai_score: 72,
         ai_analyzed_at: "2026-05-06T15:01:38.481+00:00",
         job_url: "https://example.com/job",
-        offer_status: "interesante",
+        offer_status: "interesting",
         offer_next_action_at: null,
       },
     ]);

@@ -13,7 +13,7 @@ describe("FollowUp", () => {
       id: FollowUpId.fromPrimitives("follow-1"),
       userId: UserId.fromPrimitives("user-1"),
       jobOpportunityId: JobOpportunityId.fromPrimitives("job-1"),
-      status: FollowUpStatus.fromPrimitives("interesante"),
+      status: FollowUpStatus.fromPrimitives("interesting"),
       notes: null,
       nextAction: null,
       nextActionAt: null,
@@ -23,7 +23,7 @@ describe("FollowUp", () => {
     });
 
     followUp.update({
-      status: FollowUpStatus.fromPrimitives("aplicado"),
+      status: FollowUpStatus.fromPrimitives("applied"),
       notes: "Sent CV",
       nextAction: "Follow up",
       nextActionAt: "2026-05-20T10:00:00.000Z",
@@ -31,7 +31,7 @@ describe("FollowUp", () => {
     });
 
     expect(followUp.toPrimitives()).toMatchObject({
-      status: "aplicado",
+      status: "applied",
       notes: "Sent CV",
       nextAction: "Follow up",
     });

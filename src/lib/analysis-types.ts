@@ -4,20 +4,20 @@ import type { ExtractedPdfText } from "@/lib/pdf-extraction";
 export type AnalysisMode = "general" | "job_match";
 
 export type OfferStatus =
-  | "interesante"
-  | "aplicado"
-  | "entrevista"
-  | "oferta"
-  | "rechazado"
-  | "descartado";
+  | "interesting"
+  | "applied"
+  | "interview"
+  | "offer"
+  | "rejected"
+  | "discarded";
 
 export const OFFER_STATUSES: readonly OfferStatus[] = [
-  "interesante",
-  "aplicado",
-  "entrevista",
-  "oferta",
-  "rechazado",
-  "descartado",
+  "interesting",
+  "applied",
+  "interview",
+  "offer",
+  "rejected",
+  "discarded",
 ];
 
 export interface AIContext {

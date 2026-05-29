@@ -3,7 +3,7 @@ import { FollowUpStatus } from "./follow-up-status.value-object";
 
 describe("FollowUpStatus", () => {
   it("accepts known statuses", () => {
-    expect(FollowUpStatus.fromPrimitives("entrevista").toPrimitives()).toBe("entrevista");
+    expect(FollowUpStatus.fromPrimitives("interview").toPrimitives()).toBe("interview");
   });
 
   it("rejects unknown statuses", () => {

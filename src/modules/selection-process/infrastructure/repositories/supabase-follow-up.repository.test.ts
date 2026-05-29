@@ -39,13 +39,13 @@ describe("SupabaseFollowUpRepository", () => {
 
     expect(found?.toPrimitives()).toMatchObject({
       sourceJobMatchAnalysisId: analysis.id,
-      status: "interesante",
+      status: "interesting",
     });
 
     found?.update({
       status:
         await import("../../domain/value-objects/follow-up-status.value-object").then(
-          (mod) => mod.FollowUpStatus.fromPrimitives("aplicado"),
+          (mod) => mod.FollowUpStatus.fromPrimitives("applied"),
         ),
       notes: "Sent",
       nextAction: "Follow up",
@@ -55,6 +55,6 @@ describe("SupabaseFollowUpRepository", () => {
       ),
     });
     const saved = await repo.save(found!);
-    expect(saved.toPrimitives().status).toBe("aplicado");
+    expect(saved.toPrimitives().status).toBe("applied");
   });
 });

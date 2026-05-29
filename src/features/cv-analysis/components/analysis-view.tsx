@@ -119,7 +119,7 @@ export default function AIAnalysisView({
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSavingUrl, setIsSavingUrl] = useState(false);
   const [offerStatus, setOfferStatus] = useState<OfferStatus>(
-    analysis.offer_status ?? "interesante",
+    analysis.offer_status ?? "interesting",
   );
   const [offerNotes, setOfferNotes] = useState(analysis.offer_notes ?? "");
   const [offerNextAction, setOfferNextAction] = useState(

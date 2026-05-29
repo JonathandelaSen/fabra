@@ -7,12 +7,12 @@ interface FollowUpRow {
   user_id: string;
   job_opportunity_id: string;
   status:
-    | "interesante"
-    | "aplicado"
-    | "entrevista"
-    | "oferta"
-    | "rechazado"
-    | "descartado";
+    | "interesting"
+    | "applied"
+    | "interview"
+    | "offer"
+    | "rejected"
+    | "discarded";
   notes: string | null;
   next_action: string | null;
   next_action_at: string | null;
@@ -153,7 +153,7 @@ export class SupabaseFollowUpRepository
         {
           user_id: analysis.user_id,
           job_opportunity_id: opportunity.id,
-          status: "interesante",
+          status: "interesting",
           notes: null,
           next_action: null,
           next_action_at: null,

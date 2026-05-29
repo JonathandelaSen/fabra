@@ -1,10 +1,10 @@
 export type JobMatchAnalysisOfferStatus =
-  | "interesante"
-  | "aplicado"
-  | "entrevista"
-  | "oferta"
-  | "rechazado"
-  | "descartado";
+  | "interesting"
+  | "applied"
+  | "interview"
+  | "offer"
+  | "rejected"
+  | "discarded";
 
 export interface JobMatchAnalysisSummaryResponse {
   id: string;

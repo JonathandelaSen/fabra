@@ -42,7 +42,7 @@ export function readModel(
       filename: "cv.pdf",
       analysis_mode: "job_match",
       job_url: null,
-      offer_status: "interesante",
+      offer_status: "interesting",
     },
     ...overrides,
   };

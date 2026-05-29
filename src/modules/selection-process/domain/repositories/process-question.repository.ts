@@ -17,12 +17,12 @@ export interface ProcessQuestionRelatedAnalysis {
   analysis_mode: "general" | "job_match";
   job_url: string | null;
   offer_status:
-    | "interesante"
-    | "aplicado"
-    | "entrevista"
-    | "oferta"
-    | "rechazado"
-    | "descartado"
+    | "interesting"
+    | "applied"
+    | "interview"
+    | "offer"
+    | "rejected"
+    | "discarded"
     | null;
 }
 

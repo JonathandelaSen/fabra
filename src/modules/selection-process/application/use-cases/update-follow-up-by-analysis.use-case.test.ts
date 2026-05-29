@@ -9,7 +9,7 @@ function followUp() {
     id: "follow-1",
     userId: "user-1",
     jobOpportunityId: "job-1",
-    status: "interesante",
+    status: "interesting",
     notes: null,
     nextAction: null,
     nextActionAt: null,
@@ -32,14 +32,14 @@ describe("UpdateFollowUpByAnalysisUseCase", () => {
     }).execute({
       analysisId: "analysis-1",
       userId: "user-1",
-      status: "aplicado",
+      status: "applied",
       notes: "Sent",
       nextAction: "Follow up",
       nextActionAt: "2026-05-20T10:00:00.000Z",
     });
 
     expect(result?.toPrimitives()).toMatchObject({
-      status: "aplicado",
+      status: "applied",
       notes: "Sent",
       nextAction: "Follow up",
     });

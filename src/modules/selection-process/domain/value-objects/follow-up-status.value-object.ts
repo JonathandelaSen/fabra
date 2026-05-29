@@ -1,20 +1,20 @@
 import { ValueObject } from "@/modules/shared";
 
 export type FollowUpStatusPrimitives =
-  | "interesante"
-  | "aplicado"
-  | "entrevista"
-  | "oferta"
-  | "rechazado"
-  | "descartado";
+  | "interesting"
+  | "applied"
+  | "interview"
+  | "offer"
+  | "rejected"
+  | "discarded";
 
 export const FOLLOW_UP_STATUSES: readonly FollowUpStatusPrimitives[] = [
-  "interesante",
-  "aplicado",
-  "entrevista",
-  "oferta",
-  "rechazado",
-  "descartado",
+  "interesting",
+  "applied",
+  "interview",
+  "offer",
+  "rejected",
+  "discarded",
 ];
 
 export class FollowUpStatus extends ValueObject<FollowUpStatusPrimitives> {

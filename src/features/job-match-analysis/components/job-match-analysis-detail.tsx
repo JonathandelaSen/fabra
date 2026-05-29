@@ -21,9 +21,8 @@ import TabOferta from "./tab-oferta";
 import TabEntrevista from "./tab-entrevista";
 import TabSeguimiento from "./tab-seguimiento";
 import TabChatOferta from "./tab-chat-oferta";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
-import { formatDisplayDate } from "@/lib/date-format";
 import { useQuickInterviewQuestion } from "../hooks/use-quick-interview-question";
+import { useJobMatchAnalysisExport } from "../hooks/use-job-match-analysis-export";
 
 type DetailTab = "summary" | "offer" | "questions" | "chat" | "tracking";
 
@@ -106,11 +105,9 @@ export default function JobMatchAnalysisDetail({
   onUpdateTracking,
 }: JobMatchAnalysisDetailProps) {
   const t = useTranslations("analysisDetail");
-  const { locale } = useInterfaceLanguage();
-  const dateLocale = locale === "es" ? "es-ES" : "en-US";
   const [isSavingUrl, setIsSavingUrl] = useState(false);
   const [offerStatus, setOfferStatus] = useState<OfferStatus>(
-    analysis.offerStatus ?? "interesante",
+    analysis.offerStatus ?? "interesting",
   );
   const [offerNotes, setOfferNotes] = useState(analysis.offerNotes ?? "");
   const [offerNextAction, setOfferNextAction] = useState(
@@ -136,56 +133,14 @@ export default function JobMatchAnalysisDetail({
   const matchingKeywords = safeParseArray(analysis.matchingKeywords);
   const missingKeywords = safeParseArray(analysis.missingKeywords);
   const jobKeyData = safeParseJobKeyData(analysis.jobKeyData);
-
-  const handleExport = () => {
-    const cvName = analysis.cv?.name ?? analysis.filename;
-    const cvUrl = analysis.cv
-      ? `${window.location.origin}/api/cvs/${analysis.cv.id}/${analysis.cv.type === "template" ? "template-pdf" : "pdf"}`
-      : null;
-    const report = `
-${t("export.title")}
------------------------
-${t("export.file")}: ${analysis.filename}
-${t("export.name")}: ${analysis.title}
-${t("export.cvUsed")}: ${cvName}
-${cvUrl ? `${t("export.cvLink")}: ${cvUrl}` : ""}
-${t("export.analysisId")}: ${analysis.id}
-${t("export.date")}: ${formatDisplayDate(analysis.aiAnalyzedAt, { locale: dateLocale, variant: "dateTime" })}
-${t("export.model")}: ${analysis.aiModel}
-
-${t("export.score")}: ${analysis.aiScore}/100
-
-${t("export.feedback")}:
-${analysis.aiFeedback}
-
-${t("export.detectedKeywords")}:
-${keywords.join(", ") || t("export.none")}
-
-${t("export.jobKeywords")}:
-${jobKeywords.join(", ") || t("export.none")}
-
-${t("export.cvKeywords")}:
-${cvKeywords.join(", ") || t("export.none")}
-
-${t("export.missingKeywords")}:
-${missingKeywords.join(", ") || t("export.none")}
-
-${t("export.improvements")}:
-${improvements.map((imp) => `- ${imp}`).join("\n") || t("export.noSuggestions")}
-
-${analysis.jobDescription ? `${t("export.jobDescription")}:\n${analysis.jobDescription}` : ""}
-    `.trim();
-
-    const blob = new Blob([report], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `ATS_Report_${(analysis.aiAnalyzedAt ?? "").replace(/[:.]/g, "-")}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
+  const exportAnalysis = useJobMatchAnalysisExport({
+    analysis,
+    keywords,
+    improvements,
+    jobKeywords,
+    cvKeywords,
+    missingKeywords,
+  });
 
   const handleSaveUrl = async (url: string) => {
     setIsSavingUrl(true);
@@ -236,7 +191,7 @@ ${analysis.jobDescription ? `${t("export.jobDescription")}:\n${analysis.jobDescr
             cv={analysis.cv}
             cvId={analysis.cvId}
             filename={analysis.filename}
-            onExport={handleExport}
+            onExport={exportAnalysis}
             onSaveUrl={handleSaveUrl}
             isSavingUrl={isSavingUrl}
           />
