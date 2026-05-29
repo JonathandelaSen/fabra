@@ -63,7 +63,6 @@ export function CVLibraryDetail({
       ? `/api/cvs/${selected.id}/template-pdf`
       : `/api/cvs/${selected.id}/pdf`;
 
-  // Calcular el último score de análisis ATS
   const latestWithScore = analyses.find(
     (a) => a.ai_score !== undefined && a.ai_score !== null
   );
