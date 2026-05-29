@@ -1,12 +1,7 @@
 "use client";
 
 import type React from "react";
-import type {
-  StandardCVEducation,
-  StandardCVExperience,
-  StandardCVNamedItem,
-  StandardCVProfile,
-} from "@/lib/cv-profile";
+import type { StandardCVProfile } from "@/lib/cv-profile";
 import {
   getOrderedRenderableSections,
   getResolvedAccentColor,
@@ -15,6 +10,10 @@ import {
   type CVTemplateId,
   type CVTemplateLocale,
 } from "@/lib/cv-templates";
+import { CVTemplatePreviewSection } from "./cv-template-preview-section";
+import { CVTemplatePreviewExperienceItem } from "./cv-template-preview-experience-item";
+import { CVTemplatePreviewEducationItem } from "./cv-template-preview-education-item";
+import { CVTemplatePreviewNamedItem } from "./cv-template-preview-named-item";
 
 interface CVTemplatePreviewProps {
   profile: StandardCVProfile;
@@ -23,100 +22,14 @@ interface CVTemplatePreviewProps {
   scale?: "card" | "full";
 }
 
-const hasItems = <T,>(items?: T[]) => Array.isArray(items) && items.length > 0;
+export const hasItems = <T,>(items?: T[]) => Array.isArray(items) && items.length > 0;
 
-function dateRange(
+export function dateRange(
   dates?: { start?: string; end?: string; current?: boolean }
 ) {
   if (!dates?.start && !dates?.end) return "";
   if (dates.current) return [dates.start, dates.end || "Present"].filter(Boolean).join(" - ");
   return [dates.start, dates.end].filter(Boolean).join(" - ");
-}
-
-function Section({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="cvp-section">
-      <h2>{title}</h2>
-      {children}
-    </section>
-  );
-}
-
-function ExperienceItem({ item, companyFirst }: { item: StandardCVExperience; companyFirst?: boolean }) {
-  return (
-    <article className="cvp-item">
-      <div className="cvp-item-head">
-        <div>
-          <h3>{companyFirst ? (item.company || item.role) : (item.role || item.company)}</h3>
-          <p>
-            {companyFirst
-              ? [item.role, item.location].filter(Boolean).join(" · ")
-              : [item.company, item.location].filter(Boolean).join(" · ")}
-          </p>
-        </div>
-        <span>{dateRange(item.dates)}</span>
-      </div>
-      {hasItems(item.bullets) && (
-        <ul>
-          {item.bullets?.map((bullet, index) => <li key={index}>{bullet}</li>)}
-        </ul>
-      )}
-    </article>
-  );
-}
-
-function EducationItem({ item }: { item: StandardCVEducation }) {
-  return (
-    <article className="cvp-item">
-      <div className="cvp-item-head">
-        <div>
-          <h3>{item.degree || item.institution}</h3>
-          <p>
-            {[item.institution, item.field, item.location]
-              .filter(Boolean)
-              .join(" · ")}
-          </p>
-        </div>
-        <span>{dateRange(item.dates)}</span>
-      </div>
-      {hasItems(item.details) && (
-        <ul>
-          {item.details?.map((detail, index) => <li key={index}>{detail}</li>)}
-        </ul>
-      )}
-    </article>
-  );
-}
-
-function NamedItem({ item }: { item: StandardCVNamedItem }) {
-  const metaParts = [item.issuer, item.organization].filter(Boolean);
-  return (
-    <article className="cvp-item cvp-small-item">
-      <div className="cvp-item-head">
-        <div>
-          <h3>{item.name}</h3>
-          <p>
-            {metaParts.join(" · ")}
-            {metaParts.length > 0 && item.url ? " · " : ""}
-            {item.url && <a href={item.url} target="_blank" rel="noopener noreferrer">{item.url}</a>}
-          </p>
-        </div>
-        <span>{item.date}</span>
-      </div>
-      {item.description && <p className="cvp-description">{item.description}</p>}
-      {hasItems(item.bullets) && (
-        <ul>
-          {item.bullets?.map((bullet, index) => <li key={index}>{bullet}</li>)}
-        </ul>
-      )}
-    </article>
-  );
 }
 
 const TEMPLATE_CLASS_MAP: Record<CVTemplateId, string> = {
@@ -144,17 +57,17 @@ export default function CVTemplatePreview({
 
     if (section === "summary" && profile.summary) {
       return (
-        <Section key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title}>
           <p className="cvp-summary">
             {profile.summary}
           </p>
-        </Section>
+        </CVTemplatePreviewSection>
       );
     }
 
     if (section === "skills" && hasItems(profile.skills)) {
       return (
-        <Section key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title}>
           {isClassic || isFilo ? (
             <p className="cvp-summary">
               {profile.skills?.flatMap((g) => g.items || []).join(", ")}
@@ -169,14 +82,14 @@ export default function CVTemplatePreview({
               ))}
             </div>
           )}
-        </Section>
+        </CVTemplatePreviewSection>
       );
     }
 
     if (section === "technicalSkills" && hasItems(profile.technicalSkills)) {
       const tagsColor = profile.presentation?.tagsColor;
       return (
-        <Section key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title}>
           {isFilo ? (
             <p className="cvp-summary">
               {profile.technicalSkills?.join(skillSeparator)}
@@ -194,44 +107,44 @@ export default function CVTemplatePreview({
               ))}
             </div>
           )}
-        </Section>
+        </CVTemplatePreviewSection>
       );
     }
 
     if (section === "experience" && hasItems(profile.experience)) {
       return (
-        <Section key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title}>
           {profile.experience?.map((item, index) => (
-            <ExperienceItem key={index} item={item} companyFirst={isModern} />
+            <CVTemplatePreviewExperienceItem key={index} item={item} companyFirst={isModern} />
           ))}
-        </Section>
+        </CVTemplatePreviewSection>
       );
     }
 
     if (section === "projects" && hasItems(profile.projects)) {
       return (
-        <Section key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title}>
           {profile.projects?.map((item, index) => (
-            <NamedItem key={index} item={item} />
+            <CVTemplatePreviewNamedItem key={index} item={item} />
           ))}
-        </Section>
+        </CVTemplatePreviewSection>
       );
     }
 
     if (section === "education" && hasItems(profile.education)) {
       return (
-        <Section key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title}>
           {profile.education?.map((item, index) => (
-            <EducationItem key={index} item={item} />
+            <CVTemplatePreviewEducationItem key={index} item={item} />
           ))}
-        </Section>
+        </CVTemplatePreviewSection>
       );
     }
 
     if (section === "languages" && hasItems(profile.languages)) {
       const tagsColor = profile.presentation?.tagsColor;
       return (
-        <Section key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title}>
           <div className="cvp-tags">
             {profile.languages?.map((language, index) => (
               <span 
@@ -242,47 +155,47 @@ export default function CVTemplatePreview({
               </span>
             ))}
           </div>
-        </Section>
+        </CVTemplatePreviewSection>
       );
     }
 
     if (section === "certifications" && hasItems(profile.certifications)) {
       return (
-        <Section key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title}>
           {profile.certifications?.map((item, index) => (
-            <NamedItem key={index} item={item} />
+            <CVTemplatePreviewNamedItem key={index} item={item} />
           ))}
-        </Section>
+        </CVTemplatePreviewSection>
       );
     }
 
     if (section === "awards" && hasItems(profile.awards)) {
       return (
-        <Section key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title}>
           {profile.awards?.map((item, index) => (
-            <NamedItem key={index} item={item} />
+            <CVTemplatePreviewNamedItem key={index} item={item} />
           ))}
-        </Section>
+        </CVTemplatePreviewSection>
       );
     }
 
     if (section === "publications" && hasItems(profile.publications)) {
       return (
-        <Section key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title}>
           {profile.publications?.map((item, index) => (
-            <NamedItem key={index} item={item} />
+            <CVTemplatePreviewNamedItem key={index} item={item} />
           ))}
-        </Section>
+        </CVTemplatePreviewSection>
       );
     }
 
     if (section === "volunteering" && hasItems(profile.volunteering)) {
       return (
-        <Section key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title}>
           {profile.volunteering?.map((item, index) => (
-            <NamedItem key={index} item={item} />
+            <CVTemplatePreviewNamedItem key={index} item={item} />
           ))}
-        </Section>
+        </CVTemplatePreviewSection>
       );
     }
 
