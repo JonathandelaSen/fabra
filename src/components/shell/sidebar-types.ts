@@ -1,4 +1,5 @@
 export type SidebarActiveView =
+  | "home"
   | "new"
   | "analysis"
   | "cv-analyses"

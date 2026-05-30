@@ -17,6 +17,7 @@ import { FeedbackNotesView } from "@/features/feedback-notes";
 import { ReceivedFeedbackView } from "@/features/received-feedback";
 import { ActivityContextView } from "@/features/activity-context";
 import { AdminObservabilityView } from "@/features/admin-observability";
+import { HomeView } from "@/features/home";
 import { JobMatchAnalysisView } from "@/features/job-match-analysis";
 import { SettingsView } from "@/features/settings";
 import type { InterviewQuestionResponse as InterviewQuestionSummary } from "@/app/api/interview-questions/responses";
@@ -52,6 +53,7 @@ interface AppShellContentProps {
     apiKey: string;
     model: string;
   }) => void;
+  onNavigate: (view: SidebarActiveView) => void;
 }
 
 function ViewFrame({
@@ -93,8 +95,17 @@ export default function AppShellContent({
   onUpdateAnalysis,
   onInterviewQuestionCreated,
   onAISettingsChange,
+  onNavigate,
 }: AppShellContentProps) {
   const hasAIApiKey = aiProvider === "mock" || aiApiKey.length > 0;
+
+  if (activeView === "home") {
+    return (
+      <ViewFrame frameKey="home">
+        <HomeView userEmail={userEmail} onNavigate={onNavigate} />
+      </ViewFrame>
+    );
+  }
 
   if (activeView === "new" || activeView === "cv-analyses") {
     return (

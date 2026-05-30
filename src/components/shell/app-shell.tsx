@@ -20,6 +20,7 @@ import {
 } from "@/lib/browser-preferences";
 import { CV_TEMPLATES } from "@/lib/cv-templates";
 import AppShellContent from "./app-shell-content";
+import type { SidebarActiveView } from "./sidebar-types";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 
 let userEmailRequest: Promise<string | null> | null = null;
@@ -42,6 +43,7 @@ function loadAdminStatus() {
 }
 
 type AppView =
+  | "home"
   | "new"
   | "analysis"
   | "cv-analyses"
@@ -103,7 +105,7 @@ interface AppShellProps {
 }
 
 export default function AppShell({
-  initialView = "cv-analyses",
+  initialView = "home",
   initialUserEmail = null,
   initialIsAdmin = false,
 }: AppShellProps) {
@@ -323,6 +325,42 @@ export default function AppShell({
     window.addEventListener("storage", syncAISettings);
 
     return () => window.removeEventListener("storage", syncAISettings);
+  }, []);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      if (path === "/") {
+        setActiveView("home");
+        setActiveAnalysisId(null);
+        setActiveAnalysis(null);
+      } else if (path.startsWith("/cv-analysis")) {
+        setActiveView("cv-analyses");
+      } else if (path.startsWith("/job-analyses")) {
+        setActiveView("job-analyses");
+      } else if (path.startsWith("/cvs")) {
+        setActiveView("cvs");
+      } else if (path.startsWith("/templates")) {
+        setActiveView("templates");
+      } else if (path.startsWith("/work-journal")) {
+        setActiveView("journal");
+      } else if (path.startsWith("/objectives")) {
+        setActiveView("objectives");
+      } else if (path.startsWith("/feedback-notes")) {
+        setActiveView("feedback-notes");
+      } else if (path.startsWith("/received-feedback")) {
+        setActiveView("received-feedback");
+      } else if (path.startsWith("/interview-questions")) {
+        setActiveView("questions");
+      } else if (path.startsWith("/settings")) {
+        setActiveView("settings");
+      } else if (path.startsWith("/admin")) {
+        setActiveView("admin");
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
   const rememberFeedbackNotesLocation = useCallback(() => {
@@ -593,7 +631,20 @@ export default function AppShell({
     }
   };
 
-  // Handle new analysis
+  const handleOpenHome = () => {
+    rememberWorkJournalLocation();
+    rememberObjectivesLocation();
+    rememberFeedbackNotesLocation();
+    rememberReceivedFeedbackLocation();
+    rememberInterviewQuestionsLocation();
+    rememberJobAnalysesLocation();
+    rememberCVLibraryLocation();
+    setActiveView("home");
+    setActiveAnalysisId(null);
+    setActiveAnalysis(null);
+    router.push("/");
+  };
+
   const handleNewAnalysis = () => {
     rememberWorkJournalLocation();
     rememberObjectivesLocation();
@@ -784,6 +835,26 @@ export default function AppShell({
     window.history.replaceState(null, "", "/admin");
   };
 
+  const handleNavigate = (view: SidebarActiveView) => {
+    const handlers: Record<string, () => void> = {
+      home: handleOpenHome,
+      "cv-analyses": handleOpenCVAnalyses,
+      "job-analyses": handleOpenJobAnalyses,
+      cvs: handleOpenCVs,
+      templates: handleOpenTemplates,
+      editor: () => handleOpenEditor(),
+      questions: () => handleOpenQuestions(),
+      journal: handleOpenJournal,
+      objectives: handleOpenObjectives,
+      "received-feedback": handleOpenReceivedFeedback,
+      "feedback-notes": handleOpenFeedbackNotes,
+      settings: handleOpenSettings,
+      admin: handleOpenAdmin,
+      new: handleNewAnalysis,
+    };
+    handlers[view]?.();
+  };
+
   // Handle AI analysis complete
   const handleAIComplete = () => {
     if (activeAnalysisId) {
@@ -826,6 +897,7 @@ export default function AppShell({
 
       <Sidebar
         activeView={activeView}
+        onOpenHome={handleOpenHome}
         onOpenCVAnalyses={handleOpenCVAnalyses}
         onOpenJobAnalyses={handleOpenJobAnalyses}
         onOpenCVs={handleOpenCVs}
@@ -872,6 +944,7 @@ export default function AppShell({
             setAIApiKey(settings.apiKey);
             setAIModel(settings.model);
           }}
+          onNavigate={handleNavigate}
         />
       </main>
     </div>

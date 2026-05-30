@@ -18,6 +18,7 @@ import {
   NotebookPen,
   Inbox,
   Target,
+  Home,
 } from "lucide-react";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import SidebarNavSection from "./sidebar-nav-section";
@@ -26,6 +27,7 @@ import type { SidebarActiveView } from "./sidebar-types";
 
 interface SidebarProps {
   activeView: SidebarActiveView;
+  onOpenHome: () => void;
   onOpenCVAnalyses: () => void;
   onOpenJobAnalyses: () => void;
   onOpenCVs: () => void;
@@ -44,6 +46,7 @@ interface SidebarProps {
 
 export default function Sidebar({
   activeView,
+  onOpenHome,
   onOpenCVAnalyses,
   onOpenJobAnalyses,
   onOpenCVs,
@@ -160,6 +163,17 @@ export default function Sidebar({
         </div>
 
         <div className="px-2 pb-2 shrink-0 space-y-1">
+          <button
+            onClick={onOpenHome}
+            className={`w-full flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${
+              activeView === "home"
+                ? "bg-white/[0.08] text-zinc-100"
+                : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"
+            } ${collapsed ? "justify-center" : ""}`}
+          >
+            <Home className="w-4 h-4 shrink-0" />
+            {!collapsed && <span>{t("home")}</span>}
+          </button>
           <SidebarNavSection
             id="cv-section"
             icon={FolderOpen}
