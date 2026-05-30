@@ -2,7 +2,6 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, Check, Loader2, Sparkles } from "lucide-react";
 import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
@@ -13,6 +12,7 @@ import {
   useCreateActivityContext,
   useUpdateActivityContext,
   useDeleteActivityContext,
+  useInvalidateActivityContextConsumers,
   useHandleActivityContextSuggestion,
 } from "../hooks/use-activity-contexts";
 import type { ActivityContext, ActivityContextSuggestion } from "../api/activity-context-api";
@@ -44,7 +44,7 @@ function buildReturnUrl(returnTo: string, contextId: string): string {
 export function ActivityContextView() {
   const router = useRouter();
   const params = useSearchParams();
-  const queryClient = useQueryClient();
+  const invalidateConsumers = useInvalidateActivityContextConsumers();
   const source = params.get("source");
   const returnTo = params.get("returnTo");
   const hasReturnTo = returnTo !== null;
@@ -78,19 +78,10 @@ export function ActivityContextView() {
   const navigateBackWithContext = useCallback(
     async (contextId: string) => {
       if (!returnTo) return;
-      await queryClient.invalidateQueries({
-        predicate: (query) => {
-          const key = query.queryKey;
-          return (
-            (key[0] === "work-journal" && key[1] === "contexts") ||
-            (key[0] === "received-feedback" && key[1] === "contexts") ||
-            (key[0] === "objectives" && key[1] === "workspace")
-          );
-        },
-      });
+      await invalidateConsumers();
       router.push(buildReturnUrl(returnTo, contextId));
     },
-    [queryClient, returnTo, router]
+    [invalidateConsumers, returnTo, router]
   );
 
   const handleCreate = useCallback(

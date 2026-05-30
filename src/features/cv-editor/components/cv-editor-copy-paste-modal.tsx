@@ -4,18 +4,9 @@ import { useTranslations } from "next-intl";
 import CopyPasteWorkflowModal, {
   CopyPastePreviewItem,
 } from "@/components/shared/copy-paste-workflow-modal";
-import { useCopyPasteWorkflowState } from "@/components/shared/use-copy-paste-workflow-state";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
-import type { PreviewCVEditorCopyPasteResponse } from "@/app/api/cvs/[id]/edit/copy-paste/preview/responses";
-import type { ApplyCVEditorCopyPasteResponse } from "@/app/api/cvs/[id]/edit/copy-paste/apply/responses";
-import {
-  applyCVEditorCopyPaste,
-  prepareCVEditorCopyPaste,
-  previewCVEditorCopyPaste,
-} from "../api/cv-editor-copy-paste-api";
-
-const CORRECTION_INSTRUCTIONS =
-  "Please return only the required JSON envelope. Do not include Markdown or explanation outside JSON. Keep workflowId as cv_editor.apply_instruction and schemaVersion as 1.";
+import type { ApplyCVEditorCopyPasteResponse, PreviewCVEditorCopyPasteResponse } from "../types";
+import { useCVEditorCopyPasteWorkflow } from "../hooks/use-cv-editor-copy-paste-workflow";
 
 export interface CVEditorCopyPasteModalProps {
   cvId: string;
@@ -34,18 +25,11 @@ export default function CVEditorCopyPasteModal({
 }: CVEditorCopyPasteModalProps) {
   const t = useTranslations("cvEditor.copyPaste");
 
-  const state = useCopyPasteWorkflowState({
+  const state = useCVEditorCopyPasteWorkflow({
+    cvId,
+    instruction,
     open,
-    prepare: () => prepareCVEditorCopyPaste(cvId, { instruction }),
-    preview: (rawResponse) =>
-      previewCVEditorCopyPaste(cvId, { rawResponse }),
-    apply: (previewData) =>
-      applyCVEditorCopyPaste(cvId, {
-        parsedResult: previewData.parsedResult,
-      }),
-    getCorrectionInstructions: () => CORRECTION_INSTRUCTIONS,
-    onApplied: (result) =>
-      onApplied(result as ApplyCVEditorCopyPasteResponse),
+    onApplied,
     onClose,
   });
 

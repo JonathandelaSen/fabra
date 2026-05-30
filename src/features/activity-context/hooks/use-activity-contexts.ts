@@ -152,4 +152,12 @@ export function useHandleActivityContextSuggestion() {
   return { promote, hide, isPending: mutation.isPending, error, clearError: () => setError(null) };
 }
 
+export function useInvalidateActivityContextConsumers() {
+  const queryClient = useQueryClient();
+  return useCallback(
+    () => invalidateActivityContextConsumers(queryClient),
+    [queryClient]
+  );
+}
+
 export type { ActivityContext, ActivityContextSuggestion, ActivityContextType };
