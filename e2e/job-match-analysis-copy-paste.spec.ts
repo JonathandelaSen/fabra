@@ -27,6 +27,12 @@ const validExternalChatResponse = JSON.stringify({
 const tForms = messages.en.analysisFlow.forms;
 const tCopyPaste = messages.en.analysisFlow.copyPaste;
 const tJobCopyPaste = messages.en.jobMatchCopyPaste;
+const tLauncher = messages.en.aiLauncher;
+
+async function openCopyPasteViaLauncher(page: import("@playwright/test").Page) {
+  await page.getByRole("button", { name: tForms.compareOffer }).click();
+  await page.getByRole("button", { name: tLauncher.openFlow }).click();
+}
 
 async function createJobMatchAnalysisFixture(
   page: import("@playwright/test").Page,
@@ -81,13 +87,7 @@ test("user can score a job match analysis with Copy Paste", async ({
   await expect(jobDescriptionInput).toBeVisible();
   await jobDescriptionInput.fill(jobDescription);
 
-  await expect(
-    page.getByRole("button", { name: tForms.analyzeWithExternalChat }),
-  ).toBeVisible();
-
-  await page
-    .getByRole("button", { name: tForms.analyzeWithExternalChat })
-    .click();
+  await openCopyPasteViaLauncher(page);
 
   await expect(
     page.getByRole("heading", { name: tCopyPaste.title }),
@@ -160,9 +160,7 @@ test("replacement warning appears when analysis already has a score", async ({
   const jobDescriptionInput = page.locator("textarea").first();
   await jobDescriptionInput.fill(jobDescription);
 
-  await page
-    .getByRole("button", { name: tForms.analyzeWithExternalChat })
-    .click();
+  await openCopyPasteViaLauncher(page);
   await page.getByRole("button", { name: tCopyPaste.continue }).click();
   await page
     .getByLabel(tCopyPaste.pasteResponseLabel)
@@ -184,9 +182,7 @@ test("replacement warning appears when analysis already has a score", async ({
     })
     .click();
 
-  await page
-    .getByRole("button", { name: tForms.analyzeWithExternalChat })
-    .click();
+  await openCopyPasteViaLauncher(page);
   await page.getByRole("button", { name: tCopyPaste.continue }).click();
   await page
     .getByLabel(tCopyPaste.pasteResponseLabel)

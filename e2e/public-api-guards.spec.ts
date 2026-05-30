@@ -15,18 +15,19 @@ test("core API guards return controlled errors without external AI calls", async
   expect(missingCv.status()).toBe(400);
   expect(await missingCv.json()).toEqual({ error: "cvId is required" });
 
-  const missingGemini = await page.request.post(
+  const missingProvider = await page.request.post(
     "/api/cv-analyses/00000000-0000-0000-0000-000000000000/score",
     {
       data: {
-        geminiApiKey: "",
+        provider: "",
+        model: "",
+        apiKey: "",
       },
     }
   );
-  expect(missingGemini.status()).toBe(400);
-  expect(await missingGemini.json()).toEqual({
-    error:
-      "Configura tu API key de Gemini en Configuración antes de lanzar el análisis.",
+  expect(missingProvider.status()).toBe(400);
+  expect(await missingProvider.json()).toEqual({
+    error: "Selecciona un proveedor de IA válido.",
   });
 
   const fixture = await createFixtureViaApi(page.request, "guards");

@@ -6,6 +6,7 @@ import { messages } from "../src/i18n/messages";
 
 const tForms = messages.en.analysisFlow.forms;
 const tMode = messages.en.analysisFlow.modeSelector;
+const tLauncher = messages.en.aiLauncher;
 
 test("user can create a job match analysis and view the results", async ({
   page,
@@ -111,8 +112,9 @@ test("user can create a job match analysis and view the results", async ({
     }
   });
 
-  // 5. Click "Compare offer"
+  // 5. Click "Compare offer" launcher and run integrated analysis
   await page.getByRole("button", { name: tForms.compareOffer }).click();
+  await page.getByRole("button", { name: tLauncher.continue }).click();
 
   // 6. Verify score
   await expect(page.getByText("85")).toBeVisible();
