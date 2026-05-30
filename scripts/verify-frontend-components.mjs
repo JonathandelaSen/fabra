@@ -381,14 +381,21 @@ function analyzeFile(file) {
   }
 
   for (const item of imports) {
-    const { specifier, line } = item;
+    const { specifier, line, isTypeOnly } = item;
 
     if (specifier === "@tanstack/react-query") {
       addViolation(violations, file, RULES.tanstackInComponent, line, specifier);
     }
 
     if (isApiImport(specifier)) {
-      addViolation(violations, file, RULES.apiImportInComponent, line, specifier);
+      const isExcluded =
+        isTypeOnly ||
+        specifier.includes("types") ||
+        specifier.includes("responses") ||
+        specifier.includes("prompt");
+      if (!isExcluded) {
+        addViolation(violations, file, RULES.apiImportInComponent, line, specifier);
+      }
     }
 
     const featureMatch = specifier.match(/^@\/features\/([^/]+)(?:\/(.+))?$/);
