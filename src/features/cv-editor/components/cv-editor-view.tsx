@@ -11,6 +11,7 @@ import { CVEditorHeader } from "./cv-editor-header";
 import { CVEditorModals } from "./cv-editor-modals";
 import { CVEditorSidePanel } from "./cv-editor-side-panel";
 import { useCVEditorMutations } from "../hooks/use-cv-editor-mutations";
+import { useCVEditorRouteState } from "../hooks/use-cv-editor-route-state";
 import { useCVEditorState } from "../hooks/use-cv-editor-state";
 const PDFPreview = dynamic(
   () => import("@/components/shared/pdf-preview").then((mod) => mod.PDFPreview),
@@ -24,7 +25,7 @@ const PDFPreview = dynamic(
   },
 );
 
-interface CVEditorViewProps { activeVersionId: string | null; onOpenTemplates: () => void; onOpenSettings: () => void; onStartAnalysis: () => void; onOpenVersion: (cvId: string) => void; onBackToLibrary?: () => void; }
+interface CVEditorViewProps { onOpenTemplates: () => void; onOpenSettings: () => void; onStartAnalysis: () => void; onBackToLibrary?: () => void; }
 
 const AI_MODELS: AIModelOption[] = [
   { id: "gemini-3.1-pro-preview", label: GEMINI_MODELS["gemini-3.1-pro-preview"] },
@@ -34,11 +35,9 @@ const AI_MODELS: AIModelOption[] = [
 ];
 
 export default function CVEditorView({
-  activeVersionId,
   onOpenTemplates,
   onOpenSettings,
   onStartAnalysis,
-  onOpenVersion,
   onBackToLibrary,
 }: CVEditorViewProps) {
   const t = useTranslations("cvEditor");
@@ -48,8 +47,9 @@ export default function CVEditorView({
   const [publicCopied, setPublicCopied] = useState(false);
   const [editorTab, setEditorTab] = useState<"ai" | "manual">("ai");
   const [copyPasteOpen, setCopyPasteOpen] = useState(false);
+  const routeState = useCVEditorRouteState();
 
-  const editorState = useCVEditorState(activeVersionId);
+  const editorState = useCVEditorState(routeState.versionId);
   const {
     templateCvs,
     aiProvider,
@@ -133,7 +133,7 @@ export default function CVEditorView({
     return (
       <CVEditorEmptyState
         templateCvs={templateCvs}
-        onSelectVersion={onOpenVersion}
+        onSelectVersion={routeState.selectVersion}
         onOpenTemplates={onOpenTemplates}
       />
     );

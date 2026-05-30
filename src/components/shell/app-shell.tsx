@@ -132,7 +132,6 @@ export default function AppShell({
     router.replace(`${pathname}?tab=${tab}`, { scroll: false });
   };
   const [activeView, setActiveView] = useState<AppView>(initialView);
-  const [activeEditorCvId, setActiveEditorCvId] = useState<string | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(initialUserEmail);
   const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
@@ -338,6 +337,8 @@ export default function AppShell({
         setActiveView("cv-analyses");
       } else if (path.startsWith("/job-analyses")) {
         setActiveView("job-analyses");
+      } else if (path.startsWith("/cvs/editor")) {
+        setActiveView("editor");
       } else if (path.startsWith("/cvs")) {
         setActiveView("cvs");
       } else if (path.startsWith("/templates")) {
@@ -456,7 +457,6 @@ export default function AppShell({
         setActiveView("home");
         setActiveAnalysisId(null);
         setActiveAnalysis(null);
-        setActiveEditorCvId(null);
       });
     } else if (analysisId) {
       queueMicrotask(() => {
@@ -480,11 +480,9 @@ export default function AppShell({
       });
     } else if (pathname.startsWith("/cvs/editor")) {
       queueMicrotask(() => {
-        const editorCvId = pathname.split("/").filter(Boolean)[2] ?? null;
         setActiveView("editor");
         setActiveAnalysisId(null);
         setActiveAnalysis(null);
-        setActiveEditorCvId(editorCvId ? decodeURIComponent(editorCvId) : null);
       });
     } else if (pathname.startsWith("/cvs")) {
       queueMicrotask(() => {
@@ -704,7 +702,6 @@ export default function AppShell({
     setActiveView("editor");
     setActiveAnalysisId(null);
     setActiveAnalysis(null);
-    setActiveEditorCvId(targetCvId);
     router.push(
       targetCvId ? `/cvs/editor/${encodeURIComponent(targetCvId)}` : "/cvs/editor",
     );
@@ -924,7 +921,6 @@ export default function AppShell({
       <main className="flex-1 flex flex-col overflow-hidden min-w-0 min-h-0">
         <AppShellContent
           activeView={activeView}
-          activeEditorCvId={activeEditorCvId}
           activeAnalysis={activeAnalysis}
           loadingDetail={loadingDetail}
           viewTab={viewTab}

@@ -18,6 +18,13 @@ interface ActivityContextsWorkspace {
   contexts: Array<{ id: string }>;
 }
 
+interface TemplateVersionResponse {
+  version: {
+    id: string;
+    name: string;
+  };
+}
+
 async function expectHome(page: Page) {
   await expect(page).toHaveURL(/\/$/);
   await expect(
@@ -106,6 +113,20 @@ async function createFeedbackNote(page: Page, personName: string) {
   });
   expect(feedbackResponse.ok()).toBeTruthy();
   return (await feedbackResponse.json()) as { id: string };
+}
+
+async function createTemplateVersion(page: Page, cvId: string) {
+  const templateResponse = await page.request.post(`/api/cvs/${cvId}/template`, {
+    data: {
+      templateId: "compact",
+      locale: "en",
+      provider: "mock",
+      apiKey: "",
+      model: "mock-cv-template",
+    },
+  });
+  expect(templateResponse.ok()).toBeTruthy();
+  return (await templateResponse.json()) as TemplateVersionResponse;
 }
 
 async function expectSectionItem(page: Page, sectionPath: string, itemId: string) {
@@ -376,4 +397,40 @@ test("section item navigation keeps composed back and forward history intact", a
         .click();
     },
   });
+});
+
+test("cv editor version navigation returns to the editor root screen", async ({
+  page,
+}) => {
+  const user = await createConfirmedUser("cv-editor-history");
+  await loginViaUI(page, user);
+  const fixture = await createFixtureViaApi(page.request, "cv-editor-history");
+  const templateVersion = await createTemplateVersion(page, fixture.cv.id);
+
+  await page.goto("/");
+  await expectHome(page);
+
+  await page
+    .getByRole("button", { name: messages.en.navigation.cvEditor, exact: true })
+    .click();
+  await expect(page).toHaveURL(/\/cvs\/editor(?:\?|$)/);
+  await expect(
+    page.getByRole("heading", { name: messages.en.cvEditor.empty.title }),
+  ).toBeVisible();
+
+  await page
+    .getByRole("button", { name: new RegExp(templateVersion.version.name) })
+    .click();
+  await expect(page).toHaveURL(
+    new RegExp(`/cvs/editor/${templateVersion.version.id}(?:/|\\?|$)`),
+  );
+
+  await page.goBack();
+  await expect(page).toHaveURL(/\/cvs\/editor(?:\?|$)/);
+  await expect(
+    page.getByRole("heading", { name: messages.en.cvEditor.empty.title }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: new RegExp(templateVersion.version.name) }),
+  ).toBeVisible();
 });

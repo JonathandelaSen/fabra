@@ -26,7 +26,6 @@ import type { SidebarActiveView } from "./sidebar-types";
 
 interface AppShellContentProps {
   activeView: SidebarActiveView;
-  activeEditorCvId: string | null;
   activeAnalysis: CVAnalysisDetail | null;
   loadingDetail: boolean;
   viewTab: CVAnalysisDetailTab;
@@ -72,7 +71,6 @@ function ViewFrame({
 
 export default function AppShellContent({
   activeView,
-  activeEditorCvId,
   activeAnalysis,
   loadingDetail,
   viewTab,
@@ -168,11 +166,9 @@ export default function AppShellContent({
     return (
       <ViewFrame frameKey="editor">
         <CVEditorView
-          activeVersionId={activeEditorCvId}
           onOpenTemplates={onOpenTemplates}
           onOpenSettings={onOpenSettings}
           onStartAnalysis={onNewAnalysis}
-          onOpenVersion={onOpenEditor}
           onBackToLibrary={onOpenCVs}
         />
       </ViewFrame>
