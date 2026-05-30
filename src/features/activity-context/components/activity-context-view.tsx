@@ -51,10 +51,10 @@ export function ActivityContextView() {
 
   const t = useTranslations("activityContexts");
   const query = useActivityContexts();
-  const createCtx = useCreateActivityContext();
-  const updateCtx = useUpdateActivityContext();
-  const deleteCtx = useDeleteActivityContext();
-  const suggestionCtx = useHandleActivityContextSuggestion();
+  const ctxCreator = useCreateActivityContext();
+  const ctxUpdater = useUpdateActivityContext();
+  const ctxDeleter = useDeleteActivityContext();
+  const ctxSuggester = useHandleActivityContextSuggestion();
 
   const [lastCreated, setLastCreated] = useState<{ id: string; name: string } | null>(null);
 
@@ -62,7 +62,7 @@ export function ActivityContextView() {
   const suggestions = query.data?.suggestions ?? [];
 
   const visibleError =
-    createCtx.error ?? updateCtx.error ?? deleteCtx.error ?? suggestionCtx.error ?? null;
+    ctxCreator.error ?? ctxUpdater.error ?? ctxDeleter.error ?? ctxSuggester.error ?? null;
 
   const sortedContexts = useMemo(
     () =>
@@ -87,7 +87,7 @@ export function ActivityContextView() {
   const handleCreate = useCallback(
     async (input: { name: string; type: string }) => {
       setLastCreated(null);
-      const created = await createCtx.create(input as Parameters<typeof createCtx.create>[0]);
+      const created = await ctxCreator.create(input as Parameters<typeof ctxCreator.create>[0]);
       if (created && hasReturnTo) {
         await navigateBackWithContext(created.id);
         return;
@@ -96,7 +96,7 @@ export function ActivityContextView() {
         setLastCreated({ id: created.id, name: created.name });
       }
     },
-    [createCtx, hasReturnTo, navigateBackWithContext]
+    [ctxCreator, hasReturnTo, navigateBackWithContext]
   );
 
   const handleSelect = useCallback(
@@ -109,7 +109,7 @@ export function ActivityContextView() {
   const handlePromote = useCallback(
     async (suggestion: ActivityContextSuggestion) => {
       setLastCreated(null);
-      const result = await suggestionCtx.promote(suggestion);
+      const result = await ctxSuggester.promote(suggestion);
       if (result && "id" in result && hasReturnTo) {
         await navigateBackWithContext((result as { id: string }).id);
         return;
@@ -118,14 +118,14 @@ export function ActivityContextView() {
         setLastCreated({ id: (result as { id: string; name: string }).id, name: suggestion.name });
       }
     },
-    [suggestionCtx, hasReturnTo, navigateBackWithContext]
+    [ctxSuggester, hasReturnTo, navigateBackWithContext]
   );
 
   const handleHide = useCallback(
     async (suggestion: ActivityContextSuggestion) => {
-      await suggestionCtx.hide(suggestion);
+      await ctxSuggester.hide(suggestion);
     },
-    [suggestionCtx]
+    [ctxSuggester]
   );
 
   return (
@@ -173,7 +173,7 @@ export function ActivityContextView() {
           )}
 
           <CreateContextForm
-            isPending={createCtx.isPending}
+            isPending={ctxCreator.isPending}
             hasReturnTo={hasReturnTo}
             onCreate={handleCreate}
           />
@@ -194,9 +194,9 @@ export function ActivityContextView() {
                   context={context}
                   hasReturnTo={hasReturnTo}
                   onSelect={handleSelect}
-                  onUpdate={updateCtx.update}
-                  onDelete={deleteCtx.remove}
-                  isUpdating={updateCtx.isPending}
+                  onUpdate={ctxUpdater.update}
+                  onDelete={ctxDeleter.remove}
+                  isUpdating={ctxUpdater.isPending}
                 />
               ))}
             </div>
@@ -218,7 +218,7 @@ export function ActivityContextView() {
                 <SuggestionRow
                   key={`${suggestion.type}:${suggestion.name}`}
                   suggestion={suggestion}
-                  isPending={suggestionCtx.isPending}
+                  isPending={ctxSuggester.isPending}
                   hasReturnTo={hasReturnTo}
                   onPromote={handlePromote}
                   onHide={handleHide}
