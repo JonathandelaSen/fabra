@@ -247,19 +247,48 @@ function lineNumberForIndex(source, index) {
 function extractImports(source) {
   const imports = [];
   const patterns = [
-    /import\s+(type\s+)?[\s\S]*?\s+from\s+["']([^"']+)["']/g,
-    /export\s+(type\s+)?[\s\S]*?\s+from\s+["']([^"']+)["']/g,
+    /import\s+(type\s+)?([\s\S]*?)\s+from\s+["']([^"']+)["']/g,
+    /export\s+(type\s+)?([\s\S]*?)\s+from\s+["']([^"']+)["']/g,
   ];
   for (const pattern of patterns) {
     for (const match of source.matchAll(pattern)) {
       imports.push({
         isTypeOnly: Boolean(match[1]),
-        specifier: match[2],
+        importedMembers: match[2] ? match[2].trim() : "",
+        specifier: match[3],
         line: lineNumberForIndex(source, match.index ?? 0),
       });
     }
   }
   return imports;
+}
+
+function isAllowedImportContent(importedMembers) {
+  if (!importedMembers) return false;
+  let clean = importedMembers.trim();
+  if (clean.startsWith("{") && clean.endsWith("}")) {
+    clean = clean.slice(1, -1).trim();
+  }
+  const parts = clean.split(",").map((p) => p.trim()).filter(Boolean);
+  if (parts.length === 0) return false;
+
+  for (const part of parts) {
+    let name = part;
+    if (part.includes(" as ")) {
+      name = part.split(" as ")[0].trim();
+    }
+    // Si se importa en línea con 'type', se trata de un tipo (ej. type FeedbackEntry)
+    if (name.startsWith("type ")) {
+      continue;
+    }
+    const lowerName = name.toLowerCase();
+    // Excluir generadores de prompt, que no realizan llamadas API reales
+    const isPrompt = lowerName.includes("prompt");
+    if (!isPrompt) {
+      return false;
+    }
+  }
+  return true;
 }
 
 function addViolation(violations, file, rule, line, detail = "") {
@@ -381,7 +410,7 @@ function analyzeFile(file) {
   }
 
   for (const item of imports) {
-    const { specifier, line, isTypeOnly } = item;
+    const { specifier, line, isTypeOnly, importedMembers } = item;
 
     if (specifier === "@tanstack/react-query") {
       addViolation(violations, file, RULES.tanstackInComponent, line, specifier);
@@ -392,7 +421,8 @@ function analyzeFile(file) {
         isTypeOnly ||
         specifier.includes("types") ||
         specifier.includes("responses") ||
-        specifier.includes("prompt");
+        specifier.includes("prompt") ||
+        isAllowedImportContent(importedMembers);
       if (!isExcluded) {
         addViolation(violations, file, RULES.apiImportInComponent, line, specifier);
       }
