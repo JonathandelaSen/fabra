@@ -1024,6 +1024,7 @@ export const messages = {
         matchScore: "ATS match score",
         withOffer: "With offer",
         offerUrl: "Offer URL",
+        urlPlaceholder: "https://...",
         export: "Export",
       },
       summary: {
@@ -2223,6 +2224,7 @@ export const messages = {
         matchScore: "ATS Match Score",
         withOffer: "Con oferta",
         offerUrl: "URL oferta",
+        urlPlaceholder: "https://...",
         export: "Exportar",
       },
       summary: {

@@ -354,6 +354,7 @@ function isAllowedLiteral(text) {
   if (/^[A-Z0-9_./:-]+$/.test(text)) return true;
   if (/^\d+(\.\d+)?%?$/.test(text)) return true;
   if (text.includes("{") || text.includes("}")) return true;
+  if (/^(Promise|Array|Map|Set|Record|Partial|Required|Readonly)\b/.test(text)) return true;
   return false;
 }
 
