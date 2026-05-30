@@ -1,11 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { type ComponentProps, useState } from "react";
 import { useTranslations } from "next-intl";
-import { DEFAULT_FAST_GEMINI_MODEL, DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
-import { getErrorMessage } from "@/lib/errors";
-import type { JobMatchAnalysisDetail } from "../api/job-match-analysis-api";
-import type { JobMatchAnalysisDetailResponse } from "@/app/api/job-match-analyses/responses";
 import HowAtsWorksEducationBanner from "@/components/shared/how-ats-works-education-banner";
 import JobMatchForm from "./job-match-form";
 import JobMatchScoreCopyPasteModal from "./job-match-score-copy-paste-modal";
@@ -13,13 +9,34 @@ import { ExtractionTextPanel as JobMatchExtractionTextPanel } from "@/components
 import JobMatchExtractionHeader from "@/components/shared/extraction/extraction-header";
 import JobMatchExtractionParserTabs from "@/components/shared/extraction/extraction-parser-tabs";
 import JobMatchExtractionPdfPreview from "./job-match-extraction-pdf-preview";
+import { useJobMatchScoringState } from "../hooks/use-job-match-scoring-state";
+
+type ScoreInput = { jobDescription: string; jobUrl: string; model: string };
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface ScoreFn { (input: ScoreInput): Promise<void> }
+
+interface ExtractionAnalysis {
+  id: string;
+  filename: string;
+  cvId: string | null;
+  cv?: { type?: string } | null;
+  aiScore: number | null;
+  jobDescription: string | null;
+  jobUrl: string | null;
+  textPython: string | null;
+  textPdfjs: string | null;
+  textNode: string | null;
+  extractErrorPython: string | null;
+  extractErrorPdfjs: string | null;
+  extractErrorNode: string | null;
+}
 
 interface JobMatchExtractionViewProps {
-  analysis: JobMatchAnalysisDetail;
-  onScore: (input: { jobDescription: string; jobUrl: string; model: string }) => Promise<void>;
+  analysis: ExtractionAnalysis;
+  onScore: ScoreFn;
   hasAIApiKey: boolean;
   onOpenSettings: () => void;
-  onCopyPasteApplied: (analysis: JobMatchAnalysisDetailResponse) => void;
+  onCopyPasteApplied: ComponentProps<typeof JobMatchScoreCopyPasteModal>["onApplied"];
   hideAnalysisSelector?: boolean;
 }
 
@@ -67,44 +84,27 @@ export default function JobMatchExtractionView({
   onCopyPasteApplied,
   hideAnalysisSelector = false,
 }: JobMatchExtractionViewProps) {
-  const t = useTranslations("analysisFlow.extraction");
   const formsT = useTranslations("analysisFlow.forms");
   const [activeTab, setActiveTab] = useState<ParserTab>("python");
   const [fullscreen, setFullscreen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showPdfPreview, setShowPdfPreview] = useState(false);
 
-  const [loadingAI, setLoadingAI] = useState(false);
-  const [aiError, setAiError] = useState<string | null>(null);
-  const [copyPasteOpen, setCopyPasteOpen] = useState(false);
-  const [copyPasteJobDescription, setCopyPasteJobDescription] = useState("");
-  const [copyPasteJobUrl, setCopyPasteJobUrl] = useState<string | null>(null);
-  const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_FAST_GEMINI_MODEL);
-
-  const models = [
-    { id: DEFAULT_FAST_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_FAST_GEMINI_MODEL]} (${formsT("fast")})` },
-    { id: DEFAULT_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_GEMINI_MODEL]} (${formsT("powerful")})` },
-  ];
+  const scoring = useJobMatchScoringState({ onScore, hasAIApiKey });
 
   const getTextForTab = (tab: ParserTab) => {
     switch (tab) {
-      case "python":
-        return analysis.textPython;
-      case "pdfjs":
-        return analysis.textPdfjs;
-      case "node":
-        return analysis.textNode;
+      case "python": return analysis.textPython;
+      case "pdfjs": return analysis.textPdfjs;
+      case "node": return analysis.textNode;
     }
   };
 
   const getErrorForTab = (tab: ParserTab) => {
     switch (tab) {
-      case "python":
-        return analysis.extractErrorPython;
-      case "pdfjs":
-        return analysis.extractErrorPdfjs;
-      case "node":
-        return analysis.extractErrorNode;
+      case "python": return analysis.extractErrorPython;
+      case "pdfjs": return analysis.extractErrorPdfjs;
+      case "node": return analysis.extractErrorNode;
     }
   };
 
@@ -128,28 +128,6 @@ export default function JobMatchExtractionView({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleJobMatchAnalysis = async (
-    jobDescription: string,
-    jobUrl: string,
-    model: string,
-  ) => {
-    if (!hasAIApiKey) {
-      setAiError(t("missingApiKey"));
-      return;
-    }
-
-    setLoadingAI(true);
-    setAiError(null);
-
-    try {
-      await onScore({ jobDescription, jobUrl, model });
-    } catch (err: unknown) {
-      setAiError(getErrorMessage(err));
-    } finally {
-      setLoadingAI(false);
-    }
-  };
-
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <JobMatchExtractionHeader
@@ -164,23 +142,23 @@ export default function JobMatchExtractionView({
         wordCount={wordCount}
         charCount={charCount}
         reAnalysis={{
-          loading: loadingAI,
+          loading: scoring.loadingAI,
           hasAIApiKey,
-          selectedModel,
-          models,
-          onModelChange: setSelectedModel,
+          selectedModel: scoring.selectedModel,
+          models: scoring.models,
+          onModelChange: scoring.setSelectedModel,
           onRun: () =>
-            handleJobMatchAnalysis(
+            scoring.handleJobMatchAnalysis(
               analysis.jobDescription ?? "",
               analysis.jobUrl ?? "",
-              selectedModel,
+              scoring.selectedModel,
             ),
           onConfigure: onOpenSettings,
-          onOpenCopyPaste: () => {
-            setCopyPasteJobDescription(analysis.jobDescription ?? "");
-            setCopyPasteJobUrl(analysis.jobUrl ?? null);
-            setCopyPasteOpen(true);
-          },
+          onOpenCopyPaste: () =>
+            scoring.openCopyPaste(
+              analysis.jobDescription ?? "",
+              analysis.jobUrl ?? null,
+            ),
         }}
       />
 
@@ -226,26 +204,24 @@ export default function JobMatchExtractionView({
         {analysis.aiScore === null && !hideAnalysisSelector && (
           <JobMatchForm
             key="job-match-form"
-            onSubmit={handleJobMatchAnalysis}
+            onSubmit={scoring.handleJobMatchAnalysis}
             onBack={() => {}}
-            loading={loadingAI}
-            error={aiError}
+            loading={scoring.loadingAI}
+            error={scoring.aiError}
             hasAIApiKey={hasAIApiKey}
             onOpenSettings={onOpenSettings}
-            onCopyPasteOpen={(desc, url) => {
-              setCopyPasteJobDescription(desc);
-              setCopyPasteJobUrl(url || null);
-              setCopyPasteOpen(true);
-            }}
+            onCopyPasteOpen={(desc, url) =>
+              scoring.openCopyPaste(desc, url || null)
+            }
           />
         )}
 
         <JobMatchScoreCopyPasteModal
           analysisId={analysis.id}
-          jobDescription={copyPasteJobDescription}
-          jobUrl={copyPasteJobUrl}
-          open={copyPasteOpen}
-          onClose={() => setCopyPasteOpen(false)}
+          jobDescription={scoring.copyPasteJobDescription}
+          jobUrl={scoring.copyPasteJobUrl}
+          open={scoring.copyPasteOpen}
+          onClose={scoring.closeCopyPaste}
           onApplied={onCopyPasteApplied}
         />
       </div>
