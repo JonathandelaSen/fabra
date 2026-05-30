@@ -6,7 +6,20 @@ import type {
   ObjectivePriority,
   ObjectiveSource,
   ObjectiveStatus,
+  ObjectiveContext,
+  ObjectiveWithRelations,
 } from "../api/objectives-api";
+
+export type {
+  ObjectiveItemStatus,
+  ObjectiveOutcomeStatus,
+  ObjectiveOutcomeType,
+  ObjectivePriority,
+  ObjectiveSource,
+  ObjectiveStatus,
+  ObjectiveContext,
+  ObjectiveWithRelations,
+};
 
 export interface ObjectiveForm {
   contextId: string;

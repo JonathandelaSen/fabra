@@ -3,15 +3,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { DEFAULT_FAST_GEMINI_MODEL, DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
-import {
-  Sparkles,
-  ArrowLeft,
-  MessageSquare,
-} from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { AIContext } from "@/lib/analysis-types";
-import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { BasicPanel } from "@/components/shared/basic-panel";
+import { GeneralAnalysisFormHeader } from "./general-analysis-form-header";
+import { GeneralAnalysisActionLauncher } from "./general-analysis-action-launcher";
 
 interface GeneralAnalysisFormProps {
   onSubmit: (context: AIContext, model: string) => void;
@@ -63,25 +60,7 @@ export default function GeneralAnalysisForm({
       transition={{ delay: 0.15 }}
     >
       <BasicPanel className="shrink-0 p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-xs font-medium text-violet-300">
-            <Sparkles className="w-3.5 h-3.5" />
-            {t("generalTitle")}
-          </div>
-          <span className="text-[10px] text-zinc-600">
-            {t("allFieldsOptional")}
-          </span>
-        </div>
-        <button
-          onClick={onBack}
-          className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          {t("changeMode")}
-        </button>
-      </div>
+      <GeneralAnalysisFormHeader onBack={onBack} />
 
       {/* Additional Context */}
       <div className="mb-6">
@@ -100,25 +79,16 @@ export default function GeneralAnalysisForm({
         />
       </div>
 
-      {/* Footer: Unified AI Action Launcher */}
-      <div className="w-full flex justify-end">
-        <AIActionLauncher
-          actionLabel={t("analyzeCV")}
-          loading={loading}
-          integrated={{
-            available: hasAIApiKey,
-            selectedModelId: selectedModel,
-            models,
-            onModelChange: setSelectedModel,
-            onRun: handleSubmit,
-            onConfigure: onOpenSettings,
-          }}
-          copyPaste={{
-            available: true,
-            onOpenFlow: handleExternalChat,
-          }}
-        />
-      </div>
+      <GeneralAnalysisActionLauncher
+        loading={loading}
+        hasAIApiKey={hasAIApiKey}
+        selectedModel={selectedModel}
+        models={models}
+        onModelChange={setSelectedModel}
+        onSubmit={handleSubmit}
+        onOpenSettings={onOpenSettings}
+        onAnalyzeWithExternalChat={handleExternalChat}
+      />
 
       {error && (
         <motion.div

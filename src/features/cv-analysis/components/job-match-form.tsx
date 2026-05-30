@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { DEFAULT_FAST_GEMINI_MODEL, DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
-import { Briefcase, KeyRound, Link, ArrowLeft } from "lucide-react";
+import { Briefcase, KeyRound, Link } from "lucide-react";
 import { useTranslations } from "next-intl";
-import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { BasicPanel } from "@/components/shared/basic-panel";
+import { JobMatchFormHeader } from "./job-match-form-header";
+import { JobMatchActionLauncher } from "./job-match-action-launcher";
 
 interface JobMatchFormProps {
   onSubmit: (jobDescription: string, jobUrl: string, model: string) => void;
@@ -48,22 +49,7 @@ export default function JobMatchForm({
       transition={{ delay: 0.15 }}
     >
       <BasicPanel className="shrink-0 p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-300">
-            <Briefcase className="w-3.5 h-3.5" />
-            {t("jobTitle")}
-          </div>
-        </div>
-        <button
-          onClick={onBack}
-          className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          {t("changeMode")}
-        </button>
-      </div>
+      <JobMatchFormHeader onBack={onBack} />
 
       <div className="space-y-4">
         {/* Job URL */}
@@ -77,7 +63,7 @@ export default function JobMatchForm({
           </label>
           <input
             type="url"
-            placeholder="https://www.linkedin.com/jobs/view/..."
+            placeholder={t("jobUrlPlaceholder")}
             className="w-full h-10 px-4 rounded-xl bg-[#0a0a12] border border-white/[0.06] text-sm text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500/40 focus:ring-2 focus:ring-emerald-500/10 transition-all"
             value={jobUrl}
             onChange={(e) => setJobUrl(e.target.value)}
@@ -101,26 +87,16 @@ export default function JobMatchForm({
           />
         </div>
 
-        {/* Unified AI Action Launcher */}
-        <div className="w-full pt-2 flex justify-end">
-          <AIActionLauncher
-            actionLabel={t("compareOffer")}
-            loading={loading}
-            disabled={!jobDescription.trim()}
-            integrated={{
-              available: hasAIApiKey,
-              selectedModelId: selectedModel,
-              models,
-              onModelChange: setSelectedModel,
-              onRun: handleSubmit,
-              onConfigure: onOpenSettings,
-            }}
-            copyPaste={{
-              available: false,
-              onOpenFlow: () => {},
-            }}
-          />
-        </div>
+        <JobMatchActionLauncher
+          loading={loading}
+          disabled={!jobDescription.trim()}
+          hasAIApiKey={hasAIApiKey}
+          selectedModel={selectedModel}
+          models={models}
+          onModelChange={setSelectedModel}
+          onSubmit={handleSubmit}
+          onOpenSettings={onOpenSettings}
+        />
       </div>
 
       {!hasAIApiKey && (
