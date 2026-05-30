@@ -33,6 +33,7 @@ export function useObjectivesViewState() {
   const {
     clearObjective,
     objectiveId,
+    pathname,
     replaceObjective,
     selectObjective,
   } = routeState;
@@ -74,10 +75,10 @@ export function useObjectivesViewState() {
   const visibleError = error ?? queryError;
 
   useEffect(() => {
-    if (!objectiveId && commitments[0]?.id) {
+    if (pathname === "/objectives" && !objectiveId && commitments[0]?.id) {
       replaceObjective(commitments[0].id);
     }
-  }, [commitments, objectiveId, replaceObjective]);
+  }, [commitments, objectiveId, pathname, replaceObjective]);
 
   useEffect(() => {
     const activityContextId = searchParams.get("activityContextId");

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const basePath = "/interview-questions";
 export type InterviewQuestionAnsweredFilter = "all" | "answered" | "empty";
@@ -18,6 +18,7 @@ function normalizeAnswered(value: string | null): InterviewQuestionAnsweredFilte
 }
 
 export function useInterviewQuestionsRouteState() {
+  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const questionId = pathname.startsWith(`${basePath}/`)
@@ -57,28 +58,28 @@ export function useInterviewQuestionsRouteState() {
 
   const setFilters = useCallback(
     (nextFilters: Partial<InterviewQuestionsFilters>) => {
-      window.history.pushState(null, "", hrefFor(questionId, nextFilters));
+      router.push(hrefFor(questionId, nextFilters));
     },
-    [hrefFor, questionId]
+    [hrefFor, questionId, router]
   );
 
   const selectQuestion = useCallback(
     (nextQuestionId: string) => {
-      window.history.pushState(null, "", hrefFor(nextQuestionId));
+      router.push(hrefFor(nextQuestionId));
     },
-    [hrefFor]
+    [hrefFor, router]
   );
 
   const replaceQuestion = useCallback(
     (nextQuestionId: string) => {
-      window.history.replaceState(null, "", hrefFor(nextQuestionId));
+      router.replace(hrefFor(nextQuestionId));
     },
-    [hrefFor]
+    [hrefFor, router]
   );
 
   const clearQuestion = useCallback(() => {
-    window.history.replaceState(null, "", hrefFor(null));
-  }, [hrefFor]);
+    router.replace(hrefFor(null));
+  }, [hrefFor, router]);
 
   return {
     pathname,

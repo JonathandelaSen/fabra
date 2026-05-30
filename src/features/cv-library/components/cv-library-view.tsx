@@ -78,7 +78,7 @@ export default function CVLibraryView({
       : null;
 
   useEffect(() => {
-    if (!routeState.cvId && cvs[0]?.id) {
+    if (routeState.pathname === "/cvs" && !routeState.cvId && cvs[0]?.id) {
       routeState.replaceCV(cvs[0].id);
     }
   }, [cvs, routeState]);

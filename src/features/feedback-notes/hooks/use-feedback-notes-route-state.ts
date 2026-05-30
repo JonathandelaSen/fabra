@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 import type { FeedbackFilter } from "../api/feedback-notes-api";
 
@@ -9,6 +9,7 @@ function normalizeStatus(value: string | null): FeedbackFilter {
 }
 
 export function useFeedbackNotesRouteState() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const status = normalizeStatus(searchParams.get("status"));
@@ -25,28 +26,28 @@ export function useFeedbackNotesRouteState() {
 
   const setStatus = useCallback(
     (nextStatus: FeedbackFilter) => {
-      window.history.pushState(null, "", hrefFor(feedbackId, nextStatus));
+      router.push(hrefFor(feedbackId, nextStatus));
     },
-    [feedbackId, hrefFor]
+    [feedbackId, hrefFor, router]
   );
 
   const selectFeedback = useCallback(
     (nextFeedbackId: string) => {
-      window.history.pushState(null, "", hrefFor(nextFeedbackId));
+      router.push(hrefFor(nextFeedbackId));
     },
-    [hrefFor]
+    [hrefFor, router]
   );
 
   const replaceFeedback = useCallback(
     (nextFeedbackId: string) => {
-      window.history.replaceState(null, "", hrefFor(nextFeedbackId));
+      router.replace(hrefFor(nextFeedbackId));
     },
-    [hrefFor]
+    [hrefFor, router]
   );
 
   const clearSelection = useCallback(() => {
-    window.history.replaceState(null, "", hrefFor(null));
-  }, [hrefFor]);
+    router.replace(hrefFor(null));
+  }, [hrefFor, router]);
 
   return {
     feedbackId,

@@ -1,11 +1,12 @@
 "use client";
 
 import { useCallback } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const basePath = "/objectives";
 
 export function useObjectivesRouteState() {
+  const router = useRouter();
   const pathname = usePathname();
   const objectiveId = pathname.startsWith(`${basePath}/`)
     ? decodeURIComponent(pathname.slice(`${basePath}/`.length).split("/")[0] ?? "") ||
@@ -23,21 +24,21 @@ export function useObjectivesRouteState() {
 
   const selectObjective = useCallback(
     (nextObjectiveId: string) => {
-      window.history.pushState(null, "", hrefFor(nextObjectiveId));
+      router.push(hrefFor(nextObjectiveId));
     },
-    [hrefFor]
+    [hrefFor, router]
   );
 
   const replaceObjective = useCallback(
     (nextObjectiveId: string) => {
-      window.history.replaceState(null, "", hrefFor(nextObjectiveId));
+      router.replace(hrefFor(nextObjectiveId));
     },
-    [hrefFor]
+    [hrefFor, router]
   );
 
   const clearObjective = useCallback(() => {
-    window.history.replaceState(null, "", hrefFor(null));
-  }, [hrefFor]);
+    router.replace(hrefFor(null));
+  }, [hrefFor, router]);
 
   return {
     objectiveId,

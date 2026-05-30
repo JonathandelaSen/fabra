@@ -451,7 +451,14 @@ export default function AppShell({
     const analysisId = searchParams.get("analysis");
     const view = searchParams.get("view");
 
-    if (analysisId) {
+    if (pathname === "/" && !analysisId && !view) {
+      queueMicrotask(() => {
+        setActiveView("home");
+        setActiveAnalysisId(null);
+        setActiveAnalysis(null);
+        setActiveEditorCvId(null);
+      });
+    } else if (analysisId) {
       queueMicrotask(() => {
         setActiveView("analysis");
         setActiveAnalysisId((prevId) => {

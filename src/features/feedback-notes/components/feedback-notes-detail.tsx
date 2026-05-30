@@ -43,6 +43,8 @@ interface FeedbackNotesDetailProps {
   onGenerate: () => void;
   onOpenCopyPaste: () => void;
   onOpenSettings?: () => void;
+  pendingDraft?: string | null;
+  onPendingDraftConsumed?: () => void;
 }
 
 export function FeedbackNotesDetail({
@@ -65,6 +67,8 @@ export function FeedbackNotesDetail({
   hasAIApiKey,
   selectedModel,
   onModelChange,
+  pendingDraft,
+  onPendingDraftConsumed,
 }: FeedbackNotesDetailProps) {
   const t = useTranslations("feedbackNotes");
   const router = useRouter();
@@ -169,6 +173,7 @@ export function FeedbackNotesDetail({
                 </IconTextButton>
               ) : (
                 <EditButton
+                  aria-label={t("actions.edit")}
                   onClick={() => setIsEditing(true)}
                 />
               )
@@ -222,6 +227,8 @@ export function FeedbackNotesDetail({
           onOpenCopyPaste={onOpenCopyPaste}
           onOpenSettings={onOpenSettings}
           isEditingMode={isEditing}
+          pendingDraft={pendingDraft}
+          onPendingDraftConsumed={onPendingDraftConsumed}
         />
       </section>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const basePath = "/cvs";
 export type CVLibraryTab = "library" | "templates" | "editor";
@@ -11,6 +11,7 @@ function normalizeTab(value: string | null): CVLibraryTab {
 }
 
 export function useCVLibraryRouteState() {
+  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const cvId = pathname.startsWith(`${basePath}/`)
@@ -32,23 +33,23 @@ export function useCVLibraryRouteState() {
 
   const selectCV = useCallback(
     (nextCvId: string) => {
-      window.history.pushState(null, "", hrefFor(nextCvId));
+      router.push(hrefFor(nextCvId));
     },
-    [hrefFor]
+    [hrefFor, router]
   );
 
   const replaceCV = useCallback(
     (nextCvId: string | null) => {
-      window.history.replaceState(null, "", hrefFor(nextCvId));
+      router.replace(hrefFor(nextCvId));
     },
-    [hrefFor]
+    [hrefFor, router]
   );
 
   const setTab = useCallback(
     (nextTab: CVLibraryTab) => {
-      window.history.pushState(null, "", hrefFor(cvId, nextTab));
+      router.push(hrefFor(cvId, nextTab));
     },
-    [cvId, hrefFor]
+    [cvId, hrefFor, router]
   );
 
   return {

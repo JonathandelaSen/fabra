@@ -76,7 +76,7 @@ export default function CVAnalysisView({
   const isLoadingList = analysesQuery.isLoading && analyses.length === 0;
 
   useEffect(() => {
-    if (route.mode === "list" && analyses[0]?.id) {
+    if (route.pathname === "/cv-analysis" && route.mode === "list" && analyses[0]?.id) {
       route.replaceDetail(analyses[0].id);
     }
   }, [analyses, route]);

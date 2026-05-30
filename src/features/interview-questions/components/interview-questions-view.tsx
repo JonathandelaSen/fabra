@@ -44,6 +44,7 @@ export default function InterviewQuestionsView({
   const routeState = useInterviewQuestionsRouteState();
   const {
     questionId,
+    pathname,
     filters,
     setFilters,
     selectQuestion,
@@ -74,10 +75,10 @@ export default function InterviewQuestionsView({
       : null;
 
   useEffect(() => {
-    if (!questionId && questions[0]?.id) {
+    if (pathname === "/interview-questions" && !questionId && questions[0]?.id) {
       replaceQuestion(questions[0].id);
     }
-  }, [questions, questionId, replaceQuestion]);
+  }, [pathname, questions, questionId, replaceQuestion]);
 
   const setMutationError = (err: unknown) => setError(getErrorMessage(err));
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export type CVAnalysisRouteTab = "extraction" | "analysis";
 export type CVAnalysisRouteMode = "list" | "new" | "detail";
@@ -9,6 +9,7 @@ export interface CVAnalysisRouteState {
   mode: CVAnalysisRouteMode;
   analysisId: string | null;
   tab: CVAnalysisRouteTab;
+  pathname: string;
 }
 
 function normalizeTab(value: string | null): CVAnalysisRouteTab {
@@ -35,6 +36,7 @@ export function useCVAnalysisRouteState(): CVAnalysisRouteState & {
   replaceDetail: (analysisId: string, tab?: CVAnalysisRouteTab) => void;
   setTab: (tab: CVAnalysisRouteTab) => void;
 } {
+  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const parts = pathname.split("/").filter(Boolean);
@@ -47,22 +49,20 @@ export function useCVAnalysisRouteState(): CVAnalysisRouteState & {
       : "list";
   const tab = normalizeTab(searchParams.get("tab"));
 
-  const replace = (href: string) => window.history.replaceState(null, "", href);
-  const push = (href: string) => window.history.pushState(null, "", href);
-
   return {
     mode,
     analysisId,
     tab,
-    goToList: () => push(buildHref("list", null, "extraction")),
-    goToNew: () => push(buildHref("new", null, "extraction")),
+    pathname,
+    goToList: () => router.push(buildHref("list", null, "extraction")),
+    goToNew: () => router.push(buildHref("new", null, "extraction")),
     goToDetail: (nextAnalysisId, nextTab = "extraction") =>
-      push(buildHref("detail", nextAnalysisId, nextTab)),
+      router.push(buildHref("detail", nextAnalysisId, nextTab)),
     replaceDetail: (nextAnalysisId, nextTab = "extraction") =>
-      replace(buildHref("detail", nextAnalysisId, nextTab)),
+      router.replace(buildHref("detail", nextAnalysisId, nextTab)),
     setTab: (nextTab) => {
       if (mode === "detail" && analysisId) {
-        replace(buildHref("detail", analysisId, nextTab));
+        router.replace(buildHref("detail", analysisId, nextTab));
       }
     },
   };

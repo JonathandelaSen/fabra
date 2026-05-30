@@ -74,10 +74,10 @@ export default function JobMatchAnalysisView({
     filteredAnalyses.find((analysis) => analysis.id === analysisId)?.id ?? null;
 
   useEffect(() => {
-    if (!analysisId && analyses[0]?.id) {
+    if (routeState.pathname === "/job-analyses" && !analysisId && analyses[0]?.id) {
       replaceAnalysis(analyses[0].id);
     }
-  }, [analysisId, analyses, replaceAnalysis]);
+  }, [analysisId, analyses, replaceAnalysis, routeState.pathname]);
 
   const selectItem = (id: string) => {
     selectAnalysis(id);

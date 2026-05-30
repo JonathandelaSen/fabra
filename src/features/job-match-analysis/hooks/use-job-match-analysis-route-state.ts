@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
 export type AnalysisTab = "summary" | "offer" | "questions" | "chat" | "tracking";
@@ -14,6 +14,7 @@ function normalizeTab(value: string | null): AnalysisTab {
 }
 
 export function useJobMatchAnalysisRouteState() {
+  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -43,41 +44,41 @@ export function useJobMatchAnalysisRouteState() {
 
   const selectAnalysis = useCallback(
     (id: string) => {
-      window.history.pushState(null, "", hrefFor(id));
+      router.push(hrefFor(id));
     },
-    [hrefFor],
+    [hrefFor, router],
   );
 
   const replaceAnalysis = useCallback(
     (id: string) => {
-      window.history.replaceState(null, "", hrefFor(id));
+      router.replace(hrefFor(id));
     },
-    [hrefFor],
+    [hrefFor, router],
   );
 
   const clearSelection = useCallback(() => {
-    window.history.replaceState(null, "", "/job-analyses");
-  }, []);
+    router.replace("/job-analyses");
+  }, [router]);
 
   const goToAnalysis = useCallback(
     (tab: AnalysisTab = "summary") => {
       if (!analysisId) return;
-      window.history.pushState(null, "", hrefFor(analysisId, true, tab));
+      router.push(hrefFor(analysisId, true, tab));
     },
-    [hrefFor, analysisId],
+    [hrefFor, analysisId, router],
   );
 
   const goToExtraction = useCallback(() => {
     if (!analysisId) return;
-    window.history.pushState(null, "", hrefFor(analysisId));
-  }, [hrefFor, analysisId]);
+    router.push(hrefFor(analysisId));
+  }, [hrefFor, analysisId, router]);
 
   const setAnalysisTab = useCallback(
     (tab: AnalysisTab) => {
       if (!analysisId) return;
-      window.history.pushState(null, "", hrefFor(analysisId, true, tab));
+      router.push(hrefFor(analysisId, true, tab));
     },
-    [hrefFor, analysisId],
+    [hrefFor, analysisId, router],
   );
 
   return {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -17,7 +17,7 @@ import { useCreateCVTemplateVersion } from "../hooks/use-cv-template-mutations";
 import { CVTemplatesSidebar } from "./cv-templates-sidebar";
 import { CVTemplateDetail } from "./cv-template-detail";
 import { motion } from "framer-motion";
-import { DEFAULT_GEMINI_MODEL, DEFAULT_FAST_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
+import { DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
 
 interface CVTemplatesViewProps {
   onOpenSettings: () => void;
@@ -63,6 +63,13 @@ export default function CVTemplatesView({
   );
 
   const selectedTemplate = CV_TEMPLATES.find((template) => template.templateId === templateIdFromPath) ?? null;
+
+  useEffect(() => {
+    const firstTemplateId = CV_TEMPLATES[0]?.templateId;
+    if (pathname === "/templates" && firstTemplateId) {
+      router.replace(`/templates/${encodeURIComponent(firstTemplateId)}`);
+    }
+  }, [pathname, router]);
 
   const handleSelectTemplate = (templateId: string) => {
     router.push(`/templates/${encodeURIComponent(templateId)}`);

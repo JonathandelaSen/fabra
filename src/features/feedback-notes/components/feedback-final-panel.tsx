@@ -35,6 +35,8 @@ interface FeedbackFinalPanelProps {
   onOpenCopyPaste: () => void;
   onOpenSettings?: () => void;
   isEditingMode: boolean;
+  pendingDraft?: string | null;
+  onPendingDraftConsumed?: () => void;
 }
 
 export function FeedbackFinalPanel({
@@ -51,6 +53,8 @@ export function FeedbackFinalPanel({
   onOpenCopyPaste,
   onOpenSettings,
   isEditingMode,
+  pendingDraft,
+  onPendingDraftConsumed,
 }: FeedbackFinalPanelProps) {
   const t = useTranslations("feedbackNotes");
   const [finalDraft, setFinalDraft] = useState(feedback.finalFeedback ?? "");
@@ -60,8 +64,19 @@ export function FeedbackFinalPanel({
 
   useEffect(() => {
     setFinalDraft(feedback.finalFeedback ?? "");
+  }, [feedback.finalFeedback]);
+
+  useEffect(() => {
     setIsEditing(isEditingMode && !feedback.finalFeedback?.trim());
-  }, [feedback.id, feedback.finalFeedback, isEditingMode]);
+  }, [feedback.id, isEditingMode]);
+
+  useEffect(() => {
+    if (pendingDraft) {
+      setFinalDraft(pendingDraft);
+      setIsEditing(true);
+      onPendingDraftConsumed?.();
+    }
+  }, [pendingDraft, onPendingDraftConsumed]);
 
   const copyFinalFeedback = async () => {
     if (!finalDraft.trim()) return;
@@ -132,6 +147,7 @@ export function FeedbackFinalPanel({
         )}
         {!isClosed && isEditingMode && !isEditing && (
           <EditButton
+            aria-label={t("actions.edit")}
             onClick={() => setIsEditing(true)}
           />
         )}

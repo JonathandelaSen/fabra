@@ -40,6 +40,7 @@ export default function FeedbackNotesView({
   const {
     clearSelection,
     feedbackId,
+    pathname,
     replaceFeedback,
     selectFeedback,
     setStatus,
@@ -53,6 +54,7 @@ export default function FeedbackNotesView({
   const [error, setError] = useState<string | null>(null);
   const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_GEMINI_MODEL);
   const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
+  const [pendingDraft, setPendingDraft] = useState<string | null>(null);
   const [deletingEntryIds, setDeletingEntryIds] = useState<Set<string>>(new Set());
 
   const feedbacks = listQuery.data ?? [];
@@ -76,10 +78,10 @@ export default function FeedbackNotesView({
   );
 
   useEffect(() => {
-    if (!feedbackId && feedbacks[0]?.id) {
+    if (pathname === "/feedback-notes" && !feedbackId && feedbacks[0]?.id) {
       replaceFeedback(feedbacks[0].id);
     }
-  }, [feedbackId, feedbacks, replaceFeedback]);
+  }, [feedbackId, feedbacks, pathname, replaceFeedback]);
 
   useEffect(() => {
     const queryError = listQuery.error ?? detailQuery.error ?? entriesQuery.error;
@@ -96,13 +98,7 @@ export default function FeedbackNotesView({
   };
 
   const handleApplyCopyPasteText = (text: string) => {
-    if (!selectedFeedback) return;
-    void runMutation(() =>
-      mutations.updateFeedback.mutateAsync({
-        feedbackId: selectedFeedback.id,
-        updates: { finalFeedback: text },
-      })
-    );
+    setPendingDraft(text);
   };
 
   return (
@@ -231,6 +227,8 @@ export default function FeedbackNotesView({
             }
             onOpenCopyPaste={() => setIsCopyPasteOpen(true)}
             onOpenSettings={onOpenSettings}
+            pendingDraft={pendingDraft}
+            onPendingDraftConsumed={() => setPendingDraft(null)}
           />
         )}
       </FeatureTwoPaneLayout>
