@@ -10,6 +10,10 @@ import type {
   GenerateInterviewQuestionResponse,
   SaveInterviewQuestionResponse,
 } from "@/app/api/interview-questions/responses";
+import type {
+  AnalysisChatConversation,
+  AnalysisChatMessage,
+} from "../types";
 
 export type JobMatchAnalysisSummary = ListJobMatchAnalysesResponse[number];
 export type JobMatchAnalysisDetail = GetJobMatchAnalysisResponse;
@@ -44,6 +48,25 @@ export interface GenerateLinkedInterviewQuestionAnswerInput {
   context: string;
   cvId: string | null;
   analysisId: string;
+}
+
+export interface SendJobMatchOfferChatMessageInput {
+  message: string;
+  provider: "gemini" | "mock";
+  apiKey: string;
+  model: string;
+  conversationId: string;
+}
+
+export interface PrepareJobMatchOfferChatCopyPasteInput {
+  conversationId: string;
+  message: string;
+}
+
+export interface ApplyJobMatchOfferChatCopyPasteInput {
+  conversationId: string;
+  userMessage: string;
+  assistantResponse: string;
 }
 
 async function readJsonResponse<T>(
@@ -166,4 +189,160 @@ export async function generateLinkedInterviewQuestionAnswer({
     res,
     "Could not generate linked interview answer."
   );
+}
+
+export async function listJobMatchOfferChatConversations(analysisId: string) {
+  const res = await fetch(
+    `/api/job-match-analyses/${encodeURIComponent(analysisId)}/chat`
+  );
+  return readJsonResponse<{ conversations: AnalysisChatConversation[] }>(
+    res,
+    "Could not load chat conversations."
+  );
+}
+
+export async function listJobMatchOfferChatMessages({
+  analysisId,
+  conversationId,
+}: {
+  analysisId: string;
+  conversationId: string;
+}) {
+  const params = new URLSearchParams({ conversationId });
+  const res = await fetch(
+    `/api/job-match-analyses/${encodeURIComponent(analysisId)}/chat?${params.toString()}`
+  );
+  return readJsonResponse<{ messages: AnalysisChatMessage[] }>(
+    res,
+    "Could not load chat messages."
+  );
+}
+
+export async function createJobMatchOfferChatConversation(analysisId: string) {
+  const res = await fetch(
+    `/api/job-match-analyses/${encodeURIComponent(analysisId)}/chat`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "create_conversation" }),
+    }
+  );
+  return readJsonResponse<{ conversation: AnalysisChatConversation }>(
+    res,
+    "Could not create chat conversation."
+  );
+}
+
+export async function renameJobMatchOfferChatConversation({
+  analysisId,
+  conversationId,
+  title,
+}: {
+  analysisId: string;
+  conversationId: string;
+  title: string;
+}) {
+  const res = await fetch(
+    `/api/job-match-analyses/${encodeURIComponent(analysisId)}/chat`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "rename_conversation",
+        conversationId,
+        title,
+      }),
+    }
+  );
+  return readJsonResponse<{ conversation: AnalysisChatConversation }>(
+    res,
+    "Could not rename chat conversation."
+  );
+}
+
+export async function deleteJobMatchOfferChatConversation({
+  analysisId,
+  conversationId,
+}: {
+  analysisId: string;
+  conversationId: string;
+}) {
+  const res = await fetch(
+    `/api/job-match-analyses/${encodeURIComponent(analysisId)}/chat`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "delete_conversation",
+        conversationId,
+      }),
+    }
+  );
+  return readJsonResponse<Record<string, never>>(
+    res,
+    "Could not delete chat conversation."
+  );
+}
+
+export async function sendJobMatchOfferChatMessage({
+  analysisId,
+  input,
+}: {
+  analysisId: string;
+  input: SendJobMatchOfferChatMessageInput;
+}) {
+  const res = await fetch(
+    `/api/job-match-analyses/${encodeURIComponent(analysisId)}/chat`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    }
+  );
+  return readJsonResponse<{
+    userMessage: AnalysisChatMessage;
+    assistantMessage: AnalysisChatMessage;
+  }>(res, "Could not send chat message.");
+}
+
+export async function prepareJobMatchOfferChatCopyPaste({
+  analysisId,
+  input,
+}: {
+  analysisId: string;
+  input: PrepareJobMatchOfferChatCopyPasteInput;
+}) {
+  const res = await fetch(
+    `/api/job-match-analyses/${encodeURIComponent(analysisId)}/chat/copy-paste/prepare`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    }
+  );
+  return readJsonResponse<{ prompt: string; privacyNotice?: string }>(
+    res,
+    "Could not prepare copy paste chat."
+  );
+}
+
+export async function applyJobMatchOfferChatCopyPaste({
+  analysisId,
+  input,
+}: {
+  analysisId: string;
+  input: ApplyJobMatchOfferChatCopyPasteInput;
+}) {
+  const res = await fetch(
+    `/api/job-match-analyses/${encodeURIComponent(analysisId)}/chat/copy-paste/apply`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    }
+  );
+  return readJsonResponse<{
+    userMessage: AnalysisChatMessage;
+    assistantMessage: AnalysisChatMessage;
+  }>(res, "Could not apply copy paste chat.");
 }
