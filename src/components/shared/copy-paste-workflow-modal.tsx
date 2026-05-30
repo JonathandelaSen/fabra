@@ -79,7 +79,12 @@ export default function CopyPasteWorkflowModal<TPreview>({
   const loading = isPreparing || isPreviewing || isApplying;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
+    >
       <div className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-950 shadow-2xl">
         <CopyPasteWorkflowModalHeader
           title={title}

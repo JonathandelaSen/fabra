@@ -8,6 +8,7 @@ import { AISettingsPanel } from "./ai-settings-panel";
 import { AccountSecurityPanel } from "./account-security-panel";
 import { DeleteAccountPanel } from "./delete-account-panel";
 import { LanguageSettingsPanel } from "./language-settings-panel";
+import { ThemeSettingsPanel } from "./theme-settings-panel";
 
 interface SettingsViewProps {
   aiProvider: StoredAIProvider;
@@ -42,6 +43,14 @@ export default function SettingsView({
           transition={{ delay: 0.03 }}
         >
           <LanguageSettingsPanel />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.04 }}
+        >
+          <ThemeSettingsPanel />
         </motion.div>
 
         <motion.div

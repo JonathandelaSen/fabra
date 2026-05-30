@@ -100,6 +100,98 @@
 }
 
 :root {
+  color-scheme: light dark;
+  --background: oklch(0.985 0.004 255);
+  --foreground: oklch(0.18 0.018 255);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.018 255);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.018 255);
+  --primary-1: oklch(54.1% 0.281 293.009);
+  --primary-2: oklch(51.1% 0.262 276.966);
+  --primary: oklch(0.52 0.19 264);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.955 0.008 255);
+  --secondary-foreground: oklch(0.2 0.018 255);
+  --muted: oklch(0.95 0.008 255);
+  --muted-foreground: oklch(0.48 0.018 255);
+  --accent: oklch(0.94 0.015 264);
+  --accent-foreground: oklch(0.22 0.028 264);
+  --destructive: oklch(0.58 0.22 25);
+  --border: oklch(0.88 0.012 255);
+  --input: oklch(0.9 0.012 255);
+  --ring: oklch(0.56 0.18 264);
+  --ui-bg-app: #f7f8fb;
+  --ui-bg-app-header: #ffffff;
+  --ui-surface: #ffffff;
+  --ui-surface-raised: #ffffff;
+  --ui-surface-elevated: #f3f5f9;
+  --ui-surface-overlay: #ffffff;
+  --ui-surface-modal: #ffffff;
+  --ui-surface-hover: rgb(15 23 42 / 0.05);
+  --ui-surface-active: rgb(15 23 42 / 0.08);
+  --ui-surface-selected: #eef2ff;
+  --ui-surface-row-hover: rgb(241 245 249 / 0.9);
+  --ui-surface-subtle: rgb(15 23 42 / 0.035);
+  --ui-surface-control: rgb(15 23 42 / 0.045);
+  --ui-field: rgb(255 255 255 / 0.9);
+  --ui-field-strong: rgb(248 250 252 / 0.95);
+  --ui-field-code: rgb(241 245 249 / 0.95);
+  --ui-scrim: rgb(15 23 42 / 0.35);
+  --ui-scrim-soft: rgb(15 23 42 / 0.18);
+  --ui-pdf-canvas: #e8ebf1;
+  --ui-floating-toolbar: rgb(255 255 255 / 0.86);
+  --ui-text-primary: oklch(0.18 0.018 255);
+  --ui-text-secondary: oklch(0.32 0.018 255);
+  --ui-text-muted: oklch(0.48 0.018 255);
+  --ui-text-faint: oklch(0.62 0.016 255);
+  --ui-text-inverse: oklch(0.985 0 0);
+  --ui-border-subtle: oklch(0.9 0.012 255);
+  --ui-border-default: oklch(0.84 0.014 255);
+  --ui-border-strong: oklch(0.76 0.018 255);
+  --ui-action: var(--primary-1);
+  --ui-action-hover: var(--primary-2);
+  --ui-action-soft: color-mix(in oklch, var(--primary-2) 11%, transparent);
+  --ui-action-border: color-mix(in oklch, var(--primary-2) 28%, transparent);
+  --ui-action-text: oklch(43% 0.19 276);
+  --ui-success: oklch(0.58 0.15 160);
+  --ui-success-soft: oklch(0.58 0.15 160 / 0.11);
+  --ui-success-border: oklch(0.58 0.15 160 / 0.24);
+  --ui-success-text: oklch(0.42 0.13 160);
+  --ui-warning: oklch(0.68 0.15 75);
+  --ui-warning-soft: oklch(0.68 0.15 75 / 0.12);
+  --ui-warning-border: oklch(0.68 0.15 75 / 0.26);
+  --ui-warning-text: oklch(0.46 0.12 75);
+  --ui-danger: oklch(0.58 0.22 25);
+  --ui-danger-soft: oklch(0.58 0.22 25 / 0.1);
+  --ui-danger-border: oklch(0.58 0.22 25 / 0.24);
+  --ui-danger-text: oklch(0.48 0.18 25);
+  --ui-info: oklch(0.55 0.14 230);
+  --ui-info-soft: oklch(0.55 0.14 230 / 0.11);
+  --ui-info-border: oklch(0.55 0.14 230 / 0.24);
+  --ui-info-text: oklch(0.42 0.12 230);
+  --chart-1: oklch(0.52 0.19 264);
+  --chart-2: oklch(0.58 0.15 160);
+  --chart-3: oklch(0.66 0.15 50);
+  --chart-4: oklch(0.56 0.19 300);
+  --chart-5: oklch(0.58 0.22 25);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.975 0.006 255);
+  --sidebar-foreground: oklch(0.22 0.018 255);
+  --sidebar-primary: oklch(0.52 0.19 264);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.93 0.012 255);
+  --sidebar-accent-foreground: oklch(0.2 0.018 255);
+  --sidebar-border: oklch(0.88 0.012 255);
+  --sidebar-ring: oklch(0.56 0.18 264);
+}
+
+.light {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
   --background: oklch(0.07 0.01 270);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.12 0.01 270);
@@ -195,6 +287,32 @@
   html {
     @apply font-sans;
   }
+}
+
+.light [class*="text-zinc-100"],
+.light [class*="text-zinc-200"],
+.light [class*="text-zinc-300"] {
+  color: var(--ui-text-primary);
+}
+
+.light [class*="text-zinc-400"],
+.light [class*="text-zinc-500"],
+.light [class*="text-zinc-600"] {
+  color: var(--ui-text-muted);
+}
+
+.light [class*="bg-[#0a0a12]"] {
+  background-color: var(--ui-surface-elevated);
+}
+
+.light [class*="bg-white/"],
+.light [class*="bg-white\\["] {
+  background-color: var(--ui-surface-control);
+}
+
+.light [class*="border-white/"],
+.light [class*="border-white\\["] {
+  border-color: var(--ui-border-default);
 }
 
 

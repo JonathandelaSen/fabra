@@ -27,8 +27,28 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await resolveInterfaceLanguage();
+  const themeScript = `
+try {
+  var theme = window.localStorage.getItem("ats-cv-ai-checker.theme");
+  if (theme !== "light" && theme !== "dark") theme = "dark";
+  document.documentElement.classList.remove(theme === "light" ? "dark" : "light");
+  document.documentElement.classList.add(theme);
+  document.documentElement.style.colorScheme = theme;
+  var colorSchemeMeta = document.querySelector('meta[name="color-scheme"]');
+  if (colorSchemeMeta) colorSchemeMeta.setAttribute("content", theme);
+} catch (_) {}
+`;
+
   return (
-    <html lang={locale} className={`${inter.variable} h-full antialiased dark`}>
+    <html
+      lang={locale}
+      className={`${inter.variable} h-full antialiased dark`}
+      suppressHydrationWarning
+    >
+      <head>
+        <meta name="color-scheme" content="dark" />
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="h-full font-sans">
         <I18nProvider initialLocale={locale}>
           <FrontendQueryClientProvider>{children}</FrontendQueryClientProvider>

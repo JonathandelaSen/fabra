@@ -174,6 +174,15 @@ export const messages = {
         saved: "Language updated.",
         error: "I couldn't save the language preference.",
       },
+      theme: {
+        title: "Theme",
+        description: "Choose how the app looks in this browser.",
+        label: "Interface theme",
+        options: {
+          dark: "Dark",
+          light: "Light",
+        },
+      },
       apiKey: {
         title: "API Key",
         status: "Status",
@@ -1426,6 +1435,15 @@ export const messages = {
         },
         saved: "Idioma actualizado.",
         error: "No he podido guardar la preferencia de idioma.",
+      },
+      theme: {
+        title: "Tema",
+        description: "Elige cómo se ve la app en este navegador.",
+        label: "Tema de interfaz",
+        options: {
+          dark: "Oscuro",
+          light: "Claro",
+        },
       },
       apiKey: {
         title: "API Key",
