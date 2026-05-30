@@ -1,21 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { DEFAULT_FAST_GEMINI_MODEL, DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
-import { getErrorMessage } from "@/lib/errors";
-import type { AnalysisMode, AIContext } from "@/lib/analysis-types";
+import type { AnalysisMode } from "@/lib/analysis-types";
 import HowAtsWorksEducationBanner from "@/components/shared/how-ats-works-education-banner";
 import ExtractionHeader from "@/components/shared/extraction/extraction-header";
-import ExtractionParserTabs from "@/components/shared/extraction/extraction-parser-tabs";
-import ExtractionPdfPreview from "./extraction-pdf-preview";
-import AnalysisModeSelector from "./analysis-mode-selector";
 import CVScoreCopyPasteModal from "./cv-score-copy-paste-modal";
-import GeneralAnalysisForm from "./general-analysis-form";
-import JobMatchForm from "./job-match-form";
-import { ExtractionTextPanel as CvExtractionTextPanel } from "@/components/shared/extraction/extraction-text-panel";
-import type { ScoreCVAnalysisInput } from "../hooks/use-cv-analysis-mutations";
+import {
+  useExtractionAIActions,
+  type ScoreAnalysisHandler,
+} from "../hooks/use-extraction-ai-actions";
+import ExtractionAIAnalysisSection from "./extraction-ai-analysis-section";
+import { type ParserTab } from "./extraction-parser-config";
+import ExtractionWorkspace from "./extraction-workspace";
 
 interface ExtractionData {
   text_python: string | null;
@@ -48,45 +45,9 @@ interface ExtractionViewProps {
   aiModel: string;
   hasAIApiKey: boolean;
   onOpenSettings: () => void;
-  onScoreAnalysis?: (id: string, input: ScoreCVAnalysisInput) => Promise<void>;
+  onScoreAnalysis?: ScoreAnalysisHandler;
   hideAnalysisSelector?: boolean;
 }
-
-type ParserTab = "python" | "pdfjs" | "node";
-
-const PARSERS: {
-  key: ParserTab;
-  labelKey: string;
-  descriptionKey: "python" | "pdfjs" | "node";
-  color: string;
-  badgeKey: string;
-  badgeColor: string;
-}[] = [
-  {
-    key: "python",
-    labelKey: "parserLabels.python",
-    descriptionKey: "python",
-    color: "bg-emerald-500",
-    badgeKey: "parserBadges.python",
-    badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  },
-  {
-    key: "pdfjs",
-    labelKey: "parserLabels.pdfjs",
-    descriptionKey: "pdfjs",
-    color: "bg-sky-500",
-    badgeKey: "parserBadges.pdfjs",
-    badgeColor: "bg-sky-500/10 text-sky-400 border-sky-500/20",
-  },
-  {
-    key: "node",
-    labelKey: "parserLabels.node",
-    descriptionKey: "node",
-    color: "bg-amber-500",
-    badgeKey: "parserBadges.node",
-    badgeColor: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  },
-];
 
 export default function ExtractionView({
   analysis,
@@ -99,7 +60,6 @@ export default function ExtractionView({
   onScoreAnalysis,
   hideAnalysisSelector = false,
 }: ExtractionViewProps) {
-  const t = useTranslations("analysisFlow.extraction");
   const formsT = useTranslations("analysisFlow.forms");
   const [activeTab, setActiveTab] = useState<ParserTab>("python");
   const [fullscreen, setFullscreen] = useState(false);
@@ -108,16 +68,28 @@ export default function ExtractionView({
 
   // Analysis mode state
   const [selectedMode, setSelectedMode] = useState<AnalysisMode | null>(null);
-  const [loadingAI, setLoadingAI] = useState(false);
-  const [aiError, setAiError] = useState<string | null>(null);
-  const [copyPasteContext, setCopyPasteContext] = useState<string | null>(null);
-  const [copyPasteOpen, setCopyPasteOpen] = useState(false);
-  const [selectedModel, setSelectedModel] = useState<string>(aiModel || DEFAULT_FAST_GEMINI_MODEL);
-
-  const models = [
-    { id: DEFAULT_FAST_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_FAST_GEMINI_MODEL]} (${formsT("fast")})` },
-    { id: DEFAULT_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_GEMINI_MODEL]} (${formsT("powerful")})` },
-  ];
+  const {
+    aiError,
+    copyPasteContext,
+    copyPasteOpen,
+    loadingAI,
+    models,
+    selectedModel,
+    handleExternalChatAnalysis,
+    handleGeneralAnalysis,
+    handleJobMatchAnalysis,
+    setCopyPasteContext,
+    setCopyPasteOpen,
+    setSelectedModel,
+  } = useExtractionAIActions({
+    analysisId: analysis.id,
+    aiApiKey,
+    aiModel,
+    aiProvider,
+    hasAIApiKey,
+    onAIAnalysisComplete,
+    onScoreAnalysis,
+  });
 
   const getTextForTab = (tab: ParserTab) => {
     switch (tab) {
@@ -163,93 +135,6 @@ export default function ExtractionView({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleGeneralAnalysis = async (context: AIContext, model: string) => {
-    if (!hasAIApiKey) {
-      setAiError(t("missingApiKey"));
-      return;
-    }
-
-    setLoadingAI(true);
-    setAiError(null);
-
-    try {
-      if (onScoreAnalysis) {
-        await onScoreAnalysis(analysis.id, {
-          additionalContext: context?.additionalContext ?? null,
-          provider: aiProvider,
-          apiKey: aiApiKey,
-          model,
-        });
-      } else {
-        const res = await fetch(`/api/cv-analyses/${analysis.id}/score`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            additionalContext: context?.additionalContext ?? null,
-            provider: aiProvider,
-            apiKey: aiApiKey,
-            model,
-          }),
-        });
-
-        if (!res.ok) {
-          const data = await res.json();
-          throw new Error(data.error || t("aiAnalysisFailed"));
-        }
-      }
-
-      onAIAnalysisComplete();
-    } catch (err: unknown) {
-      setAiError(getErrorMessage(err));
-    } finally {
-      setLoadingAI(false);
-    }
-  };
-
-  const handleExternalChatAnalysis = (context: AIContext) => {
-    setCopyPasteContext(context.additionalContext ?? null);
-    setCopyPasteOpen(true);
-  };
-
-  const handleJobMatchAnalysis = async (
-    jobDescription: string,
-    jobUrl: string,
-    model: string,
-  ) => {
-    if (!hasAIApiKey) {
-      setAiError(t("missingApiKey"));
-      return;
-    }
-
-    setLoadingAI(true);
-    setAiError(null);
-
-    try {
-      const res = await fetch(`/api/job-match-analyses/${analysis.id}/score`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          jobDescription,
-          jobUrl,
-          provider: aiProvider,
-          apiKey: aiApiKey,
-          model,
-        }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || t("aiAnalysisFailed"));
-      }
-
-      onAIAnalysisComplete();
-    } catch (err: unknown) {
-      setAiError(getErrorMessage(err));
-    } finally {
-      setLoadingAI(false);
-    }
-  };
-
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <CVScoreCopyPasteModal
@@ -288,81 +173,39 @@ export default function ExtractionView({
         }}
       />
 
-      {/* Content */}
       <div className="flex-1 flex flex-col overflow-auto p-4 sm:p-6 gap-4 sm:gap-6">
-        {/* Educational Banner */}
         <HowAtsWorksEducationBanner />
 
-        <ExtractionParserTabs
-          parsers={PARSERS}
+        <ExtractionWorkspace
           activeTab={activeTab}
-          onTabChange={setActiveTab}
-          getTextForTab={getTextForTab}
+          copied={copied}
+          currentError={currentError}
+          currentText={currentText}
+          fullscreen={fullscreen}
           getErrorForTab={getErrorForTab}
+          getTextForTab={getTextForTab}
+          onCopy={handleCopy}
+          onTabChange={setActiveTab}
+          onToggleFullscreen={() => setFullscreen(!fullscreen)}
+          onClosePdfPreview={() => setShowPdfPreview(false)}
+          pdfUrl={pdfUrl}
+          showPdfPreview={showPdfPreview}
         />
 
-        {/* Text Content Area & PDF Preview Side-by-Side */}
-        <div className="flex-1 flex flex-col lg:flex-row gap-4 sm:gap-6 min-h-0">
-          <CvExtractionTextPanel
-            activeTab={activeTab}
-            currentText={currentText}
-            currentError={currentError}
-            copied={copied}
-            fullscreen={fullscreen}
-            parserColor={PARSERS.find((p) => p.key === activeTab)?.color}
-            parserDescriptionKey={PARSERS.find((p) => p.key === activeTab)?.descriptionKey ?? "python"}
-            onCopy={handleCopy}
-            onToggleFullscreen={() => setFullscreen(!fullscreen)}
-          />
-
-          <ExtractionPdfPreview
-            showPdfPreview={showPdfPreview}
-            fullscreen={fullscreen}
-            pdfUrl={pdfUrl}
-            onClose={() => setShowPdfPreview(false)}
-          />
-        </div>
-
-        {/* Fullscreen backdrop */}
-        {fullscreen && (
-          <div
-            className="fixed inset-0 bg-black/80 z-40"
-            onClick={() => setFullscreen(false)}
-          />
-        )}
-
-        {/* Phase 2 - AI Analysis Section */}
-        {analysis.ai_score === null && !hideAnalysisSelector && (
-          <AnimatePresence mode="wait">
-            {selectedMode === null ? (
-              <AnalysisModeSelector
-                key="mode-selector"
-                onSelectMode={setSelectedMode}
-              />
-            ) : selectedMode === "general" ? (
-              <GeneralAnalysisForm
-                key="general-form"
-                onSubmit={handleGeneralAnalysis}
-                onBack={() => setSelectedMode(null)}
-                loading={loadingAI}
-                error={aiError}
-                hasAIApiKey={hasAIApiKey}
-                onOpenSettings={onOpenSettings}
-                onAnalyzeWithExternalChat={handleExternalChatAnalysis}
-              />
-            ) : (
-              <JobMatchForm
-                key="job-match-form"
-                onSubmit={handleJobMatchAnalysis}
-                onBack={() => setSelectedMode(null)}
-                loading={loadingAI}
-                error={aiError}
-                hasAIApiKey={hasAIApiKey}
-                onOpenSettings={onOpenSettings}
-              />
-            )}
-          </AnimatePresence>
-        )}
+        <ExtractionAIAnalysisSection
+          aiScore={analysis.ai_score}
+          aiError={aiError}
+          hasAIApiKey={hasAIApiKey}
+          hideAnalysisSelector={hideAnalysisSelector}
+          loadingAI={loadingAI}
+          selectedMode={selectedMode}
+          onAnalyzeWithExternalChat={handleExternalChatAnalysis}
+          onBack={() => setSelectedMode(null)}
+          onOpenSettings={onOpenSettings}
+          onSelectMode={setSelectedMode}
+          onSubmitGeneral={handleGeneralAnalysis}
+          onSubmitJobMatch={handleJobMatchAnalysis}
+        />
       </div>
     </div>
   );
