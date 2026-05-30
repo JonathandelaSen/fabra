@@ -11,11 +11,7 @@ import type {
   CVAnalysisCopyPasteResult,
   PreviewCVAnalysisCopyPasteResponse,
 } from "@/app/api/cv-analyses/[id]/score/copy-paste/preview/responses";
-import {
-  applyCVAnalysisCopyPaste,
-  prepareCVAnalysisCopyPaste,
-  previewCVAnalysisCopyPaste,
-} from "../api/cv-analysis-copy-paste-api";
+import { useCVAnalysisCopyPaste } from "../hooks/use-cv-analysis-copy-paste";
 
 const CV_CORRECTION_INSTRUCTIONS =
   "Please return only the required JSON envelope. Do not include Markdown or explanation outside JSON. Keep workflowId as cv_analysis.score and schemaVersion as 1.";
@@ -36,6 +32,11 @@ export default function CVScoreCopyPasteModal({
   onApplied,
 }: CVScoreCopyPasteModalProps) {
   const t = useTranslations("analysisFlow.copyPaste");
+  const {
+    prepareCVAnalysisCopyPaste,
+    previewCVAnalysisCopyPaste,
+    applyCVAnalysisCopyPaste,
+  } = useCVAnalysisCopyPaste();
 
   const state = useCopyPasteWorkflowState({
     open,

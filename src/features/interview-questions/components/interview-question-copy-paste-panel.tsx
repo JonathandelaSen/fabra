@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { ClipboardList } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { CopyPasteTextPanel } from "@/components/shared/copy-paste-text-panel";
@@ -9,10 +8,8 @@ import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
 } from "@/components/shared/action-buttons";
-import {
-  prepareInterviewQuestionCopyPaste,
-  type PrepareInterviewQuestionCopyPasteResult,
-} from "../api/interview-questions-api";
+import type { PrepareInterviewQuestionCopyPasteResult } from "../api/interview-questions-api";
+import { useInterviewQuestionsCopyPaste } from "../hooks/use-interview-questions-copy-paste";
 
 interface InterviewQuestionCopyPastePanelProps {
   questionId: string;
@@ -28,31 +25,16 @@ export function InterviewQuestionCopyPastePanel({
   onClose,
 }: InterviewQuestionCopyPastePanelProps) {
   const t = useTranslations("interviewQuestions.copyPaste");
-  const [mode, setMode] = useState<"generate" | "edit">("generate");
-  const [instruction, setInstruction] = useState("");
-  const [preparing, setPreparing] = useState(false);
-  const [prepared, setPrepared] =
-    useState<PrepareInterviewQuestionCopyPasteResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const handlePrepare = async () => {
-    setPreparing(true);
-    setError(null);
-    try {
-      const result = await prepareInterviewQuestionCopyPaste({
-        id: questionId,
-        input: {
-          mode,
-          instruction: mode === "edit" ? instruction : undefined,
-        },
-      });
-      setPrepared(result);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : t("prepareError"));
-    } finally {
-      setPreparing(false);
-    }
-  };
+  const {
+    mode,
+    setMode,
+    instruction,
+    setInstruction,
+    preparing,
+    prepared,
+    error,
+    handlePrepare,
+  } = useInterviewQuestionsCopyPaste(questionId);
 
   return (
     <CopyPasteDialog

@@ -6,11 +6,7 @@ import { useCopyPasteWorkflowState } from "@/components/shared/use-copy-paste-wo
 import type { ApplyCVProfileCopyPasteResponse } from "@/app/api/cvs/[id]/structured-profile/copy-paste/apply/responses";
 import type { PreviewCVProfileCopyPasteResponse } from "@/app/api/cvs/[id]/structured-profile/copy-paste/preview/responses";
 import type { CVTemplateLocale } from "@/lib/cv-templates";
-import {
-  applyCVProfileCopyPaste,
-  prepareCVProfileCopyPaste,
-  previewCVProfileCopyPaste,
-} from "../api/cv-profile-copy-paste-api";
+import { useCVProfileCopyPaste } from "../hooks/use-cv-profile-copy-paste";
 import CVProfileCopyPastePreview from "./cv-profile-copy-paste-preview";
 
 const CV_PROFILE_COPY_PASTE_WORKFLOW_ID =
@@ -36,6 +32,11 @@ export default function CVProfileStructureCopyPasteModal({
   onApplied,
 }: CVProfileStructureCopyPasteModalProps) {
   const tProfile = useTranslations("analysisFlow.cvProfileCopyPaste");
+  const {
+    prepareCVProfileCopyPaste,
+    previewCVProfileCopyPaste,
+    applyCVProfileCopyPaste,
+  } = useCVProfileCopyPaste();
 
   const state = useCopyPasteWorkflowState({
     open,
