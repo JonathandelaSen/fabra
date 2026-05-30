@@ -1,5 +1,5 @@
-import { Pencil, Save, Trash2, Trophy, X, Plus } from "lucide-react";
-import type { ObjectiveOutcome, ObjectiveOutcomeStatus, ObjectiveOutcomeType } from "../api/objectives-api";
+import { Pencil, Save, Trash2, X } from "lucide-react";
+import type { ObjectiveOutcome, ObjectiveOutcomeStatus, ObjectiveOutcomeType } from "../types";
 import { outcomeLabels, type OutcomeEditForm } from "./objectives-ui";
 import {
   ActionIconButton,
@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { BasicPanel } from "@/components/shared/basic-panel";
+import { ObjectiveOutcomeAddBar, ObjectiveOutcomesHeader } from "./objective-outcomes-section-parts";
 
 interface ObjectiveOutcomesProps {
   editingOutcomeId: string | null;
@@ -29,10 +30,7 @@ interface ObjectiveOutcomesProps {
   onOutcomeFormChange: (form: OutcomeEditForm | null) => void;
   onSaveOutcome: () => void;
   onStopEditingOutcome: () => void;
-  onUpdateOutcomeStatus: (
-    outcome: ObjectiveOutcome,
-    status: ObjectiveOutcomeStatus
-  ) => void;
+  onUpdateOutcomeStatus: (outcome: ObjectiveOutcome, status: ObjectiveOutcomeStatus) => void;
   outcomeLabel: (type: ObjectiveOutcomeType) => string;
   outcomeStatusLabel: (status: ObjectiveOutcomeStatus) => string;
   t: (key: string) => string;
@@ -61,17 +59,12 @@ export function ObjectiveOutcomes({
 }: ObjectiveOutcomesProps) {
   return (
     <BasicPanel className="flex flex-col overflow-hidden">
-      <div className="border-b border-white/[0.06] px-5 py-4 flex items-center gap-2.5 bg-white/[0.01]">
-        <Trophy className="h-4.5 w-4.5 text-amber-400" />
-        <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider">
-          {t("outcomes.title")}
-        </h3>
-      </div>
+      <ObjectiveOutcomesHeader t={t} />
 
       <div className="p-5 flex flex-col gap-4">
         {outcomes.length === 0 ? (
           <div className="py-8 text-center text-xs text-zinc-600 italic">
-            No expected outcomes defined yet.
+            {t("outcomes.empty")}
           </div>
         ) : (
           <div className="space-y-2.5">
@@ -113,17 +106,10 @@ export function ObjectiveOutcomes({
                           </span>
                           <Select
                             value={outcomeForm.type}
-                            onChange={(e) =>
-                              onOutcomeFormChange({
-                                ...outcomeForm,
-                                type: e.target.value as ObjectiveOutcomeType,
-                              })
-                            }
+                            onChange={(e) => onOutcomeFormChange({ ...outcomeForm, type: e.target.value as ObjectiveOutcomeType })}
                           >
                             {Object.keys(outcomeLabels).map((key) => (
-                              <option key={key} value={key} className="bg-[#101018] text-zinc-100">
-                                {outcomeLabel(key as ObjectiveOutcomeType)}
-                              </option>
+                              <option key={key} value={key} className="bg-[#101018] text-zinc-100">{outcomeLabel(key as ObjectiveOutcomeType)}</option>
                             ))}
                           </Select>
                         </label>
@@ -133,17 +119,10 @@ export function ObjectiveOutcomes({
                           </span>
                           <Select
                             value={outcomeForm.status}
-                            onChange={(e) =>
-                              onOutcomeFormChange({
-                                ...outcomeForm,
-                                status: e.target.value as ObjectiveOutcomeStatus,
-                              })
-                            }
+                            onChange={(e) => onOutcomeFormChange({ ...outcomeForm, status: e.target.value as ObjectiveOutcomeStatus })}
                           >
                             {["expected", "achieved", "missed"].map((status) => (
-                              <option key={status} value={status} className="bg-[#101018] text-zinc-100">
-                                {outcomeStatusLabel(status as ObjectiveOutcomeStatus)}
-                              </option>
+                              <option key={status} value={status} className="bg-[#101018] text-zinc-100">{outcomeStatusLabel(status as ObjectiveOutcomeStatus)}</option>
                             ))}
                           </Select>
                         </label>
@@ -157,12 +136,7 @@ export function ObjectiveOutcomes({
                             <Input
                               type="number"
                               value={outcomeForm.amount}
-                              onChange={(e) =>
-                                onOutcomeFormChange({
-                                  ...outcomeForm,
-                                  amount: e.target.value,
-                                })
-                              }
+                              onChange={(e) => onOutcomeFormChange({ ...outcomeForm, amount: e.target.value })}
                               placeholder="0"
                               className="bg-zinc-950/50 border-white/[0.06] text-xs h-9 focus-visible:ring-amber-500/20"
                             />
@@ -173,12 +147,7 @@ export function ObjectiveOutcomes({
                             </span>
                             <Input
                               value={outcomeForm.currency}
-                              onChange={(e) =>
-                                onOutcomeFormChange({
-                                  ...outcomeForm,
-                                  currency: e.target.value,
-                                })
-                              }
+                              onChange={(e) => onOutcomeFormChange({ ...outcomeForm, currency: e.target.value })}
                               placeholder="EUR"
                               className="bg-zinc-950/50 border-white/[0.06] text-xs h-9 focus-visible:ring-amber-500/20"
                             />
@@ -192,22 +161,13 @@ export function ObjectiveOutcomes({
                         <Textarea
                           rows={2}
                           value={outcomeForm.description}
-                          onChange={(e) =>
-                            onOutcomeFormChange({
-                              ...outcomeForm,
-                              description: e.target.value,
-                            })
-                          }
+                          onChange={(e) => onOutcomeFormChange({ ...outcomeForm, description: e.target.value })}
                           placeholder={t("outcomes.descriptionPlaceholder")}
                           className="bg-zinc-950/50 border-white/[0.06] text-xs focus-visible:ring-amber-500/20 min-h-0 py-2"
                         />
                       </label>
                       <div className="flex justify-end gap-2 pt-1 border-t border-white/[0.04]">
-                        <IconTextButton
-                          icon={X}
-                          onClick={onStopEditingOutcome}
-                          className="h-8"
-                        >
+                        <IconTextButton icon={X} onClick={onStopEditingOutcome} className="h-8">
                           {t("actions.cancel")}
                         </IconTextButton>
                         <IconTextButton
@@ -224,9 +184,7 @@ export function ObjectiveOutcomes({
                   ) : (
                     <div className="flex items-start gap-3 p-3.5">
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-semibold text-amber-100">
-                          {outcome.title}
-                        </p>
+                        <p className="text-sm font-semibold text-amber-100">{outcome.title}</p>
                         {outcome.description && (
                           <p className="mt-1 text-xs leading-relaxed text-zinc-400 whitespace-pre-wrap">
                             {outcome.description}
@@ -251,17 +209,12 @@ export function ObjectiveOutcomes({
                           className="h-8 py-0.5 text-xs font-semibold w-auto px-2"
                           value={outcome.status}
                           onChange={(e) =>
-                            onUpdateOutcomeStatus(
-                              outcome,
-                              e.target.value as ObjectiveOutcomeStatus
-                            )
+                            onUpdateOutcomeStatus(outcome, e.target.value as ObjectiveOutcomeStatus)
                           }
                           disabled={isEmpty}
                         >
                           {["expected", "achieved", "missed"].map((status) => (
-                            <option key={status} value={status} className="bg-[#101018] text-zinc-100">
-                              {outcomeStatusLabel(status as ObjectiveOutcomeStatus)}
-                            </option>
+                            <option key={status} value={status} className="bg-[#101018] text-zinc-100">{outcomeStatusLabel(status as ObjectiveOutcomeStatus)}</option>
                           ))}
                         </Select>
                         <div className="flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
@@ -285,41 +238,7 @@ export function ObjectiveOutcomes({
           </div>
         )}
 
-        {/* Add Outcome input bar */}
-        <div className="mt-2 flex gap-2 border-t border-white/[0.04] pt-4">
-          <Select
-            className="w-32 py-1 h-9 text-xs shrink-0"
-            value={newOutcomeType}
-            onChange={(e) =>
-              onNewOutcomeTypeChange(e.target.value as ObjectiveOutcomeType)
-            }
-            disabled={isEmpty}
-          >
-            {Object.keys(outcomeLabels).map((key) => (
-              <option key={key} value={key} className="bg-[#101018] text-zinc-100">
-                {outcomeLabel(key as ObjectiveOutcomeType)}
-              </option>
-            ))}
-          </Select>
-          <Input
-            placeholder={t("outcomes.addPlaceholder")}
-            value={newOutcomeTitle}
-            onChange={(e) => onNewOutcomeTitleChange(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") void onCreateOutcome();
-            }}
-            disabled={isEmpty}
-            className="bg-zinc-950 border-white/[0.06] text-sm h-9 focus-visible:ring-amber-500/20"
-          />
-          <IconTextButton
-            icon={Plus}
-            tone={ICON_TEXT_BUTTON_TONES.WARNING}
-            onClick={onCreateOutcome}
-            disabled={saving || isEmpty}
-          >
-            {t("actions.add")}
-          </IconTextButton>
-        </div>
+        <ObjectiveOutcomeAddBar isEmpty={isEmpty} newOutcomeTitle={newOutcomeTitle} newOutcomeType={newOutcomeType} saving={saving} onCreateOutcome={onCreateOutcome} onNewOutcomeTitleChange={onNewOutcomeTitleChange} onNewOutcomeTypeChange={onNewOutcomeTypeChange} outcomeLabel={outcomeLabel} t={t} />
       </div>
     </BasicPanel>
   );

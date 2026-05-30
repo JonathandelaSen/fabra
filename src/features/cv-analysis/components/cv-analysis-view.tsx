@@ -1,16 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { FileText, Sparkles } from "lucide-react";
 import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
 import { useTranslations } from "next-intl";
-import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
-import type { InterviewQuestionResponse as InterviewQuestionSummary } from "@/app/api/interview-questions/responses";
+import type { InterviewQuestionSummary } from "../types";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import { AnalysisDetailSkeleton } from "@/components/shared/skeletons";
-import type { AIContext, Analysis } from "@/lib/analysis-types";
 import {
   useCreateCVAnalysis,
   useDeleteCVAnalysis,
@@ -26,9 +22,8 @@ import {
   useCVAnalysisInterviewQuestions,
 } from "../hooks/use-cv-analysis-queries";
 import { useCVAnalysisRouteState } from "../hooks/use-cv-analysis-route-state";
-import AIAnalysisView from "./analysis-view";
 import CVAnalysesListView from "./cv-analyses-list-view";
-import ExtractionView from "./extraction-view";
+import { CVAnalysisDetailPanel } from "./cv-analysis-detail-panel";
 import NewAnalysisFlow from "./new-analysis-flow";
 
 interface CVAnalysisViewProps {
@@ -41,42 +36,6 @@ interface CVAnalysisViewProps {
     cvId?: string | null;
     analysisId?: string | null;
   }) => void;
-}
-
-function toAIAnalysisProps(analysis: Analysis) {
-  return {
-    ai_score: analysis.ai_score ?? 0,
-    ai_feedback: analysis.ai_feedback ?? "",
-    ai_keywords: analysis.ai_keywords ?? "[]",
-    ai_improvements: analysis.ai_improvements ?? "[]",
-    ai_model: analysis.ai_model ?? "",
-    ai_analyzed_at: analysis.ai_analyzed_at ?? "",
-    analysis_mode: analysis.analysis_mode,
-    job_description: analysis.job_description,
-    job_url: analysis.job_url,
-    offer_status: analysis.offer_status,
-    offer_notes: analysis.offer_notes,
-    offer_next_action: analysis.offer_next_action,
-    offer_next_action_at: analysis.offer_next_action_at,
-    ai_context: (analysis.ai_context as AIContext | null) ?? null,
-    job_key_data: analysis.job_key_data,
-    job_keywords: analysis.job_keywords,
-    cv_keywords: analysis.cv_keywords,
-    matching_keywords: analysis.matching_keywords,
-    missing_keywords: analysis.missing_keywords,
-    id: analysis.id,
-    cv_id: analysis.cv_id,
-    cv: analysis.cv
-      ? {
-          id: analysis.cv.id,
-          name: analysis.cv.name,
-          filename: analysis.cv.filename ?? "",
-          type: analysis.cv.type,
-        }
-      : null,
-    title: analysis.title,
-    filename: analysis.filename,
-  };
 }
 
 export default function CVAnalysisView({
@@ -196,118 +155,23 @@ export default function CVAnalysisView({
             {t("empty")}
           </div>
         ) : (
-          <div className="flex h-full min-h-0 flex-col overflow-hidden">
-            <FeatureDetailTabBar
-              tabs={[
-                { id: "extraction" as const, label: t("extractionTab"), icon: <FileText /> },
-                { id: "analysis" as const, label: t("analysisTab"), icon: <Sparkles /> },
-              ]}
-              activeTab={route.tab === "extraction" ? "extraction" : "analysis"}
-              onTabChange={(tab) => route.setTab(tab)}
-            />
-
-            <AnimatePresence mode="wait">
-              {route.tab === "extraction" ? (
-                <motion.div
-                  key="extraction-view"
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 10 }}
-                  transition={{ duration: 0.15 }}
-                  className="flex-1 flex flex-col overflow-hidden min-h-0"
-                >
-                  <ExtractionView
-                    analysis={{
-                      ...selectedAnalysis,
-                      cv: selectedAnalysis.cv
-                        ? {
-                            id: selectedAnalysis.cv.id,
-                            name: selectedAnalysis.cv.name,
-                            filename: selectedAnalysis.cv.filename ?? "",
-                            type: selectedAnalysis.cv.type,
-                          }
-                        : null,
-                    }}
-                    onAIAnalysisComplete={() => {
-                      void detailQuery.refetch();
-                      route.setTab("analysis");
-                    }}
-                    aiProvider={aiProvider}
-                    aiApiKey={aiApiKey}
-                    aiModel={aiModel}
-                    hasAIApiKey={hasAIApiKey}
-                    onOpenSettings={onOpenSettings}
-                    onScoreAnalysis={handleScoreAnalysis}
-                    hideAnalysisSelector={true}
-                  />
-                </motion.div>
-              ) : selectedAnalysis.ai_score !== null ? (
-                <motion.div
-                  key="analysis-view"
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  transition={{ duration: 0.15 }}
-                  className="flex-1 flex flex-col overflow-hidden min-h-0"
-                >
-                  <AIAnalysisView
-                    analysis={toAIAnalysisProps(selectedAnalysis)}
-                    aiProvider={aiProvider}
-                    aiApiKey={aiApiKey}
-                    aiModel={aiModel}
-                    hasAIApiKey={hasAIApiKey}
-                    onDelete={handleDelete}
-                    onUpdate={() => void detailQuery.refetch()}
-                    interviewQuestions={
-                      (interviewQuestionsQuery.data ?? []) as InterviewQuestionSummary[]
-                    }
-                    onInterviewQuestionCreated={() => {
-                      void interviewQuestionsQuery.refetch();
-                    }}
-                    onOpenQuestions={() =>
-                      onOpenQuestions({
-                        cvId: selectedAnalysis.cv_id,
-                        analysisId: selectedAnalysis.id,
-                      })
-                    }
-                  />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="analysis-selector-view"
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  transition={{ duration: 0.15 }}
-                  className="flex-1 flex flex-col overflow-hidden min-h-0"
-                >
-                  <ExtractionView
-                    analysis={{
-                      ...selectedAnalysis,
-                      cv: selectedAnalysis.cv
-                        ? {
-                            id: selectedAnalysis.cv.id,
-                            name: selectedAnalysis.cv.name,
-                            filename: selectedAnalysis.cv.filename ?? "",
-                            type: selectedAnalysis.cv.type,
-                          }
-                        : null,
-                    }}
-                    onAIAnalysisComplete={() => {
-                      void detailQuery.refetch();
-                      route.setTab("analysis");
-                    }}
-                    aiProvider={aiProvider}
-                    aiApiKey={aiApiKey}
-                    aiModel={aiModel}
-                    hasAIApiKey={hasAIApiKey}
-                    onOpenSettings={onOpenSettings}
-                    onScoreAnalysis={handleScoreAnalysis}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+          <CVAnalysisDetailPanel
+            selectedAnalysis={selectedAnalysis}
+            route={route}
+            aiProvider={aiProvider}
+            aiApiKey={aiApiKey}
+            aiModel={aiModel}
+            hasAIApiKey={hasAIApiKey}
+            interviewQuestions={
+              (interviewQuestionsQuery.data ?? []) as InterviewQuestionSummary[]
+            }
+            onDelete={handleDelete}
+            onOpenSettings={onOpenSettings}
+            onOpenQuestions={onOpenQuestions}
+            onRefetchAnalysis={() => void detailQuery.refetch()}
+            onRefetchQuestions={() => void interviewQuestionsQuery.refetch()}
+            onScoreAnalysis={handleScoreAnalysis}
+          />
         )}
       </FeatureTwoPaneLayout>
     </FeatureScreenShell>

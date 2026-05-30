@@ -601,6 +601,10 @@ export const messages = {
         configureApiKey: "Configure API Key",
       },
       derivedNotice: "You are editing a derived version. The original file and its extraction remain intact.",
+      editorTabs: {
+        ai: "AI",
+        manual: "Manual",
+      },
       publicModal: {
         title: "Publish this CV",
         description: "Anyone with this link will be able to view the full CV inside the platform, including email, phone, links, experience and any other data you wrote in this version.",
@@ -968,12 +972,14 @@ export const messages = {
       items: {
         title: "Action items",
         edit: "Edit action item",
+        empty: "No action items added yet.",
         progress: "{done}/{total} done · {completion}%",
         addPlaceholder: "Add action item...",
       },
       outcomes: {
         title: "Expected outcomes",
         edit: "Edit outcome",
+        empty: "No expected outcomes defined yet.",
         titlePlaceholder: "Outcome title",
         descriptionPlaceholder: "What does this outcome look like?",
         addPlaceholder: "Expected outcome...",
@@ -1803,6 +1809,10 @@ export const messages = {
         configureApiKey: "Configurar API Key",
       },
       derivedNotice: "Estás editando una versión derivada. El archivo original y su extracción se mantienen intactos.",
+      editorTabs: {
+        ai: "IA",
+        manual: "Manual",
+      },
       publicModal: {
         title: "Publicar este CV",
         description: "Cualquiera con este enlace podrá ver el CV completo dentro de la plataforma, incluidos email, teléfono, enlaces, experiencia y cualquier otro dato que hayas escrito en esta versión.",
@@ -2169,12 +2179,14 @@ export const messages = {
       items: {
         title: "Acciones",
         edit: "Editar acción",
+        empty: "Aún no hay acciones.",
         progress: "{done}/{total} completadas · {completion}%",
         addPlaceholder: "Añadir acción...",
       },
       outcomes: {
         title: "Resultados esperados",
         edit: "Editar resultado",
+        empty: "Aún no hay resultados esperados definidos.",
         titlePlaceholder: "Título del resultado",
         descriptionPlaceholder: "¿Cómo se ve este resultado?",
         addPlaceholder: "Resultado esperado...",

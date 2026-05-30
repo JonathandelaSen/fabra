@@ -4,18 +4,11 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
-import {
-  Briefcase,
-  MessageCircle,
-  MessageSquareQuote,
-  CalendarClock,
-  Sparkles,
-} from "lucide-react";
 import type { JobKeyData } from "@/lib/analysis-types";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { InterviewQuestionSummary } from "../types";
-import type { JobMatchAnalysisDetail as JobMatchAnalysisDetailType } from "../api/job-match-analysis-api";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import type { JobMatchAnalysisDetail as JobMatchAnalysisDetailType } from "../types";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import ScoreHero from "./score-hero";
 import TabResumen from "./tab-resumen";
 import TabOferta from "./tab-oferta";
@@ -24,17 +17,8 @@ import TabSeguimiento from "./tab-seguimiento";
 import TabChatOferta from "./tab-chat-oferta";
 import { useQuickInterviewQuestion } from "../hooks/use-quick-interview-question";
 import { useJobMatchAnalysisExport } from "../hooks/use-job-match-analysis-export";
-
+import { DETAIL_TABS, JobMatchDetailTabsList } from "./job-match-detail-tabs-list";
 type DetailTab = "summary" | "offer" | "questions" | "chat" | "tracking";
-
-const DETAIL_TABS = {
-  summary: "summary",
-  offer: "offer",
-  questions: "questions",
-  chat: "chat",
-  tracking: "tracking",
-} as const satisfies Record<DetailTab, DetailTab>;
-
 interface JobMatchAnalysisDetailProps {
   analysis: JobMatchAnalysisDetailType;
   aiProvider?: "gemini" | "mock";
@@ -74,7 +58,6 @@ function safeParseJobKeyData(value: string | null): JobKeyData | null {
     return null;
   }
 }
-
 
 function toDateTimeLocalValue(value: string | null) {
   if (!value) return "";
@@ -197,50 +180,7 @@ export default function JobMatchAnalysisDetail({
             }}
             className="w-full"
           >
-            <div className="sticky top-[-24px] z-20 -mx-6 px-6 py-4 backdrop-blur-md mb-8">
-              <TabsList className="bg-white/[0.03] border-white/[0.05] p-1 rounded-2xl gap-1">
-                <TabsTrigger
-                  value={DETAIL_TABS.summary}
-                  className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                >
-                  <Sparkles className="size-4" />
-                  {t("tabs.summary")}
-                </TabsTrigger>
-                <TabsTrigger
-                  value={DETAIL_TABS.offer}
-                  className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                >
-                  <Briefcase className="size-4" />
-                  {t("tabs.offer")}
-                </TabsTrigger>
-                <TabsTrigger
-                  value={DETAIL_TABS.questions}
-                  className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                >
-                  <MessageSquareQuote className="size-4" />
-                  {t("tabs.questions")}
-                  {interviewQuestions.length > 0 && (
-                    <span className="ml-1 rounded-full bg-primary/20 border border-primary/30 text-primary text-[10px] font-bold px-2 py-0.5">
-                      {interviewQuestions.length}
-                    </span>
-                  )}
-                </TabsTrigger>
-                <TabsTrigger
-                  value={DETAIL_TABS.chat}
-                  className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                >
-                  <MessageCircle className="size-4" />
-                  {t("tabs.chat")}
-                </TabsTrigger>
-                <TabsTrigger
-                  value={DETAIL_TABS.tracking}
-                  className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                >
-                  <CalendarClock className="size-4" />
-                  {t("tabs.tracking")}
-                </TabsTrigger>
-              </TabsList>
-            </div>
+            <JobMatchDetailTabsList interviewQuestionCount={interviewQuestions.length} />
 
             <div className="min-h-0">
               <TabsContent value={DETAIL_TABS.summary}>

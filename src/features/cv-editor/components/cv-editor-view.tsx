@@ -1,26 +1,17 @@
 "use client";
-
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
-import { motion, AnimatePresence } from "framer-motion";
-import { KeyRound, Loader2, PenLine, Sparkles } from "lucide-react";
-import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import { AnimatePresence } from "framer-motion";
+import { Loader2 } from "lucide-react";
 import { type AIModelOption } from "@/components/shared/ai-action-launcher/ai-action-launcher";
 import { GEMINI_MODELS } from "@/frontend/ai-models";
-import { ManualEditor } from "./cv-manual-editor/manual-editor";
-import CVEditorCopyPasteModal from "./cv-editor-copy-paste-modal";
 import { CVEditorEmptyState } from "./cv-editor-empty-state";
 import { CVEditorHeader } from "./cv-editor-header";
-import { CVEditorAIPanel } from "./cv-editor-ai-panel";
-import { CVEditorRecommendations } from "./cv-editor-recommendations";
-import { CVEditorPublicSection } from "./cv-editor-public-section";
-import { CVEditorSettingsSection } from "./cv-editor-settings-section";
-import { CVEditorPublicModal } from "./cv-editor-public-modal";
-import { CVEditorSaveModal } from "./cv-editor-save-modal";
+import { CVEditorModals } from "./cv-editor-modals";
+import { CVEditorSidePanel } from "./cv-editor-side-panel";
 import { useCVEditorMutations } from "../hooks/use-cv-editor-mutations";
 import { useCVEditorState } from "../hooks/use-cv-editor-state";
-
 const PDFPreview = dynamic(
   () => import("@/components/shared/pdf-preview").then((mod) => mod.PDFPreview),
   {
@@ -33,14 +24,7 @@ const PDFPreview = dynamic(
   },
 );
 
-interface CVEditorViewProps {
-  activeVersionId: string | null;
-  onOpenTemplates: () => void;
-  onOpenSettings: () => void;
-  onStartAnalysis: () => void;
-  onOpenVersion: (cvId: string) => void;
-  onBackToLibrary?: () => void;
-}
+interface CVEditorViewProps { activeVersionId: string | null; onOpenTemplates: () => void; onOpenSettings: () => void; onStartAnalysis: () => void; onOpenVersion: (cvId: string) => void; onBackToLibrary?: () => void; }
 
 const AI_MODELS: AIModelOption[] = [
   { id: "gemini-3.1-pro-preview", label: GEMINI_MODELS["gemini-3.1-pro-preview"] },
@@ -59,8 +43,7 @@ export default function CVEditorView({
 }: CVEditorViewProps) {
   const t = useTranslations("cvEditor");
   const [isPanelOpen, setIsPanelOpen] = useState(true);
-  const [isSavingModalOpen, setIsSavingModalOpen] = useState(false);
-  const [isPublicModalOpen, setIsPublicModalOpen] = useState(false);
+  const [modalState, setModalState] = useState({ saving: false, public: false });
   const [saveName, setSaveName] = useState("");
   const [publicCopied, setPublicCopied] = useState(false);
   const [editorTab, setEditorTab] = useState<"ai" | "manual">("ai");
@@ -92,7 +75,6 @@ export default function CVEditorView({
     reloadPreview,
     recommendationAnalysis,
     handleManualChange,
-    publicSlug,
     normalizedPublicSlug,
     publicUrl,
     publicDraftUrl,
@@ -132,15 +114,12 @@ export default function CVEditorView({
 
   const handleSaveAsCV = async () => {
     const saved = await saveAsCV(saveName);
-    if (saved) setIsSavingModalOpen(false);
+    if (saved) setModalState((current) => ({ ...current, saving: false }));
   };
 
-  const handleUpdatePublicSettings = async (
-    enabled: boolean,
-    confirmPublicExposure = false,
-  ) => {
+  const handleUpdatePublicSettings = async (enabled: boolean, confirmPublicExposure = false) => {
     const saved = await updatePublicSettings(enabled, confirmPublicExposure);
-    if (saved) setIsPublicModalOpen(false);
+    if (saved) setModalState((current) => ({ ...current, public: false }));
   };
 
   const copyPublicUrl = async () => {
@@ -174,7 +153,7 @@ export default function CVEditorView({
         onRedo={redo}
         onSaveNewVersion={() => {
           setSaveName(t("editedName", { name: currentVersion.name }));
-          setIsSavingModalOpen(true);
+          setModalState((current) => ({ ...current, saving: true }));
         }}
         onTogglePanel={() => setIsPanelOpen(!isPanelOpen)}
         onBackToLibrary={onBackToLibrary}
@@ -201,145 +180,69 @@ export default function CVEditorView({
 
         <AnimatePresence>
           {isPanelOpen && (
-            <motion.aside
-              initial={{ x: 480 }}
-              animate={{ x: 0 }}
-              exit={{ x: 480 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed inset-y-0 right-0 z-30 w-[480px] border-l border-white/5 bg-[#0a0a12]/95 backdrop-blur-xl md:relative"
-            >
-              <div className="flex h-full flex-col overflow-y-auto p-6 scrollbar-thin">
-                <div className="space-y-8">
-                  <div className="flex gap-1 rounded-xl border border-white/5 p-1 bg-white/5">
-                    <button
-                      onClick={() => setEditorTab("ai")}
-                      className={`flex items-center gap-1.5 flex-1 justify-center rounded-lg px-3 py-2 text-xs font-medium transition-all ${editorTab === "ai" ? "bg-white/10 text-white" : "text-zinc-500 hover:text-zinc-300"}`}
-                    >
-                      <Sparkles className="h-3.5 w-3.5" />
-                      IA
-                    </button>
-                    <button
-                      onClick={() => setEditorTab("manual")}
-                      className={`flex items-center gap-1.5 flex-1 justify-center rounded-lg px-3 py-2 text-xs font-medium transition-all ${editorTab === "manual" ? "bg-white/10 text-white" : "text-zinc-500 hover:text-zinc-300"}`}
-                    >
-                      <PenLine className="h-3.5 w-3.5" />
-                      Manual
-                    </button>
-                  </div>
-
-                  {editorTab === "manual" && currentProfile && (
-                    <ManualEditor
-                      profile={currentProfile}
-                      templateId={activeTemplate.templateId}
-                      locale={locale}
-                      saveState={saveState}
-                      onChange={handleManualChange}
-                      onSave={() => void saveProfileToApi(currentProfile)}
-                    />
-                  )}
-
-                  {editorTab === "ai" && (
-                    <CVEditorAIPanel
-                      editInstruction={editInstruction}
-                      setEditInstruction={setEditInstruction}
-                      editingProfile={editingProfile}
-                      hasAIApiKey={hasAIApiKey}
-                      selectedModel={selectedModel}
-                      setSelectedModel={setSelectedModel}
-                      aiModels={AI_MODELS}
-                      error={error}
-                      onApplyInstruction={() => applyInstruction()}
-                      onOpenCopyPaste={() => setCopyPasteOpen(true)}
-                      onOpenSettings={onOpenSettings}
-                    />
-                  )}
-
-                  <CVEditorRecommendations
-                    recommendationAnalysis={recommendationAnalysis}
-                    onStartAnalysis={onStartAnalysis}
-                  />
-
-                  <CVEditorPublicSection
-                    publicEnabled={currentVersion.publicEnabled}
-                    publicId={currentVersion.publicId}
-                    publicSlug={publicSlug}
-                    normalizedPublicSlug={normalizedPublicSlug}
-                    publicUrl={publicUrl}
-                    hasPublicSlugChanges={hasPublicSlugChanges}
-                    publicCopied={publicCopied}
-                    savingPublicSettings={savingPublicSettings}
-                    cvId={currentVersion.id}
-                    onSetPublicSlugDraft={setPublicSlugDraft}
-                    onPublish={() => setIsPublicModalOpen(true)}
-                    onUnpublish={() => void handleUpdatePublicSettings(false)}
-                    onSaveUrl={() => void handleUpdatePublicSettings(true)}
-                    onCopyPublicUrl={() => void copyPublicUrl()}
-                  />
-
-                  <CVEditorSettingsSection
-                    locale={locale}
-                    savingLocale={savingLocale}
-                    onUpdateLocale={updateLocale}
-                    onOpenTemplates={onOpenTemplates}
-                  />
-
-                  {!hasAIApiKey && (
-                    <IconTextButton
-                      icon={KeyRound}
-                      tone={ICON_TEXT_BUTTON_TONES.WARNING}
-                      onClick={onOpenSettings}
-                      className="w-full"
-                    >
-                      {t("settings.configureApiKey")}
-                    </IconTextButton>
-                  )}
-                </div>
-
-                <div className="mt-auto pt-10">
-                  <p className="text-[10px] text-zinc-600 leading-relaxed">
-                    {t("derivedNotice")}
-                  </p>
-                </div>
-              </div>
-            </motion.aside>
+            <CVEditorSidePanel
+              activeTemplateId={activeTemplate.templateId}
+              currentProfile={currentProfile}
+              currentVersion={currentVersion}
+              editInstruction={editInstruction}
+              editingProfile={editingProfile}
+              editorTab={editorTab}
+              error={error}
+              hasAIApiKey={hasAIApiKey}
+              hasPublicSlugChanges={hasPublicSlugChanges}
+              locale={locale}
+              publicCopied={publicCopied}
+              publicSlug={normalizedPublicSlug}
+              publicUrl={publicUrl}
+              recommendationAnalysis={recommendationAnalysis}
+              saveState={saveState}
+              savingLocale={savingLocale}
+              savingPublicSettings={savingPublicSettings}
+              selectedModel={selectedModel}
+              aiModels={AI_MODELS}
+              onApplyInstruction={() => applyInstruction()}
+              onCopyPublicUrl={() => void copyPublicUrl()}
+              onManualChange={handleManualChange}
+              onOpenCopyPaste={() => setCopyPasteOpen(true)}
+              onOpenSettings={onOpenSettings}
+              onOpenTemplates={onOpenTemplates}
+              onPublish={() => setModalState((current) => ({ ...current, public: true }))}
+              onSaveManual={() => void saveProfileToApi(currentProfile)}
+              onSaveUrl={() => void handleUpdatePublicSettings(true)}
+              onSetEditInstruction={setEditInstruction}
+              onSetEditorTab={setEditorTab}
+              onSetPublicSlugDraft={setPublicSlugDraft}
+              onSetSelectedModel={setSelectedModel}
+              onStartAnalysis={onStartAnalysis}
+              onUnpublish={() => void handleUpdatePublicSettings(false)}
+              onUpdateLocale={updateLocale}
+            />
           )}
         </AnimatePresence>
       </div>
 
-      <AnimatePresence>
-        {isPublicModalOpen && (
-          <CVEditorPublicModal
-            publicDraftUrl={publicDraftUrl}
-            normalizedPublicSlug={normalizedPublicSlug}
-            savingPublicSettings={savingPublicSettings}
-            onClose={() => setIsPublicModalOpen(false)}
-            onConfirm={() => void handleUpdatePublicSettings(true, true)}
-          />
-        )}
-
-        {isSavingModalOpen && (
-          <CVEditorSaveModal
-            saveName={saveName}
-            setSaveName={setSaveName}
-            savingAsCv={savingAsCv}
-            onClose={() => setIsSavingModalOpen(false)}
-            onSave={handleSaveAsCV}
-          />
-        )}
-      </AnimatePresence>
-
-      {currentVersion && (
-        <CVEditorCopyPasteModal
-          cvId={currentVersion.id}
-          instruction={editInstruction}
-          open={copyPasteOpen}
-          onClose={() => setCopyPasteOpen(false)}
-          onApplied={(result) => {
-            handleCopyPasteApplied(result);
-            setCopyPasteOpen(false);
-          }}
-        />
-      )}
+      <CVEditorModals
+        copyPasteOpen={copyPasteOpen}
+        currentVersionId={currentVersion.id}
+        editInstruction={editInstruction}
+        isPublicModalOpen={modalState.public}
+        isSavingModalOpen={modalState.saving}
+        normalizedPublicSlug={normalizedPublicSlug}
+        publicDraftUrl={publicDraftUrl}
+        saveName={saveName}
+        savingAsCv={savingAsCv}
+        savingPublicSettings={savingPublicSettings}
+        onApplyCopyPaste={(result) => {
+          handleCopyPasteApplied(result);
+          setCopyPasteOpen(false);
+        }}
+        onCloseCopyPaste={() => setCopyPasteOpen(false)}
+        onClosePublicModal={() => setModalState((current) => ({ ...current, public: false }))}
+        onCloseSavingModal={() => setModalState((current) => ({ ...current, saving: false }))}
+        onConfirmPublic={() => void handleUpdatePublicSettings(true, true)}
+        onSave={handleSaveAsCV}
+        onSaveNameChange={setSaveName}
+      />
     </div>
   );
 }

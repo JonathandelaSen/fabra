@@ -1,6 +1,6 @@
-import { Calendar, Check, Circle, Pencil, Save, Trash2, X, Plus } from "lucide-react";
+import { Calendar, Check, Circle, Pencil, Save, Trash2, X } from "lucide-react";
 import { useLocale } from "next-intl";
-import type { ObjectiveItem, ObjectiveItemStatus } from "../api/objectives-api";
+import type { ObjectiveItem, ObjectiveItemStatus } from "../types";
 import { formatDate, itemStatusLabels, type ItemEditForm } from "./objectives-ui";
 import {
   ActionIconButton,
@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { BasicPanel } from "@/components/shared/basic-panel";
+import { ObjectiveItemAddBar, ObjectiveItemsHeader } from "./objective-items-section-parts";
 
 interface ObjectiveItemsProps {
   completion: number;
@@ -61,27 +62,12 @@ export function ObjectiveItems({
 
   return (
     <BasicPanel className="flex flex-col overflow-hidden">
-      <div className="border-b border-white/[0.06] px-5 py-4 flex flex-wrap items-center justify-between gap-3 bg-white/[0.01]">
-        <div>
-          <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider">
-            {t("items.title")}
-          </h3>
-          <p className="text-xs text-zinc-500 mt-0.5">
-            {t("items.progress", { done: doneCount, total: totalItems, completion })}
-          </p>
-        </div>
-        <div className="w-32 bg-white/[0.04] h-2 rounded-full overflow-hidden border border-white/[0.02] shrink-0">
-          <div
-            className="h-full rounded-full bg-emerald-500 transition-all duration-500"
-            style={{ width: `${completion}%` }}
-          />
-        </div>
-      </div>
+      <ObjectiveItemsHeader completion={completion} doneCount={doneCount} totalItems={totalItems} t={t} />
 
       <div className="p-5 flex flex-col gap-4">
         {items.length === 0 ? (
           <div className="py-8 text-center text-xs text-zinc-600 italic">
-            No action items added yet.
+            {t("items.empty")}
           </div>
         ) : (
           <div className="space-y-2.5">
@@ -120,12 +106,7 @@ export function ObjectiveItems({
                           </span>
                           <Select
                             value={itemForm.status}
-                            onChange={(e) =>
-                              onItemFormChange({
-                                ...itemForm,
-                                status: e.target.value as ObjectiveItemStatus,
-                              })
-                            }
+                          onChange={(e) => onItemFormChange({ ...itemForm, status: e.target.value as ObjectiveItemStatus })}
                           >
                             {Object.keys(itemStatusLabels).map((key) => (
                               <option key={key} value={key} className="bg-[#101018] text-zinc-100">
@@ -141,9 +122,7 @@ export function ObjectiveItems({
                           <Input
                             type="date"
                             value={itemForm.dueDate}
-                            onChange={(e) =>
-                              onItemFormChange({ ...itemForm, dueDate: e.target.value })
-                            }
+                            onChange={(e) => onItemFormChange({ ...itemForm, dueDate: e.target.value })}
                             className="bg-zinc-950/50 border-white/[0.06] focus-visible:ring-emerald-500/20 py-1.5 h-auto text-xs"
                           />
                         </label>
@@ -155,9 +134,7 @@ export function ObjectiveItems({
                         <Textarea
                           rows={2}
                           value={itemForm.notes}
-                          onChange={(e) =>
-                            onItemFormChange({ ...itemForm, notes: e.target.value })
-                          }
+                          onChange={(e) => onItemFormChange({ ...itemForm, notes: e.target.value })}
                           placeholder={t("placeholders.itemNotes")}
                           className="bg-zinc-950/50 border-white/[0.06] text-xs focus-visible:ring-emerald-500/20 min-h-0 py-2"
                         />
@@ -169,12 +146,7 @@ export function ObjectiveItems({
                         <Textarea
                           rows={2}
                           value={itemForm.evidenceNotes}
-                          onChange={(e) =>
-                            onItemFormChange({
-                              ...itemForm,
-                              evidenceNotes: e.target.value,
-                            })
-                          }
+                          onChange={(e) => onItemFormChange({ ...itemForm, evidenceNotes: e.target.value })}
                           placeholder={t("placeholders.evidence")}
                           className="bg-zinc-950/50 border-white/[0.06] text-xs focus-visible:ring-emerald-500/20 min-h-0 py-2"
                         />
@@ -266,27 +238,7 @@ export function ObjectiveItems({
           </div>
         )}
 
-        {/* Add Action Item input bar */}
-        <div className="mt-2 flex gap-2 border-t border-white/[0.04] pt-4">
-          <Input
-            placeholder={t("items.addPlaceholder")}
-            value={newItemTitle}
-            onChange={(e) => onItemTitleChange(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") void onCreateItem();
-            }}
-            disabled={isEmpty}
-            className="bg-zinc-950 border-white/[0.06] text-sm h-9 focus-visible:ring-emerald-500/20"
-          />
-          <IconTextButton
-            icon={Plus}
-            tone={ICON_TEXT_BUTTON_TONES.SUCCESS}
-            onClick={onCreateItem}
-            disabled={saving || isEmpty}
-          >
-            {t("actions.add")}
-          </IconTextButton>
-        </div>
+        <ObjectiveItemAddBar isEmpty={isEmpty} newItemTitle={newItemTitle} saving={saving} onCreateItem={onCreateItem} onItemTitleChange={onItemTitleChange} t={t} />
       </div>
     </BasicPanel>
   );

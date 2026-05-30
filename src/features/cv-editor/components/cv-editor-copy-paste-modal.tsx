@@ -17,7 +17,7 @@ import {
 const CORRECTION_INSTRUCTIONS =
   "Please return only the required JSON envelope. Do not include Markdown or explanation outside JSON. Keep workflowId as cv_editor.apply_instruction and schemaVersion as 1.";
 
-interface CVEditorCopyPasteModalProps {
+export interface CVEditorCopyPasteModalProps {
   cvId: string;
   instruction: string;
   open: boolean;

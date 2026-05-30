@@ -32,3 +32,9 @@ export interface AnalysisChatMessage {
   metadata: Record<string, unknown> | null;
   created_at: string;
 }
+
+export type {
+  JobMatchAnalysisDetailResponse,
+  ListJobMatchAnalysesResponse,
+} from "@/app/api/job-match-analyses/responses";
+export type { JobMatchAnalysisDetail } from "./api/job-match-analysis-api";

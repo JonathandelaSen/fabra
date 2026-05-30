@@ -2,8 +2,8 @@
 
 import { useCallback, useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Briefcase, Code, GraduationCap, Languages, Save, User, FileText, Wrench, Award, FolderOpen, Heart, Trophy, BookOpen } from "lucide-react";
+import { Accordion } from "@/components/ui/accordion";
+import { Briefcase, Code, GraduationCap, Languages, User, FileText, Wrench, Award, FolderOpen, Heart, Trophy, BookOpen } from "lucide-react";
 import type { StandardCVProfile } from "@/lib/cv-profile";
 import {
   getOrderedRenderableSections,
@@ -22,15 +22,9 @@ import { SectionNamedItems } from "./section-named-items";
 import { EditableBulletList } from "./editable-bullet-list";
 import { ManualEditorPresentation } from "./manual-editor-presentation";
 import { ManualEditorSectionItem } from "./manual-editor-section-item";
-
-interface ManualEditorProps {
-  profile: StandardCVProfile;
-  templateId: CVTemplateId;
-  locale: CVTemplateLocale;
-  saveState: "idle" | "saving" | "saved";
-  onChange: (updater: (prev: StandardCVProfile) => StandardCVProfile) => void;
-  onSave: () => void;
-}
+import { ManualEditorBasicsItem } from "./manual-editor-basics-item";
+import { ManualEditorHeader } from "./manual-editor-header";
+interface ManualEditorProps { profile: StandardCVProfile; templateId: CVTemplateId; locale: CVTemplateLocale; saveState: "idle" | "saving" | "saved"; onChange: (updater: (prev: StandardCVProfile) => StandardCVProfile) => void; onSave: () => void; }
 
 export function ManualEditor({
   profile,
@@ -52,12 +46,12 @@ export function ManualEditor({
     }
   }, [sectionOrder, draggedSection]);
 
-  const handleDragStart = (sectionId: CVRenderableSectionId) => {
+  const startDrag = (sectionId: CVRenderableSectionId) => {
     setDraggedSection(sectionId);
     setOriginalSectionOrder(visualSectionOrder);
   };
 
-  const handleDragOverItem = (targetIndex: number) => {
+  const dragOverItem = (targetIndex: number) => {
     if (!draggedSection) return;
     const currentIndex = visualSectionOrder.indexOf(draggedSection);
     if (currentIndex < 0 || currentIndex === targetIndex) return;
@@ -68,18 +62,16 @@ export function ManualEditor({
     setVisualSectionOrder(nextOrder);
   };
 
-  const handleChange = useCallback((updater: (prev: StandardCVProfile) => StandardCVProfile) => {
+  const changeProfile = useCallback((updater: (prev: StandardCVProfile) => StandardCVProfile) => {
     onChange(updater);
   }, [onChange]);
 
-  const updatePresentation = useCallback((
-    updater: (prev: NonNullable<StandardCVProfile["presentation"]>) => StandardCVProfile["presentation"]
-  ) => {
-    handleChange((prev) => {
+  const applyPresentation = useCallback((updater: (prev: NonNullable<StandardCVProfile["presentation"]>) => StandardCVProfile["presentation"]) => {
+    changeProfile((prev) => {
       const nextPresentation = updater(prev.presentation ?? {});
       return { ...prev, presentation: nextPresentation };
     });
-  }, [handleChange]);
+  }, [changeProfile]);
 
   const sectionTitles = profile.presentation?.sectionTitles ?? {};
   const hiddenSections = profile.presentation?.hiddenSections ?? [];
@@ -103,14 +95,14 @@ export function ManualEditor({
     const nextOrder = [...sectionOrder];
     nextOrder.splice(index, 1);
     nextOrder.splice(targetIndex, 0, section);
-    updatePresentation((presentation) => ({
+    applyPresentation((presentation) => ({
       ...presentation,
       sectionOrder: nextOrder,
     }));
   };
 
-  const updateSectionTitle = (section: CVRenderableSectionId, title: string) => {
-    updatePresentation((presentation) => {
+  const setSectionTitle = (section: CVRenderableSectionId, title: string) => {
+    applyPresentation((presentation) => {
       const nextTitles = { ...(presentation.sectionTitles ?? {}) };
       const trimmedTitle = title.trim();
       if (trimmedTitle) {
@@ -126,7 +118,7 @@ export function ManualEditor({
   };
 
   const toggleSectionVisibility = (sectionId: CVRenderableSectionId) => {
-    updatePresentation((presentation) => {
+    applyPresentation((presentation) => {
       const currentHidden = presentation.hiddenSections ?? [];
       const nextHidden = currentHidden.includes(sectionId)
         ? currentHidden.filter((id) => id !== sectionId)
@@ -138,23 +130,23 @@ export function ManualEditor({
     });
   };
 
-  const updateAccentColor = (accentColor: string) => {
-    updatePresentation((presentation) => ({
+  const setAccentColor = (accentColor: string) => {
+    applyPresentation((presentation) => ({
       ...presentation,
       accentColor,
     }));
   };
 
-  const updateTagsColor = (tagsColor: string) => {
-    updatePresentation((presentation) => ({
+  const setTagsColor = (tagsColor: string) => {
+    applyPresentation((presentation) => ({
       ...presentation,
       tagsColor,
     }));
   };
 
-  const handleDropSection = () => {
+  const dropSection = () => {
     if (!draggedSection) return;
-    updatePresentation((presentation) => ({
+    applyPresentation((presentation) => ({
       ...presentation,
       sectionOrder: visualSectionOrder,
     }));
@@ -162,7 +154,7 @@ export function ManualEditor({
     setOriginalSectionOrder(null);
   };
 
-  const handleDragEnd = () => {
+  const endDrag = () => {
     if (originalSectionOrder) {
       setVisualSectionOrder(originalSectionOrder);
     }
@@ -171,7 +163,7 @@ export function ManualEditor({
   };
 
   const resetPresentation = () => {
-    handleChange((prev) => {
+    changeProfile((prev) => {
       const next = { ...prev };
       delete next.presentation;
       return next;
@@ -179,18 +171,18 @@ export function ManualEditor({
   };
 
   const sections = [
-    { id: "basics", label: t("sections.basics"), icon: User, content: <SectionBasics basics={profile.basics ?? {}} onChange={(basics) => handleChange((p) => ({ ...p, basics }))} /> },
-    { id: "summary", label: t("sections.summary"), icon: FileText, content: <SectionSummary summary={profile.summary ?? ""} onChange={(summary) => handleChange((p) => ({ ...p, summary }))} /> },
-    { id: "experience", label: t("sections.experience"), icon: Briefcase, count: profile.experience?.length, content: <SectionExperience items={profile.experience ?? []} onChange={(experience) => handleChange((p) => ({ ...p, experience }))} /> },
-    { id: "education", label: t("sections.education"), icon: GraduationCap, count: profile.education?.length, content: <SectionEducation items={profile.education ?? []} onChange={(education) => handleChange((p) => ({ ...p, education }))} /> },
-    { id: "skills", label: t("sections.skills"), icon: Wrench, count: profile.skills?.length, content: <SectionSkills items={profile.skills ?? []} onChange={(skills) => handleChange((p) => ({ ...p, skills }))} /> },
-    { id: "technicalSkills", label: t("sections.technicalSkills"), icon: Code, count: profile.technicalSkills?.length, content: <EditableBulletList items={profile.technicalSkills ?? []} onChange={(technicalSkills) => handleChange((p) => ({ ...p, technicalSkills }))} placeholder={t("technicalSkillsPlaceholder")} /> },
-    { id: "languages", label: t("sections.languages"), icon: Languages, count: profile.languages?.length, content: <SectionLanguages items={profile.languages ?? []} onChange={(languages) => handleChange((p) => ({ ...p, languages }))} /> },
-    { id: "certifications", label: t("sections.certifications"), icon: Award, count: profile.certifications?.length, content: <SectionNamedItems items={profile.certifications ?? []} onChange={(certifications) => handleChange((p) => ({ ...p, certifications }))} sectionLabel={t("singular.certification")} /> },
-    { id: "projects", label: t("sections.projects"), icon: FolderOpen, count: profile.projects?.length, content: <SectionNamedItems items={profile.projects ?? []} onChange={(projects) => handleChange((p) => ({ ...p, projects }))} sectionLabel={t("singular.project")} /> },
-    { id: "awards", label: t("sections.awards"), icon: Trophy, count: profile.awards?.length, content: <SectionNamedItems items={profile.awards ?? []} onChange={(awards) => handleChange((p) => ({ ...p, awards }))} sectionLabel={t("singular.award")} /> },
-    { id: "publications", label: t("sections.publications"), icon: BookOpen, count: profile.publications?.length, content: <SectionNamedItems items={profile.publications ?? []} onChange={(publications) => handleChange((p) => ({ ...p, publications }))} sectionLabel={t("singular.publication")} /> },
-    { id: "volunteering", label: t("sections.volunteering"), icon: Heart, count: profile.volunteering?.length, content: <SectionNamedItems items={profile.volunteering ?? []} onChange={(volunteering) => handleChange((p) => ({ ...p, volunteering }))} sectionLabel={t("singular.volunteering")} /> },
+    { id: "basics", label: t("sections.basics"), icon: User, content: <SectionBasics basics={profile.basics ?? {}} onChange={(basics) => changeProfile((p) => ({ ...p, basics }))} /> },
+    { id: "summary", label: t("sections.summary"), icon: FileText, content: <SectionSummary summary={profile.summary ?? ""} onChange={(summary) => changeProfile((p) => ({ ...p, summary }))} /> },
+    { id: "experience", label: t("sections.experience"), icon: Briefcase, count: profile.experience?.length, content: <SectionExperience items={profile.experience ?? []} onChange={(experience) => changeProfile((p) => ({ ...p, experience }))} /> },
+    { id: "education", label: t("sections.education"), icon: GraduationCap, count: profile.education?.length, content: <SectionEducation items={profile.education ?? []} onChange={(education) => changeProfile((p) => ({ ...p, education }))} /> },
+    { id: "skills", label: t("sections.skills"), icon: Wrench, count: profile.skills?.length, content: <SectionSkills items={profile.skills ?? []} onChange={(skills) => changeProfile((p) => ({ ...p, skills }))} /> },
+    { id: "technicalSkills", label: t("sections.technicalSkills"), icon: Code, count: profile.technicalSkills?.length, content: <EditableBulletList items={profile.technicalSkills ?? []} onChange={(technicalSkills) => changeProfile((p) => ({ ...p, technicalSkills }))} placeholder={t("technicalSkillsPlaceholder")} /> },
+    { id: "languages", label: t("sections.languages"), icon: Languages, count: profile.languages?.length, content: <SectionLanguages items={profile.languages ?? []} onChange={(languages) => changeProfile((p) => ({ ...p, languages }))} /> },
+    { id: "certifications", label: t("sections.certifications"), icon: Award, count: profile.certifications?.length, content: <SectionNamedItems items={profile.certifications ?? []} onChange={(certifications) => changeProfile((p) => ({ ...p, certifications }))} sectionLabel={t("singular.certification")} /> },
+    { id: "projects", label: t("sections.projects"), icon: FolderOpen, count: profile.projects?.length, content: <SectionNamedItems items={profile.projects ?? []} onChange={(projects) => changeProfile((p) => ({ ...p, projects }))} sectionLabel={t("singular.project")} /> },
+    { id: "awards", label: t("sections.awards"), icon: Trophy, count: profile.awards?.length, content: <SectionNamedItems items={profile.awards ?? []} onChange={(awards) => changeProfile((p) => ({ ...p, awards }))} sectionLabel={t("singular.award")} /> },
+    { id: "publications", label: t("sections.publications"), icon: BookOpen, count: profile.publications?.length, content: <SectionNamedItems items={profile.publications ?? []} onChange={(publications) => changeProfile((p) => ({ ...p, publications }))} sectionLabel={t("singular.publication")} /> },
+    { id: "volunteering", label: t("sections.volunteering"), icon: Heart, count: profile.volunteering?.length, content: <SectionNamedItems items={profile.volunteering ?? []} onChange={(volunteering) => changeProfile((p) => ({ ...p, volunteering }))} sectionLabel={t("singular.volunteering")} /> },
   ];
 
   const basicsSection = sections.find((s) => s.id === "basics")!;
@@ -200,25 +192,13 @@ export function ManualEditor({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-white">{t("title")}</h3>
-        <div className="flex items-center gap-2">
-          {saveState === "saving" && <span className="rounded-full bg-teal-500/10 px-2 py-0.5 text-[10px] text-teal-400 animate-pulse">{t("saving")}</span>}
-          {saveState === "saved" && <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] text-emerald-400">{t("saved")}</span>}
-          <button
-            onClick={onSave}
-            className="flex items-center gap-1 rounded-lg bg-white/5 border border-white/5 px-2 py-1 text-[11px] text-zinc-400 hover:text-white hover:bg-white/10"
-          >
-            <Save className="h-3 w-3" />
-          </button>
-        </div>
-      </div>
+      <ManualEditorHeader saveState={saveState} onSave={onSave} t={t} />
 
       <ManualEditorPresentation
         accentColor={accentColor}
         tagsColor={tagsColor}
-        onAccentColorChange={updateAccentColor}
-        onTagsColorChange={updateTagsColor}
+        onAccentColorChange={setAccentColor}
+        onTagsColorChange={setTagsColor}
         onReset={resetPresentation}
       />
 
@@ -230,21 +210,10 @@ export function ManualEditor({
         }}
         onDrop={(event) => {
           event.preventDefault();
-          handleDropSection();
+          dropSection();
         }}
       >
-        {/* Personal Details (Basics) Section - Fixed at the top, not reorderable, always visible */}
-        <AccordionItem value="basics" className="border border-transparent rounded-xl group/accordion-item">
-          <AccordionTrigger className="rounded-xl px-3 py-2.5 hover:bg-white/[0.03] hover:no-underline data-[state=open]:bg-white/[0.03] [&>svg]:text-zinc-600">
-            <div className="flex items-center gap-2">
-              <basicsSection.icon className="h-3.5 w-3.5 text-zinc-500" />
-              <span className="text-xs font-medium text-zinc-300">{basicsSection.label}</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="px-1 pt-2 pb-1">
-            {basicsSection.content}
-          </AccordionContent>
-        </AccordionItem>
+        <ManualEditorBasicsItem section={basicsSection} />
 
         {dynamicSections.map((section, index) => {
           const isHidden = hiddenSections.includes(section.id as CVRenderableSectionId);
@@ -259,16 +228,16 @@ export function ManualEditor({
               isHidden={isHidden}
               isBeingDragged={isBeingDragged}
               sectionTitle={sectionTitles[section.id as CVRenderableSectionId] ?? ""}
-              onDragStart={handleDragStart}
+              onDragStart={startDrag}
               onDragOverItem={(targetIndex, sectionId) => {
                 if (draggedSection && draggedSection !== sectionId) {
-                  handleDragOverItem(targetIndex);
+                  dragOverItem(targetIndex);
                 }
               }}
-              onDropSection={handleDropSection}
-              onDragEnd={handleDragEnd}
+              onDropSection={dropSection}
+              onDragEnd={endDrag}
               onMoveSection={moveSection}
-              onUpdateSectionTitle={updateSectionTitle}
+              onUpdateSectionTitle={setSectionTitle}
               onToggleVisibility={toggleSectionVisibility}
               locale={locale}
             />

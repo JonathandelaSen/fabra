@@ -15,7 +15,7 @@ function safeParseArray(value: string | null | undefined): string[] {
   }
 }
 
-interface RecommendationAnalysis {
+export interface RecommendationAnalysis {
   ai_score: number | null;
   ai_improvements: string | null;
   missing_keywords: string | null;
