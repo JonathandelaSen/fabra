@@ -93,6 +93,16 @@ function normalizeJobMatchSummary(
   };
 }
 
+export async function parseCVDocument(file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
+  const res = await fetch("/api/parse", {
+    method: "POST",
+    body: formData,
+  });
+  return readJsonResponse<{ id: string }>(res, "Could not parse CV document.");
+}
+
 export async function listAllAnalyses(): Promise<AnalysisSummary[]> {
   const [cvRes, jobRes] = await Promise.all([
     fetch("/api/cv-analyses"),

@@ -8,6 +8,7 @@ import {
   isInterfaceLanguage,
   type InterfaceLanguage,
 } from "@/i18n/config";
+import { saveInterfaceLanguage } from "@/frontend/user-preferences";
 
 type InterfaceLanguageContextValue = {
   locale: InterfaceLanguage;
@@ -38,14 +39,7 @@ export function I18nProvider({
         setLocale(nextLocale);
         document.documentElement.lang = nextLocale;
         setLanguageCookie(nextLocale);
-        const response = await fetch("/api/user-preferences/interface-language", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ locale: nextLocale }),
-        });
-        if (!response.ok && response.status !== 401) {
-          throw new Error("Could not save interface language preference");
-        }
+        await saveInterfaceLanguage(nextLocale);
       },
     }),
     [locale],

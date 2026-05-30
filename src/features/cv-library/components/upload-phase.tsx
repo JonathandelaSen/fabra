@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { UploadCloud, CheckCircle2, FileText, Loader2, Zap } from "lucide-react";
-import { getErrorMessage } from "@/lib/errors";
+import { useParseCV } from "../hooks/use-parse-cv";
 
 interface UploadPhaseProps {
   onUploadComplete: (analysisId: string) => void;
@@ -13,10 +13,9 @@ interface UploadPhaseProps {
 export default function UploadPhase({ onUploadComplete }: UploadPhaseProps) {
   const t = useTranslations("analysisFlow.upload");
   const [file, setFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { parse, loading, error, setError } = useParseCV(onUploadComplete);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -54,31 +53,7 @@ export default function UploadPhase({ onUploadComplete }: UploadPhaseProps) {
       setError(t("selectPdf"));
       return;
     }
-
-    setLoading(true);
-    setError(null);
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const res = await fetch("/api/parse", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || t("processFailed"));
-      }
-
-      const data = await res.json();
-      onUploadComplete(data.id);
-    } catch (err: unknown) {
-      setError(getErrorMessage(err));
-    } finally {
-      setLoading(false);
-    }
+    await parse(file);
   };
 
   return (
