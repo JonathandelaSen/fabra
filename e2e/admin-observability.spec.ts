@@ -5,6 +5,7 @@ import {
   createProcessingEvent,
   grantAdminAccess,
 } from "./helpers/supabase";
+import { messages } from "../src/i18n/messages";
 
 test("admin user can open observability dashboard and filter events", async ({
   page,
@@ -22,7 +23,7 @@ test("admin user can open observability dashboard and filter events", async ({
   await page.goto("/admin");
 
   await expect(
-    page.getByRole("heading", { name: "Internal observability" }),
+    page.getByRole("heading", { name: messages.en.admin.title }),
   ).toBeVisible();
   await expect(
     page.getByRole("button", {
@@ -47,6 +48,6 @@ test("non-admin user is redirected away from observability dashboard", async ({
 
   await expect(page).toHaveURL("/");
   await expect(
-    page.getByRole("heading", { name: "Internal observability" }),
+    page.getByRole("heading", { name: messages.en.admin.title }),
   ).toBeHidden();
 });

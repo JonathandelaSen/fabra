@@ -47,19 +47,12 @@ test("user can create a template CV profile with Copy Paste", async ({
     page.getByRole("heading", { name: tTemplates.title }),
   ).toBeVisible();
 
-  await page
-    .getByRole("button", { name: tTemplates.useTemplate })
-    .first()
-    .click();
   await page.getByPlaceholder(tTemplates.searchCv).fill("template-copy-paste");
   await page.getByRole("button", { name: /template-copy-paste/ }).click();
 
-  await expect(
-    page.getByRole("button", { name: tTemplates.structureWithExternalChat }),
-  ).toBeVisible();
-  await page
-    .getByRole("button", { name: tTemplates.structureWithExternalChat })
-    .click();
+  await page.getByRole("button", { name: tTemplates.createVersion }).click();
+  await expect(page.getByText(messages.en.aiLauncher.externalLabel)).toBeVisible();
+  await page.getByRole("button", { name: messages.en.aiLauncher.openFlow }).click();
 
   await expect(
     page.getByRole("heading", { name: tProfile.title }),
@@ -100,15 +93,12 @@ test("Copy Paste prepares prompt for a stored CV without previous extraction", a
   const tProfile = messages.en.analysisFlow.cvProfileCopyPaste;
 
   await page.goto("/?view=templates");
-  await page
-    .getByRole("button", { name: tTemplates.useTemplate })
-    .first()
-    .click();
   await page.getByPlaceholder(tTemplates.searchCv).fill(cv.name);
   await page.getByRole("button", { name: cv.name }).click();
-  await page
-    .getByRole("button", { name: tTemplates.structureWithExternalChat })
-    .click();
+
+  await page.getByRole("button", { name: tTemplates.createVersion }).click();
+  await expect(page.getByText(messages.en.aiLauncher.externalLabel)).toBeVisible();
+  await page.getByRole("button", { name: messages.en.aiLauncher.openFlow }).click();
 
   await expect(
     page.getByRole("heading", { name: tProfile.title }),

@@ -25,20 +25,25 @@ test("user can score and replace a CV analysis with Copy Paste", async ({
   const { analysis } = await createFixtureViaApi(page.request, "copy-paste");
 
   await page.goto(`/cv-analysis/${analysis.id}`);
+  await page.getByRole("button", { name: messages.en.analysisFlow.appShell.analysisTab }).click();
   await page
     .getByRole("button", { name: messages.en.analysisFlow.modeSelector.generalTitle })
     .click();
+
   await expect(
     page.getByRole("button", {
-      name: messages.en.analysisFlow.forms.analyzeWithExternalChat,
+      name: messages.en.analysisFlow.forms.analyzeCV,
     }),
   ).toBeVisible();
 
   await page
     .getByRole("button", {
-      name: messages.en.analysisFlow.forms.analyzeWithExternalChat,
+      name: messages.en.analysisFlow.forms.analyzeCV,
     })
     .click();
+    
+  await expect(page.getByText(messages.en.aiLauncher.externalLabel)).toBeVisible();
+  await page.getByRole("button", { name: messages.en.aiLauncher.openFlow }).click();
   await expect(
     page.getByRole("heading", {
       name: messages.en.analysisFlow.copyPaste.title,

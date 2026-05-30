@@ -4,6 +4,7 @@ import path from "node:path";
 import { expect, type APIRequestContext, type Page } from "@playwright/test";
 import { uniqueLabel } from "./env";
 import { adminClient } from "./supabase";
+import { messages } from "../../src/i18n/messages";
 
 export interface CreatedAnalysisFixture {
   cv: {
@@ -29,8 +30,8 @@ export async function createExtractionViaUI(page: Page) {
   await page
     .getByTestId("new-analysis-file-input")
     .setInputFiles(path.resolve(process.cwd(), "test.pdf"));
-  await page.getByPlaceholder("Frontend CV April").fill(cvName);
-  await page.getByPlaceholder("React Frontend - Factorial").fill(analysisTitle);
+  await page.getByPlaceholder(messages.en.analysisFlow.newExtraction.cvNamePlaceholder).fill(cvName);
+  await page.getByPlaceholder(messages.en.analysisFlow.newExtraction.extractionNamePlaceholder).fill(analysisTitle);
 
   const analysisResponsePromise = page.waitForResponse(
     (response) =>

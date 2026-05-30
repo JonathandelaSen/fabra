@@ -93,7 +93,7 @@ test.describe("CV editor copy-paste workflow", () => {
 
     await page.goto(`/?view=editor`);
     await page.getByText(cv.name).click();
-    await expect(page.getByText("Editor IA")).toBeVisible();
+    await expect(page.getByText(tEditor.aiEditor)).toBeVisible();
 
     await page
       .locator("textarea")
@@ -146,6 +146,8 @@ test.describe("CV editor copy-paste workflow", () => {
     await page.goto(`/?view=editor`);
     await page.getByText(cv.name).click();
 
+    await expect(page.getByText(tEditor.aiEditor)).toBeVisible();
+
     await page
       .locator("textarea")
       .first()
@@ -168,7 +170,7 @@ test.describe("CV editor copy-paste workflow", () => {
     await page.goto(`/?view=editor`);
     await page.getByText(cv.name).click();
 
-    await page.getByText("Manual").click();
+    await page.getByRole("button", { name: tEditor.editorTabs.manual, exact: true }).click();
     await expect(page.getByText(tEditor.manual.title)).toBeVisible();
   });
 });

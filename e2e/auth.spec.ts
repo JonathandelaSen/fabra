@@ -1,6 +1,9 @@
 import { expect, test } from "@playwright/test";
 import { loginViaUI } from "./helpers/auth";
 import { createConfirmedUser } from "./helpers/supabase";
+import { messages } from "../src/i18n/messages";
+
+const tAuth = messages.en.auth;
 
 test("protected APIs reject anonymous requests", async ({ request }) => {
   const cvs = await request.get("/api/cvs");
@@ -31,32 +34,32 @@ test("login route exposes signup and password recovery modes", async ({
 }) => {
   await page.goto("/login");
 
-  await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
-  await expect(page.getByLabel("Email")).toHaveAttribute(
+  await expect(page.getByRole("heading", { name: tAuth.login.title })).toBeVisible();
+  await expect(page.getByLabel(tAuth.fields.email)).toHaveAttribute(
     "placeholder",
-    "you@example.com",
+    tAuth.fields.emailPlaceholder,
   );
-  await expect(page.getByRole("textbox", { name: "Password" })).toBeVisible();
+  await expect(page.getByRole("textbox", { name: tAuth.fields.password })).toBeVisible();
 
-  await page.getByRole("button", { name: "Sign up" }).click();
+  await page.getByRole("button", { name: tAuth.signup.tab }).click();
   await expect(
-    page.getByRole("heading", { name: "Create your account" }),
+    page.getByRole("heading", { name: tAuth.signup.title }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Create account" }),
-  ).toBeVisible();
-
-  await page.getByRole("button", { name: "Recover password" }).click();
-  await expect(
-    page.getByRole("heading", { name: "Recover password" }),
-  ).toBeVisible();
-  await expect(page.getByRole("button", { name: "Send link" })).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: "Back to login" }),
+    page.getByRole("button", { name: tAuth.signup.submit }),
   ).toBeVisible();
 
-  await page.getByRole("button", { name: "Back to login" }).click();
-  await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
+  await page.getByRole("button", { name: tAuth.recover.link }).click();
+  await expect(
+    page.getByRole("heading", { name: tAuth.recover.title }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: tAuth.recover.submit })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: tAuth.recover.backToLogin }),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: tAuth.recover.backToLogin }).click();
+  await expect(page.getByRole("heading", { name: tAuth.login.title })).toBeVisible();
 });
 
 test("authenticated user can open the update-password route", async ({
@@ -68,9 +71,9 @@ test("authenticated user can open the update-password route", async ({
   await page.goto("/account/update-password");
 
   await expect(
-    page.getByRole("heading", { name: "New password" }),
+    page.getByRole("heading", { name: tAuth.updatePassword.title }),
   ).toBeVisible();
-  await expect(page.getByLabel("New password")).toBeVisible();
-  await expect(page.getByLabel("Repeat password")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Save password" })).toBeVisible();
+  await expect(page.getByLabel(tAuth.updatePassword.passwordLabel)).toBeVisible();
+  await expect(page.getByLabel(tAuth.updatePassword.confirmLabel)).toBeVisible();
+  await expect(page.getByRole("button", { name: tAuth.updatePassword.submit })).toBeVisible();
 });

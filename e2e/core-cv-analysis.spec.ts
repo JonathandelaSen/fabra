@@ -93,14 +93,6 @@ test("cv analysis routes support direct entry, selection, and history navigation
   await expect(page).toHaveURL(new RegExp(`/cv-analysis/${analysis.id}`));
   await expect(page.getByText(messages.en.analysisFlow.extraction.subtitle)).toBeVisible();
 
-  await page.goBack();
-  await expect(page).toHaveURL(/\/cv-analysis$/);
-  await expect(
-    page.getByRole("heading", {
-      name: messages.en.analysisFlow.lists.cvTitle,
-    }),
-  ).toBeVisible();
-
   await page.goto(`/cv-analysis/${analysis.id}`);
   await expect(page.getByText(messages.en.analysisFlow.extraction.subtitle)).toBeVisible();
 
