@@ -1,12 +1,10 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import {
   ArrowRight,
-  CheckCircle2,
-  ChevronRight,
   FileText,
   Loader2,
   UploadCloud,
@@ -14,13 +12,18 @@ import {
 } from "lucide-react";
 import { getErrorMessage } from "@/lib/errors";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
-import type { CVDocumentSummaryResponse as CVSummary } from "@/app/api/cvs/responses";
-import type { CreateCVAnalysisInput } from "../hooks/use-cv-analysis-mutations";
+import NewAnalysisExistingCV from "./new-analysis-existing-cv";
+import NewAnalysisUploadCV from "./new-analysis-upload-cv";
+import type {
+  CVSummary,
+  CreateCVHandler,
+  CreateAnalysisHandler,
+} from "./new-analysis-types";
 
 interface NewAnalysisFlowProps {
   cvs: CVSummary[];
-  onCreateCV: (file: File, name: string) => Promise<string>;
-  onCreateAnalysis: (input: CreateCVAnalysisInput) => Promise<string>;
+  onCreateCV: CreateCVHandler;
+  onCreateAnalysis: CreateAnalysisHandler;
   onAnalysisCreated: (analysisId: string) => void;
 }
 
@@ -42,27 +45,11 @@ export default function NewAnalysisFlow({
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [dragActive, setDragActive] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const selectedCv = useMemo(
-    () => cvs.find((cv) => cv.id === selectedCvId) ?? null,
-    [cvs, selectedCvId],
-  );
-
-  const getCVSourceLabel = (cv: CVSummary) => {
-    if (cv.type === "template") return t("template");
-    return cv.filename ?? t("originalPdf");
-  };
-
-  const handleFile = (nextFile: File) => {
-    if (nextFile.type !== "application/pdf") {
-      setError(t("selectPdfOnly"));
-      return;
-    }
+  const handleFileChange = (nextFile: File | null, fileError: string | null) => {
     setFile(nextFile);
-    setCvName((current) => current || nextFile.name.replace(/\.pdf$/i, ""));
-    setError(null);
+    if (fileError) setError(fileError);
+    else setError(null);
   };
 
   const uploadCV = async () => {
@@ -159,96 +146,18 @@ export default function NewAnalysisFlow({
         </section>
 
         {source === "existing" ? (
-          <section className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-            <label className="mb-2 flex items-center gap-2 text-sm text-zinc-400">
-              <FileText className="h-4 w-4" />
-              CV
-            </label>
-            <div className="relative">
-              <select
-                value={selectedCvId}
-                onChange={(event) => setSelectedCvId(event.target.value)}
-                className="h-11 w-full cursor-pointer appearance-none rounded-xl border border-white/[0.06] bg-[#0a0a12] px-4 text-sm text-zinc-200 focus:border-indigo-500/40 focus:outline-none"
-              >
-                {cvs.map((cv) => (
-                  <option key={cv.id} value={cv.id}>
-                    {cv.name} · {getCVSourceLabel(cv)}
-                  </option>
-                ))}
-              </select>
-              <ChevronRight className="pointer-events-none absolute right-3 top-3.5 h-4 w-4 rotate-90 text-zinc-500" />
-            </div>
-            {selectedCv && (
-              <p className="mt-2 text-xs text-zinc-600">
-                {selectedCv.type === "template"
-                  ? t("templateVersion")
-                  : t("originalPdfName", { filename: selectedCv.filename ?? t("noFilename") })}
-              </p>
-            )}
-          </section>
+          <NewAnalysisExistingCV
+            cvs={cvs}
+            selectedCvId={selectedCvId}
+            onSelectedCvIdChange={setSelectedCvId}
+          />
         ) : (
-          <section className="grid gap-4 rounded-xl border border-white/[0.06] bg-white/[0.02] p-5 md:grid-cols-[1fr_260px]">
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              onDragOver={(event) => {
-                event.preventDefault();
-                setDragActive(true);
-              }}
-              onDragLeave={(event) => {
-                event.preventDefault();
-                setDragActive(false);
-              }}
-              onDrop={(event) => {
-                event.preventDefault();
-                setDragActive(false);
-                const droppedFile = event.dataTransfer.files[0];
-                if (droppedFile) handleFile(droppedFile);
-              }}
-              className={`flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-6 text-center transition-all ${
-                file
-                  ? "border-emerald-500/40 bg-emerald-500/5"
-                  : dragActive
-                    ? "border-emerald-400/60 bg-emerald-500/10"
-                    : "border-zinc-800/70 hover:border-zinc-700"
-              }`}
-            >
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="application/pdf"
-                data-testid="new-analysis-file-input"
-                className="hidden"
-                onChange={(event) => {
-                  const nextFile = event.target.files?.[0];
-                  if (nextFile) handleFile(nextFile);
-                }}
-              />
-              {file ? (
-                <CheckCircle2 className="mb-3 h-8 w-8 text-emerald-300" />
-              ) : (
-                <UploadCloud className="mb-3 h-8 w-8 text-zinc-500" />
-              )}
-              <p className="font-medium text-zinc-200">
-                {file ? file.name : t("dropPdf")}
-              </p>
-              <p className="mt-1 text-sm text-zinc-500">
-                {file
-                  ? `${(file.size / 1024 / 1024).toFixed(2)} MB`
-                  : t("clickToSelect")}
-              </p>
-            </div>
-            <div>
-              <label className="mb-2 block text-sm text-zinc-400">
-                {t("cvName")}
-              </label>
-              <input
-                value={cvName}
-                onChange={(event) => setCvName(event.target.value)}
-                placeholder={t("cvNamePlaceholder")}
-                className="h-11 w-full rounded-xl border border-white/[0.06] bg-[#0a0a12] px-4 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-emerald-500/40 focus:outline-none"
-              />
-            </div>
-          </section>
+          <NewAnalysisUploadCV
+            file={file}
+            cvName={cvName}
+            onFileChange={handleFileChange}
+            onCvNameChange={setCvName}
+          />
         )}
 
         <section className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
