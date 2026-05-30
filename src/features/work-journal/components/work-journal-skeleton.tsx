@@ -1,9 +1,10 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 export function WorkJournalSkeleton() {
   return (
     <div className="py-4 lg:py-8 w-full px-4 md:px-8">
-      <div className="w-full bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 md:p-8">
+      <BasicPanel className="w-full p-6 md:p-8">
         <div className="flex items-center gap-4 mb-6">
           <Skeleton className="h-3.5 w-28 bg-white/5" />
           <Skeleton className="h-3.5 w-20 bg-white/5" />
@@ -15,7 +16,7 @@ export function WorkJournalSkeleton() {
           <Skeleton className="h-5 w-[75%] bg-white/5" />
           <Skeleton className="h-5 w-[85%] bg-white/5" />
         </div>
-      </div>
+      </BasicPanel>
     </div>
   );
 }

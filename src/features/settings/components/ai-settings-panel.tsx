@@ -18,6 +18,7 @@ import {
 } from "@/components/shared/action-buttons";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import { useAISettingsDraft } from "../hooks/use-ai-settings-draft";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 interface AISettingsPanelProps {
   aiProvider: StoredAIProvider;
@@ -61,7 +62,7 @@ export function AISettingsPanel({
   });
 
   return (
-    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
+    <BasicPanel className="p-6">
       <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="flex items-center gap-2 text-lg font-semibold text-zinc-100">
           <ShieldCheck className="h-5 w-5 text-emerald-400" />
@@ -161,6 +162,6 @@ export function AISettingsPanel({
           </div>
         </div>
       </div>
-    </div>
+    </BasicPanel>
   );
 }

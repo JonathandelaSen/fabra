@@ -10,6 +10,7 @@ import {
 import { useTranslations } from "next-intl";
 import type { AIContext } from "@/lib/analysis-types";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 interface GeneralAnalysisFormProps {
   onSubmit: (context: AIContext, model: string) => void;
@@ -59,8 +60,8 @@ export default function GeneralAnalysisForm({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.15 }}
-      className="shrink-0 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6"
     >
+      <BasicPanel className="shrink-0 p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
@@ -127,6 +128,7 @@ export default function GeneralAnalysisForm({
           {error}
         </motion.div>
       )}
+      </BasicPanel>
     </motion.div>
   );
 }

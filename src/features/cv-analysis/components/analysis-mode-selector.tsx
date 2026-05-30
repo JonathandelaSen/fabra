@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { FileSearch, Briefcase, ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { AnalysisMode } from "@/lib/analysis-types";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 interface AnalysisModeSelectorProps {
   onSelectMode: (mode: AnalysisMode) => void;
@@ -46,8 +47,8 @@ export default function AnalysisModeSelector({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
-      className="shrink-0 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6"
     >
+      <BasicPanel className="shrink-0 p-6">
       <div className="flex items-center gap-2 mb-5">
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs font-medium text-indigo-300">
           {t("step")}
@@ -106,6 +107,7 @@ export default function AnalysisModeSelector({
           );
         })}
       </div>
+      </BasicPanel>
     </motion.div>
   );
 }

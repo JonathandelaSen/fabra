@@ -10,6 +10,7 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import type { JobKeyData } from "@/lib/analysis-types";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 interface TabOfertaProps {
   jobKeyData: JobKeyData | null;
@@ -29,8 +30,8 @@ export default function TabOferta({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6"
         >
+          <BasicPanel className="p-6">
           <h4 className="text-sm font-semibold text-sky-300 flex items-center gap-2 mb-4">
             <ListChecks className="w-4 h-4" />
             {t("keyData")}
@@ -97,7 +98,8 @@ export default function TabOferta({
               );
             })}
           </div>
-        </motion.div>
+        </BasicPanel>
+      </motion.div>
       )}
 
       {jobDescription && (

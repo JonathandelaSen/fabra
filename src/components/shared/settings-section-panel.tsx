@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
+import { BasicPanel } from "./basic-panel";
 
 interface SettingsSectionPanelProps {
   title: string;
@@ -15,7 +16,7 @@ export function SettingsSectionPanel({
   children,
 }: SettingsSectionPanelProps) {
   return (
-    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
+    <BasicPanel className="p-6">
       <div className="mb-5">
         <h2 className="flex items-center gap-2 text-lg font-semibold text-zinc-100">
           <Icon className="h-5 w-5 text-zinc-400" />
@@ -26,6 +27,6 @@ export function SettingsSectionPanel({
         )}
       </div>
       {children}
-    </div>
+    </BasicPanel>
   );
 }

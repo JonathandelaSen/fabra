@@ -8,6 +8,7 @@ import type {
 import { WorkJournalFormMetadata } from "./work-journal-form-metadata";
 import { WorkJournalCopyPastePanel } from "./work-journal-copy-paste-panel";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 interface WorkJournalFormProps {
   draft: {
@@ -71,7 +72,7 @@ export function WorkJournalForm({
   return (
     <div className="text-left w-full">
       <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_340px] gap-6">
-        <div className="w-full bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 md:p-8 space-y-6">
+        <BasicPanel className="w-full p-6 md:p-8 space-y-6">
           <div className="space-y-4">
             <div>
               <label className="text-xs font-medium text-zinc-500 mb-2 block">
@@ -158,9 +159,9 @@ export function WorkJournalForm({
               />
             </div>
           </div>
-        </div>
+        </BasicPanel>
 
-        <div className="w-full bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 md:p-8 self-start">
+        <BasicPanel className="w-full p-6 md:p-8 self-start">
           <WorkJournalFormMetadata
             contextId={draft.context_id}
             onContextChange={(id) =>
@@ -181,7 +182,7 @@ export function WorkJournalForm({
             activeContexts={activeContexts}
             onManageContexts={openActivityContextManager}
           />
-        </div>
+        </BasicPanel>
       </div>
     </div>
   );

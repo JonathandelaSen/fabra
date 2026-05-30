@@ -6,6 +6,7 @@ import type { WorkJournalContextLegacy as WorkJournalContext, WorkJournalEntryLe
 import { ActivityContextSelector } from "@/features/activity-context";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { getErrorMessage } from "@/lib/errors";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 interface WorkJournalEntryEditorProps {
   entry: WorkJournalEntry;
@@ -73,7 +74,7 @@ export function WorkJournalEntryEditor({
 
   return (
     <div className="group text-left">
-      <div className="space-y-6 w-full bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 md:p-8">
+      <BasicPanel className="space-y-6 w-full p-6 md:p-8">
         <div className="flex flex-wrap gap-4 items-start">
           <div className="w-full sm:w-auto min-w-[240px] mb-2 sm:mb-0">
             <ActivityContextSelector
@@ -181,7 +182,7 @@ export function WorkJournalEntryEditor({
             />
           </div>
         </div>
-      </div>
+      </BasicPanel>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { CheckCircle2, Star, ChevronRight, XCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { AnalysisMode } from "@/lib/analysis-types";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 interface TabResumenProps {
   improvements: string[];
@@ -66,8 +67,8 @@ export default function TabResumen({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6"
         >
+          <BasicPanel className="p-6">
           <h4 className="text-sm font-semibold text-emerald-400 flex items-center gap-2 mb-4">
             <CheckCircle2 className="w-4 h-4" />
             {t("keywordsFound")}
@@ -123,7 +124,8 @@ export default function TabResumen({
               </span>
             )}
           </div>
-        </motion.div>
+        </BasicPanel>
+      </motion.div>
       </div>
 
       {/* Matching & Missing Keywords */}
@@ -133,8 +135,8 @@ export default function TabResumen({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6"
           >
+            <BasicPanel className="p-6">
             <h4 className="text-sm font-semibold text-emerald-400 flex items-center gap-2 mb-4">
               <CheckCircle2 className="w-4 h-4" />
               {t("matchingKeywords")}
@@ -155,13 +157,14 @@ export default function TabResumen({
                 </span>
               )}
             </div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-            className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6"
-          >
+          </BasicPanel>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+        >
+          <BasicPanel className="p-6">
             <h4 className="text-sm font-semibold text-rose-400 flex items-center gap-2 mb-4">
               <XCircle className="w-4 h-4" />
               {t("missingKeywords")}
@@ -182,8 +185,9 @@ export default function TabResumen({
                 </span>
               )}
             </div>
-          </motion.div>
-        </div>
+          </BasicPanel>
+        </motion.div>
+      </div>
       )}
     </div>
   );
