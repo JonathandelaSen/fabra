@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { DEFAULT_FAST_GEMINI_MODEL, DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
 import { Briefcase, KeyRound, Link, ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
@@ -28,7 +29,7 @@ export default function JobMatchForm({
   const common = useTranslations("common");
   const [jobDescription, setJobDescription] = useState("");
   const [jobUrl, setJobUrl] = useState("");
-  const [selectedModel, setSelectedModel] = useState("gemini-2.5-flash");
+  const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_FAST_GEMINI_MODEL);
 
   const handleSubmit = () => {
     if (!jobDescription.trim()) return;
@@ -36,8 +37,8 @@ export default function JobMatchForm({
   };
 
   const models = [
-    { id: "gemini-2.5-flash", label: `Gemini 2.5 Flash (${t("fast")})` },
-    { id: "gemini-3.1-pro-preview", label: `Gemini 3.1 Pro Preview (${t("powerful")})` },
+    { id: DEFAULT_FAST_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_FAST_GEMINI_MODEL]} (${t("fast")})` },
+    { id: DEFAULT_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_GEMINI_MODEL]} (${t("powerful")})` },
   ];
 
   return (

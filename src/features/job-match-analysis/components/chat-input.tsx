@@ -2,6 +2,7 @@
 
 import { FormEvent, RefObject } from "react";
 import { useTranslations } from "next-intl";
+import { DEFAULT_GEMINI_MODEL, DEFAULT_FAST_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
 import { Textarea } from "@/components/ui/textarea";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
 
@@ -59,8 +60,8 @@ export function ChatInput({
             available: hasAIApiKey,
             selectedModelId: model || aiModel,
             models: [
-              { id: "gemini-3.1-pro-preview", label: "Gemini 3.1 Pro" },
-              { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash" },
+              { id: DEFAULT_GEMINI_MODEL, label: GEMINI_MODELS[DEFAULT_GEMINI_MODEL] },
+              { id: DEFAULT_FAST_GEMINI_MODEL, label: GEMINI_MODELS[DEFAULT_FAST_GEMINI_MODEL] },
             ],
             onModelChange,
             onRun: () => void onSubmit(),

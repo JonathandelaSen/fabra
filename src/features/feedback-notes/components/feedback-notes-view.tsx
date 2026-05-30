@@ -18,6 +18,7 @@ import { FeedbackNotesDetailSkeleton } from "./feedback-notes-skeleton";
 import { FeedbackNotesDetail } from "./feedback-notes-detail";
 import { FeedbackNotesSidebar } from "./feedback-notes-sidebar";
 import { FeedbackCopyPastePanel } from "./feedback-copy-paste-panel";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 
 interface FeedbackNotesViewProps {
   aiProvider: "gemini" | "mock";
@@ -50,7 +51,7 @@ export default function FeedbackNotesView({
   const contextsQuery = useActivityContexts();
   const mutations = useFeedbackNotesMutations(status);
   const [error, setError] = useState<string | null>(null);
-  const [selectedModel, setSelectedModel] = useState("gemini-3.1-pro-preview");
+  const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_GEMINI_MODEL);
   const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
   const [deletingEntryIds, setDeletingEntryIds] = useState<Set<string>>(new Set());
 

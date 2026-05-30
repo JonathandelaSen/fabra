@@ -8,13 +8,14 @@ import AIActionLauncher, {
   type AIModelOption,
 } from "@/components/shared/ai-action-launcher";
 import { EditButton, IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import { GEMINI_MODELS } from "@/frontend/ai-models";
 import type { FeedbackEntry, FeedbackListItem } from "../api/feedback-notes-api";
 
 const AI_MODELS: AIModelOption[] = [
-  { id: "gemini-3.1-pro-preview", label: "Gemini 3.1 Pro Preview" },
-  { id: "gemini-3.1-flash-preview", label: "Gemini 3.1 Flash Preview" },
-  { id: "gemini-2.5-pro", label: "Gemini 2.5 Pro" },
-  { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash" },
+  { id: "gemini-3.1-pro-preview", label: GEMINI_MODELS["gemini-3.1-pro-preview"] },
+  { id: "gemini-3.1-flash-preview", label: GEMINI_MODELS["gemini-3.1-flash-preview"] },
+  { id: "gemini-2.5-pro", label: GEMINI_MODELS["gemini-2.5-pro"] },
+  { id: "gemini-2.5-flash", label: GEMINI_MODELS["gemini-2.5-flash"] },
 ];
 
 const textareaClass =

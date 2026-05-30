@@ -17,6 +17,7 @@ import { useCreateCVTemplateVersion } from "../hooks/use-cv-template-mutations";
 import { CVTemplatesSidebar } from "./cv-templates-sidebar";
 import { CVTemplateDetail } from "./cv-template-detail";
 import { motion } from "framer-motion";
+import { DEFAULT_GEMINI_MODEL, DEFAULT_FAST_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
 
 interface CVTemplatesViewProps {
   onOpenSettings: () => void;
@@ -45,14 +46,14 @@ export default function CVTemplatesView({
   const [locale, setLocale] = useState<CVTemplateLocale>("es");
   const [searchQuery, setSearchQuery] = useState("");
   const [copyPasteOpen, setCopyPasteOpen] = useState(false);
-  const [selectedModel, setSelectedModel] = useState("gemini-3.1-pro-preview");
+  const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_GEMINI_MODEL);
   const createVersion = useCreateCVTemplateVersion({
     onCreated: (version) => onOpenEditor(version.id),
   });
 
   const models = [
-    { id: "gemini-2.5-flash", label: `Gemini 2.5 Flash (${tf("fast")})` },
-    { id: "gemini-3.1-pro-preview", label: `Gemini 3.1 Pro Preview (${tf("powerful")})` },
+    { id: "gemini-2.5-flash", label: `${GEMINI_MODELS["gemini-2.5-flash"]} (${tf("fast")})` },
+    { id: "gemini-3.1-pro-preview", label: `${GEMINI_MODELS["gemini-3.1-pro-preview"]} (${tf("powerful")})` },
   ];
 
   const filteredCvs = cvs.filter(

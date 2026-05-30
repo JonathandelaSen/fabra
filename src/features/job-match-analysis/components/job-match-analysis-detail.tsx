@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 import {
   Briefcase,
   MessageCircle,
@@ -87,7 +88,7 @@ export default function JobMatchAnalysisDetail({
   analysis,
   aiProvider = "gemini",
   aiApiKey = "",
-  aiModel = "gemini-3.1-pro-preview",
+  aiModel = DEFAULT_GEMINI_MODEL,
   hasAIApiKey = false,
   activeTab = DETAIL_TABS.summary,
   onTabChange,
@@ -280,7 +281,7 @@ export default function JobMatchAnalysisDetail({
                   analysisId={analysis.id}
                   aiProvider={aiProvider ?? "gemini"}
                   aiApiKey={aiApiKey}
-                  aiModel={aiModel ?? "gemini-3.1-pro-preview"}
+                  aiModel={aiModel ?? DEFAULT_GEMINI_MODEL}
                   hasAIApiKey={hasAIApiKey}
                 />
               </TabsContent>

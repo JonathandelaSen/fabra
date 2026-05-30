@@ -1,5 +1,6 @@
 import { OFFER_STATUSES, type OfferStatus } from "@/lib/analysis-types";
 import { parseAIRequestConfig, type AIRequestConfig } from "@/app/api/_shared/ai-request";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 
 type Result<TValue, TError> =
   | { ok: true; value: TValue }
@@ -67,7 +68,7 @@ export function parseCreateJobMatchAnalysisRequest(
   const title = text(body.title);
   const jobDescription = text(body.jobDescription);
   const jobUrl = text(body.jobUrl) || null;
-  const model = text(body.model) || "gemini-3.1-pro-preview";
+  const model = text(body.model) || DEFAULT_GEMINI_MODEL;
   if (!cvId) return validationError("cvId is required");
   if (!title) return validationError("Title is required");
   if (!jobDescription) return validationError("Job description is required for job match analysis");

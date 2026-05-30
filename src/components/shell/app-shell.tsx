@@ -20,6 +20,7 @@ import {
 } from "@/lib/browser-preferences";
 import { CV_TEMPLATES } from "@/lib/cv-templates";
 import AppShellContent from "./app-shell-content";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 
 let userEmailRequest: Promise<string | null> | null = null;
 let adminStatusRequest: Promise<boolean> | null = null;
@@ -135,7 +136,7 @@ export default function AppShell({
   const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
   const [aiProvider, setAIProvider] = useState<StoredAIProvider>("gemini");
   const [aiApiKey, setAIApiKey] = useState("");
-  const [aiModel, setAIModel] = useState("gemini-3.1-pro-preview");
+  const [aiModel, setAIModel] = useState<string>(DEFAULT_GEMINI_MODEL);
   const lastFeedbackNotesHrefRef = useRef("/feedback-notes");
   const lastReceivedFeedbackHrefRef = useRef("/received-feedback");
   const lastWorkJournalHrefRef = useRef("/work-journal");

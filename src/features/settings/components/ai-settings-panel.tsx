@@ -17,6 +17,7 @@ import {
   ICON_TEXT_BUTTON_TONES,
 } from "@/components/shared/action-buttons";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 import { useAISettingsDraft } from "../hooks/use-ai-settings-draft";
 import { BasicPanel } from "@/components/shared/basic-panel";
 
@@ -104,7 +105,7 @@ export function AISettingsPanel({
             <input
               value={draftModel}
               onChange={(event) => setDraftModel(event.target.value)}
-              placeholder="gemini-3.1-pro-preview"
+              placeholder={DEFAULT_GEMINI_MODEL}
               className="h-11 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 text-sm text-zinc-200 outline-none transition-all placeholder:text-zinc-600 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
               autoComplete="off"
               spellCheck={false}

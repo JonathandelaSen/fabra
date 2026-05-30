@@ -3,6 +3,7 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import { ConversationList } from "./conversation-list";
 import { ChatHeader } from "./chat-header";
@@ -36,7 +37,7 @@ export default function TabChatOferta({
   >(null);
   const [messages, setMessages] = useState<AnalysisChatMessage[]>([]);
   const [draft, setDraft] = useState("");
-  const [model, setModel] = useState("gemini-3.1-pro-preview");
+  const [model, setModel] = useState<string>(DEFAULT_GEMINI_MODEL);
   const [isLoadingConversations, setIsLoadingConversations] = useState(true);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [isSending, setIsSending] = useState(false);

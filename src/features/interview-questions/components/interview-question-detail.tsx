@@ -14,10 +14,11 @@ import type {
 import InterviewQuestionHeader from "./interview-question-header";
 import InterviewQuestionPromptPanel from "./interview-question-prompt-panel";
 import InterviewQuestionAnswerPanel from "./interview-question-answer-panel";
+import { GEMINI_MODELS } from "@/frontend/ai-models";
 
 const AI_MODELS: AIModelOption[] = [
-  { id: "gemini-3.1-pro-preview", label: "Gemini 3.1 Pro" },
-  { id: "gemini-2.5-flash", label: "Gemini 2.5 Flash" },
+  { id: "gemini-3.1-pro-preview", label: GEMINI_MODELS["gemini-3.1-pro-preview"] },
+  { id: "gemini-2.5-flash", label: GEMINI_MODELS["gemini-2.5-flash"] },
 ];
 
 interface InterviewQuestionDetailProps {

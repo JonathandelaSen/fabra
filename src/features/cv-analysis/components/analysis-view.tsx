@@ -1,33 +1,22 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import {
-  Briefcase,
-  FileSearch,
-  MessageCircle,
-  MessageSquareQuote,
-  CalendarClock,
-  Sparkles,
-} from "lucide-react";
 import {
   type AnalysisMode,
   type AIContext,
   type JobKeyData,
   type OfferStatus,
 } from "@/lib/analysis-types";
-import type { InterviewQuestionResponse as InterviewQuestionSummary } from "@/app/api/interview-questions/responses";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import ScoreHero from "./score-hero";
-import TabResumen from "./tab-resumen";
-import TabOferta from "./tab-oferta";
-import TabEntrevista from "./tab-entrevista";
-import TabSeguimiento from "./tab-seguimiento";
-import TabChatOferta from "./tab-chat-oferta";
+import { Tabs } from "@/components/ui/tabs";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
-import { formatDisplayDate } from "@/lib/date-format";
+import type { DeleteAnalysisHandler, InterviewQuestionSummary } from "../types";
+import { useAnalysisViewActions } from "../hooks/use-analysis-view-actions";
+import ScoreHero from "./score-hero";
+import { AnalysisTabsContent } from "./analysis-tabs-content";
+import { AnalysisTabsList } from "./analysis-tabs-list";
+import { exportAnalysisReport } from "./analysis-report-export";
 
 interface AIAnalysisViewProps {
   analysis: {
@@ -68,7 +57,7 @@ interface AIAnalysisViewProps {
   interviewQuestions?: InterviewQuestionSummary[];
   onInterviewQuestionCreated?: () => void;
   onOpenQuestions?: () => void;
-  onDelete?: (id: string) => Promise<void>;
+  onDelete?: DeleteAnalysisHandler;
   onUpdate?: () => void;
 }
 
@@ -92,14 +81,6 @@ function safeParseJobKeyData(value: string | null): JobKeyData | null {
   }
 }
 
-function toDateTimeLocalValue(value: string | null) {
-  if (!value) return "";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  const offsetMs = date.getTimezoneOffset() * 60 * 1000;
-  return new Date(date.getTime() - offsetMs).toISOString().slice(0, 16);
-}
-
 export default function AIAnalysisView({
   analysis,
   aiProvider = "gemini",
@@ -112,29 +93,10 @@ export default function AIAnalysisView({
   onDelete,
   onUpdate,
 }: AIAnalysisViewProps) {
-  const router = useRouter();
   const t = useTranslations("analysisDetail");
   const { locale } = useInterfaceLanguage();
   const dateLocale = locale === "es" ? "es-ES" : "en-US";
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isSavingUrl, setIsSavingUrl] = useState(false);
-  const [offerStatus, setOfferStatus] = useState<OfferStatus>(
-    analysis.offer_status ?? "interesting",
-  );
-  const [offerNotes, setOfferNotes] = useState(analysis.offer_notes ?? "");
-  const [offerNextAction, setOfferNextAction] = useState(
-    analysis.offer_next_action ?? "",
-  );
-  const [offerNextActionAt, setOfferNextActionAt] = useState(
-    toDateTimeLocalValue(analysis.offer_next_action_at),
-  );
-  const [isSavingTracking, setIsSavingTracking] = useState(false);
-  const [quickQuestion, setQuickQuestion] = useState("");
-  const [quickQuestionContext, setQuickQuestionContext] = useState("");
-  const [isCreatingQuestion, setIsCreatingQuestion] = useState(false);
-  const [quickQuestionModel, setQuickQuestionModel] = useState(
-    "gemini-3.1-pro-preview",
-  );
 
   const keywords = safeParseArray(analysis.ai_keywords);
   const improvements = safeParseArray(analysis.ai_improvements);
@@ -143,66 +105,44 @@ export default function AIAnalysisView({
   const matchingKeywords = safeParseArray(analysis.matching_keywords);
   const missingKeywords = safeParseArray(analysis.missing_keywords);
   const jobKeyData = safeParseJobKeyData(analysis.job_key_data);
+  const additionalContext = analysis.ai_context?.additionalContext;
+  const isJobMatch = analysis.analysis_mode === "job_match";
+
+  const actions = useAnalysisViewActions({
+    analysis,
+    aiProvider,
+    aiApiKey,
+    hasAIApiKey,
+    onInterviewQuestionCreated,
+    onOpenQuestions,
+    onUpdate,
+    messages: {
+      missingApiKeyForAnswer: t("alerts.missingApiKeyForAnswer"),
+      missingContextForAnswer: t("alerts.missingContextForAnswer"),
+      createQuestionFailed: t("alerts.createQuestionFailed"),
+      generateAnswerFailed: t("alerts.generateAnswerFailed"),
+      createLinkedQuestionFailed: t("alerts.createLinkedQuestionFailed"),
+      saveTrackingFailed: t("alerts.saveTrackingFailed"),
+      saveUrlFailed: t("alerts.saveUrlFailed"),
+    },
+  });
 
   const handleExport = () => {
-    const cvName = analysis.cv?.name ?? analysis.filename;
-    const cvUrl = analysis.cv
-      ? `${window.location.origin}/api/cvs/${analysis.cv.id}/${analysis.cv.type === "template" ? "template-pdf" : "pdf"}`
-      : null;
-    const report = `
-${t("export.title")}
------------------------
-${t("export.file")}: ${analysis.filename}
-${t("export.name")}: ${analysis.title}
-${t("export.cvUsed")}: ${cvName}
-${cvUrl ? `${t("export.cvLink")}: ${cvUrl}` : ""}
-${t("export.analysisId")}: ${analysis.id}
-${t("export.date")}: ${formatDisplayDate(analysis.ai_analyzed_at, { locale: dateLocale, variant: "dateTime" })}
-${t("export.model")}: ${analysis.ai_model}
-
-${t("export.score")}: ${analysis.ai_score}/100
-
-${t("export.feedback")}:
-${analysis.ai_feedback}
-
-${t("export.detectedKeywords")}:
-${keywords.join(", ") || t("export.none")}
-
-${t("export.jobKeywords")}:
-${jobKeywords.join(", ") || t("export.none")}
-
-${t("export.cvKeywords")}:
-${cvKeywords.join(", ") || t("export.none")}
-
-${t("export.missingKeywords")}:
-${missingKeywords.join(", ") || t("export.none")}
-
-${t("export.improvements")}:
-${improvements.map((imp) => `- ${imp}`).join("\n") || t("export.noSuggestions")}
-
-${analysis.job_description ? `${t("export.jobDescription")}:\n${analysis.job_description}` : ""}
-    `.trim();
-
-    const blob = new Blob([report], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `ATS_Report_${analysis.ai_analyzed_at.replace(/[:.]/g, "-")}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    exportAnalysisReport({
+      analysis,
+      dateLocale,
+      keywords,
+      improvements,
+      jobKeywords,
+      cvKeywords,
+      missingKeywords,
+      t,
+    });
   };
 
   const handleDelete = async () => {
     if (!onDelete) return;
-    if (
-      !confirm(
-        t("alerts.confirmDelete"),
-      )
-    ) {
-      return;
-    }
+    if (!confirm(t("alerts.confirmDelete"))) return;
     setIsDeleting(true);
     try {
       await onDelete(analysis.id);
@@ -214,115 +154,6 @@ ${analysis.job_description ? `${t("export.jobDescription")}:\n${analysis.job_des
     }
   };
 
-  const handleSaveUrl = async (url: string) => {
-    setIsSavingUrl(true);
-    try {
-      const res = await fetch(`/api/job-match-analyses/${analysis.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ job_url: url || null }),
-      });
-      if (!res.ok) throw new Error(t("alerts.saveUrlFailed"));
-      onUpdate?.();
-      router.refresh();
-    } catch (err) {
-      console.error(err);
-      alert(t("alerts.saveUrlFailed"));
-    } finally {
-      setIsSavingUrl(false);
-    }
-  };
-
-  const handleSaveTracking = async () => {
-    setIsSavingTracking(true);
-    try {
-      const res = await fetch(`/api/job-match-analyses/${analysis.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          offer_status: offerStatus,
-          offer_notes: offerNotes,
-          offer_next_action: offerNextAction,
-          offer_next_action_at: offerNextActionAt || null,
-        }),
-      });
-      if (!res.ok) throw new Error(t("alerts.saveTrackingFailed"));
-      onUpdate?.();
-      router.refresh();
-    } catch (err) {
-      console.error(err);
-      alert(t("alerts.saveTrackingFailed"));
-    } finally {
-      setIsSavingTracking(false);
-    }
-  };
-
-  const handleCreateInterviewQuestion = async (generateAfter = false) => {
-    if (!quickQuestion.trim()) return;
-    if (generateAfter && !hasAIApiKey) {
-      alert(t("alerts.missingApiKeyForAnswer"));
-      return;
-    }
-    if (generateAfter && !quickQuestionContext.trim()) {
-      alert(t("alerts.missingContextForAnswer"));
-      return;
-    }
-    setIsCreatingQuestion(true);
-    try {
-      const res = await fetch("/api/interview-questions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          question: quickQuestion.trim(),
-          context: quickQuestionContext.trim() || null,
-          cv_id: analysis.cv_id ?? null,
-          analysis_id: analysis.id,
-        }),
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || t("alerts.createQuestionFailed"));
-      }
-      const created = await res.json();
-      if (generateAfter) {
-        const generateRes = await fetch(
-          `/api/interview-questions/${created.id}/generate`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              provider: aiProvider,
-              apiKey: aiApiKey,
-              model: quickQuestionModel,
-              context: quickQuestionContext,
-              cv_id: analysis.cv_id,
-              analysis_id: analysis.id,
-            }),
-          },
-        );
-        if (!generateRes.ok) {
-          const data = await generateRes.json().catch(() => ({}));
-          throw new Error(data.error || t("alerts.generateAnswerFailed"));
-        }
-      }
-      setQuickQuestion("");
-      setQuickQuestionContext("");
-      onInterviewQuestionCreated?.();
-      onOpenQuestions?.();
-    } catch (err) {
-      console.error(err);
-      alert(
-        err instanceof Error
-          ? err.message
-          : t("alerts.createLinkedQuestionFailed"),
-      );
-    } finally {
-      setIsCreatingQuestion(false);
-    }
-  };
-
-  const isJobMatch = analysis.analysis_mode === "job_match";
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -332,7 +163,6 @@ ${analysis.job_description ? `${t("export.jobDescription")}:\n${analysis.job_des
     >
       <div className="flex flex-1 min-h-0">
         <div className="w-full space-y-5">
-          {/* Score Hero */}
           <ScoreHero
             score={analysis.ai_score}
             title={analysis.title}
@@ -348,153 +178,54 @@ ${analysis.job_description ? `${t("export.jobDescription")}:\n${analysis.job_des
             onExport={handleExport}
             onDelete={handleDelete}
             isDeleting={isDeleting}
-            onSaveUrl={handleSaveUrl}
-            isSavingUrl={isSavingUrl}
+            onSaveUrl={actions.handleSaveUrl}
+            isSavingUrl={actions.isSavingUrl}
           />
 
-          {/* Tabs */}
           <Tabs defaultValue="resumen" className="w-full">
-            <div className="sticky top-[-24px] z-20 -mx-6 px-6 py-4 backdrop-blur-md mb-8">
-              <TabsList className="bg-white/[0.03] border-white/[0.05] p-1 rounded-2xl gap-1">
-                <TabsTrigger
-                  value="resumen"
-                  className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                >
-                  <Sparkles className="size-4" />
-                  {t("tabs.summary")}
-                </TabsTrigger>
-                {isJobMatch && (
-                  <>
-                    <TabsTrigger
-                      value="oferta"
-                      className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                    >
-                      <Briefcase className="size-4" />
-                      {t("tabs.offer")}
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="entrevista"
-                      className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                    >
-                      <MessageSquareQuote className="size-4" />
-                      {t("tabs.questions")}
-                      {interviewQuestions.length > 0 && (
-                        <span className="ml-1 rounded-full bg-primary/20 border border-primary/30 text-primary text-[10px] font-bold px-2 py-0.5">
-                          {interviewQuestions.length}
-                        </span>
-                      )}
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="chat"
-                      className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                    >
-                      <MessageCircle className="size-4" />
-                      Chat
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="seguimiento"
-                      className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                    >
-                      <CalendarClock className="size-4" />
-                      {t("tabs.tracking")}
-                    </TabsTrigger>
-                  </>
-                )}
-                {!isJobMatch && analysis.ai_context?.additionalContext && (
-                  <TabsTrigger
-                    value="contexto"
-                    className="px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-                  >
-                    <FileSearch className="size-4" />
-                    {t("tabs.context")}
-                  </TabsTrigger>
-                )}
-              </TabsList>
-            </div>
-
-            <div className="min-h-0">
-              <TabsContent value="resumen">
-                <TabResumen
-                  improvements={improvements}
-                  keywords={keywords}
-                  jobKeywords={jobKeywords}
-                  cvKeywords={cvKeywords}
-                  matchingKeywords={matchingKeywords}
-                  missingKeywords={missingKeywords}
-                  analysisMode={analysis.analysis_mode}
-                />
-              </TabsContent>
-
-              {isJobMatch && (
-                <>
-                  <TabsContent value="oferta">
-                    <TabOferta
-                      jobKeyData={jobKeyData}
-                      jobDescription={analysis.job_description}
-                    />
-                  </TabsContent>
-
-                  <TabsContent value="entrevista">
-                    <TabEntrevista
-                      interviewQuestions={interviewQuestions}
-                      onOpenQuestions={onOpenQuestions}
-                      quickQuestion={quickQuestion}
-                      onQuickQuestionChange={setQuickQuestion}
-                      quickQuestionContext={quickQuestionContext}
-                      onQuickQuestionContextChange={setQuickQuestionContext}
-                      quickQuestionModel={quickQuestionModel}
-                      onQuickQuestionModelChange={setQuickQuestionModel}
-                      isCreatingQuestion={isCreatingQuestion}
-                      onCreateQuestion={handleCreateInterviewQuestion}
-                    />
-                  </TabsContent>
-
-                  <TabsContent value="chat">
-                    <TabChatOferta
-                      analysisId={analysis.id}
-                      aiProvider={aiProvider}
-                      aiApiKey={aiApiKey}
-                      aiModel={aiModel}
-                      hasAIApiKey={hasAIApiKey}
-                    />
-                  </TabsContent>
-
-                  <TabsContent value="seguimiento">
-                    <TabSeguimiento
-                      offerStatus={offerStatus}
-                      onOfferStatusChange={setOfferStatus}
-                      offerNotes={offerNotes}
-                      onOfferNotesChange={setOfferNotes}
-                      offerNextAction={offerNextAction}
-                      onOfferNextActionChange={setOfferNextAction}
-                      offerNextActionAt={offerNextActionAt}
-                      onOfferNextActionAtChange={setOfferNextActionAt}
-                      isSavingTracking={isSavingTracking}
-                      onSaveTracking={handleSaveTracking}
-                    />
-                  </TabsContent>
-                </>
-              )}
-
-              {!isJobMatch && analysis.ai_context?.additionalContext && (
-                <TabsContent value="contexto">
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="rounded-2xl border border-violet-500/10 bg-violet-500/[0.03] p-6"
-                  >
-                    <h4 className="text-sm font-semibold text-violet-300 flex items-center gap-2 mb-3">
-                      <FileSearch className="w-4 h-4" />
-                      {t("context.title")}
-                    </h4>
-                    <p className="text-xs text-zinc-400 italic bg-[#0a0a12] rounded-lg p-3 border border-white/[0.04]">
-                      {analysis.ai_context.additionalContext}
-                    </p>
-                  </motion.div>
-                </TabsContent>
-              )}
-            </div>
+            <AnalysisTabsList
+              isJobMatch={isJobMatch}
+              hasAdditionalContext={Boolean(additionalContext)}
+              interviewQuestionCount={interviewQuestions.length}
+            />
+            <AnalysisTabsContent
+              isJobMatch={isJobMatch}
+              improvements={improvements}
+              keywords={keywords}
+              jobKeywords={jobKeywords}
+              cvKeywords={cvKeywords}
+              matchingKeywords={matchingKeywords}
+              missingKeywords={missingKeywords}
+              analysisMode={analysis.analysis_mode}
+              jobKeyData={jobKeyData}
+              jobDescription={analysis.job_description}
+              interviewQuestions={interviewQuestions}
+              onOpenQuestions={onOpenQuestions}
+              quickQuestion={actions.quickQuestion}
+              onQuickQuestionChange={actions.setQuickQuestion}
+              quickQuestionContext={actions.quickQuestionContext}
+              onQuickQuestionContextChange={actions.setQuickQuestionContext}
+              quickQuestionModel={actions.quickQuestionModel}
+              onQuickQuestionModelChange={actions.setQuickQuestionModel}
+              isCreatingQuestion={actions.isCreatingQuestion}
+              onCreateQuestion={actions.handleCreateInterviewQuestion}
+              analysisId={analysis.id}
+              aiProvider={aiProvider}
+              aiApiKey={aiApiKey}
+              aiModel={aiModel}
+              hasAIApiKey={hasAIApiKey}
+              offerStatus={actions.offerStatus}
+              onOfferStatusChange={actions.setOfferStatus}
+              offerNotes={actions.offerNotes}
+              onOfferNotesChange={actions.setOfferNotes}
+              offerNextAction={actions.offerNextAction}
+              onOfferNextActionChange={actions.setOfferNextAction}
+              offerNextActionAt={actions.offerNextActionAt}
+              onOfferNextActionAtChange={actions.setOfferNextActionAt}
+              isSavingTracking={actions.isSavingTracking}
+              onSaveTracking={actions.handleSaveTracking}
+              additionalContext={additionalContext}
+            />
           </Tabs>
         </div>
       </div>

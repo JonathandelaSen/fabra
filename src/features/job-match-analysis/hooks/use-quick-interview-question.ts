@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 import {
   createLinkedInterviewQuestion,
   generateLinkedInterviewQuestionAnswer,
@@ -30,7 +31,7 @@ export function useQuickInterviewQuestion({
   const t = useTranslations("analysisDetail");
   const [question, setQuestion] = useState("");
   const [context, setContext] = useState("");
-  const [model, setModel] = useState("gemini-3.1-pro-preview");
+  const [model, setModel] = useState<string>(DEFAULT_GEMINI_MODEL);
 
   const createQuestion = useMutation({
     mutationFn: (input: CreateLinkedInterviewQuestionInput) =>

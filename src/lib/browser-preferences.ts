@@ -4,7 +4,9 @@ const AI_PROVIDER_STORAGE_KEY = "ats-cv-ai-checker.aiProvider";
 const AI_API_KEY_STORAGE_KEY = "ats-cv-ai-checker.aiApiKey";
 const AI_MODEL_STORAGE_KEY = "ats-cv-ai-checker.aiModel";
 const DEFAULT_AI_PROVIDER: StoredAIProvider = "gemini";
-const DEFAULT_AI_MODEL = "gemini-3.1-pro-preview";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
+
+const DEFAULT_AI_MODEL = DEFAULT_GEMINI_MODEL;
 
 function getLocalStorage() {
   if (typeof window === "undefined") return null;

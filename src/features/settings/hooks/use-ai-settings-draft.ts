@@ -6,6 +6,7 @@ import {
   saveStoredAISettings,
   type StoredAIProvider,
 } from "@/lib/browser-preferences";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 
 interface AISettingsDraftParams {
   aiProvider: StoredAIProvider;
@@ -59,7 +60,7 @@ export function useAISettingsDraft({
     onAISettingsChange({
       provider: "gemini",
       apiKey: "",
-      model: "gemini-3.1-pro-preview",
+      model: DEFAULT_GEMINI_MODEL,
     });
     setDraftValue("");
     setSaved(false);

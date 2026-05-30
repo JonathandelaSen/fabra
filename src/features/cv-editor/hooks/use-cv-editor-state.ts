@@ -20,6 +20,7 @@ import { useProfileHistory } from "./use-profile-history";
 import { cvEditorKeys } from "../api/cv-editor-query-keys";
 import { fetchRecommendations, saveProfile as saveProfileApi } from "../api/cv-editor-api";
 import { getErrorMessage } from "@/lib/errors";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 
 function serializeProfile(profile: StandardCVProfile | null | undefined) {
   return JSON.stringify(profile ? normalizeStandardCVProfile(profile) : null);
@@ -37,7 +38,7 @@ export function useCVEditorState(activeVersionId: string | null) {
   const hasAIApiKey = aiProvider === "mock" || aiApiKey.length > 0;
 
   const [editedVersion, setEditedVersion] = useState<CVDocumentListItem | null>(null);
-  const [selectedModel, setSelectedModel] = useState("gemini-3.1-pro-preview");
+  const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_GEMINI_MODEL);
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved">("idle");
   const [error, setError] = useState<string | null>(null);
   const [previewVersion, setPreviewVersion] = useState(0);

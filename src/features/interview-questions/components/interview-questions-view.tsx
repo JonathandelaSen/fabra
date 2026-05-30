@@ -21,6 +21,7 @@ import { InterviewQuestionCopyPastePanel } from "./interview-question-copy-paste
 import { InterviewQuestionDetail } from "./interview-question-detail";
 import { InterviewQuestionsSidebar } from "./interview-questions-sidebar";
 import { InterviewQuestionsSkeleton } from "./interview-questions-skeleton";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 
 interface InterviewQuestionsViewProps {
   aiProvider: "gemini" | "mock";
@@ -53,7 +54,7 @@ export default function InterviewQuestionsView({
   const detailQuery = useInterviewQuestionDetail(questionId);
   const optionsQuery = useInterviewQuestionOptions();
   const mutations = useInterviewQuestionsMutations(filters);
-  const [model, setModel] = useState("gemini-3.1-pro-preview");
+  const [model, setModel] = useState<string>(DEFAULT_GEMINI_MODEL);
   const [error, setError] = useState<string | null>(null);
   const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
 

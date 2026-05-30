@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { DEFAULT_FAST_GEMINI_MODEL, DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -77,12 +78,12 @@ export default function WorkJournalView({
   const [error, setError] = useState<string | null>(null);
   const [contextFilter, setContextFilter] = useState<string>("");
   const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
-  const [selectedModel, setSelectedModel] = useState(aiModel || "gemini-2.5-flash");
+  const [selectedModel, setSelectedModel] = useState<string>(aiModel || DEFAULT_FAST_GEMINI_MODEL);
   const formsT = useTranslations("analysisFlow.forms");
 
   const models = [
-    { id: "gemini-2.5-flash", label: `Gemini 2.5 Flash (${formsT("fast")})` },
-    { id: "gemini-3.1-pro-preview", label: `Gemini 3.1 Pro Preview (${formsT("powerful")})` },
+    { id: DEFAULT_FAST_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_FAST_GEMINI_MODEL]} (${formsT("fast")})` },
+    { id: DEFAULT_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_GEMINI_MODEL]} (${formsT("powerful")})` },
   ];
 
   const contexts = contextsQuery.data?.contexts ?? [];

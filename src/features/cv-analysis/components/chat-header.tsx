@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { DEFAULT_GEMINI_MODEL, DEFAULT_FAST_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
 import { Sparkles } from "lucide-react";
 
 interface ChatHeaderProps {
@@ -32,8 +33,8 @@ export function ChatHeader({ model, onModelChange }: ChatHeaderProps) {
         aria-label={t("modelLabel")}
         className="h-8 rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 text-[11px] text-zinc-400 outline-none transition-colors hover:border-white/[0.12] focus:border-cyan-500/30"
       >
-        <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro</option>
-        <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+        <option value={DEFAULT_GEMINI_MODEL}>{GEMINI_MODELS[DEFAULT_GEMINI_MODEL]}</option>
+        <option value={DEFAULT_FAST_GEMINI_MODEL}>{GEMINI_MODELS[DEFAULT_FAST_GEMINI_MODEL]}</option>
       </select>
     </div>
   );

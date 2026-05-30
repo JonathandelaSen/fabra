@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { DEFAULT_FAST_GEMINI_MODEL, DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
 import { getErrorMessage } from "@/lib/errors";
 import type { JobMatchAnalysisDetail } from "../api/job-match-analysis-api";
 import type { JobMatchAnalysisDetailResponse } from "@/app/api/job-match-analyses/responses";
@@ -78,11 +79,11 @@ export default function JobMatchExtractionView({
   const [copyPasteOpen, setCopyPasteOpen] = useState(false);
   const [copyPasteJobDescription, setCopyPasteJobDescription] = useState("");
   const [copyPasteJobUrl, setCopyPasteJobUrl] = useState<string | null>(null);
-  const [selectedModel, setSelectedModel] = useState("gemini-2.5-flash");
+  const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_FAST_GEMINI_MODEL);
 
   const models = [
-    { id: "gemini-2.5-flash", label: `Gemini 2.5 Flash (${formsT("fast")})` },
-    { id: "gemini-3.1-pro-preview", label: `Gemini 3.1 Pro Preview (${formsT("powerful")})` },
+    { id: DEFAULT_FAST_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_FAST_GEMINI_MODEL]} (${formsT("fast")})` },
+    { id: DEFAULT_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_GEMINI_MODEL]} (${formsT("powerful")})` },
   ];
 
   const getTextForTab = (tab: ParserTab) => {

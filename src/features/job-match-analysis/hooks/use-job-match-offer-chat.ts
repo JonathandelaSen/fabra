@@ -2,6 +2,7 @@
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 import type {
   AnalysisChatConversation,
   AnalysisChatMessage,
@@ -43,7 +44,7 @@ export function useJobMatchOfferChat({
   >(null);
   const [messages, setMessages] = useState<AnalysisChatMessage[]>([]);
   const [draft, setDraft] = useState("");
-  const [model, setModel] = useState("gemini-3.1-pro-preview");
+  const [model, setModel] = useState<string>(DEFAULT_GEMINI_MODEL);
   const [isLoadingConversations, setIsLoadingConversations] = useState(true);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [isSending, setIsSending] = useState(false);
