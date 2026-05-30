@@ -115,7 +115,7 @@ export function CVEditorPublicSection({
               })
             }
             className="min-w-0 flex-1 bg-transparent px-2 text-xs text-white outline-none placeholder:text-zinc-700"
-            placeholder="nombre-del-cv"
+            placeholder={t("publicPage.urlPlaceholder")}
           />
         </div>
         <p className="text-[11px] leading-relaxed text-zinc-600">

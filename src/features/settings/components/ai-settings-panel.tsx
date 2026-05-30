@@ -97,9 +97,9 @@ export function AISettingsPanel({
               }
               className="h-11 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 text-sm text-zinc-200 outline-none transition-all focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
             >
-              <option value="gemini">Gemini</option>
+              <option value="gemini">{t("providers.gemini")}</option>
               {process.env.NODE_ENV !== "production" && (
-                <option value="mock">Mock</option>
+                <option value="mock">{t("providers.mock")}</option>
               )}
             </select>
             <input

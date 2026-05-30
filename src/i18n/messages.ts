@@ -18,6 +18,8 @@ export const messages = {
         hideKey: "Hide key",
         showPassword: "Show password",
         hidePassword: "Hide password",
+        close: "Close",
+        confirmAction: "Confirm Action",
       },
       states: {
         loadingAnalysis: "Loading analysis...",
@@ -155,6 +157,10 @@ export const messages = {
         warningBody: "It is stored only in this browser's preferences and sent only during analysis. It is not stored in Supabase, the database, or server environment variables.",
         fieldLabel: "Gemini key",
         placeholder: "Paste your Gemini API key",
+        providers: {
+          gemini: "Gemini",
+          mock: "Mock",
+        },
       },
       account: {
         title: "Account",
@@ -411,6 +417,8 @@ export const messages = {
       cvLibrary: {
         associatedAnalyses: "Associated analyses",
         noSavedCvs: "There are no saved CVs yet.",
+        generalAtsScore: "General ATS Score",
+        generateMatchScorePrompt: "Generate your first job match analysis to see your compatibility",
         renameFailed: "The CV could not be renamed",
         confirmDelete: "Are you sure you want to delete this CV?",
         deleteFailed: "The CV could not be deleted",
@@ -545,6 +553,8 @@ export const messages = {
       },
     },
     cvEditor: {
+      aiEditor: "AI Editor",
+      aiPlaceholder: "Describe the changes you want to make...",
       actions: {
         cancel: "Cancel",
         save: "Save",
@@ -593,6 +603,7 @@ export const messages = {
         saveUrl: "Save URL",
         copied: "Copied",
         copyUrl: "Copy URL",
+        urlPlaceholder: "cv-name",
       },
       settings: {
         title: "Settings",
@@ -634,6 +645,8 @@ export const messages = {
         showSection: "Show section",
         hideSection: "Hide section",
         bulletPlaceholder: "Write here...",
+        summaryPlaceholder: "Write a professional summary...",
+        reset: "Reset",
         addBullet: "Add bullet",
         addItem: "Add {label}",
         technicalSkillsPlaceholder: "E.g. React, Node.js, Python...",
@@ -902,6 +915,11 @@ export const messages = {
       sourceLabel: "Source: {source}",
       filters: { open: "Open", all: "All", closed: "Closed" },
       actions: { add: "Add", cancel: "Cancel", save: "Save", edit: "Edit", manageContexts: "Manage contexts" },
+      sections: {
+        narrative: "Narrative & Success Criteria",
+        planning: "Planning & Attributes",
+        identity: "Identity & Context",
+      },
       fields: {
         title: "Title",
         context: "Context",
@@ -928,6 +946,8 @@ export const messages = {
         resultNotes: "What actually happened? Reflect when closing.",
         itemNotes: "Context, approach, blockers...",
         evidence: "What did you do? Link to PR, doc...",
+        details: "What are the details of this objective?",
+        titlePlaceholder: "e.g. Lead the migration of frontend components",
       },
       status: {
         active: "Active",
@@ -1227,6 +1247,8 @@ export const messages = {
         hideKey: "Ocultar clave",
         showPassword: "Mostrar contraseña",
         hidePassword: "Ocultar contraseña",
+        close: "Cerrar",
+        confirmAction: "Confirmar acción",
       },
       states: {
         loadingAnalysis: "Cargando análisis...",
@@ -1364,6 +1386,10 @@ export const messages = {
         warningBody: "Se guarda solo en las preferencias de este navegador y se envía únicamente durante el análisis. No se almacena en Supabase, en la base de datos ni en variables de entorno del servidor.",
         fieldLabel: "Clave de Gemini",
         placeholder: "Pega tu API key de Gemini",
+        providers: {
+          gemini: "Gemini",
+          mock: "Simulado",
+        },
       },
       account: {
         title: "Cuenta",
@@ -1620,6 +1646,8 @@ export const messages = {
       cvLibrary: {
         associatedAnalyses: "Análisis asociados",
         noSavedCvs: "Todavía no hay CVs guardados.",
+        generalAtsScore: "Score General ATS",
+        generateMatchScorePrompt: "Genera tu primer análisis de vacante para ver tu compatibilidad",
         renameFailed: "No se pudo renombrar el CV",
         confirmDelete: "¿Seguro que quieres borrar este CV?",
         deleteFailed: "No se pudo borrar el CV",
@@ -1754,6 +1782,8 @@ export const messages = {
       },
     },
     cvEditor: {
+      aiEditor: "Editor IA",
+      aiPlaceholder: "Describe los cambios que quieres hacer...",
       actions: {
         cancel: "Cancelar",
         save: "Guardar",
@@ -1802,6 +1832,7 @@ export const messages = {
         saveUrl: "Guardar URL",
         copied: "Copiada",
         copyUrl: "Copiar URL",
+        urlPlaceholder: "nombre-del-cv",
       },
       settings: {
         title: "Configuración",
@@ -1843,6 +1874,8 @@ export const messages = {
         showSection: "Mostrar sección",
         hideSection: "Ocultar sección",
         bulletPlaceholder: "Escribe aquí...",
+        summaryPlaceholder: "Escribe un resumen profesional...",
+        reset: "Restablecer",
         addBullet: "Añadir punto",
         addItem: "Añadir {label}",
         technicalSkillsPlaceholder: "Ej: React, Node.js, Python...",
@@ -2110,6 +2143,11 @@ export const messages = {
       sourceLabel: "Origen: {source}",
       filters: { open: "Abiertos", all: "Todos", closed: "Cerrados" },
       actions: { add: "Añadir", cancel: "Cancelar", save: "Guardar", edit: "Editar", manageContexts: "Gestionar contextos" },
+      sections: {
+        narrative: "Narrativa y Criterios de Éxito",
+        planning: "Planificación y Atributos",
+        identity: "Identidad y Contexto",
+      },
       fields: {
         title: "Título",
         context: "Contexto",
@@ -2136,6 +2174,8 @@ export const messages = {
         resultNotes: "¿Qué ocurrió realmente? Reflexiona al cerrar.",
         itemNotes: "Contexto, enfoque, bloqueos...",
         evidence: "¿Qué hiciste? Enlace a PR, doc...",
+        details: "¿Cuáles son los detalles de este objetivo?",
+        titlePlaceholder: "p. ej., Liderar la migración de componentes frontend",
       },
       status: {
         active: "Activo",

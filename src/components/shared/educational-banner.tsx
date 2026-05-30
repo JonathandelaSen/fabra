@@ -1,5 +1,6 @@
 import React from "react";
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface EducationalBannerProps {
   title: React.ReactNode;
@@ -26,6 +27,8 @@ export default function EducationalBanner({
   onClose,
   cta,
 }: EducationalBannerProps) {
+  const t = useTranslations("common.actions");
+
   return (
     <div
       className={`shrink-0 w-full p-4 rounded-2xl ${bgColor} border ${borderColor} ${shadowColor} backdrop-blur-sm flex gap-3 relative group`}
@@ -46,7 +49,7 @@ export default function EducationalBanner({
         <button
           onClick={onClose}
           className="absolute right-3 top-3 rounded-md p-1 text-text-muted opacity-0 transition-all duration-200 hover:bg-panel-subtle hover:text-text-soft group-hover:opacity-100"
-          aria-label="Close"
+          aria-label={t("close")}
         >
           <X className="w-3.5 h-3.5" />
         </button>

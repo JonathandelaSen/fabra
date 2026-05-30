@@ -15,7 +15,7 @@ export function ObjectiveNarrativeSection({
   return (
     <div className="space-y-4">
       <h3 className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest border-b border-white/[0.04] pb-1">
-        Narrative & Success Criteria
+        {t("sections.narrative")}
       </h3>
       <label className="block space-y-1.5 text-left">
         <span className="text-xs font-semibold text-zinc-400">
@@ -25,7 +25,7 @@ export function ObjectiveNarrativeSection({
           rows={3}
           value={form.description}
           onChange={(e) => onFormChange({ ...form, description: e.target.value })}
-          placeholder="What are the details of this objective?"
+          placeholder={t("placeholders.details")}
           className="bg-zinc-950 border-white/[0.06] focus-visible:ring-emerald-500/20 text-sm py-2"
         />
       </label>

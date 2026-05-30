@@ -43,7 +43,7 @@ export function CVEditorAIPanel({
           <Sparkles className="h-4 w-4" />
         </div>
         <h3 className="text-sm font-semibold text-white">
-          Editor IA
+          {t("aiEditor")}
         </h3>
       </header>
 
@@ -57,7 +57,7 @@ export function CVEditorAIPanel({
         <textarea
           value={editInstruction}
           onChange={(e) => setEditInstruction(e.target.value)}
-          placeholder="Describe los cambios que quieres hacer..."
+          placeholder={t("aiPlaceholder")}
           className="h-32 w-full resize-none rounded-2xl border border-white/5 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:border-teal-500/30 focus:outline-none transition-colors"
         />
 

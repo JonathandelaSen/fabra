@@ -45,7 +45,7 @@ export default function JobMatchExtractionPdfPreview({
           <iframe
             src={`${pdfUrl}#toolbar=0`}
             className="w-full h-full border-none"
-            title="PDF Preview"
+            title={t("pdfPreview")}
           />
         </motion.div>
       )}

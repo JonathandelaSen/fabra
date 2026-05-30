@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertTriangle, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   ActionIconButton,
   DeleteButton,
@@ -14,6 +15,7 @@ interface ConfirmDialogProps {
   description: string;
   confirmLabel?: string;
   cancelLabel?: string;
+  headerTitle?: string;
   variant?: "danger" | "default";
   onConfirm: () => void;
   onCancel: () => void;
@@ -25,10 +27,12 @@ export function ConfirmDialog({
   description,
   confirmLabel = "Confirm",
   cancelLabel = "Cancel",
+  headerTitle,
   variant = "danger",
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
+  const t = useTranslations("common.actions");
   if (!open) return null;
 
   return (
@@ -45,7 +49,7 @@ export function ConfirmDialog({
             }`}
           >
             <AlertTriangle className="h-4.5 w-4.5" />
-            <span>Confirm Action</span>
+            <span>{headerTitle || t("confirmAction")}</span>
           </div>
           <ActionIconButton
             icon={X}

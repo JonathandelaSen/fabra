@@ -21,7 +21,7 @@ export function ObjectivePlanningSection({
   return (
     <div className="space-y-4">
       <h3 className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest border-b border-white/[0.04] pb-1">
-        Planning & Attributes
+        {t("sections.planning")}
       </h3>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="space-y-1.5 block text-left">

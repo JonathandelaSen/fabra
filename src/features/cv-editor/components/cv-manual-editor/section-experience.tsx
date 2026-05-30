@@ -7,6 +7,8 @@ import { useTranslations } from "next-intl";
 
 const inputClass = "w-full rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-teal-500/30 focus:outline-none";
 const labelClass = "text-[11px] font-medium text-zinc-500 uppercase tracking-wider";
+const ROLE_PLACEHOLDER = "Software Engineer";
+const COMPANY_PLACEHOLDER = "Edpuzzle";
 
 interface Props {
   items: StandardCVExperience[];
@@ -21,8 +23,8 @@ function ExperienceFields({ item, update }: { item: StandardCVExperience; update
   return (
     <>
       <div className="grid grid-cols-2 gap-3">
-        <div><label className={labelClass}>{t("role")}</label><input type="text" value={item.role ?? ""} onChange={(e) => set("role", e.target.value)} placeholder="Software Engineer" className={inputClass} /></div>
-        <div><label className={labelClass}>{t("company")}</label><input type="text" value={item.company ?? ""} onChange={(e) => set("company", e.target.value)} placeholder="Acme Inc." className={inputClass} /></div>
+        <div><label className={labelClass}>{t("role")}</label><input type="text" value={item.role ?? ""} onChange={(e) => set("role", e.target.value)} placeholder={ROLE_PLACEHOLDER} className={inputClass} /></div>
+        <div><label className={labelClass}>{t("company")}</label><input type="text" value={item.company ?? ""} onChange={(e) => set("company", e.target.value)} placeholder={COMPANY_PLACEHOLDER} className={inputClass} /></div>
       </div>
       <div><label className={labelClass}>{t("location")}</label><input type="text" value={item.location ?? ""} onChange={(e) => set("location", e.target.value)} placeholder={t("locationPlaceholder")} className={inputClass} /></div>
       <div className="grid grid-cols-2 gap-3">

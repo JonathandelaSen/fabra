@@ -34,6 +34,8 @@ interface ScoreHeroProps {
   isSavingUrl: boolean;
 }
 
+const URL_PLACEHOLDER = "https://...";
+
 function getScoreLabelKey(score: number) {
   if (score >= 80) return "excellent";
   if (score >= 60) return "improvable";
@@ -149,7 +151,7 @@ export default function ScoreHero({
                     type="url"
                     value={editedUrl}
                     onChange={(e) => setEditedUrl(e.target.value)}
-                    placeholder="https://..."
+                    placeholder={URL_PLACEHOLDER}
                     className="h-6 w-48 rounded-md bg-[#0a0a12] border border-white/[0.06] px-2 text-[11px] text-zinc-300 focus:outline-none focus:border-emerald-500/40"
                     autoFocus
                   />

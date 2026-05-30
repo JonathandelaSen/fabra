@@ -33,7 +33,7 @@ export function ManualEditorPresentation({
           title={t("resetPresentation")}
         >
           <RotateCcw className="h-2.5 w-2.5" />
-          <span>Reset</span>
+          <span>{t("reset")}</span>
         </button>
       </div>
       <div className="grid grid-cols-2 gap-4 pt-1">

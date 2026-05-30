@@ -82,7 +82,7 @@ export default function JobMatchForm({
           </label>
           <input
             type="url"
-            placeholder="https://www.linkedin.com/jobs/view/..."
+            placeholder={t("jobUrlPlaceholder")}
             className="w-full h-10 px-4 rounded-xl bg-[#0a0a12] border border-white/[0.06] text-sm text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500/40 focus:ring-2 focus:ring-emerald-500/10 transition-all"
             value={jobUrl}
             onChange={(e) => setJobUrl(e.target.value)}

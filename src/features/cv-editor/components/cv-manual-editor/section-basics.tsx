@@ -11,6 +11,8 @@ interface SectionBasicsProps {
 
 const inputClass = "w-full rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-teal-500/30 focus:outline-none";
 const labelClass = "text-[11px] font-medium text-zinc-500 uppercase tracking-wider";
+const EMAIL_PLACEHOLDER = "tu@email.com";
+const URL_PLACEHOLDER = "https://...";
 
 export function SectionBasics({ basics, onChange }: SectionBasicsProps) {
   const t = useTranslations("cvEditor.manual.basics");
@@ -38,7 +40,7 @@ export function SectionBasics({ basics, onChange }: SectionBasicsProps) {
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className={labelClass}>{t("email")}</label>
-          <input type="email" value={basics.email ?? ""} onChange={(e) => set("email", e.target.value)} placeholder="tu@email.com" className={inputClass} />
+          <input type="email" value={basics.email ?? ""} onChange={(e) => set("email", e.target.value)} placeholder={EMAIL_PLACEHOLDER} className={inputClass} />
         </div>
         <div>
           <label className={labelClass}>{t("phone")}</label>
@@ -55,7 +57,7 @@ export function SectionBasics({ basics, onChange }: SectionBasicsProps) {
           {(basics.links ?? []).map((link, i) => (
             <div key={i} className="group flex items-center gap-2">
               <input type="text" value={link.label ?? ""} onChange={(e) => updateLink(i, "label", e.target.value)} placeholder={t("linkLabel")} className={`${inputClass} w-1/3`} />
-              <input type="url" value={link.url} onChange={(e) => updateLink(i, "url", e.target.value)} placeholder="https://..." className={`${inputClass} flex-1`} />
+              <input type="url" value={link.url} onChange={(e) => updateLink(i, "url", e.target.value)} placeholder={URL_PLACEHOLDER} className={`${inputClass} flex-1`} />
               <button onClick={() => removeLink(i)} className="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-rose-400">
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
