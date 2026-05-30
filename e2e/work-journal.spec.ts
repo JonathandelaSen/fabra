@@ -10,7 +10,7 @@ test("user can create, edit, and delete work journal entries", async ({ page }) 
   await loginViaUI(page, user);
 
   // Navigate to Work Journal
-  await page.goto("/?view=journal");
+  await page.goto("/work-journal");
   await expect(page.getByRole("heading", { name: t.title })).toBeVisible();
 
   // Create new context and entry

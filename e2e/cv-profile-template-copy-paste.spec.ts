@@ -42,9 +42,16 @@ test("user can create a template CV profile with Copy Paste", async ({
   const tCopyPaste = messages.en.analysisFlow.copyPaste;
   const tProfile = messages.en.analysisFlow.cvProfileCopyPaste;
 
-  await page.goto("/?view=templates");
+  await page.goto("/templates");
+  await page.context().grantPermissions(["clipboard-write"]);
   await expect(
     page.getByRole("heading", { name: tTemplates.title }),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: "Linea" }).click();
+
+  await expect(
+    page.getByRole("heading", { name: "Linea" }).first(),
   ).toBeVisible();
 
   await page.getByPlaceholder(tTemplates.searchCv).fill("template-copy-paste");
@@ -53,34 +60,32 @@ test("user can create a template CV profile with Copy Paste", async ({
   await page.getByRole("button", { name: tTemplates.createVersion }).click();
   await expect(page.getByText(messages.en.aiLauncher.externalLabel)).toBeVisible();
   await page.getByRole("button", { name: messages.en.aiLauncher.openFlow }).click();
-
-  await expect(
-    page.getByRole("heading", { name: tProfile.title }),
-  ).toBeVisible();
-  await expect(page.getByText(tCopyPaste.privacyNotice)).toBeVisible();
-  await expect(page.locator("textarea").first()).toContainText(
+  const dialog = page.getByRole("dialog", { name: tProfile.title });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByText(tCopyPaste.privacyNotice)).toBeVisible();
+  await expect(dialog.locator("textarea").first()).toContainText(
     "Extract this CV text",
   );
 
-  await page.getByRole("button", { name: tCopyPaste.continue }).click();
-  await page.getByLabel(tCopyPaste.pasteResponseLabel).fill("not json");
-  await page
+  await dialog.getByRole("button", { name: tCopyPaste.continue }).click();
+  await dialog.getByLabel(tCopyPaste.pasteResponseLabel).fill("not json");
+  await dialog
     .getByRole("button", { name: tCopyPaste.validateResponse })
     .click();
-  await expect(page.getByText("not valid JSON")).toBeVisible();
+  await expect(dialog.getByText("not valid JSON")).toBeVisible();
 
-  await page
+  await dialog
     .getByLabel(tCopyPaste.pasteResponseLabel)
     .fill(validProfileResponse);
-  await page
+  await dialog
     .getByRole("button", { name: tCopyPaste.validateResponse })
     .click();
-  await expect(page.getByText("Ada Lovelace")).toBeVisible();
-  await expect(page.getByText("100/100")).toBeVisible();
+  await expect(dialog.getByText("Ada Lovelace")).toBeVisible();
+  await expect(dialog.getByText("100/100")).toBeVisible();
 
-  await page.getByRole("button", { name: tProfile.applyProfile }).click();
-  await expect(page).toHaveURL(/view=editor/);
-  await expect(page.locator('a[href="mailto:ada@example.com"]')).toBeVisible();
+  await dialog.getByRole("button", { name: tProfile.applyProfile }).click();
+  await expect(page).toHaveURL(/\/cvs\/editor\//);
+  await expect(page.getByRole("button", { name: messages.en.cvEditor.editorTabs.ai, exact: true })).toBeVisible();
 });
 
 test("Copy Paste prepares prompt for a stored CV without previous extraction", async ({
@@ -92,18 +97,18 @@ test("Copy Paste prepares prompt for a stored CV without previous extraction", a
   const tTemplates = messages.en.analysisFlow.templates;
   const tProfile = messages.en.analysisFlow.cvProfileCopyPaste;
 
-  await page.goto("/?view=templates");
+  await page.goto("/templates");
+  await page.context().grantPermissions(["clipboard-write"]);
+  await page.getByRole("button", { name: "Linea" }).first().click();
   await page.getByPlaceholder(tTemplates.searchCv).fill(cv.name);
   await page.getByRole("button", { name: cv.name }).click();
 
   await page.getByRole("button", { name: tTemplates.createVersion }).click();
   await expect(page.getByText(messages.en.aiLauncher.externalLabel)).toBeVisible();
   await page.getByRole("button", { name: messages.en.aiLauncher.openFlow }).click();
-
-  await expect(
-    page.getByRole("heading", { name: tProfile.title }),
-  ).toBeVisible();
-  await expect(page.locator("textarea").first()).toContainText(
+  const dialog = page.getByRole("dialog", { name: tProfile.title });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.locator("textarea").first()).toContainText(
     "Extract this CV text",
   );
 });

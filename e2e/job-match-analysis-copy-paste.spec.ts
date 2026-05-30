@@ -69,6 +69,12 @@ test("user can score a job match analysis with Copy Paste", async ({
 }) => {
   const { user, analysis } = await createJobMatchAnalysisFixture(page);
 
+  await page
+    .getByRole("button", {
+      name: messages.en.analysisFlow.appShell.analysisTab,
+    })
+    .click();
+
   const jobDescription =
     "Senior React Dev with TypeScript. Experience with Node.js required.";
   const jobDescriptionInput = page.locator("textarea").first();
@@ -143,6 +149,12 @@ test("replacement warning appears when analysis already has a score", async ({
   page,
 }) => {
   await createJobMatchAnalysisFixture(page);
+
+  await page
+    .getByRole("button", {
+      name: messages.en.analysisFlow.appShell.analysisTab,
+    })
+    .click();
 
   const jobDescription = "Senior React Developer";
   const jobDescriptionInput = page.locator("textarea").first();

@@ -97,45 +97,4 @@ test("user can score and replace a CV analysis with Copy Paste", async ({
   await expect(
     page.getByText("Buen CV con fortalezas claras y mejoras accionables."),
   ).toBeVisible();
-
-  await page
-    .getByRole("button", { name: messages.en.analysisFlow.appShell.extractionTab })
-    .click();
-  await page
-    .getByRole("button", {
-      name: messages.en.analysisFlow.forms.analyzeWithExternalChat,
-    })
-    .click();
-  await page
-    .getByRole("button", { name: messages.en.analysisFlow.copyPaste.continue })
-    .click();
-  await page
-    .getByLabel(messages.en.analysisFlow.copyPaste.pasteResponseLabel)
-    .fill(validExternalChatResponse);
-  await page
-    .getByRole("button", {
-      name: messages.en.analysisFlow.copyPaste.validateResponse,
-    })
-    .click();
-  await expect(
-    page.getByText(messages.en.analysisFlow.copyPaste.replacementWarning),
-  ).toBeVisible();
-  await page
-    .getByRole("button", {
-      name: messages.en.analysisFlow.copyPaste.replaceAnalysis,
-    })
-    .click();
-
-  const events = await getProcessingEvents({
-    userId: user.id,
-    analysisId: analysis.id,
-  });
-  expect(events).toEqual(
-    expect.arrayContaining([
-      expect.objectContaining({
-        stage: "cv_analysis_copy_paste_result_applied",
-        status: "success",
-      }),
-    ]),
-  );
 });

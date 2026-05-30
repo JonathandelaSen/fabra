@@ -55,6 +55,7 @@ test.describe("Feedback notes copy-paste workflow", () => {
     await page.goto(`/feedback-notes/${feedback.id}`);
     await page.context().grantPermissions(["clipboard-write"]);
     await expect(page.getByText("Copy Paste Test Person")).toBeVisible();
+    await page.getByRole("button", { name: t.actions.edit, exact: true }).click();
 
     await page.getByRole("button", { name: t.final.generate }).click();
     await expect(page.getByText(launcher.externalLabel)).toBeVisible();
@@ -74,10 +75,8 @@ test.describe("Feedback notes copy-paste workflow", () => {
     await dialog.getByRole("button", { name: cp.usePastedText }).click();
     await expect(dialog).not.toBeVisible();
 
-    const finalTextarea = page.locator("textarea").filter({
-      hasText: pastedFeedback,
-    });
-    await expect(finalTextarea).toBeVisible();
+    const finalTextarea = page.getByPlaceholder(t.final.placeholder);
+    await expect(finalTextarea).toHaveValue(pastedFeedback);
 
     const editedFeedback = `${pastedFeedback} Also improved documentation.`;
     await finalTextarea.fill(editedFeedback);
@@ -87,7 +86,7 @@ test.describe("Feedback notes copy-paste workflow", () => {
 
     await page.reload();
     await expect(
-      page.locator("textarea").filter({ hasText: editedFeedback })
+      page.getByText(editedFeedback)
     ).toBeVisible();
   });
 
@@ -102,6 +101,12 @@ test.describe("Feedback notes copy-paste workflow", () => {
     );
 
     await page.goto(`/feedback-notes/${feedback.id}`);
+    await expect(
+      page.getByRole("heading", { name: "No Key Person" }).first()
+    ).toBeVisible();
+
+    await page.getByRole("button", { name: t.actions.edit, exact: true }).click();
+
     await expect(
       page.getByRole("button", { name: t.final.generate })
     ).toBeVisible();
@@ -126,6 +131,12 @@ test.describe("Feedback notes copy-paste workflow", () => {
     );
 
     await page.goto(`/feedback-notes/${feedback.id}`);
+    await expect(
+      page.getByRole("heading", { name: "Integrated Person" }).first()
+    ).toBeVisible();
+
+    await page.getByRole("button", { name: t.actions.edit, exact: true }).click();
+
     await page.getByRole("button", { name: t.final.generate }).click();
 
     await expect(page.getByText(launcher.insideLabel)).toBeVisible();

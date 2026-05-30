@@ -91,7 +91,8 @@ test.describe("CV editor copy-paste workflow", () => {
     await loginViaUI(page, user);
     const cv = await createTemplateCVForUser(user.id);
 
-    await page.goto(`/?view=editor`);
+    await page.goto(`/cvs/editor`);
+    await page.context().grantPermissions(["clipboard-write"]);
     await page.getByText(cv.name).click();
     await expect(page.getByText(tEditor.aiEditor)).toBeVisible();
 
@@ -107,12 +108,12 @@ test.describe("CV editor copy-paste workflow", () => {
 
     await page.getByRole("button", { name: tLauncher.openFlow }).click();
 
-    const dialog = page.getByRole("dialog");
+    const dialog = page.getByRole("dialog", { name: tEditorCp.title });
     await expect(dialog).toBeVisible();
 
-    await dialog
-      .getByRole("button", { name: tCopyPaste.continue })
-      .click();
+    const continueBtn = dialog.getByRole("button", { name: tCopyPaste.continue });
+    await expect(continueBtn).toBeEnabled();
+    await continueBtn.click();
 
     await dialog
       .getByLabel(tCopyPaste.pasteResponseLabel)
@@ -143,7 +144,7 @@ test.describe("CV editor copy-paste workflow", () => {
     await loginViaUI(page, user);
     const cv = await createTemplateCVForUser(user.id);
 
-    await page.goto(`/?view=editor`);
+    await page.goto(`/cvs/editor`);
     await page.getByText(cv.name).click();
 
     await expect(page.getByText(tEditor.aiEditor)).toBeVisible();
@@ -167,7 +168,7 @@ test.describe("CV editor copy-paste workflow", () => {
     await loginViaUI(page, user);
     const cv = await createTemplateCVForUser(user.id);
 
-    await page.goto(`/?view=editor`);
+    await page.goto(`/cvs/editor`);
     await page.getByText(cv.name).click();
 
     await page.getByRole("button", { name: tEditor.editorTabs.manual, exact: true }).click();
