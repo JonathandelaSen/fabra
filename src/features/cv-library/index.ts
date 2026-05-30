@@ -7,3 +7,4 @@ export {
   normalizePublicCVSlug,
 } from "./utils/public-cv";
 export type { CVDocumentListItem } from "./api/cv-library-api";
+export type { InterviewQuestionResponse } from "@/app/api/interview-questions/responses";
