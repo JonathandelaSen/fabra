@@ -119,16 +119,11 @@ export default function AIActionLauncherIntegrated({
 
   const selectedModel = availableModels.find((m) => m.id === selectedModelId) || availableModels[0];
 
-  const isAvailable = available || selectedProvider === "ollama" || selectedProvider === "mock";
+  const isRunnable = available || selectedProvider === "ollama" || selectedProvider === "mock";
 
   return (
     <div
-      className={cn(
-        "relative p-4 rounded-xl border transition-all duration-300 bg-white/[0.02] flex flex-col gap-3",
-        isAvailable
-          ? "border-white/[0.06] hover:border-violet-500/30 hover:bg-white/[0.04]"
-          : "border-amber-500/10 bg-amber-500/[0.02]"
-      )}
+      className="relative p-4 rounded-xl border transition-all duration-300 bg-white/[0.02] flex flex-col gap-3 border-white/[0.06] hover:border-violet-500/30 hover:bg-white/[0.04]"
     >
       <div className="flex items-start gap-3">
         <div className="w-9 h-9 rounded-lg bg-violet-500/10 flex items-center justify-center shrink-0 border border-violet-500/10">
@@ -139,14 +134,11 @@ export default function AIActionLauncherIntegrated({
             {t("insideLabel")}
           </h4>
           <p className="text-[11px] sm:text-xs text-zinc-400 mt-0.5 leading-relaxed">
-            {isAvailable
-              ? t("insideDesc")
-              : unavailableReason || t("insideDesc")}
+            {t("insideDesc")}
           </p>
         </div>
       </div>
 
-      {isAvailable ? (
         <div className="flex flex-col gap-2 relative">
           {/* Provider Selection */}
           <div className="relative">
@@ -297,38 +289,39 @@ export default function AIActionLauncherIntegrated({
             </AnimatePresence>
           </div>
 
-          <button
-            type="button"
-            onClick={handleIntegratedRun}
-            className="w-full mt-1 py-2 px-4 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold text-xs transition-all active:scale-[0.98] shadow-md shadow-violet-950/20 cursor-pointer"
-          >
-            {t("continue")}
-          </button>
+          {isRunnable ? (
+            <button
+              type="button"
+              onClick={handleIntegratedRun}
+              className="w-full mt-1 py-2 px-4 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold text-xs transition-all active:scale-[0.98] shadow-md shadow-violet-950/20 cursor-pointer"
+            >
+              {t("continue")}
+            </button>
+          ) : (
+            <div className="flex flex-col gap-2 mt-1">
+              <AlertBanner tone={ALERT_BANNER_TONES.WARNING} icon={KeyRound}>
+                {t("configureAI")}
+              </AlertBanner>
+              {onConfigure && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onConfigure?.();
+                  }}
+                  className="w-full py-2 px-4 rounded-lg border border-amber-500/30 hover:bg-amber-500/15 text-amber-300 font-semibold text-xs transition-all cursor-pointer"
+                >
+                  {t("configureAI")}
+                </button>
+              )}
+            </div>
+          )}
           {(configurationError || currentConfigurationError) && (
             <AlertBanner tone={ALERT_BANNER_TONES.WARNING} icon={KeyRound}>
               {configurationError || currentConfigurationError}
             </AlertBanner>
           )}
         </div>
-      ) : (
-        <div className="flex flex-col gap-2 mt-1">
-          <AlertBanner tone={ALERT_BANNER_TONES.WARNING} icon={KeyRound}>
-            {t("configureAI")}
-          </AlertBanner>
-          {onConfigure && (
-            <button
-              type="button"
-              onClick={() => {
-                onClose();
-                onConfigure?.();
-              }}
-              className="w-full py-2 px-4 rounded-lg border border-amber-500/30 hover:bg-amber-500/15 text-amber-300 font-semibold text-xs transition-all cursor-pointer"
-            >
-              {t("configureAI")}
-            </button>
-          )}
-        </div>
-      )}
     </div>
   );
 }
