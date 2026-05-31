@@ -32,7 +32,7 @@ export const messages = {
       providers: {
         gemini: "Google Gemini",
         openai: "OpenAI",
-        ollama: "Ollama (Local)",
+        ollama: "Ollama local",
         mock: "Mock (Dev Only)",
         mockModel: "Mock Model",
       },
@@ -202,7 +202,7 @@ export const messages = {
         activeProviderDesc: "Choose the default AI provider for analyses and generation throughout the app.",
         geminiSectionTitle: "Google Gemini Configuration",
         openaiSectionTitle: "OpenAI Configuration",
-        ollamaSectionTitle: "Ollama Configuration",
+        ollamaSectionTitle: "Ollama local Configuration",
         ollamaBaseUrlLabel: "Base URL",
         ollamaPlaceholder: "http://localhost:11434",
         ollamaModelLabel: "Ollama Model",
@@ -212,7 +212,7 @@ export const messages = {
         providers: {
           gemini: "Gemini",
           openai: "OpenAI",
-          ollama: "Ollama",
+          ollama: "Ollama local",
           mock: "Mock (Dev)",
         },
       },
@@ -1316,7 +1316,7 @@ export const messages = {
       providers: {
         gemini: "Google Gemini",
         openai: "OpenAI",
-        ollama: "Ollama (local)",
+        ollama: "Ollama en local",
         mock: "Mock (Dev Only)",
         mockModel: "Mock Model",
       },
@@ -1484,7 +1484,7 @@ export const messages = {
         openaiPlaceholder: "Pega tu API key de OpenAI",
         geminiSectionTitle: "Configuración de Google Gemini",
         openaiSectionTitle: "Configuración de OpenAI",
-        ollamaSectionTitle: "Configuración de Ollama",
+        ollamaSectionTitle: "Configuración de Ollama en local",
         ollamaBaseUrlLabel: "URL base",
         ollamaPlaceholder: "http://localhost:11434",
         ollamaModelLabel: "Modelo de Ollama",
@@ -1494,7 +1494,7 @@ export const messages = {
         providers: {
           gemini: "Gemini",
           openai: "OpenAI",
-          ollama: "Ollama",
+          ollama: "Ollama en local",
           mock: "Mock (Dev)",
         },
       },

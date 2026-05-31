@@ -70,7 +70,7 @@ export default function AIActionLauncherIntegrated({
   const PROVIDERS = [
     { id: "gemini", label: commonT("gemini"), active: isGeminiActive },
     { id: "openai", label: commonT("openai"), active: isOpenaiActive },
-    { id: "ollama", label: "Ollama (Local)", active: isOllamaActive },
+    { id: "ollama", label: commonT("ollama"), active: isOllamaActive },
     ...(isMockActive ? [{ id: "mock", label: commonT("mock"), active: true }] : []),
   ].filter((p) => p.active || p.id === selectedProvider);
 
