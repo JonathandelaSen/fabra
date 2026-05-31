@@ -232,22 +232,32 @@ export default function JobMatchAnalysisView({
           <div className="flex items-center rounded-lg border border-line bg-panel-subtle p-1">
             <Button
               type="button"
-              variant={view === "list" ? "secondary" : "ghost"}
+              variant="ghost"
               size="sm"
               onClick={goToListView}
               aria-pressed={view === "list"}
+              className={`transition-all duration-200 ${
+                view === "list"
+                  ? "bg-panel-base text-text-main shadow-xs border border-line/40 font-semibold"
+                  : "text-text-soft hover:text-text-main hover:bg-panel-hover/50 border-transparent"
+              }`}
             >
-              <List className="h-4 w-4" />
+              <List className={`h-4 w-4 transition-colors ${view === "list" ? "text-action" : "text-text-soft"}`} />
               {kanbanT("listView")}
             </Button>
             <Button
               type="button"
-              variant={view === "kanban" ? "secondary" : "ghost"}
+              variant="ghost"
               size="sm"
               onClick={goToBoard}
               aria-pressed={view === "kanban"}
+              className={`transition-all duration-200 ${
+                view === "kanban"
+                  ? "bg-panel-base text-text-main shadow-xs border border-line/40 font-semibold"
+                  : "text-text-soft hover:text-text-main hover:bg-panel-hover/50 border-transparent"
+              }`}
             >
-              <Columns3 className="h-4 w-4" />
+              <Columns3 className={`h-4 w-4 transition-colors ${view === "kanban" ? "text-action" : "text-text-soft"}`} />
               {kanbanT("boardView")}
             </Button>
           </div>
