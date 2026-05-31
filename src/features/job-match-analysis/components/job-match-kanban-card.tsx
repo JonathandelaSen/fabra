@@ -3,6 +3,7 @@
 import { CalendarClock, ExternalLink, GripVertical, MoreHorizontal, Trash2 } from "lucide-react";
 import { useDraggable } from "@dnd-kit/core";
 import { useTranslations } from "next-intl";
+import { motion } from "framer-motion";
 import type { JobMatchAnalysisOfferStatus } from "@/app/api/job-match-analyses/responses";
 import { FormattedDate } from "@/components/shared/formatted-date";
 import {
@@ -53,7 +54,8 @@ export function JobMatchKanbanCard({
   const title = analysis.title || analysis.filename.replace(/\.pdf$/i, "");
 
   return (
-    <article
+    <motion.article
+      layout
       ref={isOverlay ? undefined : setNodeRef}
       className={cn(
         "group rounded-lg border border-line bg-panel-raised p-3 shadow-sm transition-colors hover:border-action-border/60 hover:bg-panel-hover",
@@ -130,6 +132,6 @@ export function JobMatchKanbanCard({
           </span>
         )}
       </div>
-    </article>
+    </motion.article>
   );
 }
