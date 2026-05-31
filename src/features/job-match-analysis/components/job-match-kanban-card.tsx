@@ -44,21 +44,17 @@ export function JobMatchKanbanCard({
   const common = useTranslations("common");
   const navigation = useTranslations("navigation");
   const status = getJobMatchKanbanStatus(analysis);
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
+  const { attributes, listeners, setNodeRef, isDragging } =
     useDraggable({
       id: analysis.id,
       data: { status },
       disabled: isOverlay,
     });
   const title = analysis.title || analysis.filename.replace(/\.pdf$/i, "");
-  const style = transform && !isOverlay
-    ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
-    : undefined;
 
   return (
     <article
       ref={isOverlay ? undefined : setNodeRef}
-      style={style}
       className={cn(
         "group rounded-lg border border-line bg-panel-raised p-3 shadow-sm transition-colors hover:border-action-border/60 hover:bg-panel-hover",
         isDragging && "opacity-30 border-dashed border-line bg-panel-base/40 shadow-none pointer-events-none select-none",

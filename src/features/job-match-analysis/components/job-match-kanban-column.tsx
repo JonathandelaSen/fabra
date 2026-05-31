@@ -6,11 +6,13 @@ import type { WheelEvent } from "react";
 import type { JobMatchAnalysisOfferStatus } from "@/app/api/job-match-analyses/responses";
 import { cn } from "@/lib/utils";
 import type { JobMatchAnalysisSummary } from "../api/job-match-analysis-api";
+import { getJobMatchKanbanStatus } from "./job-match-kanban-utils";
 
 interface JobMatchKanbanColumnProps {
   status: JobMatchAnalysisOfferStatus;
   items: JobMatchAnalysisSummary[];
   children: React.ReactNode;
+  activeAnalysis?: JobMatchAnalysisSummary | null;
 }
 
 const statusAccent: Record<JobMatchAnalysisOfferStatus, string> = {
@@ -50,6 +52,7 @@ export function JobMatchKanbanColumn({
   status,
   items,
   children,
+  activeAnalysis = null,
 }: JobMatchKanbanColumnProps) {
   const navigation = useTranslations("navigation");
   const t = useTranslations("analysisFlow.kanban");
@@ -57,6 +60,24 @@ export function JobMatchKanbanColumn({
     id: jobMatchKanbanDroppableId(status),
   });
   const isTerminal = status === "rejected" || status === "discarded";
+
+  const isTargetColumn =
+    isOver &&
+    activeAnalysis &&
+    getJobMatchKanbanStatus(activeAnalysis) !== status;
+
+  const placeholderElement = activeAnalysis && (
+    <div className="opacity-30 border-dashed border-line bg-panel-base/40 rounded-lg border p-3 select-none pointer-events-none">
+      <span className="line-clamp-2 text-sm font-semibold leading-snug text-text-main opacity-50">
+        {activeAnalysis.title || activeAnalysis.filename.replace(/\.pdf$/i, "")}
+      </span>
+      <div className="mt-3 flex items-center justify-between gap-2 opacity-50">
+        <span className="rounded-md border px-2 py-0.5 text-xs font-bold border-zinc-700 bg-zinc-800/70 text-zinc-500">
+          {activeAnalysis.aiScore ?? "..."}
+        </span>
+      </div>
+    </div>
+  );
 
   return (
     <section
@@ -91,7 +112,12 @@ export function JobMatchKanbanColumn({
         onWheel={forwardHorizontalWheel}
       >
         {items.length > 0 ? (
-          children
+          <>
+            {children}
+            {isTargetColumn && placeholderElement}
+          </>
+        ) : isTargetColumn ? (
+          placeholderElement
         ) : (
           <div className="flex min-h-24 flex-1 items-center justify-center rounded-md border border-dashed border-line text-xs text-text-muted">
             {t("emptyColumn")}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   DndContext,
   PointerSensor,
@@ -50,24 +50,46 @@ export function JobMatchKanbanBoard({
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [overStatus, setOverStatus] = useState<JobMatchAnalysisOfferStatus | null>(null);
+  const [pendingMoves, setPendingMoves] = useState<Record<string, JobMatchAnalysisOfferStatus>>({});
+
+  // Sync / clear pending moves that have completed in the backend
+  useEffect(() => {
+    setPendingMoves((prev) => {
+      const next = { ...prev };
+      let changed = false;
+      for (const [id, targetStatus] of Object.entries(next)) {
+        const item = analyses.find((a) => a.id === id);
+        if (!item || getJobMatchKanbanStatus(item) === targetStatus) {
+          delete next[id];
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [analyses]);
 
   const columns = useMemo(() => {
+    // 1. Build original columns from props
     const cols = buildJobMatchKanbanColumns(analyses);
-    if (!activeId || !overStatus) return cols;
 
-    const item = analyses.find((a) => a.id === activeId);
-    if (!item) return cols;
-
-    const currentStatus = getJobMatchKanbanStatus(item);
-    if (currentStatus === overStatus) return cols;
-
-    // Temporarily move the card in local view memory during drag to act as a placeholder
-    cols[currentStatus] = cols[currentStatus].filter((a) => a.id !== activeId);
-    if (!cols[overStatus].some((a) => a.id === activeId)) {
-      cols[overStatus] = [...cols[overStatus], item];
+    // 2. Apply any pending moves to columns so the card stays in the target column during network transit
+    for (const [id, targetStatus] of Object.entries(pendingMoves)) {
+      let foundItem: JobMatchAnalysisSummary | null = null;
+      for (const status of JOB_MATCH_KANBAN_STATUSES) {
+        const idx = cols[status].findIndex((a) => a.id === id);
+        if (idx !== -1) {
+          foundItem = cols[status][idx];
+          cols[status] = cols[status].filter((a) => a.id !== id);
+          break;
+        }
+      }
+      if (foundItem) {
+        cols[targetStatus] = [...cols[targetStatus], { ...foundItem, offerStatus: targetStatus }];
+      }
     }
+
     return cols;
-  }, [analyses, activeId, overStatus]);
+  }, [analyses, pendingMoves]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -109,6 +131,9 @@ export function JobMatchKanbanBoard({
       | JobMatchAnalysisOfferStatus
       | undefined;
     if (currentStatus === status) return;
+    
+    // Register the pending move to target column instantly
+    setPendingMoves((prev) => ({ ...prev, [event.active.id]: status }));
     onMove(String(event.active.id), status);
   };
 
@@ -162,6 +187,7 @@ export function JobMatchKanbanBoard({
               key={status}
               status={status}
               items={columns[status]}
+              activeAnalysis={activeId ? analyses.find((a) => a.id === activeId) : null}
             >
               {columns[status].map((analysis) => (
                 <JobMatchKanbanCard
