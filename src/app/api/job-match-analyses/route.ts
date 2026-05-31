@@ -15,10 +15,17 @@ import { parseCreateJobMatchAnalysisRequest } from "./validation";
 import {
   toJobMatchAnalysisSummaryResponse,
   toJobMatchAnalysisDetailResponse,
+  type JobMatchAnalysisOfferStatus,
 } from "./responses";
 import { ok, errorResponse, notFound, badRequest, handleApiError } from "@/modules/shared";
 
 const ROUTE_SOURCE = "api_job_match_analyses";
+
+interface FollowUpTrackingRow {
+  source_job_match_analysis_id: string;
+  status: JobMatchAnalysisOfferStatus;
+  next_action_at: string | null;
+}
 
 export async function GET() {
   try {
@@ -29,7 +36,41 @@ export async function GET() {
     const analyses = await jobMatchAnalysisModule
       .bindRequest(supabase)
       .listJobMatchAnalyses.execute({ userId: user.id });
-    return ok(analyses.map((a) => toJobMatchAnalysisSummaryResponse(presentJobMatchAnalysisSummary(a))));
+    const response = analyses.map((a) =>
+      toJobMatchAnalysisSummaryResponse(presentJobMatchAnalysisSummary(a)),
+    );
+    const analysisIds = response.map((analysis) => analysis.id);
+
+    if (analysisIds.length > 0) {
+      const { data, error } = await supabase
+        .from("follow_ups")
+        .select("source_job_match_analysis_id, status, next_action_at")
+        .eq("user_id", user.id)
+        .in("source_job_match_analysis_id", analysisIds);
+
+      if (error) throw error;
+
+      const trackingByAnalysisId = new Map(
+        ((data ?? []) as FollowUpTrackingRow[])
+          .filter((row) => row.source_job_match_analysis_id)
+          .map((row) => [row.source_job_match_analysis_id, row]),
+      );
+
+      return ok(
+        response.map((analysis) => {
+          const tracking = trackingByAnalysisId.get(analysis.id);
+          return tracking
+            ? {
+                ...analysis,
+                offerStatus: tracking.status,
+                offerNextActionAt: tracking.next_action_at,
+              }
+            : analysis;
+        }),
+      );
+    }
+
+    return ok(response);
   } catch (error: unknown) {
     return handleApiError(error);
   }

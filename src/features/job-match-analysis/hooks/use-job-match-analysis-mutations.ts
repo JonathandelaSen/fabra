@@ -100,6 +100,53 @@ export function useJobMatchAnalysisMutations() {
       },
     }),
 
+    moveAnalysisCard: useMutation({
+      mutationFn: ({
+        id,
+        status,
+      }: {
+        id: string;
+        status: NonNullable<UpdateJobMatchAnalysisInput["offerStatus"]>;
+      }) => updateJobMatchAnalysis({ id, updates: { offerStatus: status } }),
+      onMutate: async ({ id, status }) => {
+        const context = await startOptimisticUpdate(id);
+        queryClient.setQueryData<ListJobMatchAnalysesResponse>(
+          listKey,
+          (current) =>
+            current?.map((item) =>
+              item.id === id ? { ...item, offerStatus: status } : item
+            ) ?? current
+        );
+        queryClient.setQueryData<JobMatchAnalysisDetail>(
+          jobMatchAnalysisQueryKeys.detail(id),
+          (current) =>
+            current ? { ...current, offerStatus: status } : current
+        );
+        return context;
+      },
+      onError: (_error, _variables, context) => rollback(context),
+      onSuccess: (detail) => {
+        queryClient.setQueryData(
+          jobMatchAnalysisQueryKeys.detail(detail.id),
+          detail
+        );
+        queryClient.setQueryData<ListJobMatchAnalysesResponse>(
+          listKey,
+          (current) =>
+            current?.map((item) =>
+              item.id === detail.id
+                ? {
+                    ...item,
+                    offerStatus: detail.offerStatus,
+                    offerNextActionAt: detail.offerNextActionAt,
+                    jobUrl: detail.jobUrl,
+                  }
+                : item
+            ) ?? current
+        );
+      },
+    }),
+
     scoreAnalysis: useMutation({
       mutationFn: ({
         id,

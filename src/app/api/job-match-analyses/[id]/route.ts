@@ -6,8 +6,18 @@ import {
 } from "@/lib/container";
 import { presentJobMatchAnalysis } from "@/modules/job-match-analysis";
 import { parseUpdateJobMatchAnalysisRequest } from "../validation";
-import { toJobMatchAnalysisDetailResponse } from "../responses";
+import {
+  toJobMatchAnalysisDetailResponse,
+  type JobMatchAnalysisOfferStatus,
+} from "../responses";
 import { ok, errorResponse, notFound, handleApiError } from "@/modules/shared";
+
+interface FollowUpTrackingRow {
+  status: JobMatchAnalysisOfferStatus;
+  notes: string | null;
+  next_action: string | null;
+  next_action_at: string | null;
+}
 
 export async function GET(
   _req: NextRequest,
@@ -25,7 +35,31 @@ export async function GET(
     if (!analysis) {
       throw notFound("Job match analysis not found");
     }
-    return ok(toJobMatchAnalysisDetailResponse(presentJobMatchAnalysis(analysis)));
+
+    const response = toJobMatchAnalysisDetailResponse(
+      presentJobMatchAnalysis(analysis),
+    );
+    const { data, error } = await supabase
+      .from("follow_ups")
+      .select("status, notes, next_action, next_action_at")
+      .eq("source_job_match_analysis_id", id)
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (error) throw error;
+    const tracking = data as FollowUpTrackingRow | null;
+
+    return ok(
+      tracking
+        ? {
+            ...response,
+            offerStatus: tracking.status,
+            offerNotes: tracking.notes,
+            offerNextAction: tracking.next_action,
+            offerNextActionAt: tracking.next_action_at,
+          }
+        : response,
+    );
   } catch (error: unknown) {
     return handleApiError(error);
   }

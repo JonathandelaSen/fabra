@@ -4,6 +4,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
 export type AnalysisTab = "summary" | "offer" | "questions" | "chat" | "tracking";
+export type JobMatchAnalysisRouteView = "list" | "kanban";
 
 const VALID_TABS: AnalysisTab[] = ["summary", "offer", "questions", "chat", "tracking"];
 
@@ -18,13 +19,23 @@ export function useJobMatchAnalysisRouteState() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Parse: /job-analyses / [id] / analysis
+  // Parse:
+  // /job-analyses
+  // /job-analyses/[id]
+  // /job-analyses/[id]/analysis
+  // /job-analyses/kanban
+  // /job-analyses/kanban/[id]
+  // /job-analyses/kanban/[id]/analysis
   const segments = pathname.startsWith("/job-analyses/")
     ? pathname.slice("/job-analyses/".length).split("/").map(decodeURIComponent)
     : [];
 
-  const analysisId = segments[0] || null;
-  const isAnalysisView = segments[1] === "analysis";
+  const view: JobMatchAnalysisRouteView =
+    segments[0] === "kanban" ? "kanban" : "list";
+  const analysisId =
+    view === "kanban" ? segments[1] || null : segments[0] || null;
+  const isAnalysisView =
+    view === "kanban" ? segments[2] === "analysis" : segments[1] === "analysis";
   const analysisTab = normalizeTab(searchParams.get("tab"));
 
   const hrefFor = useCallback(
@@ -32,14 +43,17 @@ export function useJobMatchAnalysisRouteState() {
       nextId: string | null,
       analysis = false,
       tab: AnalysisTab = "summary",
+      nextView: JobMatchAnalysisRouteView = view,
     ) => {
-      if (!nextId) return "/job-analyses";
+      const base =
+        nextView === "kanban" ? "/job-analyses/kanban" : "/job-analyses";
+      if (!nextId) return base;
       const encodedId = encodeURIComponent(nextId);
-      if (!analysis) return `/job-analyses/${encodedId}`;
-      if (tab === "summary") return `/job-analyses/${encodedId}/analysis`;
-      return `/job-analyses/${encodedId}/analysis?tab=${tab}`;
+      if (!analysis) return `${base}/${encodedId}`;
+      if (tab === "summary") return `${base}/${encodedId}/analysis`;
+      return `${base}/${encodedId}/analysis?tab=${tab}`;
     },
-    [],
+    [view],
   );
 
   const selectAnalysis = useCallback(
@@ -57,8 +71,20 @@ export function useJobMatchAnalysisRouteState() {
   );
 
   const clearSelection = useCallback(() => {
-    router.replace("/job-analyses");
+    router.replace(hrefFor(null));
+  }, [hrefFor, router]);
+
+  const goToBoard = useCallback(() => {
+    router.push("/job-analyses/kanban");
   }, [router]);
+
+  const goToListView = useCallback(() => {
+    router.push(hrefFor(analysisId, isAnalysisView, analysisTab, "list"));
+  }, [analysisId, analysisTab, hrefFor, isAnalysisView, router]);
+
+  const goToKanbanView = useCallback(() => {
+    router.push(hrefFor(analysisId, isAnalysisView, analysisTab, "kanban"));
+  }, [analysisId, analysisTab, hrefFor, isAnalysisView, router]);
 
   const goToAnalysis = useCallback(
     (tab: AnalysisTab = "summary") => {
@@ -82,6 +108,7 @@ export function useJobMatchAnalysisRouteState() {
   );
 
   return {
+    view,
     analysisId,
     isAnalysisView,
     analysisTab,
@@ -90,6 +117,9 @@ export function useJobMatchAnalysisRouteState() {
     selectAnalysis,
     replaceAnalysis,
     clearSelection,
+    goToBoard,
+    goToListView,
+    goToKanbanView,
     goToAnalysis,
     goToExtraction,
     setAnalysisTab,

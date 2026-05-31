@@ -2,12 +2,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { ArrowLeft, Columns3, List, Search } from "lucide-react";
 import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
 import { DeleteButton } from "@/components/shared/action-buttons";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { InterviewQuestionSummary } from "../types";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
+import { Button } from "@/components/ui/button";
 import {
   useJobMatchAnalysisList,
   useJobMatchAnalysisDetail,
@@ -17,6 +19,7 @@ import { useJobMatchAnalysisRouteState } from "../hooks/use-job-match-analysis-r
 import { useJobMatchCopyPasteApplied } from "../hooks/use-job-match-copy-paste-applied";
 import JobMatchAnalysisList from "./job-match-analysis-list";
 import { JobMatchAnalysisContent } from "./job-match-analysis-content";
+import { JobMatchKanbanBoard } from "./job-match-kanban-board";
 
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 
@@ -43,6 +46,7 @@ export default function JobMatchAnalysisView({
   onInterviewQuestionCreated,
 }: JobMatchAnalysisViewProps) {
   const listT = useTranslations("analysisFlow.lists");
+  const kanbanT = useTranslations("analysisFlow.kanban");
   const alertsT = useTranslations("analysisFlow.alerts");
   const routeState = useJobMatchAnalysisRouteState();
   const listQuery = useJobMatchAnalysisList();
@@ -53,9 +57,12 @@ export default function JobMatchAnalysisView({
     analysisId,
     isAnalysisView,
     analysisTab,
+    view,
     selectAnalysis,
     clearSelection,
     replaceAnalysis,
+    goToBoard,
+    goToListView,
     goToAnalysis,
     goToExtraction,
     setAnalysisTab,
@@ -76,10 +83,15 @@ export default function JobMatchAnalysisView({
     filteredAnalyses.find((analysis) => analysis.id === analysisId)?.id ?? null;
 
   useEffect(() => {
-    if (routeState.pathname === "/job-analyses" && !analysisId && analyses[0]?.id) {
+    if (
+      view === "list" &&
+      routeState.pathname === "/job-analyses" &&
+      !analysisId &&
+      analyses[0]?.id
+    ) {
       replaceAnalysis(analyses[0].id);
     }
-  }, [analysisId, analyses, replaceAnalysis, routeState.pathname]);
+  }, [analysisId, analyses, replaceAnalysis, routeState.pathname, view]);
 
   const selectItem = (id: string) => {
     selectAnalysis(id);
@@ -97,6 +109,21 @@ export default function JobMatchAnalysisView({
         clearSelection();
       }
     }
+  };
+
+  const deleteFromKanban = async (id: string) => {
+    if (!confirm(alertsT("confirmDelete"))) return;
+
+    try {
+      await handleDelete(id);
+    } catch (error) {
+      console.error("Error deleting analysis:", error);
+      alert(alertsT("deleteFailed"));
+    }
+  };
+
+  const moveKanbanCard = (id: string, status: NonNullable<OfferStatus>) => {
+    mutations.moveAnalysisCard.mutate({ id, status });
   };
 
   const deleteSelected = async () => {
@@ -172,12 +199,58 @@ export default function JobMatchAnalysisView({
   );
 
   const hasScore = detail?.aiScore !== null && detail?.aiScore !== undefined;
+  const detailContent = (
+    <JobMatchAnalysisContent
+      analysisId={analysisId}
+      detail={detail}
+      isLoading={detailQuery.isLoading}
+      isAnalysisView={isAnalysisView}
+      hasScore={hasScore}
+      analysisTab={analysisTab}
+      aiApiKey={aiApiKey}
+      hasAIApiKey={hasAIApiKey}
+      filteredInterviewQuestions={filteredInterviewQuestions}
+      onCopyPasteApplied={applyCopyPasteResult}
+      onOpenQuestions={openQuestions}
+      onOpenSettings={onOpenSettings}
+      onScore={runScore}
+      onTabChange={setAnalysisTab}
+      onViewModeChange={(tab) =>
+        tab === "analysis" ? goToAnalysis() : goToExtraction()
+      }
+      onInterviewQuestionCreated={onInterviewQuestionCreated}
+      onUpdateUrl={persistUrl}
+      onUpdateTracking={persistTracking}
+    />
+  );
 
   return (
     <FeatureScreenShell
       title={listT("jobTitle")}
       actions={
         <>
+          <div className="flex items-center rounded-lg border border-line bg-panel-subtle p-1">
+            <Button
+              type="button"
+              variant={view === "list" ? "secondary" : "ghost"}
+              size="sm"
+              onClick={goToListView}
+              aria-pressed={view === "list"}
+            >
+              <List className="h-4 w-4" />
+              {kanbanT("listView")}
+            </Button>
+            <Button
+              type="button"
+              variant={view === "kanban" ? "secondary" : "ghost"}
+              size="sm"
+              onClick={goToBoard}
+              aria-pressed={view === "kanban"}
+            >
+              <Columns3 className="h-4 w-4" />
+              {kanbanT("boardView")}
+            </Button>
+          </div>
           <FeatureHeaderActionButton
             label={listT("newOffer")}
             onClick={onNewAnalysis}
@@ -192,42 +265,57 @@ export default function JobMatchAnalysisView({
         </>
       }
     >
-      <FeatureTwoPaneLayout
-        sidebar={
-          <JobMatchAnalysisList
+      {view === "kanban" && !analysisId ? (
+        <div className="flex h-full min-h-0 flex-col gap-3">
+          <label className="relative block w-full max-w-sm">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-600" />
+            <input
+              type="search"
+              placeholder={listT("searchOffers")}
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              className="h-9 w-full rounded-lg border border-white/10 bg-white/[0.03] py-1.5 pl-9 pr-3 text-xs text-zinc-200 outline-none placeholder:text-zinc-600 focus:border-indigo-500/40"
+            />
+          </label>
+          <JobMatchKanbanBoard
             analyses={filteredAnalyses}
-            selectedId={selectedIdInCurrentList}
             searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            onSelect={selectItem}
             isLoading={listQuery.isLoading}
+            isMoving={mutations.moveAnalysisCard.isPending}
+            onSelect={selectItem}
+            onDelete={(id) => void deleteFromKanban(id)}
+            onMove={moveKanbanCard}
           />
-        }
-        mainClassName="overflow-hidden"
-      >
-        <JobMatchAnalysisContent
-          analysisId={analysisId}
-          detail={detail}
-          isLoading={detailQuery.isLoading}
-          isAnalysisView={isAnalysisView}
-          hasScore={hasScore}
-          analysisTab={analysisTab}
-          aiApiKey={aiApiKey}
-          hasAIApiKey={hasAIApiKey}
-          filteredInterviewQuestions={filteredInterviewQuestions}
-          onCopyPasteApplied={applyCopyPasteResult}
-          onOpenQuestions={openQuestions}
-          onOpenSettings={onOpenSettings}
-          onScore={runScore}
-          onTabChange={setAnalysisTab}
-          onViewModeChange={(tab) =>
-            tab === "analysis" ? goToAnalysis() : goToExtraction()
+        </div>
+      ) : view === "kanban" ? (
+        <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-line bg-panel-base">
+          <div className="shrink-0 border-b border-line px-4 py-3">
+            <Button type="button" variant="ghost" size="sm" onClick={goToBoard}>
+              <ArrowLeft className="h-4 w-4" />
+              {kanbanT("backToBoard")}
+            </Button>
+          </div>
+          <div className="min-h-0 flex-1 overflow-hidden">
+            {detailContent}
+          </div>
+        </div>
+      ) : (
+        <FeatureTwoPaneLayout
+          sidebar={
+            <JobMatchAnalysisList
+              analyses={filteredAnalyses}
+              selectedId={selectedIdInCurrentList}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              onSelect={selectItem}
+              isLoading={listQuery.isLoading}
+            />
           }
-          onInterviewQuestionCreated={onInterviewQuestionCreated}
-          onUpdateUrl={persistUrl}
-          onUpdateTracking={persistTracking}
-        />
-      </FeatureTwoPaneLayout>
+          mainClassName="overflow-hidden"
+        >
+          {detailContent}
+        </FeatureTwoPaneLayout>
+      )}
     </FeatureScreenShell>
   );
 }
