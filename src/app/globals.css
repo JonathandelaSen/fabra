@@ -292,6 +292,22 @@
 
 
 
+.dark .app-glow {
+  position: fixed;
+  left: -120px;
+  bottom: -160px;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklch, var(--primary-1) 14%, transparent),
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
 .sidebar-nav-active {
   background: linear-gradient(
     to top,
