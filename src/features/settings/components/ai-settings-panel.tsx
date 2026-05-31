@@ -26,6 +26,7 @@ import {
   getStoredAIBaseUrlForProvider,
   getStoredAIModel,
   type StoredAIProvider,
+  AI_PROVIDER,
 } from "@/lib/browser-preferences";
 import { useDefaultAISettings } from "../hooks/use-default-ai-settings";
 import { OllamaSettingsCard } from "./ollama-settings-card";
@@ -65,8 +66,8 @@ export function AISettingsPanel({
   const updateState = (updates: Partial<typeof state>) => setState(prev => ({ ...prev, ...updates }));
 
   useEffect(() => {
-    const storedGemini = getStoredAIApiKeyForProvider("gemini", defaultApiKeys);
-    const storedOpenai = getStoredAIApiKeyForProvider("openai", defaultApiKeys);
+    const storedGemini = getStoredAIApiKeyForProvider(AI_PROVIDER.GEMINI, defaultApiKeys);
+    const storedOpenai = getStoredAIApiKeyForProvider(AI_PROVIDER.OPENAI, defaultApiKeys);
     
     setState((prev) => ({
       ...prev,
@@ -78,7 +79,7 @@ export function AISettingsPanel({
   }, [aiProvider, aiApiKey, defaultApiKeys]);
 
   const handleGeminiSave = () => {
-    saveStoredAIApiKeyForProvider("gemini", state.draftGeminiKey);
+    saveStoredAIApiKeyForProvider(AI_PROVIDER.GEMINI, state.draftGeminiKey);
     updateState({ geminiKey: state.draftGeminiKey, geminiSaved: true });
     setTimeout(() => updateState({ geminiSaved: false }), 2200);
 
@@ -91,8 +92,8 @@ export function AISettingsPanel({
   };
 
   const handleGeminiDelete = () => {
-    saveStoredAIApiKeyForProvider("gemini", "");
-    const fallbackGeminiKey = getStoredAIApiKeyForProvider("gemini", defaultApiKeys);
+    saveStoredAIApiKeyForProvider(AI_PROVIDER.GEMINI, "");
+    const fallbackGeminiKey = getStoredAIApiKeyForProvider(AI_PROVIDER.GEMINI, defaultApiKeys);
     updateState({
       geminiKey: fallbackGeminiKey,
       draftGeminiKey: fallbackGeminiKey,
@@ -108,7 +109,7 @@ export function AISettingsPanel({
   };
 
   const handleOpenaiSave = () => {
-    saveStoredAIApiKeyForProvider("openai", state.draftOpenaiKey);
+    saveStoredAIApiKeyForProvider(AI_PROVIDER.OPENAI, state.draftOpenaiKey);
     updateState({ openaiKey: state.draftOpenaiKey, openaiSaved: true });
     setTimeout(() => updateState({ openaiSaved: false }), 2200);
 
@@ -121,8 +122,8 @@ export function AISettingsPanel({
   };
 
   const handleOpenaiDelete = () => {
-    saveStoredAIApiKeyForProvider("openai", "");
-    const fallbackOpenaiKey = getStoredAIApiKeyForProvider("openai", defaultApiKeys);
+    saveStoredAIApiKeyForProvider(AI_PROVIDER.OPENAI, "");
+    const fallbackOpenaiKey = getStoredAIApiKeyForProvider(AI_PROVIDER.OPENAI, defaultApiKeys);
     updateState({
       openaiKey: fallbackOpenaiKey,
       draftOpenaiKey: fallbackOpenaiKey,

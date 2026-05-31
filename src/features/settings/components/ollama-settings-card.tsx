@@ -19,6 +19,7 @@ import {
   type StoredAIDefaultApiKeys,
   type StoredAIDefaultBaseUrls,
   type StoredAIProvider,
+  AI_PROVIDER,
 } from "@/lib/browser-preferences";
 
 interface OllamaSettingsCardProps {
@@ -56,8 +57,8 @@ export function OllamaSettingsCard({
   });
 
   useEffect(() => {
-    const storedUrl = getStoredAIBaseUrlForProvider("ollama", defaultBaseUrls);
-    const storedModel = getStoredAIModelForProvider("ollama");
+    const storedUrl = getStoredAIBaseUrlForProvider(AI_PROVIDER.OLLAMA, defaultBaseUrls);
+    const storedModel = getStoredAIModelForProvider(AI_PROVIDER.OLLAMA);
     setState((prev) => ({
       ...prev,
       url: storedUrl,
@@ -75,8 +76,8 @@ export function OllamaSettingsCard({
     const draftUrl = urlInputRef.current?.value ?? state.draftUrl;
     const draftModel = modelInputRef.current?.value ?? state.draftModel;
 
-    saveStoredAIBaseUrlForProvider("ollama", draftUrl);
-    saveStoredAIModelForProvider("ollama", draftModel);
+    saveStoredAIBaseUrlForProvider(AI_PROVIDER.OLLAMA, draftUrl);
+    saveStoredAIModelForProvider(AI_PROVIDER.OLLAMA, draftModel);
     urlDirtyRef.current = false;
     modelDirtyRef.current = false;
     updateState({
@@ -92,16 +93,16 @@ export function OllamaSettingsCard({
       provider: aiProvider,
       apiKey: getStoredAIApiKeyForProvider(aiProvider, defaultApiKeys),
       baseUrl: getStoredAIBaseUrlForProvider(aiProvider, defaultBaseUrls),
-      model: aiProvider === "ollama" ? draftModel : getStoredAIModel(),
+      model: aiProvider === AI_PROVIDER.OLLAMA ? draftModel : getStoredAIModel(),
     });
   };
 
   const handleDelete = () => {
-    saveStoredAIBaseUrlForProvider("ollama", "");
-    saveStoredAIModelForProvider("ollama", "");
+    saveStoredAIBaseUrlForProvider(AI_PROVIDER.OLLAMA, "");
+    saveStoredAIModelForProvider(AI_PROVIDER.OLLAMA, "");
     urlDirtyRef.current = false;
     modelDirtyRef.current = false;
-    const fallbackUrl = getStoredAIBaseUrlForProvider("ollama", defaultBaseUrls);
+    const fallbackUrl = getStoredAIBaseUrlForProvider(AI_PROVIDER.OLLAMA, defaultBaseUrls);
     updateState({
       url: fallbackUrl,
       draftUrl: fallbackUrl,

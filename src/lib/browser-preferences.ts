@@ -1,6 +1,8 @@
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
+import { AI_PROVIDER } from "@/modules/shared/domain/value-objects/ai-provider.value-object";
 
-export type StoredAIProvider = "gemini" | "mock" | "openai" | "ollama";
+export { AI_PROVIDER };
+export type StoredAIProvider = typeof AI_PROVIDER[keyof typeof AI_PROVIDER];
 export type StoredThemePreference = "light" | "dark";
 export type StoredAIDefaultApiKeys = Partial<Record<StoredAIProvider, string>>;
 export type StoredAIDefaultBaseUrls = Partial<Record<StoredAIProvider, string>>;
@@ -11,7 +13,7 @@ const AI_BASE_URL_STORAGE_KEY = "ats-cv-ai-checker.aiBaseUrl";
 const AI_MODEL_STORAGE_KEY = "ats-cv-ai-checker.aiModel";
 export const AI_SETTINGS_CHANGED_EVENT = "ats-cv-ai-checker.aiSettingsChanged";
 const THEME_STORAGE_KEY = "ats-cv-ai-checker.theme";
-const DEFAULT_AI_PROVIDER: StoredAIProvider = "gemini";
+const DEFAULT_AI_PROVIDER: StoredAIProvider = AI_PROVIDER.GEMINI;
 const DEFAULT_THEME: StoredThemePreference = "dark";
 
 const DEFAULT_AI_MODEL = DEFAULT_GEMINI_MODEL;
@@ -27,7 +29,7 @@ function getLocalStorage() {
 }
 
 function normalizeProvider(value: string | null): StoredAIProvider {
-  return value === "mock" || value === "gemini" || value === "openai" || value === "ollama" ? value : DEFAULT_AI_PROVIDER;
+  return value === AI_PROVIDER.MOCK || value === AI_PROVIDER.GEMINI || value === AI_PROVIDER.OPENAI || value === AI_PROVIDER.OLLAMA ? value : DEFAULT_AI_PROVIDER;
 }
 
 function normalizeTheme(value: string | null): StoredThemePreference {
@@ -74,7 +76,7 @@ export function getStoredAIBaseUrlForProvider(
   defaultBaseUrls: StoredAIDefaultBaseUrls = {},
 ): string {
   const storage = getLocalStorage();
-  const defaultValue = defaultBaseUrls[provider]?.trim() ?? (provider === "ollama" ? "http://localhost:11434" : "");
+  const defaultValue = defaultBaseUrls[provider]?.trim() ?? (provider === AI_PROVIDER.OLLAMA ? "http://localhost:11434" : "");
   if (!storage) return defaultValue;
   const providerKey = `ats-cv-ai-checker.aiBaseUrl.${provider}`;
   const stored = storage.getItem(providerKey);
@@ -100,7 +102,7 @@ export function getAIApiKeyForProvider(
   currentApiKey = "",
   defaultApiKeys: StoredAIDefaultApiKeys = {},
 ): string {
-  if (provider === "mock") return "";
+  if (provider === AI_PROVIDER.MOCK) return "";
   const providerKey = getStoredAIApiKeyForProvider(provider, defaultApiKeys);
   if (providerKey) return providerKey;
   return getStoredAIProvider() === provider ? currentApiKey.trim() : "";
@@ -112,7 +114,7 @@ export function getStoredAIModel() {
 
 export function getStoredAIModelForProvider(provider: StoredAIProvider): string {
   const storage = getLocalStorage();
-  if (!storage) return provider === "gemini" ? DEFAULT_AI_MODEL : "";
+  if (!storage) return provider === AI_PROVIDER.GEMINI ? DEFAULT_AI_MODEL : "";
 
   const providerModel = storage.getItem(`${AI_MODEL_STORAGE_KEY}.${provider}`)?.trim();
   if (providerModel) return providerModel;
@@ -122,7 +124,7 @@ export function getStoredAIModelForProvider(provider: StoredAIProvider): string 
     if (activeModel) return activeModel;
   }
 
-  return provider === "gemini" ? DEFAULT_AI_MODEL : "";
+  return provider === AI_PROVIDER.GEMINI ? DEFAULT_AI_MODEL : "";
 }
 
 export function saveStoredAIModelForProvider(provider: StoredAIProvider, model: string) {
@@ -157,11 +159,11 @@ export function getAIRequestConfigForProvider(
 ): { provider: StoredAIProvider; apiKey: string; baseUrl: string; model: string; error?: string } {
   const apiKey = getAIApiKeyForProvider(provider, currentApiKey, defaultApiKeys);
   const baseUrl = getStoredAIBaseUrlForProvider(provider, defaultBaseUrls);
-  const model = provider === "ollama"
-    ? getStoredAIModelForProvider("ollama")
+  const model = provider === AI_PROVIDER.OLLAMA
+    ? getStoredAIModelForProvider(AI_PROVIDER.OLLAMA)
     : currentModel.trim() || getStoredAIModelForProvider(provider);
 
-  if (provider === "ollama") {
+  if (provider === AI_PROVIDER.OLLAMA) {
     if (!baseUrl) {
       return { provider, apiKey: "", baseUrl, model, error: "Configura la URL local de Ollama antes de realizar esta acción." };
     }
@@ -171,7 +173,7 @@ export function getAIRequestConfigForProvider(
     return { provider, apiKey: "", baseUrl, model };
   }
 
-  if (provider !== "mock" && !apiKey) {
+  if (provider !== AI_PROVIDER.MOCK && !apiKey) {
     return { provider, apiKey, baseUrl, model, error: "Configura tu API key del proveedor de IA." };
   }
 
@@ -293,15 +295,15 @@ export function removeStoredAISettings() {
   storage?.removeItem(AI_API_KEY_STORAGE_KEY);
   storage?.removeItem(AI_BASE_URL_STORAGE_KEY);
   storage?.removeItem(AI_MODEL_STORAGE_KEY);
-  storage?.removeItem("ats-cv-ai-checker.aiApiKey.gemini");
-  storage?.removeItem("ats-cv-ai-checker.aiApiKey.openai");
-  storage?.removeItem("ats-cv-ai-checker.aiApiKey.ollama");
-  storage?.removeItem("ats-cv-ai-checker.aiBaseUrl.gemini");
-  storage?.removeItem("ats-cv-ai-checker.aiBaseUrl.openai");
-  storage?.removeItem("ats-cv-ai-checker.aiBaseUrl.ollama");
-  storage?.removeItem("ats-cv-ai-checker.aiModel.gemini");
-  storage?.removeItem("ats-cv-ai-checker.aiModel.openai");
-  storage?.removeItem("ats-cv-ai-checker.aiModel.ollama");
+  storage?.removeItem(`ats-cv-ai-checker.aiApiKey.${AI_PROVIDER.GEMINI}`);
+  storage?.removeItem(`ats-cv-ai-checker.aiApiKey.${AI_PROVIDER.OPENAI}`);
+  storage?.removeItem(`ats-cv-ai-checker.aiApiKey.${AI_PROVIDER.OLLAMA}`);
+  storage?.removeItem(`ats-cv-ai-checker.aiBaseUrl.${AI_PROVIDER.GEMINI}`);
+  storage?.removeItem(`ats-cv-ai-checker.aiBaseUrl.${AI_PROVIDER.OPENAI}`);
+  storage?.removeItem(`ats-cv-ai-checker.aiBaseUrl.${AI_PROVIDER.OLLAMA}`);
+  storage?.removeItem(`ats-cv-ai-checker.aiModel.${AI_PROVIDER.GEMINI}`);
+  storage?.removeItem(`ats-cv-ai-checker.aiModel.${AI_PROVIDER.OPENAI}`);
+  storage?.removeItem(`ats-cv-ai-checker.aiModel.${AI_PROVIDER.OLLAMA}`);
   notifyAISettingsChanged();
 }
 

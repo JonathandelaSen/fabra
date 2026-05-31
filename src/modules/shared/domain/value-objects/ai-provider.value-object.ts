@@ -1,4 +1,4 @@
-import { badRequest } from "../../infrastructure/http/api-errors";
+import { DomainError } from "../errors/domain-error";
 
 export const AI_PROVIDER = {
   GEMINI: "gemini",
@@ -17,5 +17,5 @@ export function isAIProvider(value: unknown): value is AIProvider {
 
 export function parseAIProvider(value: unknown): AIProvider {
   if (isAIProvider(value)) return value;
-  throw badRequest("Unsupported AI provider.");
+  throw new DomainError("Unsupported AI provider.");
 }
