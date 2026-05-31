@@ -66,7 +66,7 @@ export function ChatMessagesArea({
             <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-cyan-500/10 text-cyan-400">
               <Bot className="size-3.5" />
             </div>
-            <div className="flex items-center gap-2 rounded-2xl rounded-tl-md bg-white/[0.03] px-4 py-2.5 text-sm text-zinc-500">
+            <div className="flex items-center gap-2 rounded-2xl rounded-tl-md bg-panel-subtle px-4 py-2.5 text-sm text-text-muted">
               <Loader2 className="size-3.5 animate-spin" />
               {t("thinking")}
             </div>

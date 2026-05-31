@@ -45,16 +45,16 @@ export default function ExtractionHeader({
   const t = useTranslations("analysisFlow.extraction");
 
   return (
-    <div className="shrink-0 px-4 sm:px-6 py-4 border-b border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="shrink-0 px-4 sm:px-6 py-4 border-b border-line flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div className="flex items-center gap-3">
         <div className="w-9 h-9 rounded-xl bg-indigo-500/15 flex items-center justify-center shrink-0">
           <FileText className="w-4.5 h-4.5 text-indigo-400" />
         </div>
         <div className="min-w-0">
-          <h2 className="text-base sm:text-lg font-semibold text-zinc-100 truncate">
+          <h2 className="text-base sm:text-lg font-semibold text-text-main truncate">
             {filename}
           </h2>
-          <p className="text-[10px] sm:text-xs text-zinc-500 truncate">
+          <p className="text-[10px] sm:text-xs text-text-muted truncate">
             {t("subtitle")}
           </p>
         </div>
@@ -86,7 +86,7 @@ export default function ExtractionHeader({
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 showPdfPreview
                   ? "bg-indigo-500 text-white"
-                  : "text-zinc-400 bg-zinc-800/60 hover:bg-zinc-800 hover:text-zinc-200"
+                  : "text-text-muted bg-panel-control hover:bg-panel-active hover:text-text-main"
               }`}
             >
               <Eye className="w-3.5 h-3.5" />
@@ -110,12 +110,12 @@ export default function ExtractionHeader({
           </>
         )}
         <div className="flex items-center gap-1.5 ml-auto sm:ml-0">
-          <span className="text-[10px] sm:text-xs text-zinc-500 bg-zinc-800/60 px-2 py-1 rounded-md whitespace-nowrap">
+          <span className="text-[10px] sm:text-xs text-text-muted bg-panel-control px-2 py-1 rounded-md whitespace-nowrap">
             {wordCount.toLocaleString()}{" "}
             <span className="hidden xs:inline">{t("words")}</span>
             <span className="xs:hidden">w</span>
           </span>
-          <span className="text-[10px] sm:text-xs text-zinc-500 bg-zinc-800/60 px-2 py-1 rounded-md whitespace-nowrap">
+          <span className="text-[10px] sm:text-xs text-text-muted bg-panel-control px-2 py-1 rounded-md whitespace-nowrap">
             {charCount.toLocaleString()}{" "}
             <span className="hidden xs:inline">{t("characters")}</span>
             <span className="xs:hidden">ch</span>

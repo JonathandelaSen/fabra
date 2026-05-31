@@ -17,15 +17,15 @@ export function CopyPasteWorkflowModalHeader({
 }) {
   const t = useTranslations("analysisFlow.copyPaste");
   return (
-    <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+    <div className="flex items-center justify-between border-b border-line px-5 py-4">
       <div>
-        <h2 className="text-lg font-semibold text-zinc-100">{title}</h2>
-        <p className="mt-1 text-sm text-zinc-500">{intro}</p>
+        <h2 className="text-lg font-semibold text-text-main">{title}</h2>
+        <p className="mt-1 text-sm text-text-muted">{intro}</p>
       </div>
       <button
         type="button"
         onClick={onClose}
-        className="rounded-lg p-2 text-zinc-500 hover:bg-white/10 hover:text-zinc-200"
+        className="rounded-lg p-2 text-text-muted hover:bg-panel-hover hover:text-text-main"
         aria-label={t("close")}
       >
         <X className="h-4 w-4" />

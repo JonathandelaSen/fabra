@@ -25,8 +25,8 @@ export function SectionCard({
       {(title || actions) && (
         <div className="mb-4 flex items-center justify-between">
           {title && (
-            <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-100">
-              {Icon && <Icon className="h-4 w-4 text-zinc-400" />}
+            <h3 className="flex items-center gap-2 text-sm font-semibold text-text-main">
+              {Icon && <Icon className="h-4 w-4 text-text-muted" />}
               {title}
             </h3>
           )}

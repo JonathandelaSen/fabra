@@ -24,7 +24,7 @@ interface IconBoxProps {
 
 const TONE_CLASS_NAMES = {
   [ICON_BOX_TONES.NEUTRAL]:
-    "border-transparent bg-zinc-800/50 text-zinc-500 group-hover:bg-zinc-800/80 group-hover:text-zinc-300",
+    "border-transparent bg-panel-control text-text-muted group-hover:bg-panel-active group-hover:text-text-soft",
   [ICON_BOX_TONES.ACTION]: "border-action-border bg-action-soft text-action-text",
   [ICON_BOX_TONES.SUCCESS]: "border-success-border bg-success-soft text-success-text",
   [ICON_BOX_TONES.WARNING]: "border-warning-border bg-warning-soft text-warning-text",

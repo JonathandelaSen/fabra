@@ -44,7 +44,7 @@ export function ExtractionTextPanel({
       exit={{ opacity: 0, x: 20 }}
       transition={{ duration: 0.15 }}
       className={`
-        flex-1 flex flex-col rounded-2xl border border-white/[0.06] bg-[#0a0a12] overflow-hidden min-h-[300px] lg:min-h-0
+        flex-1 flex flex-col rounded-2xl border border-line bg-panel-base overflow-hidden min-h-[300px] lg:min-h-0
         ${fullscreen ? "fixed inset-4 z-50" : "relative"}
       `}
     >
@@ -56,10 +56,10 @@ export function ExtractionTextPanel({
         className="absolute left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-indigo-500/70 to-transparent shadow-[0_0_10px_rgba(99,102,241,0.7)] z-10 pointer-events-none"
       />
 
-      <div className="shrink-0 flex items-center justify-between px-3 sm:px-4 py-2 border-b border-white/[0.06] bg-white/[0.02]">
+      <div className="shrink-0 flex items-center justify-between px-3 sm:px-4 py-2 border-b border-line bg-panel-subtle">
         <div className="flex items-center gap-2 min-w-0">
           <span className={`w-2 h-2 rounded-full shrink-0 ${parserColor}`} />
-          <span className="text-[10px] sm:text-xs text-zinc-400 font-medium truncate">
+          <span className="text-[10px] sm:text-xs text-text-muted font-medium truncate">
             {t(`parserDescriptions.${parserDescriptionKey}`)}
           </span>
         </div>
@@ -67,7 +67,7 @@ export function ExtractionTextPanel({
           <button
             onClick={onCopy}
             disabled={!currentText}
-            className="flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg text-xs text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06] transition-all disabled:opacity-30"
+            className="flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg text-xs text-text-muted hover:text-text-main hover:bg-panel-hover transition-all disabled:opacity-30"
           >
             {copied ? (
               <Check className="w-3.5 h-3.5 text-emerald-400" />
@@ -80,7 +80,7 @@ export function ExtractionTextPanel({
           </button>
           <button
             onClick={onToggleFullscreen}
-            className="flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg text-xs text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06] transition-all"
+            className="flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg text-xs text-text-muted hover:text-text-main hover:bg-panel-hover transition-all"
           >
             {fullscreen ? (
               <Minimize2 className="w-3.5 h-3.5" />
@@ -103,11 +103,11 @@ export function ExtractionTextPanel({
             </div>
           </div>
         ) : currentText ? (
-          <pre className="text-xs sm:text-sm text-zinc-300 font-mono whitespace-pre-wrap leading-relaxed text-left">
+          <pre className="text-xs sm:text-sm text-text-soft font-mono whitespace-pre-wrap leading-relaxed text-left">
             {currentText}
           </pre>
         ) : (
-          <div className="flex flex-col items-center justify-center h-full py-10 text-zinc-600">
+          <div className="flex flex-col items-center justify-center h-full py-10 text-text-faint">
             <FileText className="w-8 h-8 sm:w-10 sm:h-10 mb-3 opacity-30" />
             <p className="text-xs sm:text-sm text-center px-4">{t("noText")}</p>
           </div>

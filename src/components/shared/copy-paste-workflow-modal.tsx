@@ -85,7 +85,7 @@ export default function CopyPasteWorkflowModal<TPreview>({
       aria-modal="true"
       aria-label={title}
     >
-      <div className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-950 shadow-2xl">
+      <div className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-xl border border-line bg-modal shadow-2xl">
         <CopyPasteWorkflowModalHeader
           title={title}
           intro={intro}
@@ -132,11 +132,11 @@ export default function CopyPasteWorkflowModal<TPreview>({
           {step === "review" && previewData && renderPreview(previewData)}
         </div>
 
-        <div className="flex justify-end gap-3 border-t border-white/10 px-5 py-4">
+        <div className="flex justify-end gap-3 border-t border-line px-5 py-4">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg px-4 py-2 text-sm font-semibold text-zinc-400 hover:bg-white/10 hover:text-zinc-200"
+            className="rounded-lg px-4 py-2 text-sm font-semibold text-text-muted hover:bg-panel-hover hover:text-text-main"
           >
             {t("cancel")}
           </button>
@@ -165,9 +165,9 @@ export function CopyPastePreviewItem({
   value: string | number;
 }) {
   return (
-    <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
-      <p className="text-xs font-medium uppercase text-zinc-500">{label}</p>
-      <p className="mt-1 text-lg font-semibold text-zinc-100">{value}</p>
+    <div className="rounded-lg border border-line bg-panel-subtle p-4">
+      <p className="text-xs font-medium uppercase text-text-muted">{label}</p>
+      <p className="mt-1 text-lg font-semibold text-text-main">{value}</p>
     </div>
   );
 }

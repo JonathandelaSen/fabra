@@ -18,7 +18,7 @@ export function ChatBubble({ message, formatTime }: ChatBubbleProps) {
         className={`flex size-7 shrink-0 items-center justify-center rounded-full ${
           isAssistant
             ? "bg-cyan-500/10 text-cyan-400"
-            : "bg-white/10 text-zinc-400"
+            : "bg-panel-control text-text-muted"
         }`}
       >
         {isAssistant ? (
@@ -35,8 +35,8 @@ export function ChatBubble({ message, formatTime }: ChatBubbleProps) {
         <div
           className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
             isAssistant
-              ? "rounded-tl-md bg-white/[0.03] text-zinc-300"
-              : "rounded-tr-md bg-cyan-500/10 text-zinc-200"
+              ? "rounded-tl-md bg-panel-subtle text-text-soft"
+              : "rounded-tr-md bg-cyan-500/10 text-text-main"
           }`}
         >
           {isAssistant ? (

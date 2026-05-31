@@ -10,10 +10,10 @@ export function ChatMarkdown({ content }: { content: string }) {
       components={{
         p: ({ children }) => <p className="mb-3 last:mb-0">{children}</p>,
         strong: ({ children }) => (
-          <strong className="font-semibold text-zinc-100">{children}</strong>
+          <strong className="font-semibold text-text-main">{children}</strong>
         ),
         em: ({ children }) => (
-          <em className="italic text-zinc-300">{children}</em>
+          <em className="italic text-text-soft">{children}</em>
         ),
         ul: ({ children }) => (
           <ul className="mb-3 ml-4 list-disc space-y-1 last:mb-0">
@@ -25,7 +25,7 @@ export function ChatMarkdown({ content }: { content: string }) {
             {children}
           </ol>
         ),
-        li: ({ children }) => <li className="text-zinc-300">{children}</li>,
+        li: ({ children }) => <li className="text-text-soft">{children}</li>,
         code: ({ className, children }) => {
           const isBlock = className?.includes("language-");
           if (isBlock) {
@@ -36,29 +36,29 @@ export function ChatMarkdown({ content }: { content: string }) {
             );
           }
           return (
-            <code className="rounded bg-white/10 px-1.5 py-0.5 text-xs text-emerald-300">
+            <code className="rounded bg-panel-control px-1.5 py-0.5 text-xs text-emerald-300">
               {children}
             </code>
           );
         },
         pre: ({ children }) => <pre className="mb-3 last:mb-0">{children}</pre>,
         h1: ({ children }) => (
-          <h1 className="mb-2 text-base font-bold text-zinc-100">{children}</h1>
+          <h1 className="mb-2 text-base font-bold text-text-main">{children}</h1>
         ),
         h2: ({ children }) => (
-          <h2 className="mb-2 text-sm font-bold text-zinc-100">{children}</h2>
+          <h2 className="mb-2 text-sm font-bold text-text-main">{children}</h2>
         ),
         h3: ({ children }) => (
-          <h3 className="mb-1.5 text-sm font-semibold text-zinc-200">
+          <h3 className="mb-1.5 text-sm font-semibold text-text-main">
             {children}
           </h3>
         ),
         blockquote: ({ children }) => (
-          <blockquote className="mb-3 border-l-2 border-cyan-500/30 pl-3 italic text-zinc-400 last:mb-0">
+          <blockquote className="mb-3 border-l-2 border-cyan-500/30 pl-3 italic text-text-muted last:mb-0">
             {children}
           </blockquote>
         ),
-        hr: () => <hr className="my-3 border-white/10" />,
+        hr: () => <hr className="my-3 border-line" />,
       }}
     >
       {content}

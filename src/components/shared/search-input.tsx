@@ -22,17 +22,17 @@ export function SearchInput({
 }: SearchInputProps) {
   return (
     <div className={`relative ${className}`}>
-      <Search className="absolute top-2.5 left-3 h-4 w-4 text-zinc-500" />
+      <Search className="absolute top-2.5 left-3 h-4 w-4 text-text-muted" />
       <input
         ref={inputRef}
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="h-9 w-full rounded-lg border border-white/[0.06] bg-white/[0.02] pl-9 pr-12 text-sm text-zinc-100 placeholder-zinc-500 transition-all focus:border-indigo-500/30 focus:bg-white/[0.04] focus:outline-none"
+        className="h-9 w-full rounded-lg border border-line bg-field pl-9 pr-12 text-sm text-text-main placeholder-text-muted transition-all focus:border-ring/30 focus:bg-panel-hover focus:outline-none"
       />
       {shortcutKey && (
-        <kbd className="pointer-events-none absolute top-2 right-3 hidden h-5 select-none items-center gap-0.5 rounded border border-white/[0.08] bg-zinc-900 px-1.5 font-mono text-[10px] font-medium text-zinc-500 md:inline-flex">
+        <kbd className="pointer-events-none absolute top-2 right-3 hidden h-5 select-none items-center gap-0.5 rounded border border-line bg-panel-elevated px-1.5 font-mono text-[10px] font-medium text-text-muted md:inline-flex">
           <span className="text-xs">⌘</span>
           {shortcutKey}
         </kbd>

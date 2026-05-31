@@ -123,17 +123,17 @@ export default function AIActionLauncherIntegrated({
 
   return (
     <div
-      className="relative p-4 rounded-xl border transition-all duration-300 bg-white/[0.02] flex flex-col gap-3 border-white/[0.06] hover:border-violet-500/30 hover:bg-white/[0.04]"
+      className="relative p-4 rounded-xl border transition-all duration-300 bg-panel-subtle flex flex-col gap-3 border-line hover:border-violet-500/30 hover:bg-panel-hover"
     >
       <div className="flex items-start gap-3">
         <div className="w-9 h-9 rounded-lg bg-violet-500/10 flex items-center justify-center shrink-0 border border-violet-500/10">
           <Sparkles className="w-4 h-4 text-violet-400" />
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="text-xs sm:text-sm font-semibold text-zinc-200">
+          <h4 className="text-xs sm:text-sm font-semibold text-text-main">
             {t("insideLabel")}
           </h4>
-          <p className="text-[11px] sm:text-xs text-zinc-400 mt-0.5 leading-relaxed">
+          <p className="text-[11px] sm:text-xs text-text-muted mt-0.5 leading-relaxed">
             {t("insideDesc")}
           </p>
         </div>
@@ -148,15 +148,15 @@ export default function AIActionLauncherIntegrated({
                 setShowProviderDropdown(!showProviderDropdown);
                 setShowModelDropdown(false);
               }}
-              className="w-full h-9 px-3 rounded-lg bg-black/40 border border-white/[0.06] hover:border-white/[0.12] text-xs text-zinc-300 flex items-center justify-between transition-all cursor-pointer"
+              className="w-full h-9 px-3 rounded-lg bg-field border border-line hover:border-line-default text-xs text-text-soft flex items-center justify-between transition-all cursor-pointer"
             >
               <span className="flex items-center gap-2">
-                <Building2 className="w-3.5 h-3.5 text-zinc-500" />
+                <Building2 className="w-3.5 h-3.5 text-text-muted" />
                 <span className="font-medium">{selectedProviderLabel}</span>
               </span>
               <ChevronDown
                 className={cn(
-                  "w-3.5 h-3.5 text-zinc-500 transition-transform duration-300",
+                  "w-3.5 h-3.5 text-text-muted transition-transform duration-300",
                   showProviderDropdown && "rotate-180"
                 )}
               />
@@ -169,7 +169,7 @@ export default function AIActionLauncherIntegrated({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute z-[60] w-full mt-1.5 rounded-lg border border-white/[0.08] bg-[#0c0c16] shadow-xl overflow-hidden"
+                  className="absolute z-[60] w-full mt-1.5 rounded-lg border border-line bg-panel-overlay shadow-xl overflow-hidden"
                 >
                   <div className="max-h-48 overflow-y-auto p-1 scrollbar-thin scrollbar-thumb-zinc-800">
                     {PROVIDERS.map((provider) => (
@@ -198,7 +198,7 @@ export default function AIActionLauncherIntegrated({
                           "w-full text-left px-3 py-2 rounded-md text-xs flex items-center justify-between transition-all cursor-pointer",
                           provider.id === selectedProvider
                             ? "bg-violet-500/10 text-violet-300 font-semibold"
-                            : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"
+                            : "text-text-muted hover:bg-panel-hover hover:text-text-main"
                         )}
                       >
                         <span>{provider.label}</span>
@@ -221,23 +221,23 @@ export default function AIActionLauncherIntegrated({
                 setShowModelDropdown(!showModelDropdown);
                 setShowProviderDropdown(false);
               }}
-              className="w-full h-9 px-3 rounded-lg bg-black/40 border border-white/[0.06] hover:border-white/[0.12] text-xs text-zinc-300 flex items-center justify-between transition-all cursor-pointer"
+              className="w-full h-9 px-3 rounded-lg bg-field border border-line hover:border-line-default text-xs text-text-soft flex items-center justify-between transition-all cursor-pointer"
             >
               <span className="flex items-center gap-2">
-                <Cpu className="w-3.5 h-3.5 text-zinc-500" />
+                <Cpu className="w-3.5 h-3.5 text-text-muted" />
                 <span className="font-medium">
                   {selectedModel?.label || "Select model"}
                 </span>
               </span>
               <span className="flex items-center gap-1.5">
                 {selectedModel?.badge && (
-                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-500 border border-white/[0.04]">
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-panel-control text-text-muted border border-line">
                     {selectedModel.badge}
                   </span>
                 )}
                 <ChevronDown
                   className={cn(
-                    "w-3.5 h-3.5 text-zinc-500 transition-transform duration-300",
+                    "w-3.5 h-3.5 text-text-muted transition-transform duration-300",
                     showModelDropdown && "rotate-180"
                   )}
                 />
@@ -251,7 +251,7 @@ export default function AIActionLauncherIntegrated({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute z-[50] w-full mt-1.5 rounded-lg border border-white/[0.08] bg-[#0c0c16] shadow-xl overflow-hidden"
+                  className="absolute z-[50] w-full mt-1.5 rounded-lg border border-line bg-panel-overlay shadow-xl overflow-hidden"
                 >
                   <div className="max-h-48 overflow-y-auto p-1 scrollbar-thin scrollbar-thumb-zinc-800">
                     {availableModels.map((model) => (
@@ -267,13 +267,13 @@ export default function AIActionLauncherIntegrated({
                           "w-full text-left px-3 py-2 rounded-md text-xs flex items-center justify-between transition-all cursor-pointer",
                           model.id === selectedModelId
                             ? "bg-violet-500/10 text-violet-300 font-semibold"
-                            : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"
+                            : "text-text-muted hover:bg-panel-hover hover:text-text-main"
                         )}
                       >
                         <span className="flex items-center gap-2">
                           <span>{model.label}</span>
                           {model.badge && (
-                            <span className="text-[8px] scale-90 px-1 py-0.2 bg-zinc-800/80 text-zinc-400 border border-white/[0.04] rounded">
+                            <span className="text-[8px] scale-90 px-1 py-0.2 bg-panel-control text-text-muted border border-line rounded">
                               {model.badge}
                             </span>
                           )}

@@ -26,7 +26,7 @@ export type LabelBadgeSize =
   (typeof LABEL_BADGE_SIZES)[keyof typeof LABEL_BADGE_SIZES];
 
 const TONE_CLASS_NAMES = {
-  [LABEL_BADGE_TONES.NEUTRAL]: "border-zinc-500/20 bg-zinc-500/10 text-zinc-200",
+  [LABEL_BADGE_TONES.NEUTRAL]: "border-line-default bg-panel-subtle text-text-soft",
   [LABEL_BADGE_TONES.SUCCESS]: "border-emerald-500/20 bg-emerald-500/10 text-emerald-400",
   [LABEL_BADGE_TONES.WARNING]: "border-amber-500/20 bg-amber-500/10 text-amber-400",
   [LABEL_BADGE_TONES.DANGER]: "border-rose-500/20 bg-rose-500/10 text-rose-400",

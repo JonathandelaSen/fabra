@@ -19,13 +19,13 @@ export function CopyPasteWorkflowCopyStep({
   const t = useTranslations("analysisFlow.copyPaste");
   return (
     <div className="space-y-4">
-      <textarea readOnly value={isPreparing ? t("preparing") : prompt} className="h-80 w-full resize-none rounded-lg border border-white/10 bg-black/30 p-4 text-sm text-zinc-300 focus:outline-none" />
+      <textarea readOnly value={isPreparing ? t("preparing") : prompt} className="h-80 w-full resize-none rounded-lg border border-line bg-field-code p-4 text-sm text-text-soft focus:outline-none" />
       <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
         <button type="button" onClick={onCopyPrompt} disabled={!prompt || isPreparing} className="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-400 disabled:opacity-50">
           {copiedPrompt ? <Check className="h-4 w-4" /> : <Clipboard className="h-4 w-4" />}
           {copiedPrompt ? t("promptCopied") : t("copyPrompt")}
         </button>
-        <button type="button" onClick={onContinue} disabled={!prompt || isPreparing} className="rounded-lg border border-white/10 px-4 py-2 text-sm font-semibold text-zinc-200 hover:bg-white/10 disabled:opacity-50">
+        <button type="button" onClick={onContinue} disabled={!prompt || isPreparing} className="rounded-lg border border-line px-4 py-2 text-sm font-semibold text-text-main hover:bg-panel-hover disabled:opacity-50">
           {t("continue")}
         </button>
       </div>
@@ -47,10 +47,10 @@ export function CopyPasteWorkflowPasteStep({
   const t = useTranslations("analysisFlow.copyPaste");
   return (
     <div className="space-y-4">
-      <label htmlFor="copy-paste-response" className="block text-sm font-medium text-zinc-300">
+      <label htmlFor="copy-paste-response" className="block text-sm font-medium text-text-soft">
         {t("pasteResponseLabel")}
       </label>
-      <textarea id="copy-paste-response" value={rawResponse} onChange={(event) => onRawResponseChange(event.target.value)} className="h-72 w-full resize-none rounded-lg border border-white/10 bg-black/30 p-4 text-sm text-zinc-300 focus:border-indigo-500/50 focus:outline-none" />
+      <textarea id="copy-paste-response" value={rawResponse} onChange={(event) => onRawResponseChange(event.target.value)} className="h-72 w-full resize-none rounded-lg border border-line bg-field-code p-4 text-sm text-text-soft focus:border-ring/50 focus:outline-none" />
       <div className="flex justify-end">
         <button type="button" onClick={onValidateResponse} disabled={isPreviewing || !rawResponse.trim()} className="inline-flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-400 disabled:opacity-50">
           {isPreviewing && <Loader2 className="h-4 w-4 animate-spin" />}

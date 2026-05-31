@@ -128,7 +128,7 @@ export default function Sidebar({
           x: isMobile && collapsed ? -280 : 0,
         }}
         transition={{ duration: 0.2, ease: "easeInOut" }}
-        className={`h-screen flex flex-col border-r border-white/[0.06] bg-[#0d0d14]/95 backdrop-blur-xl shrink-0 overflow-hidden z-50 ${
+        className={`h-screen flex flex-col border-r border-sidebar-border bg-sidebar/95 backdrop-blur-xl shrink-0 overflow-hidden z-50 ${
           isMobile ? "fixed left-0 top-0 bottom-0" : "relative"
         }`}
       >
@@ -144,7 +144,7 @@ export default function Sidebar({
                 <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shrink-0">
                   <FileText className="w-3.5 h-3.5 text-white" />
                 </div>
-                <span className="font-semibold text-sm text-zinc-100 truncate">
+                <span className="font-semibold text-sm text-sidebar-foreground truncate">
                   {common("appName")}
                 </span>
               </motion.div>
@@ -152,7 +152,7 @@ export default function Sidebar({
           </AnimatePresence>
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="w-7 h-7 rounded-md flex items-center justify-center text-zinc-500 hover:text-zinc-300 hover:bg-white/5 transition-colors shrink-0"
+            className="w-7 h-7 rounded-md flex items-center justify-center text-text-muted hover:text-text-soft hover:bg-panel-hover transition-colors shrink-0"
           >
             {collapsed ? (
               <ChevronRight className="w-4 h-4" />
@@ -167,8 +167,8 @@ export default function Sidebar({
             onClick={onOpenHome}
             className={`w-full flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${
               activeView === "home"
-                ? "bg-white/[0.08] text-zinc-100"
-                : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"
+                ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                : "text-text-muted hover:bg-panel-hover hover:text-text-soft"
             } ${collapsed ? "justify-center" : ""}`}
           >
             <Home className="w-4 h-4 shrink-0" />

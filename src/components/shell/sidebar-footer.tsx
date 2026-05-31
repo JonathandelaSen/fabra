@@ -25,12 +25,12 @@ export default function SidebarFooter({
   onOpenAdmin,
 }: SidebarFooterProps) {
   return (
-    <div className="px-3 py-3 border-t border-white/[0.06] shrink-0 space-y-3">
+    <div className="px-3 py-3 border-t border-sidebar-border shrink-0 space-y-3">
       <button
         onClick={onOpenSettings}
         className={`
           w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
-          ${activeView === "settings" ? "bg-white/[0.08] text-zinc-100" : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"}
+          ${activeView === "settings" ? "bg-sidebar-accent text-sidebar-accent-foreground" : "text-text-muted hover:bg-panel-hover hover:text-text-soft"}
           ${collapsed ? "justify-center p-2" : "px-3 py-2.5 text-sm"}
         `}
         title={settingsLabel}

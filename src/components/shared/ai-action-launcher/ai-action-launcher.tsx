@@ -70,7 +70,7 @@ export default function AIActionLauncher({
       <PopoverContent
         align="end"
         sideOffset={8}
-        className="w-[360px] xs:w-[380px] p-0 overflow-hidden bg-[#0c0c16]/95 backdrop-blur-xl border border-white/[0.08] rounded-2xl shadow-2xl shadow-black/80 animate-in fade-in-0 zoom-in-95 duration-200"
+        className="w-[360px] xs:w-[380px] p-0 overflow-hidden bg-panel-overlay/95 backdrop-blur-xl border border-line rounded-2xl shadow-2xl shadow-black/80 animate-in fade-in-0 zoom-in-95 duration-200"
       >
         <AIActionLauncherHeader />
 

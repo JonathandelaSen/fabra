@@ -45,8 +45,8 @@ export default function ExtractionParserTabs({
               flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 text-left flex-1 border
               ${
                 activeTab === parser.key
-                  ? "bg-white/[0.07] border-white/[0.12] shadow-xl ring-1 ring-white/[0.05]"
-                  : "bg-white/[0.015] border-transparent hover:bg-white/[0.035] hover:border-white/[0.05]"
+                  ? "bg-panel-hover border-line-default shadow-xl ring-1 ring-line"
+                  : "bg-panel-subtle/40 border-transparent hover:bg-panel-hover hover:border-line"
               }
             `}
           >
@@ -59,7 +59,7 @@ export default function ExtractionParserTabs({
               <div className="flex items-center justify-between gap-1.5 flex-wrap">
                 <p
                   className={`text-xs sm:text-sm font-semibold truncate ${
-                    activeTab === parser.key ? "text-zinc-50" : "text-zinc-400"
+                    activeTab === parser.key ? "text-text-main" : "text-text-muted"
                   }`}
                 >
                   {t(parser.labelKey)}
@@ -68,7 +68,7 @@ export default function ExtractionParserTabs({
                   {t(parser.badgeKey)}
                 </span>
               </div>
-              <p className="text-[10px] sm:text-[11px] text-zinc-500 truncate">
+              <p className="text-[10px] sm:text-[11px] text-text-muted truncate">
                 {hasError
                   ? t("error")
                   : hasContent

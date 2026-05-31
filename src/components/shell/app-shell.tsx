@@ -908,7 +908,7 @@ export default function AppShell({
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#09090f]">
+    <div className="flex h-screen overflow-hidden bg-canvas">
       <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
         <div className="absolute top-[-20%] left-[10%] w-[600px] h-[600px] bg-indigo-600/[0.07] rounded-full blur-[150px]" />
         <div className="absolute bottom-[-10%] right-[15%] w-[500px] h-[500px] bg-violet-600/[0.05] rounded-full blur-[130px]" />

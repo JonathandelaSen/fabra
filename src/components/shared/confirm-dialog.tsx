@@ -41,11 +41,11 @@ export function ConfirmDialog({
       role="dialog"
       aria-modal="true"
     >
-      <div className="flex max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-xl border border-white/10 bg-zinc-950 shadow-2xl animate-in fade-in-50 zoom-in-95 duration-200">
-        <div className="flex items-center justify-between border-b border-white/[0.06] px-5 py-4">
+      <div className="flex max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-xl border border-line bg-modal shadow-2xl animate-in fade-in-50 zoom-in-95 duration-200">
+        <div className="flex items-center justify-between border-b border-line px-5 py-4">
           <div
             className={`flex items-center gap-2 font-semibold text-sm ${
-              variant === "danger" ? "text-rose-400" : "text-zinc-200"
+              variant === "danger" ? "text-danger" : "text-text-main"
             }`}
           >
             <AlertTriangle className="h-4.5 w-4.5" />
@@ -58,13 +58,13 @@ export function ConfirmDialog({
         </div>
 
         <div className="p-5 space-y-2">
-          <h3 className="text-base font-bold text-zinc-100 leading-snug">
+          <h3 className="text-base font-bold text-text-main leading-snug">
             {title}
           </h3>
-          <p className="text-sm text-zinc-400 leading-relaxed">{description}</p>
+          <p className="text-sm text-text-muted leading-relaxed">{description}</p>
         </div>
 
-        <div className="flex justify-end gap-2.5 border-t border-white/[0.06] bg-white/[0.01] px-5 py-3.5">
+        <div className="flex justify-end gap-2.5 border-t border-line bg-panel-subtle px-5 py-3.5">
           <IconTextButton
             icon={X}
             onClick={onCancel}

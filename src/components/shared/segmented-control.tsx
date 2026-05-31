@@ -21,7 +21,7 @@ export function SegmentedControl<T extends string>({
 }: SegmentedControlProps<T>) {
   return (
     <div
-      className={`flex rounded-lg border border-white/[0.06] bg-white/[0.035] p-1 ${className}`}
+      className={`flex rounded-lg border border-line bg-panel-control p-1 ${className}`}
     >
       {options.map((option) => (
         <button
@@ -30,13 +30,13 @@ export function SegmentedControl<T extends string>({
           onClick={() => onChange(option.value)}
           className={`flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
             value === option.value
-              ? "bg-white/[0.10] text-zinc-100"
-              : "text-zinc-500 hover:text-zinc-300"
+              ? "bg-panel-base text-text-main shadow-sm"
+              : "text-text-muted hover:text-text-soft"
           }`}
         >
           {option.label}
           {option.count !== undefined && (
-            <span className="ml-1 text-zinc-600">({option.count})</span>
+            <span className="ml-1 text-text-faint">({option.count})</span>
           )}
         </button>
       ))}

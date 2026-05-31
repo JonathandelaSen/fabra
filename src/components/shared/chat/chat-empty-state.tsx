@@ -17,10 +17,10 @@ export function ChatEmptyState({ onNew }: ChatEmptyStateProps) {
         <MessageCircle className="size-6" />
       </div>
       <div>
-        <p className="text-sm font-medium text-zinc-300">
+        <p className="text-sm font-medium text-text-soft">
           {t("startTitle")}
         </p>
-        <p className="mt-1 text-xs text-zinc-600">
+        <p className="mt-1 text-xs text-text-faint">
           {t("startDescription")}
         </p>
       </div>

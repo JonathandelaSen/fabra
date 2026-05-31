@@ -35,7 +35,7 @@ export default function SidebarNavSection({
       {!collapsed && (
         <button
           onClick={onToggle}
-          className="w-full flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-zinc-500 hover:text-zinc-400 hover:bg-white/[0.03] transition-colors mt-1"
+          className="w-full flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-text-muted hover:text-text-soft hover:bg-panel-hover transition-colors mt-1"
         >
           <Icon className="w-3 h-3 shrink-0" />
           <span className="flex-1 text-left">{label}</span>
