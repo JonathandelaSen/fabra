@@ -183,11 +183,7 @@ export default function AIAnalysisView({
             onSaveUrl={actions.handleSaveUrl}
             isSavingUrl={actions.isSavingUrl}
             offerStatus={actions.offerStatus}
-            offerNextAction={actions.offerNextAction}
-            offerNextActionAt={actions.offerNextActionAt}
             onTabChange={setActiveTab}
-            onOfferStatusChange={actions.handleSaveTrackingStatus}
-            isSavingTracking={actions.isSavingTracking}
           />
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

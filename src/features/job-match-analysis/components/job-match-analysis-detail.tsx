@@ -190,11 +190,7 @@ export default function JobMatchAnalysisDetail({
             onSaveUrl={handleSaveUrl}
             isSavingUrl={isSavingUrl}
             offerStatus={offerStatus}
-            offerNextAction={offerNextAction}
-            offerNextActionAt={offerNextActionAt}
             onTabChange={onTabChange}
-            onOfferStatusChange={handleSaveTrackingStatus}
-            isSavingTracking={isSavingTracking}
           />
 
           <Tabs
