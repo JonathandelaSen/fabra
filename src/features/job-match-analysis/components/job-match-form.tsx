@@ -83,7 +83,7 @@ export default function JobMatchForm({
           <input
             type="url"
             placeholder={t("jobUrlPlaceholder")}
-            className="w-full h-10 px-4 rounded-xl bg-[#0a0a12] border border-white/[0.06] text-sm text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500/40 focus:ring-2 focus:ring-emerald-500/10 transition-all"
+            className="w-full h-10 px-4 rounded-xl bg-field border border-line text-sm text-text-main placeholder:text-text-faint focus:outline-none focus:border-emerald-500/40 focus:ring-2 focus:ring-emerald-500/10 transition-all"
             value={jobUrl}
             onChange={(e) => setJobUrl(e.target.value)}
           />
@@ -99,7 +99,7 @@ export default function JobMatchForm({
           </label>
           <textarea
             placeholder={t("jobDescriptionPlaceholder")}
-            className="w-full h-48 px-4 py-3 rounded-xl bg-[#0a0a12] border border-white/[0.06] text-sm text-zinc-300 placeholder:text-zinc-600 resize-none focus:outline-none focus:border-emerald-500/40 focus:ring-2 focus:ring-emerald-500/10 transition-all"
+            className="w-full h-48 px-4 py-3 rounded-xl bg-field border border-line text-sm text-text-main placeholder:text-text-faint resize-none focus:outline-none focus:border-emerald-500/40 focus:ring-2 focus:ring-emerald-500/10 transition-all"
             value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
           />

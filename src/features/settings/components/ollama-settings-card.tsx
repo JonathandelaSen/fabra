@@ -120,7 +120,7 @@ export function OllamaSettingsCard({
   };
 
   return (
-    <div className="rounded-xl border p-5 flex flex-col justify-between transition-all duration-300 border-white/[0.06] bg-[#07070d]/50 hover:bg-[#07070d]/80">
+    <div className="rounded-xl border p-5 flex flex-col justify-between transition-all duration-300 border-line bg-panel-elevated hover:bg-panel-active">
       <div>
         <div className="flex items-center justify-between gap-3 mb-2">
           <div className="flex items-center gap-2">

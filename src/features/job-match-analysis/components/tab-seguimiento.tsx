@@ -77,7 +77,7 @@ export default function TabSeguimiento({
                 onChange={(event) =>
                   onOfferStatusChange(event.target.value as OfferStatus)
                 }
-                className="h-10 w-full rounded-lg border border-white/[0.06] bg-[#0a0a12] px-3 text-sm text-zinc-200 focus:border-emerald-500/40 focus:outline-none focus:ring-1 focus:ring-emerald-500/40"
+                className="h-10 w-full rounded-lg border border-line bg-field px-3 text-sm text-text-main focus:border-emerald-500/40 focus:outline-none focus:ring-1 focus:ring-emerald-500/40"
               >
                 {OFFER_STATUSES.map((status) => (
                   <option key={status} value={status}>
@@ -96,7 +96,7 @@ export default function TabSeguimiento({
                 onChange={(event) =>
                   onOfferNextActionAtChange(event.target.value)
                 }
-                className="h-10 w-full rounded-lg border border-white/[0.06] bg-[#0a0a12] px-3 text-sm text-zinc-200 focus:border-emerald-500/40 focus:outline-none focus:ring-1 focus:ring-emerald-500/40"
+                className="h-10 w-full rounded-lg border border-line bg-field px-3 text-sm text-text-main focus:border-emerald-500/40 focus:outline-none focus:ring-1 focus:ring-emerald-500/40"
               />
             </label>
           </div>
@@ -109,7 +109,7 @@ export default function TabSeguimiento({
               value={offerNextAction}
               onChange={(event) => onOfferNextActionChange(event.target.value)}
               placeholder={t("nextActionPlaceholder")}
-              className="h-10 w-full rounded-lg border border-white/[0.06] bg-[#0a0a12] px-3 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-emerald-500/40 focus:outline-none focus:ring-1 focus:ring-emerald-500/40"
+              className="h-10 w-full rounded-lg border border-line bg-field px-3 text-sm text-text-main placeholder:text-text-faint focus:border-emerald-500/40 focus:outline-none focus:ring-1 focus:ring-emerald-500/40"
             />
           </label>
           <label className="space-y-1.5">
@@ -121,7 +121,7 @@ export default function TabSeguimiento({
               onChange={(event) => onOfferNotesChange(event.target.value)}
               placeholder={t("notePlaceholder")}
               rows={7}
-              className="w-full resize-none rounded-lg border border-white/[0.06] bg-[#0a0a12] px-3 py-2 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-emerald-500/40 focus:outline-none focus:ring-1 focus:ring-emerald-500/40"
+              className="w-full resize-none rounded-lg border border-line bg-field px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-emerald-500/40 focus:outline-none focus:ring-1 focus:ring-emerald-500/40"
             />
           </label>
         </div>

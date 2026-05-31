@@ -160,7 +160,7 @@ export function AISettingsPanel({
         </AlertBanner>
 
         <div className="grid gap-6 lg:grid-cols-3 md:grid-cols-2">
-          <div className="rounded-xl border p-5 flex flex-col justify-between transition-all duration-300 border-white/[0.06] bg-[#07070d]/50 hover:bg-[#07070d]/80">
+          <div className="rounded-xl border p-5 flex flex-col justify-between transition-all duration-300 border-line bg-panel-elevated hover:bg-panel-active">
             <div>
               <div className="flex items-center justify-between gap-3 mb-2">
                 <div className="flex items-center gap-2">
@@ -173,7 +173,7 @@ export function AISettingsPanel({
                   "text-[10px] px-2 py-0.5 rounded-full font-medium border",
                   state.geminiKey 
                     ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
-                    : "bg-zinc-800 text-zinc-500 border-white/[0.04]"
+                    : "bg-panel-control text-text-muted border-line"
                 )}>
                   {getSummary(state.geminiKey)}
                 </span>
@@ -188,14 +188,14 @@ export function AISettingsPanel({
                   value={state.draftGeminiKey}
                   onChange={(e) => updateState({ draftGeminiKey: e.target.value })}
                   placeholder={t("placeholder")}
-                  className="h-10 w-full rounded-xl border border-white/[0.08] bg-black/30 px-3 pr-10 text-xs text-zinc-200 outline-none transition-all placeholder:text-zinc-600 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
+                  className="h-10 w-full rounded-xl border border-line bg-field px-3 pr-10 text-xs text-text-main outline-none transition-all placeholder:text-text-faint focus:border-ring/40 focus:ring-2 focus:ring-ring/10"
                   autoComplete="off"
                   spellCheck={false}
                 />
                 <button
                   type="button"
                   onClick={() => updateState({ showGeminiKey: !state.showGeminiKey })}
-                  className="absolute inset-y-0 right-2 flex w-8 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-white/[0.06] hover:text-zinc-200"
+                  className="absolute inset-y-0 right-2 flex w-8 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-panel-hover hover:text-text-main"
                   title={state.showGeminiKey ? common("actions.hideKey") : common("actions.showKey")}
                 >
                   {state.showGeminiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -226,7 +226,7 @@ export function AISettingsPanel({
             </div>
           </div>
 
-          <div className="rounded-xl border p-5 flex flex-col justify-between transition-all duration-300 border-white/[0.06] bg-[#07070d]/50 hover:bg-[#07070d]/80">
+          <div className="rounded-xl border p-5 flex flex-col justify-between transition-all duration-300 border-line bg-panel-elevated hover:bg-panel-active">
             <div>
               <div className="flex items-center justify-between gap-3 mb-2">
                 <div className="flex items-center gap-2">
@@ -239,7 +239,7 @@ export function AISettingsPanel({
                   "text-[10px] px-2 py-0.5 rounded-full font-medium border",
                   state.openaiKey 
                     ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
-                    : "bg-zinc-800 text-zinc-500 border-white/[0.04]"
+                    : "bg-panel-control text-text-muted border-line"
                 )}>
                   {getSummary(state.openaiKey)}
                 </span>
@@ -254,14 +254,14 @@ export function AISettingsPanel({
                   value={state.draftOpenaiKey}
                   onChange={(e) => updateState({ draftOpenaiKey: e.target.value })}
                   placeholder={t("openaiPlaceholder")}
-                  className="h-10 w-full rounded-xl border border-white/[0.08] bg-black/30 px-3 pr-10 text-xs text-zinc-200 outline-none transition-all placeholder:text-zinc-600 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
+                  className="h-10 w-full rounded-xl border border-line bg-field px-3 pr-10 text-xs text-text-main outline-none transition-all placeholder:text-text-faint focus:border-ring/40 focus:ring-2 focus:ring-ring/10"
                   autoComplete="off"
                   spellCheck={false}
                 />
                 <button
                   type="button"
                   onClick={() => updateState({ showOpenaiKey: !state.showOpenaiKey })}
-                  className="absolute inset-y-0 right-2 flex w-8 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-white/[0.06] hover:text-zinc-200"
+                  className="absolute inset-y-0 right-2 flex w-8 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-panel-hover hover:text-text-main"
                   title={state.showOpenaiKey ? common("actions.hideKey") : common("actions.showKey")}
                 >
                   {state.showOpenaiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

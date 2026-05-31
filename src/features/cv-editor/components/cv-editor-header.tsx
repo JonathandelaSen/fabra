@@ -49,7 +49,7 @@ export function CVEditorHeader({
   const t = useTranslations("cvEditor");
 
   return (
-    <header className="z-20 flex h-14 shrink-0 items-center justify-between border-b border-white/5 bg-[#0a0a12]/80 px-4 backdrop-blur-md">
+    <header className="z-20 flex h-14 shrink-0 items-center justify-between border-b border-line bg-panel-base/80 px-4 backdrop-blur-md">
       <div className="flex items-center gap-4">
         <ActionIconButton
           icon={ArrowLeft}

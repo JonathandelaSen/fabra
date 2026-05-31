@@ -78,7 +78,7 @@ export default function GeneralAnalysisForm({
         </label>
         <textarea
           placeholder={t("additionalContextPlaceholder")}
-          className="w-full h-24 px-4 py-3 rounded-xl bg-[#0a0a12] border border-white/[0.06] text-sm text-zinc-300 placeholder:text-zinc-600 resize-none focus:outline-none focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10 transition-all"
+          className="w-full h-24 px-4 py-3 rounded-xl bg-field border border-line text-sm text-text-main placeholder:text-text-faint resize-none focus:outline-none focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10 transition-all"
           value={additionalContext}
           onChange={(e) => setAdditionalContext(e.target.value)}
         />

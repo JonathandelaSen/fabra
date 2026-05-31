@@ -26,7 +26,7 @@ export default function JobMatchExtractionPdfPreview({
           initial={{ opacity: 0, width: 0 }}
           animate={{ opacity: 1, width: "auto" }}
           exit={{ opacity: 0, width: 0 }}
-          className="flex flex-col flex-1 rounded-2xl border border-white/[0.06] bg-[#0a0a12] overflow-hidden shadow-2xl min-h-[400px] lg:min-h-0"
+          className="flex flex-col flex-1 rounded-2xl border border-line bg-panel-base overflow-hidden shadow-2xl min-h-[400px] lg:min-h-0"
         >
           <div className="shrink-0 flex items-center justify-between px-4 py-2 border-b border-white/[0.06] bg-indigo-500/5">
             <div className="flex items-center gap-2">

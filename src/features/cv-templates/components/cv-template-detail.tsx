@@ -77,14 +77,14 @@ export function CVTemplateDetail({
   }
 
   return (
-    <section className="min-h-0 overflow-y-auto rounded-xl border border-white/[0.06] bg-white/[0.02] shadow-[0_8px_32px_rgba(0,0,0,0.24)]">
+    <section className="min-h-0 overflow-y-auto rounded-xl border border-line bg-panel-subtle shadow-[0_8px_32px_rgba(0,0,0,0.24)]">
       <div className="flex flex-col h-full min-h-[620px]">
-        <div className="flex items-center justify-between border-b border-white/5 p-6 bg-[#09090f]">
+        <div className="flex items-center justify-between border-b border-line p-6 bg-canvas">
           <div>
-            <h2 className="text-xl font-semibold text-white">
+            <h2 className="text-xl font-semibold text-text-main">
               {template.name}
             </h2>
-            <p className="text-sm text-zinc-500 mt-1">
+            <p className="text-sm text-text-muted mt-1">
               {template.description}
             </p>
           </div>

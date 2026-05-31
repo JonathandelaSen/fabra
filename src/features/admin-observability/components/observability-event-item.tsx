@@ -26,16 +26,16 @@ export function ObservabilityEventItem({
       className={`mb-2 w-full rounded-lg border p-3 text-left transition ${
         isSelected
           ? "border-indigo-500/40 bg-indigo-500/10"
-          : "border-white/[0.06] bg-[#101018] hover:bg-white/[0.04]"
+          : "border-line bg-panel-elevated hover:bg-panel-hover"
       }`}
     >
       <div className="mb-2 flex items-center justify-between gap-2">
         <StatusBadge status={event.status} />
-        <span className="shrink-0 text-[11px] text-zinc-500">
+        <span className="shrink-0 text-[11px] text-text-muted">
           {formatTime(event.createdAt, dateLocale)}
         </span>
       </div>
-      <p className="truncate text-sm font-medium text-zinc-100">
+      <p className="truncate text-sm font-medium text-text-main">
         {event.stage}
       </p>
       <p className="mt-1 truncate text-xs text-zinc-500">

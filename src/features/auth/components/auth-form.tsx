@@ -62,7 +62,7 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
       : t("login.description");
 
   return (
-    <div className="rounded-2xl border border-white/[0.07] bg-[#0d0d14]/90 backdrop-blur-xl p-5 shadow-2xl shadow-black/30 sm:p-6">
+    <div className="rounded-2xl border border-line bg-panel-base/90 backdrop-blur-xl p-5 shadow-2xl shadow-black/30 sm:p-6">
       <div className="mb-6">
         <div className="mb-4 flex justify-end">
           <InterfaceLanguageSelect compact />

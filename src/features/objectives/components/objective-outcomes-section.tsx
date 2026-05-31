@@ -109,7 +109,7 @@ export function ObjectiveOutcomes({
                             onChange={(e) => onOutcomeFormChange({ ...outcomeForm, type: e.target.value as ObjectiveOutcomeType })}
                           >
                             {Object.keys(outcomeLabels).map((key) => (
-                              <option key={key} value={key} className="bg-[#101018] text-zinc-100">{outcomeLabel(key as ObjectiveOutcomeType)}</option>
+                              <option key={key} value={key} className="bg-panel-elevated text-text-main">{outcomeLabel(key as ObjectiveOutcomeType)}</option>
                             ))}
                           </Select>
                         </label>
@@ -122,7 +122,7 @@ export function ObjectiveOutcomes({
                             onChange={(e) => onOutcomeFormChange({ ...outcomeForm, status: e.target.value as ObjectiveOutcomeStatus })}
                           >
                             {["expected", "achieved", "missed"].map((status) => (
-                              <option key={status} value={status} className="bg-[#101018] text-zinc-100">{outcomeStatusLabel(status as ObjectiveOutcomeStatus)}</option>
+                              <option key={status} value={status} className="bg-panel-elevated text-text-main">{outcomeStatusLabel(status as ObjectiveOutcomeStatus)}</option>
                             ))}
                           </Select>
                         </label>
@@ -214,7 +214,7 @@ export function ObjectiveOutcomes({
                           disabled={isEmpty}
                         >
                           {["expected", "achieved", "missed"].map((status) => (
-                            <option key={status} value={status} className="bg-[#101018] text-zinc-100">{outcomeStatusLabel(status as ObjectiveOutcomeStatus)}</option>
+                            <option key={status} value={status} className="bg-panel-elevated text-text-main">{outcomeStatusLabel(status as ObjectiveOutcomeStatus)}</option>
                           ))}
                         </Select>
                         <div className="flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">

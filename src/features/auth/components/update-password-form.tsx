@@ -20,7 +20,7 @@ export function UpdatePasswordForm() {
   const { state, action, pending } = useUpdatePasswordFormState();
 
   return (
-    <div className="rounded-2xl border border-white/[0.07] bg-[#0d0d14]/90 p-5 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-6">
+    <div className="rounded-2xl border border-line bg-panel-base/90 p-5 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-6">
       <div className="mb-6">
         <div className="mb-4 flex justify-end">
           <InterfaceLanguageSelect compact />

@@ -24,7 +24,7 @@ export function AnalysisContextTab({ additionalContext }: AnalysisContextTabProp
           <FileSearch className="w-4 h-4" />
           {t("context.title")}
         </h4>
-        <p className="text-xs text-zinc-400 italic bg-[#0a0a12] rounded-lg p-3 border border-white/[0.04]">
+        <p className="text-xs text-zinc-400 italic bg-field rounded-lg p-3 border border-white/[0.04]">
           {additionalContext}
         </p>
       </motion.div>

@@ -50,7 +50,7 @@ export function ObservabilityTimelineItem({
             <button
               type="button"
               onClick={() => onCopy(event)}
-              className="flex h-6 w-6 items-center justify-center rounded-md border border-white/[0.06] bg-white/[0.03] text-zinc-400 transition hover:bg-white/[0.06] hover:text-white"
+              className="flex h-6 w-6 items-center justify-center rounded-md border border-line bg-panel-subtle text-text-muted transition hover:bg-panel-hover hover:text-text-main"
               title={t("copyEventJson")}
             >
               {copiedId === event.id ? (

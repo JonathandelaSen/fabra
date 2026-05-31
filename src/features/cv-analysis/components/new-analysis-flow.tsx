@@ -160,7 +160,7 @@ export default function NewAnalysisFlow({
           />
         )}
 
-        <section className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+        <section className="rounded-xl border border-line bg-white/[0.02] p-5">
           <label className="mb-2 block text-sm text-zinc-400">
             {t("extractionName")}
           </label>
@@ -168,7 +168,7 @@ export default function NewAnalysisFlow({
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             placeholder={t("extractionNamePlaceholder")}
-            className="h-11 w-full rounded-xl border border-white/[0.06] bg-[#0a0a12] px-4 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-indigo-500/40 focus:outline-none"
+            className="h-11 w-full rounded-xl border border-line bg-field px-4 text-sm text-text-main placeholder:text-text-faint focus:border-indigo-500/40 focus:outline-none"
           />
         </section>
 

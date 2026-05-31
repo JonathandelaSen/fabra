@@ -31,7 +31,7 @@ export default function NewAnalysisUploadCV({
   };
 
   return (
-    <section className="grid gap-4 rounded-xl border border-white/[0.06] bg-white/[0.02] p-5 md:grid-cols-[1fr_260px]">
+    <section className="grid gap-4 rounded-xl border border-line bg-white/[0.02] p-5 md:grid-cols-[1fr_260px]">
       <div
         onClick={() => fileInputRef.current?.click()}
         onDragOver={(event) => {
@@ -89,7 +89,7 @@ export default function NewAnalysisUploadCV({
           value={cvName}
           onChange={(event) => onCvNameChange(event.target.value)}
           placeholder={t("cvNamePlaceholder")}
-          className="h-11 w-full rounded-xl border border-white/[0.06] bg-[#0a0a12] px-4 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-emerald-500/40 focus:outline-none"
+          className="h-11 w-full rounded-xl border border-line bg-field px-4 text-sm text-text-main placeholder:text-text-faint focus:border-emerald-500/40 focus:outline-none"
         />
       </div>
     </section>

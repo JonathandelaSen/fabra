@@ -48,7 +48,7 @@ export function ObservabilityFilters({
                 event.target.value as ProcessingEventStatus | "",
               )
             }
-            className="h-9 w-full appearance-none rounded-lg border border-white/[0.06] bg-[#0d0d14] pl-9 pr-3 text-sm text-zinc-200 outline-none focus:border-indigo-500/50"
+            className="h-9 w-full appearance-none rounded-lg border border-line bg-panel-elevated pl-9 pr-3 text-sm text-text-main outline-none focus:border-ring/50"
           >
             {STATUS_OPTIONS.map((option) => (
               <option key={option || "all"} value={option}>
@@ -60,7 +60,7 @@ export function ObservabilityFilters({
         <select
           value={filters.stage}
           onChange={(event) => onStageChange(event.target.value)}
-          className="h-9 rounded-lg border border-white/[0.06] bg-[#0d0d14] px-3 text-sm text-zinc-200 outline-none focus:border-indigo-500/50"
+          className="h-9 rounded-lg border border-line bg-panel-elevated px-3 text-sm text-text-main outline-none focus:border-ring/50"
         >
           {STAGE_OPTIONS.map((option) => (
             <option key={option || "all"} value={option}>
@@ -75,7 +75,7 @@ export function ObservabilityFilters({
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
           placeholder={t("searchPlaceholder")}
-          className="h-9 w-full rounded-lg border border-white/[0.06] bg-[#0d0d14] pl-9 pr-3 text-sm text-zinc-200 outline-none placeholder:text-zinc-600 focus:border-indigo-500/50"
+          className="h-9 w-full rounded-lg border border-line bg-panel-elevated pl-9 pr-3 text-sm text-text-main outline-none placeholder:text-text-faint focus:border-ring/50"
         />
       </label>
     </div>

@@ -31,12 +31,12 @@ export function CVEditorSaveModal({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="w-full max-w-sm rounded-3xl border border-white/10 bg-[#0a0a12] p-6 shadow-2xl"
+        className="w-full max-w-sm rounded-3xl border border-line bg-modal p-6 shadow-2xl"
       >
-        <h3 className="text-lg font-semibold text-white">
+        <h3 className="text-lg font-semibold text-text-main">
           {t("saveModal.title")}
         </h3>
-        <p className="mt-2 text-sm text-zinc-500">
+        <p className="mt-2 text-sm text-text-muted">
           {t("saveModal.description")}
         </p>
         <div className="mt-6 space-y-4">

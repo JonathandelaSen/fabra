@@ -55,7 +55,7 @@ export function CVLibraryDetailHeader({
                 if (event.key === "Enter") onSaveName();
                 if (event.key === "Escape") onCancelEditing();
               }}
-              className="h-9 w-full rounded-lg border border-white/[0.08] bg-[#0a0a12] px-3 text-sm text-zinc-100 focus:border-indigo-500/40 focus:outline-none"
+              className="h-9 w-full rounded-lg border border-line bg-field px-3 text-sm text-text-main focus:border-ring/40 focus:outline-none"
               autoFocus
             />
             <ActionIconButton

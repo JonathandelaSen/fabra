@@ -41,7 +41,7 @@ export function ScoreHeroJobUrl({
             value={editedUrl}
             onChange={(e) => setEditedUrl(e.target.value)}
             placeholder={t("urlPlaceholder")}
-            className="h-6 w-48 rounded-md bg-[#0a0a12] border border-white/[0.06] px-2 text-[11px] text-zinc-300 focus:outline-none focus:border-emerald-500/40"
+            className="h-6 w-48 rounded-md bg-field border border-line px-2 text-[11px] text-text-main focus:outline-none focus:border-emerald-500/40"
             autoFocus
           />
           <button

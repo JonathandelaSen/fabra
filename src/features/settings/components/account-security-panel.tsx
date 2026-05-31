@@ -30,11 +30,11 @@ export function AccountSecurityPanel() {
       <div className="space-y-5">
         <form
           action={signOut}
-          className="flex flex-col gap-3 rounded-xl border border-white/[0.06] bg-[#0a0a12] p-4 sm:flex-row sm:items-center sm:justify-between"
+          className="flex flex-col gap-3 rounded-xl border border-line bg-panel-elevated p-4 sm:flex-row sm:items-center sm:justify-between"
         >
           <input type="hidden" name="interfaceLanguage" value={locale} />
           <div>
-            <p className="text-sm font-medium text-zinc-200">
+            <p className="text-sm font-medium text-text-main">
               {t("signOut")}
             </p>
           </div>
@@ -50,11 +50,11 @@ export function AccountSecurityPanel() {
 
         <form
           action={passwordAction}
-          className="rounded-xl border border-white/[0.06] bg-[#0a0a12] p-4"
+          className="rounded-xl border border-line bg-panel-elevated p-4"
         >
           <input type="hidden" name="interfaceLanguage" value={locale} />
           <div className="mb-4">
-            <p className="flex items-center gap-2 text-sm font-medium text-zinc-200">
+            <p className="flex items-center gap-2 text-sm font-medium text-text-main">
               <LockKeyhole className="h-4 w-4 text-indigo-300" />
               {t("changePassword")}
             </p>
@@ -67,7 +67,7 @@ export function AccountSecurityPanel() {
               autoComplete="current-password"
               placeholder={t("currentPassword")}
               required
-              className="h-11 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 text-sm text-zinc-200 outline-none transition-all placeholder:text-zinc-600 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
+              className="h-11 rounded-xl border border-line bg-field px-4 text-sm text-text-main outline-none transition-all placeholder:text-text-faint focus:border-ring/40 focus:ring-2 focus:ring-ring/10"
             />
             <input
               name="password"
@@ -76,7 +76,7 @@ export function AccountSecurityPanel() {
               placeholder={t("newPassword")}
               minLength={6}
               required
-              className="h-11 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 text-sm text-zinc-200 outline-none transition-all placeholder:text-zinc-600 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
+              className="h-11 rounded-xl border border-line bg-field px-4 text-sm text-text-main outline-none transition-all placeholder:text-text-faint focus:border-ring/40 focus:ring-2 focus:ring-ring/10"
             />
             <input
               name="confirmPassword"
@@ -85,7 +85,7 @@ export function AccountSecurityPanel() {
               placeholder={t("repeatNewPassword")}
               minLength={6}
               required
-              className="h-11 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 text-sm text-zinc-200 outline-none transition-all placeholder:text-zinc-600 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
+              className="h-11 rounded-xl border border-line bg-field px-4 text-sm text-text-main outline-none transition-all placeholder:text-text-faint focus:border-ring/40 focus:ring-2 focus:ring-ring/10"
             />
           </div>
 

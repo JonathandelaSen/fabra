@@ -45,10 +45,10 @@ export function WorkJournalSidebar({
             placeholder={t("searchPlaceholder")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="h-9 w-full rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-zinc-200 outline-none placeholder:text-zinc-600 focus:border-indigo-500/40 transition-colors"
+            className="h-9 w-full rounded-lg border border-line bg-field px-3 py-1.5 text-xs text-text-main outline-none placeholder:text-text-faint focus:border-ring/40 transition-colors"
           />
           <select
-            className="h-9 w-full rounded-lg border border-white/10 bg-[#101018] px-3 py-1.5 text-xs text-zinc-400 outline-none focus:border-indigo-500/40 focus:text-zinc-200 transition-colors cursor-pointer appearance-none"
+            className="h-9 w-full rounded-lg border border-line bg-panel-elevated px-3 py-1.5 text-xs text-text-muted outline-none focus:border-ring/40 focus:text-text-main transition-colors cursor-pointer appearance-none"
             value={contextFilter}
             onChange={(e) => setContextFilter(e.target.value)}
           >

@@ -39,7 +39,7 @@ export function ObjectiveOutcomeAddBar({
     <div className="mt-2 flex gap-2 border-t border-white/[0.04] pt-4">
       <Select className="w-32 py-1 h-9 text-xs shrink-0" value={newOutcomeType} onChange={(e) => onNewOutcomeTypeChange(e.target.value as ObjectiveOutcomeType)} disabled={isEmpty}>
         {Object.keys(outcomeLabels).map((key) => (
-          <option key={key} value={key} className="bg-[#101018] text-zinc-100">{outcomeLabel(key as ObjectiveOutcomeType)}</option>
+          <option key={key} value={key} className="bg-panel-elevated text-text-main">{outcomeLabel(key as ObjectiveOutcomeType)}</option>
         ))}
       </Select>
       <Input

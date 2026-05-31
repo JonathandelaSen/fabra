@@ -109,7 +109,7 @@ export function ObjectiveItems({
                           onChange={(e) => onItemFormChange({ ...itemForm, status: e.target.value as ObjectiveItemStatus })}
                           >
                             {Object.keys(itemStatusLabels).map((key) => (
-                              <option key={key} value={key} className="bg-[#101018] text-zinc-100">
+                              <option key={key} value={key} className="bg-panel-elevated text-text-main">
                                 {itemStatusLabel(key as ObjectiveItemStatus)}
                               </option>
                             ))}

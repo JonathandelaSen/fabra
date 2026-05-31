@@ -32,7 +32,7 @@ export function CVEditorPublicModal({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="w-full max-w-md rounded-3xl border border-rose-500/20 bg-[#0a0a12] p-6 shadow-2xl"
+        className="w-full max-w-md rounded-3xl border border-rose-500/20 bg-modal p-6 shadow-2xl"
       >
         <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-500/10 text-rose-300">
           <AlertTriangle className="h-6 w-6" />

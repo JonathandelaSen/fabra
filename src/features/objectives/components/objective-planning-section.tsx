@@ -33,7 +33,7 @@ export function ObjectivePlanningSection({
             }
           >
             {["manager", "self", "company", "project", "other"].map((source) => (
-              <option key={source} value={source} className="bg-[#101018] text-zinc-100">
+              <option key={source} value={source} className="bg-panel-elevated text-text-main">
                 {sourceLabel(source as ObjectiveSource)}
               </option>
             ))}
@@ -52,10 +52,10 @@ export function ObjectivePlanningSection({
               })
             }
           >
-            <option value="" className="bg-[#101018] text-zinc-100">{t("priority.none")}</option>
-            <option value="low" className="bg-[#101018] text-zinc-100">{priorityLabel("low")}</option>
-            <option value="medium" className="bg-[#101018] text-zinc-100">{priorityLabel("medium")}</option>
-            <option value="high" className="bg-[#101018] text-zinc-100">{priorityLabel("high")}</option>
+            <option value="" className="bg-panel-elevated text-text-main">{t("priority.none")}</option>
+            <option value="low" className="bg-panel-elevated text-text-main">{priorityLabel("low")}</option>
+            <option value="medium" className="bg-panel-elevated text-text-main">{priorityLabel("medium")}</option>
+            <option value="high" className="bg-panel-elevated text-text-main">{priorityLabel("high")}</option>
           </Select>
         </label>
       </div>

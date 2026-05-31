@@ -40,7 +40,7 @@ export function CVLibrarySidebarError({
                 event.preventDefault();
                 onOpenAnalysis(analysis.id);
               }}
-              className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-[#0a0a12]/70 px-3 py-2 text-left text-xs text-zinc-300 transition-colors hover:border-rose-400/30 hover:bg-rose-500/10 hover:text-rose-100"
+              className="flex items-center gap-2 rounded-lg border border-line bg-panel-elevated px-3 py-2 text-left text-xs text-text-soft transition-colors hover:border-rose-400/30 hover:bg-rose-500/10 hover:text-danger-text"
             >
               <FileSearch className="h-3.5 w-3.5 shrink-0 text-danger-text" />
               <span className="min-w-0 flex-1 truncate">

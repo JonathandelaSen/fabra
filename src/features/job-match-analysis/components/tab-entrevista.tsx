@@ -86,9 +86,9 @@ export default function TabEntrevista({
                 key={question.id}
                 type="button"
                 onClick={onOpenQuestions}
-                className="group rounded-xl border border-white/[0.06] bg-[#0a0a12]/85 p-3 text-left transition-colors hover:border-fuchsia-500/25 hover:bg-fuchsia-500/10"
+                className="group rounded-xl border border-line bg-panel-elevated p-3 text-left transition-colors hover:border-fuchsia-500/25 hover:bg-fuchsia-500/10"
               >
-                <span className="block text-sm font-semibold leading-5 text-zinc-100">
+                <span className="block text-sm font-semibold leading-5 text-text-main">
                   {question.question}
                 </span>
                 {question.answer ? (
@@ -104,12 +104,12 @@ export default function TabEntrevista({
             ))}
           </div>
         ) : (
-          <p className="mb-5 rounded-xl border border-white/[0.04] bg-[#0a0a12]/70 px-4 py-4 text-sm text-zinc-600">
+          <p className="mb-5 rounded-xl border border-line bg-panel-subtle px-4 py-4 text-sm text-text-faint">
             {t("empty")}
           </p>
         )}
 
-        <div className="rounded-xl border border-white/[0.06] bg-[#0a0a12]/70 p-4">
+        <div className="rounded-xl border border-line bg-panel-elevated p-4">
           <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-600">
             {t("createTitle")}
           </p>
@@ -119,7 +119,7 @@ export default function TabEntrevista({
               onChange={(event) => onQuickQuestionChange(event.target.value)}
               placeholder={t("questionPlaceholder")}
               rows={2}
-              className="resize-none rounded-lg border border-white/[0.06] bg-[#09090f] px-3 py-2 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-fuchsia-500/40 focus:outline-none focus:ring-1 focus:ring-fuchsia-500/40"
+              className="resize-none rounded-lg border border-line bg-field px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-fuchsia-500/40 focus:outline-none focus:ring-1 focus:ring-fuchsia-500/40"
             />
             <textarea
               value={quickQuestionContext}
@@ -128,7 +128,7 @@ export default function TabEntrevista({
               }
               placeholder={t("contextPlaceholder")}
               rows={2}
-              className="resize-none rounded-lg border border-white/[0.06] bg-[#09090f] px-3 py-2 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-fuchsia-500/40 focus:outline-none focus:ring-1 focus:ring-fuchsia-500/40"
+              className="resize-none rounded-lg border border-line bg-field px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-fuchsia-500/40 focus:outline-none focus:ring-1 focus:ring-fuchsia-500/40"
             />
             <div className="flex flex-wrap items-center gap-2 lg:col-span-2">
               <button

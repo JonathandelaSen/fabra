@@ -36,7 +36,7 @@ export function ActivityContextSelector({
           onChange={(e) => onChange(e.target.value)}
         >
           {contexts.map((ctx) => (
-            <option key={ctx.id} value={ctx.id} className="bg-[#101018] text-zinc-100">
+            <option key={ctx.id} value={ctx.id} className="bg-panel-elevated text-text-main">
               {ctx.name}
             </option>
           ))}

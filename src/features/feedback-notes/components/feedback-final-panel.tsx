@@ -111,11 +111,11 @@ export function FeedbackFinalPanel({
           className={textareaClass}
         />
       ) : hasFinalFeedback ? (
-        <div className="min-h-[18rem] rounded-lg border border-indigo-300/10 bg-[#101018]/90 px-3 py-3 text-sm leading-6 text-zinc-200">
+        <div className="min-h-[18rem] rounded-lg border border-line bg-panel-elevated px-3 py-3 text-sm leading-6 text-text-main">
           <p className="whitespace-pre-wrap">{feedback.finalFeedback}</p>
         </div>
       ) : (
-        <div className="flex min-h-[18rem] flex-col items-center justify-center rounded-lg border border-dashed border-indigo-300/15 bg-[#101018]/60 px-4 py-8 text-center">
+        <div className="flex min-h-[18rem] flex-col items-center justify-center rounded-lg border border-dashed border-line bg-panel-subtle px-4 py-8 text-center">
           <p className="text-sm font-medium text-zinc-500">{t("final.empty")}</p>
           {!isClosed && !isEditingMode && (
             <p className="mt-2 text-xs text-zinc-600">

@@ -50,9 +50,9 @@ export default function TabOferta({
             ).map(([label, value]) => (
               <div
                 key={label}
-                className="rounded-xl border border-white/[0.04] bg-[#0a0a12] p-3"
+                className="rounded-xl border border-line bg-field p-3"
               >
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-faint">
                   {label}
                 </p>
                 <p className="mt-1 text-sm text-zinc-300">
@@ -74,7 +74,7 @@ export default function TabOferta({
               return (
                 <div
                   key={label}
-                  className="rounded-xl border border-white/[0.04] bg-[#0a0a12] p-4"
+                  className="rounded-xl border border-line bg-field p-4"
                 >
                   <p className="mb-3 text-xs font-semibold text-zinc-300">
                     {label}
@@ -92,7 +92,7 @@ export default function TabOferta({
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-xs italic text-zinc-600">{t("notSpecified")}.</p>
+                    <p className="text-xs italic text-text-faint">{t("notSpecified")}.</p>
                   )}
                 </div>
               );
@@ -118,7 +118,7 @@ export default function TabOferta({
                 </h4>
               </AccordionTrigger>
               <AccordionContent className="pt-4">
-                <div className="text-sm text-zinc-400 bg-[#0a0a12] rounded-xl p-4 border border-white/[0.04] whitespace-pre-wrap max-h-96 overflow-y-auto">
+                <div className="text-sm text-zinc-400 bg-field rounded-xl p-4 border border-line whitespace-pre-wrap max-h-96 overflow-y-auto">
                   {jobDescription}
                 </div>
               </AccordionContent>
