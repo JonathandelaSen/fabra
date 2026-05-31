@@ -298,8 +298,8 @@ export default function JobMatchAnalysisView({
           />
         </div>
       ) : view === "kanban" ? (
-        <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-line bg-panel-base">
-          <div className="shrink-0 border-b border-line px-4 py-3">
+        <div className="flex h-full min-h-0 flex-col overflow-hidden">
+          <div className="shrink-0 border-b border-line pb-3">
             <Button type="button" variant="ghost" size="sm" onClick={goToBoard}>
               <ArrowLeft className="h-4 w-4" />
               {kanbanT("backToBoard")}
