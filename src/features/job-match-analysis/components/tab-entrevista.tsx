@@ -1,16 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { GEMINI_MODELS } from "@/frontend/ai-models";
 import {
   MessageSquareQuote,
   ExternalLink,
   Loader2,
   Check,
-  Sparkles,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { InterviewQuestionSummary } from "../types";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
+import AIActionLauncher from "@/components/shared/ai-action-launcher";
 
 interface TabEntrevistaProps {
   interviewQuestions: InterviewQuestionSummary[];
@@ -23,6 +24,9 @@ interface TabEntrevistaProps {
   onQuickQuestionModelChange: (value: string) => void;
   isCreatingQuestion: boolean;
   onCreateQuestion: (generateAfter: boolean) => void;
+  aiProvider: StoredAIProvider;
+  hasAIApiKey: boolean;
+  onOpenSettings?: () => void;
 }
 
 export default function TabEntrevista({
@@ -36,7 +40,11 @@ export default function TabEntrevista({
   onQuickQuestionModelChange,
   isCreatingQuestion,
   onCreateQuestion,
+  aiProvider,
+  hasAIApiKey,
+  onOpenSettings,
 }: TabEntrevistaProps) {
+  const [selectedProvider, setSelectedProvider] = useState<StoredAIProvider>(aiProvider);
   const t = useTranslations("analysisDetail.interview");
 
   return (
@@ -136,31 +144,24 @@ export default function TabEntrevista({
                 )}
                 {t("saveWithoutAI")}
               </button>
-              <select
-                value={quickQuestionModel}
-                onChange={(event) =>
-                  onQuickQuestionModelChange(event.target.value)
-                }
-                aria-label={t("modelLabel")}
-                className="h-10 rounded-lg border border-white/[0.08] bg-[#09090f] px-3 text-xs text-zinc-300 outline-none"
-              >
-                {Object.entries(GEMINI_MODELS).map(([id, label]) => (
-                  <option key={id} value={id}>{label}</option>
-                ))}
-              </select>
-              <button
-                type="button"
-                onClick={() => onCreateQuestion(true)}
-                disabled={isCreatingQuestion || !quickQuestion.trim()}
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-fuchsia-500/20 bg-fuchsia-500/10 px-4 text-xs font-semibold text-fuchsia-300 transition-colors hover:bg-fuchsia-500/20 disabled:opacity-50"
-              >
-                {isCreatingQuestion ? (
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <Sparkles className="h-3.5 w-3.5" />
-                )}
-                {t("createWithAI")}
-              </button>
+              <AIActionLauncher
+                actionLabel={t("createWithAI")}
+                loading={isCreatingQuestion}
+                disabled={!quickQuestion.trim()}
+                integrated={{
+                  available: hasAIApiKey,
+                  selectedProvider,
+                  onProviderChange: setSelectedProvider,
+                  selectedModelId: quickQuestionModel,
+                  onModelChange: onQuickQuestionModelChange,
+                  onRun: () => onCreateQuestion(true),
+                  onConfigure: onOpenSettings,
+                }}
+                copyPaste={{
+                  available: false,
+                  onOpenFlow: () => {},
+                }}
+              />
             </div>
           </div>
         </div>

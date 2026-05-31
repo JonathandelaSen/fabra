@@ -48,6 +48,7 @@ interface AnalysisTabsContentProps {
   isSavingTracking: boolean;
   onSaveTracking: () => void;
   additionalContext?: string;
+  onOpenSettings?: () => void;
 }
 
 export function AnalysisTabsContent({
@@ -87,6 +88,7 @@ export function AnalysisTabsContent({
   isSavingTracking,
   onSaveTracking,
   additionalContext,
+  onOpenSettings,
 }: AnalysisTabsContentProps) {
   return (
     <div className="min-h-0">
@@ -120,6 +122,9 @@ export function AnalysisTabsContent({
               onQuickQuestionModelChange={onQuickQuestionModelChange}
               isCreatingQuestion={isCreatingQuestion}
               onCreateQuestion={onCreateQuestion}
+              aiProvider={aiProvider}
+              hasAIApiKey={hasAIApiKey}
+              onOpenSettings={onOpenSettings}
             />
           </TabsContent>
 

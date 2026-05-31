@@ -213,6 +213,8 @@ export default function JobMatchAnalysisDetail({
                   onQuickQuestionModelChange={quickInterviewQuestion.setModel}
                   isCreatingQuestion={quickInterviewQuestion.isCreating}
                   onCreateQuestion={quickInterviewQuestion.create}
+                  aiProvider={aiProvider ?? "gemini"}
+                  hasAIApiKey={hasAIApiKey}
                 />
               </TabsContent>
 
