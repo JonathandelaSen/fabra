@@ -10,8 +10,12 @@ import {
   getAIRequestConfigForProvider,
   getStoredAIModelForProvider,
   saveStoredAIProvider,
+  getStoredAIApiKeyForProvider,
+  getStoredAIBaseUrlForProvider,
+  AI_PROVIDER,
   type StoredAIProvider,
 } from "@/lib/browser-preferences";
+import { useDefaultAISettings } from "../use-default-ai-settings";
 import {
   GEMINI_MODELS,
   OPENAI_MODELS,
@@ -56,12 +60,19 @@ export default function AIActionLauncherIntegrated({
   const [configurationError, setConfigurationError] = useState<string | null>(null);
   const commonT = useTranslations("common.providers");
 
+  const { defaultApiKeys, defaultBaseUrls } = useDefaultAISettings();
+
+  const isGeminiActive = !!getStoredAIApiKeyForProvider(AI_PROVIDER.GEMINI, defaultApiKeys);
+  const isOpenaiActive = !!getStoredAIApiKeyForProvider(AI_PROVIDER.OPENAI, defaultApiKeys);
+  const isOllamaActive = !!getStoredAIBaseUrlForProvider(AI_PROVIDER.OLLAMA, defaultBaseUrls) && !!getStoredAIModelForProvider(AI_PROVIDER.OLLAMA);
+  const isMockActive = process.env.NODE_ENV !== "production";
+
   const PROVIDERS = [
-    { id: "gemini", label: commonT("gemini") },
-    { id: "openai", label: commonT("openai") },
-    { id: "ollama", label: "Ollama (Local)" },
-    ...(process.env.NODE_ENV !== "production" ? [{ id: "mock", label: commonT("mock") }] : []),
-  ] as const;
+    { id: "gemini", label: commonT("gemini"), active: isGeminiActive },
+    { id: "openai", label: commonT("openai"), active: isOpenaiActive },
+    { id: "ollama", label: "Ollama (Local)", active: isOllamaActive },
+    ...(isMockActive ? [{ id: "mock", label: commonT("mock"), active: true }] : []),
+  ].filter((p) => p.active || p.id === selectedProvider);
 
   const aiConfig = getAIRequestConfigForProvider(selectedProvider, "", selectedModelId);
   const currentConfigurationError = aiConfig.error;

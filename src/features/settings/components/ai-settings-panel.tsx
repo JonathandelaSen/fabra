@@ -28,7 +28,7 @@ import {
   type StoredAIProvider,
   AI_PROVIDER,
 } from "@/lib/browser-preferences";
-import { useDefaultAISettings } from "../hooks/use-default-ai-settings";
+import { useDefaultAISettings } from "@/components/shared/use-default-ai-settings";
 import { OllamaSettingsCard } from "./ollama-settings-card";
 
 interface AISettingsPanelProps {
@@ -160,137 +160,159 @@ export function AISettingsPanel({
         </AlertBanner>
 
         <div className="grid gap-6 lg:grid-cols-3 md:grid-cols-2">
-          <div className="rounded-xl border p-5 flex flex-col justify-between transition-all duration-300 border-line bg-panel-elevated hover:bg-panel-active">
-            <div>
-              <div className="flex items-center justify-between gap-3 mb-2">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="h-4.5 w-4.5 text-text-muted" />
-                  <h4 className="text-sm font-semibold text-text-main">
-                    {t("geminiSectionTitle")}
-                  </h4>
+          {(() => {
+            const isGeminiActive = !!state.geminiKey;
+            return (
+              <div className={cn(
+                "rounded-xl border p-5 flex flex-col justify-between transition-all duration-300",
+                isGeminiActive 
+                  ? "border-emerald-500/20 bg-panel-active shadow-[0_0_12px_rgba(16,185,129,0.03)] hover:border-emerald-500/30" 
+                  : "border-line bg-panel-elevated/40 opacity-65 hover:opacity-85"
+              )}>
+                <div>
+                  <div className="flex items-center justify-between gap-3 mb-2">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-4.5 w-4.5 text-text-muted" />
+                      <h4 className="text-sm font-semibold text-text-main">
+                        {t("geminiSectionTitle")}
+                      </h4>
+                    </div>
+                    <span className={cn(
+                      "text-[10px] px-2 py-0.5 rounded-full font-medium border flex items-center gap-1.5",
+                      isGeminiActive 
+                        ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
+                        : "bg-zinc-500/10 text-zinc-400 border-zinc-500/20"
+                    )}>
+                      <span className={cn("w-1.5 h-1.5 rounded-full", isGeminiActive ? "bg-emerald-400 animate-pulse" : "bg-zinc-500")} />
+                      {isGeminiActive ? getSummary(state.geminiKey) : common("states.notConfigured")}
+                    </span>
+                  </div>
+                  <p className="text-xs text-text-muted mb-4 leading-relaxed">
+                    {t("placeholder")}
+                  </p>
+                  
+                  <div className="relative mb-4">
+                    <input
+                      type={state.showGeminiKey ? "text" : "password"}
+                      value={state.draftGeminiKey}
+                      onChange={(e) => updateState({ draftGeminiKey: e.target.value })}
+                      placeholder={t("placeholder")}
+                      className="h-10 w-full rounded-xl border border-line bg-field px-3 pr-10 text-xs text-text-main outline-none transition-all placeholder:text-text-faint focus:border-ring/40 focus:ring-2 focus:ring-ring/10"
+                      autoComplete="off"
+                      spellCheck={false}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => updateState({ showGeminiKey: !state.showGeminiKey })}
+                      className="absolute inset-y-0 right-2 flex w-8 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-panel-hover hover:text-text-main"
+                      title={state.showGeminiKey ? common("actions.hideKey") : common("actions.showKey")}
+                    >
+                      {state.showGeminiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                 </div>
-                <span className={cn(
-                  "text-[10px] px-2 py-0.5 rounded-full font-medium border",
-                  state.geminiKey 
-                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
-                    : "bg-panel-control text-text-muted border-line"
-                )}>
-                  {getSummary(state.geminiKey)}
-                </span>
-              </div>
-              <p className="text-xs text-text-muted mb-4 leading-relaxed">
-                {t("placeholder")}
-              </p>
-              
-              <div className="relative mb-4">
-                <input
-                  type={state.showGeminiKey ? "text" : "password"}
-                  value={state.draftGeminiKey}
-                  onChange={(e) => updateState({ draftGeminiKey: e.target.value })}
-                  placeholder={t("placeholder")}
-                  className="h-10 w-full rounded-xl border border-line bg-field px-3 pr-10 text-xs text-text-main outline-none transition-all placeholder:text-text-faint focus:border-ring/40 focus:ring-2 focus:ring-ring/10"
-                  autoComplete="off"
-                  spellCheck={false}
-                />
-                <button
-                  type="button"
-                  onClick={() => updateState({ showGeminiKey: !state.showGeminiKey })}
-                  className="absolute inset-y-0 right-2 flex w-8 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-panel-hover hover:text-text-main"
-                  title={state.showGeminiKey ? common("actions.hideKey") : common("actions.showKey")}
-                >
-                  {state.showGeminiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
 
-            <div className="flex gap-2 mt-2">
-              <IconTextButton
-                icon={state.geminiSaved ? Check : Save}
-                onClick={handleGeminiSave}
-                disabled={!state.draftGeminiKey.trim()}
-                tone={ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT}
-                strong
-                className="h-9 text-xs py-0 px-3 flex-1"
-              >
-                {state.geminiSaved ? common("actions.saved") : common("actions.save")}
-              </IconTextButton>
-              <DeleteButton
-                type="button"
-                onClick={handleGeminiDelete}
-                disabled={!state.geminiKey && !state.draftGeminiKey}
-                strong
-                className="h-9 text-xs py-0 px-3"
-              >
-                {common("actions.delete")}
-              </DeleteButton>
-            </div>
-          </div>
-
-          <div className="rounded-xl border p-5 flex flex-col justify-between transition-all duration-300 border-line bg-panel-elevated hover:bg-panel-active">
-            <div>
-              <div className="flex items-center justify-between gap-3 mb-2">
-                <div className="flex items-center gap-2">
-                  <Cpu className="h-4.5 w-4.5 text-text-muted" />
-                  <h4 className="text-sm font-semibold text-text-main">
-                    {t("openaiSectionTitle")}
-                  </h4>
+                <div className="flex gap-2 mt-2">
+                  <IconTextButton
+                    icon={state.geminiSaved ? Check : Save}
+                    onClick={handleGeminiSave}
+                    disabled={!state.draftGeminiKey.trim()}
+                    tone={ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT}
+                    strong
+                    className="h-9 text-xs py-0 px-3 flex-1"
+                  >
+                    {state.geminiSaved ? common("actions.saved") : common("actions.save")}
+                  </IconTextButton>
+                  <DeleteButton
+                    type="button"
+                    onClick={handleGeminiDelete}
+                    disabled={!state.geminiKey && !state.draftGeminiKey}
+                    strong
+                    className="h-9 text-xs py-0 px-3"
+                  >
+                    {common("actions.delete")}
+                  </DeleteButton>
                 </div>
-                <span className={cn(
-                  "text-[10px] px-2 py-0.5 rounded-full font-medium border",
-                  state.openaiKey 
-                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
-                    : "bg-panel-control text-text-muted border-line"
-                )}>
-                  {getSummary(state.openaiKey)}
-                </span>
               </div>
-              <p className="text-xs text-text-muted mb-4 leading-relaxed">
-                {t("openaiPlaceholder")}
-              </p>
-              
-              <div className="relative mb-4">
-                <input
-                  type={state.showOpenaiKey ? "text" : "password"}
-                  value={state.draftOpenaiKey}
-                  onChange={(e) => updateState({ draftOpenaiKey: e.target.value })}
-                  placeholder={t("openaiPlaceholder")}
-                  className="h-10 w-full rounded-xl border border-line bg-field px-3 pr-10 text-xs text-text-main outline-none transition-all placeholder:text-text-faint focus:border-ring/40 focus:ring-2 focus:ring-ring/10"
-                  autoComplete="off"
-                  spellCheck={false}
-                />
-                <button
-                  type="button"
-                  onClick={() => updateState({ showOpenaiKey: !state.showOpenaiKey })}
-                  className="absolute inset-y-0 right-2 flex w-8 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-panel-hover hover:text-text-main"
-                  title={state.showOpenaiKey ? common("actions.hideKey") : common("actions.showKey")}
-                >
-                  {state.showOpenaiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
+            );
+          })()}
 
-            <div className="flex gap-2 mt-2">
-              <IconTextButton
-                icon={state.openaiSaved ? Check : Save}
-                onClick={handleOpenaiSave}
-                disabled={!state.draftOpenaiKey.trim()}
-                tone={ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT}
-                strong
-                className="h-9 text-xs py-0 px-3 flex-1"
-              >
-                {state.openaiSaved ? common("actions.saved") : common("actions.save")}
-              </IconTextButton>
-              <DeleteButton
-                type="button"
-                onClick={handleOpenaiDelete}
-                disabled={!state.openaiKey && !state.draftOpenaiKey}
-                strong
-                className="h-9 text-xs py-0 px-3"
-              >
-                {common("actions.delete")}
-              </DeleteButton>
-            </div>
-          </div>
+          {(() => {
+            const isOpenaiActive = !!state.openaiKey;
+            return (
+              <div className={cn(
+                "rounded-xl border p-5 flex flex-col justify-between transition-all duration-300",
+                isOpenaiActive 
+                  ? "border-emerald-500/20 bg-panel-active shadow-[0_0_12px_rgba(16,185,129,0.03)] hover:border-emerald-500/30" 
+                  : "border-line bg-panel-elevated/40 opacity-65 hover:opacity-85"
+              )}>
+                <div>
+                  <div className="flex items-center justify-between gap-3 mb-2">
+                    <div className="flex items-center gap-2">
+                      <Cpu className="h-4.5 w-4.5 text-text-muted" />
+                      <h4 className="text-sm font-semibold text-text-main">
+                        {t("openaiSectionTitle")}
+                      </h4>
+                    </div>
+                    <span className={cn(
+                      "text-[10px] px-2 py-0.5 rounded-full font-medium border flex items-center gap-1.5",
+                      isOpenaiActive 
+                        ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
+                        : "bg-zinc-500/10 text-zinc-400 border-zinc-500/20"
+                    )}>
+                      <span className={cn("w-1.5 h-1.5 rounded-full", isOpenaiActive ? "bg-emerald-400 animate-pulse" : "bg-zinc-500")} />
+                      {isOpenaiActive ? getSummary(state.openaiKey) : common("states.notConfigured")}
+                    </span>
+                  </div>
+                  <p className="text-xs text-text-muted mb-4 leading-relaxed">
+                    {t("openaiPlaceholder")}
+                  </p>
+                  
+                  <div className="relative mb-4">
+                    <input
+                      type={state.showOpenaiKey ? "text" : "password"}
+                      value={state.draftOpenaiKey}
+                      onChange={(e) => updateState({ draftOpenaiKey: e.target.value })}
+                      placeholder={t("openaiPlaceholder")}
+                      className="h-10 w-full rounded-xl border border-line bg-field px-3 pr-10 text-xs text-text-main outline-none transition-all placeholder:text-text-faint focus:border-ring/40 focus:ring-2 focus:ring-ring/10"
+                      autoComplete="off"
+                      spellCheck={false}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => updateState({ showOpenaiKey: !state.showOpenaiKey })}
+                      className="absolute inset-y-0 right-2 flex w-8 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-panel-hover hover:text-text-main"
+                      title={state.showOpenaiKey ? common("actions.hideKey") : common("actions.showKey")}
+                    >
+                      {state.showOpenaiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 mt-2">
+                  <IconTextButton
+                    icon={state.openaiSaved ? Check : Save}
+                    onClick={handleOpenaiSave}
+                    disabled={!state.draftOpenaiKey.trim()}
+                    tone={ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT}
+                    strong
+                    className="h-9 text-xs py-0 px-3 flex-1"
+                  >
+                    {state.openaiSaved ? common("actions.saved") : common("actions.save")}
+                  </IconTextButton>
+                  <DeleteButton
+                    type="button"
+                    onClick={handleOpenaiDelete}
+                    disabled={!state.openaiKey && !state.draftOpenaiKey}
+                    strong
+                    className="h-9 text-xs py-0 px-3"
+                  >
+                    {common("actions.delete")}
+                  </DeleteButton>
+                </div>
+              </div>
+            );
+          })()}
 
           <OllamaSettingsCard
             aiProvider={aiProvider}

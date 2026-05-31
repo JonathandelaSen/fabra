@@ -2,7 +2,19 @@
 
 import { useEffect, useState } from "react";
 import type { StoredAIDefaultApiKeys, StoredAIDefaultBaseUrls } from "@/lib/browser-preferences";
-import { fetchDefaultAISettings } from "../api/ai-settings-api";
+
+export interface AIDefaultSettingsResponse {
+  apiKeys: StoredAIDefaultApiKeys;
+  baseUrls: StoredAIDefaultBaseUrls;
+}
+
+export async function fetchDefaultAISettings(): Promise<AIDefaultSettingsResponse> {
+  const response = await fetch("/api/ai-settings/defaults");
+  if (!response.ok) {
+    return { apiKeys: {}, baseUrls: {} };
+  }
+  return response.json();
+}
 
 export function useDefaultAISettings() {
   const [defaultApiKeys, setDefaultApiKeys] = useState<StoredAIDefaultApiKeys>({});

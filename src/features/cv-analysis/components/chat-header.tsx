@@ -11,8 +11,12 @@ import { Sparkles } from "lucide-react";
 import {
   getStoredAIModelForProvider,
   saveStoredAIProvider,
+  getStoredAIApiKeyForProvider,
+  getStoredAIBaseUrlForProvider,
+  AI_PROVIDER,
   type StoredAIProvider,
 } from "@/lib/browser-preferences";
+import { useDefaultAISettings } from "@/components/shared/use-default-ai-settings";
 
 interface ChatHeaderProps {
   provider: StoredAIProvider;
@@ -24,6 +28,12 @@ interface ChatHeaderProps {
 export function ChatHeader({ provider, onProviderChange, model, onModelChange }: ChatHeaderProps) {
   const t = useTranslations("analysisDetail.chat");
   const commonT = useTranslations("common.providers");
+  const { defaultApiKeys, defaultBaseUrls } = useDefaultAISettings();
+
+  const isGeminiActive = !!getStoredAIApiKeyForProvider(AI_PROVIDER.GEMINI, defaultApiKeys);
+  const isOpenaiActive = !!getStoredAIApiKeyForProvider(AI_PROVIDER.OPENAI, defaultApiKeys);
+  const isOllamaActive = !!getStoredAIBaseUrlForProvider(AI_PROVIDER.OLLAMA, defaultBaseUrls) && !!getStoredAIModelForProvider(AI_PROVIDER.OLLAMA);
+  const isMockActive = process.env.NODE_ENV !== "production";
 
   const handleProviderChange = (newProvider: StoredAIProvider) => {
     saveStoredAIProvider(newProvider);
@@ -60,10 +70,10 @@ export function ChatHeader({ provider, onProviderChange, model, onModelChange }:
           onChange={(event) => handleProviderChange(event.target.value as StoredAIProvider)}
           className="h-8 rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 text-[11px] text-zinc-400 outline-none transition-colors hover:border-white/[0.12] focus:border-cyan-500/30"
         >
-          <option value="gemini">{commonT("gemini")}</option>
-          <option value="openai">{commonT("openai")}</option>
-          <option value="ollama">{commonT("ollama")}</option>
-          {process.env.NODE_ENV !== "production" && <option value="mock">{commonT("mock")}</option>}
+          {(isGeminiActive || provider === "gemini") && <option value="gemini">{commonT("gemini")}</option>}
+          {(isOpenaiActive || provider === "openai") && <option value="openai">{commonT("openai")}</option>}
+          {(isOllamaActive || provider === "ollama") && <option value="ollama">{commonT("ollama")}</option>}
+          {(isMockActive || provider === "mock") && <option value="mock">{commonT("mock")}</option>}
         </select>
         <select
           value={model}
