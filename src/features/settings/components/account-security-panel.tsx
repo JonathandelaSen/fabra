@@ -55,7 +55,7 @@ export function AccountSecurityPanel() {
           <input type="hidden" name="interfaceLanguage" value={locale} />
           <div className="mb-4">
             <p className="flex items-center gap-2 text-sm font-medium text-text-main">
-              <LockKeyhole className="h-4 w-4 text-indigo-300" />
+              <LockKeyhole className="h-4 w-4 text-text-muted" />
               {t("changePassword")}
             </p>
           </div>
@@ -93,8 +93,8 @@ export function AccountSecurityPanel() {
             <div
               className={`mt-3 flex gap-2 rounded-xl border px-3 py-2 text-sm ${
                 passwordState.error
-                  ? "border-rose-500/20 bg-rose-500/10 text-rose-200"
-                  : "border-emerald-500/20 bg-emerald-500/10 text-emerald-200"
+                  ? "border-danger-border bg-danger-soft text-danger-text"
+                  : "border-success-border bg-success-soft text-success-text"
               }`}
             >
               {passwordState.error ? (

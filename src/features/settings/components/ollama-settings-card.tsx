@@ -124,8 +124,8 @@ export function OllamaSettingsCard({
       <div>
         <div className="flex items-center justify-between gap-3 mb-2">
           <div className="flex items-center gap-2">
-            <Cpu className="h-4.5 w-4.5 text-zinc-500" />
-            <h4 className="text-sm font-semibold text-zinc-200">
+            <Cpu className="h-4.5 w-4.5 text-text-muted" />
+            <h4 className="text-sm font-semibold text-text-main">
               {t("ollamaSectionTitle")}
             </h4>
           </div>
@@ -133,13 +133,13 @@ export function OllamaSettingsCard({
             "text-[10px] px-2 py-0.5 rounded-full font-medium border",
             state.url
               ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-              : "bg-zinc-800 text-zinc-500 border-white/[0.04]",
+              : "bg-panel-control text-text-muted border-line",
           )}>
             {getSummary(state.url)}
           </span>
         </div>
         <div className="relative mb-3">
-          <label className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">
+          <label className="text-[10px] uppercase font-bold text-text-muted block mb-1">
             {t("ollamaBaseUrlLabel")}
           </label>
           <input
@@ -151,14 +151,14 @@ export function OllamaSettingsCard({
               updateState({ draftUrl: event.target.value });
             }}
             placeholder={t("ollamaPlaceholder")}
-            className="h-10 w-full rounded-xl border border-white/[0.08] bg-black/30 px-3 text-xs text-zinc-200 outline-none transition-all placeholder:text-zinc-600 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
+            className="h-10 w-full rounded-xl border border-line bg-field px-3 text-xs text-text-main outline-none transition-all placeholder:text-text-faint focus:border-ring/40 focus:ring-2 focus:ring-ring/10"
             autoComplete="off"
             spellCheck={false}
           />
         </div>
 
         <div className="relative mb-4">
-          <label className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">
+          <label className="text-[10px] uppercase font-bold text-text-muted block mb-1">
             {t("ollamaModelLabel")}
           </label>
           <input
@@ -170,7 +170,7 @@ export function OllamaSettingsCard({
               updateState({ draftModel: event.target.value });
             }}
             placeholder={t("ollamaModelPlaceholder")}
-            className="h-10 w-full rounded-xl border border-white/[0.08] bg-black/30 px-3 text-xs text-zinc-200 outline-none transition-all placeholder:text-zinc-600 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
+            className="h-10 w-full rounded-xl border border-line bg-field px-3 text-xs text-text-main outline-none transition-all placeholder:text-text-faint focus:border-ring/40 focus:ring-2 focus:ring-ring/10"
             autoComplete="off"
             spellCheck={false}
           />

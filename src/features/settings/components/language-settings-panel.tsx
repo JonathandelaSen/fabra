@@ -13,7 +13,7 @@ export function LanguageSettingsPanel() {
   return (
     <SettingsSectionPanel title={t("title")} icon={Globe2} description={t("description")}>
       <label
-        className="block text-sm font-medium text-zinc-300"
+        className="block text-sm font-medium text-text-soft"
         htmlFor="interface-language"
       >
         {t("label")}

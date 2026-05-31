@@ -148,7 +148,7 @@ export function AISettingsPanel({
     <BasicPanel className="p-6">
 
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="flex items-center gap-2 text-lg font-semibold text-zinc-100">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-text-main">
           <ShieldCheck className="h-5 w-5 text-emerald-400" />
           {t("title")}
         </h2>
@@ -164,8 +164,8 @@ export function AISettingsPanel({
             <div>
               <div className="flex items-center justify-between gap-3 mb-2">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="h-4.5 w-4.5 text-zinc-500" />
-                  <h4 className="text-sm font-semibold text-zinc-200">
+                  <Sparkles className="h-4.5 w-4.5 text-text-muted" />
+                  <h4 className="text-sm font-semibold text-text-main">
                     {t("geminiSectionTitle")}
                   </h4>
                 </div>
@@ -178,7 +178,7 @@ export function AISettingsPanel({
                   {getSummary(state.geminiKey)}
                 </span>
               </div>
-              <p className="text-xs text-zinc-400 mb-4 leading-relaxed">
+              <p className="text-xs text-text-muted mb-4 leading-relaxed">
                 {t("placeholder")}
               </p>
               
@@ -230,8 +230,8 @@ export function AISettingsPanel({
             <div>
               <div className="flex items-center justify-between gap-3 mb-2">
                 <div className="flex items-center gap-2">
-                  <Cpu className="h-4.5 w-4.5 text-zinc-500" />
-                  <h4 className="text-sm font-semibold text-zinc-200">
+                  <Cpu className="h-4.5 w-4.5 text-text-muted" />
+                  <h4 className="text-sm font-semibold text-text-main">
                     {t("openaiSectionTitle")}
                   </h4>
                 </div>
@@ -244,7 +244,7 @@ export function AISettingsPanel({
                   {getSummary(state.openaiKey)}
                 </span>
               </div>
-              <p className="text-xs text-zinc-400 mb-4 leading-relaxed">
+              <p className="text-xs text-text-muted mb-4 leading-relaxed">
                 {t("openaiPlaceholder")}
               </p>
               

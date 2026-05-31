@@ -25,15 +25,15 @@ export function DeleteAccountPanel({ userEmail }: DeleteAccountPanelProps) {
   return (
     <form
       action={deleteAction}
-      className="rounded-2xl border border-rose-500/20 bg-rose-500/[0.06] p-6"
+      className="rounded-2xl border border-danger-border bg-danger-soft p-6"
     >
       <input type="hidden" name="interfaceLanguage" value={locale} />
       <div className="mb-4">
-        <p className="flex items-center gap-2 text-sm font-semibold text-rose-100">
+        <p className="flex items-center gap-2 text-sm font-semibold text-danger-text">
           <Trash2 className="h-4 w-4" />
           {t("deleteAccount")}
         </p>
-        <p className="mt-1 text-xs leading-5 text-rose-100/70">
+        <p className="mt-1 text-xs leading-5 text-danger-text/70">
           {t("deleteWarning")}
         </p>
       </div>
