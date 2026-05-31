@@ -93,13 +93,13 @@ export function JobMatchKanbanBoard({
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <div className="flex h-full min-h-0 flex-col">
+      <div className="flex h-full min-h-0 w-max flex-col">
         {isMoving && (
           <div className="mb-2 text-xs font-medium text-text-muted">
             {t("saving")}
           </div>
         )}
-        <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto md:flex-row md:overflow-visible md:pb-2">
+        <div className="flex min-h-0 flex-1 w-max flex-col gap-3 overflow-y-auto md:flex-row md:overflow-visible md:pb-2">
           {JOB_MATCH_KANBAN_STATUSES.map((status) => (
             <JobMatchKanbanColumn
               key={status}

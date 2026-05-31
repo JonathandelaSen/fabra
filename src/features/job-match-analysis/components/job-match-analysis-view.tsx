@@ -281,7 +281,7 @@ export default function JobMatchAnalysisView({
           data-kanban-horizontal-scroll
           className="h-full min-h-0 overflow-x-auto overflow-y-hidden"
         >
-          <div className="flex h-full min-h-0 min-w-max flex-col gap-3">
+          <div className="mx-auto flex h-full min-h-0 w-max flex-col gap-3">
             <label className="relative block w-full max-w-sm">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-600" />
               <input
