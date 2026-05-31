@@ -148,6 +148,24 @@ export default function JobMatchAnalysisDetail({
     }
   };
 
+  const handleSaveTrackingStatus = async (status: OfferStatus) => {
+    setOfferStatus(status);
+    setIsSavingTracking(true);
+    try {
+      await onUpdateTracking({
+        offerStatus: status,
+        offerNotes,
+        offerNextAction,
+        offerNextActionAt,
+      });
+    } catch (err) {
+      console.error(err);
+      alert(t("alerts.saveTrackingFailed"));
+    } finally {
+      setIsSavingTracking(false);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -171,6 +189,12 @@ export default function JobMatchAnalysisDetail({
             onExport={exportAnalysis}
             onSaveUrl={handleSaveUrl}
             isSavingUrl={isSavingUrl}
+            offerStatus={offerStatus}
+            offerNextAction={offerNextAction}
+            offerNextActionAt={offerNextActionAt}
+            onTabChange={onTabChange}
+            onOfferStatusChange={handleSaveTrackingStatus}
+            isSavingTracking={isSavingTracking}
           />
 
           <Tabs

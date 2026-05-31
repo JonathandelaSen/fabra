@@ -108,6 +108,26 @@ export function useAnalysisViewActions({
     }
   };
 
+  const handleSaveTrackingStatus = async (status: OfferStatus) => {
+    setOfferStatus(status);
+    setIsSavingTracking(true);
+    try {
+      await updateJobMatchAnalysis(analysis.id, {
+        offer_status: status,
+        offer_notes: offerNotes,
+        offer_next_action: offerNextAction,
+        offer_next_action_at: offerNextActionAt || null,
+      });
+      onUpdate?.();
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      alert(messages.saveTrackingFailed);
+    } finally {
+      setIsSavingTracking(false);
+    }
+  };
+
   const handleCreateInterviewQuestion = async (generateAfter = false) => {
     if (!quickQuestion.trim()) return;
     const aiConfig = getAIRequestConfigForProvider(aiProvider, aiApiKey, quickQuestionModel);
@@ -172,6 +192,7 @@ export function useAnalysisViewActions({
     isCreatingQuestion,
     handleSaveUrl,
     handleSaveTracking,
+    handleSaveTrackingStatus,
     handleCreateInterviewQuestion,
   };
 }

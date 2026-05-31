@@ -98,6 +98,7 @@ export default function AIAnalysisView({
   const { locale } = useInterfaceLanguage();
   const dateLocale = locale === "es" ? "es-ES" : "en-US";
   const [isDeleting, setIsDeleting] = useState(false);
+  const [activeTab, setActiveTab] = useState("resumen");
 
   const keywords = safeParseArray(analysis.ai_keywords);
   const improvements = safeParseArray(analysis.ai_improvements);
@@ -181,9 +182,15 @@ export default function AIAnalysisView({
             isDeleting={isDeleting}
             onSaveUrl={actions.handleSaveUrl}
             isSavingUrl={actions.isSavingUrl}
+            offerStatus={actions.offerStatus}
+            offerNextAction={actions.offerNextAction}
+            offerNextActionAt={actions.offerNextActionAt}
+            onTabChange={setActiveTab}
+            onOfferStatusChange={actions.handleSaveTrackingStatus}
+            isSavingTracking={actions.isSavingTracking}
           />
 
-          <Tabs defaultValue="resumen" className="w-full">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <AnalysisTabsList
               isJobMatch={isJobMatch}
               hasAdditionalContext={Boolean(additionalContext)}
