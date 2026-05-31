@@ -8,8 +8,10 @@ import {
   type CVTemplateLocale,
 } from "@/lib/cv-templates";
 import {
+  getAIApiKeyForProvider,
   getStoredAIApiKey,
   getStoredAIProvider,
+  type StoredAIProvider,
 } from "@/lib/browser-preferences";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { useCVDocumentList } from "@/features/cv-library";
@@ -34,10 +36,10 @@ export default function CVTemplatesView({
   const router = useRouter();
   const listQuery = useCVDocumentList();
   const cvs = listQuery.data ?? [];
-  const aiProvider = getStoredAIProvider();
+  const aiProviderValue = getStoredAIProvider();
   const aiApiKey = getStoredAIApiKey();
   
-  const hasAIApiKey = aiProvider === "mock" || aiApiKey.length > 0;
+  const hasAIApiKey = aiProviderValue === "mock" || aiApiKey.length > 0;
   const t = useTranslations("analysisFlow.templates");
   const tf = useTranslations("analysisFlow.forms");
   const templateIdFromPath = pathname.split("/").filter(Boolean)[1] ?? null;
@@ -46,15 +48,11 @@ export default function CVTemplatesView({
   const [locale, setLocale] = useState<CVTemplateLocale>("es");
   const [searchQuery, setSearchQuery] = useState("");
   const [copyPasteOpen, setCopyPasteOpen] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState<StoredAIProvider>(aiProviderValue);
   const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_GEMINI_MODEL);
   const createVersion = useCreateCVTemplateVersion({
     onCreated: (version) => onOpenEditor(version.id),
   });
-
-  const models = [
-    { id: "gemini-2.5-flash", label: `${GEMINI_MODELS["gemini-2.5-flash"]} (${tf("fast")})` },
-    { id: "gemini-3.1-pro-preview", label: `${GEMINI_MODELS["gemini-3.1-pro-preview"]} (${tf("powerful")})` },
-  ];
 
   const filteredCvs = cvs.filter(
     (cv) =>
@@ -82,8 +80,8 @@ export default function CVTemplatesView({
       cvId: selectedCvId,
       templateId: selectedTemplate.templateId,
       locale,
-      provider: aiProvider,
-      apiKey: aiApiKey,
+      provider: selectedProvider || aiProviderValue,
+      apiKey: getAIApiKeyForProvider(selectedProvider || aiProviderValue, aiApiKey),
       model: selectedModel,
     });
   };
@@ -113,8 +111,9 @@ export default function CVTemplatesView({
           locale={locale}
           searchQuery={searchQuery}
           hasAIApiKey={hasAIApiKey}
+          selectedProvider={selectedProvider}
+          onProviderChange={setSelectedProvider}
           selectedModel={selectedModel}
-          models={models}
           creating={createVersion.isPending}
           copyPasteOpen={copyPasteOpen}
           error={createVersion.errorMessage}

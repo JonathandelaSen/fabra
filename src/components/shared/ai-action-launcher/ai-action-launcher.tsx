@@ -11,20 +11,15 @@ import AIActionLauncherHeader from "./ai-action-launcher-header";
 import AIActionLauncherIntegrated from "./ai-action-launcher-integrated";
 import AIActionLauncherCopyPaste from "./ai-action-launcher-copy-paste";
 
-export interface AIModelOption {
-  id: string;
-  label: string;
-  provider?: string;
-  badge?: string;
-  disabled?: boolean;
-}
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 export interface AIActionLauncherProps {
   actionLabel: string;
   integrated: {
     available: boolean;
+    selectedProvider: StoredAIProvider;
+    onProviderChange: (provider: StoredAIProvider) => void;
     selectedModelId: string;
-    models: AIModelOption[];
     onModelChange: (modelId: string) => void;
     onRun: () => void;
     unavailableReason?: string;
@@ -82,8 +77,9 @@ export default function AIActionLauncher({
         <div className="p-4 flex flex-col gap-3">
           <AIActionLauncherIntegrated
             available={integrated.available}
+            selectedProvider={integrated.selectedProvider}
+            onProviderChange={integrated.onProviderChange}
             selectedModelId={integrated.selectedModelId}
-            models={integrated.models}
             onModelChange={integrated.onModelChange}
             onRun={integrated.onRun}
             unavailableReason={integrated.unavailableReason}

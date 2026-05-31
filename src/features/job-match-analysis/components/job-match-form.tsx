@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { DEFAULT_FAST_GEMINI_MODEL, DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 import {
   ArrowLeft,
   Briefcase,
@@ -14,7 +14,7 @@ import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { BasicPanel } from "@/components/shared/basic-panel";
 
 interface JobMatchFormProps {
-  onSubmit: (jobDescription: string, jobUrl: string, model: string) => void;
+  onSubmit: (jobDescription: string, jobUrl: string, provider: StoredAIProvider, model: string) => void;
   onBack: () => void;
   loading: boolean;
   error: string | null;
@@ -22,6 +22,8 @@ interface JobMatchFormProps {
   onOpenSettings: () => void;
   onCopyPasteOpen?: (jobDescription: string, jobUrl: string) => void;
 }
+
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 export default function JobMatchForm({
   onSubmit,
@@ -36,17 +38,15 @@ export default function JobMatchForm({
   const common = useTranslations("common");
   const [jobDescription, setJobDescription] = useState("");
   const [jobUrl, setJobUrl] = useState("");
-  const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_FAST_GEMINI_MODEL);
+  const [selectedProvider, setSelectedProvider] = useState<StoredAIProvider>("gemini");
+  const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_GEMINI_MODEL);
 
   const handleSubmit = () => {
     if (!jobDescription.trim()) return;
-    onSubmit(jobDescription.trim(), jobUrl.trim(), selectedModel);
+    onSubmit(jobDescription.trim(), jobUrl.trim(), selectedProvider, selectedModel);
   };
 
-  const models = [
-    { id: DEFAULT_FAST_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_FAST_GEMINI_MODEL]} (${t("fast")})` },
-    { id: DEFAULT_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_GEMINI_MODEL]} (${t("powerful")})` },
-  ];
+
 
   return (
     <motion.div
@@ -113,8 +113,9 @@ export default function JobMatchForm({
           disabled={!jobDescription.trim()}
           integrated={{
             available: hasAIApiKey,
+            selectedProvider,
+            onProviderChange: setSelectedProvider,
             selectedModelId: selectedModel,
-            models,
             onModelChange: setSelectedModel,
             onRun: handleSubmit,
             onConfigure: onOpenSettings,
@@ -159,4 +160,3 @@ export default function JobMatchForm({
     </motion.div>
   );
 }
-

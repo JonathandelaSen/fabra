@@ -8,10 +8,11 @@ import { useAnalysisChat } from "../hooks/use-analysis-chat";
 import { ConversationList } from "./conversation-list";
 import { ChatHeader } from "./chat-header";
 import { ChatInput } from "./chat-input";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface TabChatOfertaProps {
   analysisId: string;
-  aiProvider: "gemini" | "mock";
+  aiProvider: StoredAIProvider;
   aiApiKey: string;
   aiModel: string;
   hasAIApiKey: boolean;
@@ -66,7 +67,12 @@ export default function TabChatOferta({
       />
 
       <div className="flex min-w-0 min-h-0 flex-1 flex-col">
-        <ChatHeader model={chat.model} onModelChange={chat.setModel} />
+        <ChatHeader
+          provider={chat.provider}
+          onProviderChange={chat.setProvider}
+          model={chat.model}
+          onModelChange={chat.setModel}
+        />
 
         <ChatMessagesArea
           messages={chat.messages}

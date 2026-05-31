@@ -7,6 +7,7 @@ import type { JobMatchAnalysisDetailResponse } from "../types";
 import type { AnalysisTab } from "../hooks/use-job-match-analysis-route-state";
 import type { InterviewQuestionSummary } from "../types";
 import { JobMatchAnalysisMainPanel } from "./job-match-analysis-main-panel";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface JobMatchAnalysisContentProps {
   analysisId: string | null;
@@ -24,6 +25,7 @@ interface JobMatchAnalysisContentProps {
   onScore: (input: {
     jobDescription: string;
     jobUrl: string;
+    provider: StoredAIProvider;
     model: string;
   }) => Promise<void>;
   onTabChange: (tab: AnalysisTab) => void;

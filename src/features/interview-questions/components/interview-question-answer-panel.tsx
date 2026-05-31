@@ -5,9 +5,10 @@ import { CheckCircle2, Copy, Loader2, Save } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 import { Textarea } from "@/components/ui/textarea";
-import AIActionLauncher, { type AIModelOption } from "@/components/shared/ai-action-launcher";
+import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { BasicPanel } from "@/components/shared/basic-panel";
 import type { InterviewQuestion, UpdateInterviewQuestionInput } from "../api/interview-questions-api";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface InterviewQuestionAnswerPanelProps {
   question: InterviewQuestion;
@@ -16,11 +17,12 @@ interface InterviewQuestionAnswerPanelProps {
   isSaving: boolean;
   aiLoading: "generate" | "edit" | null;
   hasAIApiKey: boolean;
+  provider: StoredAIProvider;
   model: string;
-  models: AIModelOption[];
   answerRef: RefObject<HTMLTextAreaElement | null>;
   shouldSkipBlurSave: () => boolean;
   onUpdate: (updates: Partial<UpdateInterviewQuestionInput>) => void;
+  onProviderChange: (provider: StoredAIProvider) => void;
   onModelChange: (model: string) => void;
   onRunAI: (mode: "generate" | "edit", instruction: string) => void;
   onOpenSettings: () => void;
@@ -37,11 +39,12 @@ export default function InterviewQuestionAnswerPanel({
   isSaving,
   aiLoading,
   hasAIApiKey,
+  provider,
   model,
-  models,
   answerRef,
   shouldSkipBlurSave,
   onUpdate,
+  onProviderChange,
   onModelChange,
   onRunAI,
   onOpenSettings,
@@ -86,8 +89,9 @@ export default function InterviewQuestionAnswerPanel({
                 loading={aiLoading !== null}
                 integrated={{
                   available: hasAIApiKey,
+                  selectedProvider: provider,
+                  onProviderChange,
                   selectedModelId: model,
-                  models,
                   onModelChange,
                   onRun: () => onRunAI("generate", ""),
                   onConfigure: onOpenSettings,

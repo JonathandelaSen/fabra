@@ -11,6 +11,7 @@ import {
 } from "@/lib/analysis-types";
 import { Tabs } from "@/components/ui/tabs";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 import type { DeleteAnalysisHandler, InterviewQuestionSummary } from "../types";
 import { useAnalysisViewActions } from "../hooks/use-analysis-view-actions";
 import ScoreHero from "./score-hero";
@@ -48,9 +49,9 @@ interface AIAnalysisViewProps {
       type?: string;
     } | null;
     title: string;
-    filename: string;
-  };
-  aiProvider?: "gemini" | "mock";
+      filename: string;
+    };
+  aiProvider?: StoredAIProvider;
   aiApiKey?: string;
   aiModel?: string;
   hasAIApiKey?: boolean;

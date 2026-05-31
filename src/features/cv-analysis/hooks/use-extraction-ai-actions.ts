@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { DEFAULT_FAST_GEMINI_MODEL, DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
+import { DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
 import { getErrorMessage } from "@/lib/errors";
 import type { AIContext } from "@/lib/analysis-types";
 import { useJobMatchAnalysisMutations } from "@/features/job-match-analysis";
@@ -11,7 +11,7 @@ import {
   type ScoreCVAnalysisInput,
 } from "./use-cv-analysis-mutations";
 
-type AIProvider = "gemini" | "mock";
+import { getAIApiKeyForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 
 interface ScoreAnalysisHandler {
   (id: string, input: ScoreCVAnalysisInput): Promise<void>;
@@ -21,7 +21,7 @@ interface UseExtractionAIActionsParams {
   analysisId: string;
   aiApiKey: string;
   aiModel: string;
-  aiProvider: AIProvider;
+  aiProvider: StoredAIProvider;
   hasAIApiKey: boolean;
   onAIAnalysisComplete: () => void;
   onScoreAnalysis?: ScoreAnalysisHandler;
@@ -44,17 +44,19 @@ export function useExtractionAIActions({
   const [aiError, setAiError] = useState<string | null>(null);
   const [copyPasteContext, setCopyPasteContext] = useState<string | null>(null);
   const [copyPasteOpen, setCopyPasteOpen] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState<StoredAIProvider>(aiProvider);
   const [selectedModel, setSelectedModel] = useState<string>(
-    aiModel || DEFAULT_FAST_GEMINI_MODEL,
+    aiModel || DEFAULT_GEMINI_MODEL,
   );
 
-  const models = [
-    { id: DEFAULT_FAST_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_FAST_GEMINI_MODEL]} (${formsT("fast")})` },
-    { id: DEFAULT_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_GEMINI_MODEL]} (${formsT("powerful")})` },
-  ];
+  const models = Object.entries(GEMINI_MODELS).map(([id, label]) => ({
+    id,
+    label: id === DEFAULT_GEMINI_MODEL ? `${label} (${formsT("powerful")})` : label,
+  }));
 
-  const handleGeneralAnalysis = async (context: AIContext, model: string) => {
-    if (!hasAIApiKey) {
+  const handleGeneralAnalysis = async (context: AIContext) => {
+    const resolvedApiKey = getAIApiKeyForProvider(selectedProvider, aiApiKey);
+    if (selectedProvider !== "mock" && !resolvedApiKey) {
       setAiError(t("missingApiKey"));
       return;
     }
@@ -66,18 +68,18 @@ export function useExtractionAIActions({
       if (onScoreAnalysis) {
         await onScoreAnalysis(analysisId, {
           additionalContext: context?.additionalContext ?? null,
-          provider: aiProvider,
-          apiKey: aiApiKey,
-          model,
+          provider: selectedProvider,
+          apiKey: resolvedApiKey,
+          model: selectedModel,
         });
       } else {
         await scoreCVAnalysis.mutateAsync({
           id: analysisId,
           input: {
             additionalContext: context?.additionalContext ?? null,
-            provider: aiProvider,
-            apiKey: aiApiKey,
-            model,
+            provider: selectedProvider,
+            apiKey: resolvedApiKey,
+            model: selectedModel,
           },
         });
       }
@@ -98,9 +100,9 @@ export function useExtractionAIActions({
   const handleJobMatchAnalysis = async (
     jobDescription: string,
     jobUrl: string,
-    model: string,
   ) => {
-    if (!hasAIApiKey) {
+    const resolvedApiKey = getAIApiKeyForProvider(selectedProvider, aiApiKey);
+    if (selectedProvider !== "mock" && !resolvedApiKey) {
       setAiError(t("missingApiKey"));
       return;
     }
@@ -114,9 +116,9 @@ export function useExtractionAIActions({
         input: {
           jobDescription,
           jobUrl: jobUrl || null,
-          provider: aiProvider,
-          apiKey: aiApiKey,
-          model,
+          provider: selectedProvider,
+          apiKey: resolvedApiKey,
+          model: selectedModel,
         },
       });
 
@@ -140,6 +142,8 @@ export function useExtractionAIActions({
     handleJobMatchAnalysis,
     setCopyPasteContext,
     setCopyPasteOpen,
+    selectedProvider,
+    setSelectedProvider,
     setSelectedModel,
   };
 }

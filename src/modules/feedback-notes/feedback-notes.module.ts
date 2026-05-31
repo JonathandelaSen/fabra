@@ -17,6 +17,7 @@ import { SupabaseFeedbackEntryRepository } from "./infrastructure/repositories/s
 import { SupabaseFeedbackRepository } from "./infrastructure/repositories/supabase-feedback.repository";
 import { GeminiFeedbackAIServiceFactory } from "./infrastructure/services/gemini-feedback-ai.service";
 import { MockFeedbackAIServiceFactory } from "./infrastructure/services/mock-feedback-ai.service";
+import { OpenAIFeedbackAIServiceFactory } from "./infrastructure/services/openai-feedback-ai.service";
 import { ProviderFeedbackAIServiceFactory } from "./infrastructure/services/provider-feedback-ai-service.factory";
 
 const feedbackRepo = new SupabaseFeedbackRepository();
@@ -24,6 +25,7 @@ const entryRepo = new SupabaseFeedbackEntryRepository();
 const tracker: EventTracker = new SupabaseEventTracker();
 const aiFactory = new ProviderFeedbackAIServiceFactory({
   geminiFactory: new GeminiFeedbackAIServiceFactory(),
+  openaiFactory: new OpenAIFeedbackAIServiceFactory(),
   mockFactory: new MockFeedbackAIServiceFactory(),
 });
 

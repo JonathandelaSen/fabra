@@ -14,6 +14,7 @@ import { UpdateCVAnalysisAIResultUseCase } from "./application/use-cases/update-
 import { buildCVScoringCopyPastePrompt } from "./infrastructure/services/cv-scoring-prompts";
 import { GeminiCVScoringAIServiceFactory } from "./infrastructure/services/gemini-cv-scoring-ai.service";
 import { MockCVScoringAIServiceFactory } from "./infrastructure/services/mock-cv-scoring-ai.service";
+import { OpenAICVScoringAIServiceFactory } from "./infrastructure/services/openai-cv-scoring-ai.service";
 import { ProviderCVScoringAIServiceFactory } from "./infrastructure/services/provider-cv-scoring-ai-service.factory";
 import { SupabaseCVAnalysisRepository } from "./infrastructure/repositories/supabase-cv-analysis.repository";
 
@@ -21,6 +22,7 @@ const repo = new SupabaseCVAnalysisRepository();
 const tracker: EventTracker = new SupabaseEventTracker();
 const aiServiceFactory = new ProviderCVScoringAIServiceFactory({
   geminiFactory: new GeminiCVScoringAIServiceFactory(),
+  openaiFactory: new OpenAICVScoringAIServiceFactory(),
   mockFactory: new MockCVScoringAIServiceFactory(),
 });
 

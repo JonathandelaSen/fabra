@@ -21,7 +21,9 @@ test("user can create, edit, and delete work journal entries", async ({ page }) 
 
   await page.getByRole("button", { name: t.newEntry }).click();
 
-  await page.getByLabel(t.context).selectOption({ label: `${contextName} ${t.projectSuffix}` });
+  // Wait for React Query to load contexts (it can take a second after the POST)
+  await page.getByLabel(t.context).waitFor({ state: "visible" });
+  await page.getByLabel(t.context).selectOption({ label: contextName });
 
   const notesContent = "Completed the first part of the E2E testing framework.";
   await page.getByPlaceholder(t.notesPlaceholder).fill(notesContent);

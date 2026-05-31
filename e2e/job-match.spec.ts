@@ -25,7 +25,7 @@ test("user can create a job match analysis and view the results", async ({
   await expect(page.getByText(messages.en.common.actions.saved)).toBeVisible();
 
   // Navigate back to New Analysis
-  await page.getByRole("button", { name: messages.en.navigation.newAnalysis }).click();
+  await page.getByRole("button", { name: messages.en.analysisFlow.lists.newOffer }).click();
 
   // 1. Upload a CV via UI and create an analysis
   // This leaves us in the Extraction View with the mode selector

@@ -17,6 +17,9 @@ describe("assertAIProviderAllowedForRuntime", () => {
     expect(() => assertAIProviderAllowedForRuntime("gemini")).toThrow(
       "Los proveedores reales de IA están deshabilitados en tests.",
     );
+    expect(() => assertAIProviderAllowedForRuntime("openai")).toThrow(
+      "Los proveedores reales de IA están deshabilitados en tests.",
+    );
   });
 
   it("allows mock and real providers in development runtime", () => {
@@ -24,6 +27,7 @@ describe("assertAIProviderAllowedForRuntime", () => {
 
     expect(() => assertAIProviderAllowedForRuntime("mock")).not.toThrow();
     expect(() => assertAIProviderAllowedForRuntime("gemini")).not.toThrow();
+    expect(() => assertAIProviderAllowedForRuntime("openai")).not.toThrow();
   });
 
   it("rejects mock in production runtime", () => {
@@ -33,5 +37,6 @@ describe("assertAIProviderAllowedForRuntime", () => {
       "El proveedor mock de IA no está permitido en producción.",
     );
     expect(() => assertAIProviderAllowedForRuntime("gemini")).not.toThrow();
+    expect(() => assertAIProviderAllowedForRuntime("openai")).not.toThrow();
   });
 });

@@ -3,12 +3,15 @@
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { useTranslations } from "next-intl";
 
+import type { StoredAIProvider } from "@/lib/browser-preferences";
+
 interface JobMatchActionLauncherProps {
   loading: boolean;
   disabled: boolean;
   hasAIApiKey: boolean;
+  selectedProvider: StoredAIProvider;
+  onProviderChange: (provider: StoredAIProvider) => void;
   selectedModel: string;
-  models: Array<{ id: string; label: string }>;
   onModelChange: (model: string) => void;
   onSubmit: () => void;
   onOpenSettings: () => void;
@@ -18,8 +21,9 @@ export function JobMatchActionLauncher({
   loading,
   disabled,
   hasAIApiKey,
+  selectedProvider,
+  onProviderChange,
   selectedModel,
-  models,
   onModelChange,
   onSubmit,
   onOpenSettings,
@@ -34,8 +38,9 @@ export function JobMatchActionLauncher({
         disabled={disabled}
         integrated={{
           available: hasAIApiKey,
+          selectedProvider,
+          onProviderChange,
           selectedModelId: selectedModel,
-          models,
           onModelChange,
           onRun: onSubmit,
           onConfigure: onOpenSettings,

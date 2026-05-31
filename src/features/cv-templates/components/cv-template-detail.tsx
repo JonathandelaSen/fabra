@@ -11,6 +11,7 @@ import CVTemplatePreview from "./cv-template-preview";
 import { CVTemplateCvSelector } from "./cv-template-cv-selector";
 import { CVTemplateLanguageSelector } from "./cv-template-language-selector";
 import { CVTemplateApiKeyAlert } from "./cv-template-api-key-alert";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface CVTemplateDetailProps {
   template: CVTemplateDefinition | null;
@@ -20,8 +21,9 @@ interface CVTemplateDetailProps {
   locale: CVTemplateLocale;
   searchQuery: string;
   hasAIApiKey: boolean;
+  selectedProvider: StoredAIProvider;
+  onProviderChange: (provider: StoredAIProvider) => void;
   selectedModel: string;
-  models: { id: string; label: string }[];
   creating: boolean;
   copyPasteOpen: boolean;
   error: string | null;
@@ -45,8 +47,9 @@ export function CVTemplateDetail({
   locale,
   searchQuery,
   hasAIApiKey,
+  selectedProvider,
+  onProviderChange,
   selectedModel,
-  models,
   creating,
   copyPasteOpen,
   error,
@@ -147,8 +150,9 @@ export function CVTemplateDetail({
                 disabled={!selectedCvId}
                 integrated={{
                   available: hasAIApiKey,
+                  selectedProvider,
+                  onProviderChange,
                   selectedModelId: selectedModel,
-                  models,
                   onModelChange,
                   onRun: onCreateVersion,
                   onConfigure: onOpenSettings,

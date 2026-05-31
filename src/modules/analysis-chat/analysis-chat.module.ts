@@ -17,12 +17,14 @@ import { SupabaseChatMessageRepository } from "./infrastructure/repositories/sup
 import { SupabaseConversationRepository } from "./infrastructure/repositories/supabase-conversation.repository";
 import { GeminiAnalysisChatAIServiceFactory } from "./infrastructure/services/gemini-analysis-chat-ai.service";
 import { MockAnalysisChatAIServiceFactory } from "./infrastructure/services/mock-analysis-chat-ai.service";
+import { OpenAIAnalysisChatAIServiceFactory } from "./infrastructure/services/openai-analysis-chat-ai.service";
 import { ProviderAnalysisChatAIServiceFactory } from "./infrastructure/services/provider-analysis-chat-ai-service.factory";
 
 const conversationRepo = new SupabaseConversationRepository();
 const messageRepo = new SupabaseChatMessageRepository();
 const aiFactory = new ProviderAnalysisChatAIServiceFactory({
   geminiFactory: new GeminiAnalysisChatAIServiceFactory(),
+  openaiFactory: new OpenAIAnalysisChatAIServiceFactory(),
   mockFactory: new MockAnalysisChatAIServiceFactory(),
 });
 const tracker: EventTracker = new SupabaseEventTracker();

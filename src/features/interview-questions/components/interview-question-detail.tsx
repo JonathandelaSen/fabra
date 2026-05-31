@@ -2,7 +2,6 @@
 
 import { useRef, useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import type { AIModelOption } from "@/components/shared/ai-action-launcher";
 import type {
   InterviewQuestion,
   UpdateInterviewQuestionInput,
@@ -11,20 +10,17 @@ import type {
   InterviewQuestionAnalysisOption,
   InterviewQuestionCVOption,
 } from "./interview-questions-types";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 import InterviewQuestionHeader from "./interview-question-header";
 import InterviewQuestionPromptPanel from "./interview-question-prompt-panel";
 import InterviewQuestionAnswerPanel from "./interview-question-answer-panel";
-import { GEMINI_MODELS } from "@/frontend/ai-models";
-
-const AI_MODELS: AIModelOption[] = [
-  { id: "gemini-3.1-pro-preview", label: GEMINI_MODELS["gemini-3.1-pro-preview"] },
-  { id: "gemini-2.5-flash", label: GEMINI_MODELS["gemini-2.5-flash"] },
-];
 
 interface InterviewQuestionDetailProps {
   question: InterviewQuestion;
   cvs: InterviewQuestionCVOption[];
   analyses: InterviewQuestionAnalysisOption[];
+  provider: StoredAIProvider;
+  onProviderChange: (provider: StoredAIProvider) => void;
   model: string;
   isSaving: boolean;
   aiLoading: "generate" | "edit" | null;
@@ -42,6 +38,8 @@ export function InterviewQuestionDetail({
   question,
   cvs,
   analyses,
+  provider,
+  onProviderChange,
   model,
   isSaving,
   aiLoading,
@@ -132,8 +130,9 @@ export function InterviewQuestionDetail({
           isSaving={isSaving}
           aiLoading={aiLoading}
           hasAIApiKey={hasAIApiKey}
+          provider={provider}
+          onProviderChange={onProviderChange}
           model={model}
-          models={AI_MODELS}
           answerRef={answerRef}
           shouldSkipBlurSave={shouldSkipBlurSave}
           onUpdate={onUpdate}

@@ -13,6 +13,7 @@ import {
 import ExtractionAIAnalysisSection from "./extraction-ai-analysis-section";
 import { type ParserTab } from "./extraction-parser-config";
 import ExtractionWorkspace from "./extraction-workspace";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface ExtractionData {
   text_python: string | null;
@@ -40,7 +41,7 @@ interface ExtractionViewProps {
     } | null;
   };
   onAIAnalysisComplete: () => void;
-  aiProvider: "gemini" | "mock";
+  aiProvider: StoredAIProvider;
   aiApiKey: string;
   aiModel: string;
   hasAIApiKey: boolean;
@@ -73,13 +74,14 @@ export default function ExtractionView({
     copyPasteContext,
     copyPasteOpen,
     loadingAI,
-    models,
+    selectedProvider,
     selectedModel,
     handleExternalChatAnalysis,
     handleGeneralAnalysis,
     handleJobMatchAnalysis,
     setCopyPasteContext,
     setCopyPasteOpen,
+    setSelectedProvider,
     setSelectedModel,
   } = useExtractionAIActions({
     analysisId: analysis.id,
@@ -161,10 +163,11 @@ export default function ExtractionView({
         reAnalysis={{
           loading: loadingAI,
           hasAIApiKey,
+          selectedProvider,
+          onProviderChange: setSelectedProvider,
           selectedModel,
-          models,
           onModelChange: setSelectedModel,
-          onRun: () => handleGeneralAnalysis({}, selectedModel),
+          onRun: () => handleGeneralAnalysis({}),
           onConfigure: onOpenSettings,
           onOpenCopyPaste: () => {
             setCopyPasteContext(null);
@@ -198,6 +201,10 @@ export default function ExtractionView({
           hasAIApiKey={hasAIApiKey}
           hideAnalysisSelector={hideAnalysisSelector}
           loadingAI={loadingAI}
+          selectedProvider={selectedProvider}
+          onProviderChange={setSelectedProvider}
+          selectedModel={selectedModel}
+          onModelChange={setSelectedModel}
           selectedMode={selectedMode}
           onAnalyzeWithExternalChat={handleExternalChatAnalysis}
           onBack={() => setSelectedMode(null)}

@@ -13,11 +13,10 @@ import {
 } from "../api/cv-analysis-chat-api";
 import type { AnalysisChatConversation, AnalysisChatMessage } from "../components/chat-types";
 
-type AIProvider = "gemini" | "mock";
-
+import { getAIApiKeyForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 interface UseAnalysisChatParams {
   analysisId: string;
-  aiProvider: AIProvider;
+  aiProvider: StoredAIProvider;
   aiApiKey: string;
   aiModel: string;
   hasAIApiKey: boolean;
@@ -41,6 +40,7 @@ export function useAnalysisChat({
   >(null);
   const [messages, setMessages] = useState<AnalysisChatMessage[]>([]);
   const [draft, setDraft] = useState("");
+  const [provider, setProvider] = useState<StoredAIProvider>("gemini");
   const [model, setModel] = useState<string>(DEFAULT_GEMINI_MODEL);
   const [isLoadingConversations, setIsLoadingConversations] = useState(true);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
@@ -169,7 +169,9 @@ export function useAnalysisChat({
       event.preventDefault();
       const message = draft.trim();
       if (!message || isSending) return;
-      if (!hasAIApiKey) {
+      const resolvedProvider = provider || aiProvider;
+      const resolvedApiKey = getAIApiKeyForProvider(resolvedProvider, aiApiKey);
+      if (resolvedProvider !== "mock" && !resolvedApiKey) {
         setError(t("missingApiKey"));
         return;
       }
@@ -185,8 +187,8 @@ export function useAnalysisChat({
           analysisId,
           {
             message,
-            provider: aiProvider,
-            apiKey: aiApiKey,
+            provider: resolvedProvider,
+            apiKey: resolvedApiKey,
             model: model || aiModel,
             conversationId: conversation,
           },
@@ -208,7 +210,7 @@ export function useAnalysisChat({
       activeConversationId,
       aiApiKey,
       aiModel,
-      aiProvider,
+      provider,
       analysisId,
       createConversation,
       draft,
@@ -224,6 +226,7 @@ export function useAnalysisChat({
     activeConversationId,
     messages,
     draft,
+    provider,
     model,
     isLoadingConversations,
     isLoadingMessages,
@@ -231,6 +234,7 @@ export function useAnalysisChat({
     error,
     setActiveConversationId,
     setDraft,
+    setProvider,
     setModel,
     createConversation,
     renameConversation,

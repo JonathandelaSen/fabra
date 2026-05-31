@@ -2,15 +2,20 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { DEFAULT_FAST_GEMINI_MODEL, DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
-import { Briefcase, KeyRound, Link } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { BasicPanel } from "@/components/shared/basic-panel";
 import { JobMatchFormHeader } from "./job-match-form-header";
 import { JobMatchActionLauncher } from "./job-match-action-launcher";
 
+import type { StoredAIProvider } from "@/lib/browser-preferences";
+import { Briefcase, KeyRound, Link } from "lucide-react";
+
 interface JobMatchFormProps {
-  onSubmit: (jobDescription: string, jobUrl: string, model: string) => void;
+  selectedProvider: StoredAIProvider;
+  onProviderChange: (provider: StoredAIProvider) => void;
+  selectedModel: string;
+  onModelChange: (model: string) => void;
+  onSubmit: (jobDescription: string, jobUrl: string) => void;
   onBack: () => void;
   loading: boolean;
   error: string | null;
@@ -19,6 +24,10 @@ interface JobMatchFormProps {
 }
 
 export default function JobMatchForm({
+  selectedProvider,
+  onProviderChange,
+  selectedModel,
+  onModelChange,
   onSubmit,
   onBack,
   loading,
@@ -30,17 +39,11 @@ export default function JobMatchForm({
   const common = useTranslations("common");
   const [jobDescription, setJobDescription] = useState("");
   const [jobUrl, setJobUrl] = useState("");
-  const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_FAST_GEMINI_MODEL);
 
   const handleSubmit = () => {
     if (!jobDescription.trim()) return;
-    onSubmit(jobDescription.trim(), jobUrl.trim(), selectedModel);
+    onSubmit(jobDescription.trim(), jobUrl.trim());
   };
-
-  const models = [
-    { id: DEFAULT_FAST_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_FAST_GEMINI_MODEL]} (${t("fast")})` },
-    { id: DEFAULT_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_GEMINI_MODEL]} (${t("powerful")})` },
-  ];
 
   return (
     <motion.div
@@ -91,9 +94,10 @@ export default function JobMatchForm({
           loading={loading}
           disabled={!jobDescription.trim()}
           hasAIApiKey={hasAIApiKey}
+          selectedProvider={selectedProvider}
+          onProviderChange={onProviderChange}
           selectedModel={selectedModel}
-          models={models}
-          onModelChange={setSelectedModel}
+          onModelChange={onModelChange}
           onSubmit={handleSubmit}
           onOpenSettings={onOpenSettings}
         />

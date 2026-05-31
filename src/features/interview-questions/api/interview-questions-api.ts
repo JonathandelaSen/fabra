@@ -7,6 +7,7 @@ import type {
   SaveInterviewQuestionResponse,
 } from "@/app/api/interview-questions/responses";
 import type { InterviewQuestionsFilters } from "../hooks/use-interview-questions-route-state";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 export type InterviewQuestion = ListInterviewQuestionsResponse[number];
 
@@ -19,7 +20,7 @@ export interface UpdateInterviewQuestionInput {
 }
 
 export interface RunInterviewQuestionAIInput {
-  provider: "gemini" | "mock";
+  provider: StoredAIProvider;
   apiKey?: string;
   model: string;
   context: string | null;

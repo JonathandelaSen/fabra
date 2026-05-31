@@ -2,19 +2,20 @@
 
 import { useTranslations } from "next-intl";
 import { Sparkles } from "lucide-react";
-import AIActionLauncher, {
-  type AIModelOption,
-} from "@/components/shared/ai-action-launcher/ai-action-launcher";
+import AIActionLauncher from "@/components/shared/ai-action-launcher/ai-action-launcher";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
+
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface CVEditorAIPanelProps {
   editInstruction: string;
   setEditInstruction: (value: string) => void;
   editingProfile: boolean;
   hasAIApiKey: boolean;
+  selectedProvider: StoredAIProvider;
+  setSelectedProvider: (provider: StoredAIProvider) => void;
   selectedModel: string;
   setSelectedModel: (model: string) => void;
-  aiModels: AIModelOption[];
   error: string | null;
   onApplyInstruction: () => void;
   onOpenCopyPaste: () => void;
@@ -26,9 +27,10 @@ export function CVEditorAIPanel({
   setEditInstruction,
   editingProfile,
   hasAIApiKey,
+  selectedProvider,
+  setSelectedProvider,
   selectedModel,
   setSelectedModel,
-  aiModels,
   error,
   onApplyInstruction,
   onOpenCopyPaste,
@@ -67,8 +69,9 @@ export function CVEditorAIPanel({
           disabled={!editInstruction.trim()}
           integrated={{
             available: hasAIApiKey,
+            selectedProvider,
+            onProviderChange: setSelectedProvider,
             selectedModelId: selectedModel,
-            models: aiModels,
             onModelChange: setSelectedModel,
             onRun: onApplyInstruction,
             unavailableReason: hasAIApiKey

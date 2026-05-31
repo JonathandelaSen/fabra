@@ -4,19 +4,10 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Check, Copy, Pencil, Save, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import AIActionLauncher, {
-  type AIModelOption,
-} from "@/components/shared/ai-action-launcher";
+import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { EditButton, IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
-import { GEMINI_MODELS } from "@/frontend/ai-models";
 import type { FeedbackEntry, FeedbackListItem } from "../api/feedback-notes-api";
-
-const AI_MODELS: AIModelOption[] = [
-  { id: "gemini-3.1-pro-preview", label: GEMINI_MODELS["gemini-3.1-pro-preview"] },
-  { id: "gemini-3.1-flash-preview", label: GEMINI_MODELS["gemini-3.1-flash-preview"] },
-  { id: "gemini-2.5-pro", label: GEMINI_MODELS["gemini-2.5-pro"] },
-  { id: "gemini-2.5-flash", label: GEMINI_MODELS["gemini-2.5-flash"] },
-];
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 const textareaClass =
   "w-full resize-y border-indigo-300/10 bg-indigo-300/[0.035] text-sm leading-6 text-zinc-100 placeholder:text-zinc-600 focus-visible:border-indigo-300/40 disabled:cursor-not-allowed disabled:opacity-60";
@@ -28,6 +19,8 @@ interface FeedbackFinalPanelProps {
   isSaving: boolean;
   isGenerating: boolean;
   hasAIApiKey: boolean;
+  selectedProvider: StoredAIProvider;
+  onProviderChange: (provider: StoredAIProvider) => void;
   selectedModel: string;
   onModelChange: (model: string) => void;
   onSaveFinalFeedback: (finalFeedback: string | null) => void;
@@ -46,6 +39,8 @@ export function FeedbackFinalPanel({
   isSaving,
   isGenerating,
   hasAIApiKey,
+  selectedProvider,
+  onProviderChange,
   selectedModel,
   onModelChange,
   onSaveFinalFeedback,
@@ -166,8 +161,9 @@ export function FeedbackFinalPanel({
             disabled={entries.length === 0}
             integrated={{
               available: hasAIApiKey,
+              selectedProvider,
+              onProviderChange,
               selectedModelId: selectedModel,
-              models: AI_MODELS,
               onModelChange,
               onRun: onGenerate,
               onConfigure: onOpenSettings,

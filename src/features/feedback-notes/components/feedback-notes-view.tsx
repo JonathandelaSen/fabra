@@ -20,8 +20,10 @@ import { FeedbackNotesSidebar } from "./feedback-notes-sidebar";
 import { FeedbackCopyPastePanel } from "./feedback-copy-paste-panel";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 
+import { getAIApiKeyForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+
 interface FeedbackNotesViewProps {
-  aiProvider: "gemini" | "mock";
+  aiProvider: StoredAIProvider;
   aiApiKey: string;
   aiModel: string;
   hasAIApiKey: boolean;
@@ -52,6 +54,7 @@ export default function FeedbackNotesView({
   const contextsQuery = useActivityContexts();
   const mutations = useFeedbackNotesMutations(status);
   const [error, setError] = useState<string | null>(null);
+  const [selectedProvider, setSelectedProvider] = useState<StoredAIProvider>("gemini");
   const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_GEMINI_MODEL);
   const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
   const [pendingDraft, setPendingDraft] = useState<string | null>(null);
@@ -149,6 +152,8 @@ export default function FeedbackNotesView({
             isSaving={isSaving}
             isGenerating={mutations.generateFinalFeedback.isPending}
             hasAIApiKey={hasAIApiKey}
+            selectedProvider={selectedProvider}
+            onProviderChange={setSelectedProvider}
             selectedModel={selectedModel}
             onModelChange={setSelectedModel}
             onUpdateFeedback={(updates) =>
@@ -203,7 +208,9 @@ export default function FeedbackNotesView({
             }
             onGenerate={() =>
               void runMutation(async () => {
-                if (!hasAIApiKey) {
+                const resolvedProvider = selectedProvider || aiProvider;
+                const resolvedApiKey = getAIApiKeyForProvider(resolvedProvider, aiApiKey);
+                if (resolvedProvider !== "mock" && !resolvedApiKey) {
                    onOpenSettings?.();
                   return;
                 }
@@ -219,9 +226,9 @@ export default function FeedbackNotesView({
                 }
                 await mutations.generateFinalFeedback.mutateAsync({
                   feedbackId: selectedFeedback.id,
-                  provider: aiProvider,
-                  apiKey: aiApiKey,
-                  model: aiModel,
+                  provider: resolvedProvider,
+                  apiKey: resolvedApiKey,
+                  model: selectedModel || aiModel,
                 });
               })
             }

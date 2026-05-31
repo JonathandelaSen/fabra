@@ -9,6 +9,7 @@ import {
   getStoredAIApiKey,
   getStoredAIModel,
   getStoredAIProvider,
+  type StoredAIProvider,
 } from "@/lib/browser-preferences";
 import {
   buildPublicCVPath,
@@ -38,6 +39,7 @@ export function useCVEditorState(activeVersionId: string | null) {
   const hasAIApiKey = aiProvider === "mock" || aiApiKey.length > 0;
 
   const [editedVersion, setEditedVersion] = useState<CVDocumentListItem | null>(null);
+  const [selectedProvider, setSelectedProvider] = useState<StoredAIProvider>("gemini");
   const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_GEMINI_MODEL);
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -186,6 +188,8 @@ export function useCVEditorState(activeVersionId: string | null) {
     saveState,
     error,
     setError,
+    selectedProvider,
+    setSelectedProvider,
     selectedModel,
     setSelectedModel,
     editedVersion,

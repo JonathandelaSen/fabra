@@ -8,6 +8,7 @@ import type {
   CVScoringAIServiceFactory,
 } from "../../domain/repositories/cv-scoring-ai.service";
 import type { GeminiCVScoringAIServiceFactory } from "./gemini-cv-scoring-ai.service";
+import type { OpenAICVScoringAIServiceFactory } from "./openai-cv-scoring-ai.service";
 import type { MockCVScoringAIServiceFactory } from "./mock-cv-scoring-ai.service";
 
 export class ProviderCVScoringAIServiceFactory
@@ -16,6 +17,7 @@ export class ProviderCVScoringAIServiceFactory
   constructor(
     private readonly deps: {
       geminiFactory: GeminiCVScoringAIServiceFactory;
+      openaiFactory: OpenAICVScoringAIServiceFactory;
       mockFactory: MockCVScoringAIServiceFactory;
     },
   ) {}
@@ -26,10 +28,11 @@ export class ProviderCVScoringAIServiceFactory
     assertAIProviderAllowedForRuntime(config.provider);
     const factories = {
       [AI_PROVIDER.GEMINI]: () => this.deps.geminiFactory.create(config),
+      [AI_PROVIDER.OPENAI]: () => this.deps.openaiFactory.create(config),
       [AI_PROVIDER.MOCK]: () => this.deps.mockFactory.create(),
     };
     const createService = factories[config.provider];
-    if (!createService) throw badRequest("Proveedor de IA no soportado para analizar CVs.");
+    if (!createService) throw badRequest("Unsupported AI provider for CV analysis.");
     return createService();
   }
 }

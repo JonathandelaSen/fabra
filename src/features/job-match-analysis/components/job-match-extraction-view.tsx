@@ -10,8 +10,9 @@ import JobMatchExtractionHeader from "@/components/shared/extraction/extraction-
 import JobMatchExtractionParserTabs from "@/components/shared/extraction/extraction-parser-tabs";
 import JobMatchExtractionPdfPreview from "./job-match-extraction-pdf-preview";
 import { useJobMatchScoringState } from "../hooks/use-job-match-scoring-state";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
-type ScoreInput = { jobDescription: string; jobUrl: string; model: string };
+type ScoreInput = { jobDescription: string; jobUrl: string; provider: StoredAIProvider; model: string };
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ScoreFn { (input: ScoreInput): Promise<void> }
 
@@ -144,13 +145,15 @@ export default function JobMatchExtractionView({
         reAnalysis={{
           loading: scoring.loadingAI,
           hasAIApiKey,
+          selectedProvider: scoring.selectedProvider,
+          onProviderChange: scoring.setSelectedProvider,
           selectedModel: scoring.selectedModel,
-          models: scoring.models,
           onModelChange: scoring.setSelectedModel,
           onRun: () =>
             scoring.handleJobMatchAnalysis(
               analysis.jobDescription ?? "",
               analysis.jobUrl ?? "",
+              scoring.selectedProvider,
               scoring.selectedModel,
             ),
           onConfigure: onOpenSettings,

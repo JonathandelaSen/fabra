@@ -50,7 +50,7 @@ export class GeminiAnalysisChatAIService implements AnalysisChatAIService {
       typeof parsed.answer === "string" ? parsed.answer.trim() : "";
 
     if (!answer) {
-      throw new Error("La IA no pudo generar una respuesta con este contexto.");
+      throw new Error("The AI could not generate an answer with this context.");
     }
 
     return answer;

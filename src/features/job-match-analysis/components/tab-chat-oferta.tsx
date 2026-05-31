@@ -106,6 +106,8 @@ export default function TabChatOferta({
           isSending={chat.isSending}
           isPreparingCopyPaste={chat.isPreparingCopyPaste}
           hasAIApiKey={hasAIApiKey}
+          provider={chat.provider}
+          onProviderChange={chat.setProvider}
           model={chat.model}
           aiModel={aiModel}
           onModelChange={chat.setModel}

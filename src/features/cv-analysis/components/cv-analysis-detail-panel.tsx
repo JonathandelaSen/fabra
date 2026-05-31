@@ -10,11 +10,12 @@ import type { ScoreCVAnalysisInput } from "../hooks/use-cv-analysis-mutations";
 import type { useCVAnalysisRouteState } from "../hooks/use-cv-analysis-route-state";
 import AIAnalysisView from "./analysis-view";
 import ExtractionView from "./extraction-view";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface CVAnalysisDetailPanelProps {
   selectedAnalysis: Analysis;
   route: ReturnType<typeof useCVAnalysisRouteState>;
-  aiProvider: "gemini" | "mock";
+  aiProvider: StoredAIProvider;
   aiApiKey: string;
   aiModel: string;
   hasAIApiKey: boolean;

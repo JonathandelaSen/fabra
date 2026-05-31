@@ -38,7 +38,7 @@ export class GeminiJournalAIService implements JournalAIService {
         ? parsed.final_text.trim()
         : null;
     if (!finalText) {
-      throw new Error("La IA no pudo redactar la entrada con estas notas.");
+      throw new Error("The AI could not draft the entry with these notes.");
     }
     return finalText;
   }

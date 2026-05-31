@@ -3,11 +3,14 @@
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { useTranslations } from "next-intl";
 
+import type { StoredAIProvider } from "@/lib/browser-preferences";
+
 interface GeneralAnalysisActionLauncherProps {
   loading: boolean;
   hasAIApiKey: boolean;
+  selectedProvider: StoredAIProvider;
+  onProviderChange: (provider: StoredAIProvider) => void;
   selectedModel: string;
-  models: Array<{ id: string; label: string }>;
   onModelChange: (model: string) => void;
   onSubmit: () => void;
   onOpenSettings: () => void;
@@ -17,8 +20,9 @@ interface GeneralAnalysisActionLauncherProps {
 export function GeneralAnalysisActionLauncher({
   loading,
   hasAIApiKey,
+  selectedProvider,
+  onProviderChange,
   selectedModel,
-  models,
   onModelChange,
   onSubmit,
   onOpenSettings,
@@ -33,8 +37,9 @@ export function GeneralAnalysisActionLauncher({
         loading={loading}
         integrated={{
           available: hasAIApiKey,
+          selectedProvider,
+          onProviderChange,
           selectedModelId: selectedModel,
-          models,
           onModelChange,
           onRun: onSubmit,
           onConfigure: onOpenSettings,

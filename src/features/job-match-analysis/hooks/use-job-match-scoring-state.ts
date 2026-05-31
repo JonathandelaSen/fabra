@@ -2,33 +2,31 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { DEFAULT_FAST_GEMINI_MODEL, DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 import { getErrorMessage } from "@/lib/errors";
 
 interface UseJobMatchScoringStateParams {
-  onScore: (input: { jobDescription: string; jobUrl: string; model: string }) => Promise<void>;
+  onScore: (input: { jobDescription: string; jobUrl: string; provider: StoredAIProvider; model: string }) => Promise<void>;
   hasAIApiKey: boolean;
 }
 
+import type { StoredAIProvider } from "@/lib/browser-preferences";
+
 export function useJobMatchScoringState({ onScore, hasAIApiKey }: UseJobMatchScoringStateParams) {
   const t = useTranslations("analysisFlow.extraction");
-  const formsT = useTranslations("analysisFlow.forms");
 
   const [loadingAI, setLoadingAI] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
   const [copyPasteOpen, setCopyPasteOpen] = useState(false);
   const [copyPasteJobDescription, setCopyPasteJobDescription] = useState("");
   const [copyPasteJobUrl, setCopyPasteJobUrl] = useState<string | null>(null);
-  const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_FAST_GEMINI_MODEL);
-
-  const models = [
-    { id: DEFAULT_FAST_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_FAST_GEMINI_MODEL]} (${formsT("fast")})` },
-    { id: DEFAULT_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_GEMINI_MODEL]} (${formsT("powerful")})` },
-  ];
+  const [selectedProvider, setSelectedProvider] = useState<StoredAIProvider>("gemini");
+  const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_GEMINI_MODEL);
 
   const handleJobMatchAnalysis = async (
     jobDescription: string,
     jobUrl: string,
+    provider: StoredAIProvider,
     model: string,
   ) => {
     if (!hasAIApiKey) {
@@ -40,7 +38,7 @@ export function useJobMatchScoringState({ onScore, hasAIApiKey }: UseJobMatchSco
     setAiError(null);
 
     try {
-      await onScore({ jobDescription, jobUrl, model });
+      await onScore({ jobDescription, jobUrl, provider, model });
     } catch (err: unknown) {
       setAiError(getErrorMessage(err));
     } finally {
@@ -59,8 +57,9 @@ export function useJobMatchScoringState({ onScore, hasAIApiKey }: UseJobMatchSco
   return {
     loadingAI,
     aiError,
+    selectedProvider,
+    setSelectedProvider,
     selectedModel,
-    models,
     setSelectedModel,
     handleJobMatchAnalysis,
     copyPasteOpen,

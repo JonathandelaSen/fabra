@@ -2,9 +2,10 @@
 
 import { FormEvent, RefObject } from "react";
 import { useTranslations } from "next-intl";
-import { DEFAULT_GEMINI_MODEL, DEFAULT_FAST_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
 import { Textarea } from "@/components/ui/textarea";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
+
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface ChatInputProps {
   draft: string;
@@ -13,6 +14,8 @@ interface ChatInputProps {
   isSending: boolean;
   isPreparingCopyPaste: boolean;
   hasAIApiKey: boolean;
+  provider: StoredAIProvider;
+  onProviderChange: (provider: StoredAIProvider) => void;
   model: string;
   aiModel: string;
   onModelChange: (model: string) => void;
@@ -27,6 +30,8 @@ export function ChatInput({
   isSending,
   isPreparingCopyPaste,
   hasAIApiKey,
+  provider,
+  onProviderChange,
   model,
   aiModel,
   onModelChange,
@@ -58,11 +63,9 @@ export function ChatInput({
           disabled={!draft.trim()}
           integrated={{
             available: hasAIApiKey,
+            selectedProvider: provider,
+            onProviderChange,
             selectedModelId: model || aiModel,
-            models: [
-              { id: DEFAULT_GEMINI_MODEL, label: GEMINI_MODELS[DEFAULT_GEMINI_MODEL] },
-              { id: DEFAULT_FAST_GEMINI_MODEL, label: GEMINI_MODELS[DEFAULT_FAST_GEMINI_MODEL] },
-            ],
             onModelChange,
             onRun: () => void onSubmit(),
             unavailableReason: t("missingApiKey"),

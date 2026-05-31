@@ -57,11 +57,13 @@ export interface CVAnalysisDetail {
   ai_analyzed_at: string | null;
 }
 
+import type { StoredAIProvider } from "@/lib/browser-preferences";
+
 interface CVAnalysisDetailViewProps {
   analysis: CVAnalysisDetail | null;
   loading: boolean;
   activeTab: CVAnalysisDetailTab;
-  aiProvider: "gemini" | "mock";
+  aiProvider: StoredAIProvider;
   aiApiKey: string;
   aiModel: string;
   hasAIApiKey: boolean;

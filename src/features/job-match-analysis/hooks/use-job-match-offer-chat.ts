@@ -18,9 +18,11 @@ import {
   sendJobMatchOfferChatMessage,
 } from "../api/job-match-analysis-api";
 
+import { getAIApiKeyForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+
 interface UseJobMatchOfferChatParams {
   analysisId: string;
-  aiProvider: "gemini" | "mock";
+  aiProvider: StoredAIProvider;
   aiApiKey: string;
   aiModel: string;
   hasAIApiKey: boolean;
@@ -44,6 +46,7 @@ export function useJobMatchOfferChat({
   >(null);
   const [messages, setMessages] = useState<AnalysisChatMessage[]>([]);
   const [draft, setDraft] = useState("");
+  const [provider, setProvider] = useState<StoredAIProvider>("gemini");
   const [model, setModel] = useState<string>(DEFAULT_GEMINI_MODEL);
   const [isLoadingConversations, setIsLoadingConversations] = useState(true);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
@@ -187,7 +190,9 @@ export function useJobMatchOfferChat({
       event?.preventDefault();
       const message = draft.trim();
       if (!message || isSending) return;
-      if (!hasAIApiKey) {
+      const resolvedProvider = provider || aiProvider;
+      const resolvedApiKey = getAIApiKeyForProvider(resolvedProvider, aiApiKey);
+      if (resolvedProvider !== "mock" && !resolvedApiKey) {
         setError(t("missingApiKey"));
         return;
       }
@@ -200,8 +205,8 @@ export function useJobMatchOfferChat({
           analysisId,
           input: {
             message,
-            provider: aiProvider,
-            apiKey: aiApiKey,
+            provider: resolvedProvider,
+            apiKey: resolvedApiKey,
             model: model || aiModel,
             conversationId,
           },
@@ -221,7 +226,7 @@ export function useJobMatchOfferChat({
     [
       aiApiKey,
       aiModel,
-      aiProvider,
+      provider,
       analysisId,
       draft,
       ensureConversation,
@@ -300,6 +305,8 @@ export function useJobMatchOfferChat({
     messages,
     draft,
     setDraft,
+    provider,
+    setProvider,
     model,
     setModel,
     isLoadingConversations,

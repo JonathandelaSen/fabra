@@ -2,16 +2,21 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { DEFAULT_FAST_GEMINI_MODEL, DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
-import { MessageSquare } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { AIContext } from "@/lib/analysis-types";
 import { BasicPanel } from "@/components/shared/basic-panel";
 import { GeneralAnalysisFormHeader } from "./general-analysis-form-header";
 import { GeneralAnalysisActionLauncher } from "./general-analysis-action-launcher";
 
+import type { StoredAIProvider } from "@/lib/browser-preferences";
+import { MessageSquare } from "lucide-react";
+
 interface GeneralAnalysisFormProps {
-  onSubmit: (context: AIContext, model: string) => void;
+  selectedProvider: StoredAIProvider;
+  onProviderChange: (provider: StoredAIProvider) => void;
+  selectedModel: string;
+  onModelChange: (model: string) => void;
+  onSubmit: (context: AIContext) => void;
   onBack: () => void;
   loading: boolean;
   error: string | null;
@@ -21,6 +26,10 @@ interface GeneralAnalysisFormProps {
 }
 
 export default function GeneralAnalysisForm({
+  selectedProvider,
+  onProviderChange,
+  selectedModel,
+  onModelChange,
   onSubmit,
   onBack,
   loading,
@@ -31,14 +40,13 @@ export default function GeneralAnalysisForm({
 }: GeneralAnalysisFormProps) {
   const t = useTranslations("analysisFlow.forms");
   const [additionalContext, setAdditionalContext] = useState("");
-  const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_FAST_GEMINI_MODEL);
 
   const handleSubmit = () => {
     const context: AIContext = {};
     if (additionalContext.trim())
       context.additionalContext = additionalContext.trim();
 
-    onSubmit(context, selectedModel);
+    onSubmit(context);
   };
 
   const handleExternalChat = () => {
@@ -48,10 +56,7 @@ export default function GeneralAnalysisForm({
     onAnalyzeWithExternalChat(context);
   };
 
-  const models = [
-    { id: DEFAULT_FAST_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_FAST_GEMINI_MODEL]} (${t("fast")})` },
-    { id: DEFAULT_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_GEMINI_MODEL]} (${t("powerful")})` },
-  ];
+
 
   return (
     <motion.div
@@ -82,9 +87,10 @@ export default function GeneralAnalysisForm({
       <GeneralAnalysisActionLauncher
         loading={loading}
         hasAIApiKey={hasAIApiKey}
+        selectedProvider={selectedProvider}
+        onProviderChange={onProviderChange}
         selectedModel={selectedModel}
-        models={models}
-        onModelChange={setSelectedModel}
+        onModelChange={onModelChange}
         onSubmit={handleSubmit}
         onOpenSettings={onOpenSettings}
         onAnalyzeWithExternalChat={handleExternalChat}

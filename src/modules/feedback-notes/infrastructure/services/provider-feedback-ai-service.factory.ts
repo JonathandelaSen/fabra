@@ -8,6 +8,7 @@ import type {
   FeedbackAIServiceFactory,
 } from "../../domain/repositories/feedback-ai-service.repository";
 import type { GeminiFeedbackAIServiceFactory } from "./gemini-feedback-ai.service";
+import type { OpenAIFeedbackAIServiceFactory } from "./openai-feedback-ai.service";
 import type { MockFeedbackAIServiceFactory } from "./mock-feedback-ai.service";
 
 export class ProviderFeedbackAIServiceFactory
@@ -16,6 +17,7 @@ export class ProviderFeedbackAIServiceFactory
   constructor(
     private readonly deps: {
       geminiFactory: GeminiFeedbackAIServiceFactory;
+      openaiFactory: OpenAIFeedbackAIServiceFactory;
       mockFactory: MockFeedbackAIServiceFactory;
     },
   ) {}
@@ -26,10 +28,11 @@ export class ProviderFeedbackAIServiceFactory
     assertAIProviderAllowedForRuntime(config.provider);
     const factories = {
       [AI_PROVIDER.GEMINI]: () => this.deps.geminiFactory.create(config),
+      [AI_PROVIDER.OPENAI]: () => this.deps.openaiFactory.create(config),
       [AI_PROVIDER.MOCK]: () => this.deps.mockFactory.create(),
     };
     const createService = factories[config.provider];
-    if (!createService) throw badRequest("Proveedor de IA no soportado para feedback.");
+    if (!createService) throw badRequest("Unsupported AI provider for feedback.");
     return createService();
   }
 }

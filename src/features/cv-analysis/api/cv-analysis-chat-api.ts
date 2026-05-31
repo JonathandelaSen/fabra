@@ -3,7 +3,7 @@ import type {
   AnalysisChatMessage,
 } from "../components/chat-types";
 
-type AIProvider = "gemini" | "mock";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface ChatResponse {
   error?: string;
@@ -28,7 +28,7 @@ interface SendMessageResponse extends ChatResponse {
 
 export interface SendAnalysisChatMessageInput {
   message: string;
-  provider: AIProvider;
+  provider: StoredAIProvider;
   apiKey: string;
   model: string;
   conversationId: string;

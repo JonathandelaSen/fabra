@@ -41,7 +41,7 @@ function parseResult(rawText: string): JobMatchScoringAIResult {
     feedback:
       typeof parsed.feedback === "string"
         ? parsed.feedback
-        : "No se pudo generar feedback.",
+        : "Feedback could not be generated.",
     aiKeywords: keywordsFound,
     improvements: cleanArray(parsed.improvements),
     jobKeyData: cleanJobKeyData(parsed.jobKeyData),

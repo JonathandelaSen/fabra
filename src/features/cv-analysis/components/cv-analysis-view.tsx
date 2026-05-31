@@ -26,8 +26,10 @@ import CVAnalysesListView from "./cv-analyses-list-view";
 import { CVAnalysisDetailPanel } from "./cv-analysis-detail-panel";
 import NewAnalysisFlow from "./new-analysis-flow";
 
+import type { StoredAIProvider } from "@/lib/browser-preferences";
+
 interface CVAnalysisViewProps {
-  aiProvider: "gemini" | "mock";
+  aiProvider: StoredAIProvider;
   aiApiKey: string;
   aiModel: string;
   hasAIApiKey: boolean;

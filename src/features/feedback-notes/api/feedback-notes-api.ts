@@ -20,6 +20,7 @@ import type {
 import type { GenerateFinalFeedbackResponse } from "@/app/api/feedback-notes/feedbacks/[id]/generate/responses";
 import type { CloseFeedbackResponse } from "@/app/api/feedback-notes/feedbacks/[id]/close/responses";
 import type { ReopenFeedbackResponse } from "@/app/api/feedback-notes/feedbacks/[id]/reopen/responses";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 export type FeedbackFilter = FeedbackResponse["status"] | "all";
 export type FeedbackListItem = ListFeedbacksResponse[number];
@@ -118,7 +119,7 @@ export async function deleteEntry(entryId: string) {
 
 export async function generateFinalFeedback(
   feedbackId: string,
-  input: { provider: "gemini" | "mock";
+  input: { provider: StoredAIProvider;
   apiKey?: string; model: string }
 ) {
   const res = await fetch(`/api/feedback-notes/feedbacks/${feedbackId}/generate`, {

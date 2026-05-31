@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { KeyRound, PenLine, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
-import type { AIModelOption } from "@/components/shared/ai-action-launcher/ai-action-launcher";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 import type { StandardCVProfile } from "@/lib/cv-profile";
 import type { CVTemplateId, CVTemplateLocale } from "@/lib/cv-templates";
 import { ManualEditor } from "./cv-manual-editor/manual-editor";
@@ -31,8 +31,8 @@ interface CVEditorSidePanelProps {
   saveState: "idle" | "saving" | "saved";
   savingLocale: boolean;
   savingPublicSettings: boolean;
+  selectedProvider: StoredAIProvider;
   selectedModel: string;
-  aiModels: AIModelOption[];
   onApplyInstruction: () => void;
   onCopyPublicUrl: () => void;
   onManualChange: (updater: (prev: StandardCVProfile) => StandardCVProfile) => void;
@@ -45,6 +45,7 @@ interface CVEditorSidePanelProps {
   onSetEditInstruction: (value: string) => void;
   onSetEditorTab: (tab: "ai" | "manual") => void;
   onSetPublicSlugDraft: (params: { cvId: string; value: string }) => void;
+  onSetSelectedProvider: (value: StoredAIProvider) => void;
   onSetSelectedModel: (value: string) => void;
   onStartAnalysis: () => void;
   onUnpublish: () => void;
@@ -69,8 +70,8 @@ export function CVEditorSidePanel({
   saveState,
   savingLocale,
   savingPublicSettings,
+  selectedProvider,
   selectedModel,
-  aiModels,
   onApplyInstruction,
   onCopyPublicUrl,
   onManualChange,
@@ -83,6 +84,7 @@ export function CVEditorSidePanel({
   onSetEditInstruction,
   onSetEditorTab,
   onSetPublicSlugDraft,
+  onSetSelectedProvider,
   onSetSelectedModel,
   onStartAnalysis,
   onUnpublish,
@@ -121,9 +123,10 @@ export function CVEditorSidePanel({
               setEditInstruction={onSetEditInstruction}
               editingProfile={editingProfile}
               hasAIApiKey={hasAIApiKey}
+              selectedProvider={selectedProvider}
+              setSelectedProvider={onSetSelectedProvider}
               selectedModel={selectedModel}
               setSelectedModel={onSetSelectedModel}
-              aiModels={aiModels}
               error={error}
               onApplyInstruction={onApplyInstruction}
               onOpenCopyPaste={onOpenCopyPaste}

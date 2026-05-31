@@ -14,6 +14,7 @@ import {
   type FeedbackFilter,
 } from "../api/feedback-notes-api";
 import { feedbackNotesQueryKeys } from "../api/feedback-notes-query-keys";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 export function useFeedbackNotesMutations(status: FeedbackFilter) {
   const queryClient = useQueryClient();
@@ -116,7 +117,7 @@ export function useFeedbackNotesMutations(status: FeedbackFilter) {
         model,
       }: {
         feedbackId: string;
-        provider: "gemini" | "mock";
+        provider: StoredAIProvider;
         apiKey?: string;
         model: string;
       }) => generateFinalFeedback(feedbackId, { provider, apiKey, model }),

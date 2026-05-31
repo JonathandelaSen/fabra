@@ -7,6 +7,7 @@ import { ActivityContextSelector } from "@/features/activity-context";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { getErrorMessage } from "@/lib/errors";
 import { BasicPanel } from "@/components/shared/basic-panel";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface WorkJournalEntryEditorProps {
   entry: WorkJournalEntry;
@@ -16,15 +17,17 @@ interface WorkJournalEntryEditorProps {
   onManageContexts: () => void;
   hasAIApiKey: boolean;
   onOpenSettings: () => void;
+  selectedProvider: StoredAIProvider;
+  setSelectedProvider: (provider: StoredAIProvider) => void;
   selectedModel: string;
   setSelectedModel: (s: string) => void;
-  models: { id: string; label: string }[];
   onDraftEditWithAI: (
     contextId: string,
     dateStart: string,
     dateEnd: string | null,
     topic: string | null,
     notes: string,
+    provider: StoredAIProvider,
     modelId: string
   ) => Promise<string>;
 }
@@ -37,9 +40,10 @@ export function WorkJournalEntryEditor({
   onManageContexts,
   hasAIApiKey,
   onOpenSettings,
+  selectedProvider,
+  setSelectedProvider,
   selectedModel,
   setSelectedModel,
-  models,
   onDraftEditWithAI,
 }: WorkJournalEntryEditorProps) {
   const t = useTranslations("workJournal");
@@ -62,6 +66,7 @@ export function WorkJournalEntryEditor({
         edit.date_end,
         edit.topic,
         edit.raw_notes,
+        selectedProvider,
         selectedModel
       );
       setEdit((current) => ({ ...current, final_text: newText }));
@@ -169,8 +174,9 @@ export function WorkJournalEntryEditor({
               disabled={!edit.raw_notes.trim() || !edit.context_id}
               integrated={{
                 available: hasAIApiKey,
+                selectedProvider,
+                onProviderChange: setSelectedProvider,
                 selectedModelId: selectedModel,
-                models,
                 onModelChange: setSelectedModel,
                 onRun: handleGenerate,
                 onConfigure: onOpenSettings,

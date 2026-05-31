@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { DEFAULT_GEMINI_MODEL, DEFAULT_FAST_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
+import { GEMINI_MODELS } from "@/frontend/ai-models";
 import {
   MessageSquareQuote,
   ExternalLink,
@@ -144,8 +144,9 @@ export default function TabEntrevista({
                 aria-label={t("modelLabel")}
                 className="h-10 rounded-lg border border-white/[0.08] bg-[#09090f] px-3 text-xs text-zinc-300 outline-none"
               >
-                <option value={DEFAULT_GEMINI_MODEL}>{GEMINI_MODELS[DEFAULT_GEMINI_MODEL]}</option>
-                <option value={DEFAULT_FAST_GEMINI_MODEL}>{GEMINI_MODELS[DEFAULT_FAST_GEMINI_MODEL]}</option>
+                {Object.entries(GEMINI_MODELS).map(([id, label]) => (
+                  <option key={id} value={id}>{label}</option>
+                ))}
               </select>
               <button
                 type="button"

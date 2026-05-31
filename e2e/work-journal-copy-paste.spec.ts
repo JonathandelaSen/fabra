@@ -30,7 +30,8 @@ test("user can draft a work journal entry with Copy Paste", async ({ page }) => 
   await expect(page.getByRole("heading", { name: t.title })).toBeVisible();
 
   await page.getByRole("button", { name: t.newEntry }).click();
-  await page.getByLabel(t.context).selectOption({ label: `${contextName} ${t.projectSuffix}` });
+  await page.getByLabel(t.context).waitFor({ state: "visible" });
+  await page.getByLabel(t.context).selectOption({ label: contextName });
   await page.getByPlaceholder(t.topicPlaceholder).fill(uniqueLabel("copy-paste-topic"));
   await page
     .getByPlaceholder(t.aiNotesPlaceholder)
@@ -78,7 +79,8 @@ test("integrated AI drafting remains available when an API key is configured", a
 
   await page.goto("/work-journal");
   await page.getByRole("button", { name: t.newEntry }).click();
-  await page.getByLabel(t.context).selectOption({ label: `${contextName} ${t.projectSuffix}` });
+  await page.getByLabel(t.context).waitFor({ state: "visible" });
+  await page.getByLabel(t.context).selectOption({ label: contextName });
   await page.getByPlaceholder(t.aiNotesPlaceholder).fill("Some raw notes for AI");
   await page.getByRole("button", { name: t.generateProfessionalDraft }).click();
 

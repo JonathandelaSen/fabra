@@ -6,6 +6,7 @@ import { WorkJournalEntryDisplay } from "./work-journal-entry-display";
 import { WorkJournalEntryEditor } from "./work-journal-entry-editor";
 import { WorkJournalEmptyState } from "./work-journal-empty-state";
 import { FilePenLine } from "lucide-react";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface WorkJournalDetailProps {
   entry: WorkJournalEntry | null;
@@ -17,15 +18,17 @@ interface WorkJournalDetailProps {
   onManageContexts: () => void;
   hasAIApiKey: boolean;
   onOpenSettings: () => void;
+  selectedProvider: StoredAIProvider;
+  setSelectedProvider: (provider: StoredAIProvider) => void;
   selectedModel: string;
   setSelectedModel: (s: string) => void;
-  models: { id: string; label: string }[];
   onDraftEditWithAI: (
     contextId: string,
     dateStart: string,
     dateEnd: string | null,
     topic: string | null,
     notes: string,
+    provider: StoredAIProvider,
     modelId: string
   ) => Promise<string>;
 }
@@ -40,9 +43,10 @@ export function WorkJournalDetail({
   onManageContexts,
   hasAIApiKey,
   onOpenSettings,
+  selectedProvider,
+  setSelectedProvider,
   selectedModel,
   setSelectedModel,
-  models,
   onDraftEditWithAI,
 }: WorkJournalDetailProps) {
   const t = useTranslations("workJournal");
@@ -62,9 +66,10 @@ export function WorkJournalDetail({
           onManageContexts={onManageContexts}
           hasAIApiKey={hasAIApiKey}
           onOpenSettings={onOpenSettings}
+          selectedProvider={selectedProvider}
+          setSelectedProvider={setSelectedProvider}
           selectedModel={selectedModel}
           setSelectedModel={setSelectedModel}
-          models={models}
           onDraftEditWithAI={onDraftEditWithAI}
         />
       ) : (

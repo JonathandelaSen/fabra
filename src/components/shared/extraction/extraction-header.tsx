@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { FileText, Download, Eye } from "lucide-react";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface ExtractionHeaderProps {
   filename: string;
@@ -18,8 +19,9 @@ interface ExtractionHeaderProps {
   reAnalysis: {
     loading: boolean;
     hasAIApiKey: boolean;
+    selectedProvider: StoredAIProvider;
+    onProviderChange: (provider: StoredAIProvider) => void;
     selectedModel: string;
-    models: { id: string; label: string }[];
     onModelChange: (model: string) => void;
     onRun: () => void;
     onConfigure: () => void;
@@ -66,8 +68,9 @@ export default function ExtractionHeader({
                 loading={reAnalysis.loading}
                 integrated={{
                   available: reAnalysis.hasAIApiKey,
+                  selectedProvider: reAnalysis.selectedProvider,
+                  onProviderChange: reAnalysis.onProviderChange,
                   selectedModelId: reAnalysis.selectedModel,
-                  models: reAnalysis.models,
                   onModelChange: reAnalysis.onModelChange,
                   onRun: reAnalysis.onRun,
                   onConfigure: reAnalysis.onConfigure,

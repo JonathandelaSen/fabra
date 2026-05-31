@@ -22,9 +22,10 @@ import { InterviewQuestionDetail } from "./interview-question-detail";
 import { InterviewQuestionsSidebar } from "./interview-questions-sidebar";
 import { InterviewQuestionsSkeleton } from "./interview-questions-skeleton";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
+import { getAIApiKeyForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 
 interface InterviewQuestionsViewProps {
-  aiProvider: "gemini" | "mock";
+  aiProvider: StoredAIProvider;
   aiApiKey: string;
   aiModel: string;
   hasAIApiKey: boolean;
@@ -55,6 +56,7 @@ export default function InterviewQuestionsView({
   const detailQuery = useInterviewQuestionDetail(questionId);
   const optionsQuery = useInterviewQuestionOptions();
   const mutations = useInterviewQuestionsMutations(filters);
+  const [provider, setProvider] = useState<StoredAIProvider>("gemini");
   const [model, setModel] = useState<string>(DEFAULT_GEMINI_MODEL);
   const [error, setError] = useState<string | null>(null);
   const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
@@ -111,7 +113,9 @@ export default function InterviewQuestionsView({
 
   const runAI = async (mode: "generate" | "edit", instruction: string) => {
     if (!selected) return;
-    if (!hasAIApiKey) {
+    const resolvedProvider = provider || aiProvider;
+    const resolvedApiKey = getAIApiKeyForProvider(resolvedProvider, aiApiKey);
+    if (resolvedProvider !== "mock" && !resolvedApiKey) {
       onOpenSettings();
       return;
     }
@@ -121,9 +125,9 @@ export default function InterviewQuestionsView({
         ? mutations.generateAnswer.mutateAsync({
             id: selected.id,
             input: {
-              provider: aiProvider,
-              apiKey: aiApiKey,
-              model: aiModel,
+              provider: resolvedProvider,
+              apiKey: resolvedApiKey,
+              model: model || aiModel,
               context: selected.context,
               cvId: selected.cvId,
               analysisId: selected.analysisId,
@@ -132,9 +136,9 @@ export default function InterviewQuestionsView({
         : mutations.editAnswer.mutateAsync({
             id: selected.id,
             input: {
-              provider: aiProvider,
-              apiKey: aiApiKey,
-              model: aiModel,
+              provider: resolvedProvider,
+              apiKey: resolvedApiKey,
+              model: model || aiModel,
               context: selected.context,
               instruction,
               cvId: selected.cvId,
@@ -184,6 +188,8 @@ export default function InterviewQuestionsView({
             question={selected as InterviewQuestion}
             cvs={cvs}
             analyses={analyses}
+            provider={provider}
+            onProviderChange={setProvider}
             model={model}
             isSaving={isSaving}
             aiLoading={aiLoading}

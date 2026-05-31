@@ -15,7 +15,7 @@ function parseInterviewQuestionAIResponse(rawText: string): string {
 
   if (!answer) {
     throw new Error(
-      "La IA no pudo generar una respuesta segura. Añade más contexto personal.",
+      "The AI could not generate a confident answer. Add more personal context.",
     );
   }
 

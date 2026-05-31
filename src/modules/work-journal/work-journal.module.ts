@@ -4,6 +4,7 @@ import { SupabaseEventTracker } from "@/modules/shared";
 import { SupabaseWorkJournalEntryRepository } from "./infrastructure/repositories/supabase-work-journal-entry.repository";
 import { GeminiJournalAIServiceFactory } from "./infrastructure/services/gemini-journal-ai.service";
 import { MockJournalAIServiceFactory } from "./infrastructure/services/mock-journal-ai.service";
+import { OpenAIJournalAIServiceFactory } from "./infrastructure/services/openai-journal-ai.service";
 import { ProviderJournalAIServiceFactory } from "./infrastructure/services/provider-journal-ai-service.factory";
 import { ListEntriesUseCase } from "./application/use-cases/list-entries.use-case";
 import { CreateEntryUseCase } from "./application/use-cases/create-entry.use-case";
@@ -15,6 +16,7 @@ const entryRepo = new SupabaseWorkJournalEntryRepository();
 const tracker: EventTracker = new SupabaseEventTracker();
 const aiFactory = new ProviderJournalAIServiceFactory({
   geminiFactory: new GeminiJournalAIServiceFactory(),
+  openaiFactory: new OpenAIJournalAIServiceFactory(),
   mockFactory: new MockJournalAIServiceFactory(),
 });
 

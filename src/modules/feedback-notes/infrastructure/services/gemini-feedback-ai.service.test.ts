@@ -13,6 +13,6 @@ describe("GeminiFeedbackAIService.parseFinalAIResponse", () => {
   it("throws when final feedback is missing", () => {
     expect(() =>
       parseFinalFeedbackAIResponse("{}")
-    ).toThrow("La IA no pudo redactar el feedback con estas notas.");
+    ).toThrow("The AI could not draft the feedback with these notes.");
   });
 });

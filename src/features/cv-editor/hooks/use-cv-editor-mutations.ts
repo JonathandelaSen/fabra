@@ -20,6 +20,7 @@ import {
   updatePublicSettings as updatePublicSettingsApi,
   normalizeCVResponse,
 } from "../api/cv-editor-api";
+import { getAIApiKeyForProvider } from "@/lib/browser-preferences";
 
 interface UseCVEditorMutationsInput {
   currentVersionId: string | null;
@@ -71,7 +72,11 @@ export function useCVEditorMutations({
     async (instruction?: string) => {
       const text = instruction ?? editInstruction;
       if (!currentVersionId) return;
-      if (!hasAIApiKey) {
+      const resolvedApiKey = getAIApiKeyForProvider(
+        aiProvider === "gemini" || aiProvider === "openai" || aiProvider === "mock" ? aiProvider : "gemini",
+        aiApiKey,
+      );
+      if (aiProvider !== "mock" && !resolvedApiKey) {
         setError(t("errors.missingApiKey"));
         return;
       }
@@ -85,7 +90,7 @@ export function useCVEditorMutations({
         const { version, profile } = await applyInstructionApi({
           cvId: currentVersionId,
           provider: aiProvider,
-          apiKey: aiApiKey,
+          apiKey: resolvedApiKey,
           model: selectedModel,
           instruction: text.trim(),
         });

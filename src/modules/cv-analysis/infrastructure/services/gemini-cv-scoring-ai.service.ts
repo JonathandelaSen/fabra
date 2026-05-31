@@ -22,7 +22,7 @@ function parseResult(rawText: string): CVScoringAIResult {
     feedback:
       typeof parsed.feedback === "string"
         ? parsed.feedback
-        : "No se pudo generar feedback.",
+        : "Feedback could not be generated.",
     keywords: cvKeywords.length > 0 ? cvKeywords : keywordsFound,
     improvements: cleanArray(parsed.improvements),
   };

@@ -1,14 +1,16 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useState, useEffect } from "react";
 import {
   AlertTriangle,
   Check,
   Eye,
   EyeOff,
-  KeyRound,
   Save,
   ShieldCheck,
+  Sparkles,
+  Cpu,
 } from "lucide-react";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import {
@@ -16,10 +18,15 @@ import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
 } from "@/components/shared/action-buttons";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
-import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
-import { useAISettingsDraft } from "../hooks/use-ai-settings-draft";
 import { BasicPanel } from "@/components/shared/basic-panel";
+import { cn } from "@/lib/utils";
+import {
+  getStoredAIApiKeyForProvider,
+  saveStoredAIApiKeyForProvider,
+  getStoredAIModel,
+  type StoredAIProvider,
+} from "@/lib/browser-preferences";
+import { useDefaultAISettings } from "../hooks/use-default-ai-settings";
 
 interface AISettingsPanelProps {
   aiProvider: StoredAIProvider;
@@ -35,131 +42,245 @@ interface AISettingsPanelProps {
 export function AISettingsPanel({
   aiProvider,
   aiApiKey,
-  aiModel,
   onAISettingsChange,
 }: AISettingsPanelProps) {
   const t = useTranslations("settings.apiKey");
   const common = useTranslations("common");
-  const {
-    draftProvider,
-    setDraftProvider,
-    draftModel,
-    setDraftModel,
-    inputValue,
-    setDraftValue,
-    showKey,
-    setShowKey,
-    saved,
-    keySummary,
-    save,
-    remove,
-  } = useAISettingsDraft({
-    aiProvider,
-    aiApiKey,
-    aiModel,
-    onAISettingsChange,
-    notConfiguredLabel: common("states.notConfigured"),
-    configuredLabel: common("states.configured"),
+
+  const [state, setState] = useState({
+    geminiKey: "",
+    draftGeminiKey: "",
+    showGeminiKey: false,
+    geminiSaved: false,
+    openaiKey: "",
+    draftOpenaiKey: "",
+    showOpenaiKey: false,
+    openaiSaved: false,
   });
+  const { defaultApiKeys } = useDefaultAISettings();
+
+  const updateState = (updates: Partial<typeof state>) => setState(prev => ({ ...prev, ...updates }));
+
+  useEffect(() => {
+    const storedGemini = getStoredAIApiKeyForProvider("gemini", defaultApiKeys);
+    const storedOpenai = getStoredAIApiKeyForProvider("openai", defaultApiKeys);
+    
+    updateState({
+      geminiKey: storedGemini,
+      draftGeminiKey: storedGemini,
+      openaiKey: storedOpenai,
+      draftOpenaiKey: storedOpenai,
+    });
+  }, [aiProvider, aiApiKey, defaultApiKeys]);
+
+  const handleGeminiSave = () => {
+    saveStoredAIApiKeyForProvider("gemini", state.draftGeminiKey);
+    updateState({ geminiKey: state.draftGeminiKey, geminiSaved: true });
+    setTimeout(() => updateState({ geminiSaved: false }), 2200);
+
+    onAISettingsChange({
+      provider: aiProvider,
+      apiKey: getStoredAIApiKeyForProvider(aiProvider, defaultApiKeys),
+      model: getStoredAIModel(),
+    });
+  };
+
+  const handleGeminiDelete = () => {
+    saveStoredAIApiKeyForProvider("gemini", "");
+    const fallbackGeminiKey = getStoredAIApiKeyForProvider("gemini", defaultApiKeys);
+    updateState({
+      geminiKey: fallbackGeminiKey,
+      draftGeminiKey: fallbackGeminiKey,
+      geminiSaved: false,
+    });
+
+    onAISettingsChange({
+      provider: aiProvider,
+      apiKey: getStoredAIApiKeyForProvider(aiProvider, defaultApiKeys),
+      model: getStoredAIModel(),
+    });
+  };
+
+  const handleOpenaiSave = () => {
+    saveStoredAIApiKeyForProvider("openai", state.draftOpenaiKey);
+    updateState({ openaiKey: state.draftOpenaiKey, openaiSaved: true });
+    setTimeout(() => updateState({ openaiSaved: false }), 2200);
+
+    onAISettingsChange({
+      provider: aiProvider,
+      apiKey: getStoredAIApiKeyForProvider(aiProvider, defaultApiKeys),
+      model: getStoredAIModel(),
+    });
+  };
+
+  const handleOpenaiDelete = () => {
+    saveStoredAIApiKeyForProvider("openai", "");
+    const fallbackOpenaiKey = getStoredAIApiKeyForProvider("openai", defaultApiKeys);
+    updateState({
+      openaiKey: fallbackOpenaiKey,
+      draftOpenaiKey: fallbackOpenaiKey,
+      openaiSaved: false,
+    });
+
+    onAISettingsChange({
+      provider: aiProvider,
+      apiKey: getStoredAIApiKeyForProvider(aiProvider, defaultApiKeys),
+      model: getStoredAIModel(),
+    });
+  };
+
+  const getSummary = (key: string) => {
+    if (!key) return common("states.notConfigured");
+    if (key.length <= 12) return common("states.configured");
+    return `${key.slice(0, 6)}...${key.slice(-4)}`;
+  };
 
   return (
     <BasicPanel className="p-6">
-      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="flex items-center gap-2 text-lg font-semibold text-zinc-100">
           <ShieldCheck className="h-5 w-5 text-emerald-400" />
           {t("title")}
         </h2>
-        <div className="w-fit rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-2 text-left sm:text-right">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-600">
-            {t("status")}
-          </p>
-          <p className="mt-1 text-sm font-medium text-zinc-200">
-            {keySummary}
-          </p>
-        </div>
       </div>
 
-      <div className="space-y-5">
+      <div className="space-y-6">
         <AlertBanner tone={ALERT_BANNER_TONES.WARNING} icon={AlertTriangle} title={t("warningTitle")}>
           {t("warningBody")}
         </AlertBanner>
 
-        <div className="rounded-xl border border-white/[0.06] bg-[#0a0a12] p-4">
-          <p className="mb-4 flex items-center gap-2 text-sm font-medium text-zinc-200">
-            <KeyRound className="h-4 w-4 text-indigo-300" />
-            {t("fieldLabel")}
-          </p>
-          <div className="mb-3 grid gap-3 sm:grid-cols-[180px_1fr]">
-            <select
-              value={draftProvider}
-              onChange={(event) =>
-                setDraftProvider(event.target.value as StoredAIProvider)
-              }
-              className="h-11 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 text-sm text-zinc-200 outline-none transition-all focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
-            >
-              <option value="gemini">{t("providers.gemini")}</option>
-              {process.env.NODE_ENV !== "production" && (
-                <option value="mock">{t("providers.mock")}</option>
-              )}
-            </select>
-            <input
-              value={draftModel}
-              onChange={(event) => setDraftModel(event.target.value)}
-              placeholder={DEFAULT_GEMINI_MODEL}
-              className="h-11 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 text-sm text-zinc-200 outline-none transition-all placeholder:text-zinc-600 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
-              autoComplete="off"
-              spellCheck={false}
-            />
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <div className="relative flex-1">
-              <input
-                type={showKey ? "text" : "password"}
-                value={inputValue}
-                onChange={(event) => {
-                  setDraftValue(event.target.value);
-                }}
-                placeholder={t("placeholder")}
-                className="h-11 w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 pr-12 text-sm text-zinc-200 outline-none transition-all placeholder:text-zinc-600 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
-                autoComplete="off"
-                spellCheck={false}
-              />
-              <button
-                type="button"
-                onClick={() => setShowKey((value) => !value)}
-                className="absolute inset-y-0 right-2 flex w-9 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-white/[0.06] hover:text-zinc-200"
-                title={
-                  showKey
-                    ? common("actions.hideKey")
-                    : common("actions.showKey")
-                }
-              >
-                {showKey ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
-              </button>
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="rounded-xl border p-5 flex flex-col justify-between transition-all duration-300 border-white/[0.06] bg-[#07070d]/50 hover:bg-[#07070d]/80">
+            <div>
+              <div className="flex items-center justify-between gap-3 mb-2">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4.5 w-4.5 text-zinc-500" />
+                  <h4 className="text-sm font-semibold text-zinc-200">
+                    {t("geminiSectionTitle")}
+                  </h4>
+                </div>
+                <span className={cn(
+                  "text-[10px] px-2 py-0.5 rounded-full font-medium border",
+                  state.geminiKey 
+                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
+                    : "bg-zinc-800 text-zinc-500 border-white/[0.04]"
+                )}>
+                  {getSummary(state.geminiKey)}
+                </span>
+              </div>
+              <p className="text-xs text-zinc-400 mb-4 leading-relaxed">
+                {t("placeholder")}
+              </p>
+              
+              <div className="relative mb-4">
+                <input
+                  type={state.showGeminiKey ? "text" : "password"}
+                  value={state.draftGeminiKey}
+                  onChange={(e) => updateState({ draftGeminiKey: e.target.value })}
+                  placeholder={t("placeholder")}
+                  className="h-10 w-full rounded-xl border border-white/[0.08] bg-black/30 px-3 pr-10 text-xs text-zinc-200 outline-none transition-all placeholder:text-zinc-600 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
+                  autoComplete="off"
+                  spellCheck={false}
+                />
+                <button
+                  type="button"
+                  onClick={() => updateState({ showGeminiKey: !state.showGeminiKey })}
+                  className="absolute inset-y-0 right-2 flex w-8 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-white/[0.06] hover:text-zinc-200"
+                  title={state.showGeminiKey ? common("actions.hideKey") : common("actions.showKey")}
+                >
+                  {state.showGeminiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
-            <IconTextButton
-              icon={saved ? Check : Save}
-              onClick={save}
-              disabled={draftProvider !== "mock" && !inputValue.trim()}
-              tone={ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT}
-              strong
-              className="h-11"
-            >
-              {saved ? common("actions.saved") : common("actions.save")}
-            </IconTextButton>
-            <DeleteButton
-              type="button"
-              onClick={remove}
-              disabled={!aiApiKey && !inputValue}
-              strong
-              className="h-11"
-            >
-              {common("actions.delete")}
-            </DeleteButton>
+
+            <div className="flex gap-2 mt-2">
+              <IconTextButton
+                icon={state.geminiSaved ? Check : Save}
+                onClick={handleGeminiSave}
+                disabled={!state.draftGeminiKey.trim()}
+                tone={ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT}
+                strong
+                className="h-9 text-xs py-0 px-3 flex-1"
+              >
+                {state.geminiSaved ? common("actions.saved") : common("actions.save")}
+              </IconTextButton>
+              <DeleteButton
+                type="button"
+                onClick={handleGeminiDelete}
+                disabled={!state.geminiKey && !state.draftGeminiKey}
+                strong
+                className="h-9 text-xs py-0 px-3"
+              >
+                {common("actions.delete")}
+              </DeleteButton>
+            </div>
+          </div>
+
+          <div className="rounded-xl border p-5 flex flex-col justify-between transition-all duration-300 border-white/[0.06] bg-[#07070d]/50 hover:bg-[#07070d]/80">
+            <div>
+              <div className="flex items-center justify-between gap-3 mb-2">
+                <div className="flex items-center gap-2">
+                  <Cpu className="h-4.5 w-4.5 text-zinc-500" />
+                  <h4 className="text-sm font-semibold text-zinc-200">
+                    {t("openaiSectionTitle")}
+                  </h4>
+                </div>
+                <span className={cn(
+                  "text-[10px] px-2 py-0.5 rounded-full font-medium border",
+                  state.openaiKey 
+                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
+                    : "bg-zinc-800 text-zinc-500 border-white/[0.04]"
+                )}>
+                  {getSummary(state.openaiKey)}
+                </span>
+              </div>
+              <p className="text-xs text-zinc-400 mb-4 leading-relaxed">
+                {t("openaiPlaceholder")}
+              </p>
+              
+              <div className="relative mb-4">
+                <input
+                  type={state.showOpenaiKey ? "text" : "password"}
+                  value={state.draftOpenaiKey}
+                  onChange={(e) => updateState({ draftOpenaiKey: e.target.value })}
+                  placeholder={t("openaiPlaceholder")}
+                  className="h-10 w-full rounded-xl border border-white/[0.08] bg-black/30 px-3 pr-10 text-xs text-zinc-200 outline-none transition-all placeholder:text-zinc-600 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10"
+                  autoComplete="off"
+                  spellCheck={false}
+                />
+                <button
+                  type="button"
+                  onClick={() => updateState({ showOpenaiKey: !state.showOpenaiKey })}
+                  className="absolute inset-y-0 right-2 flex w-8 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-white/[0.06] hover:text-zinc-200"
+                  title={state.showOpenaiKey ? common("actions.hideKey") : common("actions.showKey")}
+                >
+                  {state.showOpenaiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex gap-2 mt-2">
+              <IconTextButton
+                icon={state.openaiSaved ? Check : Save}
+                onClick={handleOpenaiSave}
+                disabled={!state.draftOpenaiKey.trim()}
+                tone={ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT}
+                strong
+                className="h-9 text-xs py-0 px-3 flex-1"
+              >
+                {state.openaiSaved ? common("actions.saved") : common("actions.save")}
+              </IconTextButton>
+              <DeleteButton
+                type="button"
+                onClick={handleOpenaiDelete}
+                disabled={!state.openaiKey && !state.draftOpenaiKey}
+                strong
+                className="h-9 text-xs py-0 px-3"
+              >
+                {common("actions.delete")}
+              </DeleteButton>
+            </div>
           </div>
         </div>
       </div>

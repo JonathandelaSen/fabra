@@ -13,6 +13,7 @@ import { SupabaseFollowUpRepository } from "./infrastructure/repositories/supaba
 import { SupabaseProcessQuestionRepository } from "./infrastructure/repositories/supabase-process-question.repository";
 import { GeminiInterviewQuestionAIServiceFactory } from "./infrastructure/services/gemini-interview-question-ai.service";
 import { MockInterviewQuestionAIServiceFactory } from "./infrastructure/services/mock-interview-question-ai.service";
+import { OpenAIInterviewQuestionAIServiceFactory } from "./infrastructure/services/openai-interview-question-ai.service";
 import { ProviderInterviewQuestionAIServiceFactory } from "./infrastructure/services/provider-interview-question-ai-service.factory";
 
 const questionRepo = new SupabaseProcessQuestionRepository();
@@ -20,6 +21,7 @@ const followUpRepo = new SupabaseFollowUpRepository();
 const tracker: EventTracker = new SupabaseEventTracker();
 const aiFactory = new ProviderInterviewQuestionAIServiceFactory({
   geminiFactory: new GeminiInterviewQuestionAIServiceFactory(),
+  openaiFactory: new OpenAIInterviewQuestionAIServiceFactory(),
   mockFactory: new MockInterviewQuestionAIServiceFactory(),
 });
 

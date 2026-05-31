@@ -8,9 +8,8 @@ import type {
   WorkJournalEntryLegacy,
   WorkJournalEntryResponse,
 } from "./work-journal-types";
-import {
-  toWorkJournalEntryLegacy,
-} from "./work-journal-types";
+import { toWorkJournalEntryLegacy } from "./work-journal-types";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface ErrorResponse {
   error?: string;
@@ -70,7 +69,7 @@ export async function createWorkJournalEntry(input: SaveWorkJournalEntryInput) {
 }
 
 export async function draftWorkJournalEntry(input: {
-  provider: "gemini" | "mock";
+  provider: StoredAIProvider;
   apiKey?: string;
   model: string;
   context_id: string;

@@ -2,6 +2,7 @@
 
 import type { AnalysisMode, JobKeyData, OfferStatus } from "@/lib/analysis-types";
 import { TabsContent } from "@/components/ui/tabs";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 import type { InterviewQuestionSummary } from "../types";
 import TabResumen from "./tab-resumen";
 import TabOferta from "./tab-oferta";
@@ -32,7 +33,7 @@ interface AnalysisTabsContentProps {
   isCreatingQuestion: boolean;
   onCreateQuestion: (generateAfter?: boolean) => void;
   analysisId: string;
-  aiProvider: "gemini" | "mock";
+  aiProvider: StoredAIProvider;
   aiApiKey: string;
   aiModel: string;
   hasAIApiKey: boolean;

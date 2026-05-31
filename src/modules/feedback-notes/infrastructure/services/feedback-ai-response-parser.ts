@@ -4,7 +4,7 @@ export function parseFinalFeedbackAIResponse(rawText: string): string {
   const finalFeedback =
     typeof value === "string" && value.trim() ? value.trim() : null;
   if (!finalFeedback) {
-    throw new Error("La IA no pudo redactar el feedback con estas notas.");
+    throw new Error("The AI could not draft the feedback with these notes.");
   }
   return finalFeedback;
 }

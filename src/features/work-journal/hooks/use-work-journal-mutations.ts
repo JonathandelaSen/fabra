@@ -14,6 +14,7 @@ import {
   draftWorkJournalEntry,
   updateWorkJournalEntry,
 } from "../api/work-journal-api";
+import { getAIApiKeyForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 import { workJournalQueryKeys } from "../api/work-journal-query-keys";
 import {
   addWorkJournalEntryToCache,
@@ -37,7 +38,7 @@ export const emptyEntryDraft = {
 export type WorkJournalDraft = typeof emptyEntryDraft;
 
 interface UseWorkJournalMutationsParams {
-  aiProvider: "gemini" | "mock";
+  aiProvider: StoredAIProvider;
   aiApiKey: string;
   hasAIApiKey: boolean;
   onOpenSettings: () => void;
@@ -68,13 +69,13 @@ export function useWorkJournalMutations({
   const [error, setError] = useState<string | null>(null);
 
   const saveEntry = async () => {
-    if (!draft.context_id || !draft.raw_notes.trim()) {
+    const finalText = draft.final_text.trim() || draft.raw_notes.trim();
+    const rawNotes = draft.raw_notes.trim() || finalText;
+
+    if (!draft.context_id || !rawNotes) {
       setError(t("errors.requiredFields"));
       return;
     }
-
-    const finalText =
-      draft.input_mode === "manual" ? draft.raw_notes : draft.final_text || draft.raw_notes;
     const previousEntries =
       queryClient.getQueryData<WorkJournalEntry[]>(workJournalQueryKeys.entries()) ?? [];
     const now = new Date().toISOString();
@@ -86,7 +87,7 @@ export function useWorkJournalMutations({
       date_end: draft.date_end || null,
       topic: draft.topic || null,
       input_mode: draft.input_mode,
-      raw_notes: draft.raw_notes,
+      raw_notes: rawNotes,
       final_text: finalText,
       metadata: {},
       created_at: now,
@@ -107,6 +108,7 @@ export function useWorkJournalMutations({
     try {
       const entry = await createWorkJournalEntry({
         ...draft,
+        raw_notes: rawNotes,
         final_text: finalText,
         date_end: draft.date_end || null,
         topic: draft.topic || null,
@@ -139,8 +141,9 @@ export function useWorkJournalMutations({
     }
   };
 
-  const draftWithAI = async (selectedModel: string) => {
-    if (!hasAIApiKey) {
+  const draftWithAI = async (provider: StoredAIProvider, modelId: string) => {
+    const resolvedApiKey = getAIApiKeyForProvider(provider, aiApiKey);
+    if (provider !== "mock" && !resolvedApiKey) {
       onOpenSettings();
       return;
     }
@@ -152,17 +155,17 @@ export function useWorkJournalMutations({
     setAiLoading(true);
     setError(null);
     try {
-      const data = await draftWorkJournalEntry({
-        provider: aiProvider,
-        apiKey: aiApiKey,
-        model: selectedModel,
+      const response = await draftWorkJournalEntry({
+        provider,
+        apiKey: resolvedApiKey,
+        model: modelId,
         context_id: draft.context_id,
         date_start: draft.date_start,
         date_end: draft.date_end || null,
         topic: draft.topic || null,
         notes: draft.raw_notes,
       });
-      setDraft((current) => ({ ...current, final_text: data.finalText }));
+      setDraft((current) => ({ ...current, final_text: response.finalText }));
     } catch (err: unknown) {
       setError(getErrorMessage(err));
     } finally {
@@ -176,15 +179,17 @@ export function useWorkJournalMutations({
     dateEnd: string | null,
     topic: string | null,
     notes: string,
+    provider: StoredAIProvider,
     modelId: string
   ): Promise<string> => {
-    if (!hasAIApiKey) {
+    const resolvedApiKey = getAIApiKeyForProvider(provider, aiApiKey);
+    if (provider !== "mock" && !resolvedApiKey) {
       onOpenSettings();
       throw new Error("Missing API Key");
     }
     const data = await draftWorkJournalEntry({
-      provider: aiProvider,
-      apiKey: aiApiKey,
+      provider,
+      apiKey: resolvedApiKey,
       model: modelId,
       context_id: contextId,
       date_start: dateStart,

@@ -16,6 +16,7 @@ import {
   ICON_TEXT_BUTTON_TONES,
 } from "@/components/shared/action-buttons";
 import { BasicPanel } from "@/components/shared/basic-panel";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface FeedbackNotesDetailProps {
   feedback: FeedbackListItem;
@@ -25,6 +26,8 @@ interface FeedbackNotesDetailProps {
   isSaving: boolean;
   isGenerating: boolean;
   hasAIApiKey: boolean;
+  selectedProvider: StoredAIProvider;
+  onProviderChange: (provider: StoredAIProvider) => void;
   selectedModel: string;
   onModelChange: (model: string) => void;
   onUpdateFeedback: (
@@ -65,6 +68,8 @@ export function FeedbackNotesDetail({
   onOpenCopyPaste,
   onOpenSettings,
   hasAIApiKey,
+  selectedProvider,
+  onProviderChange,
   selectedModel,
   onModelChange,
   pendingDraft,
@@ -220,6 +225,8 @@ export function FeedbackNotesDetail({
           isSaving={isSaving}
           isGenerating={isGenerating}
           hasAIApiKey={hasAIApiKey}
+          selectedProvider={selectedProvider}
+          onProviderChange={onProviderChange}
           selectedModel={selectedModel}
           onModelChange={onModelChange}
           onSaveFinalFeedback={(finalFeedback) => onUpdateFeedback({ finalFeedback })}

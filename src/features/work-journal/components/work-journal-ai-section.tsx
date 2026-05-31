@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import type { WorkJournalContextLegacy as WorkJournalContext } from "../api/work-journal-types";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { WorkJournalCopyPastePanel } from "./work-journal-copy-paste-panel";
 
@@ -16,9 +17,10 @@ interface WorkJournalAISectionProps {
   aiLoading: boolean;
   hasAIApiKey: boolean;
   onOpenSettings: () => void;
+  selectedProvider: StoredAIProvider;
+  setSelectedProvider: (provider: StoredAIProvider) => void;
   selectedModel: string;
   setSelectedModel: (s: string) => void;
-  models: { id: string; label: string }[];
   isCopyPasteOpen: boolean;
   setIsCopyPasteOpen: React.Dispatch<React.SetStateAction<boolean>>;
   contexts: WorkJournalContext[];
@@ -36,9 +38,10 @@ export function WorkJournalAISection({
   aiLoading,
   hasAIApiKey,
   onOpenSettings,
+  selectedProvider,
+  setSelectedProvider,
   selectedModel,
   setSelectedModel,
-  models,
   isCopyPasteOpen,
   setIsCopyPasteOpen,
   contexts,
@@ -65,8 +68,9 @@ export function WorkJournalAISection({
           disabled={!rawNotes.trim() || !contextId}
           integrated={{
             available: hasAIApiKey,
+            selectedProvider,
+            onProviderChange: setSelectedProvider,
             selectedModelId: selectedModel,
-            models,
             onModelChange: setSelectedModel,
             onRun: onDraftWithAI,
             onConfigure: onOpenSettings,

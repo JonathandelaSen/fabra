@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import { I18nProvider } from "@/components/shared/i18n-provider";
 import { FrontendQueryClientProvider } from "@/frontend/query/query-client-provider";
 import { getMessages } from "@/i18n/messages";
@@ -47,7 +48,7 @@ try {
     >
       <head>
         <meta name="color-scheme" content="dark" />
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <Script id="theme-script" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="h-full font-sans">
         <I18nProvider initialLocale={locale}>

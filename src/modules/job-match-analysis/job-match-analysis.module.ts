@@ -13,6 +13,7 @@ import { PreviewJobMatchScoreCopyPasteUseCase } from "./application/use-cases/pr
 import { ApplyJobMatchScoreCopyPasteUseCase } from "./application/use-cases/apply-job-match-score-copy-paste.use-case";
 import { GeminiJobMatchScoringAIServiceFactory } from "./infrastructure/services/gemini-job-match-scoring-ai.service";
 import { MockJobMatchScoringAIServiceFactory } from "./infrastructure/services/mock-job-match-scoring-ai.service";
+import { OpenAIJobMatchScoringAIServiceFactory } from "./infrastructure/services/openai-job-match-scoring-ai.service";
 import { ProviderJobMatchScoringAIServiceFactory } from "./infrastructure/services/provider-job-match-scoring-ai-service.factory";
 import { buildJobMatchScoringCopyPastePrompt } from "./infrastructure/services/job-match-scoring-prompts";
 import { SupabaseJobMatchAnalysisRepository } from "./infrastructure/repositories/supabase-job-match-analysis.repository";
@@ -21,6 +22,7 @@ const repo = new SupabaseJobMatchAnalysisRepository();
 const tracker = new SupabaseEventTracker();
 const aiServiceFactory = new ProviderJobMatchScoringAIServiceFactory({
   geminiFactory: new GeminiJobMatchScoringAIServiceFactory(),
+  openaiFactory: new OpenAIJobMatchScoringAIServiceFactory(),
   mockFactory: new MockJobMatchScoringAIServiceFactory(),
 });
 

@@ -325,7 +325,7 @@ test("objectives delayed auto-selection does not replace Home after back", async
       response.url().endsWith("/api/commitments") &&
       response.request().method() === "GET",
   );
-  releaseCommitments?.();
+  (releaseCommitments as any)?.();
   await commitmentsResponse;
   await expectHomeIsInteractive(page);
 });

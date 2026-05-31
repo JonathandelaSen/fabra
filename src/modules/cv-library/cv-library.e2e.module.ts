@@ -23,7 +23,8 @@ const pdfStorage = new SupabaseCVPdfStorage();
 const mockTextExtractor = new MockPdfTextExtractor();
 const templateRenderer = new TemplateCVPdfRenderer();
 const profileStructuringAI = new ProviderCVProfileStructuringAIServiceFactory({
-  geminiFactory: new MockCVProfileStructuringAIServiceFactory(),
+  geminiFactory: new MockCVProfileStructuringAIServiceFactory() as any,
+  openaiFactory: new MockCVProfileStructuringAIServiceFactory() as any,
   mockFactory: new MockCVProfileStructuringAIServiceFactory(),
 });
 const tracker: EventTracker = new SupabaseEventTracker();

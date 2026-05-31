@@ -12,8 +12,7 @@ import type {
 import type { ListInterviewQuestionsResponse } from "@/app/api/interview-questions/responses";
 import type { AIContext } from "@/lib/analysis-types";
 import type { OfferStatus } from "@/lib/analysis-types";
-
-type AIProvider = "gemini" | "mock";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 export interface CreateCVAnalysisInput {
   cvId: string;
@@ -22,7 +21,7 @@ export interface CreateCVAnalysisInput {
 }
 
 export interface ScoreCVAnalysisInput {
-  provider: AIProvider;
+  provider: StoredAIProvider;
   apiKey: string;
   model: string;
   additionalContext: string | null;
@@ -44,7 +43,7 @@ export interface CreateInterviewQuestionInput {
 }
 
 export interface GenerateInterviewQuestionInput {
-  provider: AIProvider;
+  provider: StoredAIProvider;
   apiKey: string;
   model: string;
   context: string;

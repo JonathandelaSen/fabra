@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { DEFAULT_FAST_GEMINI_MODEL, DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
@@ -17,8 +17,10 @@ import { WorkJournalSidebar } from "./work-journal-sidebar";
 import { WorkJournalDetail } from "./work-journal-detail";
 import { WorkJournalForm } from "./work-journal-form";
 
+import type { StoredAIProvider } from "@/lib/browser-preferences";
+
 interface WorkJournalViewProps {
-  aiProvider: "gemini" | "mock";
+  aiProvider: StoredAIProvider;
   aiApiKey: string;
   aiModel: string;
   hasAIApiKey: boolean;
@@ -44,16 +46,11 @@ export default function WorkJournalView({
   const [showForm, setShowForm] = useState(false);
   const [contextFilter, setContextFilter] = useState<string>("");
   const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
-  const [selectedModel, setSelectedModel] = useState<string>(aiModel || DEFAULT_FAST_GEMINI_MODEL);
-
-  const formsT = useTranslations("analysisFlow.forms");
-  const models = [
-    { id: DEFAULT_FAST_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_FAST_GEMINI_MODEL]} (${formsT("fast")})` },
-    { id: DEFAULT_GEMINI_MODEL, label: `${GEMINI_MODELS[DEFAULT_GEMINI_MODEL]} (${formsT("powerful")})` },
-  ];
+  const [selectedProvider, setSelectedProvider] = useState<StoredAIProvider>(aiProvider);
+  const [selectedModel, setSelectedModel] = useState<string>(aiModel || DEFAULT_GEMINI_MODEL);
 
   const contexts = contextsQuery.data?.contexts ?? [];
-  const entries = entriesQuery.data ?? [];
+  const entries: import("../api/work-journal-types").WorkJournalEntryLegacy[] = entriesQuery.data ?? [];
   const loading = contextsQuery.isLoading || entriesQuery.isLoading;
   const queryError = contextsQuery.error
     ? getErrorMessage(contextsQuery.error)
@@ -88,7 +85,7 @@ export default function WorkJournalView({
     patchEntry,
     deleteEntry,
   } = useWorkJournalMutations({
-    aiProvider,
+    aiProvider: selectedProvider,
     aiApiKey,
     hasAIApiKey,
     onOpenSettings,
@@ -161,7 +158,7 @@ export default function WorkJournalView({
     }
   };
 
-  const handleDraftWithAI = () => draftWithAI(selectedModel);
+  const handleDraftWithAI = () => draftWithAI(selectedProvider, selectedModel);
 
   return (
     <FeatureScreenShell
@@ -207,9 +204,10 @@ export default function WorkJournalView({
                 aiLoading={aiLoading}
                 hasAIApiKey={hasAIApiKey}
                 onOpenSettings={onOpenSettings}
+                selectedProvider={selectedProvider}
+                setSelectedProvider={setSelectedProvider}
                 selectedModel={selectedModel}
                 setSelectedModel={setSelectedModel}
-                models={models}
                 isCopyPasteOpen={isCopyPasteOpen}
                 setIsCopyPasteOpen={setIsCopyPasteOpen}
                 contexts={contexts}
@@ -229,9 +227,10 @@ export default function WorkJournalView({
               onManageContexts={openActivityContextManager}
               hasAIApiKey={hasAIApiKey}
               onOpenSettings={onOpenSettings}
+              selectedProvider={selectedProvider}
+              setSelectedProvider={setSelectedProvider}
               selectedModel={selectedModel}
               setSelectedModel={setSelectedModel}
-              models={models}
               onDraftEditWithAI={draftEditWithAI}
             />
           )}

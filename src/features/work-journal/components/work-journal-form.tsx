@@ -9,6 +9,7 @@ import { WorkJournalFormMetadata } from "./work-journal-form-metadata";
 import { WorkJournalCopyPastePanel } from "./work-journal-copy-paste-panel";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { BasicPanel } from "@/components/shared/basic-panel";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface WorkJournalFormProps {
   draft: {
@@ -34,9 +35,10 @@ interface WorkJournalFormProps {
   aiLoading: boolean;
   hasAIApiKey: boolean;
   onOpenSettings: () => void;
+  selectedProvider: StoredAIProvider;
+  setSelectedProvider: (provider: StoredAIProvider) => void;
   selectedModel: string;
   setSelectedModel: (s: string) => void;
-  models: { id: string; label: string }[];
   isCopyPasteOpen: boolean;
   setIsCopyPasteOpen: React.Dispatch<React.SetStateAction<boolean>>;
   contexts: WorkJournalContext[];
@@ -53,9 +55,10 @@ export function WorkJournalForm({
   aiLoading,
   hasAIApiKey,
   onOpenSettings,
+  selectedProvider,
+  setSelectedProvider,
   selectedModel,
   setSelectedModel,
-  models,
   isCopyPasteOpen,
   setIsCopyPasteOpen,
   contexts,
@@ -146,8 +149,9 @@ export function WorkJournalForm({
                 disabled={!draft.raw_notes.trim() || !draft.context_id}
                 integrated={{
                   available: hasAIApiKey,
+                  selectedProvider,
+                  onProviderChange: setSelectedProvider,
                   selectedModelId: selectedModel,
-                  models,
                   onModelChange: setSelectedModel,
                   onRun: draftWithAI,
                   onConfigure: onOpenSettings,

@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
-import { type AIModelOption } from "@/components/shared/ai-action-launcher/ai-action-launcher";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 import { GEMINI_MODELS } from "@/frontend/ai-models";
 import { CVEditorEmptyState } from "./cv-editor-empty-state";
 import { CVEditorHeader } from "./cv-editor-header";
@@ -26,13 +26,6 @@ const PDFPreview = dynamic(
 );
 
 interface CVEditorViewProps { onOpenTemplates: () => void; onOpenSettings: () => void; onStartAnalysis: () => void; onBackToLibrary?: () => void; }
-
-const AI_MODELS: AIModelOption[] = [
-  { id: "gemini-3.1-pro-preview", label: GEMINI_MODELS["gemini-3.1-pro-preview"] },
-  { id: "gemini-3.1-flash-preview", label: GEMINI_MODELS["gemini-3.1-flash-preview"] },
-  { id: "gemini-2.5-pro", label: GEMINI_MODELS["gemini-2.5-pro"] },
-  { id: "gemini-2.5-flash", label: GEMINI_MODELS["gemini-2.5-flash"] },
-];
 
 export default function CVEditorView({
   onOpenTemplates,
@@ -67,6 +60,8 @@ export default function CVEditorView({
     saveState,
     error,
     setError,
+    selectedProvider,
+    setSelectedProvider,
     selectedModel,
     setSelectedModel,
     setEditedVersion,
@@ -99,7 +94,7 @@ export default function CVEditorView({
     currentVersionId: currentVersion?.id ?? null,
     currentProfile,
     normalizedPublicSlug,
-    aiProvider,
+    aiProvider: selectedProvider,
     aiApiKey,
     selectedModel,
     hasAIApiKey,
@@ -198,8 +193,8 @@ export default function CVEditorView({
               saveState={saveState}
               savingLocale={savingLocale}
               savingPublicSettings={savingPublicSettings}
+              selectedProvider={selectedProvider}
               selectedModel={selectedModel}
-              aiModels={AI_MODELS}
               onApplyInstruction={() => applyInstruction()}
               onCopyPublicUrl={() => void copyPublicUrl()}
               onManualChange={handleManualChange}
@@ -212,6 +207,7 @@ export default function CVEditorView({
               onSetEditInstruction={setEditInstruction}
               onSetEditorTab={setEditorTab}
               onSetPublicSlugDraft={setPublicSlugDraft}
+              onSetSelectedProvider={setSelectedProvider}
               onSetSelectedModel={setSelectedModel}
               onStartAnalysis={onStartAnalysis}
               onUnpublish={() => void handleUpdatePublicSettings(false)}

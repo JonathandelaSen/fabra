@@ -9,6 +9,7 @@ import {
   generateInterviewQuestionAnswer,
   updateJobMatchAnalysis,
 } from "../api/cv-analysis-api";
+import { getAIApiKeyForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 
 interface UseAnalysisViewActionsParams {
   analysis: {
@@ -19,7 +20,7 @@ interface UseAnalysisViewActionsParams {
     offer_next_action: string | null;
     offer_next_action_at: string | null;
   };
-  aiProvider: "gemini" | "mock";
+  aiProvider: StoredAIProvider;
   aiApiKey: string;
   hasAIApiKey: boolean;
   onInterviewQuestionCreated?: () => void;
@@ -109,7 +110,8 @@ export function useAnalysisViewActions({
 
   const handleCreateInterviewQuestion = async (generateAfter = false) => {
     if (!quickQuestion.trim()) return;
-    if (generateAfter && !hasAIApiKey) {
+    const resolvedApiKey = getAIApiKeyForProvider(aiProvider, aiApiKey);
+    if (generateAfter && aiProvider !== "mock" && !resolvedApiKey) {
       alert(messages.missingApiKeyForAnswer);
       return;
     }
@@ -128,7 +130,7 @@ export function useAnalysisViewActions({
       if (generateAfter) {
         await generateInterviewQuestionAnswer(created.id, {
           provider: aiProvider,
-          apiKey: aiApiKey,
+          apiKey: resolvedApiKey,
           model: quickQuestionModel,
           context: quickQuestionContext,
           cv_id: analysis.cv_id,

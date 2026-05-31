@@ -14,12 +14,13 @@ import type {
   AnalysisChatConversation,
   AnalysisChatMessage,
 } from "../types";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 export type JobMatchAnalysisSummary = ListJobMatchAnalysesResponse[number];
 export type JobMatchAnalysisDetail = GetJobMatchAnalysisResponse;
 
 export interface ScoreJobMatchAnalysisInput {
-  provider: "gemini" | "mock";
+  provider: StoredAIProvider;
   apiKey?: string;
   model: string;
   jobDescription: string;
@@ -42,7 +43,7 @@ export interface CreateLinkedInterviewQuestionInput {
 }
 
 export interface GenerateLinkedInterviewQuestionAnswerInput {
-  provider: "gemini" | "mock";
+  provider: StoredAIProvider;
   apiKey?: string;
   model: string;
   context: string;
@@ -52,7 +53,7 @@ export interface GenerateLinkedInterviewQuestionAnswerInput {
 
 export interface SendJobMatchOfferChatMessageInput {
   message: string;
-  provider: "gemini" | "mock";
+  provider: StoredAIProvider;
   apiKey: string;
   model: string;
   conversationId: string;
