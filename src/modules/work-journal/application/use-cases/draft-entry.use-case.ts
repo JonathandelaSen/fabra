@@ -20,7 +20,8 @@ export class DraftEntryUseCase {
     input: DraftEntryInput & {
       provider: AIProvider;
       apiKey?: string;
-      model: string;
+      baseUrl?: string;
+  model: string;
     }
   ): Promise<string> {
     const requestId = createRequestId("wj-draft");
@@ -32,10 +33,11 @@ export class DraftEntryUseCase {
       metadata: { contextId, provider: input.provider, model: input.model },
     });
 
-    const { provider, apiKey, model, ...draftInput } = input;
+    const { provider, apiKey, baseUrl, model, ...draftInput } = input;
     const aiService = this.deps.aiFactory.create({
       provider,
       apiKey,
+      baseUrl,
       model,
     });
     const finalText = await aiService.draftEntry({

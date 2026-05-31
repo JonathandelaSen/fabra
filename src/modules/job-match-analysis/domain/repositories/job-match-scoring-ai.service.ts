@@ -26,6 +26,7 @@ export interface JobMatchScoringAIServiceFactory {
   create(config: {
     provider: AIProvider;
     apiKey?: string;
+    baseUrl?: string;
     model: string;
   }): JobMatchScoringAIService;
 }

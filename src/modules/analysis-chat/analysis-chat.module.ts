@@ -1,3 +1,4 @@
+import { OllamaAnalysisChatAIServiceFactory } from "./infrastructure/services/ollama-analysis-chat-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { EventTracker, QueryBus } from "@/modules/shared";
 import { SupabaseEventTracker } from "@/modules/shared";
@@ -26,6 +27,7 @@ const aiFactory = new ProviderAnalysisChatAIServiceFactory({
   geminiFactory: new GeminiAnalysisChatAIServiceFactory(),
   openaiFactory: new OpenAIAnalysisChatAIServiceFactory(),
   mockFactory: new MockAnalysisChatAIServiceFactory(),
+  ollamaFactory: new OllamaAnalysisChatAIServiceFactory(),
 });
 const tracker: EventTracker = new SupabaseEventTracker();
 

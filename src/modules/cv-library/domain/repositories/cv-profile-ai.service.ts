@@ -15,6 +15,7 @@ export interface CVProfileStructuringAIServiceFactory {
   create(config: {
     provider: AIProvider;
     apiKey?: string;
+    baseUrl?: string;
     model: string;
   }): CVProfileStructuringAIService;
 }
@@ -33,6 +34,7 @@ export interface CVProfileEditingAIServiceFactory {
   create(config: {
     provider: AIProvider;
     apiKey?: string;
+    baseUrl?: string;
     model: string;
   }): CVProfileEditingAIService;
 }

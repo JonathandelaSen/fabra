@@ -17,6 +17,7 @@ export interface GenerateQuestionAnswerInput {
   userId: string;
   provider: AIProvider;
   apiKey?: string;
+  baseUrl?: string;
   model: string;
   context: string;
   legacyCvId?: string | null;
@@ -49,6 +50,7 @@ export class GenerateQuestionAnswerUseCase {
     const aiService = this.deps.aiFactory.create({
       provider: input.provider,
       apiKey: input.apiKey,
+      baseUrl: input.baseUrl,
       model: input.model,
     });
     const answer = await aiService.generateAnswer({

@@ -10,6 +10,7 @@ import type {
 import type { GeminiCVProfileStructuringAIServiceFactory } from "./gemini-cv-profile-structuring-ai.service";
 import type { OpenAICVProfileStructuringAIServiceFactory } from "./openai-cv-profile-structuring-ai.service";
 import type { MockCVProfileStructuringAIServiceFactory } from "./mock-cv-profile-structuring-ai.service";
+import type { OllamaCVProfileStructuringAIServiceFactory } from "./ollama-cv-profile-structuring-ai.service";
 
 export class ProviderCVProfileStructuringAIServiceFactory
   implements CVProfileStructuringAIServiceFactory
@@ -19,6 +20,7 @@ export class ProviderCVProfileStructuringAIServiceFactory
       geminiFactory: GeminiCVProfileStructuringAIServiceFactory;
       openaiFactory: OpenAICVProfileStructuringAIServiceFactory;
       mockFactory: MockCVProfileStructuringAIServiceFactory;
+      ollamaFactory: OllamaCVProfileStructuringAIServiceFactory;
     },
   ) {}
 
@@ -29,6 +31,7 @@ export class ProviderCVProfileStructuringAIServiceFactory
     const factories = {
       [AI_PROVIDER.GEMINI]: () => this.deps.geminiFactory.create(config),
       [AI_PROVIDER.OPENAI]: () => this.deps.openaiFactory.create(config),
+      [AI_PROVIDER.OLLAMA]: () => this.deps.ollamaFactory.create(config),
       [AI_PROVIDER.MOCK]: () => this.deps.mockFactory.create(),
     };
     const createService = factories[config.provider];

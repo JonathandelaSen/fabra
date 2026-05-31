@@ -22,6 +22,7 @@ export interface UpdateInterviewQuestionInput {
 export interface RunInterviewQuestionAIInput {
   provider: StoredAIProvider;
   apiKey?: string;
+  baseUrl?: string;
   model: string;
   context: string | null;
   instruction?: string;

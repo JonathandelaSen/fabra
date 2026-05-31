@@ -44,6 +44,7 @@ export async function POST(
         userId: user.id,
         provider: parsed.value.provider,
         apiKey: parsed.value.apiKey,
+        baseUrl: parsed.value.baseUrl,
         model: parsed.value.model,
         additionalContext: parsed.value.additionalContext,
       });

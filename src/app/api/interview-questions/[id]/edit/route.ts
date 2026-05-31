@@ -82,7 +82,7 @@ export async function POST(
       });
       return errorResponse(parsed.error);
     }
-    const { provider, apiKey, model, context, instruction } = parsed.value;
+    const { provider, apiKey, baseUrl, model, context, instruction } = parsed.value;
     if (!existing.answer?.trim()) {
       await recordProcessingEvent({
         userId,
@@ -133,6 +133,7 @@ export async function POST(
       userId: user.id,
       provider,
       apiKey,
+      baseUrl,
       model,
       context,
       instruction,

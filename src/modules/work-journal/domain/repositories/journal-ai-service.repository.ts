@@ -17,6 +17,7 @@ export interface JournalAIServiceFactory {
   create(config: {
     provider: AIProvider;
     apiKey?: string;
+    baseUrl?: string;
     model: string;
   }): JournalAIService;
 }

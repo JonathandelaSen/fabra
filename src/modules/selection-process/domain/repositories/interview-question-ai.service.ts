@@ -20,6 +20,7 @@ export interface InterviewQuestionAIServiceFactory {
   create(config: {
     provider: AIProvider;
     apiKey?: string;
+    baseUrl?: string;
     model: string;
   }): InterviewQuestionAIService;
 }

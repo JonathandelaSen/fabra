@@ -20,6 +20,7 @@ export interface CVScoringAIServiceFactory {
   create(config: {
     provider: AIProvider;
     apiKey?: string;
+    baseUrl?: string;
     model: string;
   }): CVScoringAIService;
 }

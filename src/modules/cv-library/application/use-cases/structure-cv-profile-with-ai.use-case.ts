@@ -5,6 +5,7 @@ import type { CVProfileStructuringAIServiceFactory } from "../../domain/reposito
 export interface StructureCVProfileWithAIInput {
   provider: AIProvider;
   apiKey?: string;
+  baseUrl?: string;
   model: string;
   text: string;
 }
@@ -27,6 +28,7 @@ export class StructureCVProfileWithAIUseCase {
     const service = this.deps.aiFactory.create({
       provider: input.provider,
       apiKey: input.apiKey,
+      baseUrl: input.baseUrl,
       model: input.model,
     });
 

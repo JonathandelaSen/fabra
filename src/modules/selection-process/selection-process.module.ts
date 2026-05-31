@@ -1,3 +1,4 @@
+import { OllamaInterviewQuestionAIServiceFactory } from "./infrastructure/services/ollama-interview-question-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { SupabaseEventTracker, type EventTracker } from "@/modules/shared";
 import { CreateProcessQuestionUseCase } from "./application/use-cases/create-process-question.use-case";
@@ -23,6 +24,7 @@ const aiFactory = new ProviderInterviewQuestionAIServiceFactory({
   geminiFactory: new GeminiInterviewQuestionAIServiceFactory(),
   openaiFactory: new OpenAIInterviewQuestionAIServiceFactory(),
   mockFactory: new MockInterviewQuestionAIServiceFactory(),
+  ollamaFactory: new OllamaInterviewQuestionAIServiceFactory(),
 });
 
 function createUseCases() {

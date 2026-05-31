@@ -1,3 +1,4 @@
+import { OllamaFeedbackAIServiceFactory } from "./infrastructure/services/ollama-feedback-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
 import { SupabaseEventTracker } from "@/modules/shared";
@@ -27,6 +28,7 @@ const aiFactory = new ProviderFeedbackAIServiceFactory({
   geminiFactory: new GeminiFeedbackAIServiceFactory(),
   openaiFactory: new OpenAIFeedbackAIServiceFactory(),
   mockFactory: new MockFeedbackAIServiceFactory(),
+  ollamaFactory: new OllamaFeedbackAIServiceFactory(),
 });
 
 function createUseCases() {

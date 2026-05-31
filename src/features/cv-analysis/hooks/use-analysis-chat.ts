@@ -13,7 +13,7 @@ import {
 } from "../api/cv-analysis-chat-api";
 import type { AnalysisChatConversation, AnalysisChatMessage } from "../components/chat-types";
 
-import { getAIApiKeyForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 interface UseAnalysisChatParams {
   analysisId: string;
   aiProvider: StoredAIProvider;
@@ -170,9 +170,9 @@ export function useAnalysisChat({
       const message = draft.trim();
       if (!message || isSending) return;
       const resolvedProvider = provider || aiProvider;
-      const resolvedApiKey = getAIApiKeyForProvider(resolvedProvider, aiApiKey);
-      if (resolvedProvider !== "mock" && !resolvedApiKey) {
-        setError(t("missingApiKey"));
+      const aiConfig = getAIRequestConfigForProvider(resolvedProvider, aiApiKey, model || aiModel);
+      if (aiConfig.error) {
+        setError(aiConfig.error);
         return;
       }
 
@@ -187,9 +187,10 @@ export function useAnalysisChat({
           analysisId,
           {
             message,
-            provider: resolvedProvider,
-            apiKey: resolvedApiKey,
-            model: model || aiModel,
+            provider: aiConfig.provider,
+            apiKey: aiConfig.apiKey,
+            baseUrl: aiConfig.baseUrl,
+            model: aiConfig.model,
             conversationId: conversation,
           },
           t("sendFailed"),

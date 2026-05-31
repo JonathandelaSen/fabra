@@ -8,7 +8,7 @@ import {
   type CVTemplateLocale,
 } from "@/lib/cv-templates";
 import {
-  getAIApiKeyForProvider,
+  getAIRequestConfigForProvider,
   getStoredAIApiKey,
   getStoredAIProvider,
   type StoredAIProvider,
@@ -76,13 +76,21 @@ export default function CVTemplatesView({
   const handleCreateVersion = async () => {
     if (!selectedTemplate || !selectedCvId) return;
 
+    const aiConfig = getAIRequestConfigForProvider(selectedProvider || aiProviderValue, aiApiKey, selectedModel);
+    if (aiConfig.error) {
+      alert(aiConfig.error);
+      onOpenSettings();
+      return;
+    }
+
     createVersion.create({
       cvId: selectedCvId,
       templateId: selectedTemplate.templateId,
       locale,
-      provider: selectedProvider || aiProviderValue,
-      apiKey: getAIApiKeyForProvider(selectedProvider || aiProviderValue, aiApiKey),
-      model: selectedModel,
+      provider: aiConfig.provider,
+      apiKey: aiConfig.apiKey,
+      baseUrl: aiConfig.baseUrl,
+      model: aiConfig.model,
     });
   };
 

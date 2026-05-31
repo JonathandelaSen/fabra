@@ -47,6 +47,7 @@ export interface ApplyInstructionInput {
   cvId: string;
   provider: string;
   apiKey: string;
+  baseUrl?: string;
   model: string;
   instruction: string;
 }

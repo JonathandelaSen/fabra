@@ -77,6 +77,7 @@ export async function POST(
       .structureCVProfileWithAI.execute({
         provider: parsed.value.provider,
         apiKey: parsed.value.apiKey,
+        baseUrl: parsed.value.baseUrl,
         model: parsed.value.model,
         text,
       });

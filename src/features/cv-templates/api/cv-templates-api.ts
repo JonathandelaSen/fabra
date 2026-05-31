@@ -8,6 +8,7 @@ interface CreateCVTemplateVersionInput {
   locale: CVTemplateLocale;
   provider: StoredAIProvider;
   apiKey: string;
+  baseUrl?: string;
   model: string;
 }
 

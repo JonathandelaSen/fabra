@@ -6,7 +6,12 @@ import { Cpu, ChevronDown, Check, KeyRound, Sparkles, Building2 } from "lucide-r
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { AlertBanner, ALERT_BANNER_TONES } from "../alert-banner";
-import { saveStoredAIProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import {
+  getAIRequestConfigForProvider,
+  getStoredAIModelForProvider,
+  saveStoredAIProvider,
+  type StoredAIProvider,
+} from "@/lib/browser-preferences";
 import {
   GEMINI_MODELS,
   OPENAI_MODELS,
@@ -48,15 +53,24 @@ export default function AIActionLauncherIntegrated({
   const formsT = useTranslations("analysisFlow.forms");
   const [showProviderDropdown, setShowProviderDropdown] = useState(false);
   const [showModelDropdown, setShowModelDropdown] = useState(false);
+  const [configurationError, setConfigurationError] = useState<string | null>(null);
   const commonT = useTranslations("common.providers");
 
   const PROVIDERS = [
     { id: "gemini", label: commonT("gemini") },
     { id: "openai", label: commonT("openai") },
+    { id: "ollama", label: "Ollama (Local)" },
     ...(process.env.NODE_ENV !== "production" ? [{ id: "mock", label: commonT("mock") }] : []),
   ] as const;
 
+  const aiConfig = getAIRequestConfigForProvider(selectedProvider, "", selectedModelId);
+  const currentConfigurationError = aiConfig.error;
+
   const handleIntegratedRun = () => {
+    if (currentConfigurationError) {
+      setConfigurationError(currentConfigurationError);
+      return;
+    }
     onClose();
     onRun();
   };
@@ -77,6 +91,8 @@ export default function AIActionLauncherIntegrated({
     return undefined;
   };
 
+  const configuredOllamaModel = getStoredAIModelForProvider("ollama");
+
   let availableModels: { id: string; label: string; badge?: string }[] = [];
   
   if (selectedProvider === "gemini") {
@@ -91,6 +107,10 @@ export default function AIActionLauncherIntegrated({
       label,
       badge: getOpenAIModelBadge(id),
     }));
+  } else if (selectedProvider === "ollama") {
+    availableModels = [
+      { id: configuredOllamaModel, label: configuredOllamaModel || "Model not configured", badge: "Local Configured" }
+    ];
   } else if (selectedProvider === "mock") {
     availableModels = [
       { id: "mock-model", label: commonT("mockModel"), badge: "Dev" },
@@ -99,11 +119,13 @@ export default function AIActionLauncherIntegrated({
 
   const selectedModel = availableModels.find((m) => m.id === selectedModelId) || availableModels[0];
 
+  const isAvailable = available || selectedProvider === "ollama" || selectedProvider === "mock";
+
   return (
     <div
       className={cn(
         "relative p-4 rounded-xl border transition-all duration-300 bg-white/[0.02] flex flex-col gap-3",
-        available
+        isAvailable
           ? "border-white/[0.06] hover:border-violet-500/30 hover:bg-white/[0.04]"
           : "border-amber-500/10 bg-amber-500/[0.02]"
       )}
@@ -117,14 +139,14 @@ export default function AIActionLauncherIntegrated({
             {t("insideLabel")}
           </h4>
           <p className="text-[11px] sm:text-xs text-zinc-400 mt-0.5 leading-relaxed">
-            {available
+            {isAvailable
               ? t("insideDesc")
               : unavailableReason || t("insideDesc")}
           </p>
         </div>
       </div>
 
-      {available ? (
+      {isAvailable ? (
         <div className="flex flex-col gap-2 relative">
           {/* Provider Selection */}
           <div className="relative">
@@ -166,6 +188,7 @@ export default function AIActionLauncherIntegrated({
                           const nextProvider = provider.id as StoredAIProvider;
                           saveStoredAIProvider(nextProvider);
                           onProviderChange(nextProvider);
+                          setConfigurationError(null);
                           setShowProviderDropdown(false);
                           
                           // Reset model to default of the new provider
@@ -173,6 +196,8 @@ export default function AIActionLauncherIntegrated({
                             onModelChange(DEFAULT_GEMINI_MODEL);
                           } else if (nextProvider === "openai") {
                             onModelChange(CHEAPEST_OPENAI_MODEL);
+                          } else if (nextProvider === "ollama") {
+                            onModelChange(getStoredAIModelForProvider("ollama"));
                           } else {
                             onModelChange("mock-model");
                           }
@@ -243,6 +268,7 @@ export default function AIActionLauncherIntegrated({
                         type="button"
                         onClick={() => {
                           onModelChange(model.id);
+                          setConfigurationError(null);
                           setShowModelDropdown(false);
                         }}
                         className={cn(
@@ -278,6 +304,11 @@ export default function AIActionLauncherIntegrated({
           >
             {t("continue")}
           </button>
+          {(configurationError || currentConfigurationError) && (
+            <AlertBanner tone={ALERT_BANNER_TONES.WARNING} icon={KeyRound}>
+              {configurationError || currentConfigurationError}
+            </AlertBanner>
+          )}
         </div>
       ) : (
         <div className="flex flex-col gap-2 mt-1">

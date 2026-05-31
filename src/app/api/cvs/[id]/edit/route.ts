@@ -70,6 +70,7 @@ export async function POST(
       .editCVProfileWithAI.execute({
         provider: parsed.value.provider,
         apiKey: parsed.value.apiKey,
+        baseUrl: parsed.value.baseUrl,
         model: parsed.value.model,
         profile: cv.profile,
         instruction: parsed.value.instruction,

@@ -5,6 +5,7 @@ describe("AIProvider", () => {
   it("accepts supported AI providers", () => {
     expect(isAIProvider("gemini")).toBe(true);
     expect(isAIProvider("openai")).toBe(true);
+    expect(isAIProvider("ollama")).toBe(true);
     expect(isAIProvider("mock")).toBe(true);
   });
 
@@ -17,6 +18,7 @@ describe("AIProvider", () => {
   it("parses a supported provider", () => {
     expect(parseAIProvider("gemini")).toBe("gemini");
     expect(parseAIProvider("openai")).toBe("openai");
+    expect(parseAIProvider("ollama")).toBe("ollama");
   });
 
   it("throws a controlled error for unsupported providers", () => {

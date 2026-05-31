@@ -3,7 +3,7 @@ import type { AIDefaultSettingsResponse } from "@/app/api/ai-settings/defaults/r
 export async function fetchDefaultAISettings(): Promise<AIDefaultSettingsResponse> {
   const response = await fetch("/api/ai-settings/defaults");
   if (!response.ok) {
-    return { apiKeys: {} };
+    return { apiKeys: {}, baseUrls: {} };
   }
   return response.json();
 }

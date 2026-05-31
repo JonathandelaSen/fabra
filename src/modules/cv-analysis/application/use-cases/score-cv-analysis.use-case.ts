@@ -10,6 +10,7 @@ export interface ScoreCVAnalysisInput {
   userId: string;
   provider: AIProvider;
   apiKey?: string;
+  baseUrl?: string;
   model: string;
   additionalContext?: string | null;
 }
@@ -34,6 +35,7 @@ export class ScoreCVAnalysisUseCase {
     const aiService = this.deps.aiServiceFactory.create({
       provider: input.provider,
       apiKey: input.apiKey,
+      baseUrl: input.baseUrl,
       model: input.model,
     });
     const result = await aiService.score({

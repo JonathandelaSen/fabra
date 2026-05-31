@@ -146,7 +146,8 @@ export async function POST(
       message: parsed.value.message,
       provider: parsed.value.provider,
         apiKey: parsed.value.apiKey,
-      model: parsed.value.model,
+      baseUrl: parsed.value.baseUrl,
+        model: parsed.value.model,
       requestId,
       startedAt,
     });

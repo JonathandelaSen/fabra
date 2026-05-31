@@ -18,7 +18,7 @@ import {
   sendJobMatchOfferChatMessage,
 } from "../api/job-match-analysis-api";
 
-import { getAIApiKeyForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 
 interface UseJobMatchOfferChatParams {
   analysisId: string;
@@ -191,9 +191,9 @@ export function useJobMatchOfferChat({
       const message = draft.trim();
       if (!message || isSending) return;
       const resolvedProvider = provider || aiProvider;
-      const resolvedApiKey = getAIApiKeyForProvider(resolvedProvider, aiApiKey);
-      if (resolvedProvider !== "mock" && !resolvedApiKey) {
-        setError(t("missingApiKey"));
+      const aiConfig = getAIRequestConfigForProvider(resolvedProvider, aiApiKey, model || aiModel);
+      if (aiConfig.error) {
+        setError(aiConfig.error);
         return;
       }
 
@@ -205,9 +205,10 @@ export function useJobMatchOfferChat({
           analysisId,
           input: {
             message,
-            provider: resolvedProvider,
-            apiKey: resolvedApiKey,
-            model: model || aiModel,
+            provider: aiConfig.provider,
+            apiKey: aiConfig.apiKey,
+            baseUrl: aiConfig.baseUrl,
+            model: aiConfig.model,
             conversationId,
           },
         });

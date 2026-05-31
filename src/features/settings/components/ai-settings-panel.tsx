@@ -23,10 +23,12 @@ import { cn } from "@/lib/utils";
 import {
   getStoredAIApiKeyForProvider,
   saveStoredAIApiKeyForProvider,
+  getStoredAIBaseUrlForProvider,
   getStoredAIModel,
   type StoredAIProvider,
 } from "@/lib/browser-preferences";
 import { useDefaultAISettings } from "../hooks/use-default-ai-settings";
+import { OllamaSettingsCard } from "./ollama-settings-card";
 
 interface AISettingsPanelProps {
   aiProvider: StoredAIProvider;
@@ -35,6 +37,7 @@ interface AISettingsPanelProps {
   onAISettingsChange: (settings: {
     provider: StoredAIProvider;
     apiKey: string;
+    baseUrl?: string;
     model: string;
   }) => void;
 }
@@ -57,7 +60,7 @@ export function AISettingsPanel({
     showOpenaiKey: false,
     openaiSaved: false,
   });
-  const { defaultApiKeys } = useDefaultAISettings();
+  const { defaultApiKeys, defaultBaseUrls } = useDefaultAISettings();
 
   const updateState = (updates: Partial<typeof state>) => setState(prev => ({ ...prev, ...updates }));
 
@@ -65,12 +68,13 @@ export function AISettingsPanel({
     const storedGemini = getStoredAIApiKeyForProvider("gemini", defaultApiKeys);
     const storedOpenai = getStoredAIApiKeyForProvider("openai", defaultApiKeys);
     
-    updateState({
+    setState((prev) => ({
+      ...prev,
       geminiKey: storedGemini,
       draftGeminiKey: storedGemini,
       openaiKey: storedOpenai,
       draftOpenaiKey: storedOpenai,
-    });
+    }));
   }, [aiProvider, aiApiKey, defaultApiKeys]);
 
   const handleGeminiSave = () => {
@@ -81,6 +85,7 @@ export function AISettingsPanel({
     onAISettingsChange({
       provider: aiProvider,
       apiKey: getStoredAIApiKeyForProvider(aiProvider, defaultApiKeys),
+      baseUrl: getStoredAIBaseUrlForProvider(aiProvider, defaultBaseUrls),
       model: getStoredAIModel(),
     });
   };
@@ -97,6 +102,7 @@ export function AISettingsPanel({
     onAISettingsChange({
       provider: aiProvider,
       apiKey: getStoredAIApiKeyForProvider(aiProvider, defaultApiKeys),
+      baseUrl: getStoredAIBaseUrlForProvider(aiProvider, defaultBaseUrls),
       model: getStoredAIModel(),
     });
   };
@@ -109,6 +115,7 @@ export function AISettingsPanel({
     onAISettingsChange({
       provider: aiProvider,
       apiKey: getStoredAIApiKeyForProvider(aiProvider, defaultApiKeys),
+      baseUrl: getStoredAIBaseUrlForProvider(aiProvider, defaultBaseUrls),
       model: getStoredAIModel(),
     });
   };
@@ -125,6 +132,7 @@ export function AISettingsPanel({
     onAISettingsChange({
       provider: aiProvider,
       apiKey: getStoredAIApiKeyForProvider(aiProvider, defaultApiKeys),
+      baseUrl: getStoredAIBaseUrlForProvider(aiProvider, defaultBaseUrls),
       model: getStoredAIModel(),
     });
   };
@@ -150,7 +158,7 @@ export function AISettingsPanel({
           {t("warningBody")}
         </AlertBanner>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-3 md:grid-cols-2">
           <div className="rounded-xl border p-5 flex flex-col justify-between transition-all duration-300 border-white/[0.06] bg-[#07070d]/50 hover:bg-[#07070d]/80">
             <div>
               <div className="flex items-center justify-between gap-3 mb-2">
@@ -282,6 +290,14 @@ export function AISettingsPanel({
               </DeleteButton>
             </div>
           </div>
+
+          <OllamaSettingsCard
+            aiProvider={aiProvider}
+            defaultApiKeys={defaultApiKeys}
+            defaultBaseUrls={defaultBaseUrls}
+            getSummary={getSummary}
+            onAISettingsChange={onAISettingsChange}
+          />
         </div>
       </div>
     </BasicPanel>

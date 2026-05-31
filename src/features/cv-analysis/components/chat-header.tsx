@@ -8,7 +8,11 @@ import {
   OPENAI_MODELS 
 } from "@/frontend/ai-models";
 import { Sparkles } from "lucide-react";
-import { saveStoredAIProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import {
+  getStoredAIModelForProvider,
+  saveStoredAIProvider,
+  type StoredAIProvider,
+} from "@/lib/browser-preferences";
 
 interface ChatHeaderProps {
   provider: StoredAIProvider;
@@ -28,6 +32,8 @@ export function ChatHeader({ provider, onProviderChange, model, onModelChange }:
       onModelChange(DEFAULT_GEMINI_MODEL);
     } else if (newProvider === "openai") {
       onModelChange(CHEAPEST_OPENAI_MODEL);
+    } else if (newProvider === "ollama") {
+      onModelChange(getStoredAIModelForProvider("ollama"));
     } else {
       onModelChange("mock-model");
     }
@@ -40,7 +46,7 @@ export function ChatHeader({ provider, onProviderChange, model, onModelChange }:
           <Sparkles className="size-3.5" />
         </div>
         <div>
-          <h4 className="text-sm font-medium text-zinc-200">
+          <h4 className="text-sm font-semibold text-zinc-200">
             {t("title")}
           </h4>
           <p className="text-[11px] text-zinc-600">
@@ -56,6 +62,7 @@ export function ChatHeader({ provider, onProviderChange, model, onModelChange }:
         >
           <option value="gemini">{commonT("gemini")}</option>
           <option value="openai">{commonT("openai")}</option>
+          <option value="ollama">{commonT("ollama")}</option>
           {process.env.NODE_ENV !== "production" && <option value="mock">{commonT("mock")}</option>}
         </select>
         <select
@@ -73,6 +80,9 @@ export function ChatHeader({ provider, onProviderChange, model, onModelChange }:
             Object.entries(OPENAI_MODELS).map(([id, label]) => (
               <option key={id} value={id}>{label}</option>
             ))
+          )}
+          {provider === "ollama" && (
+            <option value={model}>{model || "Model not configured"}</option>
           )}
           {provider === "mock" && (
             <option value="mock-model">{commonT("mockModel")}</option>

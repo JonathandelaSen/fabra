@@ -18,7 +18,7 @@ import { useJobMatchCopyPasteApplied } from "../hooks/use-job-match-copy-paste-a
 import JobMatchAnalysisList from "./job-match-analysis-list";
 import { JobMatchAnalysisContent } from "./job-match-analysis-content";
 
-import { getAIApiKeyForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 
 interface JobMatchAnalysisViewProps {
   aiProvider: StoredAIProvider;
@@ -138,13 +138,15 @@ export default function JobMatchAnalysisView({
     input: { jobDescription: string; jobUrl: string; provider: StoredAIProvider; model: string },
   ) => {
     if (!analysisId) return;
-    const resolvedApiKey = getAIApiKeyForProvider(input.provider, aiApiKey);
+    const aiConfig = getAIRequestConfigForProvider(input.provider, aiApiKey, input.model);
+    if (aiConfig.error) throw new Error(aiConfig.error);
     await mutations.scoreAnalysis.mutateAsync({
       id: analysisId,
       input: {
-        provider: input.provider,
-        apiKey: resolvedApiKey,
-        model: input.model,
+        provider: aiConfig.provider,
+        apiKey: aiConfig.apiKey,
+        baseUrl: aiConfig.baseUrl,
+        model: aiConfig.model,
         jobDescription: input.jobDescription,
         jobUrl: input.jobUrl || null,
       },

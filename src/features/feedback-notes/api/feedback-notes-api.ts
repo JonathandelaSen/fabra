@@ -120,7 +120,7 @@ export async function deleteEntry(entryId: string) {
 export async function generateFinalFeedback(
   feedbackId: string,
   input: { provider: StoredAIProvider;
-  apiKey?: string; model: string }
+  apiKey?: string; baseUrl?: string; model: string }
 ) {
   const res = await fetch(`/api/feedback-notes/feedbacks/${feedbackId}/generate`, {
     method: "POST",

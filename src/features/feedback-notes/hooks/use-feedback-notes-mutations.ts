@@ -114,13 +114,15 @@ export function useFeedbackNotesMutations(status: FeedbackFilter) {
         feedbackId,
         provider,
         apiKey,
+        baseUrl,
         model,
       }: {
         feedbackId: string;
         provider: StoredAIProvider;
         apiKey?: string;
+        baseUrl?: string;
         model: string;
-      }) => generateFinalFeedback(feedbackId, { provider, apiKey, model }),
+      }) => generateFinalFeedback(feedbackId, { provider, apiKey, baseUrl, model }),
       onSuccess: async (feedback) => {
         queryClient.setQueryData(feedbackNotesQueryKeys.detail(feedback.id), feedback);
         await invalidateFeedbacks(feedback.id);

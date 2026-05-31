@@ -1,3 +1,4 @@
+import { OllamaCVScoringAIServiceFactory } from "./infrastructure/services/ollama-cv-scoring-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
 import { SupabaseEventTracker } from "@/modules/shared";
@@ -24,6 +25,7 @@ const aiServiceFactory = new ProviderCVScoringAIServiceFactory({
   geminiFactory: new GeminiCVScoringAIServiceFactory(),
   openaiFactory: new OpenAICVScoringAIServiceFactory(),
   mockFactory: new MockCVScoringAIServiceFactory(),
+  ollamaFactory: new OllamaCVScoringAIServiceFactory(),
 });
 
 function createUseCases() {

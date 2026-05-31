@@ -25,7 +25,8 @@ export async function POST(req: NextRequest) {
     const finalText = await workJournalModule.draftEntry.execute(user.id, parsed.value.contextId, {
       provider: parsed.value.provider,
       apiKey: parsed.value.apiKey,
-      model: parsed.value.model,
+      baseUrl: parsed.value.baseUrl,
+        model: parsed.value.model,
       context: {
         type: context?.toPrimitives().type ?? "other",
         name: context?.toPrimitives().name ?? "Selected activity context",

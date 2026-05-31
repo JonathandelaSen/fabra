@@ -1,3 +1,4 @@
+import type { OllamaJobMatchScoringAIServiceFactory } from "./ollama-job-match-scoring-ai.service";
 import {
   AI_PROVIDER,
   assertAIProviderAllowedForRuntime,
@@ -19,6 +20,7 @@ export class ProviderJobMatchScoringAIServiceFactory
       geminiFactory: GeminiJobMatchScoringAIServiceFactory;
       openaiFactory: OpenAIJobMatchScoringAIServiceFactory;
       mockFactory: MockJobMatchScoringAIServiceFactory;
+      ollamaFactory: OllamaJobMatchScoringAIServiceFactory;
     },
   ) {}
 
@@ -29,6 +31,7 @@ export class ProviderJobMatchScoringAIServiceFactory
     const factories = {
       [AI_PROVIDER.GEMINI]: () => this.deps.geminiFactory.create(config),
       [AI_PROVIDER.OPENAI]: () => this.deps.openaiFactory.create(config),
+      [AI_PROVIDER.OLLAMA]: () => this.deps.ollamaFactory.create(config),
       [AI_PROVIDER.MOCK]: () => this.deps.mockFactory.create(),
     };
     const createService = factories[config.provider];

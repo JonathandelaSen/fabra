@@ -11,7 +11,7 @@ import {
   type ScoreCVAnalysisInput,
 } from "./use-cv-analysis-mutations";
 
-import { getAIApiKeyForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 
 interface ScoreAnalysisHandler {
   (id: string, input: ScoreCVAnalysisInput): Promise<void>;
@@ -55,9 +55,9 @@ export function useExtractionAIActions({
   }));
 
   const handleGeneralAnalysis = async (context: AIContext) => {
-    const resolvedApiKey = getAIApiKeyForProvider(selectedProvider, aiApiKey);
-    if (selectedProvider !== "mock" && !resolvedApiKey) {
-      setAiError(t("missingApiKey"));
+    const aiConfig = getAIRequestConfigForProvider(selectedProvider, aiApiKey, selectedModel);
+    if (aiConfig.error) {
+      setAiError(aiConfig.error);
       return;
     }
 
@@ -68,18 +68,20 @@ export function useExtractionAIActions({
       if (onScoreAnalysis) {
         await onScoreAnalysis(analysisId, {
           additionalContext: context?.additionalContext ?? null,
-          provider: selectedProvider,
-          apiKey: resolvedApiKey,
-          model: selectedModel,
+          provider: aiConfig.provider,
+            apiKey: aiConfig.apiKey,
+            baseUrl: aiConfig.baseUrl,
+            model: aiConfig.model,
         });
       } else {
         await scoreCVAnalysis.mutateAsync({
           id: analysisId,
           input: {
             additionalContext: context?.additionalContext ?? null,
-            provider: selectedProvider,
-            apiKey: resolvedApiKey,
-            model: selectedModel,
+            provider: aiConfig.provider,
+            apiKey: aiConfig.apiKey,
+            baseUrl: aiConfig.baseUrl,
+            model: aiConfig.model,
           },
         });
       }
@@ -101,9 +103,9 @@ export function useExtractionAIActions({
     jobDescription: string,
     jobUrl: string,
   ) => {
-    const resolvedApiKey = getAIApiKeyForProvider(selectedProvider, aiApiKey);
-    if (selectedProvider !== "mock" && !resolvedApiKey) {
-      setAiError(t("missingApiKey"));
+    const aiConfig = getAIRequestConfigForProvider(selectedProvider, aiApiKey, selectedModel);
+    if (aiConfig.error) {
+      setAiError(aiConfig.error);
       return;
     }
 
@@ -116,9 +118,10 @@ export function useExtractionAIActions({
         input: {
           jobDescription,
           jobUrl: jobUrl || null,
-          provider: selectedProvider,
-          apiKey: resolvedApiKey,
-          model: selectedModel,
+          provider: aiConfig.provider,
+            apiKey: aiConfig.apiKey,
+            baseUrl: aiConfig.baseUrl,
+            model: aiConfig.model,
         },
       });
 

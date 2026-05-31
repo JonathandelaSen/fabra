@@ -22,7 +22,7 @@ import { InterviewQuestionDetail } from "./interview-question-detail";
 import { InterviewQuestionsSidebar } from "./interview-questions-sidebar";
 import { InterviewQuestionsSkeleton } from "./interview-questions-skeleton";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
-import { getAIApiKeyForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 
 interface InterviewQuestionsViewProps {
   aiProvider: StoredAIProvider;
@@ -114,9 +114,9 @@ export default function InterviewQuestionsView({
   const runAI = async (mode: "generate" | "edit", instruction: string) => {
     if (!selected) return;
     const resolvedProvider = provider || aiProvider;
-    const resolvedApiKey = getAIApiKeyForProvider(resolvedProvider, aiApiKey);
-    if (resolvedProvider !== "mock" && !resolvedApiKey) {
-      onOpenSettings();
+    const aiConfig = getAIRequestConfigForProvider(resolvedProvider, aiApiKey, model || aiModel);
+    if (aiConfig.error) {
+      setError(aiConfig.error);
       return;
     }
     setError(null);
@@ -125,9 +125,10 @@ export default function InterviewQuestionsView({
         ? mutations.generateAnswer.mutateAsync({
             id: selected.id,
             input: {
-              provider: resolvedProvider,
-              apiKey: resolvedApiKey,
-              model: model || aiModel,
+              provider: aiConfig.provider,
+              apiKey: aiConfig.apiKey,
+              baseUrl: aiConfig.baseUrl,
+              model: aiConfig.model,
               context: selected.context,
               cvId: selected.cvId,
               analysisId: selected.analysisId,
@@ -136,9 +137,10 @@ export default function InterviewQuestionsView({
         : mutations.editAnswer.mutateAsync({
             id: selected.id,
             input: {
-              provider: resolvedProvider,
-              apiKey: resolvedApiKey,
-              model: model || aiModel,
+              provider: aiConfig.provider,
+              apiKey: aiConfig.apiKey,
+              baseUrl: aiConfig.baseUrl,
+              model: aiConfig.model,
               context: selected.context,
               instruction,
               cvId: selected.cvId,

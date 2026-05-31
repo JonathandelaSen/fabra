@@ -1,3 +1,4 @@
+import { OllamaCVProfileStructuringAIServiceFactory } from "./infrastructure/services/ollama-cv-profile-structuring-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { QueryBus } from "@/modules/shared";
 import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
@@ -26,6 +27,7 @@ const profileStructuringAI = new ProviderCVProfileStructuringAIServiceFactory({
   geminiFactory: new MockCVProfileStructuringAIServiceFactory() as any,
   openaiFactory: new MockCVProfileStructuringAIServiceFactory() as any,
   mockFactory: new MockCVProfileStructuringAIServiceFactory(),
+  ollamaFactory: new OllamaCVProfileStructuringAIServiceFactory(),
 });
 const tracker: EventTracker = new SupabaseEventTracker();
 

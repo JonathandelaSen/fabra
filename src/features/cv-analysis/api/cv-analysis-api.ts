@@ -23,6 +23,7 @@ export interface CreateCVAnalysisInput {
 export interface ScoreCVAnalysisInput {
   provider: StoredAIProvider;
   apiKey: string;
+  baseUrl?: string;
   model: string;
   additionalContext: string | null;
 }
@@ -45,6 +46,7 @@ export interface CreateInterviewQuestionInput {
 export interface GenerateInterviewQuestionInput {
   provider: StoredAIProvider;
   apiKey: string;
+  baseUrl?: string;
   model: string;
   context: string;
   cv_id: string | null;

@@ -34,6 +34,7 @@ export async function POST(
       {
         provider: parsed.value.provider,
         apiKey: parsed.value.apiKey,
+        baseUrl: parsed.value.baseUrl,
         model: parsed.value.model,
       },
     );

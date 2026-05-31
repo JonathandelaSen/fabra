@@ -10,7 +10,7 @@ import {
   type CreateLinkedInterviewQuestionInput,
   type GenerateLinkedInterviewQuestionAnswerInput,
 } from "../api/job-match-analysis-api";
-import { getAIApiKeyForProvider } from "@/lib/browser-preferences";
+import { getAIRequestConfigForProvider } from "@/lib/browser-preferences";
 
 interface UseQuickInterviewQuestionParams {
   analysisId: string;
@@ -53,9 +53,9 @@ export function useQuickInterviewQuestion({
     const trimmedQuestion = question.trim();
     const trimmedContext = context.trim();
     if (!trimmedQuestion) return;
-    const resolvedApiKey = getAIApiKeyForProvider(aiProvider, aiApiKey);
-    if (generateAfter && aiProvider !== "mock" && !resolvedApiKey) {
-      alert(t("alerts.missingApiKeyForAnswer"));
+    const aiConfig = getAIRequestConfigForProvider(aiProvider, aiApiKey, model);
+    if (generateAfter && aiConfig.error) {
+      alert(aiConfig.error);
       return;
     }
     if (generateAfter && !trimmedContext) {
@@ -75,9 +75,10 @@ export function useQuickInterviewQuestion({
         await generateAnswer.mutateAsync({
           id: created.id,
           input: {
-            provider: aiProvider,
-            apiKey: resolvedApiKey,
-            model,
+            provider: aiConfig.provider,
+            apiKey: aiConfig.apiKey,
+            baseUrl: aiConfig.baseUrl,
+            model: aiConfig.model,
             context: trimmedContext,
             cvId,
             analysisId,

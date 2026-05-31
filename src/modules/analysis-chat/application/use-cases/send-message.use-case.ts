@@ -42,6 +42,7 @@ export interface SendMessageInput {
   message: string;
   provider: AIProvider;
   apiKey?: string;
+  baseUrl?: string;
   model: string;
   requestId: string;
   startedAt?: number;
@@ -126,7 +127,8 @@ export class SendMessageUseCase {
       const aiService = this.deps.aiFactory.create({
         provider: input.provider,
         apiKey: input.apiKey,
-        model: input.model,
+        baseUrl: input.baseUrl,
+      model: input.model,
       });
       answer = await aiService.generateAnswer({
         message: input.message,

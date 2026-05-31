@@ -30,6 +30,7 @@ export interface SendAnalysisChatMessageInput {
   message: string;
   provider: StoredAIProvider;
   apiKey: string;
+  baseUrl?: string;
   model: string;
   conversationId: string;
 }

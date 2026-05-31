@@ -21,7 +21,7 @@ export class GenerateFinalFeedbackUseCase {
   async execute(
     userId: string,
     feedbackId: string,
-    aiConfig: { provider: AIProvider; apiKey?: string; model: string },
+    aiConfig: { provider: AIProvider; apiKey?: string; baseUrl?: string; model: string },
   ) {
     const feedback = await this.deps.feedbackRepo.findById(feedbackId, userId);
     if (!feedback) throw new FeedbackNotFoundError(feedbackId);

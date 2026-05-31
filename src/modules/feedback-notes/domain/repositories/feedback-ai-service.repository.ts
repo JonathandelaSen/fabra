@@ -14,6 +14,7 @@ export interface FeedbackAIServiceFactory {
   create(config: {
     provider: AIProvider;
     apiKey?: string;
+    baseUrl?: string;
     model: string;
   }): FeedbackAIService;
 }

@@ -6,6 +6,7 @@ import type { CVProfileEditingAIServiceFactory } from "../../domain/repositories
 export interface EditCVProfileWithAIInput {
   provider: AIProvider;
   apiKey?: string;
+  baseUrl?: string;
   model: string;
   profile: StandardCVProfile;
   instruction: string;
@@ -25,6 +26,7 @@ export class EditCVProfileWithAIUseCase {
     const service = this.deps.aiFactory.create({
       provider: input.provider,
       apiKey: input.apiKey,
+      baseUrl: input.baseUrl,
       model: input.model,
     });
 

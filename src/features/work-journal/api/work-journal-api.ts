@@ -71,6 +71,7 @@ export async function createWorkJournalEntry(input: SaveWorkJournalEntryInput) {
 export async function draftWorkJournalEntry(input: {
   provider: StoredAIProvider;
   apiKey?: string;
+  baseUrl?: string;
   model: string;
   context_id: string;
   date_start: string;

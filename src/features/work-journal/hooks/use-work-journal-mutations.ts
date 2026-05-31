@@ -14,7 +14,7 @@ import {
   draftWorkJournalEntry,
   updateWorkJournalEntry,
 } from "../api/work-journal-api";
-import { getAIApiKeyForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 import { workJournalQueryKeys } from "../api/work-journal-query-keys";
 import {
   addWorkJournalEntryToCache,
@@ -142,9 +142,9 @@ export function useWorkJournalMutations({
   };
 
   const draftWithAI = async (provider: StoredAIProvider, modelId: string) => {
-    const resolvedApiKey = getAIApiKeyForProvider(provider, aiApiKey);
-    if (provider !== "mock" && !resolvedApiKey) {
-      onOpenSettings();
+    const aiConfig = getAIRequestConfigForProvider(provider, aiApiKey, modelId);
+    if (aiConfig.error) {
+      setError(aiConfig.error);
       return;
     }
     if (!draft.context_id || !draft.raw_notes.trim()) {
@@ -156,9 +156,10 @@ export function useWorkJournalMutations({
     setError(null);
     try {
       const response = await draftWorkJournalEntry({
-        provider,
-        apiKey: resolvedApiKey,
-        model: modelId,
+        provider: aiConfig.provider,
+        apiKey: aiConfig.apiKey,
+        baseUrl: aiConfig.baseUrl,
+        model: aiConfig.model,
         context_id: draft.context_id,
         date_start: draft.date_start,
         date_end: draft.date_end || null,
@@ -182,15 +183,16 @@ export function useWorkJournalMutations({
     provider: StoredAIProvider,
     modelId: string
   ): Promise<string> => {
-    const resolvedApiKey = getAIApiKeyForProvider(provider, aiApiKey);
-    if (provider !== "mock" && !resolvedApiKey) {
+    const aiConfig = getAIRequestConfigForProvider(provider, aiApiKey, modelId);
+    if (aiConfig.error) {
       onOpenSettings();
-      throw new Error("Missing API Key");
+      throw new Error(aiConfig.error);
     }
     const data = await draftWorkJournalEntry({
-      provider,
-      apiKey: resolvedApiKey,
-      model: modelId,
+      provider: aiConfig.provider,
+      apiKey: aiConfig.apiKey,
+      baseUrl: aiConfig.baseUrl,
+      model: aiConfig.model,
       context_id: contextId,
       date_start: dateStart,
       date_end: dateEnd,

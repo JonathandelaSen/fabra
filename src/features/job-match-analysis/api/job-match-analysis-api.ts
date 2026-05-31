@@ -22,6 +22,7 @@ export type JobMatchAnalysisDetail = GetJobMatchAnalysisResponse;
 export interface ScoreJobMatchAnalysisInput {
   provider: StoredAIProvider;
   apiKey?: string;
+  baseUrl?: string;
   model: string;
   jobDescription: string;
   jobUrl: string | null;
@@ -45,6 +46,7 @@ export interface CreateLinkedInterviewQuestionInput {
 export interface GenerateLinkedInterviewQuestionAnswerInput {
   provider: StoredAIProvider;
   apiKey?: string;
+  baseUrl?: string;
   model: string;
   context: string;
   cvId: string | null;
@@ -55,6 +57,7 @@ export interface SendJobMatchOfferChatMessageInput {
   message: string;
   provider: StoredAIProvider;
   apiKey: string;
+  baseUrl?: string;
   model: string;
   conversationId: string;
 }

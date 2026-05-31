@@ -17,6 +17,7 @@ export interface EditQuestionAnswerInput {
   userId: string;
   provider: AIProvider;
   apiKey?: string;
+  baseUrl?: string;
   model: string;
   context: string;
   instruction: string;
@@ -48,6 +49,7 @@ export class EditQuestionAnswerUseCase {
     const aiService = this.deps.aiFactory.create({
       provider: input.provider,
       apiKey: input.apiKey,
+      baseUrl: input.baseUrl,
       model: input.model,
     });
     const answer = await aiService.editAnswer({

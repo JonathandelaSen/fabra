@@ -1,3 +1,4 @@
+import type { OllamaCVProfileEditingAIServiceFactory } from "./ollama-cv-profile-editing-ai.service";
 import {
   AI_PROVIDER,
   assertAIProviderAllowedForRuntime,
@@ -19,6 +20,7 @@ export class ProviderCVProfileEditingAIServiceFactory
       geminiFactory: GeminiCVProfileEditingAIServiceFactory;
       openaiFactory: OpenAICVProfileEditingAIServiceFactory;
       mockFactory: MockCVProfileEditingAIServiceFactory;
+      ollamaFactory: OllamaCVProfileEditingAIServiceFactory;
     },
   ) {}
 
@@ -29,6 +31,7 @@ export class ProviderCVProfileEditingAIServiceFactory
     const factories = {
       [AI_PROVIDER.GEMINI]: () => this.deps.geminiFactory.create(config),
       [AI_PROVIDER.OPENAI]: () => this.deps.openaiFactory.create(config),
+      [AI_PROVIDER.OLLAMA]: () => this.deps.ollamaFactory.create(config),
       [AI_PROVIDER.MOCK]: () => this.deps.mockFactory.create(),
     };
     const createService = factories[config.provider];

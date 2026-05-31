@@ -20,7 +20,7 @@ import { FeedbackNotesSidebar } from "./feedback-notes-sidebar";
 import { FeedbackCopyPastePanel } from "./feedback-copy-paste-panel";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 
-import { getAIApiKeyForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 
 interface FeedbackNotesViewProps {
   aiProvider: StoredAIProvider;
@@ -209,9 +209,9 @@ export default function FeedbackNotesView({
             onGenerate={() =>
               void runMutation(async () => {
                 const resolvedProvider = selectedProvider || aiProvider;
-                const resolvedApiKey = getAIApiKeyForProvider(resolvedProvider, aiApiKey);
-                if (resolvedProvider !== "mock" && !resolvedApiKey) {
-                   onOpenSettings?.();
+                const aiConfig = getAIRequestConfigForProvider(resolvedProvider, aiApiKey, selectedModel || aiModel);
+                if (aiConfig.error) {
+                  setError(aiConfig.error);
                   return;
                 }
                 if (entries.length === 0) {
@@ -226,9 +226,10 @@ export default function FeedbackNotesView({
                 }
                 await mutations.generateFinalFeedback.mutateAsync({
                   feedbackId: selectedFeedback.id,
-                  provider: resolvedProvider,
-                  apiKey: resolvedApiKey,
-                  model: selectedModel || aiModel,
+                  provider: aiConfig.provider,
+                  apiKey: aiConfig.apiKey,
+                  baseUrl: aiConfig.baseUrl,
+                  model: aiConfig.model,
                 });
               })
             }

@@ -3,7 +3,7 @@ import { loginViaUI } from "./helpers/auth";
 import { createConfirmedUser } from "./helpers/supabase";
 import { messages } from "../src/i18n/messages";
 
-test("authenticated user can open settings and manage local AI preferences", async ({
+test("authenticated user can open settings and manage Ollama local AI preferences", async ({
   page,
 }) => {
   const user = await createConfirmedUser("settings");
@@ -15,21 +15,28 @@ test("authenticated user can open settings and manage local AI preferences", asy
     page.getByRole("heading", { name: messages.en.settings.title }),
   ).toBeVisible();
 
-  const apiKeyInput = page.getByPlaceholder(
-    messages.en.settings.apiKey.placeholder,
+  const ollamaUrlInput = page.getByPlaceholder(
+    messages.en.settings.apiKey.ollamaPlaceholder,
   );
-  await apiKeyInput.fill("settings-e2e-api-key");
-  await page
+  const ollamaModelInput = page.getByPlaceholder(
+    messages.en.settings.apiKey.ollamaModelPlaceholder,
+  );
+
+  await expect(ollamaUrlInput).toHaveValue("http://localhost:11434");
+  await ollamaUrlInput.fill("http://localhost:11434");
+  await ollamaModelInput.fill("llama3.2");
+  await expect(ollamaModelInput).toHaveValue("llama3.2");
+  const ollamaCard = ollamaModelInput.locator("xpath=ancestor::div[contains(@class, 'rounded-xl')][1]");
+  await ollamaCard
     .getByRole("button", { name: messages.en.common.actions.save })
     .click();
   await expect(
-    page.getByText(messages.en.common.actions.saved),
+    page.getByRole("button", { name: messages.en.common.actions.saved }),
   ).toBeVisible();
 
-  await page.goto("/");
-  await page
-    .getByRole("button", { name: messages.en.navigation.settings })
-    .click();
-  await expect(page).toHaveURL(/\/settings$/);
-  await expect(apiKeyInput).toHaveValue("settings-e2e-api-key");
+  await page.reload();
+  await expect(
+    ollamaUrlInput,
+  ).toHaveValue("http://localhost:11434");
+  await expect(ollamaModelInput).toHaveValue("llama3.2");
 });
