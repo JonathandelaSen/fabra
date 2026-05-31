@@ -2,6 +2,7 @@
 
 import { useDroppable } from "@dnd-kit/core";
 import { useTranslations } from "next-intl";
+import type { WheelEvent } from "react";
 import type { JobMatchAnalysisOfferStatus } from "@/app/api/job-match-analyses/responses";
 import { cn } from "@/lib/utils";
 import type { JobMatchAnalysisSummary } from "../api/job-match-analysis-api";
@@ -23,6 +24,26 @@ const statusAccent: Record<JobMatchAnalysisOfferStatus, string> = {
 
 export function jobMatchKanbanDroppableId(status: JobMatchAnalysisOfferStatus) {
   return `status:${status}`;
+}
+
+function forwardHorizontalWheel(event: WheelEvent<HTMLDivElement>) {
+  const horizontalDelta =
+    Math.abs(event.deltaX) > Math.abs(event.deltaY)
+      ? event.deltaX
+      : event.shiftKey
+        ? event.deltaY
+        : 0;
+
+  if (horizontalDelta === 0) return;
+
+  const horizontalScroller = event.currentTarget.closest(
+    "[data-kanban-horizontal-scroll]",
+  );
+  if (!(horizontalScroller instanceof HTMLElement)) return;
+
+  horizontalScroller.scrollLeft += horizontalDelta;
+  event.preventDefault();
+  event.stopPropagation();
 }
 
 export function JobMatchKanbanColumn({
@@ -65,7 +86,10 @@ export function JobMatchKanbanColumn({
         </span>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto overscroll-contain p-2.5">
+      <div
+        className="flex min-h-0 flex-1 flex-col gap-2 overflow-x-hidden overflow-y-auto overscroll-contain p-2.5"
+        onWheel={forwardHorizontalWheel}
+      >
         {items.length > 0 ? (
           children
         ) : (

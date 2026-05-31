@@ -99,7 +99,7 @@ export function JobMatchKanbanBoard({
             {t("saving")}
           </div>
         )}
-        <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto md:flex-row md:overflow-x-auto md:overflow-y-hidden md:pb-2">
+        <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto md:flex-row md:overflow-visible md:pb-2">
           {JOB_MATCH_KANBAN_STATUSES.map((status) => (
             <JobMatchKanbanColumn
               key={status}

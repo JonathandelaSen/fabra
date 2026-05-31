@@ -227,6 +227,7 @@ export default function JobMatchAnalysisView({
   return (
     <FeatureScreenShell
       title={listT("jobTitle")}
+      bodyContentClassName={view === "kanban" && !analysisId ? "max-w-none" : undefined}
       actions={
         <>
           <div className="flex items-center rounded-lg border border-line bg-panel-subtle p-1">
@@ -276,26 +277,31 @@ export default function JobMatchAnalysisView({
       }
     >
       {view === "kanban" && !analysisId ? (
-        <div className="flex h-full min-h-0 flex-col gap-3">
-          <label className="relative block w-full max-w-sm">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-600" />
-            <input
-              type="search"
-              placeholder={listT("searchOffers")}
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-              className="h-9 w-full rounded-lg border border-white/10 bg-white/[0.03] py-1.5 pl-9 pr-3 text-xs text-zinc-200 outline-none placeholder:text-zinc-600 focus:border-indigo-500/40"
+        <div
+          data-kanban-horizontal-scroll
+          className="h-full min-h-0 overflow-x-auto overflow-y-hidden"
+        >
+          <div className="flex h-full min-h-0 min-w-max flex-col gap-3">
+            <label className="relative block w-full max-w-sm">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-600" />
+              <input
+                type="search"
+                placeholder={listT("searchOffers")}
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                className="h-9 w-full rounded-lg border border-white/10 bg-white/[0.03] py-1.5 pl-9 pr-3 text-xs text-zinc-200 outline-none placeholder:text-zinc-600 focus:border-indigo-500/40"
+              />
+            </label>
+            <JobMatchKanbanBoard
+              analyses={filteredAnalyses}
+              searchQuery={searchQuery}
+              isLoading={listQuery.isLoading}
+              isMoving={mutations.moveAnalysisCard.isPending}
+              onSelect={selectItem}
+              onDelete={(id) => void deleteFromKanban(id)}
+              onMove={moveKanbanCard}
             />
-          </label>
-          <JobMatchKanbanBoard
-            analyses={filteredAnalyses}
-            searchQuery={searchQuery}
-            isLoading={listQuery.isLoading}
-            isMoving={mutations.moveAnalysisCard.isPending}
-            onSelect={selectItem}
-            onDelete={(id) => void deleteFromKanban(id)}
-            onMove={moveKanbanCard}
-          />
+          </div>
         </div>
       ) : view === "kanban" ? (
         <div className="flex h-full min-h-0 flex-col overflow-hidden">
