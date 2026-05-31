@@ -1,11 +1,14 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   DndContext,
   PointerSensor,
   useSensor,
   useSensors,
+  DragOverlay,
+  type DragStartEvent,
+  type DragOverEvent,
   type DragEndEvent,
 } from "@dnd-kit/core";
 import { useTranslations } from "next-intl";
@@ -15,6 +18,7 @@ import { JobMatchKanbanCard } from "./job-match-kanban-card";
 import { JobMatchKanbanColumn } from "./job-match-kanban-column";
 import {
   buildJobMatchKanbanColumns,
+  getJobMatchKanbanStatus,
   JOB_MATCH_KANBAN_STATUSES,
 } from "./job-match-kanban-utils";
 
@@ -43,14 +47,61 @@ export function JobMatchKanbanBoard({
   onMove,
 }: JobMatchKanbanBoardProps) {
   const t = useTranslations("analysisFlow.kanban");
-  const columns = useMemo(() => buildJobMatchKanbanColumns(analyses), [analyses]);
+
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [overStatus, setOverStatus] = useState<JobMatchAnalysisOfferStatus | null>(null);
+
+  const columns = useMemo(() => {
+    const cols = buildJobMatchKanbanColumns(analyses);
+    if (!activeId || !overStatus) return cols;
+
+    const item = analyses.find((a) => a.id === activeId);
+    if (!item) return cols;
+
+    const currentStatus = getJobMatchKanbanStatus(item);
+    if (currentStatus === overStatus) return cols;
+
+    // Temporarily move the card in local view memory during drag to act as a placeholder
+    cols[currentStatus] = cols[currentStatus].filter((a) => a.id !== activeId);
+    if (!cols[overStatus].some((a) => a.id === activeId)) {
+      cols[overStatus] = [...cols[overStatus], item];
+    }
+    return cols;
+  }, [analyses, activeId, overStatus]);
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { distance: 6 },
     }),
   );
 
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(String(event.active.id));
+    const currentStatus = event.active.data.current?.status as
+      | JobMatchAnalysisOfferStatus
+      | undefined;
+    if (currentStatus) {
+      setOverStatus(currentStatus);
+    }
+  };
+
+  const handleDragOver = (event: DragOverEvent) => {
+    if (event.over) {
+      const status = parseStatus(String(event.over.id));
+      setOverStatus(status);
+    } else {
+      setOverStatus(null);
+    }
+  };
+
+  const handleDragCancel = () => {
+    setActiveId(null);
+    setOverStatus(null);
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
+    setActiveId(null);
+    setOverStatus(null);
     if (!event.over) return;
     const status = parseStatus(String(event.over.id));
     if (!status) return;
@@ -92,7 +143,13 @@ export function JobMatchKanbanBoard({
   }
 
   return (
-    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+    <DndContext
+      sensors={sensors}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
+    >
       <div className="flex h-full min-h-0 w-max flex-col">
         {isMoving && (
           <div className="mb-2 text-xs font-medium text-text-muted">
@@ -119,6 +176,17 @@ export function JobMatchKanbanBoard({
           ))}
         </div>
       </div>
+      <DragOverlay>
+        {activeId ? (
+          <JobMatchKanbanCard
+            analysis={analyses.find((a) => a.id === activeId)!}
+            onSelect={onSelect}
+            onDelete={onDelete}
+            onMove={onMove}
+            isOverlay
+          />
+        ) : null}
+      </DragOverlay>
     </DndContext>
   );
 }

@@ -23,6 +23,7 @@ interface JobMatchKanbanCardProps {
   onSelect: (id: string) => void;
   onDelete: (id: string) => void;
   onMove: (id: string, status: JobMatchAnalysisOfferStatus) => void;
+  isOverlay?: boolean;
 }
 
 function scoreClassName(score: number | null) {
@@ -37,6 +38,7 @@ export function JobMatchKanbanCard({
   onSelect,
   onDelete,
   onMove,
+  isOverlay = false,
 }: JobMatchKanbanCardProps) {
   const t = useTranslations("analysisFlow.kanban");
   const common = useTranslations("common");
@@ -46,19 +48,21 @@ export function JobMatchKanbanCard({
     useDraggable({
       id: analysis.id,
       data: { status },
+      disabled: isOverlay,
     });
   const title = analysis.title || analysis.filename.replace(/\.pdf$/i, "");
-  const style = transform
+  const style = transform && !isOverlay
     ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
     : undefined;
 
   return (
     <article
-      ref={setNodeRef}
+      ref={isOverlay ? undefined : setNodeRef}
       style={style}
       className={cn(
         "group rounded-lg border border-line bg-panel-raised p-3 shadow-sm transition-colors hover:border-action-border/60 hover:bg-panel-hover",
-        isDragging && "relative z-20 opacity-70 shadow-xl",
+        isDragging && "opacity-30 border-dashed border-line bg-panel-base/40 shadow-none pointer-events-none select-none",
+        isOverlay && "cursor-grabbing shadow-2xl border-action-border/80 bg-panel-hover scale-[1.02] rotate-1 select-none",
       )}
     >
       <div className="flex items-start gap-2">
@@ -66,8 +70,8 @@ export function JobMatchKanbanCard({
           type="button"
           className="mt-0.5 flex h-7 w-7 shrink-0 cursor-grab items-center justify-center rounded-md text-text-muted hover:bg-panel-active hover:text-text-main focus-visible:outline focus-visible:outline-2 focus-visible:outline-action-border active:cursor-grabbing"
           aria-label={t("dragCard", { title })}
-          {...attributes}
-          {...listeners}
+          {...(isOverlay ? {} : attributes)}
+          {...(isOverlay ? {} : listeners)}
         >
           <GripVertical className="h-4 w-4" />
         </button>
