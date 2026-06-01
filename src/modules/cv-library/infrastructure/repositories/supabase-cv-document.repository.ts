@@ -17,7 +17,7 @@ interface CVDocumentRow {
   filename: string | null;
   file_size: number | null;
   pdf_storage_path: string | null;
-  type: "uploaded" | "template";
+  type: "uploaded" | "template" | "json_resume";
   source_cv_id: string | null;
   template_id: string | null;
   template_locale: string | null;

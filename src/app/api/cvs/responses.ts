@@ -1,6 +1,6 @@
 import type { StandardCVProfile } from "@/modules/cv-library";
 
-export type CVDocumentType = "uploaded" | "template";
+export type CVDocumentType = "uploaded" | "template" | "json_resume";
 
 export interface CVDocumentSummaryResponse {
   id: string;

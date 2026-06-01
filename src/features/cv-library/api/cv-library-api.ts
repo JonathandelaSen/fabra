@@ -75,6 +75,29 @@ export async function deleteCVDocument(id: string) {
   );
 }
 
+export interface ImportJsonResumeInput {
+  jsonContent: string;
+  name?: string;
+  filename?: string;
+}
+
+export interface ImportJsonResumeResponse {
+  document: CreateCVDocumentResponse;
+  warnings: string[];
+}
+
+export async function importJsonResume(input: ImportJsonResumeInput) {
+  const res = await fetch("/api/cvs/json-resume", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ content: input.jsonContent, name: input.name }),
+  });
+  return readJsonResponse<ImportJsonResumeResponse>(
+    res,
+    "Could not import JSON Resume."
+  );
+}
+
 function normalizeJobMatchSummary(
   s: JobMatchAnalysisSummaryResponse
 ): AnalysisSummary {

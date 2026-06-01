@@ -177,4 +177,99 @@ describe("PrepareCVAnalysisInputUseCase", () => {
     expect(result?.filename).toBe("Original_CV.pdf");
     expect(result?.analysisText).toBe("extracted text");
   });
+
+  it("converts json_resume profile to plain text without PDF extraction", async () => {
+    const repo = documentRepo({
+      findById: vi.fn(async () =>
+        document({
+          type: "json_resume",
+          profile: {
+            basics: { name: "Abraham Mokhtari", headline: "Full Engineer", email: "abraham@gmail.com" },
+            summary: "Software developer with experience.",
+            experience: [
+              { company: "Javelin Group", role: "Senior Engineer", bullets: ["Led team"] },
+            ],
+          },
+          pdfStoragePath: "user-1/cv-1.json",
+          extractedText: {
+            textPython: null,
+            textPdfjs: null,
+            textNode: null,
+            extractErrorPython: null,
+            extractErrorPdfjs: null,
+            extractErrorNode: null,
+          },
+        }),
+      ),
+    });
+    const deps = services();
+    const eventTracker = tracker();
+
+    const result = await new PrepareCVAnalysisInputUseCase({
+      documentRepo: repo,
+      tracker: eventTracker,
+      ...deps,
+    }).execute({
+      cvId: "cv-1",
+      userId: "user-1",
+      requestId: "req-1",
+      source: "test",
+    });
+
+    expect(result?.analysisText).toContain("Abraham Mokhtari");
+    expect(result?.analysisText).toContain("Software developer with experience.");
+    expect(result?.analysisText).toContain("Javelin Group");
+    expect(deps.pdfStorage.download).not.toHaveBeenCalled();
+    expect(deps.textExtractor.extract).not.toHaveBeenCalled();
+    expect(deps.templateRenderer.render).not.toHaveBeenCalled();
+    expect(repo.save).not.toHaveBeenCalled();
+    expect(eventTracker.record).toHaveBeenCalledWith(
+      expect.objectContaining({
+        stage: "cv_text_extraction",
+        status: "success",
+        source: "json_resume_profile",
+      }),
+    );
+  });
+
+  it("returns warning when json_resume has no profile data", async () => {
+    const repo = documentRepo({
+      findById: vi.fn(async () =>
+        document({
+          type: "json_resume",
+          profile: null,
+          extractedText: {
+            textPython: null,
+            textPdfjs: null,
+            textNode: null,
+            extractErrorPython: null,
+            extractErrorPdfjs: null,
+            extractErrorNode: null,
+          },
+        }),
+      ),
+    });
+    const eventTracker = tracker();
+
+    const result = await new PrepareCVAnalysisInputUseCase({
+      documentRepo: repo,
+      tracker: eventTracker,
+      ...services(),
+    }).execute({
+      cvId: "cv-1",
+      userId: "user-1",
+      requestId: "req-1",
+      source: "test",
+    });
+
+    expect(result?.analysisText).toBeNull();
+    expect(eventTracker.record).toHaveBeenCalledWith(
+      expect.objectContaining({
+        stage: "cv_text_extraction",
+        status: "warning",
+        source: "json_resume_profile",
+        errorCode: "no_extracted_text_available",
+      }),
+    );
+  });
 });

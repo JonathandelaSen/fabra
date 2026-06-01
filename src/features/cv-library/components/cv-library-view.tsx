@@ -16,6 +16,7 @@ import {
 import { useCVLibraryRouteState } from "../hooks/use-cv-library-route-state";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { CVLibraryDetail } from "./cv-library-detail";
+import { CVLibraryImportPanel } from "./cv-library-import-panel";
 import { CVLibrarySidebar } from "./cv-library-sidebar";
 import { CVLibrarySkeleton } from "./cv-library-skeleton";
 
@@ -60,6 +61,7 @@ export default function CVLibraryView({
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [blockingAnalyses, setBlockingAnalyses] = useState<AnalysisSummary[]>([]);
+  const [showImport, setShowImport] = useState(false);
 
   const cvs = listQuery.data ?? [];
   const analysesByCv = useMemo(() => groupAnalysesByCv(analyses), [analyses]);
@@ -145,26 +147,31 @@ export default function CVLibraryView({
           analysesByCv={analysesByCv}
           error={error ?? queryError}
           blockingAnalyses={blockingAnalyses}
-          onSelect={routeState.selectCV}
+          onSelect={(id) => { setShowImport(false); routeState.selectCV(id); }}
           onOpenAnalysis={onOpenAnalysis}
+          onImportJsonResume={() => setShowImport(true)}
         />
-        <CVLibraryDetail
-          selected={selected}
-          cvs={cvs}
-          analyses={selectedAnalyses}
-          questions={selectedQuestions}
-          editing={selected ? editingId === selected.id : false}
-          draftName={draftName}
-          saving={selected ? loadingId === selected.id : false}
-          onStartEditing={() => selected && startEditing(selected)}
-          onDraftNameChange={setDraftName}
-          onSaveName={() => selected && saveName(selected.id)}
-          onCancelEditing={() => setEditingId(null)}
-          onDelete={() => selected && deleteCv(selected.id)}
-          onOpenAnalysis={onOpenAnalysis}
-          onOpenEditor={onOpenEditor}
-          onOpenQuestions={onOpenQuestions}
-        />
+        {showImport ? (
+          <CVLibraryImportPanel onClose={() => setShowImport(false)} />
+        ) : (
+          <CVLibraryDetail
+            selected={selected}
+            cvs={cvs}
+            analyses={selectedAnalyses}
+            questions={selectedQuestions}
+            editing={selected ? editingId === selected.id : false}
+            draftName={draftName}
+            saving={selected ? loadingId === selected.id : false}
+            onStartEditing={() => selected && startEditing(selected)}
+            onDraftNameChange={setDraftName}
+            onSaveName={() => selected && saveName(selected.id)}
+            onCancelEditing={() => setEditingId(null)}
+            onDelete={() => selected && deleteCv(selected.id)}
+            onOpenAnalysis={onOpenAnalysis}
+            onOpenEditor={onOpenEditor}
+            onOpenQuestions={onOpenQuestions}
+          />
+        )}
       </motion.div>
     </FeatureScreenShell>
   );

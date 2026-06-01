@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import {
   ArrowRight,
+  FileJson,
   FileText,
   Loader2,
   UploadCloud,
@@ -13,6 +14,7 @@ import {
 import { getErrorMessage } from "@/lib/errors";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import NewAnalysisExistingCV from "./new-analysis-existing-cv";
+import NewAnalysisJsonResume from "./new-analysis-json-resume";
 import NewAnalysisUploadCV from "./new-analysis-upload-cv";
 import type {
   CVSummary,
@@ -27,7 +29,7 @@ interface NewAnalysisFlowProps {
   onAnalysisCreated: (analysisId: string) => void;
 }
 
-type CVSource = "existing" | "upload";
+type CVSource = "existing" | "upload" | "json_resume";
 
 export default function NewAnalysisFlow({
   cvs,
@@ -42,6 +44,7 @@ export default function NewAnalysisFlow({
   const [selectedCvId, setSelectedCvId] = useState(cvs[0]?.id ?? "");
   const [file, setFile] = useState<File | null>(null);
   const [cvName, setCvName] = useState("");
+  const [jsonResumeCvId, setJsonResumeCvId] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -70,11 +73,20 @@ export default function NewAnalysisFlow({
       setError(t("selectPdf"));
       return;
     }
+    if (source === "json_resume" && !jsonResumeCvId) {
+      setError(t("importJsonResumeFirst"));
+      return;
+    }
     setLoading(true);
     setError(null);
 
     try {
-      const cvId = source === "upload" ? await uploadCV() : selectedCvId;
+      const cvId =
+        source === "upload"
+          ? await uploadCV()
+          : source === "json_resume"
+            ? jsonResumeCvId!
+            : selectedCvId;
 
       const analysisId = await onCreateAnalysis({
         cvId,
@@ -110,7 +122,7 @@ export default function NewAnalysisFlow({
           </p>
         </div>
 
-        <section className="grid gap-4 md:grid-cols-2">
+        <section className="grid gap-4 md:grid-cols-3">
           <button
             type="button"
             onClick={() => setSource("existing")}
@@ -143,6 +155,21 @@ export default function NewAnalysisFlow({
               {t("uploadDescription")}
             </p>
           </button>
+          <button
+            type="button"
+            onClick={() => setSource("json_resume")}
+            className={`rounded-xl border p-5 text-left transition-all ${
+              source === "json_resume"
+                ? "border-violet-500/40 bg-violet-500/10 text-zinc-100"
+                : "border-white/[0.06] bg-white/[0.02] text-zinc-400 hover:bg-white/[0.04]"
+            }`}
+          >
+            <FileJson className="mb-4 h-6 w-6 text-violet-300" />
+            <p className="font-semibold">{t("jsonResume")}</p>
+            <p className="mt-1 text-sm text-zinc-500">
+              {t("jsonResumeDescription")}
+            </p>
+          </button>
         </section>
 
         {source === "existing" ? (
@@ -150,6 +177,11 @@ export default function NewAnalysisFlow({
             cvs={cvs}
             selectedCvId={selectedCvId}
             onSelectedCvIdChange={setSelectedCvId}
+          />
+        ) : source === "json_resume" ? (
+          <NewAnalysisJsonResume
+            onImported={(cvId) => setJsonResumeCvId(cvId)}
+            importedCvId={jsonResumeCvId}
           />
         ) : (
           <NewAnalysisUploadCV

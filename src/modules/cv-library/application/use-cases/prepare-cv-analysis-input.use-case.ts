@@ -1,5 +1,9 @@
 import { hasExtractedText, sanitizeErrorMessage } from "@/lib/observability";
-import { getBestCVText, type StandardCVProfile } from "../../domain/cv-profile";
+import {
+  getBestCVText,
+  profileToPlainText,
+  type StandardCVProfile,
+} from "../../domain/cv-profile";
 import {
   getCVTemplate,
   type CVTemplateId,
@@ -72,6 +76,12 @@ export class PrepareCVAnalysisInputUseCase {
     );
     if (!cv) return null;
 
+    const cvType = cv.toPrimitives().type;
+
+    if (cvType === "json_resume") {
+      return this.prepareJsonResumeResult(cv, input);
+    }
+
     cv = await this.ensureUploadedCVExtraction({ ...input, cv });
 
     const cvPrimitives = cv.toPrimitives();
@@ -133,6 +143,55 @@ export class PrepareCVAnalysisInputUseCase {
         pythonError: Boolean(analysisExtraction.extractErrorPython),
         pdfjsError: Boolean(analysisExtraction.extractErrorPdfjs),
         nodeError: Boolean(analysisExtraction.extractErrorNode),
+      },
+    };
+  }
+
+  private async prepareJsonResumeResult(
+    cv: CVDocument,
+    input: PrepareCVAnalysisInputInput,
+  ): Promise<PrepareCVAnalysisInputResult> {
+    const primitives = cv.toPrimitives();
+    const analysisText = profileToPlainText(
+      primitives.profile as StandardCVProfile | null,
+    );
+    const emptyExtraction: CVDocumentExtractedTextPrimitives = {
+      textPython: null,
+      textPdfjs: null,
+      textNode: analysisText,
+      extractErrorPython: null,
+      extractErrorPdfjs: null,
+      extractErrorNode: null,
+    };
+
+    await this.deps.tracker.record({
+      userId: input.userId,
+      cvId: input.cvId,
+      requestId: input.requestId,
+      stage: "cv_text_extraction",
+      status: analysisText ? "success" : "warning",
+      source: "json_resume_profile",
+      textLength: analysisText?.trim().length ?? 0,
+      errorCode: analysisText ? null : "no_extracted_text_available",
+      metadata: { cvType: "json_resume" },
+    });
+
+    return {
+      cv: primitives,
+      analysisText,
+      filename: primitives.filename ?? "resume.json",
+      fileSize: primitives.fileSize,
+      pdfStoragePath: primitives.pdfStoragePath,
+      extractedText: emptyExtraction,
+      extractionDiagnostics: {
+        filename: primitives.filename,
+        fileSize: primitives.fileSize,
+        pythonLength: 0,
+        pdfjsLength: 0,
+        nodeLength: analysisText?.length ?? 0,
+        pythonError: false,
+        pdfjsError: false,
+        nodeError: false,
       },
     };
   }

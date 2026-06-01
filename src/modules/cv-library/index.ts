@@ -62,6 +62,10 @@ export {
   type CVStructuredProfileResponse,
 } from "./application/presenters/cv-library-presenters";
 export type {
+  CreateJsonResumeCVDocumentInput,
+  CreateJsonResumeCVDocumentResult,
+} from "./application/use-cases/create-json-resume-cv-document.use-case";
+export type {
   PrepareCVAnalysisInputInput,
   PrepareCVAnalysisInputResult,
 } from "./application/use-cases/prepare-cv-analysis-input.use-case";

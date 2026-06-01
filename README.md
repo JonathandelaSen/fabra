@@ -17,17 +17,15 @@
 
 It's not just a CV parser; it's a complete operating system for your career:
 
+- 📊 **AI-Powered CV Analysis:** Instantly analyze your resume with cloud or local AI to receive a comprehensive review, custom questionnaires, and tailored recommendations for improvement.
+- 🎯 **AI-Powered Job Match & Analysis:** Paste any job description to get an ATS-style match rate, detailed AI-powered gap analysis, and actionable recommendations. Transition matches directly into a visual Kanban board to track application status (_Bookmarked_, _Applied_, _Interviewing_, _Offered_, _Rejected_) with smooth layout animations and drag previews.
 - 📔 **Work Journal:** Log your daily work, achievements, and challenges. Let the AI automatically use your journal entries to enrich your CV and prepare you for interviews.
-- 🎯 **Targeted Job Matching:** Paste a job description and get an ATS-style match rate and targeted recommendations.
-- 📊 **General Profile Review:** Receive a comprehensive evaluation and a custom questionnaire to improve your CV.
-- 📋 **Visual Application Tracking (Kanban Board):** Transition your matches directly into a visual tracking board. Drag and drop jobs across statuses (*Bookmarked*, *Applied*, *Interviewing*, *Offered*, *Rejected*) with smooth animations, drag previews, and responsive layouts.
-- 🎨 **AI-Powered Templates:** Choose from professional designs and let the AI automatically structure and fill them with your CV data.
-- ✍️ **Intelligent CV Editor:** Refine your resume with natural language instructions. Uses deep-linked URL-based state management so you never lose your history.
-- 📚 **Smart CV Library:** Upload, preview (PDF support), and manage multiple versions of your resume seamlessly.
 - 🚀 **Career Objectives Planner:** Set strategic professional goals, organize them by priority matrices, list actionable milestones, and track measurable outcomes.
 - 📝 **Feedback Gatherer & Notes:** Collect professional notes about peers, managers, or clients over time. Generate beautifully balanced performance summaries or formal recommendations with local or cloud AI.
 - 💬 **Received Feedback Tracker:** Keep a detailed log of direct feedback received from peers to recognize your core strengths and areas of growth.
-- 🔋 **Adaptive Activity Contexts:** Dynamically link your journal logs, goals, and received feedback directly to AI operations to enrich prompt templates with hyper-personalized context.
+- 🎨 **AI-Powered Templates:** Choose from professional designs and let the AI automatically structure and fill them with your CV data.
+- ✍️ **Intelligent CV Editor:** Refine your resume with natural language instructions. Uses deep-linked URL-based state management so you never lose your history.
+- 📚 **Smart CV Library:** Upload, preview (PDF support), and manage multiple versions of your resume seamlessly.
 - 🤝 **Flexible Assistance (Assisted Workflows):** Supports Integrated AI (Gemini, OpenAI, Ollama), bring your own API key, copy-paste (external chat workflow), or fully manual mode.
 - 🔌 **Offline AI (Ollama Local):** Complete privacy-first, 100% offline AI execution of all analysis and writing tasks using local models.
 - 📈 **Observability Dashboard:** Complete admin event tracking dashboard for analyzing system logs, workflow timelines, and API details.
@@ -113,6 +111,7 @@ A modern, robust, and scalable foundation:
 ## 🎨 Design & Aesthetics
 
 The application is built on a highly polished, premium visual design system:
+
 - **Aesthetic Excellence:** Curated harmonious OKLCH color palettes optimized for modern, high-contrast dark modes (eliminating raw CSS/Tailwind color codes in favor of cohesive design tokens).
 - **Interactive UI:** Smooth transitions, micro-animations via Framer Motion, dynamic sidebar gradient highlights, and a global `app-glow` element.
 - **Fluid Layouts:** Uses responsive, full-screen layouts that dynamically adapt to any viewport.
@@ -122,6 +121,7 @@ The application is built on a highly polished, premium visual design system:
 ## 🧪 Testing Suite & Architecture
 
 Maintain code quality and structural integrity with the robust validation suite:
+
 - **DDD Boundaries:** Enforce hexagonal architecture boundaries and domain-driven design structure using strict verify scripts (`npm run ddd:check`).
 - **Backend Tests:** Run tests against your local Supabase stack with `npm run test:backend`.
 - **E2E Integration:** Full Playwright E2E coverage for both integrated and copy-paste workflow modes using `npm run test:e2e:local` or `npm run test:e2e:ui`.

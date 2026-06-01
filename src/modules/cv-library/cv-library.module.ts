@@ -7,6 +7,7 @@ import { SupabaseEventTracker } from "@/modules/shared";
 import { ApplyCVEditorCopyPasteUseCase } from "./application/use-cases/apply-cv-editor-copy-paste.use-case";
 import { ApplyCVProfileStructureCopyPasteUseCase } from "./application/use-cases/apply-cv-profile-structure-copy-paste.use-case";
 import { CreateTemplateCVDocumentUseCase } from "./application/use-cases/create-template-cv-document.use-case";
+import { CreateJsonResumeCVDocumentUseCase } from "./application/use-cases/create-json-resume-cv-document.use-case";
 import { CreateUploadedCVDocumentUseCase } from "./application/use-cases/create-uploaded-cv-document.use-case";
 import { DeleteCVDocumentUseCase } from "./application/use-cases/delete-cv-document.use-case";
 import { EditCVProfileWithAIUseCase } from "./application/use-cases/edit-cv-profile-with-ai.use-case";
@@ -80,6 +81,11 @@ function createUseCases(queryBus: QueryBus) {
   return {
     listCVDocuments: new ListCVDocumentsUseCase({ documentRepo }),
     getCVDocument: new GetCVDocumentUseCase({ documentRepo }),
+    createJsonResumeCVDocument: new CreateJsonResumeCVDocumentUseCase({
+      documentRepo,
+      pdfStorage,
+      tracker,
+    }),
     createUploadedCVDocument: new CreateUploadedCVDocumentUseCase({
       documentRepo,
       tracker,

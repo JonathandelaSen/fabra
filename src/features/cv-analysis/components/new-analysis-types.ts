@@ -1,7 +1,7 @@
 export interface CVSummary {
   id: string;
   name: string;
-  type: "uploaded" | "template";
+  type: "uploaded" | "template" | "json_resume";
   filename: string | null;
 }
 

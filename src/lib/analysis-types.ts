@@ -37,8 +37,15 @@ export interface JobKeyData {
   responsibilities?: string[];
   notablePoints?: string[];
 }
+export const CV_TYPE = {
+  UPLOADED: "uploaded",
+  TEMPLATE: "template",
+  JSON_RESUME: "json_resume",
+} as const;
 
-export type CVType = "uploaded" | "template";
+export const CV_TYPES = [CV_TYPE.UPLOADED, CV_TYPE.TEMPLATE, CV_TYPE.JSON_RESUME] as const;
+
+export type CVType = (typeof CV_TYPES)[number];
 
 export interface CVRecord extends ExtractedPdfText {
   id: string;

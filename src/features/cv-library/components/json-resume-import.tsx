@@ -1,0 +1,200 @@
+"use client";
+
+import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
+import { FileJson, Upload, ClipboardPaste, Loader2, AlertTriangle } from "lucide-react";
+import { useImportJsonResume } from "../hooks/use-import-json-resume";
+
+type Tab = "upload" | "paste";
+
+interface JsonResumeImportProps {
+  onSuccess?: (cvId?: string) => void;
+}
+
+export function JsonResumeImport({ onSuccess }: JsonResumeImportProps) {
+  const t = useTranslations("jsonResumeImport");
+  const [tab, setTab] = useState<Tab>("upload");
+  const [file, setFile] = useState<File | null>(null);
+  const [pasteContent, setPasteContent] = useState("");
+  const [name, setName] = useState("");
+  const [localError, setLocalError] = useState<string | null>(null);
+  const [warnings, setWarnings] = useState<string[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const mutation = useImportJsonResume();
+
+  const tryParseName = (content: string) => {
+    try {
+      const parsed = JSON.parse(content);
+      if (parsed?.basics?.name && !name) setName(parsed.basics.name);
+    } catch {
+      // ignore parse errors during typing
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files?.[0];
+    if (!selected) return;
+    if (!selected.name.endsWith(".json")) {
+      setLocalError(t("errors.invalidFile"));
+      return;
+    }
+    if (selected.size > 1024 * 1024) {
+      setLocalError(t("errors.fileTooLarge"));
+      return;
+    }
+    setFile(selected);
+    setLocalError(null);
+    selected.text().then((content) => tryParseName(content));
+  };
+
+  const handleSubmit = async () => {
+    setLocalError(null);
+    setWarnings([]);
+
+    let jsonContent: string;
+    let filename: string | undefined;
+
+    if (tab === "upload") {
+      if (!file) return;
+      jsonContent = await file.text();
+      filename = file.name;
+    } else {
+      if (!pasteContent.trim()) return;
+      jsonContent = pasteContent;
+    }
+
+    try {
+      const result = await mutation.mutateAsync({
+        jsonContent,
+        name: name || undefined,
+        filename,
+      });
+      setWarnings(result.warnings);
+      onSuccess?.(result.document?.id);
+    } catch (err) {
+      setLocalError(err instanceof Error ? err.message : t("errors.invalidJson"));
+    }
+  };
+
+  const canSubmit =
+    !mutation.isPending && (tab === "upload" ? !!file : !!pasteContent.trim());
+
+  return (
+    <div className="grid gap-4">
+      <div className="flex gap-1 rounded-lg bg-zinc-900/50 p-1">
+        <button
+          onClick={() => setTab("upload")}
+          className={`flex-1 flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+            tab === "upload"
+              ? "bg-zinc-800 text-zinc-100"
+              : "text-zinc-400 hover:text-zinc-200"
+          }`}
+        >
+          <Upload className="h-4 w-4" />
+          {t("tabs.upload")}
+        </button>
+        <button
+          onClick={() => setTab("paste")}
+          className={`flex-1 flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+            tab === "paste"
+              ? "bg-zinc-800 text-zinc-100"
+              : "text-zinc-400 hover:text-zinc-200"
+          }`}
+        >
+          <ClipboardPaste className="h-4 w-4" />
+          {t("tabs.paste")}
+        </button>
+      </div>
+
+      {tab === "upload" ? (
+        <div
+          onClick={() => fileInputRef.current?.click()}
+          className="flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 border-dashed border-zinc-800/60 p-8 text-center transition-colors hover:border-zinc-700/80 hover:bg-white/[0.02]"
+        >
+          <FileJson className="h-10 w-10 text-zinc-500" />
+          <div>
+            <p className="text-sm font-medium text-zinc-200">
+              {file ? file.name : t("uploadArea.drop")}
+            </p>
+            <p className="text-xs text-zinc-500">
+              {file
+                ? `${(file.size / 1024).toFixed(1)} KB`
+                : t("uploadArea.click")}
+            </p>
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+        </div>
+      ) : (
+        <textarea
+          value={pasteContent}
+          onChange={(e) => {
+            setPasteContent(e.target.value);
+            tryParseName(e.target.value);
+          }}
+          placeholder={t("pasteArea.placeholder")}
+          rows={8}
+          className="w-full rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-3 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-indigo-500/40 focus:outline-none focus:ring-1 focus:ring-indigo-500/20"
+        />
+      )}
+
+      <div className="grid gap-1.5">
+        <label className="text-xs font-medium text-zinc-400">
+          {t("nameLabel")}
+        </label>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder={t("namePlaceholder")}
+          className="rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-indigo-500/40 focus:outline-none focus:ring-1 focus:ring-indigo-500/20"
+        />
+      </div>
+
+      {localError && (
+        <p className="text-sm text-red-400">{localError}</p>
+      )}
+
+      {warnings.length > 0 && (
+        <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
+          <p className="mb-1 flex items-center gap-1.5 text-xs font-medium text-amber-400">
+            <AlertTriangle className="h-3.5 w-3.5" />
+            {t("warnings.title")}
+          </p>
+          <ul className="list-inside list-disc text-xs text-amber-300/80">
+            {warnings.map((w) => (
+              <li key={w}>{w}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <button
+        onClick={handleSubmit}
+        disabled={!canSubmit}
+        className={`flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+          canSubmit
+            ? "bg-gradient-to-r from-indigo-600 to-violet-600 text-white hover:from-indigo-500 hover:to-violet-500"
+            : "bg-zinc-800/60 text-zinc-500 cursor-not-allowed"
+        }`}
+      >
+        {mutation.isPending ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            {t("importing")}
+          </>
+        ) : (
+          <>
+            <FileJson className="h-4 w-4" />
+            {t("submit")}
+          </>
+        )}
+      </button>
+    </div>
+  );
+}

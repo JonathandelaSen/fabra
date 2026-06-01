@@ -16,7 +16,7 @@ export interface CVDocumentResponse extends ExtractedPdfText {
   filename: string | null;
   file_size: number | null;
   pdf_storage_path: string | null;
-  type: "uploaded" | "template";
+  type: "uploaded" | "template" | "json_resume";
   source_cv_id: string | null;
   template_id: string | null;
   template_locale: string | null;
@@ -37,7 +37,7 @@ export interface CVDocumentSummaryResponse {
   name: string;
   filename: string | null;
   file_size: number | null;
-  type: "uploaded" | "template";
+  type: "uploaded" | "template" | "json_resume";
   source_cv_id: string | null;
   template_id: string | null;
   template_locale: string | null;

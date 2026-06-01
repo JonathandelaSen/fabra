@@ -1,12 +1,14 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { AnalysisSummary } from "@/lib/analysis-types";
+import { CV_TYPE, type AnalysisSummary } from "@/lib/analysis-types";
 import type { InterviewQuestionResponse } from "@/app/api/interview-questions/responses";
 import type { CVDocumentListItem } from "../api/cv-library-api";
+import type { StandardCVProfile } from "@/lib/cv-profile";
 import { CVLibraryDetailHeader } from "./cv-library-detail-header";
 import { CVLibraryDetailSummary } from "./cv-library-detail-summary";
 import { CVLibraryDetailPreview } from "./cv-library-detail-preview";
+import { CVLibraryJsonPreview } from "./cv-library-json-preview";
 
 interface CVLibraryDetailProps {
   selected: CVDocumentListItem | null;
@@ -56,10 +58,10 @@ export function CVLibraryDetail({
   }
 
   const templateVersions = cvs.filter(
-    (cv) => cv.type === "template" && cv.sourceCvId === selected.id
+    (cv) => cv.type === CV_TYPE.TEMPLATE && cv.sourceCvId === selected.id
   );
   const pdfPath =
-    selected.type === "template"
+    selected.type === CV_TYPE.TEMPLATE
       ? `/api/cvs/${selected.id}/template-pdf`
       : `/api/cvs/${selected.id}/pdf`;
 
@@ -96,10 +98,16 @@ export function CVLibraryDetail({
           onOpenEditor={onOpenEditor}
         />
 
-        <CVLibraryDetailPreview
-          pdfPath={pdfPath}
-          title={t("previewTitle")}
-        />
+        {selected.type === CV_TYPE.JSON_RESUME ? (
+          <CVLibraryJsonPreview
+            profile={selected.profile as StandardCVProfile | null}
+          />
+        ) : (
+          <CVLibraryDetailPreview
+            pdfPath={pdfPath}
+            title={t("previewTitle")}
+          />
+        )}
       </div>
     </section>
   );

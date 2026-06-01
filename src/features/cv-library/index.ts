@@ -1,5 +1,6 @@
 export { default as CVLibraryView } from "./components/cv-library-view";
 export { default as UploadPhase } from "./components/upload-phase";
+export { JsonResumeImport } from "./components/json-resume-import";
 export { useCVDocumentList } from "./hooks/use-cv-library-queries";
 export { cvLibraryQueryKeys } from "./api/cv-library-query-keys";
 export {
