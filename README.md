@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🚀 JulyLog
+# 🚀 Fabra
 
-**Your intelligent Work Journal and Career Toolkit. Track your progress, build your CV, and land your next job with AI or with practical manual workflows when you prefer.**
+**Craft your career, your way.** Track your progress, build your CV, and land your next job with AI or with practical manual workflows when you prefer.
 
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Local_Ready-green?logo=supabase)](https://supabase.com/)

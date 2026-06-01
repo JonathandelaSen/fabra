@@ -3,7 +3,7 @@ import type { InterfaceLanguage } from "./config";
 export const messages = {
   en: {
     common: {
-      appName: "JulyLog",
+      appName: "Fabra",
       actions: {
         save: "Save",
         saved: "Saved",
@@ -43,7 +43,7 @@ export const messages = {
     },
     publicCv: {
       fallbackName: "Public CV",
-      metadataDescription: "Public CV created and shared from JulyLog",
+      metadataDescription: "Public CV created and shared from Fabra",
       downloadPdf: "Download PDF",
       createMyCv: "Create my CV",
     },
@@ -1345,7 +1345,7 @@ export const messages = {
   },
   es: {
     common: {
-      appName: "JulyLog",
+      appName: "Fabra",
       actions: {
         save: "Guardar",
         saved: "Guardada",
@@ -1385,7 +1385,7 @@ export const messages = {
     },
     publicCv: {
       fallbackName: "CV público",
-      metadataDescription: "CV público creado y compartido desde JulyLog",
+      metadataDescription: "CV público creado y compartido desde Fabra",
       downloadPdf: "Descargar PDF",
       createMyCv: "Crear mi CV",
     },
