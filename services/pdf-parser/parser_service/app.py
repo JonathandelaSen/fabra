@@ -11,7 +11,7 @@ from pdfminer.high_level import extract_text
 from pydantic import BaseModel, Field
 
 
-app = FastAPI(title="ATS CV Python Parser")
+app = FastAPI(title="Fabra Python Parser")
 
 
 class ExtractRequest(BaseModel):

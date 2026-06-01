@@ -1,6 +1,6 @@
-# ATS CV Python Parser
+# Fabra Python Parser
 
-Python PDF parser service for `ats-cv-ai-checker`. It exposes `POST /extract`,
+Python PDF parser service for `fabra`. It exposes `POST /extract`,
 downloads a PDF from Supabase Storage, parses it with `pdfminer.six`, and returns
 `{ "text": "...", "error": null }`.
 
@@ -25,7 +25,7 @@ The service runs at `http://127.0.0.1:8001`.
 ## Vercel
 
 Create a separate Vercel project from this directory named
-`ats-cv-python-parser`:
+`fabra-python-parser`:
 
 ```bash
 cd services/pdf-parser

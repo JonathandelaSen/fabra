@@ -21,7 +21,7 @@ export const logsDir = path.join(testInfraDir, "logs");
 export const supabaseProjectRoot = path.join(testInfraDir, "supabase-workdir");
 const supabaseDir = path.join(supabaseProjectRoot, "supabase");
 const envJsonPath = path.join(testInfraDir, "env.json");
-export const projectId = "ats-cv-ai-checker-test";
+export const projectId = "fabra-test";
 
 export const ports = {
   app: 3100,

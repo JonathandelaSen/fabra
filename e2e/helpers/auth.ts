@@ -8,7 +8,7 @@ export async function loginViaUI(page: Page, user: E2EUser) {
 
   await page.goto("/login");
   await page.evaluate(() => {
-    localStorage.setItem("ats-cv-ai-checker.aiProvider", "mock");
+    localStorage.setItem("fabra.aiProvider", "mock");
   });
   await page.getByLabel(tAuth.fields.email).fill(user.email);
   await page.getByRole("textbox", { name: tAuth.fields.password }).fill(user.password);

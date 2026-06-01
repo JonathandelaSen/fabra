@@ -26,8 +26,8 @@ const rootDir = path.resolve(
   "../.."
 );
 const appWorkdir = path.join(testInfraDir, "app-workdir");
-const parserContainerName = "ats-cv-ai-checker-pdf-parser-e2e";
-const parserImageName = "ats-cv-ai-checker-pdf-parser:e2e";
+const parserContainerName = "fabra-pdf-parser-e2e";
+const parserImageName = "fabra-pdf-parser:e2e";
 const parserSecret = "e2e-parser-secret";
 
 const rawArgs = process.argv.slice(2);

@@ -7,12 +7,14 @@ export type StoredThemePreference = "light" | "dark";
 export type StoredAIDefaultApiKeys = Partial<Record<StoredAIProvider, string>>;
 export type StoredAIDefaultBaseUrls = Partial<Record<StoredAIProvider, string>>;
 
-const AI_PROVIDER_STORAGE_KEY = "ats-cv-ai-checker.aiProvider";
-const AI_API_KEY_STORAGE_KEY = "ats-cv-ai-checker.aiApiKey";
-const AI_BASE_URL_STORAGE_KEY = "ats-cv-ai-checker.aiBaseUrl";
-const AI_MODEL_STORAGE_KEY = "ats-cv-ai-checker.aiModel";
-export const AI_SETTINGS_CHANGED_EVENT = "ats-cv-ai-checker.aiSettingsChanged";
-const THEME_STORAGE_KEY = "ats-cv-ai-checker.theme";
+const STORAGE_PREFIX = "fabra";
+const LEGACY_STORAGE_PREFIX = "ats-cv-ai-checker";
+const AI_PROVIDER_STORAGE_KEY = `${STORAGE_PREFIX}.aiProvider`;
+const AI_API_KEY_STORAGE_KEY = `${STORAGE_PREFIX}.aiApiKey`;
+const AI_BASE_URL_STORAGE_KEY = `${STORAGE_PREFIX}.aiBaseUrl`;
+const AI_MODEL_STORAGE_KEY = `${STORAGE_PREFIX}.aiModel`;
+export const AI_SETTINGS_CHANGED_EVENT = `${STORAGE_PREFIX}.aiSettingsChanged`;
+const THEME_STORAGE_KEY = `${STORAGE_PREFIX}.theme`;
 const DEFAULT_AI_PROVIDER: StoredAIProvider = AI_PROVIDER.GEMINI;
 const DEFAULT_THEME: StoredThemePreference = "dark";
 
@@ -36,13 +38,24 @@ function normalizeTheme(value: string | null): StoredThemePreference {
   return value === "light" || value === "dark" ? value : DEFAULT_THEME;
 }
 
+function storageKey(suffix: string) {
+  return `${STORAGE_PREFIX}.${suffix}`;
+}
+
+function getStoredValue(storage: Storage | null | undefined, key: string) {
+  if (!storage) return null;
+  const stored = storage.getItem(key);
+  if (stored !== null) return stored;
+  return storage.getItem(key.replace(STORAGE_PREFIX, LEGACY_STORAGE_PREFIX));
+}
+
 function notifyAISettingsChanged() {
   if (typeof window === "undefined") return;
   window.dispatchEvent(new Event(AI_SETTINGS_CHANGED_EVENT));
 }
 
 export function getStoredAIProvider(): StoredAIProvider {
-  return normalizeProvider(getLocalStorage()?.getItem(AI_PROVIDER_STORAGE_KEY) ?? null);
+  return normalizeProvider(getStoredValue(getLocalStorage(), AI_PROVIDER_STORAGE_KEY));
 }
 
 export function getStoredAIApiKeyForProvider(
@@ -51,14 +64,14 @@ export function getStoredAIApiKeyForProvider(
 ): string {
   const storage = getLocalStorage();
   if (!storage) return defaultApiKeys[provider]?.trim() ?? "";
-  const providerKey = `ats-cv-ai-checker.aiApiKey.${provider}`;
-  const stored = storage.getItem(providerKey);
+  const providerKey = storageKey(`aiApiKey.${provider}`);
+  const stored = getStoredValue(storage, providerKey);
   if (stored !== null) return stored.trim();
 
   // Fallback to legacy key if the requested provider is the active one
   const activeProvider = getStoredAIProvider();
   if (activeProvider === provider) {
-    const legacyKey = storage.getItem(AI_API_KEY_STORAGE_KEY);
+    const legacyKey = getStoredValue(storage, AI_API_KEY_STORAGE_KEY);
     if (legacyKey !== null) return legacyKey.trim();
   }
   return defaultApiKeys[provider]?.trim() ?? "";
@@ -78,13 +91,13 @@ export function getStoredAIBaseUrlForProvider(
   const storage = getLocalStorage();
   const defaultValue = defaultBaseUrls[provider]?.trim() ?? (provider === AI_PROVIDER.OLLAMA ? "http://localhost:11434" : "");
   if (!storage) return defaultValue;
-  const providerKey = `ats-cv-ai-checker.aiBaseUrl.${provider}`;
-  const stored = storage.getItem(providerKey);
+  const providerKey = storageKey(`aiBaseUrl.${provider}`);
+  const stored = getStoredValue(storage, providerKey);
   if (stored !== null) return stored.trim();
 
   const activeProvider = getStoredAIProvider();
   if (activeProvider === provider) {
-    const legacyKey = storage.getItem(AI_BASE_URL_STORAGE_KEY);
+    const legacyKey = getStoredValue(storage, AI_BASE_URL_STORAGE_KEY);
     if (legacyKey !== null) return legacyKey.trim();
   }
   return defaultValue;
@@ -109,18 +122,18 @@ export function getAIApiKeyForProvider(
 }
 
 export function getStoredAIModel() {
-  return getLocalStorage()?.getItem(AI_MODEL_STORAGE_KEY)?.trim() || DEFAULT_AI_MODEL;
+  return getStoredValue(getLocalStorage(), AI_MODEL_STORAGE_KEY)?.trim() || DEFAULT_AI_MODEL;
 }
 
 export function getStoredAIModelForProvider(provider: StoredAIProvider): string {
   const storage = getLocalStorage();
   if (!storage) return provider === AI_PROVIDER.GEMINI ? DEFAULT_AI_MODEL : "";
 
-  const providerModel = storage.getItem(`${AI_MODEL_STORAGE_KEY}.${provider}`)?.trim();
+  const providerModel = getStoredValue(storage, `${AI_MODEL_STORAGE_KEY}.${provider}`)?.trim();
   if (providerModel) return providerModel;
 
   if (getStoredAIProvider() === provider) {
-    const activeModel = storage.getItem(AI_MODEL_STORAGE_KEY)?.trim();
+    const activeModel = getStoredValue(storage, AI_MODEL_STORAGE_KEY)?.trim();
     if (activeModel) return activeModel;
   }
 
@@ -184,7 +197,7 @@ export function saveStoredAIApiKeyForProvider(provider: StoredAIProvider, apiKey
   const storage = getLocalStorage();
   if (!storage) return;
   const key = apiKey.trim();
-  const providerKey = `ats-cv-ai-checker.aiApiKey.${provider}`;
+  const providerKey = storageKey(`aiApiKey.${provider}`);
 
   if (key) {
     storage.setItem(providerKey, key);
@@ -209,7 +222,7 @@ export function saveStoredAIBaseUrlForProvider(provider: StoredAIProvider, baseU
   const storage = getLocalStorage();
   if (!storage) return;
   const url = baseUrl.trim();
-  const providerKey = `ats-cv-ai-checker.aiBaseUrl.${provider}`;
+  const providerKey = storageKey(`aiBaseUrl.${provider}`);
 
   if (url) {
     storage.setItem(providerKey, url);
@@ -295,15 +308,21 @@ export function removeStoredAISettings() {
   storage?.removeItem(AI_API_KEY_STORAGE_KEY);
   storage?.removeItem(AI_BASE_URL_STORAGE_KEY);
   storage?.removeItem(AI_MODEL_STORAGE_KEY);
-  storage?.removeItem(`ats-cv-ai-checker.aiApiKey.${AI_PROVIDER.GEMINI}`);
-  storage?.removeItem(`ats-cv-ai-checker.aiApiKey.${AI_PROVIDER.OPENAI}`);
-  storage?.removeItem(`ats-cv-ai-checker.aiApiKey.${AI_PROVIDER.OLLAMA}`);
-  storage?.removeItem(`ats-cv-ai-checker.aiBaseUrl.${AI_PROVIDER.GEMINI}`);
-  storage?.removeItem(`ats-cv-ai-checker.aiBaseUrl.${AI_PROVIDER.OPENAI}`);
-  storage?.removeItem(`ats-cv-ai-checker.aiBaseUrl.${AI_PROVIDER.OLLAMA}`);
-  storage?.removeItem(`ats-cv-ai-checker.aiModel.${AI_PROVIDER.GEMINI}`);
-  storage?.removeItem(`ats-cv-ai-checker.aiModel.${AI_PROVIDER.OPENAI}`);
-  storage?.removeItem(`ats-cv-ai-checker.aiModel.${AI_PROVIDER.OLLAMA}`);
+  for (const prefix of [STORAGE_PREFIX, LEGACY_STORAGE_PREFIX]) {
+    storage?.removeItem(`${prefix}.aiProvider`);
+    storage?.removeItem(`${prefix}.aiApiKey`);
+    storage?.removeItem(`${prefix}.aiBaseUrl`);
+    storage?.removeItem(`${prefix}.aiModel`);
+    storage?.removeItem(`${prefix}.aiApiKey.${AI_PROVIDER.GEMINI}`);
+    storage?.removeItem(`${prefix}.aiApiKey.${AI_PROVIDER.OPENAI}`);
+    storage?.removeItem(`${prefix}.aiApiKey.${AI_PROVIDER.OLLAMA}`);
+    storage?.removeItem(`${prefix}.aiBaseUrl.${AI_PROVIDER.GEMINI}`);
+    storage?.removeItem(`${prefix}.aiBaseUrl.${AI_PROVIDER.OPENAI}`);
+    storage?.removeItem(`${prefix}.aiBaseUrl.${AI_PROVIDER.OLLAMA}`);
+    storage?.removeItem(`${prefix}.aiModel.${AI_PROVIDER.GEMINI}`);
+    storage?.removeItem(`${prefix}.aiModel.${AI_PROVIDER.OPENAI}`);
+    storage?.removeItem(`${prefix}.aiModel.${AI_PROVIDER.OLLAMA}`);
+  }
   notifyAISettingsChanged();
 }
 
@@ -312,7 +331,7 @@ export function hasStoredAIApiKey() {
 }
 
 export function getStoredThemePreference(): StoredThemePreference {
-  return normalizeTheme(getLocalStorage()?.getItem(THEME_STORAGE_KEY) ?? null);
+  return normalizeTheme(getStoredValue(getLocalStorage(), THEME_STORAGE_KEY));
 }
 
 export function applyStoredThemePreference(theme: StoredThemePreference) {

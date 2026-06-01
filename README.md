@@ -44,8 +44,8 @@ Get the project running on your local machine in just a few minutes.
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/JonathandelaSen/ats-cv-ai-checker.git
-cd ats-cv-ai-checker
+git clone https://github.com/JonathandelaSen/fabra.git
+cd fabra
 npm install
 ```
 
@@ -130,7 +130,7 @@ Maintain code quality and structural integrity with the robust validation suite:
 
 ## 🐍 Python Parser Deployment
 
-Deploy the parser as a separate Vercel project named `ats-cv-python-parser`:
+Deploy the parser as a separate Vercel project named `fabra-python-parser`:
 
 ```bash
 cd services/pdf-parser
@@ -144,7 +144,7 @@ vercel --prod
 Add these variables to the main Next.js Vercel project:
 
 ```env
-PYTHON_PARSER_URL=https://ats-cv-python-parser.vercel.app
+PYTHON_PARSER_URL=https://fabra-python-parser.vercel.app
 PYTHON_PARSER_SECRET=the-same-secret
 ```
 

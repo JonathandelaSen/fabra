@@ -30,7 +30,7 @@ export default async function RootLayout({
   const locale = await resolveInterfaceLanguage();
   const themeScript = `
 try {
-  var theme = window.localStorage.getItem("ats-cv-ai-checker.theme");
+  var theme = window.localStorage.getItem("fabra.theme") || window.localStorage.getItem("ats-cv-ai-checker.theme");
   if (theme !== "light" && theme !== "dark") theme = "dark";
   document.documentElement.classList.remove(theme === "light" ? "dark" : "light");
   document.documentElement.classList.add(theme);
