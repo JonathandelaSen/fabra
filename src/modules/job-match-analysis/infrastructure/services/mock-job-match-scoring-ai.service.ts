@@ -131,20 +131,32 @@ const MATCH_PROFILES = [
   },
 ] satisfies JobMatchScoringAIResult[];
 
-function pickProfile(input: JobMatchScoringAIInput): JobMatchScoringAIResult {
+function hashInput(input: JobMatchScoringAIInput): number {
   const seed = `${input.text}|${input.jobDescription}|${input.jobUrl ?? ""}`;
-  const hash = Array.from(seed).reduce(
+  return Array.from(seed).reduce(
     (acc, char) => (acc * 33 + char.charCodeAt(0)) % 12347,
     23,
   );
+}
+
+function pickProfile(hash: number): JobMatchScoringAIResult {
   return MATCH_PROFILES[hash % MATCH_PROFILES.length];
+}
+
+function scoreForProfile(profile: JobMatchScoringAIResult, hash: number): number {
+  if (profile.score >= 90) return 86 + (hash % 11);
+  if (profile.score >= 80) return 76 + (hash % 12);
+  if (profile.score >= 65) return 62 + (hash % 14);
+  return 45 + (hash % 16);
 }
 
 class MockJobMatchScoringAIService implements JobMatchScoringAIService {
   async score(input: JobMatchScoringAIInput): Promise<JobMatchScoringAIResult> {
-    const profile = pickProfile(input);
+    const hash = hashInput(input);
+    const profile = pickProfile(hash);
     return {
       ...profile,
+      score: scoreForProfile(profile, hash),
       feedback: `${profile.feedback} Compared against ${input.text.length} CV characters.`,
     };
   }

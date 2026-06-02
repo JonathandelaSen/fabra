@@ -70,6 +70,15 @@ const COUNTS = {
   processQuestionsPerOpp: { min: 1, max: 4 },
 };
 
+const DEMO_OFFER_STATUSES = [
+  "interesting",
+  "applied",
+  "interview",
+  "offer",
+  "rejected",
+  "discarded",
+] as const;
+
 // ---------------------------------------------------------------------------
 // Modules (singleton, wired once)
 // ---------------------------------------------------------------------------
@@ -250,7 +259,7 @@ async function main() {
   // Also set user preferences
   await adminClient
     .from("user_preferences")
-    .upsert({ user_id: userId, interface_language: "es" }, { onConflict: "user_id" });
+    .upsert({ user_id: userId, interface_language: "en" }, { onConflict: "user_id" });
 
   // -----------------------------------------------------------------------
   // 4. Activity Contexts
@@ -260,14 +269,14 @@ async function main() {
 
   // Default context is auto-created by some modules; create named ones
   const contextNames = [
-    { type: "employment" as const, name: "Búsqueda de Empleo Tech" },
-    { type: "employment" as const, name: "Empleo Actual - Senior Engineer" },
-    { type: "project" as const, name: "Proyecto AI Checker" },
-    { type: "project" as const, name: "Proyecto Open Source CLI" },
-    { type: "personal" as const, name: "Desarrollo Personal" },
-    { type: "personal" as const, name: "Certificaciones Cloud" },
-    { type: "other" as const, name: "Networking y Conferencias" },
-    { type: "other" as const, name: "Mentoring Junior Devs" },
+    { type: "employment" as const, name: "Senior Platform Job Search" },
+    { type: "employment" as const, name: "Current Role - Staff Engineer" },
+    { type: "project" as const, name: "AI Resume Checker" },
+    { type: "project" as const, name: "Open Source CLI Toolkit" },
+    { type: "personal" as const, name: "Leadership Development" },
+    { type: "personal" as const, name: "Cloud Certifications" },
+    { type: "other" as const, name: "Networking and Conferences" },
+    { type: "other" as const, name: "Mentoring Junior Developers" },
   ];
 
   for (const ctx of contextNames.slice(0, COUNTS.activityContexts)) {
@@ -425,6 +434,36 @@ async function main() {
         jobUrl: oppRow.url,
       });
 
+      const { error: followUpErr } = await userClient.from("follow_ups").upsert(
+        {
+          user_id: userId,
+          job_opportunity_id: opp.id,
+          status: DEMO_OFFER_STATUSES[i % DEMO_OFFER_STATUSES.length],
+          notes: faker.helpers.arrayElement([
+            "Good fit; prioritize outreach this week.",
+            "Need to validate team scope before applying.",
+            "Interesting company, but compensation range needs review.",
+            "Prepare a tighter story around product impact.",
+          ]),
+          next_action: faker.helpers.arrayElement([
+            "Tailor CV summary",
+            "Send recruiter follow-up",
+            "Prepare interview questions",
+            "Review role requirements",
+          ]),
+          next_action_at: new Date(
+            Date.now() +
+              faker.number.int({ min: 1, max: 21 }) * 86400000,
+          ).toISOString(),
+          source_job_match_analysis_id: matchId,
+        },
+        { onConflict: "user_id,job_opportunity_id" },
+      );
+      if (followUpErr) {
+        console.error("Error creating follow-up:", followUpErr.message);
+        continue;
+      }
+
       // Enrich job_snapshot with real opportunity data (mock AI returns nulls)
       await userClient
         .from("job_match_analyses")
@@ -444,8 +483,8 @@ async function main() {
               requirements: oppRow.requirements,
               responsibilities: oppRow.responsibilities,
               notablePoints: [
-                "Equipo internacional",
-                "Producto con impacto social",
+                "International team",
+                "Mission-driven product",
               ],
             },
           },
@@ -457,15 +496,15 @@ async function main() {
         const convo = await analysisChatModule.createConversation.execute({
           userId,
           analysisId: matchId,
-          title: `Chat sobre ${oppRow.title} en ${oppRow.company}`,
+          title: `Chat about ${oppRow.title} at ${oppRow.company}`,
           requestId: crypto.randomUUID(),
         });
         const convoId = convo.toPrimitives().id;
 
         const chatMessages = [
-          "¿Qué aspectos de mi perfil encajan mejor con esta oferta?",
-          "¿Qué habilidades debería destacar en la entrevista?",
-          "¿Hay algún gap importante entre mi perfil y los requisitos?",
+          "Which parts of my profile are strongest for this role?",
+          "Which skills should I highlight during the interview?",
+          "Are there any major gaps between my profile and the requirements?",
         ];
         const numMessages = faker.number.int({ min: 1, max: 3 });
         for (let cm = 0; cm < numMessages; cm++) {
@@ -485,15 +524,7 @@ async function main() {
       totalMatches++;
     }
 
-    // Follow-up (70% chance)
-    if (faker.datatype.boolean({ probability: 0.7 })) {
-      const followUpRow = SelectionProcessFixture.createFollowUpRow(
-        userId,
-        opp.id,
-      );
-      await userClient.from("follow_ups").insert(followUpRow);
-      totalFollowUps++;
-    }
+    totalFollowUps += matchIds.length;
 
     // Process questions linked to job match analysis
     const numQuestions = faker.number.int(COUNTS.processQuestionsPerOpp);
@@ -561,7 +592,7 @@ async function main() {
   const wjContextId = wjDefaultCtx?.toPrimitives().id ?? contextIds[0];
 
   const wjContextIds = [wjContextId];
-  const wjContextNames = ["Proyecto Principal", "Investigación", "Reuniones"];
+  const wjContextNames = ["Core Product Work", "Research", "Meetings"];
   for (const name of wjContextNames) {
     const ctx = await activityModule.createActivityContext.execute({
       userId,
@@ -597,8 +628,8 @@ async function main() {
       type: faker.helpers.arrayElement(["employment", "project", "personal", "other"] as const),
       name: faker.helpers.arrayElement([
         `${faker.company.name()} - ${faker.date.recent().getFullYear()}`,
-        `Proyecto ${faker.commerce.productName()}`,
-        `Desarrollo personal - ${faker.person.jobArea()}`,
+        `${faker.commerce.productName()} Project`,
+        `Personal development - ${faker.person.jobArea()}`,
       ]),
     });
     cmtContextIds.push(ctx.toPrimitives().id);

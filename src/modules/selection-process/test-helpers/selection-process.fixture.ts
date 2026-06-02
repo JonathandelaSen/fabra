@@ -64,9 +64,9 @@ export class SelectionProcessFixture {
       url: faker.internet.url(),
       benefits: faker.helpers.arrayElements(
         [
-          "Seguro médico",
-          "Teletrabajo",
-          "Formación continua",
+          "Private healthcare",
+          "Remote work",
+          "Continuous learning budget",
           "Stock options",
           "Annual bonus",
           "Wellness stipend",
@@ -81,7 +81,7 @@ export class SelectionProcessFixture {
           "Advanced TypeScript/JavaScript",
           "Experience with React/Next.js",
           "PostgreSQL or relational databases",
-          "Docker y CI/CD",
+          "Docker and CI/CD",
           "Cloud experience (AWS/GCP/Azure)",
           "Technical leadership",
           "Agile delivery methods",
