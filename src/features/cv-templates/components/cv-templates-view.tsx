@@ -2,11 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { usePathname, useRouter } from "next/navigation";
-import {
-  CV_TEMPLATES,
-  type CVTemplateLocale,
-} from "@/lib/cv-templates";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { CV_TEMPLATES, type CVTemplateLocale } from "@/lib/cv-templates";
 import {
   getAIRequestConfigForProvider,
   getStoredAIApiKey,
@@ -34,22 +31,25 @@ export default function CVTemplatesView({
 }: CVTemplatesViewProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const listQuery = useCVDocumentList();
   const cvs = listQuery.data ?? [];
   const aiProviderValue = getStoredAIProvider();
   const aiApiKey = getStoredAIApiKey();
-  
+
   const hasAIApiKey = aiProviderValue === "mock" || aiApiKey.length > 0;
   const t = useTranslations("analysisFlow.templates");
-  const tf = useTranslations("analysisFlow.forms");
   const templateIdFromPath = pathname.split("/").filter(Boolean)[1] ?? null;
-  
+  const cvIdFromQuery = searchParams.get("cvId");
+
   const [selectedCvId, setSelectedCvId] = useState<string>("");
   const [locale, setLocale] = useState<CVTemplateLocale>("es");
   const [searchQuery, setSearchQuery] = useState("");
   const [copyPasteOpen, setCopyPasteOpen] = useState(false);
-  const [selectedProvider, setSelectedProvider] = useState<StoredAIProvider>(aiProviderValue);
-  const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_GEMINI_MODEL);
+  const [selectedProvider, setSelectedProvider] =
+    useState<StoredAIProvider>(aiProviderValue);
+  const [selectedModel, setSelectedModel] =
+    useState<string>(DEFAULT_GEMINI_MODEL);
   const createVersion = useCreateCVTemplateVersion({
     onCreated: (version) => onOpenEditor(version.id),
   });
@@ -60,23 +60,45 @@ export default function CVTemplatesView({
       (cv.filename ?? "").toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  const selectedTemplate = CV_TEMPLATES.find((template) => template.templateId === templateIdFromPath) ?? null;
+  const selectedTemplate =
+    CV_TEMPLATES.find(
+      (template) => template.templateId === templateIdFromPath,
+    ) ?? null;
 
   useEffect(() => {
     const firstTemplateId = CV_TEMPLATES[0]?.templateId;
     if (pathname === "/templates" && firstTemplateId) {
-      router.replace(`/templates/${encodeURIComponent(firstTemplateId)}`);
+      const query = cvIdFromQuery
+        ? `?cvId=${encodeURIComponent(cvIdFromQuery)}`
+        : "";
+      router.replace(
+        `/templates/${encodeURIComponent(firstTemplateId)}${query}`,
+      );
     }
-  }, [pathname, router]);
+  }, [cvIdFromQuery, pathname, router]);
+
+  useEffect(() => {
+    if (!cvIdFromQuery || selectedCvId) return;
+    if (cvs.some((cv) => cv.id === cvIdFromQuery)) {
+      setSelectedCvId(cvIdFromQuery);
+    }
+  }, [cvIdFromQuery, cvs, selectedCvId]);
 
   const handleSelectTemplate = (templateId: string) => {
-    router.push(`/templates/${encodeURIComponent(templateId)}`);
+    const query = selectedCvId
+      ? `?cvId=${encodeURIComponent(selectedCvId)}`
+      : "";
+    router.push(`/templates/${encodeURIComponent(templateId)}${query}`);
   };
 
   const handleCreateVersion = async () => {
     if (!selectedTemplate || !selectedCvId) return;
 
-    const aiConfig = getAIRequestConfigForProvider(selectedProvider || aiProviderValue, aiApiKey, selectedModel);
+    const aiConfig = getAIRequestConfigForProvider(
+      selectedProvider || aiProviderValue,
+      aiApiKey,
+      selectedModel,
+    );
     if (aiConfig.error) {
       alert(aiConfig.error);
       onOpenSettings();
@@ -95,10 +117,7 @@ export default function CVTemplatesView({
   };
 
   return (
-    <FeatureScreenShell
-      title={t("title")}
-      bodyClassName="overflow-hidden"
-    >
+    <FeatureScreenShell title={t("title")} bodyClassName="overflow-hidden">
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
@@ -110,7 +129,7 @@ export default function CVTemplatesView({
           selectedId={templateIdFromPath}
           onSelect={handleSelectTemplate}
         />
-        
+
         <CVTemplateDetail
           template={selectedTemplate}
           cvs={cvs}

@@ -1167,6 +1167,8 @@ export const messages = {
         offerUrl: "Offer URL",
         urlPlaceholder: "https://...",
         export: "Export",
+        chooseTemplate: "Choose template",
+        editCv: "Edit CV",
       },
       summary: {
         improvements: "Improvement areas",
@@ -2506,6 +2508,8 @@ export const messages = {
         offerUrl: "URL oferta",
         urlPlaceholder: "https://...",
         export: "Exportar",
+        chooseTemplate: "Elegir plantilla",
+        editCv: "Editar CV",
       },
       summary: {
         improvements: "Áreas de mejora",
