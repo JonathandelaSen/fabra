@@ -14,16 +14,16 @@ export class ReceivedFeedbackFixture {
       receivedDate: date.toISOString().split("T")[0],
       giverName: `${faker.person.fullName()} (${faker.person.jobTitle()})`,
       feedbackText: faker.helpers.arrayElement([
-        `Excelente trabajo liderando la iniciativa de ${faker.commerce.productName()}. Tu capacidad de comunicación técnica con stakeholders no técnicos es sobresaliente.`,
-        `Tu contribución al diseño de la arquitectura de ${faker.hacker.noun()} ha elevado significativamente la calidad del código del equipo.`,
-        `Buen trabajo coordinando el lanzamiento. Sugerencia: involucrar al equipo de QA más temprano en el proceso de desarrollo para detectar edge cases.`,
-        `Se nota una mejora considerable en tu gestión del tiempo. Los entregables de las últimas dos semanas llegaron antes del deadline.`,
+        `Excellent work leading the ${faker.commerce.productName()} initiative. Your ability to explain technical tradeoffs to non-technical stakeholders stood out.`,
+        `Your contribution to the ${faker.hacker.noun()} architecture improved the team's code quality in a visible way.`,
+        `Good job coordinating the release. Suggestion: involve QA earlier in the development process to catch edge cases sooner.`,
+        `Your time management has noticeably improved. The last two weeks of deliverables landed ahead of the deadline.`,
       ]),
       userNote: faker.datatype.boolean()
         ? faker.helpers.arrayElement([
-            "Tomar nota de esto para la próxima retrospectiva.",
-            "Agradezco el reconocimiento. Seguir en esta línea.",
-            "Punto interesante, incorporar esta sugerencia en el próximo sprint.",
+            "Capture this for the next retrospective.",
+            "I appreciate the recognition. Keep building on this pattern.",
+            "Useful point; incorporate this suggestion into the next sprint.",
           ])
         : null,
       ...overrides,

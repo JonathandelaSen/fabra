@@ -10,19 +10,19 @@ export class SelectionProcessFixture {
       userId: overrides.userId ?? faker.string.uuid(),
       jobOpportunityId: overrides.jobOpportunityId ?? null,
       question: faker.helpers.arrayElement([
-        "¿Cómo manejarías la migración de un monolito a microservicios sin downtime?",
-        "Describe tu experiencia liderando equipos técnicos distribuidos.",
-        "¿Qué estrategia usarías para optimizar queries lentas en PostgreSQL?",
-        "¿Cómo implementarías un sistema de caché distribuido?",
-        "Explica cómo diseñarías una API que soporte 100k requests/segundo.",
-        "¿Cuál es tu enfoque para testing en aplicaciones con múltiples integraciones externas?",
-        "¿Cómo manejas conflictos técnicos dentro de un equipo de desarrollo?",
-        "Describe un sistema que hayas diseñado de principio a fin.",
-        "¿Qué patrones de diseño aplicas habitualmente y por qué?",
-        "¿Cómo garantizas la seguridad en una aplicación web moderna?",
+        "How would you migrate a monolith to services without downtime?",
+        "Describe your experience leading distributed technical teams.",
+        "What strategy would you use to optimize slow PostgreSQL queries?",
+        "How would you design a distributed cache for a high-traffic product?",
+        "Walk through an API design that can sustain 100k requests per second.",
+        "What is your testing approach for applications with external integrations?",
+        "How do you handle technical disagreements within an engineering team?",
+        "Describe a system you designed from discovery through production launch.",
+        "Which design patterns do you reach for most often, and why?",
+        "How do you keep a modern web application secure by default?",
       ]),
       context: faker.datatype.boolean()
-        ? `Pregunta para la posición de ${faker.person.jobTitle()} en ${faker.company.name()}.`
+        ? `Question for the ${faker.person.jobTitle()} role at ${faker.company.name()}.`
         : null,
       answer: faker.datatype.boolean()
         ? faker.lorem.paragraphs(2)
@@ -68,38 +68,38 @@ export class SelectionProcessFixture {
           "Teletrabajo",
           "Formación continua",
           "Stock options",
-          "Bonus anual",
-          "Gimnasio",
-          "Comida en oficina",
-          "Horario flexible",
+          "Annual bonus",
+          "Wellness stipend",
+          "Catered lunches",
+          "Flexible schedule",
         ],
         { min: 2, max: 5 },
       ),
       requirements: faker.helpers.arrayElements(
         [
-          "5+ años de experiencia",
-          "TypeScript/JavaScript avanzado",
-          "Experiencia con React/Next.js",
-          "PostgreSQL o bases de datos relacionales",
+          "5+ years of experience",
+          "Advanced TypeScript/JavaScript",
+          "Experience with React/Next.js",
+          "PostgreSQL or relational databases",
           "Docker y CI/CD",
-          "Experiencia con cloud (AWS/GCP/Azure)",
-          "Liderazgo técnico",
-          "Metodologías ágiles",
+          "Cloud experience (AWS/GCP/Azure)",
+          "Technical leadership",
+          "Agile delivery methods",
         ],
         { min: 3, max: 6 },
       ),
       responsibilities: faker.helpers.arrayElements(
         [
-          "Diseñar y construir funcionalidades core del producto",
-          "Mentorizar desarrolladores junior",
-          "Participar en revisiones de código",
-          "Colaborar con producto y diseño",
-          "Mantener y mejorar la infraestructura",
-          "Garantizar calidad y rendimiento del código",
+          "Design and build core product capabilities",
+          "Mentor junior engineers",
+          "Participate in thoughtful code reviews",
+          "Collaborate closely with product and design",
+          "Maintain and improve infrastructure",
+          "Ensure code quality and performance",
         ],
         { min: 2, max: 4 },
       ),
-      description: `Buscamos un ${title} apasionado para unirse a ${company}. ${faker.company.catchPhrase()}.`,
+      description: `We are looking for a thoughtful ${title} to join ${company}. ${faker.company.catchPhrase()}.`,
     };
   }
 
@@ -118,10 +118,10 @@ export class SelectionProcessFixture {
       notes: faker.lorem.sentence(),
       next_action: faker.datatype.boolean()
         ? faker.helpers.arrayElement([
-            "Preparar caso técnico",
-            "Enviar email de seguimiento",
-            "Revisar oferta económica",
-            "Preparar preguntas para el entrevistador",
+            "Prepare the technical case study",
+            "Send a follow-up email",
+            "Review the compensation package",
+            "Prepare questions for the interviewer",
           ])
         : null,
       next_action_at: faker.datatype.boolean()

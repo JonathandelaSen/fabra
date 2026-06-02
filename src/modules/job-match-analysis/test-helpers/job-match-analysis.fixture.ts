@@ -12,7 +12,7 @@ export class JobMatchAnalysisFixture {
       cvDocumentId: overrides.cvDocumentId ?? null,
       cvStructuredProfileId: overrides.cvStructuredProfileId ?? null,
       jobOpportunityId: overrides.jobOpportunityId ?? null,
-      title: `Match: ${faker.person.jobTitle()} en ${faker.company.name()}`,
+      title: `${faker.person.jobTitle()} at ${faker.company.name()}`,
       filename: `cv_${faker.person.lastName().toLowerCase()}.pdf`,
       fileSize: faker.number.int({ min: 20000, max: 500000 }),
       pdfStoragePath: null,

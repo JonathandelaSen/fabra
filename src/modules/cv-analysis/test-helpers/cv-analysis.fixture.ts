@@ -11,7 +11,7 @@ export class CVAnalysisFixture {
       userId: overrides.userId ?? faker.string.uuid(),
       cvDocumentId: overrides.cvDocumentId ?? null,
       cvStructuredProfileId: overrides.cvStructuredProfileId ?? null,
-      title: `Análisis CV - ${faker.person.fullName()}`,
+      title: `${faker.person.fullName()}`,
       filename: `cv_${faker.person.lastName().toLowerCase()}.pdf`,
       fileSize: faker.number.int({ min: 20000, max: 500000 }),
       pdfStoragePath: null,

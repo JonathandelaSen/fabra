@@ -12,22 +12,22 @@ export class WorkJournalEntryFixture {
     const inputMode = faker.helpers.arrayElement(INPUT_MODES);
 
     const topic = faker.helpers.arrayElement([
-      `Refactorización de ${faker.hacker.noun()}`,
-      `Diseño de API para ${faker.commerce.productName()}`,
-      `Resolución de bug en ${faker.hacker.adjective()} ${faker.hacker.noun()}`,
-      `Reunión de planificación: ${faker.company.catchPhrase()}`,
-      `Code review de ${faker.person.firstName()}`,
-      `Investigación: ${faker.hacker.phrase()}`,
-      `Deploy de ${faker.commerce.productName()} v${faker.system.semver()}`,
-      `Pair programming con ${faker.person.firstName()}`,
-      `Optimización de rendimiento en ${faker.hacker.noun()}`,
-      `Documentación de ${faker.hacker.noun()}`,
+      `Refactoring ${faker.hacker.noun()} boundaries`,
+      `API design for ${faker.commerce.productName()}`,
+      `Bug fix in ${faker.hacker.adjective()} ${faker.hacker.noun()}`,
+      `Planning session: ${faker.company.catchPhrase()}`,
+      `Code review with ${faker.person.firstName()}`,
+      `Research spike: ${faker.hacker.phrase()}`,
+      `Deploying ${faker.commerce.productName()} v${faker.system.semver()}`,
+      `Pair programming with ${faker.person.firstName()}`,
+      `Performance optimization in ${faker.hacker.noun()}`,
+      `Documentation for ${faker.hacker.noun()}`,
     ]);
 
     const rawNotes = faker.helpers.arrayElement([
-      `Trabajé en ${topic.toLowerCase()}. ${faker.company.catchPhrase()}.`,
-      `Sesión productiva de ${faker.number.int({ min: 2, max: 6 })} horas dedicadas a ${topic.toLowerCase()}.`,
-      `Avancé significativamente en ${topic.toLowerCase()}. Pendiente: ${faker.hacker.phrase()}.`,
+      `Worked on ${topic.toLowerCase()}. ${faker.company.catchPhrase()}.`,
+      `Productive ${faker.number.int({ min: 2, max: 6 })}-hour session focused on ${topic.toLowerCase()}.`,
+      `Made meaningful progress on ${topic.toLowerCase()}. Follow-up: ${faker.hacker.phrase()}.`,
     ]);
 
     return {
@@ -40,7 +40,7 @@ export class WorkJournalEntryFixture {
       raw_notes: rawNotes,
       final_text:
         inputMode === "ai_assisted"
-          ? `${rawNotes}\n\nResumen expandido: ${faker.lorem.paragraph()}`
+          ? `${rawNotes}\n\nExpanded summary: ${faker.lorem.paragraph()}`
           : rawNotes,
       ...overrides,
     };

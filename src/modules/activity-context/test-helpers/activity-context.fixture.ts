@@ -12,7 +12,7 @@ export class ActivityContextFixture {
       type: faker.helpers.arrayElement(TYPES),
       name: faker.helpers.arrayElement([
         `${faker.company.name()} - ${faker.person.jobTitle()}`,
-        `Proyecto ${faker.commerce.productName()}`,
+        `${faker.commerce.productName()} Project`,
         `Freelance ${faker.company.buzzNoun()}`,
         faker.company.catchPhrase(),
       ]),

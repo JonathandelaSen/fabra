@@ -21,11 +21,11 @@ export class FeedbackFixture {
       user_id: overrides.user_id ?? faker.string.uuid(),
       feedback_id: overrides.feedback_id ?? faker.string.uuid(),
       content: faker.helpers.arrayElement([
-        `${faker.person.firstName()} mencionó que ${faker.company.catchPhrase().toLowerCase()} fue un logro clave esta semana.`,
-        `Feedback positivo: excelente trabajo en ${faker.commerce.productName()}, especialmente la ${faker.company.buzzNoun()}.`,
-        `Sugerencia: mejorar la documentación de ${faker.hacker.noun()} para facilitar el onboarding de nuevos miembros.`,
-        `Destacó la proactividad al resolver el incidente de ${faker.hacker.noun()} en producción sin ayuda.`,
-        `Reconoció el esfuerzo extra en la entrega del sprint de ${faker.commerce.department()}.`,
+        `${faker.person.firstName()} mentioned that ${faker.company.catchPhrase().toLowerCase()} was a key achievement this week.`,
+        `Positive feedback: excellent work on ${faker.commerce.productName()}, especially the ${faker.company.buzzNoun()}.`,
+        `Suggestion: improve the ${faker.hacker.noun()} documentation to make onboarding easier for new team members.`,
+        `They highlighted the proactive response to the production ${faker.hacker.noun()} incident.`,
+        `They recognized the extra effort behind the ${faker.commerce.department()} sprint delivery.`,
       ]),
       ...overrides,
     };
