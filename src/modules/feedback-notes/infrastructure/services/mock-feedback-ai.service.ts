@@ -5,7 +5,7 @@ import type {
 
 class MockFeedbackAIService implements FeedbackAIService {
   async generateFinalFeedback(input: GenerateFinalFeedbackInput): Promise<string> {
-    return `[mock-ai] Feedback final para ${input.personName} basado en ${input.entries.length} notas.`;
+    return `Final feedback for ${input.personName}: consolidated from ${input.entries.length} notes, with emphasis on observable impact, collaboration patterns, and practical next steps.`;
   }
 }
 

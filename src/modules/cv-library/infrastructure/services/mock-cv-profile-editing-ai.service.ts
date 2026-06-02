@@ -8,7 +8,7 @@ class MockCVProfileEditingAIService implements CVProfileEditingAIService {
   }): Promise<StandardCVProfile> {
     return {
       ...input.profile,
-      summary: `[mock-ai] ${input.instruction} ${input.profile.summary ?? ""}`.trim(),
+      summary: `${input.instruction} ${input.profile.summary ?? ""}`.trim(),
     };
   }
 }

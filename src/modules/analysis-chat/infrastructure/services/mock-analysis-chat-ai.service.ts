@@ -5,7 +5,7 @@ import type {
 
 class MockAnalysisChatAIService implements AnalysisChatAIService {
   async generateAnswer(input: AnalysisChatAIInput): Promise<string> {
-    return `[mock-ai] Respuesta de chat para "${input.message}" con ${input.history.length} mensajes previos.`;
+    return `Based on the current analysis, "${input.message}" is best answered by focusing on the strongest matching evidence, the remaining gaps, and one practical next step. Conversation context includes ${input.history.length} previous messages.`;
   }
 }
 

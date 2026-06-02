@@ -79,6 +79,15 @@ const DEMO_OFFER_STATUSES = [
   "discarded",
 ] as const;
 
+const DEMO_AI_MODEL = "Fabra Demo Review v1";
+const CV_ANALYSIS_CONTEXTS = [
+  "Targeting senior product engineering roles with platform ownership.",
+  "Targeting backend platform roles with reliability and observability scope.",
+  "Targeting frontend architecture roles with design-system leadership.",
+  "Targeting staff-level engineering roles with mentoring and roadmap influence.",
+  "Targeting full-stack roles in B2B SaaS with measurable delivery outcomes.",
+] as const;
+
 // ---------------------------------------------------------------------------
 // Modules (singleton, wired once)
 // ---------------------------------------------------------------------------
@@ -333,7 +342,7 @@ async function main() {
     // Upsert a structured profile (mock)
     const profile = await cvLibraryE2E.structureCVProfileWithAI.execute({
       provider: "mock",
-      model: "mock-model",
+      model: DEMO_AI_MODEL,
       text: cvInput.textNode ?? "Mock text",
     });
 
@@ -345,7 +354,7 @@ async function main() {
         .createHash("sha256")
         .update(cvInput.textNode ?? "")
         .digest("hex"),
-      aiModel: "mock-model",
+      aiModel: DEMO_AI_MODEL,
       profile: profile.profile,
     });
     structuredProfileIds.push(sp.toPrimitives().id);
@@ -377,7 +386,11 @@ async function main() {
         id: analysis.toPrimitives().id,
         userId,
         provider: "mock",
-        model: "mock-model",
+        model: DEMO_AI_MODEL,
+        additionalContext:
+          CV_ANALYSIS_CONTEXTS[
+            (i * COUNTS.cvAnalysesPerCV + a) % CV_ANALYSIS_CONTEXTS.length
+          ],
       });
     }
   }
@@ -429,7 +442,7 @@ async function main() {
         id: matchId,
         userId,
         provider: "mock",
-        model: "mock-model",
+        model: DEMO_AI_MODEL,
         jobDescription: oppRow.description,
         jobUrl: oppRow.url,
       });
@@ -514,7 +527,7 @@ async function main() {
             conversationId: convoId,
             message: chatMessages[cm],
             provider: "mock",
-            model: "mock-model",
+            model: DEMO_AI_MODEL,
             requestId: crypto.randomUUID(),
           });
         }

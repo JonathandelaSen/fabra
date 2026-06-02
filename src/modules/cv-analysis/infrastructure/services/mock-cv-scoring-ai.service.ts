@@ -8,59 +8,115 @@ const SCORE_PROFILES = [
   {
     score: 91,
     feedback:
-      "[mock-ai] Strong senior profile with clear technical leadership, product ownership, and measurable delivery signals.",
-    keywords: ["[mock-ai] platform leadership", "TypeScript", "system design", "mentoring"],
+      "Strong senior profile with clear technical leadership, product ownership, and measurable delivery signals.",
+    keywords: [
+      "platform leadership",
+      "TypeScript",
+      "system design",
+      "mentoring",
+      "product ownership",
+      "architecture reviews",
+      "stakeholder communication",
+      "delivery strategy",
+    ],
     improvements: [
-      "[mock-ai] Add one quantified business outcome to the most recent role.",
-      "[mock-ai] Move architecture ownership higher in the summary.",
+      "Add one quantified business outcome to the most recent role.",
+      "Move architecture ownership higher in the summary.",
+      "Name the teams or functions influenced by the candidate's technical direction.",
+      "Add a short line about roadmap ownership or product decision-making.",
     ],
   },
   {
     score: 84,
     feedback:
-      "[mock-ai] Well-rounded engineering CV with solid delivery evidence and a good balance of frontend, backend, and collaboration signals.",
-    keywords: ["[mock-ai] full-stack delivery", "React", "Node.js", "PostgreSQL"],
+      "Well-rounded engineering CV with solid delivery evidence and a good balance of frontend, backend, and collaboration signals.",
+    keywords: [
+      "full-stack delivery",
+      "React",
+      "Node.js",
+      "PostgreSQL",
+      "API design",
+      "testing",
+      "CI/CD",
+      "cross-functional work",
+    ],
     improvements: [
-      "[mock-ai] Tighten older experience bullets so recent impact is easier to scan.",
-      "[mock-ai] Add scope indicators such as team size, traffic, or revenue impact.",
+      "Tighten older experience bullets so recent impact is easier to scan.",
+      "Add scope indicators such as team size, traffic, or revenue impact.",
+      "Group repeated tooling into a concise skills section.",
+      "Make the first three bullets in the latest role more outcome-focused.",
     ],
   },
   {
     score: 76,
     feedback:
-      "[mock-ai] Credible profile with relevant technologies, but impact statements are uneven and some achievements read like responsibilities.",
-    keywords: ["[mock-ai] product engineering", "Next.js", "CI/CD", "testing"],
+      "Credible profile with relevant technologies, but impact statements are uneven and some achievements read like responsibilities.",
+    keywords: [
+      "product engineering",
+      "Next.js",
+      "CI/CD",
+      "testing",
+      "Docker",
+      "observability",
+      "accessibility",
+      "code quality",
+    ],
     improvements: [
-      "[mock-ai] Rewrite responsibility-heavy bullets as outcomes with metrics.",
-      "[mock-ai] Group repeated tooling keywords into a compact skills section.",
+      "Rewrite responsibility-heavy bullets as outcomes with metrics.",
+      "Clarify which projects were owned end-to-end.",
+      "Add before-and-after results for performance, reliability, or conversion work.",
+      "Bring the target role keywords into the summary and latest experience.",
     ],
   },
   {
     score: 68,
     feedback:
-      "[mock-ai] Good foundation, but the CV needs sharper positioning and stronger evidence of ownership for senior roles.",
-    keywords: ["[mock-ai] backend foundations", "APIs", "Docker", "observability"],
+      "Good foundation, but the CV needs sharper positioning and stronger evidence of ownership for senior roles.",
+    keywords: [
+      "backend foundations",
+      "APIs",
+      "Docker",
+      "observability",
+      "data modeling",
+      "incident response",
+      "documentation",
+      "technical planning",
+    ],
     improvements: [
-      "[mock-ai] Add a short executive summary that names the target role.",
-      "[mock-ai] Surface project scale, reliability wins, and cross-functional work.",
+      "Add a short executive summary that names the target role.",
+      "Surface project scale, reliability wins, and cross-functional work.",
+      "Replace generic skill claims with concrete examples from recent projects.",
+      "Add measurable delivery signals such as latency, uptime, cost, or user impact.",
     ],
   },
 ] satisfies CVScoringAIResult[];
 
-function pickProfile(input: CVScoringAIInput): CVScoringAIResult {
+function hashInput(input: CVScoringAIInput): number {
   const seed = `${input.text}|${input.additionalContext ?? ""}`;
-  const hash = Array.from(seed).reduce(
+  return Array.from(seed).reduce(
     (acc, char) => (acc * 31 + char.charCodeAt(0)) % 9973,
     17,
   );
+}
+
+function pickProfile(hash: number): CVScoringAIResult {
   return SCORE_PROFILES[hash % SCORE_PROFILES.length];
+}
+
+function scoreForProfile(profile: CVScoringAIResult, hash: number): number {
+  if (profile.score >= 90) return 88 + (hash % 9);
+  if (profile.score >= 80) return 78 + (hash % 10);
+  if (profile.score >= 75) return 70 + (hash % 9);
+  return 58 + (hash % 12);
 }
 
 class MockCVScoringAIService implements CVScoringAIService {
   async score(input: CVScoringAIInput): Promise<CVScoringAIResult> {
-    const profile = pickProfile(input);
+    const hash = hashInput(input);
+    const profile = pickProfile(hash);
     return {
       ...profile,
+      score: scoreForProfile(profile, hash),
       feedback: `${profile.feedback} Source length: ${input.text.length} characters.`,
     };
   }

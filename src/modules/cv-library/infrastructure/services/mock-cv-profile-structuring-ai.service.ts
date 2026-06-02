@@ -14,11 +14,18 @@ class MockCVProfileStructuringAIService
     return {
       schemaVersion: CV_PROFILE_SCHEMA_VERSION,
       profile: normalizeStandardCVProfile({
-        summary: `[mock-ai] Perfil estructurado desde ${input.text.length} caracteres.`,
-        basics: { name: "[mock-ai] Candidate" },
+        summary: `Structured senior engineering profile extracted from ${input.text.length} characters of CV content.`,
+        basics: { name: "Demo Candidate" },
         experience: [],
         education: [],
-        skills: ["[mock-ai] structured-profile"],
+        skills: [
+          "TypeScript",
+          "React",
+          "Node.js",
+          "PostgreSQL",
+          "System design",
+          "Technical leadership",
+        ],
       }),
     };
   }

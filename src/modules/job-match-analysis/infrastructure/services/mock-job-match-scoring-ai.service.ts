@@ -8,11 +8,11 @@ const MATCH_PROFILES = [
   {
     score: 92,
     feedback:
-      "[mock-ai] Excellent match. The CV shows direct experience with the role's core stack, ownership level, and collaboration expectations.",
-    aiKeywords: ["[mock-ai] high-fit role", "platform ownership", "React", "distributed systems"],
+      "Excellent match. The CV shows direct experience with the role's core stack, ownership level, and collaboration expectations.",
+    aiKeywords: ["high-fit role", "platform ownership", "React", "distributed systems"],
     improvements: [
-      "[mock-ai] Tailor the opening summary to mention the company's product domain.",
-      "[mock-ai] Add one bullet about mentoring or technical direction.",
+      "Tailor the opening summary to mention the company's product domain.",
+      "Add one bullet about mentoring or technical direction.",
     ],
     jobKeyData: {
       title: "Senior Product Engineer",
@@ -39,11 +39,11 @@ const MATCH_PROFILES = [
   {
     score: 81,
     feedback:
-      "[mock-ai] Strong match with a few gaps. The profile aligns well technically, but should make cloud and reliability experience more explicit.",
-    aiKeywords: ["[mock-ai] strong technical fit", "backend systems", "cloud", "observability"],
+      "Strong match with a few gaps. The profile aligns well technically, but should make cloud and reliability experience more explicit.",
+    aiKeywords: ["strong technical fit", "backend systems", "cloud", "observability"],
     improvements: [
-      "[mock-ai] Highlight production reliability work near the top of the CV.",
-      "[mock-ai] Add concrete cloud provider experience if available.",
+      "Highlight production reliability work near the top of the CV.",
+      "Add concrete cloud provider experience if available.",
     ],
     jobKeyData: {
       title: "Backend Platform Engineer",
@@ -70,11 +70,11 @@ const MATCH_PROFILES = [
   {
     score: 69,
     feedback:
-      "[mock-ai] Partial match. The CV covers important engineering fundamentals, but the role asks for leadership and domain depth that are not yet prominent.",
-    aiKeywords: ["[mock-ai] partial fit", "technical leadership", "data workflows", "stakeholder management"],
+      "Partial match. The CV covers important engineering fundamentals, but the role asks for leadership and domain depth that are not yet prominent.",
+    aiKeywords: ["partial fit", "technical leadership", "data workflows", "stakeholder management"],
     improvements: [
-      "[mock-ai] Add leadership examples from roadmap planning, hiring, or architecture reviews.",
-      "[mock-ai] Reframe project bullets around business outcomes and team impact.",
+      "Add leadership examples from roadmap planning, hiring, or architecture reviews.",
+      "Reframe project bullets around business outcomes and team impact.",
     ],
     jobKeyData: {
       title: "Engineering Lead, Data Products",
@@ -101,11 +101,11 @@ const MATCH_PROFILES = [
   {
     score: 57,
     feedback:
-      "[mock-ai] Stretch role. There is useful overlap in software delivery, but the CV needs stronger evidence for the role's specialist requirements.",
-    aiKeywords: ["[mock-ai] stretch fit", "security engineering", "compliance", "incident response"],
+      "Stretch role. There is useful overlap in software delivery, but the CV needs stronger evidence for the role's specialist requirements.",
+    aiKeywords: ["stretch fit", "security engineering", "compliance", "incident response"],
     improvements: [
-      "[mock-ai] Only apply if you can add security projects or compliance ownership.",
-      "[mock-ai] Prepare examples around incident response, risk tradeoffs, and audit readiness.",
+      "Only apply if you can add security projects or compliance ownership.",
+      "Prepare examples around incident response, risk tradeoffs, and audit readiness.",
     ],
     jobKeyData: {
       title: "Security Automation Engineer",

@@ -5,7 +5,7 @@ import type {
 
 class MockJournalAIService implements JournalAIService {
   async draftEntry(input: DraftEntryInput): Promise<string> {
-    return `[mock-ai] ${input.topic ?? input.context.name}: ${input.notes}`;
+    return `${input.topic ?? input.context.name}: ${input.notes}`;
   }
 }
 
