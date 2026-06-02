@@ -87,6 +87,24 @@ const CV_ANALYSIS_CONTEXTS = [
   "Targeting staff-level engineering roles with mentoring and roadmap influence.",
   "Targeting full-stack roles in B2B SaaS with measurable delivery outcomes.",
 ] as const;
+const CREATE_JOB_MATCH_CHATS = false;
+const DEMO_CHAT_MESSAGES = [
+  {
+    user: "Which parts of my profile are strongest for this role?",
+    assistant:
+      "Your strongest angle is the overlap between product engineering, TypeScript delivery, and cross-functional ownership. Lead with a recent example where you connected technical decisions to user or business outcomes.",
+  },
+  {
+    user: "What should I prepare before applying?",
+    assistant:
+      "Prepare a short version of your platform impact story, one metric-backed delivery example, and a concise explanation of how your current CV maps to the role's top requirements.",
+  },
+  {
+    user: "Are there any gaps I should address?",
+    assistant:
+      "The main gap is specificity. Add role-relevant metrics, name the systems you owned, and make any missing domain experience explicit through adjacent projects or learning signals.",
+  },
+] as const;
 
 // ---------------------------------------------------------------------------
 // Modules (singleton, wired once)
@@ -504,8 +522,7 @@ async function main() {
         })
         .eq("id", matchId);
 
-      // Create chat conversation with mock messages (40% of analyses)
-      if (faker.datatype.boolean({ probability: 0.4 })) {
+      if (CREATE_JOB_MATCH_CHATS && faker.datatype.boolean({ probability: 0.4 })) {
         const convo = await analysisChatModule.createConversation.execute({
           userId,
           analysisId: matchId,
@@ -553,6 +570,103 @@ async function main() {
       totalQuestions++;
     }
   }
+
+  const { data: seededMatches, error: seededMatchesErr } = await adminClient
+    .from("job_match_analyses")
+    .select("id, job_opportunity_id, title")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: true });
+
+  if (seededMatchesErr) {
+    console.error("Error loading seeded job matches:", seededMatchesErr.message);
+    process.exit(1);
+  }
+
+  for (const [index, match] of (seededMatches ?? []).entries()) {
+    if (!match.job_opportunity_id) continue;
+    const { error: linkErr } = await adminClient
+      .from("follow_ups")
+      .update({
+        source_job_match_analysis_id: match.id,
+        status: DEMO_OFFER_STATUSES[index % DEMO_OFFER_STATUSES.length],
+      })
+      .eq("user_id", userId)
+      .eq("job_opportunity_id", match.job_opportunity_id);
+
+    if (linkErr) {
+      console.error("Error linking follow-up to job match:", linkErr.message);
+      process.exit(1);
+    }
+  }
+
+  for (const [index, match] of (seededMatches ?? []).entries()) {
+    const conversationId = crypto.randomUUID();
+    const now = new Date(Date.now() + index * 1000).toISOString();
+    const { error: conversationErr } = await adminClient
+      .from("analysis_chat_conversations")
+      .insert({
+        id: conversationId,
+        user_id: userId,
+        analysis_id: match.id,
+        title: `Application strategy for ${match.title}`,
+        created_at: now,
+        updated_at: now,
+      });
+
+    if (conversationErr) {
+      console.error("Error creating job match chat:", conversationErr.message);
+      process.exit(1);
+    }
+
+    for (const [messageIndex, message] of DEMO_CHAT_MESSAGES.entries()) {
+      const userMessageAt = new Date(
+        Date.parse(now) + messageIndex * 2000,
+      ).toISOString();
+      const assistantMessageAt = new Date(
+        Date.parse(userMessageAt) + 1000,
+      ).toISOString();
+      const { error: userMessageErr } = await adminClient
+        .from("analysis_chat_messages")
+        .insert({
+          id: crypto.randomUUID(),
+          user_id: userId,
+          analysis_id: match.id,
+          conversation_id: conversationId,
+          role: "user",
+          content: message.user,
+          model: null,
+          metadata: null,
+          created_at: userMessageAt,
+        });
+
+      if (userMessageErr) {
+        console.error("Error creating job match chat message:", userMessageErr.message);
+        process.exit(1);
+      }
+
+      const { error: assistantMessageErr } = await adminClient
+        .from("analysis_chat_messages")
+        .insert({
+          id: crypto.randomUUID(),
+          user_id: userId,
+          analysis_id: match.id,
+          conversation_id: conversationId,
+          role: "assistant",
+          content: message.assistant,
+          model: DEMO_AI_MODEL,
+          metadata: { seeded: true },
+          created_at: assistantMessageAt,
+        });
+
+      if (assistantMessageErr) {
+        console.error("Error creating job match chat answer:", assistantMessageErr.message);
+        process.exit(1);
+      }
+    }
+
+    totalChats++;
+  }
+
   log(`  ${totalMatches} matches, ${totalFollowUps} follow-ups, ${totalQuestions} questions, ${totalChats} chats`);
 
   // -----------------------------------------------------------------------
@@ -561,23 +675,53 @@ async function main() {
   log("Creating feedback notes...");
 
   for (let i = 0; i < COUNTS.feedbackNotes; i++) {
-    const fbInput = FeedbackFixture.createInput({ user_id: userId, activity_context_id: faker.helpers.arrayElement(contextIds) });
-    const fb = await feedbackNotesModule.createFeedback.execute(fbInput);
-    const fbId = fb.toPrimitives().id;
+    const fbInput = FeedbackFixture.createInput({
+      user_id: userId,
+      activity_context_id: faker.helpers.arrayElement(contextIds),
+    });
+    const fbId = crypto.randomUUID();
+    const now = new Date().toISOString();
+    const isClosed = faker.datatype.boolean({ probability: 0.3 });
+    const { error: feedbackErr } = await adminClient
+      .from("feedback_notes_feedbacks")
+      .insert({
+        id: fbId,
+        user_id: userId,
+        activity_context_id: fbInput.activity_context_id,
+        person_name: fbInput.person_name,
+        status: isClosed ? "closed" : "active",
+        final_feedback: fbInput.final_feedback ?? null,
+        closed_at: isClosed ? now : null,
+        created_at: now,
+        updated_at: now,
+      });
+
+    if (feedbackErr) {
+      console.error("Error creating feedback:", feedbackErr.message);
+      process.exit(1);
+    }
 
     const numEntries = faker.number.int(COUNTS.entriesPerFeedback);
     for (let e = 0; e < numEntries; e++) {
-      await feedbackNotesModule.createEntry.execute(
-        FeedbackFixture.createEntryInput({
+      const entryInput = FeedbackFixture.createEntryInput({
+        user_id: userId,
+        feedback_id: fbId,
+      });
+      const { error: entryErr } = await adminClient
+        .from("feedback_notes_entries")
+        .insert({
+          id: crypto.randomUUID(),
           user_id: userId,
           feedback_id: fbId,
-        }),
-      );
-    }
+          content: entryInput.content,
+          created_at: now,
+          updated_at: now,
+        });
 
-    // Close some feedbacks (30%)
-    if (faker.datatype.boolean({ probability: 0.3 })) {
-      await feedbackNotesModule.closeFeedback.execute(userId, fbId);
+      if (entryErr) {
+        console.error("Error creating feedback entry:", entryErr.message);
+        process.exit(1);
+      }
     }
   }
 
