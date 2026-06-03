@@ -29,7 +29,7 @@ export function featureListItemClassName(
   className?: string,
 ) {
   return cn(
-    "group relative w-full rounded-xl p-3.5 text-left border transition-all duration-200",
+    "group relative w-full rounded-xl p-3.5 text-left border transition-all duration-200 cursor-pointer",
     isSelected
       ? [featureSurfaces.selectedRow, featureStates.selected]
       : [featureSurfaces.row, featureSurfaces.rowHover, featureStates.idle, featureStates.hover],

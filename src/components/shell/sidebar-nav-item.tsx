@@ -21,7 +21,7 @@ export default function SidebarNavItem({
     <button
       onClick={onClick}
       className={`
-        w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
+        w-full flex items-center gap-2 rounded-lg font-medium cursor-pointer transition-all duration-150
         ${active ? "sidebar-nav-active text-sidebar-accent-foreground" : "text-text-muted hover:bg-panel-hover hover:text-text-soft"}
         ${collapsed ? "justify-center p-2" : "px-3 py-2 text-sm"}
       `}

@@ -29,7 +29,7 @@ export default function SidebarFooter({
       <button
         onClick={onOpenSettings}
         className={`
-          w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
+          w-full flex items-center gap-2 rounded-lg font-medium cursor-pointer transition-all duration-150
           ${activeView === "settings" ? "bg-sidebar-accent text-sidebar-accent-foreground" : "text-text-muted hover:bg-panel-hover hover:text-text-soft"}
           ${collapsed ? "justify-center p-2" : "px-3 py-2.5 text-sm"}
         `}
@@ -43,7 +43,7 @@ export default function SidebarFooter({
           type="button"
           onClick={onOpenAdmin}
           className={`
-            w-full flex items-center gap-2 rounded-lg font-medium transition-all duration-150
+            w-full flex items-center gap-2 rounded-lg font-medium cursor-pointer transition-all duration-150
             ${activeView === "admin" ? "bg-emerald-500/10 text-emerald-200" : "text-emerald-300 hover:bg-emerald-500/10 hover:text-emerald-200"}
             ${collapsed ? "justify-center p-2" : "px-3 py-2.5 text-sm"}
           `}

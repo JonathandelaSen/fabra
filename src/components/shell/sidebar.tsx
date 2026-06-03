@@ -102,7 +102,7 @@ export default function Sidebar({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={() => setCollapsed(false)}
-            className="md:hidden fixed bottom-6 right-6 z-[60] w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-900/30 active:scale-95 transition-transform"
+            className="md:hidden fixed bottom-6 right-6 z-[60] w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-900/30 active:scale-95 transition-transform cursor-pointer"
           >
             <Menu className="w-5 h-5" />
           </motion.button>
@@ -149,7 +149,7 @@ export default function Sidebar({
           ) : (
             <button
               onClick={() => setCollapsed(false)}
-              className="w-8 h-8 flex items-center justify-center shrink-0 hover:bg-panel-hover rounded-md transition-colors"
+              className="w-8 h-8 flex items-center justify-center shrink-0 hover:bg-panel-hover rounded-md transition-colors cursor-pointer"
               title={common("appName")}
             >
               <img
@@ -162,7 +162,7 @@ export default function Sidebar({
           {!collapsed && (
             <button
               onClick={() => setCollapsed(true)}
-              className="w-7 h-7 rounded-md flex items-center justify-center text-text-muted hover:text-text-soft hover:bg-panel-hover transition-colors shrink-0"
+              className="w-7 h-7 rounded-md flex items-center justify-center text-text-muted hover:text-text-soft hover:bg-panel-hover transition-colors shrink-0 cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -172,7 +172,7 @@ export default function Sidebar({
         <div className="px-2 pb-2 shrink-0 space-y-1">
           <button
             onClick={onOpenHome}
-            className={`w-full flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${
+            className={`w-full flex items-center gap-2 rounded-md px-2 py-1.5 text-sm cursor-pointer transition-colors ${
               activeView === "home"
                 ? "bg-sidebar-accent text-sidebar-accent-foreground"
                 : "text-text-muted hover:bg-panel-hover hover:text-text-soft"
