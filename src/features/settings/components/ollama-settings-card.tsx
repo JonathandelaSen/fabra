@@ -16,16 +16,12 @@ import {
   getStoredAIModelForProvider,
   saveStoredAIBaseUrlForProvider,
   saveStoredAIModelForProvider,
-  type StoredAIDefaultApiKeys,
-  type StoredAIDefaultBaseUrls,
   type StoredAIProvider,
   AI_PROVIDER,
 } from "@/lib/browser-preferences";
 
 interface OllamaSettingsCardProps {
   aiProvider: StoredAIProvider;
-  defaultApiKeys: StoredAIDefaultApiKeys;
-  defaultBaseUrls: StoredAIDefaultBaseUrls;
   getSummary: (value: string) => string;
   onAISettingsChange: (settings: {
     provider: StoredAIProvider;
@@ -37,8 +33,6 @@ interface OllamaSettingsCardProps {
 
 export function OllamaSettingsCard({
   aiProvider,
-  defaultApiKeys,
-  defaultBaseUrls,
   getSummary,
   onAISettingsChange,
 }: OllamaSettingsCardProps) {
@@ -57,7 +51,7 @@ export function OllamaSettingsCard({
   });
 
   useEffect(() => {
-    const storedUrl = getStoredAIBaseUrlForProvider(AI_PROVIDER.OLLAMA, defaultBaseUrls);
+    const storedUrl = getStoredAIBaseUrlForProvider(AI_PROVIDER.OLLAMA);
     const storedModel = getStoredAIModelForProvider(AI_PROVIDER.OLLAMA);
     setState((prev) => ({
       ...prev,
@@ -66,7 +60,7 @@ export function OllamaSettingsCard({
       model: storedModel,
       draftModel: modelDirtyRef.current ? prev.draftModel : storedModel,
     }));
-  }, [aiProvider, defaultBaseUrls]);
+  }, [aiProvider]);
 
   const updateState = (updates: Partial<typeof state>) => {
     setState((prev) => ({ ...prev, ...updates }));
@@ -91,8 +85,8 @@ export function OllamaSettingsCard({
 
     onAISettingsChange({
       provider: aiProvider,
-      apiKey: getStoredAIApiKeyForProvider(aiProvider, defaultApiKeys),
-      baseUrl: getStoredAIBaseUrlForProvider(aiProvider, defaultBaseUrls),
+      apiKey: getStoredAIApiKeyForProvider(aiProvider),
+      baseUrl: getStoredAIBaseUrlForProvider(aiProvider),
       model: aiProvider === AI_PROVIDER.OLLAMA ? draftModel : getStoredAIModel(),
     });
   };
@@ -102,10 +96,9 @@ export function OllamaSettingsCard({
     saveStoredAIModelForProvider(AI_PROVIDER.OLLAMA, "");
     urlDirtyRef.current = false;
     modelDirtyRef.current = false;
-    const fallbackUrl = getStoredAIBaseUrlForProvider(AI_PROVIDER.OLLAMA, defaultBaseUrls);
     updateState({
-      url: fallbackUrl,
-      draftUrl: fallbackUrl,
+      url: "",
+      draftUrl: "",
       model: "",
       draftModel: "",
       saved: false,
@@ -113,8 +106,8 @@ export function OllamaSettingsCard({
 
     onAISettingsChange({
       provider: aiProvider,
-      apiKey: getStoredAIApiKeyForProvider(aiProvider, defaultApiKeys),
-      baseUrl: getStoredAIBaseUrlForProvider(aiProvider, defaultBaseUrls),
+      apiKey: getStoredAIApiKeyForProvider(aiProvider),
+      baseUrl: getStoredAIBaseUrlForProvider(aiProvider),
       model: getStoredAIModel(),
     });
   };

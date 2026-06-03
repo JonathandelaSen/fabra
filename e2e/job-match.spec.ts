@@ -21,7 +21,7 @@ test("user can create a job match analysis and view the results", async ({
   await page.getByRole("button", { name: messages.en.navigation.settings }).click();
   await expect(page).toHaveURL(/\/settings$/);
   await page.getByPlaceholder(messages.en.settings.apiKey.placeholder).fill("test-api-key");
-  await page.getByRole("button", { name: messages.en.common.actions.save }).click();
+  await page.getByTestId("gemini-api-key-save").click();
   await expect(page.getByText(messages.en.common.actions.saved)).toBeVisible();
 
   // Navigate back to New Analysis

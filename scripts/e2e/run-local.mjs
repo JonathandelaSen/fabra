@@ -139,7 +139,6 @@ async function startNext(supabaseEnv) {
     PYTHON_PARSER_URL: `http://127.0.0.1:${ports.parser}`,
     PYTHON_PARSER_SECRET: parserSecret,
     PYTHON_PARSER_TIMEOUT_MS: "15000",
-    GEMINI_API_KEY: "",
   };
   const child = spawnManaged("npm", [
     "run",

@@ -15,7 +15,6 @@ import {
   AI_PROVIDER,
   type StoredAIProvider,
 } from "@/lib/browser-preferences";
-import { useDefaultAISettings } from "../use-default-ai-settings";
 import {
   GEMINI_MODELS,
   OPENAI_MODELS,
@@ -60,11 +59,9 @@ export default function AIActionLauncherIntegrated({
   const [configurationError, setConfigurationError] = useState<string | null>(null);
   const commonT = useTranslations("common.providers");
 
-  const { defaultApiKeys, defaultBaseUrls } = useDefaultAISettings();
-
-  const isGeminiActive = !!getStoredAIApiKeyForProvider(AI_PROVIDER.GEMINI, defaultApiKeys);
-  const isOpenaiActive = !!getStoredAIApiKeyForProvider(AI_PROVIDER.OPENAI, defaultApiKeys);
-  const isOllamaActive = !!getStoredAIBaseUrlForProvider(AI_PROVIDER.OLLAMA, defaultBaseUrls) && !!getStoredAIModelForProvider(AI_PROVIDER.OLLAMA);
+  const isGeminiActive = !!getStoredAIApiKeyForProvider(AI_PROVIDER.GEMINI);
+  const isOpenaiActive = !!getStoredAIApiKeyForProvider(AI_PROVIDER.OPENAI);
+  const isOllamaActive = !!getStoredAIBaseUrlForProvider(AI_PROVIDER.OLLAMA) && !!getStoredAIModelForProvider(AI_PROVIDER.OLLAMA);
   const isMockActive = process.env.NODE_ENV !== "production";
 
   const PROVIDERS = [

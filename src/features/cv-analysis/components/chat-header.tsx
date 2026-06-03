@@ -16,7 +16,6 @@ import {
   AI_PROVIDER,
   type StoredAIProvider,
 } from "@/lib/browser-preferences";
-import { useDefaultAISettings } from "@/components/shared/use-default-ai-settings";
 
 interface ChatHeaderProps {
   provider: StoredAIProvider;
@@ -28,11 +27,10 @@ interface ChatHeaderProps {
 export function ChatHeader({ provider, onProviderChange, model, onModelChange }: ChatHeaderProps) {
   const t = useTranslations("analysisDetail.chat");
   const commonT = useTranslations("common.providers");
-  const { defaultApiKeys, defaultBaseUrls } = useDefaultAISettings();
 
-  const isGeminiActive = !!getStoredAIApiKeyForProvider(AI_PROVIDER.GEMINI, defaultApiKeys);
-  const isOpenaiActive = !!getStoredAIApiKeyForProvider(AI_PROVIDER.OPENAI, defaultApiKeys);
-  const isOllamaActive = !!getStoredAIBaseUrlForProvider(AI_PROVIDER.OLLAMA, defaultBaseUrls) && !!getStoredAIModelForProvider(AI_PROVIDER.OLLAMA);
+  const isGeminiActive = !!getStoredAIApiKeyForProvider(AI_PROVIDER.GEMINI);
+  const isOpenaiActive = !!getStoredAIApiKeyForProvider(AI_PROVIDER.OPENAI);
+  const isOllamaActive = !!getStoredAIBaseUrlForProvider(AI_PROVIDER.OLLAMA) && !!getStoredAIModelForProvider(AI_PROVIDER.OLLAMA);
   const isMockActive = process.env.NODE_ENV !== "production";
 
   const handleProviderChange = (newProvider: StoredAIProvider) => {

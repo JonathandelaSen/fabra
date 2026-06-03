@@ -16,14 +16,12 @@ import {
   getStoredAIApiKey,
   getStoredAIModel,
   getStoredAIProvider,
-  type StoredAIDefaultApiKeys,
   type StoredAIProvider,
 } from "@/lib/browser-preferences";
 import { CV_TEMPLATES } from "@/lib/cv-templates";
 import AppShellContent from "./app-shell-content";
 import type { SidebarActiveView } from "./sidebar-types";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
-import { fetchDefaultAISettings } from "@/features/settings";
 
 let userEmailRequest: Promise<string | null> | null = null;
 let adminStatusRequest: Promise<boolean> | null = null;
@@ -109,7 +107,6 @@ export default function AppShell({
   const lastCVAnalysesHrefRef = useRef("/cv-analysis");
   const lastJobAnalysesHrefRef = useRef("/job-analyses");
   const lastCVLibraryHrefRef = useRef("/cvs");
-  const defaultAIKeysRef = useRef<StoredAIDefaultApiKeys>({});
   const hasLoadedAnalysesRef = useRef(false);
   const hasLoadedCVAnalysesRef = useRef(false);
   const hasLoadedInterviewQuestionsRef = useRef(false);
@@ -240,24 +237,17 @@ export default function AppShell({
   }, [initialIsAdmin]);
 
   useEffect(() => {
-    let cancelled = false;
     const syncAISettings = () => {
       setAIProvider(getStoredAIProvider());
-      setAIApiKey(getStoredAIApiKey(defaultAIKeysRef.current));
+      setAIApiKey(getStoredAIApiKey());
       setAIModel(getStoredAIModel());
     };
 
     syncAISettings();
-    fetchDefaultAISettings().then((settings) => {
-      if (cancelled) return;
-      defaultAIKeysRef.current = settings.apiKeys;
-      syncAISettings();
-    });
     window.addEventListener("storage", syncAISettings);
     window.addEventListener(AI_SETTINGS_CHANGED_EVENT, syncAISettings);
 
     return () => {
-      cancelled = true;
       window.removeEventListener("storage", syncAISettings);
       window.removeEventListener(AI_SETTINGS_CHANGED_EVENT, syncAISettings);
     };

@@ -4,8 +4,6 @@ import { AI_PROVIDER } from "@/modules/shared/domain/value-objects/ai-provider.v
 export { AI_PROVIDER };
 export type StoredAIProvider = typeof AI_PROVIDER[keyof typeof AI_PROVIDER];
 export type StoredThemePreference = "light" | "dark";
-export type StoredAIDefaultApiKeys = Partial<Record<StoredAIProvider, string>>;
-export type StoredAIDefaultBaseUrls = Partial<Record<StoredAIProvider, string>>;
 
 const STORAGE_PREFIX = "fabra";
 const LEGACY_STORAGE_PREFIX = "ats-cv-ai-checker";
@@ -58,12 +56,9 @@ export function getStoredAIProvider(): StoredAIProvider {
   return normalizeProvider(getStoredValue(getLocalStorage(), AI_PROVIDER_STORAGE_KEY));
 }
 
-export function getStoredAIApiKeyForProvider(
-  provider: StoredAIProvider,
-  defaultApiKeys: StoredAIDefaultApiKeys = {},
-): string {
+export function getStoredAIApiKeyForProvider(provider: StoredAIProvider): string {
   const storage = getLocalStorage();
-  if (!storage) return defaultApiKeys[provider]?.trim() ?? "";
+  if (!storage) return "";
   const providerKey = storageKey(`aiApiKey.${provider}`);
   const stored = getStoredValue(storage, providerKey);
   if (stored !== null) return stored.trim();
@@ -74,23 +69,17 @@ export function getStoredAIApiKeyForProvider(
     const legacyKey = getStoredValue(storage, AI_API_KEY_STORAGE_KEY);
     if (legacyKey !== null) return legacyKey.trim();
   }
-  return defaultApiKeys[provider]?.trim() ?? "";
+  return "";
 }
 
-export function getStoredAIApiKey(
-  defaultApiKeys: StoredAIDefaultApiKeys = {},
-): string {
+export function getStoredAIApiKey(): string {
   const provider = getStoredAIProvider();
-  return getStoredAIApiKeyForProvider(provider, defaultApiKeys);
+  return getStoredAIApiKeyForProvider(provider);
 }
 
-export function getStoredAIBaseUrlForProvider(
-  provider: StoredAIProvider,
-  defaultBaseUrls: StoredAIDefaultBaseUrls = {},
-): string {
+export function getStoredAIBaseUrlForProvider(provider: StoredAIProvider): string {
   const storage = getLocalStorage();
-  const defaultValue = defaultBaseUrls[provider]?.trim() ?? (provider === AI_PROVIDER.OLLAMA ? "http://localhost:11434" : "");
-  if (!storage) return defaultValue;
+  if (!storage) return "";
   const providerKey = storageKey(`aiBaseUrl.${provider}`);
   const stored = getStoredValue(storage, providerKey);
   if (stored !== null) return stored.trim();
@@ -100,23 +89,20 @@ export function getStoredAIBaseUrlForProvider(
     const legacyKey = getStoredValue(storage, AI_BASE_URL_STORAGE_KEY);
     if (legacyKey !== null) return legacyKey.trim();
   }
-  return defaultValue;
+  return "";
 }
 
-export function getStoredAIBaseUrl(
-  defaultBaseUrls: StoredAIDefaultBaseUrls = {},
-): string {
+export function getStoredAIBaseUrl(): string {
   const provider = getStoredAIProvider();
-  return getStoredAIBaseUrlForProvider(provider, defaultBaseUrls);
+  return getStoredAIBaseUrlForProvider(provider);
 }
 
 export function getAIApiKeyForProvider(
   provider: StoredAIProvider,
   currentApiKey = "",
-  defaultApiKeys: StoredAIDefaultApiKeys = {},
 ): string {
   if (provider === AI_PROVIDER.MOCK) return "";
-  const providerKey = getStoredAIApiKeyForProvider(provider, defaultApiKeys);
+  const providerKey = getStoredAIApiKeyForProvider(provider);
   if (providerKey) return providerKey;
   return getStoredAIProvider() === provider ? currentApiKey.trim() : "";
 }
@@ -167,11 +153,9 @@ export function getAIRequestConfigForProvider(
   provider: StoredAIProvider,
   currentApiKey = "",
   currentModel = "",
-  defaultApiKeys: StoredAIDefaultApiKeys = {},
-  defaultBaseUrls: StoredAIDefaultBaseUrls = {},
 ): { provider: StoredAIProvider; apiKey: string; baseUrl: string; model: string; error?: string } {
-  const apiKey = getAIApiKeyForProvider(provider, currentApiKey, defaultApiKeys);
-  const baseUrl = getStoredAIBaseUrlForProvider(provider, defaultBaseUrls);
+  const apiKey = getAIApiKeyForProvider(provider, currentApiKey);
+  const baseUrl = getStoredAIBaseUrlForProvider(provider);
   const model = provider === AI_PROVIDER.OLLAMA
     ? getStoredAIModelForProvider(AI_PROVIDER.OLLAMA)
     : currentModel.trim() || getStoredAIModelForProvider(provider);

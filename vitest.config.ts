@@ -10,6 +10,7 @@ export default defineConfig({
   },
   test: {
     include: [
+      "src/lib/**/*.test.ts",
       "src/modules/**/*.test.ts",
       "src/app/api/**/*.test.ts",
       "src/features/**/*.test.ts",

@@ -30,7 +30,9 @@ test("user can create, edit, and delete work journal entries", async ({ page }) 
 
   await page.getByRole("button", { name: t.saveChanges }).click();
 
-  await expect(page.getByText(notesContent)).toBeVisible();
+  await expect(
+    page.getByRole("article").getByText(notesContent),
+  ).toBeVisible();
 
   await page.getByTitle(t.editEntry).click({ force: true });
 
@@ -40,10 +42,14 @@ test("user can create, edit, and delete work journal entries", async ({ page }) 
 
   await page.getByRole("button", { name: t.saveChanges }).click();
 
-  await expect(page.getByText(updatedContent)).toBeVisible();
+  await expect(
+    page.getByRole("article").getByText(updatedContent),
+  ).toBeVisible();
 
   page.once("dialog", (dialog) => dialog.accept());
   await page.getByTitle(t.deleteEntry).click({ force: true });
 
-  await expect(page.getByText(updatedContent)).not.toBeVisible();
+  await expect(
+    page.getByRole("article").getByText(updatedContent),
+  ).not.toBeVisible();
 });

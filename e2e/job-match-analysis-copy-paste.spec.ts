@@ -94,7 +94,7 @@ test("user can score a job match analysis with Copy Paste", async ({
   ).toBeVisible();
   await expect(page.getByText(tCopyPaste.privacyNotice)).toBeVisible();
 
-  await page.getByRole("dialog").getByRole("button", { name: tCopyPaste.continue }).click();
+  await page.getByRole("dialog", { name: tCopyPaste.title }).getByRole("button", { name: tCopyPaste.continue }).click();
 
   await page.getByLabel(tCopyPaste.pasteResponseLabel).fill("not json");
   await page
@@ -161,7 +161,7 @@ test("replacement warning appears when analysis already has a score", async ({
   await jobDescriptionInput.fill(jobDescription);
 
   await openCopyPasteViaLauncher(page);
-  await page.getByRole("dialog").getByRole("button", { name: tCopyPaste.continue }).click();
+  await page.getByRole("dialog", { name: tCopyPaste.title }).getByRole("button", { name: tCopyPaste.continue }).click();
   await page
     .getByLabel(tCopyPaste.pasteResponseLabel)
     .fill(validExternalChatResponse);
@@ -183,7 +183,7 @@ test("replacement warning appears when analysis already has a score", async ({
     .click();
 
   await openCopyPasteViaLauncher(page);
-  await page.getByRole("dialog").getByRole("button", { name: tCopyPaste.continue }).click();
+  await page.getByRole("dialog", { name: tCopyPaste.title }).getByRole("button", { name: tCopyPaste.continue }).click();
   await page
     .getByLabel(tCopyPaste.pasteResponseLabel)
     .fill(validExternalChatResponse);

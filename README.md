@@ -57,27 +57,28 @@ We use [Supabase](https://supabase.com/) for authentication, database, and stora
 npm run supabase:start
 ```
 
-_(Keep the terminal open to copy the API keys generated in the output!)_
+_(Keep the terminal open to copy the Supabase keys generated in the output.)_
 
 ### 3. Environment Setup
 
 ```bash
-cp .env.example .env.local
+cp env.sample .env.local
 ```
 
 Fill in the variables in `.env.local`:
 
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` & `SUPABASE_SERVICE_ROLE_KEY`: From the local Supabase start output.
-- `GEMINI_API_KEY`: Your Google Gemini API key.
 - `PYTHON_PARSER_URL`: `http://127.0.0.1:8001` for local development.
 - `PYTHON_PARSER_SECRET`: Shared secret used by the Next.js app to call the Python parser.
+
+AI provider credentials are not configured in backend environment variables. Each user configures their own Gemini, OpenAI, or Ollama settings from the app Settings screen, and those preferences stay in that browser.
 
 ### 4. Start the Python Parser
 
 The Python parser runs as a small local service and mirrors the production parser.
 
 ```bash
-cp services/pdf-parser/.env.example services/pdf-parser/.env.local
+cp services/pdf-parser/env.sample services/pdf-parser/.env.local
 ```
 
 Set `SUPABASE_SERVICE_ROLE_KEY` in `services/pdf-parser/.env.local` from the local Supabase output, then run:

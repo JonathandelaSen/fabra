@@ -28,7 +28,6 @@ import {
   type StoredAIProvider,
   AI_PROVIDER,
 } from "@/lib/browser-preferences";
-import { useDefaultAISettings } from "@/components/shared/use-default-ai-settings";
 import { OllamaSettingsCard } from "./ollama-settings-card";
 
 interface AISettingsPanelProps {
@@ -61,13 +60,11 @@ export function AISettingsPanel({
     showOpenaiKey: false,
     openaiSaved: false,
   });
-  const { defaultApiKeys, defaultBaseUrls } = useDefaultAISettings();
-
   const updateState = (updates: Partial<typeof state>) => setState(prev => ({ ...prev, ...updates }));
 
   useEffect(() => {
-    const storedGemini = getStoredAIApiKeyForProvider(AI_PROVIDER.GEMINI, defaultApiKeys);
-    const storedOpenai = getStoredAIApiKeyForProvider(AI_PROVIDER.OPENAI, defaultApiKeys);
+    const storedGemini = getStoredAIApiKeyForProvider(AI_PROVIDER.GEMINI);
+    const storedOpenai = getStoredAIApiKeyForProvider(AI_PROVIDER.OPENAI);
     
     setState((prev) => ({
       ...prev,
@@ -76,7 +73,7 @@ export function AISettingsPanel({
       openaiKey: storedOpenai,
       draftOpenaiKey: storedOpenai,
     }));
-  }, [aiProvider, aiApiKey, defaultApiKeys]);
+  }, [aiProvider, aiApiKey]);
 
   const handleGeminiSave = () => {
     saveStoredAIApiKeyForProvider(AI_PROVIDER.GEMINI, state.draftGeminiKey);
@@ -85,25 +82,24 @@ export function AISettingsPanel({
 
     onAISettingsChange({
       provider: aiProvider,
-      apiKey: getStoredAIApiKeyForProvider(aiProvider, defaultApiKeys),
-      baseUrl: getStoredAIBaseUrlForProvider(aiProvider, defaultBaseUrls),
+      apiKey: getStoredAIApiKeyForProvider(aiProvider),
+      baseUrl: getStoredAIBaseUrlForProvider(aiProvider),
       model: getStoredAIModel(),
     });
   };
 
   const handleGeminiDelete = () => {
     saveStoredAIApiKeyForProvider(AI_PROVIDER.GEMINI, "");
-    const fallbackGeminiKey = getStoredAIApiKeyForProvider(AI_PROVIDER.GEMINI, defaultApiKeys);
     updateState({
-      geminiKey: fallbackGeminiKey,
-      draftGeminiKey: fallbackGeminiKey,
+      geminiKey: "",
+      draftGeminiKey: "",
       geminiSaved: false,
     });
 
     onAISettingsChange({
       provider: aiProvider,
-      apiKey: getStoredAIApiKeyForProvider(aiProvider, defaultApiKeys),
-      baseUrl: getStoredAIBaseUrlForProvider(aiProvider, defaultBaseUrls),
+      apiKey: getStoredAIApiKeyForProvider(aiProvider),
+      baseUrl: getStoredAIBaseUrlForProvider(aiProvider),
       model: getStoredAIModel(),
     });
   };
@@ -115,25 +111,24 @@ export function AISettingsPanel({
 
     onAISettingsChange({
       provider: aiProvider,
-      apiKey: getStoredAIApiKeyForProvider(aiProvider, defaultApiKeys),
-      baseUrl: getStoredAIBaseUrlForProvider(aiProvider, defaultBaseUrls),
+      apiKey: getStoredAIApiKeyForProvider(aiProvider),
+      baseUrl: getStoredAIBaseUrlForProvider(aiProvider),
       model: getStoredAIModel(),
     });
   };
 
   const handleOpenaiDelete = () => {
     saveStoredAIApiKeyForProvider(AI_PROVIDER.OPENAI, "");
-    const fallbackOpenaiKey = getStoredAIApiKeyForProvider(AI_PROVIDER.OPENAI, defaultApiKeys);
     updateState({
-      openaiKey: fallbackOpenaiKey,
-      draftOpenaiKey: fallbackOpenaiKey,
+      openaiKey: "",
+      draftOpenaiKey: "",
       openaiSaved: false,
     });
 
     onAISettingsChange({
       provider: aiProvider,
-      apiKey: getStoredAIApiKeyForProvider(aiProvider, defaultApiKeys),
-      baseUrl: getStoredAIBaseUrlForProvider(aiProvider, defaultBaseUrls),
+      apiKey: getStoredAIApiKeyForProvider(aiProvider),
+      baseUrl: getStoredAIBaseUrlForProvider(aiProvider),
       model: getStoredAIModel(),
     });
   };
@@ -214,6 +209,7 @@ export function AISettingsPanel({
 
                 <div className="flex gap-2 mt-2">
                   <IconTextButton
+                    data-testid="gemini-api-key-save"
                     icon={state.geminiSaved ? Check : Save}
                     onClick={handleGeminiSave}
                     disabled={!state.draftGeminiKey.trim()}
@@ -316,8 +312,6 @@ export function AISettingsPanel({
 
           <OllamaSettingsCard
             aiProvider={aiProvider}
-            defaultApiKeys={defaultApiKeys}
-            defaultBaseUrls={defaultBaseUrls}
             getSummary={getSummary}
             onAISettingsChange={onAISettingsChange}
           />
