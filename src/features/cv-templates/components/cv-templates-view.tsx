@@ -42,6 +42,9 @@ export default function CVTemplatesView({
   const templateIdFromPath = pathname.split("/").filter(Boolean)[1] ?? null;
   const cvIdFromQuery = searchParams.get("cvId");
 
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
+    templateIdFromPath,
+  );
   const [selectedCvId, setSelectedCvId] = useState<string>("");
   const [locale, setLocale] = useState<CVTemplateLocale>("es");
   const [searchQuery, setSearchQuery] = useState("");
@@ -62,8 +65,12 @@ export default function CVTemplatesView({
 
   const selectedTemplate =
     CV_TEMPLATES.find(
-      (template) => template.templateId === templateIdFromPath,
+      (template) => template.templateId === selectedTemplateId,
     ) ?? null;
+
+  useEffect(() => {
+    setSelectedTemplateId(templateIdFromPath);
+  }, [templateIdFromPath]);
 
   useEffect(() => {
     const firstTemplateId = CV_TEMPLATES[0]?.templateId;
@@ -85,8 +92,10 @@ export default function CVTemplatesView({
   }, [cvIdFromQuery, cvs, selectedCvId]);
 
   const handleSelectTemplate = (templateId: string) => {
-    const query = selectedCvId
-      ? `?cvId=${encodeURIComponent(selectedCvId)}`
+    setSelectedTemplateId(templateId);
+    const queryCvId = selectedCvId || cvIdFromQuery;
+    const query = queryCvId
+      ? `?cvId=${encodeURIComponent(queryCvId)}`
       : "";
     router.push(`/templates/${encodeURIComponent(templateId)}${query}`);
   };
@@ -126,7 +135,7 @@ export default function CVTemplatesView({
       >
         <CVTemplatesSidebar
           templates={CV_TEMPLATES}
-          selectedId={templateIdFromPath}
+          selectedId={selectedTemplateId}
           onSelect={handleSelectTemplate}
         />
 
