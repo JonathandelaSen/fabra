@@ -38,8 +38,8 @@ export const messages = {
       },
     },
     metadata: {
-      title: "CV ATS Checker - Analyze your resume",
-      description: "Extract and analyze your CV text with multiple parsers and AI technology to optimize your resume for ATS systems.",
+      title: "Fabra - Craft your career, your way",
+      description: "Analyze your CV, compare it with opportunities, prepare for interviews, and manage your professional growth with AI.",
     },
     publicCv: {
       fallbackName: "Public CV",
@@ -48,7 +48,7 @@ export const messages = {
       createMyCv: "Create my CV",
     },
     auth: {
-      hero: "Analyze and improve your CV for ATS",
+      hero: "Craft your career, your way with Fabra",
       login: {
         title: "Sign in",
         description: "Sign in to continue with your analyses.",
@@ -366,7 +366,7 @@ export const messages = {
         newAnalysis: "New analysis",
         newOffer: "New offer",
         cvEmptyTitle: "No CV analyses",
-        cvEmptyDescription: "Upload a CV to get a general ATS analysis",
+        cvEmptyDescription: "Upload a CV to get a complete career-ready analysis",
         jobEmptyTitle: "No job analyses",
         jobEmptyDescription: "Analyze how your CV fits a job offer",
         cvCount: "{count, plural, =0 {No analyses} one {# analysis} other {# analyses}}",
@@ -395,7 +395,7 @@ export const messages = {
       modeSelector: {
         step: "Step 2 — Choose analysis type",
         generalTitle: "General analysis",
-        generalDescription: "Full CV evaluation: structure, ATS readability, clarity, keywords, and general improvements.",
+        generalDescription: "Full CV evaluation: structure, readability, clarity, keywords, and general improvements.",
         jobTitle: "Job match",
         jobDescription: "Compare your CV against a specific job offer. Keyword analysis, gaps, and fit score.",
         compareTag: "Compare",
@@ -489,7 +489,7 @@ export const messages = {
       cvLibrary: {
         associatedAnalyses: "Associated analyses",
         noSavedCvs: "There are no saved CVs yet.",
-        generalAtsScore: "General ATS Score",
+        generalAtsScore: "General CV Score",
         generateMatchScorePrompt: "Generate your first job match analysis to see your compatibility",
         renameFailed: "The CV could not be renamed",
         confirmDelete: "Are you sure you want to delete this CV?",
@@ -549,7 +549,7 @@ export const messages = {
       upload: {
         step: "Step 1 — Text extraction",
         title: "Upload your CV",
-        description: "We will extract text with 3 different parsers so you can see how ATS systems interpret it.",
+        description: "We will extract text with 3 different parsers so you can validate how readable and structured your CV is.",
         pdfOnly: "Only PDF files are allowed.",
         selectPdf: "Select a PDF file.",
         processFailed: "Error processing PDF",
@@ -561,12 +561,12 @@ export const messages = {
       extraction: {
         banner: {
           title: "How do companies read your CV?",
-          description: "Applicant Tracking Systems (ATS) don't see your PDF design; they extract and analyze the raw text. Below, you can simulate exactly how three of the most common reading methods interpret your CV to make sure your information is fully readable and organized.",
+          description: "Recruiting tools and AI assistants do not always see your PDF design as you do; they extract and analyze the raw text. Below, you can compare three common reading methods to make sure your information is fully readable and organized.",
         },
         parserLabels: {
-          python: "Standard ATS Scanner",
+          python: "Structured Text Scanner",
           pdfjs: "Visual Flow Scanner",
-          node: "Traditional ATS Scanner",
+          node: "Plain Text Scanner",
         },
         parserBadges: {
           python: "Best Compatibility",
@@ -574,7 +574,7 @@ export const messages = {
           node: "Rigorous Test",
         },
         parserDescriptions: {
-          python: "Analyzes layout structure and groups text by position. Simulates modern ATS interpreting multi-column resumes.",
+          python: "Analyzes layout structure and groups text by position. Helps validate multi-column resumes and visual layouts.",
           pdfjs: "Extracts text following the rendering order of the PDF. Simulates how a browser processes reading hierarchy sequentially.",
           node: "Extracts raw text line-by-line in the exact sequence it was written. Represents how simpler or legacy recruitment platforms read text.",
         },
@@ -1136,7 +1136,7 @@ export const messages = {
         context: "Context",
       },
       export: {
-        title: "ATS ANALYSIS REPORT",
+        title: "FABRA ANALYSIS REPORT",
         file: "File",
         name: "Name",
         cvUsed: "CV used",
@@ -1162,7 +1162,7 @@ export const messages = {
         general: "General analysis",
         jobMatch: "Job match",
         qualityScore: "CV quality score",
-        matchScore: "ATS match score",
+        matchScore: "Job match score",
         withOffer: "With offer",
         offerUrl: "Offer URL",
         urlPlaceholder: "https://...",
@@ -1382,8 +1382,8 @@ export const messages = {
       },
     },
     metadata: {
-      title: "CV ATS Checker - Analiza tu Currículum",
-      description: "Extrae y analiza el texto de tu CV con múltiples parsers y tecnología IA para optimizar tu currículum para sistemas ATS.",
+      title: "Fabra - Construye tu carrera a tu manera",
+      description: "Analiza tu CV, compáralo con oportunidades, prepárate para entrevistas y gestiona tu crecimiento profesional con IA.",
     },
     publicCv: {
       fallbackName: "CV público",
@@ -1392,7 +1392,7 @@ export const messages = {
       createMyCv: "Crear mi CV",
     },
     auth: {
-      hero: "Analiza y mejora tu CV para ATS",
+      hero: "Construye tu carrera a tu manera con Fabra",
       login: {
         title: "Inicia sesión",
         description: "Accede para continuar con tus análisis.",
@@ -1708,7 +1708,7 @@ export const messages = {
         newAnalysis: "Nuevo análisis",
         newOffer: "Nueva oferta",
         cvEmptyTitle: "No hay análisis de CV",
-        cvEmptyDescription: "Sube un CV para obtener un análisis general ATS",
+        cvEmptyDescription: "Sube un CV para obtener un análisis completo orientado a tu carrera",
         jobEmptyTitle: "No hay análisis de ofertas",
         jobEmptyDescription: "Analiza cómo encaja tu CV con una oferta de empleo",
         cvCount: "{count, plural, =0 {Sin análisis} one {# análisis} other {# análisis}}",
@@ -1737,7 +1737,7 @@ export const messages = {
       modeSelector: {
         step: "Fase 2 — Elige el tipo de análisis",
         generalTitle: "Análisis general",
-        generalDescription: "Evaluación completa de tu CV: estructura, legibilidad ATS, claridad, keywords y mejoras generales.",
+        generalDescription: "Evaluación completa de tu CV: estructura, legibilidad, claridad, palabras clave y mejoras generales.",
         jobTitle: "Match con oferta",
         jobDescription: "Compara tu CV contra una oferta de trabajo específica. Análisis de keywords, gaps y fit score.",
         compareTag: "Comparar",
@@ -1831,7 +1831,7 @@ export const messages = {
       cvLibrary: {
         associatedAnalyses: "Análisis asociados",
         noSavedCvs: "Todavía no hay CVs guardados.",
-        generalAtsScore: "Score General ATS",
+        generalAtsScore: "Puntuación general del CV",
         generateMatchScorePrompt: "Genera tu primer análisis de vacante para ver tu compatibilidad",
         renameFailed: "No se pudo renombrar el CV",
         confirmDelete: "¿Seguro que quieres borrar este CV?",
@@ -1891,7 +1891,7 @@ export const messages = {
       upload: {
         step: "Fase 1 — Extracción de texto",
         title: "Sube tu currículum",
-        description: "Extraeremos el texto con 3 parsers diferentes para que veas cómo lo interpretan los sistemas ATS.",
+        description: "Extraeremos el texto con 3 parsers diferentes para que puedas validar si tu CV es legible y está bien estructurado.",
         pdfOnly: "Solo se permiten archivos PDF.",
         selectPdf: "Selecciona un archivo PDF.",
         processFailed: "Error al procesar el PDF",
@@ -1903,12 +1903,12 @@ export const messages = {
       extraction: {
         banner: {
           title: "¿Cómo leen las empresas tu currículum?",
-          description: "Las plataformas de empleo automáticas (ATS) no ven el diseño visual de tu PDF; extraen y analizan el texto en bruto. Aquí puedes simular exactamente cómo interpretan tu CV tres de los métodos de lectura más comunes del mercado para asegurarte de que tu información sea legible y esté ordenada.",
+          description: "Las herramientas de recruiting y los asistentes de IA no siempre ven el diseño de tu PDF como tú; extraen y analizan el texto en bruto. Aquí puedes comparar tres métodos de lectura comunes para asegurarte de que tu información sea legible y esté ordenada.",
         },
         parserLabels: {
-          python: "Lector ATS Estándar",
+          python: "Lector de texto estructurado",
           pdfjs: "Lector de Flujo Visual",
-          node: "Lector ATS Tradicional",
+          node: "Lector de texto plano",
         },
         parserBadges: {
           python: "Mayor compatibilidad",
@@ -1916,7 +1916,7 @@ export const messages = {
           node: "Prueba Rigurosa",
         },
         parserDescriptions: {
-          python: "Analiza la estructura visual del diseño y agrupa el texto por posición. Simula la lógica de los ATS modernos que interpretan currículums a doble columna.",
+          python: "Analiza la estructura visual del diseño y agrupa el texto por posición. Ayuda a validar currículums con columnas y diseños visuales.",
           pdfjs: "Extrae el texto siguiendo el orden de renderizado del PDF. Simula cómo un navegador web procesa secuencialmente la estructura de lectura.",
           node: "Extrae el texto plano directo en el orden en que fue escrito en el documento. Representa cómo los sistemas de reclutamiento más sencillos o antiguos leen el texto.",
         },
@@ -2477,7 +2477,7 @@ export const messages = {
         context: "Contexto",
       },
       export: {
-        title: "INFORME DE ANÁLISIS ATS",
+        title: "INFORME DE ANÁLISIS FABRA",
         file: "Archivo",
         name: "Nombre",
         cvUsed: "CV utilizado",
@@ -2503,7 +2503,7 @@ export const messages = {
         general: "Análisis general",
         jobMatch: "Match con oferta",
         qualityScore: "CV Quality Score",
-        matchScore: "ATS Match Score",
+        matchScore: "Puntuación de match",
         withOffer: "Con oferta",
         offerUrl: "URL oferta",
         urlPlaceholder: "https://...",
