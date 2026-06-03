@@ -15,6 +15,7 @@ import type { StoredAIProvider } from "@/lib/browser-preferences";
 import type { DeleteAnalysisHandler, InterviewQuestionSummary } from "../types";
 import { useAnalysisViewActions } from "../hooks/use-analysis-view-actions";
 import ScoreHero from "./score-hero";
+import { AnalysisNextStep } from "./analysis-next-step";
 import { AnalysisTabsContent } from "./analysis-tabs-content";
 import { AnalysisTabsList } from "./analysis-tabs-list";
 import { exportAnalysisReport } from "./analysis-report-export";
@@ -184,6 +185,11 @@ export default function AIAnalysisView({
             isSavingUrl={actions.isSavingUrl}
             offerStatus={actions.offerStatus}
             onTabChange={setActiveTab}
+          />
+
+          <AnalysisNextStep
+            cvId={analysis.cv?.id ?? analysis.cv_id}
+            isTemplateCv={analysis.cv?.type === "template"}
           />
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

@@ -72,7 +72,6 @@ export default function ScoreHero({
       : `/api/cvs/${cv?.id ?? cvId}/pdf`;
 
   const hasCv = cv || cvId;
-  const resolvedCvId = cv?.id ?? cvId;
 
   return (
     <div
@@ -167,8 +166,6 @@ export default function ScoreHero({
           </div>
 
           <ScoreHeroActions
-            cvId={resolvedCvId}
-            isTemplateCv={cv?.type === "template"}
             onExport={onExport}
             onDelete={onDelete}
             isDeleting={isDeleting}

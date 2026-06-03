@@ -1167,8 +1167,17 @@ export const messages = {
         offerUrl: "Offer URL",
         urlPlaceholder: "https://...",
         export: "Export",
-        chooseTemplate: "Choose template",
-        editCv: "Edit CV",
+      },
+      nextStep: {
+        eyebrow: "Next step",
+        templateTitle: "Apply these suggestions to your CV",
+        templateDescription:
+          "Edit your CV with AI assistance to incorporate the improvements from this analysis.",
+        templateCta: "Edit CV",
+        uploadedTitle: "Use an ATS-friendly template",
+        uploadedDescription:
+          "Move your CV into one of our ATS-friendly templates and apply these improvements while keeping a format that filters can read.",
+        uploadedCta: "Choose a template",
       },
       summary: {
         improvements: "Improvement areas",
@@ -2508,8 +2517,17 @@ export const messages = {
         offerUrl: "URL oferta",
         urlPlaceholder: "https://...",
         export: "Exportar",
-        chooseTemplate: "Elegir plantilla",
-        editCv: "Editar CV",
+      },
+      nextStep: {
+        eyebrow: "Siguiente paso",
+        templateTitle: "Aplica las sugerencias a tu CV",
+        templateDescription:
+          "Edita tu CV con asistencia de IA para incorporar las mejoras de este análisis.",
+        templateCta: "Editar CV",
+        uploadedTitle: "Usa una plantilla optimizada para ATS",
+        uploadedDescription:
+          "Convierte tu CV a una de nuestras plantillas ATS-friendly y aplica estas mejoras manteniendo un formato que los filtros entienden.",
+        uploadedCta: "Elegir plantilla",
       },
       summary: {
         improvements: "Áreas de mejora",
