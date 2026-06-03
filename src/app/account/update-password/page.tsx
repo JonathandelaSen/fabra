@@ -1,6 +1,5 @@
 import { UpdatePasswordForm } from "@/features/auth";
 import { createClient } from "@/lib/supabase/server";
-import { FileText } from "lucide-react";
 import { redirect } from "next/navigation";
 
 export default async function UpdatePasswordPage() {
@@ -20,11 +19,8 @@ export default async function UpdatePasswordPage() {
 
       <div className="relative z-10 flex min-h-screen items-center justify-center px-5 py-10">
         <section className="w-full max-w-[460px]">
-          <div className="mb-7 flex items-center justify-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600">
-              <FileText className="h-4 w-4 text-white" />
-            </div>
-            <span className="text-sm font-semibold">Fabra</span>
+          <div className="mb-8 flex items-center justify-center gap-3">
+            <img src="/brand/fabra-logo.svg" alt="Fabra Logo" className="w-24 h-24 object-contain" />
           </div>
 
           <UpdatePasswordForm />

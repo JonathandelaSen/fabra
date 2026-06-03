@@ -70,8 +70,9 @@ export default async function PublicCVPage({ params }: PublicCVPageProps) {
     <main className="public-cv-page min-h-screen bg-[#f4f1ec] text-zinc-950">
       <header className="border-b border-zinc-200/80 bg-[#f4f1ec]/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-          <Link href="/" className="text-sm font-bold tracking-tight text-zinc-950">
-            Fabra
+          <Link href="/" className="flex items-center gap-1.5 text-sm font-bold tracking-tight text-zinc-950">
+            <img src="/brand/fabra-logo.svg" alt="Fabra Logo" className="h-5 w-5 object-contain" />
+            <span>Fabra</span>
           </Link>
           <div className="flex items-center gap-2">
             <a

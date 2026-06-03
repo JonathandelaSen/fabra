@@ -134,32 +134,53 @@ export default function Sidebar({
       >
         <div className="flex items-center justify-between p-3 h-14 shrink-0">
           <AnimatePresence mode="wait">
-            {!collapsed && (
+            {!collapsed ? (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                key="expanded"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{ duration: 0.15 }}
                 className="flex items-center gap-2 min-w-0"
               >
-                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shrink-0">
-                  <FileText className="w-3.5 h-3.5 text-white" />
+                <div className="w-7 h-7 flex items-center justify-center shrink-0">
+                  <img
+                    src="/brand/fabra-logo.svg"
+                    alt="Fabra Logo"
+                    className="w-7 h-7 object-contain"
+                  />
                 </div>
                 <span className="font-semibold text-sm text-sidebar-foreground truncate">
                   {common("appName")}
                 </span>
               </motion.div>
+            ) : (
+              <motion.button
+                key="collapsed"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.15 }}
+                onClick={() => setCollapsed(false)}
+                className="w-8 h-8 flex items-center justify-center shrink-0 hover:bg-panel-hover rounded-md transition-colors"
+                title={common("appName")}
+              >
+                <img
+                  src="/brand/fabra-logo.svg"
+                  alt="Fabra Logo"
+                  className="w-7 h-7 object-contain"
+                />
+              </motion.button>
             )}
           </AnimatePresence>
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="w-7 h-7 rounded-md flex items-center justify-center text-text-muted hover:text-text-soft hover:bg-panel-hover transition-colors shrink-0"
-          >
-            {collapsed ? (
-              <ChevronRight className="w-4 h-4" />
-            ) : (
+          {!collapsed && (
+            <button
+              onClick={() => setCollapsed(true)}
+              className="w-7 h-7 rounded-md flex items-center justify-center text-text-muted hover:text-text-soft hover:bg-panel-hover transition-colors shrink-0"
+            >
               <ChevronLeft className="w-4 h-4" />
-            )}
-          </button>
+            </button>
+          )}
         </div>
 
         <div className="px-2 pb-2 shrink-0 space-y-1">
