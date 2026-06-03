@@ -2,11 +2,11 @@
 
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { AlertTriangle, X } from "lucide-react";
+import { AlertTriangle, Globe2, X } from "lucide-react";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import {
-  DeleteButton,
   IconTextButton,
+  ICON_TEXT_BUTTON_TONES,
 } from "@/components/shared/action-buttons";
 
 interface CVEditorPublicModalProps {
@@ -32,7 +32,7 @@ export function CVEditorPublicModal({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="w-full max-w-md rounded-3xl border border-rose-500/20 bg-modal p-6 shadow-2xl"
+        className="w-full max-w-md overflow-hidden rounded-3xl border border-rose-500/20 bg-modal p-6 shadow-2xl"
       >
         <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-500/10 text-rose-300">
           <AlertTriangle className="h-6 w-6" />
@@ -49,23 +49,27 @@ export function CVEditorPublicModal({
         <div className="mt-6 rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-xs text-zinc-300">
           {publicDraftUrl || `/cv/id/${normalizedPublicSlug}`}
         </div>
-        <div className="mt-6 flex gap-3">
+        <div className="mt-6 flex min-w-0 gap-3">
           <IconTextButton
             icon={X}
             onClick={onClose}
             fullWidth
+            className="min-w-0 shrink"
           >
             {t("actions.cancel")}
           </IconTextButton>
-          <DeleteButton
+          <IconTextButton
+            icon={Globe2}
+            tone={ICON_TEXT_BUTTON_TONES.DANGER}
             disabled={savingPublicSettings || !normalizedPublicSlug}
             loading={savingPublicSettings}
             onClick={onConfirm}
             fullWidth
             strong
+            className="min-w-0 shrink"
           >
             {t("publicModal.confirm")}
-          </DeleteButton>
+          </IconTextButton>
         </div>
       </motion.div>
     </div>

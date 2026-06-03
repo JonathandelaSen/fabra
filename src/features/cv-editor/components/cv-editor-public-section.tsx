@@ -141,13 +141,13 @@ export function CVEditorPublicSection({
               {t("publicPage.saveUrl")}
             </IconTextButton>
           )}
-          <div className="flex gap-2">
+          <div className="flex min-w-0 gap-2">
             <IconTextButton
               icon={publicCopied ? Check : Copy}
               disabled={savingPublicSettings}
               onClick={onCopyPublicUrl}
               fullWidth
-              className="h-8"
+              className="h-8 min-w-0 shrink"
             >
               {publicCopied ? t("publicPage.copied") : t("publicPage.copyUrl")}
             </IconTextButton>
@@ -155,7 +155,7 @@ export function CVEditorPublicSection({
               href={publicUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-8 items-center justify-center rounded-md border border-white/5 bg-white/5 px-3 text-xs text-zinc-300 hover:bg-white/10"
+              className="inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-white/5 bg-white/5 px-3 text-xs text-zinc-300 hover:bg-white/10"
             >
               <ExternalLink className="h-3.5 w-3.5" />
             </a>
