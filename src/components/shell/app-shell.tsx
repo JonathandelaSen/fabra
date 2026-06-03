@@ -10,7 +10,6 @@ import {
 } from "@/features/cv-analysis";
 import { createClient } from "@/lib/supabase/client";
 import { normalizeAnalysisSummaries } from "@/components/shell/analysis-summary-normalizer";
-import type { ListCVDocumentsResponse } from "@/app/api/cvs/responses";
 import type { InterviewQuestionResponse as InterviewQuestionSummary } from "@/app/api/interview-questions/responses";
 import {
   AI_SETTINGS_CHANGED_EVENT,
@@ -63,44 +62,6 @@ type AppView =
   | "settings"
   | "admin";
 
-type CVSummary = {
-  id: string;
-  name: string;
-  filename: string | null;
-  file_size: number | null;
-  type: ListCVDocumentsResponse[number]["type"];
-  source_cv_id: string | null;
-  template_id: string | null;
-  template_locale: string | null;
-  profile: ListCVDocumentsResponse[number]["profile"];
-  public_enabled: boolean;
-  public_id: string | null;
-  public_slug: string | null;
-  public_published_at: string | null;
-  created_at: string;
-  updated_at: string;
-};
-
-function toLegacyCVSummary(cv: ListCVDocumentsResponse[number]): CVSummary {
-  return {
-    id: cv.id,
-    name: cv.name,
-    filename: cv.filename,
-    file_size: cv.fileSize,
-    type: cv.type,
-    source_cv_id: cv.sourceCvId,
-    template_id: cv.templateId,
-    template_locale: cv.templateLocale,
-    profile: cv.profile,
-    public_enabled: cv.publicEnabled,
-    public_id: cv.publicId,
-    public_slug: cv.publicSlug,
-    public_published_at: cv.publicPublishedAt,
-    created_at: cv.createdAt,
-    updated_at: cv.updatedAt,
-  };
-}
-
 interface AppShellProps {
   initialView?: AppView;
   initialUserEmail?: string | null;
@@ -116,7 +77,6 @@ export default function AppShell({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [analyses, setAnalyses] = useState<AnalysisSummary[]>([]);
-  const [, setCVs] = useState<CVSummary[]>([]);
   const [interviewQuestions, setInterviewQuestions] = useState<
     InterviewQuestionSummary[]
   >([]);
@@ -152,10 +112,8 @@ export default function AppShell({
   const defaultAIKeysRef = useRef<StoredAIDefaultApiKeys>({});
   const hasLoadedAnalysesRef = useRef(false);
   const hasLoadedCVAnalysesRef = useRef(false);
-  const hasLoadedCVsRef = useRef(false);
   const hasLoadedInterviewQuestionsRef = useRef(false);
   const analysesRequestRef = useRef<Promise<void> | null>(null);
-  const cvsRequestRef = useRef<Promise<void> | null>(null);
   const interviewQuestionsRequestRef = useRef<Promise<void> | null>(null);
 
   // Fetch analyses list
@@ -200,19 +158,6 @@ export default function AppShell({
     [],
   );
 
-  const fetchCVs = useCallback(async () => {
-    try {
-      const res = await fetch("/api/cvs");
-      if (res.ok) {
-        const data = (await res.json()) as ListCVDocumentsResponse;
-        setCVs(data.map(toLegacyCVSummary));
-        hasLoadedCVsRef.current = true;
-      }
-    } catch {
-      // silent
-    }
-  }, []);
-
   const fetchInterviewQuestions = useCallback(async () => {
     try {
       const res = await fetch("/api/interview-questions");
@@ -233,22 +178,6 @@ export default function AppShell({
     });
     await analysesRequestRef.current;
   }, [fetchAnalyses]);
-
-  const ensureAllAnalyses = useCallback(async () => {
-    if (hasLoadedAnalysesRef.current) return;
-    analysesRequestRef.current ??= fetchAnalyses(true).finally(() => {
-      analysesRequestRef.current = null;
-    });
-    await analysesRequestRef.current;
-  }, [fetchAnalyses]);
-
-  const ensureCVs = useCallback(async () => {
-    if (hasLoadedCVsRef.current) return;
-    cvsRequestRef.current ??= fetchCVs().finally(() => {
-      cvsRequestRef.current = null;
-    });
-    await cvsRequestRef.current;
-  }, [fetchCVs]);
 
   const ensureInterviewQuestions = useCallback(async () => {
     if (hasLoadedInterviewQuestionsRef.current) return;
@@ -279,19 +208,12 @@ export default function AppShell({
       return;
     }
 
-    if (activeView === "cvs") {
-      void Promise.all([ensureAllAnalyses(), ensureInterviewQuestions()]);
-      return;
-    }
-
     if (activeView === "questions") {
       return;
     }
   }, [
     activeView,
     ensureAnalyses,
-    ensureAllAnalyses,
-    ensureCVs,
     ensureInterviewQuestions,
   ]);
 

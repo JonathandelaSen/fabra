@@ -15,8 +15,7 @@ import { useCVDocumentList } from "@/features/cv-library";
 import { useCreateCVTemplateVersion } from "../hooks/use-cv-template-mutations";
 import { CVTemplatesSidebar } from "./cv-templates-sidebar";
 import { CVTemplateDetail } from "./cv-template-detail";
-import { motion } from "framer-motion";
-import { DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 
 interface CVTemplatesViewProps {
   onOpenSettings: () => void;
@@ -127,12 +126,7 @@ export default function CVTemplatesView({
 
   return (
     <FeatureScreenShell title={t("title")} bodyClassName="overflow-hidden">
-      <motion.div
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35 }}
-        className="grid h-full w-full gap-6 lg:grid-cols-[320px_1fr]"
-      >
+      <div className="grid h-full w-full gap-6 lg:grid-cols-[320px_1fr]">
         <CVTemplatesSidebar
           templates={CV_TEMPLATES}
           selectedId={selectedTemplateId}
@@ -169,7 +163,7 @@ export default function CVTemplatesView({
             }
           }}
         />
-      </motion.div>
+      </div>
     </FeatureScreenShell>
   );
 }

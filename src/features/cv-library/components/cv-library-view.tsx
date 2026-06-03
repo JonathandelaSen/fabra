@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
 import type { AnalysisSummary } from "@/lib/analysis-types";
@@ -54,6 +53,7 @@ export default function CVLibraryView({
   const analysesQuery = useAllAnalyses();
   const questionsQuery = useInterviewQuestionsForLibrary();
   const mutations = useCVLibraryMutations();
+  const autoSelectedCvIdRef = useRef<string | null>(null);
   const analyses = analysesQuery.data ?? [];
   const interviewQuestions = questionsQuery.data ?? [];
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -80,10 +80,17 @@ export default function CVLibraryView({
       : null;
 
   useEffect(() => {
-    if (routeState.pathname === "/cvs" && !routeState.cvId && cvs[0]?.id) {
-      routeState.replaceCV(cvs[0].id);
+    const firstCvId = cvs[0]?.id ?? null;
+    if (
+      routeState.pathname === "/cvs" &&
+      !routeState.cvId &&
+      firstCvId &&
+      autoSelectedCvIdRef.current !== firstCvId
+    ) {
+      autoSelectedCvIdRef.current = firstCvId;
+      routeState.replaceCV(firstCvId);
     }
-  }, [cvs, routeState]);
+  }, [cvs, routeState.cvId, routeState.pathname, routeState.replaceCV]);
 
   const startEditing = (cv: CVDocumentListItem) => {
     setEditingId(cv.id);
@@ -135,12 +142,7 @@ export default function CVLibraryView({
       title={navT("cvLibrary")}
       bodyClassName="overflow-hidden"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35 }}
-        className="grid h-full w-full gap-6 lg:grid-cols-[320px_1fr]"
-      >
+      <div className="grid h-full w-full gap-6 lg:grid-cols-[320px_1fr]">
         <CVLibrarySidebar
           cvs={cvs}
           selectedId={selected?.id ?? null}
@@ -172,7 +174,7 @@ export default function CVLibraryView({
             onOpenQuestions={onOpenQuestions}
           />
         )}
-      </motion.div>
+      </div>
     </FeatureScreenShell>
   );
 }
