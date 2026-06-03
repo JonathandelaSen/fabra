@@ -37,6 +37,12 @@ export function useObjectivesViewState() {
     replaceObjective,
     selectObjective,
   } = routeState;
+  const [selectedObjectiveId, setSelectedObjectiveId] = useState<string | null>(objectiveId);
+
+  useEffect(() => {
+    setSelectedObjectiveId(objectiveId);
+  }, [objectiveId]);
+
   const [error, setError] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [form, setForm] = useState<ObjectiveForm | null>(null);
@@ -62,10 +68,10 @@ export function useObjectivesViewState() {
   const isEmpty = commitments.length === 0;
 
   const selected =
-    commitments.find((item) => item.id === objectiveId) ??
-    (objectiveId ? null : commitments[0] ?? null);
+    commitments.find((item) => item.id === selectedObjectiveId) ??
+    (selectedObjectiveId ? null : commitments[0] ?? null);
   const selectedIdInCurrentList =
-    commitments.find((item) => item.id === objectiveId)?.id ?? null;
+    commitments.find((item) => item.id === selectedObjectiveId)?.id ?? null;
   const selectedContext = selected
     ? contexts.find((context) => context.id === selected.contextId) ?? null
     : null;
@@ -76,6 +82,7 @@ export function useObjectivesViewState() {
 
   useEffect(() => {
     if (pathname === "/objectives" && !objectiveId && commitments[0]?.id) {
+      setSelectedObjectiveId(commitments[0].id);
       replaceObjective(commitments[0].id);
     }
   }, [commitments, objectiveId, pathname, replaceObjective]);
@@ -170,14 +177,17 @@ export function useObjectivesViewState() {
       setForm(null);
       setIsCreating(false);
       const optimisticId = `optimistic-objective-${Date.now()}`;
+      setSelectedObjectiveId(optimisticId);
       selectObjective(optimisticId);
       const data = await mutations.createObjective.mutateAsync({
         input: payload,
         optimisticId,
       });
+      setSelectedObjectiveId(data.id);
       selectObjective(data.id);
     } catch (err: unknown) {
       setError(getErrorMessage(err));
+      setSelectedObjectiveId(null);
       clearObjective();
     }
   };
@@ -358,8 +368,10 @@ export function useObjectivesViewState() {
 
     clearInlineEdits();
     if (nextObjective) {
+      setSelectedObjectiveId(nextObjective.id);
       replaceObjective(nextObjective.id);
     } else {
+      setSelectedObjectiveId(null);
       clearObjective();
     }
 
@@ -368,6 +380,7 @@ export function useObjectivesViewState() {
       await mutations.deleteObjective.mutateAsync(deletedId);
     } catch (err: unknown) {
       setError(getErrorMessage(err) || t("errors.saveChanges"));
+      setSelectedObjectiveId(deletedId);
       replaceObjective(deletedId);
     }
   };
@@ -408,7 +421,10 @@ export function useObjectivesViewState() {
     commitments,
     hasLoadedWorkspace,
     selectedIdInCurrentList,
-    selectObjective,
+    selectObjective: (id: string) => {
+      setSelectedObjectiveId(id);
+      selectObjective(id);
+    },
     clearInlineEdits,
     visibleError,
     saving,

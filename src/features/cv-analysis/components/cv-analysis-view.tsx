@@ -52,11 +52,14 @@ export default function CVAnalysisView({
   const listT = useTranslations("analysisFlow.lists");
   const route = useCVAnalysisRouteState();
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedAnalysisId, setSelectedAnalysisId] = useState<string | null>(
+    route.analysisId,
+  );
   const analysesQuery = useCVAnalysesList();
   const cvOptionsQuery = useCVAnalysisCVOptions();
-  const detailQuery = useCVAnalysisDetail(route.analysisId);
+  const detailQuery = useCVAnalysisDetail(selectedAnalysisId);
   const interviewQuestionsQuery = useCVAnalysisInterviewQuestions(
-    route.analysisId,
+    selectedAnalysisId,
   );
   const createAnalysis = useCreateCVAnalysis();
   const uploadCV = useUploadCVForAnalysis();
@@ -74,14 +77,19 @@ export default function CVAnalysisView({
   }, [analyses, searchQuery]);
   const selectedAnalysis = detailQuery.data ?? null;
   const selectedIdInCurrentList =
-    filteredAnalyses.find((analysis) => analysis.id === route.analysisId)?.id ?? null;
+    filteredAnalyses.find((analysis) => analysis.id === selectedAnalysisId)?.id ?? null;
   const isLoadingList = analysesQuery.isLoading && analyses.length === 0;
 
   useEffect(() => {
     if (route.pathname === "/cv-analysis" && route.mode === "list" && analyses[0]?.id) {
+      setSelectedAnalysisId(analyses[0].id);
       route.replaceDetail(analyses[0].id);
     }
   }, [analyses, route]);
+
+  useEffect(() => {
+    setSelectedAnalysisId(route.analysisId);
+  }, [route.analysisId]);
 
   const handleCreateCV = async (file: File, name: string) => {
     const cv = await uploadCV.mutateAsync({ file, name });
@@ -108,10 +116,12 @@ export default function CVAnalysisView({
     const nextAnalysis =
       analyses[currentIndex + 1] ?? analyses[currentIndex - 1] ?? null;
     await deleteAnalysis.mutateAsync(id);
-    if (route.analysisId === id) {
+    if (selectedAnalysisId === id) {
       if (nextAnalysis) {
+        setSelectedAnalysisId(nextAnalysis.id);
         route.replaceDetail(nextAnalysis.id);
       } else {
+        setSelectedAnalysisId(null);
         route.goToList();
       }
     }
@@ -135,7 +145,10 @@ export default function CVAnalysisView({
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             isLoading={isLoadingList}
-            onSelect={(id) => route.goToDetail(id)}
+            onSelect={(id) => {
+              setSelectedAnalysisId(id);
+              route.goToDetail(id);
+            }}
             onDelete={(id) => void handleDelete(id)}
           />
         }
@@ -146,7 +159,10 @@ export default function CVAnalysisView({
             cvs={cvOptionsQuery.data ?? []}
             onCreateCV={handleCreateCV}
             onCreateAnalysis={handleCreateAnalysis}
-            onAnalysisCreated={(analysisId) => route.goToDetail(analysisId)}
+            onAnalysisCreated={(analysisId) => {
+              setSelectedAnalysisId(analysisId);
+              route.goToDetail(analysisId);
+            }}
           />
         ) : isLoadingList || (route.mode === "detail" && detailQuery.isLoading) ? (
           <div className="h-full overflow-y-auto p-6">

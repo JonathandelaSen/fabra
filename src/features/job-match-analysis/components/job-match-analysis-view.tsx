@@ -49,10 +49,6 @@ export default function JobMatchAnalysisView({
   const kanbanT = useTranslations("analysisFlow.kanban");
   const alertsT = useTranslations("analysisFlow.alerts");
   const routeState = useJobMatchAnalysisRouteState();
-  const listQuery = useJobMatchAnalysisList();
-  const mutations = useJobMatchAnalysisMutations();
-  const [searchQuery, setSearchQuery] = useState("");
-
   const {
     analysisId,
     isAnalysisView,
@@ -67,8 +63,17 @@ export default function JobMatchAnalysisView({
     goToExtraction,
     setAnalysisTab,
   } = routeState;
+  const [selectedAnalysisId, setSelectedAnalysisId] = useState<string | null>(analysisId);
 
-  const detailQuery = useJobMatchAnalysisDetail(analysisId);
+  useEffect(() => {
+    setSelectedAnalysisId(analysisId);
+  }, [analysisId]);
+
+  const listQuery = useJobMatchAnalysisList();
+  const mutations = useJobMatchAnalysisMutations();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const detailQuery = useJobMatchAnalysisDetail(selectedAnalysisId);
   const analyses = useMemo(() => listQuery.data ?? [], [listQuery.data]);
   const filteredAnalyses = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -80,7 +85,7 @@ export default function JobMatchAnalysisView({
   }, [analyses, searchQuery]);
   const detail = detailQuery.data ?? null;
   const selectedIdInCurrentList =
-    filteredAnalyses.find((analysis) => analysis.id === analysisId)?.id ?? null;
+    filteredAnalyses.find((analysis) => analysis.id === selectedAnalysisId)?.id ?? null;
 
   useEffect(() => {
     if (
@@ -89,11 +94,13 @@ export default function JobMatchAnalysisView({
       !analysisId &&
       analyses[0]?.id
     ) {
+      setSelectedAnalysisId(analyses[0].id);
       replaceAnalysis(analyses[0].id);
     }
   }, [analysisId, analyses, replaceAnalysis, routeState.pathname, view]);
 
   const selectItem = (id: string) => {
+    setSelectedAnalysisId(id);
     selectAnalysis(id);
   };
 
@@ -104,8 +111,10 @@ export default function JobMatchAnalysisView({
     await mutations.deleteAnalysis.mutateAsync(id);
     if (analysisId === id) {
       if (nextSelection) {
+        setSelectedAnalysisId(nextSelection);
         replaceAnalysis(nextSelection);
       } else {
+        setSelectedAnalysisId(null);
         clearSelection();
       }
     }
@@ -201,7 +210,7 @@ export default function JobMatchAnalysisView({
   const hasScore = detail?.aiScore !== null && detail?.aiScore !== undefined;
   const detailContent = (
     <JobMatchAnalysisContent
-      analysisId={analysisId}
+      analysisId={selectedAnalysisId}
       detail={detail}
       isLoading={detailQuery.isLoading}
       isAnalysisView={isAnalysisView}

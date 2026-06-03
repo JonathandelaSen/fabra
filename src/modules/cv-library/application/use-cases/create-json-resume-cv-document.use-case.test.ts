@@ -14,6 +14,7 @@ function pdfStorage() {
   return {
     download: vi.fn(),
     upload: vi.fn(async () => undefined),
+    remove: vi.fn(async () => undefined),
   };
 }
 

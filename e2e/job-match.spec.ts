@@ -22,16 +22,18 @@ test("user can create a job match analysis and view the results", async ({
   await expect(page).toHaveURL(/\/settings$/);
   await page.getByPlaceholder(messages.en.settings.apiKey.placeholder).fill("test-api-key");
   await page.getByTestId("gemini-api-key-save").click();
-  await expect(page.getByText(messages.en.common.actions.saved)).toBeVisible();
-
-  // Navigate back to New Analysis
-  await page.getByRole("button", { name: messages.en.analysisFlow.lists.newOffer }).click();
+  await expect(page.getByTestId("gemini-api-key-save")).toHaveText(
+    messages.en.common.actions.saved,
+  );
 
   // 1. Upload a CV via UI and create an analysis
   // This leaves us in the Extraction View with the mode selector
   await createExtractionViaUI(page);
 
-  // 2. Select Mode
+  // 2. Open the AI analysis tab and select the job match mode
+  await page
+    .getByRole("button", { name: messages.en.analysisFlow.appShell.analysisTab })
+    .click();
   await page
     .getByRole("button", { name: new RegExp(tMode.jobTitle) })
     .click();

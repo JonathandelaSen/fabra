@@ -48,9 +48,15 @@ export default function FeedbackNotesView({
     setStatus,
     status,
   } = routeState;
+  const [selectedFeedbackId, setSelectedFeedbackId] = useState<string | null>(feedbackId);
+
+  useEffect(() => {
+    setSelectedFeedbackId(feedbackId);
+  }, [feedbackId]);
+
   const listQuery = useFeedbackNotesList(status);
-  const detailQuery = useFeedbackNoteDetail(feedbackId);
-  const entriesQuery = useFeedbackEntries(feedbackId);
+  const detailQuery = useFeedbackNoteDetail(selectedFeedbackId);
+  const entriesQuery = useFeedbackEntries(selectedFeedbackId);
   const contextsQuery = useActivityContexts();
   const mutations = useFeedbackNotesMutations(status);
   const [error, setError] = useState<string | null>(null);
@@ -62,7 +68,7 @@ export default function FeedbackNotesView({
 
   const feedbacks = listQuery.data ?? [];
   const listSelectedFeedback =
-    feedbacks.find((feedback) => feedback.id === feedbackId) ?? null;
+    feedbacks.find((feedback) => feedback.id === selectedFeedbackId) ?? null;
   const selectedFeedback = detailQuery.data ?? listSelectedFeedback;
   const entries = entriesQuery.data ?? [];
   const selectedIdInCurrentList = listSelectedFeedback?.id ?? null;
@@ -82,6 +88,7 @@ export default function FeedbackNotesView({
 
   useEffect(() => {
     if (pathname === "/feedback-notes" && !feedbackId && feedbacks[0]?.id) {
+      setSelectedFeedbackId(feedbacks[0].id);
       replaceFeedback(feedbacks[0].id);
     }
   }, [feedbackId, feedbacks, pathname, replaceFeedback]);
@@ -118,13 +125,17 @@ export default function FeedbackNotesView({
             isLoading={isInitialListLoading}
             isCreating={mutations.createFeedback.isPending}
             onStatusChange={setStatus}
-            onSelect={selectFeedback}
+            onSelect={(id) => {
+              setSelectedFeedbackId(id);
+              selectFeedback(id);
+            }}
             onCreate={(personName, activityContextId) =>
               void runMutation(async () => {
                 const feedback = await mutations.createFeedback.mutateAsync({
                   personName,
                   activityContextId,
                 });
+                setSelectedFeedbackId(feedback.id);
                 replaceFeedback(feedback.id);
               })
             }
@@ -137,7 +148,7 @@ export default function FeedbackNotesView({
           </AlertBanner>
         )}
 
-        {isInitialListLoading || (feedbackId && detailQuery.isLoading) ? (
+        {isInitialListLoading || (selectedFeedbackId && detailQuery.isLoading) ? (
           <FeedbackNotesDetailSkeleton />
         ) : !selectedFeedback ? (
           <div className="flex h-full items-center justify-center text-sm text-zinc-600">
@@ -168,6 +179,7 @@ export default function FeedbackNotesView({
               void runMutation(async () => {
                 if (!confirm(t("confirmDeleteFeedback"))) return;
                 await mutations.deleteFeedback.mutateAsync(selectedFeedback.id);
+                setSelectedFeedbackId(null);
                 clearSelection();
               })
             }

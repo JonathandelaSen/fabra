@@ -52,8 +52,14 @@ export default function InterviewQuestionsView({
     replaceQuestion,
     clearQuestion,
   } = routeState;
+  const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(questionId);
+
+  useEffect(() => {
+    setSelectedQuestionId(questionId);
+  }, [questionId]);
+
   const listQuery = useInterviewQuestionsList(filters);
-  const detailQuery = useInterviewQuestionDetail(questionId);
+  const detailQuery = useInterviewQuestionDetail(selectedQuestionId);
   const optionsQuery = useInterviewQuestionOptions();
   const mutations = useInterviewQuestionsMutations(filters);
   const [provider, setProvider] = useState<StoredAIProvider>("gemini");
@@ -65,7 +71,7 @@ export default function InterviewQuestionsView({
   const cvs = optionsQuery.data?.cvs ?? [];
   const analyses = optionsQuery.data?.analyses ?? [];
   const selectedFromList =
-    questions.find((question) => question.id === questionId) ?? null;
+    questions.find((question) => question.id === selectedQuestionId) ?? null;
   const selected = detailQuery.data ?? selectedFromList;
   const isSaving =
     mutations.updateQuestion.isPending ||
@@ -78,6 +84,7 @@ export default function InterviewQuestionsView({
 
   useEffect(() => {
     if (pathname === "/interview-questions" && !questionId && questions[0]?.id) {
+      setSelectedQuestionId(questions[0].id);
       replaceQuestion(questions[0].id);
     }
   }, [pathname, questions, questionId, replaceQuestion]);
@@ -101,11 +108,17 @@ export default function InterviewQuestionsView({
     const nextSelection =
       questions[selectedIndex + 1]?.id ?? questions[selectedIndex - 1]?.id ?? null;
     setError(null);
-    if (nextSelection) replaceQuestion(nextSelection);
-    else clearQuestion();
+    if (nextSelection) {
+      setSelectedQuestionId(nextSelection);
+      replaceQuestion(nextSelection);
+    } else {
+      setSelectedQuestionId(null);
+      clearQuestion();
+    }
     try {
       await mutations.deleteQuestion.mutateAsync(selected.id);
     } catch (err: unknown) {
+      setSelectedQuestionId(selected.id);
       replaceQuestion(selected.id);
       setMutationError(err);
     }
@@ -147,7 +160,10 @@ export default function InterviewQuestionsView({
               analysisId: selected.analysisId,
             },
           }));
-      if (result) replaceQuestion(result.id);
+      if (result) {
+        setSelectedQuestionId(result.id);
+        replaceQuestion(result.id);
+      }
     } catch (err: unknown) {
       setMutationError(err);
     }
@@ -170,11 +186,14 @@ export default function InterviewQuestionsView({
         sidebar={
           <InterviewQuestionsSidebar
             questions={questions}
-            selectedId={questionId}
+            selectedId={selectedQuestionId}
             filters={filters}
             cvs={cvs}
             analyses={analyses}
-            onSelect={selectQuestion}
+            onSelect={(id) => {
+              setSelectedQuestionId(id);
+              selectQuestion(id);
+            }}
             onFiltersChange={setFilters}
           />
         }

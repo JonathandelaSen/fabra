@@ -48,8 +48,14 @@ export default function CVLibraryView({
   const t = useTranslations("analysisFlow.cvLibrary");
   const navT = useTranslations("navigation");
   const routeState = useCVLibraryRouteState();
+  const [selectedCvId, setSelectedCvId] = useState<string | null>(routeState.cvId);
+
+  useEffect(() => {
+    setSelectedCvId(routeState.cvId);
+  }, [routeState.cvId]);
+
   const listQuery = useCVDocumentList();
-  const detailQuery = useCVDocumentDetail(routeState.cvId);
+  const detailQuery = useCVDocumentDetail(selectedCvId);
   const analysesQuery = useAllAnalyses();
   const questionsQuery = useInterviewQuestionsForLibrary();
   const mutations = useCVLibraryMutations();
@@ -65,7 +71,7 @@ export default function CVLibraryView({
 
   const cvs = listQuery.data ?? [];
   const analysesByCv = useMemo(() => groupAnalysesByCv(analyses), [analyses]);
-  const selectedFromList = cvs.find((cv) => cv.id === routeState.cvId) ?? null;
+  const selectedFromList = cvs.find((cv) => cv.id === selectedCvId) ?? null;
   const selected = detailQuery.data ?? selectedFromList;
   const selectedAnalyses = selected
     ? analysesByCv.get(selected.id) ?? []
@@ -88,6 +94,7 @@ export default function CVLibraryView({
       autoSelectedCvIdRef.current !== firstCvId
     ) {
       autoSelectedCvIdRef.current = firstCvId;
+      setSelectedCvId(firstCvId);
       routeState.replaceCV(firstCvId);
     }
   }, [cvs, routeState.cvId, routeState.pathname, routeState.replaceCV]);
@@ -122,10 +129,12 @@ export default function CVLibraryView({
     setLoadingId(id);
     setError(null);
     setBlockingAnalyses([]);
+    setSelectedCvId(nextSelection);
     routeState.replaceCV(nextSelection);
     try {
       await mutations.deleteCV.mutateAsync(id);
     } catch (err: unknown) {
+      setSelectedCvId(id);
       routeState.replaceCV(id);
       setError(getErrorMessage(err) || t("deleteFailed"));
     } finally {
@@ -145,11 +154,15 @@ export default function CVLibraryView({
       <div className="grid h-full w-full gap-6 lg:grid-cols-[320px_1fr]">
         <CVLibrarySidebar
           cvs={cvs}
-          selectedId={selected?.id ?? null}
+          selectedId={selectedCvId}
           analysesByCv={analysesByCv}
           error={error ?? queryError}
           blockingAnalyses={blockingAnalyses}
-          onSelect={(id) => { setShowImport(false); routeState.selectCV(id); }}
+          onSelect={(id) => {
+            setShowImport(false);
+            setSelectedCvId(id);
+            routeState.selectCV(id);
+          }}
           onOpenAnalysis={onOpenAnalysis}
           onImportJsonResume={() => setShowImport(true)}
         />
