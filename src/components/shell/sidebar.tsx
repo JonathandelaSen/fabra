@@ -133,46 +133,32 @@ export default function Sidebar({
         }`}
       >
         <div className="flex items-center justify-between p-3 h-14 shrink-0">
-          <AnimatePresence mode="wait">
-            {!collapsed ? (
-              <motion.div
-                key="expanded"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.15 }}
-                className="flex items-center gap-2 min-w-0"
-              >
-                <div className="w-7 h-7 flex items-center justify-center shrink-0">
-                  <img
-                    src="/brand/fabra-logo.svg"
-                    alt="Fabra Logo"
-                    className="w-7 h-7 object-contain"
-                  />
-                </div>
-                <span className="font-semibold text-sm text-sidebar-foreground truncate">
-                  {common("appName")}
-                </span>
-              </motion.div>
-            ) : (
-              <motion.button
-                key="collapsed"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.15 }}
-                onClick={() => setCollapsed(false)}
-                className="w-8 h-8 flex items-center justify-center shrink-0 hover:bg-panel-hover rounded-md transition-colors"
-                title={common("appName")}
-              >
+          {!collapsed ? (
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="w-7 h-7 flex items-center justify-center shrink-0">
                 <img
                   src="/brand/fabra-logo.svg"
                   alt="Fabra Logo"
                   className="w-7 h-7 object-contain"
                 />
-              </motion.button>
-            )}
-          </AnimatePresence>
+              </div>
+              <span className="font-semibold text-sm text-sidebar-foreground truncate">
+                {common("appName")}
+              </span>
+            </div>
+          ) : (
+            <button
+              onClick={() => setCollapsed(false)}
+              className="w-8 h-8 flex items-center justify-center shrink-0 hover:bg-panel-hover rounded-md transition-colors"
+              title={common("appName")}
+            >
+              <img
+                src="/brand/fabra-logo.svg"
+                alt="Fabra Logo"
+                className="w-7 h-7 object-contain"
+              />
+            </button>
+          )}
           {!collapsed && (
             <button
               onClick={() => setCollapsed(true)}
