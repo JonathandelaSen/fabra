@@ -33,6 +33,7 @@ interface ExtractionViewProps {
     analysis_mode: AnalysisMode;
     ai_score: number | null;
     job_url?: string | null;
+    job_description?: string | null;
     cv?: {
       id?: string;
       name?: string;
@@ -152,8 +153,8 @@ export default function ExtractionView({
       <ExtractionHeader
         filename={analysis.filename}
         analysisId={analysis.id}
-        actionLabel={formsT("analyzeCV")}
-        showReAnalysis={analysis.analysis_mode === "general"}
+        actionLabel={formsT("repeatAnalysis")}
+        showReAnalysis={true}
         aiScore={analysis.ai_score}
         showPdfPreview={showPdfPreview}
         onTogglePdfPreview={() => setShowPdfPreview(!showPdfPreview)}
@@ -167,7 +168,13 @@ export default function ExtractionView({
           onProviderChange: setSelectedProvider,
           selectedModel,
           onModelChange: setSelectedModel,
-          onRun: () => handleGeneralAnalysis({}),
+          onRun: () =>
+            analysis.analysis_mode === "job_match"
+              ? handleJobMatchAnalysis(
+                  analysis.job_description ?? "",
+                  analysis.job_url ?? "",
+                )
+              : handleGeneralAnalysis({}),
           onConfigure: onOpenSettings,
           onOpenCopyPaste: () => {
             setCopyPasteContext(null);

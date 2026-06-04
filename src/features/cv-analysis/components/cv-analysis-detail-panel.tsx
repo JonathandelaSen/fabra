@@ -98,6 +98,9 @@ export function CVAnalysisDetailPanel({
 }: CVAnalysisDetailPanelProps) {
   const t = useTranslations("analysisFlow.appShell");
   const extractionAnalysis = toExtractionAnalysis(selectedAnalysis);
+  const hasAnalysis = selectedAnalysis.ai_score !== null;
+  const effectiveTab =
+    hasAnalysis && route.tab !== "extraction" ? "analysis" : "extraction";
   const handleAnalysisComplete = () => {
     onRefetchAnalysis();
     route.setTab("analysis");
@@ -108,14 +111,22 @@ export function CVAnalysisDetailPanel({
       <FeatureDetailTabBar
         tabs={[
           { id: "extraction" as const, label: t("extractionTab"), icon: <FileText /> },
-          { id: "analysis" as const, label: t("analysisTab"), icon: <Sparkles /> },
+          ...(hasAnalysis
+            ? [
+                {
+                  id: "analysis" as const,
+                  label: t("analysisTab"),
+                  icon: <Sparkles />,
+                },
+              ]
+            : []),
         ]}
-        activeTab={route.tab === "extraction" ? "extraction" : "analysis"}
+        activeTab={effectiveTab}
         onTabChange={(tab) => route.setTab(tab)}
       />
 
       <AnimatePresence mode="wait">
-        {route.tab === "extraction" ? (
+        {effectiveTab === "extraction" ? (
           <motion.div
             key="extraction-view"
             initial={{ opacity: 0, x: -10 }}
@@ -133,10 +144,10 @@ export function CVAnalysisDetailPanel({
               hasAIApiKey={hasAIApiKey}
               onOpenSettings={onOpenSettings}
               onScoreAnalysis={onScoreAnalysis}
-              hideAnalysisSelector={true}
+              hideAnalysisSelector={hasAnalysis}
             />
           </motion.div>
-        ) : selectedAnalysis.ai_score !== null ? (
+        ) : (
           <motion.div
             key="analysis-view"
             initial={{ opacity: 0, x: 10 }}
@@ -161,26 +172,6 @@ export function CVAnalysisDetailPanel({
                   analysisId: selectedAnalysis.id,
                 })
               }
-            />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="analysis-selector-view"
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
-            transition={{ duration: 0.15 }}
-            className="flex min-h-0 flex-1 flex-col overflow-hidden"
-          >
-            <ExtractionView
-              analysis={extractionAnalysis}
-              onAIAnalysisComplete={handleAnalysisComplete}
-              aiProvider={aiProvider}
-              aiApiKey={aiApiKey}
-              aiModel={aiModel}
-              hasAIApiKey={hasAIApiKey}
-              onOpenSettings={onOpenSettings}
-              onScoreAnalysis={onScoreAnalysis}
             />
           </motion.div>
         )}
