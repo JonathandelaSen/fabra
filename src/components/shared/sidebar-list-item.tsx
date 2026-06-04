@@ -34,7 +34,7 @@ export function SidebarListItem({
     >
       <div className="flex items-start justify-between gap-3">
         <p
-          className={`min-w-0 text-[14px] font-semibold tracking-tight text-text-main ${
+          className={`min-w-0 text-[14px] font-semibold tracking-tight text-text-main transition-colors group-hover:text-action-text ${
             titleClamp === 1 ? "truncate" : "line-clamp-2"
           }`}
         >

@@ -7,6 +7,7 @@ import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
 import { IconBox, ICON_BOX_TONES } from "@/components/shared/icon-box";
 import { CVAnalysesListSkeleton } from "./cv-analyses-list-skeleton";
 import type { AnalysisSummary } from "@/lib/analysis-types";
+import { featureListItemClassName } from "@/components/shared/feature-visual-system";
 import { cn } from "@/lib/utils";
 
 interface CVAnalysesListViewProps {
@@ -90,12 +91,7 @@ export default function CVAnalysesListView({
                   onSelect(analysis.id);
                 }
               }}
-              className={cn(
-                "group flex w-full cursor-pointer items-start gap-3 rounded-xl border p-3.5 text-left transition-all duration-200",
-                selectedId === analysis.id
-                  ? "bg-panel-selected border-action-border text-zinc-100 shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
-                  : "bg-transparent border-transparent text-zinc-400 hover:bg-[#13131c]/60 hover:border-white/[0.04] hover:text-zinc-200",
-              )}
+              className={featureListItemClassName(selectedId === analysis.id, "flex items-start gap-3")}
             >
               <IconBox
                 icon={FileSearch}

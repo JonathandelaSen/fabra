@@ -22,7 +22,7 @@ test("authenticated user can open settings and manage Ollama local AI preference
     messages.en.settings.apiKey.ollamaModelPlaceholder,
   );
 
-  await expect(ollamaUrlInput).toHaveValue("http://localhost:11434");
+  await expect(ollamaUrlInput).toHaveValue("");
   await ollamaUrlInput.fill("http://localhost:11434");
   await ollamaModelInput.fill("llama3.2");
   await expect(ollamaModelInput).toHaveValue("llama3.2");
