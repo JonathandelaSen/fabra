@@ -99,8 +99,9 @@ export function CVAnalysisDetailPanel({
   const t = useTranslations("analysisFlow.appShell");
   const extractionAnalysis = toExtractionAnalysis(selectedAnalysis);
   const hasAnalysis = selectedAnalysis.ai_score !== null;
-  const effectiveTab =
-    hasAnalysis && route.tab !== "extraction" ? "analysis" : "extraction";
+  const effectiveTab = hasAnalysis
+    ? (route.tab ?? "analysis")
+    : "extraction";
   const handleAnalysisComplete = () => {
     onRefetchAnalysis();
     route.setTab("analysis");
