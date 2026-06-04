@@ -5,7 +5,7 @@ import { BasicPanel } from "@/components/shared/basic-panel";
 
 export function CVLibrarySkeleton() {
   return (
-    <div className="grid h-full w-full gap-6 p-6 md:p-8 lg:grid-cols-[360px_1fr]">
+    <div className="grid h-full w-full gap-6 lg:grid-cols-[320px_1fr]">
       <BasicPanel className="space-y-3 p-4">
         <div className="mb-4 flex items-center justify-between">
           <Skeleton className="h-6 w-32 rounded-md" />

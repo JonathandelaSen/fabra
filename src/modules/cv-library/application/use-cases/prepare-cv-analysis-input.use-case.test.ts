@@ -37,8 +37,8 @@ describe("PrepareCVAnalysisInputUseCase", () => {
         document({
           extractedText: {
             textPython: "stored text",
-            textPdfjs: null,
-            textNode: null,
+            textPdfjs: "stored pdfjs text",
+            textNode: "stored node text",
             extractErrorPython: null,
             extractErrorPdfjs: null,
             extractErrorNode: null,
@@ -71,6 +71,126 @@ describe("PrepareCVAnalysisInputUseCase", () => {
         source: "stored_pdf_text",
       }),
     );
+  });
+
+  it("retries uploaded CV extraction when one parser result is missing", async () => {
+    const cv = document({
+      extractedText: {
+        textPython: "stored python text",
+        textPdfjs: "stored pdfjs text",
+        textNode: null,
+        extractErrorPython: null,
+        extractErrorPdfjs: null,
+        extractErrorNode: null,
+      },
+    });
+    const repo = documentRepo({
+      findById: vi.fn(async () => cv),
+    });
+    const deps = services();
+    deps.textExtractor.extract = vi.fn(async () => ({
+      textPython: "repaired python text",
+      textPdfjs: "repaired pdfjs text",
+      textNode: "repaired node text",
+      extractErrorPython: null,
+      extractErrorPdfjs: null,
+      extractErrorNode: null,
+    }));
+
+    const result = await new PrepareCVAnalysisInputUseCase({
+      documentRepo: repo,
+      tracker: tracker(),
+      ...deps,
+    }).execute({
+      cvId: "cv-1",
+      userId: "user-1",
+      requestId: "req-1",
+      source: "test",
+    });
+
+    expect(deps.pdfStorage.download).toHaveBeenCalledWith("user-1/cv-1.pdf");
+    expect(deps.textExtractor.extract).toHaveBeenCalledOnce();
+    expect(repo.save).toHaveBeenCalledOnce();
+    expect(result?.extractedText.textNode).toBe("repaired node text");
+  });
+
+  it("does not propagate stale parser errors after retrying extraction", async () => {
+    const repo = documentRepo({
+      findById: vi.fn(async () =>
+        document({
+          extractedText: {
+            textPython: null,
+            textPdfjs: "stored pdfjs text",
+            textNode: null,
+            extractErrorPython:
+              "Supabase storage credentials are not configured.",
+            extractErrorPdfjs: null,
+            extractErrorNode: null,
+          },
+        }),
+      ),
+    });
+    const deps = services();
+
+    const result = await new PrepareCVAnalysisInputUseCase({
+      documentRepo: repo,
+      tracker: tracker(),
+      ...deps,
+    }).execute({
+      cvId: "cv-1",
+      userId: "user-1",
+      requestId: "req-1",
+      source: "test",
+    });
+
+    expect(result?.analysisText).toBe("extracted text");
+    expect(result?.extractedText.extractErrorPython).toBeNull();
+    expect(result?.extractionDiagnostics.pythonError).toBe(false);
+    expect(deps.pdfStorage.download).toHaveBeenCalledWith("user-1/cv-1.pdf");
+    expect(repo.save).toHaveBeenCalledOnce();
+  });
+
+  it("retries and persists uploaded CV extraction when stored text has parser errors", async () => {
+    const cv = document({
+      extractedText: {
+        textPython: null,
+        textPdfjs: "stored pdfjs text",
+        textNode: null,
+        extractErrorPython:
+          "Supabase storage credentials are not configured.",
+        extractErrorPdfjs: null,
+        extractErrorNode: null,
+      },
+    });
+    const repo = documentRepo({
+      findById: vi.fn(async () => cv),
+    });
+    const deps = services();
+    deps.textExtractor.extract = vi.fn(async () => ({
+      textPython: "repaired python text",
+      textPdfjs: "repaired pdfjs text",
+      textNode: null,
+      extractErrorPython: null,
+      extractErrorPdfjs: null,
+      extractErrorNode: null,
+    }));
+
+    const result = await new PrepareCVAnalysisInputUseCase({
+      documentRepo: repo,
+      tracker: tracker(),
+      ...deps,
+    }).execute({
+      cvId: "cv-1",
+      userId: "user-1",
+      requestId: "req-1",
+      source: "test",
+    });
+
+    expect(deps.pdfStorage.download).toHaveBeenCalledWith("user-1/cv-1.pdf");
+    expect(deps.textExtractor.extract).toHaveBeenCalledOnce();
+    expect(repo.save).toHaveBeenCalledOnce();
+    expect(result?.analysisText).toBe("repaired python text");
+    expect(result?.extractedText.extractErrorPython).toBeNull();
   });
 
   it("extracts and persists uploaded CV text when no stored extraction exists", async () => {

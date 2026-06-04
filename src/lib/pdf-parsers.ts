@@ -1,26 +1,11 @@
-import { createRequire } from "module";
-
-const nodeRequire = createRequire(import.meta.url);
-
-type PdfParse = (dataBuffer: Buffer) => Promise<{ text?: string | null }>;
-
 type PdfJsLib = typeof import("pdfjs-dist/legacy/build/pdf.mjs");
 
-let pdfParseModule: PdfParse | null = null;
 let pdfjsModule: PdfJsLib | null = null;
 let canvasPolyfillsReady = false;
 
 function cleanExtractedText(text: string | null | undefined) {
   const cleaned = text?.trim();
   return cleaned ? cleaned : null;
-}
-
-async function loadPdfParse() {
-  if (!pdfParseModule) {
-    pdfParseModule = nodeRequire("pdf-parse") as PdfParse;
-  }
-
-  return pdfParseModule;
 }
 
 async function ensurePdfjsCanvasPolyfills() {
@@ -44,12 +29,62 @@ async function loadPdfjs() {
   return pdfjsModule;
 }
 
-export async function extractWithPdfParse(
+function getTextItemY(item: unknown): number | null {
+  if (
+    typeof item === "object" &&
+    item !== null &&
+    "transform" in item &&
+    Array.isArray(item.transform) &&
+    typeof item.transform[5] === "number"
+  ) {
+    return item.transform[5];
+  }
+
+  return null;
+}
+
+export async function extractWithPlainTextScanner(
   buffer: Buffer
 ): Promise<{ text: string | null }> {
-  const pdfParse = await loadPdfParse();
-  const parsed = await pdfParse(buffer);
-  return { text: cleanExtractedText(parsed.text) };
+  const pdfjsLib = await loadPdfjs();
+
+  const loadingTask = pdfjsLib.getDocument({
+    data: new Uint8Array(buffer),
+  });
+  const pdfDocument = await loadingTask.promise;
+
+  const pageTexts: string[] = [];
+
+  for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber += 1) {
+    const page = await pdfDocument.getPage(pageNumber);
+    const textContent = await page.getTextContent({
+      includeMarkedContent: false,
+    });
+
+    let lastY: number | null = null;
+    let pageText = "";
+
+    for (const item of textContent.items) {
+      const text = "str" in item ? item.str : "";
+      if (!text) continue;
+
+      const y = getTextItemY(item);
+      if (lastY !== null && y !== null && Math.abs(lastY - y) > 1) {
+        pageText += "\n";
+      } else if (pageText && !pageText.endsWith("\n")) {
+        pageText += " ";
+      }
+
+      pageText += text;
+      lastY = y;
+    }
+
+    pageTexts.push(pageText);
+  }
+
+  await pdfDocument.destroy();
+
+  return { text: cleanExtractedText(pageTexts.join("\n\n")) };
 }
 
 export async function extractWithPdfjs(

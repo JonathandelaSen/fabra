@@ -17,7 +17,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 From the repository root:
 
 ```bash
-docker compose up pdf-parser
+npm run parser:dev
 ```
 
 The service runs at `http://127.0.0.1:8001`.

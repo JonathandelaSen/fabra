@@ -6,7 +6,7 @@ import {
   recordProcessingEvent,
   sanitizeErrorMessage,
 } from "@/lib/observability";
-import { extractWithPdfjs, extractWithPdfParse } from "@/lib/pdf-parsers";
+import { extractWithPdfjs, extractWithPlainTextScanner } from "@/lib/pdf-parsers";
 
 export interface ExtractedPdfText {
   text_python: string | null;
@@ -133,13 +133,13 @@ export async function extractPdfText(
   try {
     const parserStartedAt = performance.now();
     await recordParserEvent(context, {
-      source: "node_pdf_parse",
+      source: "node_plain_text_scanner",
       status: "started",
     });
-    const parsedOut = await extractWithPdfParse(buffer);
+    const parsedOut = await extractWithPlainTextScanner(buffer);
     text_node = parsedOut.text || null;
     await recordParserEvent(context, {
-      source: "node_pdf_parse",
+      source: "node_plain_text_scanner",
       status: extract_error_node ? "error" : getTextLength(text_node) > 0 ? "success" : "warning",
       durationMs: performance.now() - parserStartedAt,
       textLength: getTextLength(text_node),
@@ -151,7 +151,7 @@ export async function extractPdfText(
   } catch (e: unknown) {
     extract_error_node = getErrorMessage(e);
     await recordParserEvent(context, {
-      source: "node_pdf_parse",
+      source: "node_plain_text_scanner",
       status: "error",
       errorCode: getErrorCode(e),
       errorMessage: sanitizeErrorMessage(e),

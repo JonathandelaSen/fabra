@@ -143,7 +143,14 @@ export default function CVLibraryView({
   };
 
   if (listQuery.isLoading) {
-    return <CVLibrarySkeleton />;
+    return (
+      <FeatureScreenShell
+        title={navT("cvLibrary")}
+        bodyClassName="overflow-hidden"
+      >
+        <CVLibrarySkeleton />
+      </FeatureScreenShell>
+    );
   }
 
   return (

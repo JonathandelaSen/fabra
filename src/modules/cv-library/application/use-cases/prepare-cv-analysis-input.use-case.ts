@@ -96,6 +96,9 @@ export class PrepareCVAnalysisInputUseCase {
       text_pdfjs: analysisExtraction.textPdfjs,
       text_node: analysisExtraction.textNode,
     });
+    const responseExtraction = analysisText
+      ? this.clearParserErrors(analysisExtraction)
+      : analysisExtraction;
 
     await this.deps.tracker.record({
       userId: input.userId,
@@ -117,12 +120,12 @@ export class PrepareCVAnalysisInputUseCase {
       metadata: {
         cvType: cvPrimitives.type,
         filename: templatePdfExtraction?.filename ?? cvPrimitives.filename,
-        pythonLength: analysisExtraction.textPython?.trim().length ?? 0,
-        pdfjsLength: analysisExtraction.textPdfjs?.trim().length ?? 0,
-        nodeLength: analysisExtraction.textNode?.trim().length ?? 0,
-        pythonError: Boolean(analysisExtraction.extractErrorPython),
-        pdfjsError: Boolean(analysisExtraction.extractErrorPdfjs),
-        nodeError: Boolean(analysisExtraction.extractErrorNode),
+        pythonLength: responseExtraction.textPython?.trim().length ?? 0,
+        pdfjsLength: responseExtraction.textPdfjs?.trim().length ?? 0,
+        nodeLength: responseExtraction.textNode?.trim().length ?? 0,
+        pythonError: Boolean(responseExtraction.extractErrorPython),
+        pdfjsError: Boolean(responseExtraction.extractErrorPdfjs),
+        nodeError: Boolean(responseExtraction.extractErrorNode),
         templateId: cvPrimitives.templateId,
       },
     });
@@ -133,17 +136,28 @@ export class PrepareCVAnalysisInputUseCase {
       filename: templatePdfExtraction?.filename ?? cvPrimitives.filename ?? "",
       fileSize: templatePdfExtraction?.fileSize ?? cvPrimitives.fileSize,
       pdfStoragePath: cvPrimitives.pdfStoragePath,
-      extractedText: analysisExtraction,
+      extractedText: responseExtraction,
       extractionDiagnostics: {
         filename: templatePdfExtraction?.filename ?? cvPrimitives.filename,
         fileSize: templatePdfExtraction?.fileSize ?? cvPrimitives.fileSize,
-        pythonLength: analysisExtraction.textPython?.length ?? 0,
-        pdfjsLength: analysisExtraction.textPdfjs?.length ?? 0,
-        nodeLength: analysisExtraction.textNode?.length ?? 0,
-        pythonError: Boolean(analysisExtraction.extractErrorPython),
-        pdfjsError: Boolean(analysisExtraction.extractErrorPdfjs),
-        nodeError: Boolean(analysisExtraction.extractErrorNode),
+        pythonLength: responseExtraction.textPython?.length ?? 0,
+        pdfjsLength: responseExtraction.textPdfjs?.length ?? 0,
+        nodeLength: responseExtraction.textNode?.length ?? 0,
+        pythonError: Boolean(responseExtraction.extractErrorPython),
+        pdfjsError: Boolean(responseExtraction.extractErrorPdfjs),
+        nodeError: Boolean(responseExtraction.extractErrorNode),
       },
+    };
+  }
+
+  private clearParserErrors(
+    extracted: CVDocumentExtractedTextPrimitives,
+  ): CVDocumentExtractedTextPrimitives {
+    return {
+      ...extracted,
+      extractErrorPython: null,
+      extractErrorPdfjs: null,
+      extractErrorNode: null,
     };
   }
 
@@ -202,13 +216,25 @@ export class PrepareCVAnalysisInputUseCase {
     requestId: string;
   }): Promise<CVDocument> {
     const primitives = input.cv.toPrimitives();
+    if (!primitives.pdfStoragePath) {
+      return input.cv;
+    }
+
+    const storedExtractionHasText = hasExtractedText([
+      primitives.extractedText.textPython,
+      primitives.extractedText.textPdfjs,
+      primitives.extractedText.textNode,
+    ]);
+    const storedExtractionIsComplete = this.hasAllParserText(
+      primitives.extractedText,
+    );
+    const storedExtractionHasErrors = this.hasParserErrors(
+      primitives.extractedText,
+    );
     if (
-      hasExtractedText([
-        primitives.extractedText.textPython,
-        primitives.extractedText.textPdfjs,
-        primitives.extractedText.textNode,
-      ]) ||
-      !primitives.pdfStoragePath
+      storedExtractionHasText &&
+      storedExtractionIsComplete &&
+      !storedExtractionHasErrors
     ) {
       return input.cv;
     }
@@ -239,6 +265,24 @@ export class PrepareCVAnalysisInputUseCase {
       cvId: saved.id,
     });
     return saved;
+  }
+
+  private hasParserErrors(
+    extracted: CVDocumentExtractedTextPrimitives,
+  ): boolean {
+    return Boolean(
+      extracted.extractErrorPython ||
+        extracted.extractErrorPdfjs ||
+        extracted.extractErrorNode,
+    );
+  }
+
+  private hasAllParserText(
+    extracted: CVDocumentExtractedTextPrimitives,
+  ): boolean {
+    return hasExtractedText([extracted.textPython]) &&
+      hasExtractedText([extracted.textPdfjs]) &&
+      hasExtractedText([extracted.textNode]);
   }
 
   private getTemplateAnalysisFilename(cv: CVDocumentPrimitives) {
