@@ -3,12 +3,12 @@
 import { FileSearch, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
-import type { AnalysisSummary } from "@/lib/analysis-types";
+import type { AnalysisMode, AnalysisSummary } from "@/lib/analysis-types";
 
 interface CVLibrarySidebarErrorProps {
   error: string | null;
   blockingAnalyses: AnalysisSummary[];
-  onOpenAnalysis: (id: string) => void;
+  onOpenAnalysis: (id: string, mode?: AnalysisMode) => void;
 }
 
 export function CVLibrarySidebarError({
@@ -38,7 +38,7 @@ export function CVLibrarySidebarError({
               }
               onClick={(event) => {
                 event.preventDefault();
-                onOpenAnalysis(analysis.id);
+                onOpenAnalysis(analysis.id, analysis.analysis_mode);
               }}
               className="flex items-center gap-2 rounded-lg border border-line bg-panel-elevated px-3 py-2 text-left text-xs text-text-soft transition-colors hover:border-rose-400/30 hover:bg-rose-500/10 hover:text-danger-text"
             >

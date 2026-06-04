@@ -22,6 +22,7 @@ import { JobMatchAnalysisView } from "@/features/job-match-analysis";
 import { SettingsView } from "@/features/settings";
 import type { InterviewQuestionResponse as InterviewQuestionSummary } from "@/app/api/interview-questions/responses";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { AnalysisMode } from "@/lib/analysis-types";
 import type { SidebarActiveView } from "./sidebar-types";
 
 interface AppShellContentProps {
@@ -38,7 +39,7 @@ interface AppShellContentProps {
   onOpenSettings: () => void;
   onOpenQuestions: (options?: { cvId?: string | null; analysisId?: string | null }) => void;
   onNewAnalysis: () => void;
-  onOpenAnalysis: (id: string) => void;
+  onOpenAnalysis: (id: string, mode?: AnalysisMode) => void;
   onOpenEditor: (cvId?: string | null) => void;
   onOpenTemplates: () => void;
   onOpenCVs: () => void;

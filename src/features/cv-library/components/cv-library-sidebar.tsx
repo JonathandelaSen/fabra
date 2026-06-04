@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FileText, Plus, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { AnalysisSummary } from "@/lib/analysis-types";
+import type { AnalysisMode, AnalysisSummary } from "@/lib/analysis-types";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
 import type { CVDocumentListItem } from "../api/cv-library-api";
 import { CVLibraryListItem } from "./cv-library-list-item";
@@ -17,7 +17,7 @@ interface CVLibrarySidebarProps {
   error: string | null;
   blockingAnalyses: AnalysisSummary[];
   onSelect: (id: string) => void;
-  onOpenAnalysis: (id: string) => void;
+  onOpenAnalysis: (id: string, mode?: AnalysisMode) => void;
   onImportJsonResume?: () => void;
 }
 

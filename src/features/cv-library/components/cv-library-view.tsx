@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
-import type { AnalysisSummary } from "@/lib/analysis-types";
+import type { AnalysisMode, AnalysisSummary } from "@/lib/analysis-types";
 import type { CVDocumentListItem } from "../api/cv-library-api";
 import { useCVLibraryMutations } from "../hooks/use-cv-library-mutations";
 import {
@@ -20,7 +20,7 @@ import { CVLibrarySidebar } from "./cv-library-sidebar";
 import { CVLibrarySkeleton } from "./cv-library-skeleton";
 
 interface CVLibraryViewProps {
-  onOpenAnalysis: (id: string) => void;
+  onOpenAnalysis: (id: string, mode?: AnalysisMode) => void;
   onOpenEditor: (cvId: string) => void;
   onOpenQuestions: (cvId: string) => void;
 }

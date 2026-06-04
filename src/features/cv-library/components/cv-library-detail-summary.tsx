@@ -2,7 +2,7 @@
 
 import { FileSearch, MessageSquareQuote, Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { AnalysisSummary } from "@/lib/analysis-types";
+import type { AnalysisMode, AnalysisSummary } from "@/lib/analysis-types";
 import type { InterviewQuestionResponse, CVDocumentListItem } from "@/features/cv-library";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CVLibraryAtsScoreCircle } from "./cv-library-ats-score-circle";
@@ -16,7 +16,7 @@ interface CVLibraryDetailSummaryProps {
   questions: InterviewQuestionResponse[];
   templateVersions: CVDocumentListItem[];
   displayScore: number | null;
-  onOpenAnalysis: (id: string) => void;
+  onOpenAnalysis: (id: string, mode?: AnalysisMode) => void;
   onOpenQuestions: (cvId: string) => void;
   onOpenEditor: (cvId: string) => void;
 }

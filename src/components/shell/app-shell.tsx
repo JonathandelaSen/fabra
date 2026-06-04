@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import type { AnalysisSummary } from "@/lib/analysis-types";
+import type { AnalysisMode, AnalysisSummary } from "@/lib/analysis-types";
 import Sidebar from "@/components/shell/sidebar";
 import {
   type CVAnalysisDetail,
@@ -540,7 +540,7 @@ export default function AppShell({
   }, [fetchAnalysisDetail, router, pathname, searchParams]);
 
   // Handle selecting an analysis
-  const handleSelect = (id: string) => {
+  const handleSelect = (id: string, knownMode?: AnalysisMode) => {
     rememberWorkJournalLocation();
     rememberObjectivesLocation();
     rememberFeedbackNotesLocation();
@@ -553,7 +553,7 @@ export default function AppShell({
     setActiveView("analysis");
     fetchAnalysisDetail(id);
 
-    const mode = analyses.find((a) => a.id === id)?.analysis_mode;
+    const mode = knownMode ?? analyses.find((a) => a.id === id)?.analysis_mode;
     if (mode === "general") {
       router.push(`/cv-analysis/${encodeURIComponent(id)}`);
     } else if (mode === "job_match") {

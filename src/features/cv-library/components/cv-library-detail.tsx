@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { CV_TYPE, type AnalysisSummary } from "@/lib/analysis-types";
+import { CV_TYPE, type AnalysisMode, type AnalysisSummary } from "@/lib/analysis-types";
 import type { InterviewQuestionResponse } from "@/app/api/interview-questions/responses";
 import type { CVDocumentListItem } from "../api/cv-library-api";
 import type { StandardCVProfile } from "@/lib/cv-profile";
@@ -23,7 +23,7 @@ interface CVLibraryDetailProps {
   onSaveName: () => void;
   onCancelEditing: () => void;
   onDelete: () => void;
-  onOpenAnalysis: (id: string) => void;
+  onOpenAnalysis: (id: string, mode?: AnalysisMode) => void;
   onOpenEditor: (cvId: string) => void;
   onOpenQuestions: (cvId: string) => void;
 }

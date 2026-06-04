@@ -3,11 +3,11 @@
 import { Briefcase, FileSearch, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { FormattedDate } from "@/components/shared/formatted-date";
-import type { AnalysisSummary } from "@/lib/analysis-types";
+import type { AnalysisMode, AnalysisSummary } from "@/lib/analysis-types";
 
 interface CVLibraryAssociatedAnalysesProps {
   analyses: AnalysisSummary[];
-  onOpenAnalysis: (id: string) => void;
+  onOpenAnalysis: (id: string, mode?: AnalysisMode) => void;
 }
 
 export function CVLibraryAssociatedAnalyses({
@@ -36,7 +36,7 @@ export function CVLibraryAssociatedAnalyses({
           }
           onClick={(event) => {
             event.preventDefault();
-            onOpenAnalysis(analysis.id);
+            onOpenAnalysis(analysis.id, analysis.analysis_mode);
           }}
           className="group flex min-w-0 items-center gap-3 rounded-lg border border-white/[0.04] bg-white/[0.02] p-2.5 transition-all hover:border-teal-500/20 hover:bg-teal-500/[0.04]"
         >
