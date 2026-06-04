@@ -70,7 +70,21 @@ test("user can upload a PDF, create an extraction, and read persisted backend st
   expect(cvEvents).toEqual(
     expect.arrayContaining([
       expect.objectContaining({ stage: "cv_upload", status: "success" }),
-      expect.objectContaining({ stage: "pdf_parser" }),
+      expect.objectContaining({
+        stage: "pdf_parser",
+        source: "node_plain_text_scanner",
+        status: "success",
+      }),
+      expect.objectContaining({
+        stage: "pdf_parser",
+        source: "node_pdfjs",
+        status: "success",
+      }),
+      expect.objectContaining({
+        stage: "pdf_parser",
+        source: "python_pdfminer_service",
+        status: "success",
+      }),
     ])
   );
 });
