@@ -103,7 +103,7 @@ export async function updateLocale({ cvId, locale }: UpdateLocaleInput) {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || "Could not change language.");
-  return normalizeCVResponse(data.version);
+  return normalizeCVResponse(data);
 }
 
 export interface UpdatePublicSettingsInput {
