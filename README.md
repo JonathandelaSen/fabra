@@ -1,6 +1,8 @@
 <div align="center">
 
-# 🚀 Fabra
+<img src="public/brand/fabra-logo.svg" alt="Fabra Logo" width="120" />
+
+# Fabra
 
 **Craft your career, your way.** Track your progress, build your CV, and land your next job with AI or with practical manual workflows when you prefer.
 
