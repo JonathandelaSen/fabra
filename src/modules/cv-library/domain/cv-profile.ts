@@ -99,6 +99,44 @@ const asRecord = (value: unknown): Record<string, unknown> =>
 const asString = (value: unknown): string | undefined =>
   typeof value === "string" && value.trim() ? value.trim() : undefined;
 
+const markdownLinkPattern = /^\[([^\]]+)\]\(([^)]+)\)$/;
+
+function parseMarkdownLink(value: string): { label: string; url: string } | null {
+  const match = value.trim().match(markdownLinkPattern);
+  if (!match) return null;
+  return { label: match[1].trim(), url: match[2].trim() };
+}
+
+export function normalizeContactEmail(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  const markdownLink = parseMarkdownLink(value);
+  const candidate = markdownLink?.url ?? value.trim();
+  const withoutMailto = candidate.replace(/^mailto:/i, "").trim();
+  const emailMatch = withoutMailto.match(/[^\s@<>()]+@[^\s@<>()]+\.[^\s@<>()]+/);
+  if (emailMatch) return emailMatch[0];
+  return withoutMailto || undefined;
+}
+
+function normalizeLinkText(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  const markdownLink = parseMarkdownLink(value);
+  return (markdownLink?.label ?? value).trim() || undefined;
+}
+
+function normalizeLinkUrl(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  const markdownLink = parseMarkdownLink(value);
+  return (markdownLink?.url ?? value).trim() || undefined;
+}
+
+export function buildExternalLinkHref(value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  if (/^(https?:|mailto:|tel:)/i.test(trimmed)) return trimmed;
+  if (trimmed.startsWith("//")) return `https:${trimmed}`;
+  return `https://${trimmed}`;
+}
+
 const asBoolean = (value: unknown): boolean | undefined =>
   typeof value === "boolean" ? value : undefined;
 
@@ -140,9 +178,9 @@ function normalizeBasics(value: unknown): StandardCVBasics {
     ? raw.links
         .map((item): StandardCVLink | null => {
           const link = asRecord(item);
-          const url = asString(link.url);
+          const url = normalizeLinkUrl(asString(link.url));
           if (!url) return null;
-          const label = asString(link.label);
+          const label = normalizeLinkText(asString(link.label));
           return label ? { label, url } : { url };
         })
         .filter((item): item is StandardCVLink => item !== null)
@@ -151,7 +189,7 @@ function normalizeBasics(value: unknown): StandardCVBasics {
   return withDefined({
     name: asString(raw.name),
     headline: asString(raw.headline),
-    email: asString(raw.email),
+    email: normalizeContactEmail(asString(raw.email)),
     phone: asString(raw.phone),
     location: asString(raw.location),
     links,
@@ -204,7 +242,7 @@ function normalizeNamedItem(value: unknown): StandardCVNamedItem {
     issuer: asString(raw.issuer),
     organization: asString(raw.organization),
     date: asString(raw.date),
-    url: asString(raw.url),
+    url: normalizeLinkUrl(asString(raw.url)),
     description: asString(raw.description),
     bullets: asStringArray(raw.bullets),
   });

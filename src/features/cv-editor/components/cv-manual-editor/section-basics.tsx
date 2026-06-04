@@ -9,7 +9,8 @@ interface SectionBasicsProps {
   onChange: (basics: StandardCVBasics) => void;
 }
 
-const inputClass = "w-full rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-teal-500/30 focus:outline-none";
+const inputBaseClass = "rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-teal-500/30 focus:outline-none";
+const inputClass = `w-full ${inputBaseClass}`;
 const labelClass = "text-[11px] font-medium text-zinc-500 uppercase tracking-wider";
 const EMAIL_PLACEHOLDER = "tu@email.com";
 const URL_PLACEHOLDER = "https://...";
@@ -55,10 +56,12 @@ export function SectionBasics({ basics, onChange }: SectionBasicsProps) {
         <label className={labelClass}>{t("links")}</label>
         <div className="space-y-2 mt-1">
           {(basics.links ?? []).map((link, i) => (
-            <div key={i} className="group flex items-center gap-2">
-              <input type="text" value={link.label ?? ""} onChange={(e) => updateLink(i, "label", e.target.value)} placeholder={t("linkLabel")} className={`${inputClass} w-1/3`} />
-              <input type="url" value={link.url} onChange={(e) => updateLink(i, "url", e.target.value)} placeholder={URL_PLACEHOLDER} className={`${inputClass} flex-1`} />
-              <button onClick={() => removeLink(i)} className="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-rose-400">
+            <div key={i} className="group flex items-start gap-2">
+              <div className="flex-1 min-w-0 space-y-1.5">
+                <input type="text" value={link.label ?? ""} onChange={(e) => updateLink(i, "label", e.target.value)} placeholder={t("linkLabel")} className={inputClass} />
+                <input type="url" value={link.url} onChange={(e) => updateLink(i, "url", e.target.value)} placeholder={URL_PLACEHOLDER} className={inputClass} />
+              </div>
+              <button onClick={() => removeLink(i)} className="shrink-0 mt-2 opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-rose-400">
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
             </div>

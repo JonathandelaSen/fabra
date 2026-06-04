@@ -1,4 +1,4 @@
-import type { StandardCVNamedItem } from "@/lib/cv-profile";
+import { buildExternalLinkHref, type StandardCVNamedItem } from "@/lib/cv-profile";
 import { hasItems } from "./cv-template-preview";
 
 interface CVTemplatePreviewNamedItemProps {
@@ -17,7 +17,7 @@ export function CVTemplatePreviewNamedItem({
           <p>
             {metaParts.join(" · ")}
             {metaParts.length > 0 && item.url ? " · " : ""}
-            {item.url && <a href={item.url} target="_blank" rel="noopener noreferrer">{item.url}</a>}
+            {item.url && <a href={buildExternalLinkHref(item.url)} target="_blank" rel="noopener noreferrer">{item.url}</a>}
           </p>
         </div>
         <span>{item.date}</span>

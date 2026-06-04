@@ -9,12 +9,14 @@ import {
   Font,
 } from "@react-pdf/renderer";
 import path from "path";
-import type React from "react";
-import type {
-  StandardCVEducation,
-  StandardCVExperience,
-  StandardCVNamedItem,
-  StandardCVProfile,
+import { Fragment, type ReactNode } from "react";
+import {
+  buildExternalLinkHref,
+  normalizeContactEmail,
+  type StandardCVEducation,
+  type StandardCVExperience,
+  type StandardCVNamedItem,
+  type StandardCVProfile,
 } from "@/lib/cv-profile";
 import {
   getCVTemplate,
@@ -561,7 +563,7 @@ function Section({
   accentColor,
 }: {
   title: string;
-  children: React.ReactNode;
+  children: ReactNode;
   s: ReturnType<typeof getStyles>;
   accentColor: string;
 }) {
@@ -657,7 +659,7 @@ function NamedPDF({ item, s }: { item: StandardCVNamedItem; s: ReturnType<typeof
             {metaParts.join(" · ")}
             {metaParts.length > 0 && item.url ? " · " : ""}
             {item.url && (
-              <Link src={item.url} style={s.link}>
+              <Link src={buildExternalLinkHref(item.url)} style={s.link}>
                 {item.url}
               </Link>
             )}
@@ -681,6 +683,7 @@ function CVTemplateDocument({
   locale: CVTemplateLocale;
 }) {
   const basics = profile.basics ?? {};
+  const email = normalizeContactEmail(basics.email);
   const s = getStyles(templateId);
   const templateDef = getCVTemplate(templateId);
   const documentVariant = templateDef?.name ?? "CV";
@@ -690,6 +693,15 @@ function CVTemplateDocument({
   const skillSeparator = isModern || isFilo ? " / " : ", ";
   const accentColor = getResolvedAccentColor(profile, templateId);
   const tagsColor = profile.presentation?.tagsColor;
+  const classicContactItems = [
+    email ? { text: email, href: `mailto:${email}` } : null,
+    basics.phone ? { text: basics.phone } : null,
+    basics.location ? { text: basics.location } : null,
+    ...(basics.links ?? []).map((link) => ({
+      text: link.label || link.url,
+      href: buildExternalLinkHref(link.url),
+    })),
+  ].filter((item): item is { text: string; href?: string } => item !== null);
 
   const renderSection = (section: CVRenderableSectionId) => {
     const title = getSectionTitle(section, locale, profile);
@@ -863,20 +875,24 @@ function CVTemplateDocument({
           <View style={s.contact}>
             {isClassic ? (
               <Text style={s.contactLine}>
-                {[
-                  basics.email,
-                  basics.phone,
-                  basics.location,
-                  ...(basics.links?.map((l) => l.label || l.url) || []),
-                ]
-                  .filter(Boolean)
-                  .join(" · ")}
+                {classicContactItems.map((item, index) => (
+                  <Fragment key={`${item.text}-${index}`}>
+                    {index > 0 ? " · " : ""}
+                    {item.href ? (
+                      <Link src={item.href} style={s.link}>
+                        {item.text}
+                      </Link>
+                    ) : (
+                      item.text
+                    )}
+                  </Fragment>
+                ))}
               </Text>
             ) : (
               <>
-                {basics.email && (
-                  <Link src={`mailto:${basics.email}`} style={[s.contactLine, s.link]}>
-                    {basics.email}
+                {email && (
+                  <Link src={`mailto:${email}`} style={[s.contactLine, s.link]}>
+                    {email}
                   </Link>
                 )}
                 {[basics.phone, basics.location]
@@ -887,7 +903,7 @@ function CVTemplateDocument({
                     </Text>
                   ))}
                 {basics.links?.map((link) => (
-                  <Link key={link.url} src={link.url} style={[s.contactLine, s.link]}>
+                  <Link key={link.url} src={buildExternalLinkHref(link.url)} style={[s.contactLine, s.link]}>
                     {link.label || link.url}
                   </Link>
                 ))}

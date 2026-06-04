@@ -11,6 +11,8 @@ export {
   type StandardCVPresentation,
   type StandardCVProfile,
   normalizeStandardCVProfile,
+  normalizeContactEmail,
+  buildExternalLinkHref,
   getBestCVText,
   profileToPlainText,
   getCVSourceTextHash,

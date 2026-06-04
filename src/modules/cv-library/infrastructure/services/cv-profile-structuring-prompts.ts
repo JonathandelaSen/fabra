@@ -13,6 +13,10 @@ Critical rules:
 - Preserve the original language and wording from the CV as much as possible.
 - If a field is missing, use null, an empty string, or an empty array as appropriate.
 - Keep bullets faithful to the source text; only split obvious list items.
+- Return plain data strings only. Do not put Markdown, HTML, mailto:, or clickable-link syntax inside any JSON string.
+- For basics.email, return only the raw email address exactly as written, for example "name@example.com"; never return "[name@example.com](mailto:name@example.com)" or "mailto:name@example.com".
+- For basics.links, keep each link as plain text. If the CV shows a bare URL such as "github.com/JonathandelaSen", use that same text for both label and url. Do not replace it with a platform label such as "GitHub" unless the CV explicitly uses that label.
+- URLs and emails become clickable in the template renderer, not in the extracted JSON.
 - Respond ONLY with valid JSON.
 
 JSON format:

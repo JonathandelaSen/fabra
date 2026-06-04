@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import type { StandardCVProfile } from "@/lib/cv-profile";
+import { buildExternalLinkHref, type StandardCVProfile } from "@/lib/cv-profile";
 import {
   getOrderedRenderableSections,
   getResolvedAccentColor,
@@ -224,7 +224,7 @@ export default function CVTemplatePreview({
               <span key={item}>{item}</span>
             ))}
           {basics.links?.map((link) => (
-            <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer">{link.label || link.url}</a>
+            <a key={link.url} href={buildExternalLinkHref(link.url)} target="_blank" rel="noopener noreferrer">{link.label || link.url}</a>
           ))}
         </div>
       </header>
