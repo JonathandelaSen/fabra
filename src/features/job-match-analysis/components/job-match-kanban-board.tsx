@@ -152,7 +152,7 @@ export function JobMatchKanbanBoard({
 
   if (total === 0) {
     return (
-      <div className="flex h-full items-center justify-center rounded-lg border border-line bg-panel-base/60 p-8 text-center">
+      <div className="flex w-full flex-1 h-full items-center justify-center rounded-lg border border-line bg-panel-base/60 p-8 text-center">
         <div>
           <p className="text-sm font-semibold text-text-main">
             {searchQuery ? t("noMatches") : t("emptyBoardTitle")}
