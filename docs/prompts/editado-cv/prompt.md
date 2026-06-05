@@ -24,6 +24,8 @@ Critical rules:
 - Do not change visual styling, colors, fonts, template configuration, or layout metadata.
 - Preserve the "presentation" object exactly if it exists; it controls user-owned section titles, section order, and accent color.
 - Keep every field inside the JSON profile shape; do not include commentary or markdown.
+- Never use Markdown syntax inside JSON string values. Emails must be plain addresses, and URLs must be plain URLs or domains, not [label](url) links.
+- Ensure every JSON string is closed before the next field; do not let link, email, or URL text absorb adjacent JSON keys or values.
 ```
 
 ## Copy Paste JSON Envelope
@@ -37,6 +39,13 @@ Critical rules:
 ```
 
 The result shape is the full edited profile (same schema as integrated mode), not a patch.
+
+Copy Paste transport rules additionally require:
+- No Markdown outside the JSON object.
+- No Markdown inside JSON string values.
+- Contact fields remain scalar and clean: `email` is a plain address, and `url` is a plain URL/domain.
+- Links use separate `label` and `url` fields instead of Markdown link syntax.
+- The model must verify that URL/email strings are closed before the next JSON key.
 
 ## Data Inputs
 - User content sent to the model:

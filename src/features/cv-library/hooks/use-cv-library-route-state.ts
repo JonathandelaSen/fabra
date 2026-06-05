@@ -14,10 +14,11 @@ export function useCVLibraryRouteState() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const cvId = pathname.startsWith(`${basePath}/`)
-    ? decodeURIComponent(pathname.slice(`${basePath}/`.length).split("/")[0] ?? "") ||
-      null
-    : null;
+  const firstSegment = pathname.startsWith(`${basePath}/`)
+    ? decodeURIComponent(pathname.slice(`${basePath}/`.length).split("/")[0] ?? "")
+    : "";
+  const cvId =
+    firstSegment && firstSegment !== "editor" ? firstSegment : null;
   const tab = normalizeTab(searchParams.get("tab"));
 
   const hrefFor = useCallback(

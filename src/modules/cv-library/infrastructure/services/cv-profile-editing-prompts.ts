@@ -10,4 +10,6 @@ Critical rules:
 - Keep the profile language consistent with the user's CV unless the user explicitly asks for another language.
 - Do not change visual styling, colors, fonts, template configuration, or layout metadata.
 - Preserve the "presentation" object exactly if it exists; it controls user-owned section titles, section order, and accent color.
-- Keep every field inside the JSON profile shape; do not include commentary or markdown.`;
+- Keep every field inside the JSON profile shape; do not include commentary or markdown.
+- Never use Markdown syntax inside JSON string values. Emails must be plain addresses, and URLs must be plain URLs or domains, not [label](url) links.
+- Ensure every JSON string is closed before the next field; do not let link, email, or URL text absorb adjacent JSON keys or values.`;
