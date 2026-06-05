@@ -17,6 +17,10 @@ import { useNewJobMatchFlowActions } from "../hooks/use-new-job-match-flow-actio
 import { JobMatchAnalysisContent } from "./job-match-analysis-content";
 import { JobMatchAnalysisBody } from "./job-match-analysis-body";
 import { JobMatchAnalysisHeaderActions } from "./job-match-analysis-header-actions";
+import {
+  shouldAutoSelectJobMatchAnalysis,
+  shouldShowJobMatchAnalysisMainLoader,
+} from "./job-match-analysis-loading-state";
 import NewJobMatchFlow from "./new-job-match-flow";
 import { PendingJobMatchCopyPasteModal } from "./pending-job-match-copy-paste-modal";
 
@@ -96,19 +100,24 @@ export default function JobMatchAnalysisView({
   const detail = detailQuery.data ?? null;
   const selectedIdInCurrentList =
     filteredAnalyses.find((analysis) => analysis.id === selectedAnalysisId)?.id ?? null;
+  const isResolvingList = listQuery.isFetching;
+  const isResolvingDetail = detailQuery.isFetching;
 
   useEffect(() => {
     if (
-      view === "list" &&
-      mode !== "new" &&
-      routeState.pathname === "/job-analyses" &&
-      !analysisId &&
-      analyses[0]?.id
+      shouldAutoSelectJobMatchAnalysis({
+        analysisCount: analyses.length,
+        analysisId,
+        isResolvingList,
+        mode,
+        pathname: routeState.pathname,
+        view,
+      })
     ) {
       const firstHasScore = analyses[0].aiScore !== null && analyses[0].aiScore !== undefined;
       replaceAnalysis(analyses[0].id, firstHasScore);
     }
-  }, [analysisId, analyses, mode, replaceAnalysis, routeState.pathname, view]);
+  }, [analysisId, analyses, isResolvingList, mode, replaceAnalysis, routeState.pathname, view]);
 
   const selectItem = (id: string) => {
     const item = analyses.find((a) => a.id === id);
@@ -223,7 +232,15 @@ export default function JobMatchAnalysisView({
     <JobMatchAnalysisContent
       analysisId={selectedAnalysisId}
       detail={detail}
-      isLoading={detailQuery.isLoading}
+      isLoading={shouldShowJobMatchAnalysisMainLoader({
+        analysisCount: filteredAnalyses.length,
+        analysisId,
+        isResolvingDetail,
+        isResolvingList,
+        mode,
+        pathname: routeState.pathname,
+        view,
+      })}
       isAnalysisView={isAnalysisView}
       hasScore={hasScore}
       analysisTab={analysisTab}
@@ -292,7 +309,7 @@ export default function JobMatchAnalysisView({
         searchQuery={searchQuery}
         searchPlaceholder={listT("searchOffers")}
         backToBoardLabel={kanbanT("backToBoard")}
-        isListLoading={listQuery.isLoading}
+        isListLoading={isResolvingList}
         isMoving={mutations.moveAnalysisCard.isPending}
         onSearchChange={setSearchQuery}
         onSelect={selectItem}

@@ -19,8 +19,16 @@ import {
 import { useInterviewQuestionsRouteState } from "../hooks/use-interview-questions-route-state";
 import { InterviewQuestionCopyPastePanel } from "./interview-question-copy-paste-panel";
 import { InterviewQuestionDetail } from "./interview-question-detail";
+import {
+  shouldAutoSelectInterviewQuestion,
+  shouldShowInterviewQuestionsDetailLoader,
+  shouldShowInterviewQuestionsShellLoader,
+} from "./interview-questions-loading-state";
 import { InterviewQuestionsSidebar } from "./interview-questions-sidebar";
-import { InterviewQuestionsSkeleton } from "./interview-questions-skeleton";
+import {
+  InterviewQuestionsDetailSkeleton,
+  InterviewQuestionsSkeleton,
+} from "./interview-questions-skeleton";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 
@@ -81,13 +89,23 @@ export default function InterviewQuestionsView({
     : mutations.editAnswer.isPending
       ? "edit"
       : null;
+  const isResolvingList = listQuery.isFetching;
+  const isResolvingDetail = detailQuery.isFetching;
 
   useEffect(() => {
-    if (pathname === "/interview-questions" && !questionId && questions[0]?.id) {
+    if (
+      shouldAutoSelectInterviewQuestion({
+        isResolvingList,
+        pathname,
+        questionCount: questions.length,
+        questionId,
+      }) &&
+      questions[0]?.id
+    ) {
       setSelectedQuestionId(questions[0].id);
       replaceQuestion(questions[0].id);
     }
-  }, [pathname, questions, questionId, replaceQuestion]);
+  }, [isResolvingList, pathname, questions, questionId, replaceQuestion]);
 
   const setMutationError = (err: unknown) => setError(getErrorMessage(err));
 
@@ -174,7 +192,15 @@ export default function InterviewQuestionsView({
     updateQuestion({ answer });
   };
 
-  if (listQuery.isLoading && questions.length === 0) {
+  if (
+    shouldShowInterviewQuestionsShellLoader({
+      isResolvingDetail,
+      isResolvingList,
+      pathname,
+      questionCount: questions.length,
+      questionId: selectedQuestionId,
+    })
+  ) {
     return <InterviewQuestionsSkeleton />;
   }
 
@@ -204,7 +230,17 @@ export default function InterviewQuestionsView({
           </AlertBanner>
         )}
 
-        {selected ? (
+        {shouldShowInterviewQuestionsDetailLoader({
+          isResolvingDetail,
+          isResolvingList,
+          pathname,
+          questionCount: questions.length,
+          questionId: selectedQuestionId,
+        }) ? (
+          <div className="min-h-[300px]">
+            <InterviewQuestionsDetailSkeleton />
+          </div>
+        ) : selected ? (
           <InterviewQuestionDetail
             question={selected as InterviewQuestion}
             cvs={cvs}

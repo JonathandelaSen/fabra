@@ -79,3 +79,42 @@ export function InterviewQuestionsSkeleton() {
     </FeatureScreenShell>
   );
 }
+
+export function InterviewQuestionsDetailSkeleton() {
+  return (
+    <div className="flex w-full flex-col gap-6 p-6 animate-pulse">
+      <BasicPanel as="section" className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0 flex-1">
+          <Skeleton className="mb-2 h-3.5 w-24 rounded" />
+          <Skeleton className="h-8 w-3/4 rounded-md" />
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Skeleton className="h-9 w-24 rounded-lg" />
+          <Skeleton className="h-9 w-24 rounded-lg" />
+        </div>
+      </BasicPanel>
+
+      <BasicPanel as="section" className="p-5 space-y-4">
+        <Skeleton className="h-4 w-32 rounded" />
+        <div className="grid gap-4 lg:grid-cols-2">
+          <div className="space-y-1.5">
+            <Skeleton className="h-3 w-16 rounded" />
+            <Skeleton className="h-28 w-full rounded-lg" />
+          </div>
+          <div className="space-y-1.5">
+            <Skeleton className="h-3 w-16 rounded" />
+            <Skeleton className="h-28 w-full rounded-lg" />
+          </div>
+        </div>
+      </BasicPanel>
+
+      <BasicPanel as="section" className="p-5 space-y-4">
+        <Skeleton className="h-4 w-28 rounded" />
+        <div className="space-y-1.5">
+          <Skeleton className="h-3 w-16 rounded" />
+          <Skeleton className="h-52 w-full rounded-lg" />
+        </div>
+      </BasicPanel>
+    </div>
+  );
+}

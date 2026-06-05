@@ -24,6 +24,10 @@ import {
 import { useCVAnalysisRouteState } from "../hooks/use-cv-analysis-route-state";
 import CVAnalysesListView from "./cv-analyses-list-view";
 import { CVAnalysisDetailPanel } from "./cv-analysis-detail-panel";
+import {
+  shouldAutoSelectCVAnalysis,
+  shouldShowCVAnalysisMainLoader,
+} from "./cv-analysis-loading-state";
 import NewAnalysisFlow from "./new-analysis-flow";
 
 import type { StoredAIProvider } from "@/lib/browser-preferences";
@@ -78,14 +82,23 @@ export default function CVAnalysisView({
   const selectedAnalysis = detailQuery.data ?? null;
   const selectedIdInCurrentList =
     filteredAnalyses.find((analysis) => analysis.id === selectedAnalysisId)?.id ?? null;
-  const isLoadingList = analysesQuery.isLoading && analyses.length === 0;
+  const isResolvingList = analysesQuery.isFetching;
+  const isResolvingDetail = detailQuery.isFetching;
 
   useEffect(() => {
-    if (route.pathname === "/cv-analysis" && route.mode === "list" && analyses[0]?.id) {
+    if (
+      route.pathname === "/cv-analysis" &&
+      shouldAutoSelectCVAnalysis({
+        analysisCount: analyses.length,
+        isResolvingList,
+        mode: route.mode,
+        selectedAnalysisId: route.analysisId,
+      })
+    ) {
       setSelectedAnalysisId(analyses[0].id);
       route.replaceDetail(analyses[0].id);
     }
-  }, [analyses, route]);
+  }, [analyses, isResolvingList, route]);
 
   useEffect(() => {
     setSelectedAnalysisId(route.analysisId);
@@ -144,7 +157,7 @@ export default function CVAnalysisView({
             selectedId={selectedIdInCurrentList}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
-            isLoading={isLoadingList}
+            isLoading={isResolvingList}
             onSelect={(id) => {
               setSelectedAnalysisId(id);
               route.goToDetail(id);
@@ -164,7 +177,13 @@ export default function CVAnalysisView({
               route.goToDetail(analysisId);
             }}
           />
-        ) : isLoadingList || (route.mode === "detail" && detailQuery.isLoading) ? (
+        ) : shouldShowCVAnalysisMainLoader({
+          analysisCount: filteredAnalyses.length,
+          isResolvingDetail,
+          isResolvingList,
+          mode: route.mode,
+          selectedAnalysisId,
+        }) ? (
           <div className="h-full overflow-y-auto p-6">
             <AnalysisDetailSkeleton />
           </div>

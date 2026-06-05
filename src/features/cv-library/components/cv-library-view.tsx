@@ -16,8 +16,13 @@ import { useCVLibraryRouteState } from "../hooks/use-cv-library-route-state";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { CVLibraryDetail } from "./cv-library-detail";
 import { CVLibraryImportPanel } from "./cv-library-import-panel";
+import {
+  shouldAutoSelectCVLibraryItem,
+  shouldShowCVLibraryDetailLoader,
+  shouldShowCVLibraryShellLoader,
+} from "./cv-library-loading-state";
 import { CVLibrarySidebar } from "./cv-library-sidebar";
-import { CVLibrarySkeleton } from "./cv-library-skeleton";
+import { CVLibraryDetailSkeleton, CVLibrarySkeleton } from "./cv-library-skeleton";
 
 interface CVLibraryViewProps {
   onOpenAnalysis: (id: string, mode?: AnalysisMode) => void;
@@ -84,12 +89,18 @@ export default function CVLibraryView({
     : detailQuery.error
       ? getErrorMessage(detailQuery.error)
       : null;
+  const isResolvingList = listQuery.isFetching;
+  const isResolvingDetail = detailQuery.isFetching;
 
   useEffect(() => {
     const firstCvId = cvs[0]?.id ?? null;
     if (
-      routeState.pathname === "/cvs" &&
-      !routeState.cvId &&
+      shouldAutoSelectCVLibraryItem({
+        cvCount: cvs.length,
+        isResolvingList,
+        pathname: routeState.pathname,
+        selectedCvId: routeState.cvId,
+      }) &&
       firstCvId &&
       autoSelectedCvIdRef.current !== firstCvId
     ) {
@@ -97,7 +108,7 @@ export default function CVLibraryView({
       setSelectedCvId(firstCvId);
       routeState.replaceCV(firstCvId);
     }
-  }, [cvs, routeState.cvId, routeState.pathname, routeState.replaceCV]);
+  }, [cvs, isResolvingList, routeState.cvId, routeState.pathname, routeState.replaceCV]);
 
   const startEditing = (cv: CVDocumentListItem) => {
     setEditingId(cv.id);
@@ -142,7 +153,15 @@ export default function CVLibraryView({
     }
   };
 
-  if (listQuery.isLoading) {
+  if (
+    shouldShowCVLibraryShellLoader({
+      cvCount: cvs.length,
+      isResolvingDetail,
+      isResolvingList,
+      pathname: routeState.pathname,
+      selectedCvId,
+    })
+  ) {
     return (
       <FeatureScreenShell
         title={navT("cvLibrary")}
@@ -175,6 +194,14 @@ export default function CVLibraryView({
         />
         {showImport ? (
           <CVLibraryImportPanel onClose={() => setShowImport(false)} />
+        ) : shouldShowCVLibraryDetailLoader({
+          cvCount: cvs.length,
+          isResolvingDetail,
+          isResolvingList,
+          pathname: routeState.pathname,
+          selectedCvId,
+        }) ? (
+          <CVLibraryDetailSkeleton />
         ) : (
           <CVLibraryDetail
             selected={selected}

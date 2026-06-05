@@ -573,6 +573,7 @@ export const messages = {
         createVersion: "Create editable version",
         structureWithExternalChat: "Use external chat",
         createFailed: "Error creating version",
+        emptySelection: "Choose a template for your CV.",
       },
       cvProfileCopyPaste: {
         title: "Structure profile with external AI",
@@ -1962,6 +1963,7 @@ export const messages = {
         createVersion: "Crear versión editable",
         structureWithExternalChat: "Usar chat externo",
         createFailed: "Error al crear la versión",
+        emptySelection: "Elige una plantilla para tu CV.",
       },
       cvProfileCopyPaste: {
         title: "Estructurar perfil con IA externa",

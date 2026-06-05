@@ -62,18 +62,18 @@ export function JobMatchAnalysisContent({
 }: JobMatchAnalysisContentProps) {
   const t = useTranslations("analysisFlow.appShell");
 
-  if (!analysisId) {
-    return (
-      <div className="flex h-full items-center justify-center text-sm text-zinc-600">
-        {t("empty")}
-      </div>
-    );
-  }
-
   if (isLoading) {
     return (
       <div className="h-full overflow-y-auto p-6">
         <AnalysisDetailSkeleton />
+      </div>
+    );
+  }
+
+  if (!analysisId) {
+    return (
+      <div className="flex h-full items-center justify-center text-sm text-zinc-600">
+        {t("empty")}
       </div>
     );
   }

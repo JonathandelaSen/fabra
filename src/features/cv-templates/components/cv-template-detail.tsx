@@ -70,7 +70,7 @@ export function CVTemplateDetail({
     return (
       <section className="min-h-0 overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]">
         <div className="flex h-full min-h-[520px] items-center justify-center text-sm text-zinc-500">
-          {t("title")}
+          {t("emptySelection")}
         </div>
       </section>
     );

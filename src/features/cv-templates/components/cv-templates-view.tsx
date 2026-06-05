@@ -15,6 +15,8 @@ import { useCVDocumentList } from "@/features/cv-library";
 import { useCreateCVTemplateVersion } from "../hooks/use-cv-template-mutations";
 import { CVTemplatesSidebar } from "./cv-templates-sidebar";
 import { CVTemplateDetail } from "./cv-template-detail";
+import { shouldShowCVTemplatesLoader } from "./cv-templates-loading-state";
+import { CVTemplatesSkeleton } from "./cv-templates-skeleton";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 
 interface CVTemplatesViewProps {
@@ -55,6 +57,7 @@ export default function CVTemplatesView({
   const createVersion = useCreateCVTemplateVersion({
     onCreated: (version) => onOpenEditor(version.id),
   });
+  const isResolvingCvs = listQuery.isFetching;
 
   const filteredCvs = cvs.filter(
     (cv) =>
@@ -126,44 +129,53 @@ export default function CVTemplatesView({
 
   return (
     <FeatureScreenShell title={t("title")} bodyClassName="overflow-hidden">
-      <div className="grid h-full w-full gap-6 lg:grid-cols-[320px_1fr]">
-        <CVTemplatesSidebar
-          templates={CV_TEMPLATES}
-          selectedId={selectedTemplateId}
-          onSelect={handleSelectTemplate}
-        />
+      {shouldShowCVTemplatesLoader({
+        isResolvingCvs,
+        pathname,
+        templateCount: CV_TEMPLATES.length,
+        templateId: templateIdFromPath,
+      }) ? (
+        <CVTemplatesSkeleton />
+      ) : (
+        <div className="grid h-full w-full gap-6 lg:grid-cols-[320px_1fr]">
+          <CVTemplatesSidebar
+            templates={CV_TEMPLATES}
+            selectedId={selectedTemplateId}
+            onSelect={handleSelectTemplate}
+          />
 
-        <CVTemplateDetail
-          template={selectedTemplate}
-          cvs={cvs}
-          filteredCvs={filteredCvs}
-          selectedCvId={selectedCvId}
-          locale={locale}
-          searchQuery={searchQuery}
-          hasAIApiKey={hasAIApiKey}
-          selectedProvider={selectedProvider}
-          onProviderChange={setSelectedProvider}
-          selectedModel={selectedModel}
-          creating={createVersion.isPending}
-          copyPasteOpen={copyPasteOpen}
-          error={createVersion.errorMessage}
-          onSelectCv={setSelectedCvId}
-          onLocaleChange={setLocale}
-          onSearchChange={setSearchQuery}
-          onOpenUpload={onOpenUpload}
-          onOpenSettings={onOpenSettings}
-          onModelChange={setSelectedModel}
-          onCreateVersion={handleCreateVersion}
-          onOpenCopyPaste={() => setCopyPasteOpen(true)}
-          onCloseCopyPaste={() => setCopyPasteOpen(false)}
-          onApplied={(result) => {
-            void listQuery.refetch();
-            if (result.version) {
-              onOpenEditor(result.version.id);
-            }
-          }}
-        />
-      </div>
+          <CVTemplateDetail
+            template={selectedTemplate}
+            cvs={cvs}
+            filteredCvs={filteredCvs}
+            selectedCvId={selectedCvId}
+            locale={locale}
+            searchQuery={searchQuery}
+            hasAIApiKey={hasAIApiKey}
+            selectedProvider={selectedProvider}
+            onProviderChange={setSelectedProvider}
+            selectedModel={selectedModel}
+            creating={createVersion.isPending}
+            copyPasteOpen={copyPasteOpen}
+            error={createVersion.errorMessage}
+            onSelectCv={setSelectedCvId}
+            onLocaleChange={setLocale}
+            onSearchChange={setSearchQuery}
+            onOpenUpload={onOpenUpload}
+            onOpenSettings={onOpenSettings}
+            onModelChange={setSelectedModel}
+            onCreateVersion={handleCreateVersion}
+            onOpenCopyPaste={() => setCopyPasteOpen(true)}
+            onCloseCopyPaste={() => setCopyPasteOpen(false)}
+            onApplied={(result) => {
+              void listQuery.refetch();
+              if (result.version) {
+                onOpenEditor(result.version.id);
+              }
+            }}
+          />
+        </div>
+      )}
     </FeatureScreenShell>
   );
 }

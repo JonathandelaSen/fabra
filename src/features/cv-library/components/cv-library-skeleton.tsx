@@ -27,23 +27,29 @@ export function CVLibrarySkeleton() {
           </div>
         ))}
       </BasicPanel>
-      <BasicPanel className="flex w-full flex-col gap-6 p-6">
-        <div className="flex flex-col gap-4 border-b border-white/[0.04] pb-6 md:flex-row md:items-end md:justify-between">
-          <div className="space-y-3 flex-1">
-            <Skeleton className="h-3 w-24" />
-            <Skeleton className="h-8 w-2/3" />
-          </div>
-          <div className="flex gap-2">
-            <Skeleton className="h-9 w-28 rounded-lg" />
-            <Skeleton className="h-9 w-28 rounded-lg" />
-          </div>
-        </div>
-        <div className="space-y-4">
-          <Skeleton className="h-4 w-1/4" />
-          <Skeleton className="h-32 w-full rounded-xl" />
-          <Skeleton className="h-64 w-full rounded-xl" />
-        </div>
-      </BasicPanel>
+      <CVLibraryDetailSkeleton />
     </div>
+  );
+}
+
+export function CVLibraryDetailSkeleton() {
+  return (
+    <BasicPanel className="flex w-full flex-col gap-6 p-6">
+      <div className="flex flex-col gap-4 border-b border-white/[0.04] pb-6 md:flex-row md:items-end md:justify-between">
+        <div className="space-y-3 flex-1">
+          <Skeleton className="h-3 w-24" />
+          <Skeleton className="h-8 w-2/3" />
+        </div>
+        <div className="flex gap-2">
+          <Skeleton className="h-9 w-28 rounded-lg" />
+          <Skeleton className="h-9 w-28 rounded-lg" />
+        </div>
+      </div>
+      <div className="space-y-4">
+        <Skeleton className="h-4 w-1/4" />
+        <Skeleton className="h-32 w-full rounded-xl" />
+        <Skeleton className="h-64 w-full rounded-xl" />
+      </div>
+    </BasicPanel>
   );
 }
