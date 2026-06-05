@@ -195,7 +195,6 @@ export default function AIAnalysisView({
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <AnalysisTabsList
               isJobMatch={isJobMatch}
-              hasAdditionalContext={Boolean(additionalContext)}
               interviewQuestionCount={interviewQuestions.length}
             />
             <AnalysisTabsContent

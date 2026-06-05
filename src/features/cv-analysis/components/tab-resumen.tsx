@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, Star, ChevronRight, XCircle } from "lucide-react";
+import { CheckCircle2, Star, ChevronRight, XCircle, FileSearch } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { AnalysisMode } from "@/lib/analysis-types";
 import { BasicPanel } from "@/components/shared/basic-panel";
@@ -14,6 +14,7 @@ interface TabResumenProps {
   matchingKeywords: string[];
   missingKeywords: string[];
   analysisMode: AnalysisMode;
+  additionalContext?: string;
 }
 
 export default function TabResumen({
@@ -24,8 +25,10 @@ export default function TabResumen({
   matchingKeywords,
   missingKeywords,
   analysisMode,
+  additionalContext,
 }: TabResumenProps) {
   const t = useTranslations("analysisDetail.summary");
+  const tDetail = useTranslations("analysisDetail");
 
   return (
     <div className="space-y-6">
@@ -188,6 +191,22 @@ export default function TabResumen({
           </BasicPanel>
         </motion.div>
       </div>
+      )}
+      {additionalContext && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="rounded-2xl border border-violet-500/10 bg-violet-500/[0.03] p-6"
+        >
+          <h4 className="text-sm font-semibold text-violet-300 flex items-center gap-2 mb-3">
+            <FileSearch className="w-4 h-4" />
+            {tDetail("context.title")}
+          </h4>
+          <p className="text-xs text-zinc-400 italic bg-field rounded-lg p-3 border border-white/[0.04] whitespace-pre-wrap">
+            {additionalContext}
+          </p>
+        </motion.div>
       )}
     </div>
   );

@@ -9,7 +9,6 @@ import TabOferta from "./tab-oferta";
 import TabEntrevista from "./tab-entrevista";
 import TabSeguimiento from "./tab-seguimiento";
 import TabChatOferta from "./tab-chat-oferta";
-import { AnalysisContextTab } from "./analysis-context-tab";
 
 interface AnalysisTabsContentProps {
   isJobMatch: boolean;
@@ -101,6 +100,7 @@ export function AnalysisTabsContent({
           matchingKeywords={matchingKeywords}
           missingKeywords={missingKeywords}
           analysisMode={analysisMode}
+          additionalContext={additionalContext}
         />
       </TabsContent>
 
@@ -155,9 +155,6 @@ export function AnalysisTabsContent({
         </>
       )}
 
-      {!isJobMatch && additionalContext && (
-        <AnalysisContextTab additionalContext={additionalContext} />
-      )}
     </div>
   );
 }

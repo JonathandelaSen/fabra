@@ -100,15 +100,15 @@ export function useJobMatchAnalysisRouteState() {
   );
 
   const selectAnalysis = useCallback(
-    (id: string) => {
-      router.push(hrefFor(id));
+    (id: string, analysis = false) => {
+      router.push(hrefFor(id, analysis));
     },
     [hrefFor, router],
   );
 
   const replaceAnalysis = useCallback(
-    (id: string) => {
-      router.replace(hrefFor(id));
+    (id: string, analysis = false) => {
+      router.replace(hrefFor(id, analysis));
     },
     [hrefFor, router],
   );

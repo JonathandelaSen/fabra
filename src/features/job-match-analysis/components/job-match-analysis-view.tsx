@@ -105,22 +105,26 @@ export default function JobMatchAnalysisView({
       !analysisId &&
       analyses[0]?.id
     ) {
-      replaceAnalysis(analyses[0].id);
+      const firstHasScore = analyses[0].aiScore !== null && analyses[0].aiScore !== undefined;
+      replaceAnalysis(analyses[0].id, firstHasScore);
     }
   }, [analysisId, analyses, mode, replaceAnalysis, routeState.pathname, view]);
 
   const selectItem = (id: string) => {
-    selectAnalysis(id);
+    const item = analyses.find((a) => a.id === id);
+    const itemHasScore = item?.aiScore !== null && item?.aiScore !== undefined;
+    selectAnalysis(id, itemHasScore);
   };
 
   const handleDelete = async (id: string) => {
     const currentIndex = analyses.findIndex((analysis) => analysis.id === id);
-    const nextSelection =
-      analyses[currentIndex + 1]?.id ?? analyses[currentIndex - 1]?.id ?? null;
+    const nextItem =
+      analyses[currentIndex + 1] ?? analyses[currentIndex - 1] ?? null;
     await mutations.deleteAnalysis.mutateAsync(id);
     if (analysisId === id) {
-      if (nextSelection) {
-        replaceAnalysis(nextSelection);
+      if (nextItem) {
+        const nextHasScore = nextItem.aiScore !== null && nextItem.aiScore !== undefined;
+        replaceAnalysis(nextItem.id, nextHasScore);
       } else {
         clearSelection();
       }

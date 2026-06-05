@@ -13,7 +13,6 @@ import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface AnalysisTabsListProps {
   isJobMatch: boolean;
-  hasAdditionalContext: boolean;
   interviewQuestionCount: number;
 }
 
@@ -22,10 +21,13 @@ const tabClassName =
 
 export function AnalysisTabsList({
   isJobMatch,
-  hasAdditionalContext,
   interviewQuestionCount,
 }: AnalysisTabsListProps) {
   const t = useTranslations("analysisDetail");
+
+  if (!isJobMatch) {
+    return null;
+  }
 
   return (
     <div className="sticky top-[-24px] z-20 -mx-6 px-6 py-4 backdrop-blur-md mb-8">
@@ -58,12 +60,6 @@ export function AnalysisTabsList({
               {t("tabs.tracking")}
             </TabsTrigger>
           </>
-        )}
-        {!isJobMatch && hasAdditionalContext && (
-          <TabsTrigger value="contexto" className={tabClassName}>
-            <FileSearch className="size-4" />
-            {t("tabs.context")}
-          </TabsTrigger>
         )}
       </TabsList>
     </div>

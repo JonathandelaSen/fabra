@@ -13,7 +13,7 @@ import type { AnalysisTab } from "./use-job-match-analysis-route-state";
 interface UseNewJobMatchFlowActionsParams {
   mutations: ReturnType<typeof useJobMatchAnalysisMutations>;
   aiApiKey: string;
-  replaceAnalysis: (id: string) => void;
+  replaceAnalysis: (id: string, analysis?: boolean) => void;
   goToAnalysisById: (id: string, tab?: AnalysisTab) => void;
 }
 
