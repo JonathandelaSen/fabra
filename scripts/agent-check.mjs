@@ -8,6 +8,12 @@ const checks = [
     successSummary: "DDD, frontend boundaries, query bus, and AI DI checks passed.",
   },
   {
+    name: "frontend tests",
+    command: "npm",
+    args: ["run", "test:frontend", "--silent", "--", "--run"],
+    successSummary: "Frontend component and hook tests passed.",
+  },
+  {
     name: "build",
     command: "npm",
     args: ["run", "build", "--silent"],

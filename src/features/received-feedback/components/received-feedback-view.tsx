@@ -12,6 +12,11 @@ import { useReceivedFeedbackMutations } from "../hooks/use-received-feedback-mut
 import { useReceivedFeedbackContexts, useReceivedFeedbackList } from "../hooks/use-received-feedback-queries";
 import { useReceivedFeedbackRouteState } from "../hooks/use-received-feedback-route-state";
 import type { FormState } from "./received-feedback-form";
+import {
+  shouldAutoSelectReceivedFeedback,
+  shouldClearMissingReceivedFeedbackSelection,
+  shouldShowReceivedFeedbackMainLoader,
+} from "./received-feedback-loading-state";
 import { ReceivedFeedbackMain } from "./received-feedback-main";
 import { ReceivedFeedbackSidebar } from "./received-feedback-sidebar";
 
@@ -30,7 +35,12 @@ function findDefaultContext(contexts: ActivityContext[]) {
 }
 
 export default function ReceivedFeedbackView() {
-  useReceivedFeedbackRouteState();
+  const {
+    selectedId: routeSelectedId,
+    goToList,
+    replaceItem: replaceRouteItem,
+    selectItem: selectRouteItem,
+  } = useReceivedFeedbackRouteState();
   const t = useTranslations("receivedFeedback");
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -57,21 +67,42 @@ export default function ReceivedFeedbackView() {
     return sorted.filter((item) => item.giverName.toLowerCase().includes(query) || item.feedbackText.toLowerCase().includes(query) || (item.userNote && item.userNote.toLowerCase().includes(query)));
   }, [rawItems, searchQuery]);
 
+  const activeSelectedId = routeSelectedId ?? selectedId;
   const selectedItem = useMemo(() => {
-    return rawItems.find((item) => item.id === selectedId) ?? null;
-  }, [rawItems, selectedId]);
+    return rawItems.find((item) => item.id === activeSelectedId) ?? null;
+  }, [rawItems, activeSelectedId]);
 
   const saving = mutations.createFeedback.isPending || mutations.updateFeedback.isPending || mutations.deleteFeedback.isPending;
-  const loading = feedbackQuery.isLoading || contextsQuery.isLoading;
+  const isResolvingQueries = feedbackQuery.isFetching || contextsQuery.isFetching;
 
   const queryError = feedbackQuery.error ? getErrorMessage(feedbackQuery.error) : contextsQuery.error ? getErrorMessage(contextsQuery.error) : null;
   const visibleError = error ?? queryError;
 
   useEffect(() => {
-    if (!selectedId && !isCreating && items.length > 0) {
-      setSelectedId(items[0].id);
+    if (
+      shouldAutoSelectReceivedFeedback({
+        activeSelectedId,
+        isCreating,
+        isResolvingQueries,
+        itemCount: items.length,
+      })
+    ) {
+      const nextId = items[0].id;
+      replaceRouteItem(nextId);
     }
-  }, [items, selectedId, isCreating]);
+  }, [activeSelectedId, items, isCreating, isResolvingQueries, replaceRouteItem]);
+
+  useEffect(() => {
+    if (
+      shouldClearMissingReceivedFeedbackSelection({
+        isResolvingQueries,
+        routeSelectedId,
+        selectedItemExists: Boolean(selectedItem),
+      })
+    ) {
+      goToList();
+    }
+  }, [routeSelectedId, isResolvingQueries, selectedItem, goToList]);
 
   useEffect(() => {
     const selectedContextId = searchParams.get("activityContextId");
@@ -96,6 +127,7 @@ export default function ReceivedFeedbackView() {
     const defaultContext = findDefaultContext(contexts);
     setForm({ ...emptyForm(), activityContextId: defaultContext?.id ?? "" });
     setSelectedId(null);
+    goToList();
     setIsCreating(true);
     setIsEditing(false);
     setError(null);
@@ -119,9 +151,12 @@ export default function ReceivedFeedbackView() {
     setIsCreating(false);
     setIsEditing(false);
     if (items.length > 0) {
-      setSelectedId(selectedId ?? items[0].id);
+      const nextId = selectedId ?? items[0].id;
+      setSelectedId(nextId);
+      selectRouteItem(nextId);
     } else {
       setSelectedId(null);
+      goToList();
     }
     setForm(emptyForm());
   };
@@ -146,13 +181,14 @@ export default function ReceivedFeedbackView() {
 
     setError(null);
     try {
-      if (isEditing && selectedId) {
-        await mutations.updateFeedback.mutateAsync({ id: selectedId, updates: payload });
+      if (isEditing && activeSelectedId) {
+        await mutations.updateFeedback.mutateAsync({ id: activeSelectedId, updates: payload });
         setIsEditing(false);
       } else {
         const result = await mutations.createFeedback.mutateAsync(payload);
         if (result?.id) {
           setSelectedId(result.id);
+          selectRouteItem(result.id);
         }
         setIsCreating(false);
       }
@@ -173,10 +209,15 @@ export default function ReceivedFeedbackView() {
 
       await mutations.deleteFeedback.mutateAsync(item);
 
-      if (selectedId === deletedId) {
+      if (activeSelectedId === deletedId) {
         setSelectedId(nextSelection);
         setIsEditing(false);
         setIsCreating(false);
+        if (nextSelection) {
+          selectRouteItem(nextSelection);
+        } else {
+          goToList();
+        }
       }
     } catch (err: unknown) {
       setError(getErrorMessage(err) || t("errors.deleteFeedback"));
@@ -185,6 +226,7 @@ export default function ReceivedFeedbackView() {
 
   const selectItem = (id: string) => {
     setSelectedId(id);
+    selectRouteItem(id);
     setIsEditing(false);
     setIsCreating(false);
     setError(null);
@@ -206,9 +248,9 @@ export default function ReceivedFeedbackView() {
           <ReceivedFeedbackSidebar
             contexts={contexts}
             items={items}
-            loading={loading}
+            loading={isResolvingQueries}
             searchQuery={searchQuery}
-            selectedId={selectedId}
+            selectedId={activeSelectedId}
             onSearchChange={setSearchQuery}
             onSelectItem={selectItem}
             t={t}
@@ -220,7 +262,12 @@ export default function ReceivedFeedbackView() {
           form={form}
           isCreating={isCreating}
           isEditing={isEditing}
-          loading={loading}
+          loading={shouldShowReceivedFeedbackMainLoader({
+            activeSelectedId,
+            isCreating,
+            isResolvingQueries,
+            itemCount: items.length,
+          })}
           saving={saving}
           selectedItem={selectedItem}
           today={today}

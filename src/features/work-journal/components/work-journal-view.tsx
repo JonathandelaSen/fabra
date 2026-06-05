@@ -1,15 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { ArrowLeft, CalendarRange, List } from "lucide-react";
 import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
 import { getErrorMessage } from "@/lib/errors";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
-import { Button } from "@/components/ui/button";
 import {
   useWorkJournalContexts,
   useWorkJournalEntries,
@@ -17,9 +15,13 @@ import {
 import { useWorkJournalMutations } from "../hooks/use-work-journal-mutations";
 import { useWorkJournalRouteState } from "../hooks/use-work-journal-route-state";
 import { WorkJournalSidebar } from "./work-journal-sidebar";
-import { WorkJournalDetail } from "./work-journal-detail";
-import { WorkJournalForm } from "./work-journal-form";
-import { WorkJournalTimeline } from "./work-journal-timeline";
+import { WorkJournalMainPane } from "./work-journal-main-pane";
+import { WorkJournalViewToggle } from "./work-journal-view-toggle";
+import {
+  shouldAutoSelectWorkJournalEntry,
+  shouldClearMissingWorkJournalSelection,
+  shouldShowWorkJournalMainLoader,
+} from "./work-journal-loading-state";
 import type { TimelineGranularity } from "./work-journal-timeline-utils";
 
 import type { StoredAIProvider } from "@/lib/browser-preferences";
@@ -46,9 +48,12 @@ export default function WorkJournalView({
   const entriesQuery = useWorkJournalEntries();
   const {
     view,
+    listEntryId,
     timelineEntryId,
     goToList,
     goToTimeline,
+    replaceListEntry,
+    selectListEntry,
     selectTimelineEntry,
     backToTimeline,
   } = useWorkJournalRouteState();
@@ -65,7 +70,7 @@ export default function WorkJournalView({
 
   const contexts = contextsQuery.data?.contexts ?? [];
   const entries: import("../api/work-journal-types").WorkJournalEntryLegacy[] = entriesQuery.data ?? [];
-  const loading = contextsQuery.isLoading || entriesQuery.isLoading;
+  const isResolvingQueries = contextsQuery.isFetching || entriesQuery.isFetching;
   const queryError = contextsQuery.error
     ? getErrorMessage(contextsQuery.error)
     : entriesQuery.error
@@ -107,29 +112,60 @@ export default function WorkJournalView({
     filteredEntries,
     selectedEntryId,
     setSelectedEntryId,
+    onEntrySelectionChange: (id) => {
+      if (id) {
+        selectListEntry(id);
+      } else {
+        goToList();
+      }
+    },
     setIsEditing,
     setShowForm,
   });
 
   const visibleError = error ?? queryError;
 
-  const activeEntryId = view === "timeline" ? timelineEntryId : selectedEntryId;
+  const activeEntryId = view === "timeline" ? timelineEntryId : (listEntryId ?? selectedEntryId);
   const selectedEntry = useMemo(() => {
     return entries.find(e => e.id === activeEntryId) ?? null;
   }, [entries, activeEntryId]);
 
   useEffect(() => {
-    if (view !== "list") return;
-    if (!selectedEntryId && !showForm && filteredEntries.length > 0) {
-      setSelectedEntryId(filteredEntries[0].id);
+    if (
+      shouldAutoSelectWorkJournalEntry({
+        activeEntryId,
+        entryCount: filteredEntries.length,
+        isResolvingQueries,
+        showForm,
+        view,
+      })
+    ) {
+      const nextId = filteredEntries[0].id;
+      replaceListEntry(nextId);
     }
-  }, [filteredEntries, selectedEntryId, showForm, view]);
+  }, [activeEntryId, filteredEntries, isResolvingQueries, replaceListEntry, showForm, view]);
 
   useEffect(() => {
-    if (view === "timeline" && timelineEntryId && !loading && !selectedEntry) {
+    if (
+      view === "timeline" &&
+      shouldClearMissingWorkJournalSelection({
+        isResolvingQueries,
+        routeEntryId: timelineEntryId,
+        selectedEntryExists: Boolean(selectedEntry),
+      })
+    ) {
       backToTimeline();
+    } else if (
+      view === "list" &&
+      shouldClearMissingWorkJournalSelection({
+        isResolvingQueries,
+        routeEntryId: listEntryId,
+        selectedEntryExists: Boolean(selectedEntry),
+      })
+    ) {
+      goToList();
     }
-  }, [view, timelineEntryId, loading, selectedEntry, backToTimeline]);
+  }, [view, timelineEntryId, listEntryId, isResolvingQueries, selectedEntry, backToTimeline, goToList]);
 
   useEffect(() => {
     const selectedContextId = searchParams.get("activityContextId");
@@ -156,6 +192,7 @@ export default function WorkJournalView({
 
   const handleSelectEntry = (id: string) => {
     setSelectedEntryId(id);
+    selectListEntry(id);
     setShowForm(false);
     setIsEditing(false);
     setError(null);
@@ -193,122 +230,16 @@ export default function WorkJournalView({
     }
   };
 
-  const handleDraftWithAI = () => draftWithAI(selectedProvider, selectedModel);
-
-  const viewToggle = (
-    <div className="flex items-center rounded-lg border border-line bg-panel-subtle p-1">
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={goToList}
-        aria-pressed={view === "list"}
-        className={`transition-all duration-200 ${
-          view === "list"
-            ? "bg-panel-base text-text-main shadow-xs border border-line/40 font-semibold"
-            : "text-text-soft hover:text-text-main hover:bg-panel-hover/50 border-transparent"
-        }`}
-      >
-        <List className={`h-4 w-4 transition-colors ${view === "list" ? "text-action" : "text-text-soft"}`} />
-        {t("timeline.listView")}
-      </Button>
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={goToTimeline}
-        aria-pressed={view === "timeline"}
-        className={`transition-all duration-200 ${
-          view === "timeline"
-            ? "bg-panel-base text-text-main shadow-xs border border-line/40 font-semibold"
-            : "text-text-soft hover:text-text-main hover:bg-panel-hover/50 border-transparent"
-        }`}
-      >
-        <CalendarRange className={`h-4 w-4 transition-colors ${view === "timeline" ? "text-action" : "text-text-soft"}`} />
-        {t("timeline.timelineView")}
-      </Button>
-    </div>
-  );
-
-  const detailPane = (
-    <WorkJournalDetail
-      entry={selectedEntry}
-      isEditing={isEditing}
-      setIsEditing={setIsEditing}
-      onSave={patchEntry}
-      onDelete={deleteEntry}
-      activeContexts={activeContexts}
-      onManageContexts={openActivityContextManager}
-      hasAIApiKey={hasAIApiKey}
-      onOpenSettings={onOpenSettings}
-      selectedProvider={selectedProvider}
-      setSelectedProvider={setSelectedProvider}
-      selectedModel={selectedModel}
-      setSelectedModel={setSelectedModel}
-      onDraftEditWithAI={draftEditWithAI}
-    />
-  );
-
-  const isTimelineBoard = view === "timeline" && !timelineEntryId;
-
-  let mainPane: ReactNode;
-  if (showForm) {
-    mainPane = (
-      <div className="px-2 md:px-6 py-4">
-        <WorkJournalForm
-          draft={draft}
-          setDraft={setDraft}
-          saveEntry={saveEntry}
-          draftWithAI={handleDraftWithAI}
-          aiLoading={aiLoading}
-          hasAIApiKey={hasAIApiKey}
-          onOpenSettings={onOpenSettings}
-          selectedProvider={selectedProvider}
-          setSelectedProvider={setSelectedProvider}
-          selectedModel={selectedModel}
-          setSelectedModel={setSelectedModel}
-          isCopyPasteOpen={isCopyPasteOpen}
-          setIsCopyPasteOpen={setIsCopyPasteOpen}
-          contexts={contexts}
-          activeContexts={activeContexts}
-          openActivityContextManager={openActivityContextManager}
-          setShowForm={setShowForm}
-        />
-      </div>
-    );
-  } else if (isTimelineBoard) {
-    mainPane = (
-      <WorkJournalTimeline
-        entries={filteredEntries}
-        isLoading={loading}
-        isFiltered={Boolean(search || contextFilter)}
-        granularity={granularity}
-        setGranularity={setGranularity}
-        onSelect={selectTimelineEntry}
-      />
-    );
-  } else if (view === "timeline") {
-    mainPane = (
-      <div className="flex flex-col">
-        <div className="px-2 md:px-6 pt-4">
-          <Button type="button" variant="ghost" size="sm" onClick={backToTimeline}>
-            <ArrowLeft className="h-4 w-4" />
-            {t("timeline.backToTimeline")}
-          </Button>
-        </div>
-        {detailPane}
-      </div>
-    );
-  } else {
-    mainPane = detailPane;
-  }
-
   return (
     <FeatureScreenShell
       title={t("title")}
       actions={
         <>
-          {viewToggle}
+          <WorkJournalViewToggle
+            view={view}
+            onGoToList={goToList}
+            onGoToTimeline={goToTimeline}
+          />
           <FeatureHeaderActionButton
             label={t("newEntry")}
             onClick={handleToggleForm}
@@ -324,7 +255,7 @@ export default function WorkJournalView({
             entries={filteredEntries}
             contexts={contexts}
             selectedId={activeEntryId}
-            isLoading={loading}
+            isLoading={isResolvingQueries}
             search={search}
             setSearch={setSearch}
             contextFilter={contextFilter}
@@ -339,7 +270,47 @@ export default function WorkJournalView({
               {visibleError}
             </div>
           )}
-          {mainPane}
+          <WorkJournalMainPane
+            activeContexts={activeContexts}
+            aiLoading={aiLoading}
+            contexts={contexts}
+            draft={draft}
+            draftEditWithAI={draftEditWithAI}
+            draftWithAI={draftWithAI}
+            filteredEntries={filteredEntries}
+            granularity={granularity}
+            hasAIApiKey={hasAIApiKey}
+            isCopyPasteOpen={isCopyPasteOpen}
+            isEditing={isEditing}
+            isFiltered={Boolean(search || contextFilter)}
+            isResolvingQueries={shouldShowWorkJournalMainLoader({
+              activeEntryId,
+              entryCount: filteredEntries.length,
+              isResolvingQueries,
+              showForm,
+              view,
+            })}
+            onBackToTimeline={backToTimeline}
+            onDelete={deleteEntry}
+            onManageContexts={openActivityContextManager}
+            onOpenSettings={onOpenSettings}
+            onSave={patchEntry}
+            onSelectTimelineEntry={selectTimelineEntry}
+            saveEntry={saveEntry}
+            selectedEntry={selectedEntry}
+            selectedModel={selectedModel}
+            selectedProvider={selectedProvider}
+            setDraft={setDraft}
+            setGranularity={setGranularity}
+            setIsCopyPasteOpen={setIsCopyPasteOpen}
+            setIsEditing={setIsEditing}
+            setSelectedModel={setSelectedModel}
+            setSelectedProvider={setSelectedProvider}
+            setShowForm={setShowForm}
+            showForm={showForm}
+            timelineEntryId={timelineEntryId}
+            view={view}
+          />
         </div>
       </FeatureTwoPaneLayout>
     </FeatureScreenShell>

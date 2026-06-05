@@ -46,19 +46,21 @@ interface UseWorkJournalMutationsParams {
   filteredEntries: WorkJournalEntry[];
   selectedEntryId: string | null;
   setSelectedEntryId: (id: string | null) => void;
+  onEntrySelectionChange?: (id: string | null) => void;
   setIsEditing: (editing: boolean) => void;
   setShowForm: (show: boolean) => void;
 }
 
 export function useWorkJournalMutations({
-  aiProvider,
+  aiProvider: _aiProvider,
   aiApiKey,
-  hasAIApiKey,
+  hasAIApiKey: _hasAIApiKey,
   onOpenSettings,
   contexts,
   filteredEntries,
   selectedEntryId,
   setSelectedEntryId,
+  onEntrySelectionChange,
   setIsEditing,
   setShowForm,
 }: UseWorkJournalMutationsParams) {
@@ -104,6 +106,7 @@ export function useWorkJournalMutations({
     }));
     setShowForm(false);
     setSelectedEntryId(optimisticEntry.id);
+    onEntrySelectionChange?.(optimisticEntry.id);
 
     try {
       const entry = await createWorkJournalEntry({
@@ -124,6 +127,7 @@ export function useWorkJournalMutations({
               )
       );
       setSelectedEntryId(entry.id);
+      onEntrySelectionChange?.(entry.id);
     } catch (err: unknown) {
       queryClient.setQueryData(workJournalQueryKeys.entries(), previousEntries);
       setError(getErrorMessage(err) || t("errors.saveEntry"));
@@ -138,6 +142,7 @@ export function useWorkJournalMutations({
       });
       setShowForm(true);
       setSelectedEntryId(null);
+      onEntrySelectionChange?.(null);
     }
   };
 
@@ -251,6 +256,7 @@ export function useWorkJournalMutations({
 
     if (selectedEntryId === entry.id) {
       setSelectedEntryId(nextSelection);
+      onEntrySelectionChange?.(nextSelection);
       setIsEditing(false);
     }
 

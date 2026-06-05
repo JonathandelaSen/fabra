@@ -9,10 +9,6 @@ export function useWorkJournalRouteState() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Parse:
-  // /work-journal
-  // /work-journal/timeline
-  // /work-journal/timeline/[id]
   const segments = pathname.startsWith("/work-journal/")
     ? pathname.slice("/work-journal/".length).split("/").map(decodeURIComponent)
     : [];
@@ -21,6 +17,8 @@ export function useWorkJournalRouteState() {
     segments[0] === "timeline" ? "timeline" : "list";
   const timelineEntryId =
     view === "timeline" ? segments[1] || null : null;
+  const listEntryId =
+    view === "list" ? segments[0] || null : null;
 
   const goToList = useCallback(() => {
     router.push("/work-journal");
@@ -37,16 +35,33 @@ export function useWorkJournalRouteState() {
     [router],
   );
 
+  const selectListEntry = useCallback(
+    (id: string) => {
+      router.push(`/work-journal/${encodeURIComponent(id)}`);
+    },
+    [router],
+  );
+
+  const replaceListEntry = useCallback(
+    (id: string) => {
+      router.replace(`/work-journal/${encodeURIComponent(id)}`);
+    },
+    [router],
+  );
+
   const backToTimeline = useCallback(() => {
     router.push("/work-journal/timeline");
   }, [router]);
 
   return {
     view,
+    listEntryId,
     timelineEntryId,
     pathname,
     goToList,
     goToTimeline,
+    selectListEntry,
+    replaceListEntry,
     selectTimelineEntry,
     backToTimeline,
   };
