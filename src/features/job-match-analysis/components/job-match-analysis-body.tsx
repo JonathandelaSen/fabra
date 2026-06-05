@@ -57,7 +57,13 @@ export function JobMatchAnalysisBody({
         data-kanban-horizontal-scroll
         className="h-full min-h-0 overflow-x-auto overflow-y-hidden"
       >
-        <div className="flex h-full min-h-0 w-full min-w-full md:w-max md:min-w-full flex-col gap-3">
+        <div
+          className={`flex h-full min-h-0 w-full min-w-full flex-col gap-3 ${
+            analyses.length > 0
+              ? "md:w-max md:min-w-0 md:mx-auto"
+              : "md:w-max md:min-w-full"
+          }`}
+        >
           <label className="relative block w-full max-w-sm">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-600" />
             <input
