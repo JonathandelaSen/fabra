@@ -46,7 +46,7 @@ export default function TabResumen({
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 + i * 0.05 }}
-                  className="flex items-start gap-2.5 text-sm text-zinc-300"
+                  className="flex items-start gap-2.5 text-sm sm:text-base text-zinc-200"
                 >
                   <ChevronRight className="w-4 h-4 mt-0.5 text-amber-500/70 shrink-0" />
                   <span>{imp}</span>
@@ -72,14 +72,14 @@ export default function TabResumen({
           </h4>
           <div className="mb-4 grid gap-3">
             <div>
-              <p className="mb-2 text-xs font-semibold text-zinc-500">
+              <p className="mb-2 text-xs sm:text-sm font-semibold text-zinc-400">
                 {t("offer")}
               </p>
               <div className="flex flex-wrap gap-2">
                 {jobKeywords.map((kw) => (
                   <span
                     key={kw}
-                    className="rounded-lg border border-sky-500/20 bg-sky-500/10 px-2.5 py-1 text-[11px] font-medium text-sky-300"
+                    className="rounded-lg border border-sky-500/20 bg-sky-500/10 px-2.5 py-1 text-xs sm:text-sm font-medium text-sky-300"
                   >
                     {kw}
                   </span>
@@ -87,12 +87,12 @@ export default function TabResumen({
               </div>
             </div>
             <div>
-              <p className="mb-2 text-xs font-semibold text-zinc-500">{t("cv")}</p>
+              <p className="mb-2 text-xs sm:text-sm font-semibold text-zinc-400">{t("cv")}</p>
               <div className="flex flex-wrap gap-2">
                 {cvKeywords.map((kw) => (
                   <span
                     key={kw}
-                    className="rounded-lg border border-violet-500/20 bg-violet-500/10 px-2.5 py-1 text-[11px] font-medium text-violet-300"
+                    className="rounded-lg border border-violet-500/20 bg-violet-500/10 px-2.5 py-1 text-xs sm:text-sm font-medium text-violet-300"
                   >
                     {kw}
                   </span>
@@ -108,7 +108,7 @@ export default function TabResumen({
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.3 + i * 0.05 }}
-                  className="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-medium"
+                  className="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs sm:text-sm font-medium"
                 >
                   {kw}
                 </motion.span>
@@ -140,7 +140,7 @@ export default function TabResumen({
               matchingKeywords.map((kw) => (
                 <span
                   key={kw}
-                  className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-300"
+                  className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs sm:text-sm font-medium text-emerald-300"
                 >
                   {kw}
                 </span>
@@ -168,7 +168,7 @@ export default function TabResumen({
               missingKeywords.map((kw) => (
                 <span
                   key={kw}
-                  className="rounded-lg border border-rose-500/20 bg-rose-500/10 px-3 py-1.5 text-xs font-medium text-rose-300"
+                  className="rounded-lg border border-rose-500/20 bg-rose-500/10 px-3 py-1.5 text-xs sm:text-sm font-medium text-rose-300"
                 >
                   {kw}
                 </span>

@@ -103,7 +103,7 @@ export function ExtractionTextPanel({
             </div>
           </div>
         ) : currentText ? (
-          <pre className="text-xs sm:text-sm text-text-soft font-mono whitespace-pre-wrap leading-relaxed text-left">
+          <pre className="text-sm sm:text-[0.9375rem] text-text-soft font-mono whitespace-pre-wrap leading-relaxed text-left">
             {currentText}
           </pre>
         ) : (

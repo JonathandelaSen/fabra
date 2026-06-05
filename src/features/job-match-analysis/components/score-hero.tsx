@@ -114,7 +114,7 @@ export default function ScoreHero({
               {title || t("matchScore")}
             </h3>
           </div>
-          <p className="text-zinc-400 leading-relaxed text-sm line-clamp-3">
+          <p className="text-zinc-300 leading-relaxed text-base">
             {feedback}
           </p>
 

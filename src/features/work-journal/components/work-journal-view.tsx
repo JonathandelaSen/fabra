@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -249,10 +249,63 @@ export default function WorkJournalView({
     />
   );
 
+  const isTimelineBoard = view === "timeline" && !timelineEntryId;
+
+  let mainPane: ReactNode;
+  if (showForm) {
+    mainPane = (
+      <div className="px-2 md:px-6 py-4">
+        <WorkJournalForm
+          draft={draft}
+          setDraft={setDraft}
+          saveEntry={saveEntry}
+          draftWithAI={handleDraftWithAI}
+          aiLoading={aiLoading}
+          hasAIApiKey={hasAIApiKey}
+          onOpenSettings={onOpenSettings}
+          selectedProvider={selectedProvider}
+          setSelectedProvider={setSelectedProvider}
+          selectedModel={selectedModel}
+          setSelectedModel={setSelectedModel}
+          isCopyPasteOpen={isCopyPasteOpen}
+          setIsCopyPasteOpen={setIsCopyPasteOpen}
+          contexts={contexts}
+          activeContexts={activeContexts}
+          openActivityContextManager={openActivityContextManager}
+          setShowForm={setShowForm}
+        />
+      </div>
+    );
+  } else if (isTimelineBoard) {
+    mainPane = (
+      <WorkJournalTimeline
+        entries={filteredEntries}
+        isLoading={loading}
+        isFiltered={Boolean(search || contextFilter)}
+        granularity={granularity}
+        setGranularity={setGranularity}
+        onSelect={selectTimelineEntry}
+      />
+    );
+  } else if (view === "timeline") {
+    mainPane = (
+      <div className="flex flex-col">
+        <div className="px-2 md:px-6 pt-4">
+          <Button type="button" variant="ghost" size="sm" onClick={backToTimeline}>
+            <ArrowLeft className="h-4 w-4" />
+            {t("timeline.backToTimeline")}
+          </Button>
+        </div>
+        {detailPane}
+      </div>
+    );
+  } else {
+    mainPane = detailPane;
+  }
+
   return (
     <FeatureScreenShell
       title={t("title")}
-      bodyContentClassName={view === "timeline" && !timelineEntryId ? "max-w-none" : undefined}
       actions={
         <>
           {viewToggle}
@@ -265,85 +318,30 @@ export default function WorkJournalView({
         </>
       }
     >
-      {view === "timeline" && !timelineEntryId ? (
-        <WorkJournalTimeline
-          entries={filteredEntries}
-          contexts={contexts}
-          isLoading={loading}
-          search={search}
-          setSearch={setSearch}
-          contextFilter={contextFilter}
-          setContextFilter={setContextFilter}
-          granularity={granularity}
-          setGranularity={setGranularity}
-          onSelect={selectTimelineEntry}
-        />
-      ) : view === "timeline" ? (
-        <div className="flex h-full min-h-0 flex-col overflow-hidden">
-          <div className="shrink-0 border-b border-line pb-3">
-            <Button type="button" variant="ghost" size="sm" onClick={backToTimeline}>
-              <ArrowLeft className="h-4 w-4" />
-              {t("timeline.backToTimeline")}
-            </Button>
-          </div>
+      <FeatureTwoPaneLayout
+        sidebar={
+          <WorkJournalSidebar
+            entries={filteredEntries}
+            contexts={contexts}
+            selectedId={activeEntryId}
+            isLoading={loading}
+            search={search}
+            setSearch={setSearch}
+            contextFilter={contextFilter}
+            setContextFilter={setContextFilter}
+            onSelect={view === "timeline" ? selectTimelineEntry : handleSelectEntry}
+          />
+        }
+      >
+        <div className="flex flex-col gap-4">
           {visibleError && (
-            <div className="mt-4 text-sm text-rose-400 bg-rose-500/10 px-4 py-3 rounded-lg border border-rose-500/20">
+            <div className="mb-8 text-sm text-rose-400 bg-rose-500/10 px-4 py-3 rounded-lg border border-rose-500/20">
               {visibleError}
             </div>
           )}
-          <div className="min-h-0 flex-1 overflow-y-auto">{detailPane}</div>
+          {mainPane}
         </div>
-      ) : (
-        <FeatureTwoPaneLayout
-          sidebar={
-            <WorkJournalSidebar
-              entries={filteredEntries}
-              contexts={contexts}
-              selectedId={selectedEntryId}
-              isLoading={loading}
-              search={search}
-              setSearch={setSearch}
-              contextFilter={contextFilter}
-              setContextFilter={setContextFilter}
-              onSelect={handleSelectEntry}
-            />
-          }
-        >
-          <div className="flex flex-col gap-4">
-            {visibleError && (
-              <div className="mb-8 text-sm text-rose-400 bg-rose-500/10 px-4 py-3 rounded-lg border border-rose-500/20">
-                {visibleError}
-              </div>
-            )}
-
-            {showForm ? (
-              <div className="px-2 md:px-6 py-4">
-                <WorkJournalForm
-                  draft={draft}
-                  setDraft={setDraft}
-                  saveEntry={saveEntry}
-                  draftWithAI={handleDraftWithAI}
-                  aiLoading={aiLoading}
-                  hasAIApiKey={hasAIApiKey}
-                  onOpenSettings={onOpenSettings}
-                  selectedProvider={selectedProvider}
-                  setSelectedProvider={setSelectedProvider}
-                  selectedModel={selectedModel}
-                  setSelectedModel={setSelectedModel}
-                  isCopyPasteOpen={isCopyPasteOpen}
-                  setIsCopyPasteOpen={setIsCopyPasteOpen}
-                  contexts={contexts}
-                  activeContexts={activeContexts}
-                  openActivityContextManager={openActivityContextManager}
-                  setShowForm={setShowForm}
-                />
-              </div>
-            ) : (
-              detailPane
-            )}
-          </div>
-        </FeatureTwoPaneLayout>
-      )}
+      </FeatureTwoPaneLayout>
     </FeatureScreenShell>
   );
 }

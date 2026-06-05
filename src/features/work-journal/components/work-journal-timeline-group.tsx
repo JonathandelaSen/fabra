@@ -31,7 +31,7 @@ export function WorkJournalTimelineGroup({
         {label}
       </h3>
 
-      <div className="grid grid-cols-1 gap-3 pb-6 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 pb-6 sm:grid-cols-2">
         {group.entries.map((view) => (
           <WorkJournalTimelineCard
             key={view.entry.id}

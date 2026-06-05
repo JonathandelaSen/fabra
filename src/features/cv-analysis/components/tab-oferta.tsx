@@ -52,10 +52,10 @@ export default function TabOferta({
                 key={label}
                 className="rounded-xl border border-line bg-field p-3"
               >
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-text-faint">
+                <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-text-faint">
                   {label}
                 </p>
-                <p className="mt-1 text-sm text-zinc-300">
+                <p className="mt-1 text-sm sm:text-base text-zinc-200">
                   {value || t("notSpecified")}
                 </p>
               </div>
@@ -76,7 +76,7 @@ export default function TabOferta({
                   key={label}
                   className="rounded-xl border border-line bg-field p-4"
                 >
-                  <p className="mb-3 text-xs font-semibold text-zinc-300">
+                  <p className="mb-3 text-xs sm:text-sm font-semibold text-zinc-200">
                     {label}
                   </p>
                   {list.length > 0 ? (
@@ -84,15 +84,15 @@ export default function TabOferta({
                       {list.map((item, index) => (
                         <li
                           key={`${item}-${index}`}
-                          className="flex gap-2 text-xs text-zinc-400"
+                          className="flex gap-2 text-xs sm:text-sm text-zinc-300"
                         >
-                          <ChevronRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-sky-400/70" />
+                          <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-sky-400/70" />
                           {item}
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-xs italic text-text-faint">{t("notSpecified")}.</p>
+                    <p className="text-xs sm:text-sm italic text-text-faint">{t("notSpecified")}.</p>
                   )}
                 </div>
               );
@@ -118,7 +118,7 @@ export default function TabOferta({
                 </h4>
               </AccordionTrigger>
               <AccordionContent className="pt-4">
-                <div className="text-sm text-zinc-400 bg-field rounded-xl p-4 border border-line whitespace-pre-wrap max-h-96 overflow-y-auto">
+                <div className="text-sm sm:text-base text-zinc-300 bg-field rounded-xl p-4 border border-line whitespace-pre-wrap max-h-96 overflow-y-auto">
                   {jobDescription}
                 </div>
               </AccordionContent>
