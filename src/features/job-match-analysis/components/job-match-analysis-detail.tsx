@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
@@ -82,17 +82,19 @@ export default function JobMatchAnalysisDetail({
   onUpdateTracking,
 }: JobMatchAnalysisDetailProps) {
   const t = useTranslations("analysisDetail");
+  const [localTab, setLocalTab] = useState(activeTab);
+
+  useEffect(() => {
+    setLocalTab(activeTab);
+  }, [activeTab]);
+
   const [isSavingUrl, setIsSavingUrl] = useState(false);
-  const [offerStatus, setOfferStatus] = useState<OfferStatus>(
-    analysis.offerStatus ?? "interesting",
-  );
-  const [offerNotes, setOfferNotes] = useState(analysis.offerNotes ?? "");
-  const [offerNextAction, setOfferNextAction] = useState(
-    analysis.offerNextAction ?? "",
-  );
-  const [offerNextActionAt, setOfferNextActionAt] = useState(
-    toDateTimeLocalValue(analysis.offerNextActionAt),
-  );
+  const [tracking, setTracking] = useState({
+    status: analysis.offerStatus ?? ("interesting" as OfferStatus),
+    notes: analysis.offerNotes ?? "",
+    nextAction: analysis.offerNextAction ?? "",
+    nextActionAt: toDateTimeLocalValue(analysis.offerNextActionAt),
+  });
   const [isSavingTracking, setIsSavingTracking] = useState(false);
   const quickInterviewQuestion = useQuickInterviewQuestion({
     analysisId: analysis.id,
@@ -135,28 +137,10 @@ export default function JobMatchAnalysisDetail({
     setIsSavingTracking(true);
     try {
       await onUpdateTracking({
-        offerStatus,
-        offerNotes,
-        offerNextAction,
-        offerNextActionAt,
-      });
-    } catch (err) {
-      console.error(err);
-      alert(t("alerts.saveTrackingFailed"));
-    } finally {
-      setIsSavingTracking(false);
-    }
-  };
-
-  const handleSaveTrackingStatus = async (status: OfferStatus) => {
-    setOfferStatus(status);
-    setIsSavingTracking(true);
-    try {
-      await onUpdateTracking({
-        offerStatus: status,
-        offerNotes,
-        offerNextAction,
-        offerNextActionAt,
+        offerStatus: tracking.status,
+        offerNotes: tracking.notes,
+        offerNextAction: tracking.nextAction,
+        offerNextActionAt: tracking.nextActionAt,
       });
     } catch (err) {
       console.error(err);
@@ -189,14 +173,16 @@ export default function JobMatchAnalysisDetail({
             onExport={exportAnalysis}
             onSaveUrl={handleSaveUrl}
             isSavingUrl={isSavingUrl}
-            offerStatus={offerStatus}
+            offerStatus={tracking.status}
             onTabChange={onTabChange}
           />
 
           <Tabs
-            value={activeTab}
+            value={localTab}
             onValueChange={(val) => {
-              onTabChange?.(val as DetailTab);
+              const nextTab = val as DetailTab;
+              setLocalTab(nextTab);
+              onTabChange?.(nextTab);
             }}
             className="w-full"
           >
@@ -250,14 +236,22 @@ export default function JobMatchAnalysisDetail({
 
               <TabsContent value={DETAIL_TABS.tracking}>
                 <TabSeguimiento
-                  offerStatus={offerStatus}
-                  onOfferStatusChange={setOfferStatus}
-                  offerNotes={offerNotes}
-                  onOfferNotesChange={setOfferNotes}
-                  offerNextAction={offerNextAction}
-                  onOfferNextActionChange={setOfferNextAction}
-                  offerNextActionAt={offerNextActionAt}
-                  onOfferNextActionAtChange={setOfferNextActionAt}
+                  offerStatus={tracking.status}
+                  onOfferStatusChange={(status) =>
+                    setTracking((prev) => ({ ...prev, status }))
+                  }
+                  offerNotes={tracking.notes}
+                  onOfferNotesChange={(notes) =>
+                    setTracking((prev) => ({ ...prev, notes }))
+                  }
+                  offerNextAction={tracking.nextAction}
+                  onOfferNextActionChange={(nextAction) =>
+                    setTracking((prev) => ({ ...prev, nextAction }))
+                  }
+                  offerNextActionAt={tracking.nextActionAt}
+                  onOfferNextActionAtChange={(nextActionAt) =>
+                    setTracking((prev) => ({ ...prev, nextActionAt }))
+                  }
                   isSavingTracking={isSavingTracking}
                   onSaveTracking={handleSaveTracking}
                 />
