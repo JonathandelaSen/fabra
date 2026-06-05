@@ -7,6 +7,10 @@ import type {
   JobMatchAnalysisOfferStatus,
 } from "@/app/api/job-match-analyses/responses";
 import type {
+  CreateCVDocumentResponse,
+  ListCVDocumentsResponse,
+} from "@/app/api/cvs/responses";
+import type {
   GenerateInterviewQuestionResponse,
   SaveInterviewQuestionResponse,
 } from "@/app/api/interview-questions/responses";
@@ -18,6 +22,14 @@ import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 export type JobMatchAnalysisSummary = ListJobMatchAnalysesResponse[number];
 export type JobMatchAnalysisDetail = GetJobMatchAnalysisResponse;
+
+export interface CreateJobMatchAnalysisInput {
+  cvId: string;
+  title: string;
+  jobDescription: string;
+  jobUrl: string | null;
+  model: string;
+}
 
 export interface ScoreJobMatchAnalysisInput {
   provider: StoredAIProvider;
@@ -97,6 +109,41 @@ export async function getJobMatchAnalysis(id: string) {
   return readJsonResponse<GetJobMatchAnalysisResponse>(
     res,
     "Could not load job match analysis."
+  );
+}
+
+export async function listJobMatchCVOptions() {
+  const res = await fetch("/api/cvs");
+  return readJsonResponse<ListCVDocumentsResponse>(
+    res,
+    "Could not load CVs."
+  );
+}
+
+export async function uploadCVForJobMatch(file: File, name: string) {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("name", name);
+
+  const res = await fetch("/api/cvs", {
+    method: "POST",
+    body: formData,
+  });
+  return readJsonResponse<CreateCVDocumentResponse>(
+    res,
+    "Could not upload CV."
+  );
+}
+
+export async function createJobMatchAnalysis(input: CreateJobMatchAnalysisInput) {
+  const res = await fetch("/api/job-match-analyses", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+  return readJsonResponse<GetJobMatchAnalysisResponse>(
+    res,
+    "Could not create job match analysis."
   );
 }
 

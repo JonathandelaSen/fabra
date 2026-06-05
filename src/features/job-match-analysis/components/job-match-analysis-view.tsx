@@ -2,24 +2,23 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { ArrowLeft, Columns3, List, Search } from "lucide-react";
-import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
-import { DeleteButton } from "@/components/shared/action-buttons";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { InterviewQuestionSummary } from "../types";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
-import { Button } from "@/components/ui/button";
 import {
   useJobMatchAnalysisList,
   useJobMatchAnalysisDetail,
+  useJobMatchAnalysisCVOptions,
 } from "../hooks/use-job-match-analysis-queries";
 import { useJobMatchAnalysisMutations } from "../hooks/use-job-match-analysis-mutations";
 import { useJobMatchAnalysisRouteState } from "../hooks/use-job-match-analysis-route-state";
 import { useJobMatchCopyPasteApplied } from "../hooks/use-job-match-copy-paste-applied";
-import JobMatchAnalysisList from "./job-match-analysis-list";
+import { useNewJobMatchFlowActions } from "../hooks/use-new-job-match-flow-actions";
 import { JobMatchAnalysisContent } from "./job-match-analysis-content";
-import { JobMatchKanbanBoard } from "./job-match-kanban-board";
+import { JobMatchAnalysisBody } from "./job-match-analysis-body";
+import { JobMatchAnalysisHeaderActions } from "./job-match-analysis-header-actions";
+import NewJobMatchFlow from "./new-job-match-flow";
+import { PendingJobMatchCopyPasteModal } from "./pending-job-match-copy-paste-modal";
 
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 
@@ -29,7 +28,6 @@ interface JobMatchAnalysisViewProps {
   aiModel: string;
   hasAIApiKey: boolean;
   onOpenSettings: () => void;
-  onNewAnalysis: () => void;
   onOpenQuestions?: (options?: { cvId?: string | null; analysisId?: string | null }) => void;
   interviewQuestions?: InterviewQuestionSummary[];
   onInterviewQuestionCreated?: () => void;
@@ -38,9 +36,9 @@ interface JobMatchAnalysisViewProps {
 export default function JobMatchAnalysisView({
   aiProvider,
   aiApiKey,
+  aiModel,
   hasAIApiKey,
   onOpenSettings,
-  onNewAnalysis,
   onOpenQuestions,
   interviewQuestions = [],
   onInterviewQuestionCreated,
@@ -54,25 +52,37 @@ export default function JobMatchAnalysisView({
     isAnalysisView,
     analysisTab,
     view,
+    mode,
     selectAnalysis,
     clearSelection,
     replaceAnalysis,
+    goToNew,
     goToBoard,
     goToListView,
     goToAnalysis,
+    goToAnalysisById,
     goToExtraction,
     setAnalysisTab,
   } = routeState;
-  const [selectedAnalysisId, setSelectedAnalysisId] = useState<string | null>(analysisId);
-
-  useEffect(() => {
-    setSelectedAnalysisId(analysisId);
-  }, [analysisId]);
-
   const listQuery = useJobMatchAnalysisList();
+  const cvOptionsQuery = useJobMatchAnalysisCVOptions();
   const mutations = useJobMatchAnalysisMutations();
   const [searchQuery, setSearchQuery] = useState("");
+  const {
+    newFlowError,
+    pendingCopyPasteAnalysis,
+    setPendingCopyPasteAnalysis,
+    createCV,
+    runNewIntegratedAnalysis,
+    openNewCopyPasteFlow,
+  } = useNewJobMatchFlowActions({
+    mutations,
+    aiApiKey,
+    replaceAnalysis,
+    goToAnalysisById,
+  });
 
+  const selectedAnalysisId = analysisId;
   const detailQuery = useJobMatchAnalysisDetail(selectedAnalysisId);
   const analyses = useMemo(() => listQuery.data ?? [], [listQuery.data]);
   const filteredAnalyses = useMemo(() => {
@@ -90,17 +100,16 @@ export default function JobMatchAnalysisView({
   useEffect(() => {
     if (
       view === "list" &&
+      mode !== "new" &&
       routeState.pathname === "/job-analyses" &&
       !analysisId &&
       analyses[0]?.id
     ) {
-      setSelectedAnalysisId(analyses[0].id);
       replaceAnalysis(analyses[0].id);
     }
-  }, [analysisId, analyses, replaceAnalysis, routeState.pathname, view]);
+  }, [analysisId, analyses, mode, replaceAnalysis, routeState.pathname, view]);
 
   const selectItem = (id: string) => {
-    setSelectedAnalysisId(id);
     selectAnalysis(id);
   };
 
@@ -111,10 +120,8 @@ export default function JobMatchAnalysisView({
     await mutations.deleteAnalysis.mutateAsync(id);
     if (analysisId === id) {
       if (nextSelection) {
-        setSelectedAnalysisId(nextSelection);
         replaceAnalysis(nextSelection);
       } else {
-        setSelectedAnalysisId(null);
         clearSelection();
       }
     }
@@ -233,114 +240,70 @@ export default function JobMatchAnalysisView({
     />
   );
 
+  const newFlow = (
+    <NewJobMatchFlow
+      cvs={cvOptionsQuery.data ?? []}
+      defaultProvider={aiProvider}
+      defaultModel={aiModel}
+      hasAIApiKey={hasAIApiKey}
+      isCreating={mutations.createAnalysis.isPending}
+      isUploading={mutations.uploadCV.isPending}
+      isScoring={mutations.scoreAnalysis.isPending}
+      error={newFlowError}
+      onCreateCV={createCV}
+      onRunIntegrated={runNewIntegratedAnalysis}
+      onOpenCopyPaste={openNewCopyPasteFlow}
+      onOpenSettings={onOpenSettings}
+    />
+  );
+
   return (
     <FeatureScreenShell
       title={listT("jobTitle")}
       bodyContentClassName={view === "kanban" && !analysisId ? "max-w-none" : undefined}
       actions={
-        <>
-          <div className="flex items-center rounded-lg border border-line bg-panel-subtle p-1">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={goToListView}
-              aria-pressed={view === "list"}
-              className={`transition-all duration-200 ${
-                view === "list"
-                  ? "bg-panel-base text-text-main shadow-xs border border-line/40 font-semibold"
-                  : "text-text-soft hover:text-text-main hover:bg-panel-hover/50 border-transparent"
-              }`}
-            >
-              <List className={`h-4 w-4 transition-colors ${view === "list" ? "text-action" : "text-text-soft"}`} />
-              {kanbanT("listView")}
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={goToBoard}
-              aria-pressed={view === "kanban"}
-              className={`transition-all duration-200 ${
-                view === "kanban"
-                  ? "bg-panel-base text-text-main shadow-xs border border-line/40 font-semibold"
-                  : "text-text-soft hover:text-text-main hover:bg-panel-hover/50 border-transparent"
-              }`}
-            >
-              <Columns3 className={`h-4 w-4 transition-colors ${view === "kanban" ? "text-action" : "text-text-soft"}`} />
-              {kanbanT("boardView")}
-            </Button>
-          </div>
-          <FeatureHeaderActionButton
-            label={listT("newOffer")}
-            onClick={onNewAnalysis}
-          />
-          {analysisId && (
-            <DeleteButton
-              onClick={() => void deleteSelected()}
-              disabled={mutations.deleteAnalysis.isPending}
-              aria-label={listT("deleteOffer")}
-            />
-          )}
-        </>
+        <JobMatchAnalysisHeaderActions
+          view={view}
+          analysisId={analysisId}
+          listLabel={kanbanT("listView")}
+          boardLabel={kanbanT("boardView")}
+          newOfferLabel={listT("newOffer")}
+          deleteOfferLabel={listT("deleteOffer")}
+          isDeleting={mutations.deleteAnalysis.isPending}
+          onListView={goToListView}
+          onBoardView={goToBoard}
+          onNewOffer={goToNew}
+          onDelete={() => void deleteSelected()}
+        />
       }
     >
-      {view === "kanban" && !analysisId ? (
-        <div
-          data-kanban-horizontal-scroll
-          className="h-full min-h-0 overflow-x-auto overflow-y-hidden"
-        >
-          <div className="flex h-full min-h-0 w-full min-w-full md:w-max md:min-w-full flex-col gap-3">
-            <label className="relative block w-full max-w-sm">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-600" />
-              <input
-                type="search"
-                placeholder={listT("searchOffers")}
-                value={searchQuery}
-                onChange={(event) => setSearchQuery(event.target.value)}
-                className="h-9 w-full rounded-lg border border-white/10 bg-white/[0.03] py-1.5 pl-9 pr-3 text-xs text-zinc-200 outline-none placeholder:text-zinc-600 focus:border-indigo-500/40"
-              />
-            </label>
-            <JobMatchKanbanBoard
-              analyses={filteredAnalyses}
-              searchQuery={searchQuery}
-              isLoading={listQuery.isLoading}
-              isMoving={mutations.moveAnalysisCard.isPending}
-              onSelect={selectItem}
-              onDelete={(id) => void deleteFromKanban(id)}
-              onMove={moveKanbanCard}
-            />
-          </div>
-        </div>
-      ) : view === "kanban" ? (
-        <div className="flex h-full min-h-0 flex-col overflow-hidden">
-          <div className="shrink-0 border-b border-line pb-3">
-            <Button type="button" variant="ghost" size="sm" onClick={goToBoard}>
-              <ArrowLeft className="h-4 w-4" />
-              {kanbanT("backToBoard")}
-            </Button>
-          </div>
-          <div className="min-h-0 flex-1 overflow-hidden">
-            {detailContent}
-          </div>
-        </div>
-      ) : (
-        <FeatureTwoPaneLayout
-          sidebar={
-            <JobMatchAnalysisList
-              analyses={filteredAnalyses}
-              selectedId={selectedIdInCurrentList}
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              onSelect={selectItem}
-              isLoading={listQuery.isLoading}
-            />
-          }
-          mainClassName="overflow-hidden"
-        >
-          {detailContent}
-        </FeatureTwoPaneLayout>
-      )}
+      <JobMatchAnalysisBody
+        mode={mode}
+        view={view}
+        analysisId={analysisId}
+        newFlow={newFlow}
+        detailContent={detailContent}
+        analyses={filteredAnalyses}
+        selectedId={selectedIdInCurrentList}
+        searchQuery={searchQuery}
+        searchPlaceholder={listT("searchOffers")}
+        backToBoardLabel={kanbanT("backToBoard")}
+        isListLoading={listQuery.isLoading}
+        isMoving={mutations.moveAnalysisCard.isPending}
+        onSearchChange={setSearchQuery}
+        onSelect={selectItem}
+        onDeleteFromKanban={(id) => void deleteFromKanban(id)}
+        onMoveCard={moveKanbanCard}
+        onBackToBoard={goToBoard}
+      />
+      <PendingJobMatchCopyPasteModal
+        analysis={pendingCopyPasteAnalysis}
+        onClose={() => setPendingCopyPasteAnalysis(null)}
+        onApplied={(updated) => {
+          applyCopyPasteResult(updated);
+          setPendingCopyPasteAnalysis(null);
+        }}
+      />
     </FeatureScreenShell>
   );
 }

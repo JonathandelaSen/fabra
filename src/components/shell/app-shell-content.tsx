@@ -130,7 +130,6 @@ export default function AppShellContent({
           aiModel={aiModel}
           hasAIApiKey={hasAIApiKey}
           onOpenSettings={onOpenSettings}
-          onNewAnalysis={onNewAnalysis}
           onOpenQuestions={(options) => onOpenQuestions(options)}
           interviewQuestions={interviewQuestions}
           onInterviewQuestionCreated={onInterviewQuestionCreated}

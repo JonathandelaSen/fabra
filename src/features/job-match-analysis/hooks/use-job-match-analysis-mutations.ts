@@ -2,17 +2,21 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type {
+  CreateJobMatchAnalysisInput,
   UpdateJobMatchAnalysisInput,
   ScoreJobMatchAnalysisInput,
   JobMatchAnalysisDetail,
 } from "../api/job-match-analysis-api";
 import {
+  createJobMatchAnalysis,
   deleteJobMatchAnalysis,
   scoreJobMatchAnalysis,
   updateJobMatchAnalysis,
+  uploadCVForJobMatch,
 } from "../api/job-match-analysis-api";
 import { jobMatchAnalysisQueryKeys } from "../api/job-match-analysis-query-keys";
 import type { ListJobMatchAnalysesResponse } from "@/app/api/job-match-analyses/responses";
+import type { ListCVDocumentsResponse } from "@/app/api/cvs/responses";
 
 interface OptimisticContext {
   previousList?: ListJobMatchAnalysesResponse;
@@ -54,6 +58,56 @@ export function useJobMatchAnalysisMutations() {
   };
 
   return {
+    uploadCV: useMutation({
+      mutationFn: ({ file, name }: { file: File; name: string }) =>
+        uploadCVForJobMatch(file, name),
+      onSuccess: (cv) => {
+        queryClient.setQueryData<ListCVDocumentsResponse>(
+          jobMatchAnalysisQueryKeys.cvOptions(),
+          (current) => {
+            const withoutDuplicate = (current ?? []).filter(
+              (item) => item.id !== cv.id
+            );
+            return [cv, ...withoutDuplicate];
+          }
+        );
+      },
+    }),
+
+    createAnalysis: useMutation({
+      mutationFn: (input: CreateJobMatchAnalysisInput) =>
+        createJobMatchAnalysis(input),
+      onSuccess: (detail) => {
+        queryClient.setQueryData(
+          jobMatchAnalysisQueryKeys.detail(detail.id),
+          detail
+        );
+        queryClient.setQueryData<ListJobMatchAnalysesResponse>(
+          listKey,
+          (current) => {
+            const withoutDuplicate = (current ?? []).filter(
+              (item) => item.id !== detail.id
+            );
+            return [
+              {
+                id: detail.id,
+                cvId: detail.cvId,
+                title: detail.title,
+                filename: detail.filename,
+                createdAt: detail.createdAt,
+                aiScore: detail.aiScore,
+                aiAnalyzedAt: detail.aiAnalyzedAt,
+                jobUrl: detail.jobUrl,
+                offerStatus: detail.offerStatus,
+                offerNextActionAt: detail.offerNextActionAt,
+              },
+              ...withoutDuplicate,
+            ];
+          }
+        );
+      },
+    }),
+
     deleteAnalysis: useMutation({
       mutationFn: deleteJobMatchAnalysis,
       onMutate: async (id) => {

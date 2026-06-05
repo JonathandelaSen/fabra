@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import {
   getJobMatchAnalysis,
+  listJobMatchCVOptions,
   listJobMatchAnalyses,
 } from "../api/job-match-analysis-api";
 import { jobMatchAnalysisQueryKeys } from "../api/job-match-analysis-query-keys";
@@ -19,5 +20,12 @@ export function useJobMatchAnalysisDetail(id: string | null) {
     queryKey: jobMatchAnalysisQueryKeys.detail(id),
     queryFn: () => getJobMatchAnalysis(id as string),
     enabled: Boolean(id),
+  });
+}
+
+export function useJobMatchAnalysisCVOptions() {
+  return useQuery({
+    queryKey: jobMatchAnalysisQueryKeys.cvOptions(),
+    queryFn: listJobMatchCVOptions,
   });
 }

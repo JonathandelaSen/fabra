@@ -15,6 +15,7 @@ interface JobMatchActionLauncherProps {
   onModelChange: (model: string) => void;
   onSubmit: () => void;
   onOpenSettings: () => void;
+  onCopyPasteOpen?: () => void;
 }
 
 export function JobMatchActionLauncher({
@@ -27,6 +28,7 @@ export function JobMatchActionLauncher({
   onModelChange,
   onSubmit,
   onOpenSettings,
+  onCopyPasteOpen,
 }: JobMatchActionLauncherProps) {
   const t = useTranslations("analysisFlow.forms");
 
@@ -46,8 +48,8 @@ export function JobMatchActionLauncher({
           onConfigure: onOpenSettings,
         }}
         copyPaste={{
-          available: false,
-          onOpenFlow: () => {},
+          available: !!onCopyPasteOpen,
+          onOpenFlow: onCopyPasteOpen ?? (() => {}),
         }}
       />
     </div>

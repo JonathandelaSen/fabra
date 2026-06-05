@@ -6,6 +6,7 @@ import type { AnalysisMode } from "@/lib/analysis-types";
 import HowAtsWorksEducationBanner from "@/components/shared/how-ats-works-education-banner";
 import ExtractionHeader from "@/components/shared/extraction/extraction-header";
 import CVScoreCopyPasteModal from "./cv-score-copy-paste-modal";
+import { JobMatchScoreCopyPasteModal } from "@/features/job-match-analysis";
 import {
   useExtractionAIActions,
   type ScoreAnalysisHandler,
@@ -74,10 +75,13 @@ export default function ExtractionView({
     aiError,
     copyPasteContext,
     copyPasteOpen,
+    copyPasteJobDescription,
+    copyPasteJobUrl,
     loadingAI,
     selectedProvider,
     selectedModel,
     handleExternalChatAnalysis,
+    handleJobMatchCopyPasteOpen,
     handleGeneralAnalysis,
     handleJobMatchAnalysis,
     setCopyPasteContext,
@@ -140,16 +144,30 @@ export default function ExtractionView({
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <CVScoreCopyPasteModal
-        analysisId={analysis.id}
-        additionalContext={copyPasteContext}
-        open={copyPasteOpen}
-        onClose={() => setCopyPasteOpen(false)}
-        onApplied={() => {
-          setCopyPasteOpen(false);
-          onAIAnalysisComplete();
-        }}
-      />
+      {analysis.analysis_mode === "job_match" ? (
+        <JobMatchScoreCopyPasteModal
+          analysisId={analysis.id}
+          jobDescription={copyPasteJobDescription || analysis.job_description || ""}
+          jobUrl={copyPasteJobUrl || analysis.job_url || null}
+          open={copyPasteOpen}
+          onClose={() => setCopyPasteOpen(false)}
+          onApplied={() => {
+            setCopyPasteOpen(false);
+            onAIAnalysisComplete();
+          }}
+        />
+      ) : (
+        <CVScoreCopyPasteModal
+          analysisId={analysis.id}
+          additionalContext={copyPasteContext}
+          open={copyPasteOpen}
+          onClose={() => setCopyPasteOpen(false)}
+          onApplied={() => {
+            setCopyPasteOpen(false);
+            onAIAnalysisComplete();
+          }}
+        />
+      )}
       <ExtractionHeader
         filename={analysis.filename}
         analysisId={analysis.id}
@@ -177,8 +195,15 @@ export default function ExtractionView({
               : handleGeneralAnalysis({}),
           onConfigure: onOpenSettings,
           onOpenCopyPaste: () => {
-            setCopyPasteContext(null);
-            setCopyPasteOpen(true);
+            if (analysis.analysis_mode === "job_match") {
+              handleJobMatchCopyPasteOpen(
+                analysis.job_description ?? "",
+                analysis.job_url ?? "",
+              );
+            } else {
+              setCopyPasteContext(null);
+              setCopyPasteOpen(true);
+            }
           },
         }}
       />
@@ -219,6 +244,7 @@ export default function ExtractionView({
           onSelectMode={setSelectedMode}
           onSubmitGeneral={handleGeneralAnalysis}
           onSubmitJobMatch={handleJobMatchAnalysis}
+          onCopyPasteJobMatch={handleJobMatchCopyPasteOpen}
         />
       </div>
     </div>

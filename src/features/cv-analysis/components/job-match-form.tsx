@@ -21,6 +21,7 @@ interface JobMatchFormProps {
   error: string | null;
   hasAIApiKey: boolean;
   onOpenSettings: () => void;
+  onCopyPasteOpen?: (jobDescription: string, jobUrl: string) => void;
 }
 
 export default function JobMatchForm({
@@ -34,6 +35,7 @@ export default function JobMatchForm({
   error,
   hasAIApiKey,
   onOpenSettings,
+  onCopyPasteOpen,
 }: JobMatchFormProps) {
   const t = useTranslations("analysisFlow.forms");
   const common = useTranslations("common");
@@ -100,6 +102,11 @@ export default function JobMatchForm({
           onModelChange={onModelChange}
           onSubmit={handleSubmit}
           onOpenSettings={onOpenSettings}
+          onCopyPasteOpen={
+            onCopyPasteOpen
+              ? () => onCopyPasteOpen(jobDescription.trim(), jobUrl.trim())
+              : undefined
+          }
         />
       </div>
 

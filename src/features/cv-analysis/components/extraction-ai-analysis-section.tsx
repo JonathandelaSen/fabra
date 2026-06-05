@@ -24,6 +24,7 @@ interface ExtractionAIAnalysisSectionProps {
     jobDescription: string,
     jobUrl: string,
   ) => void;
+  onCopyPasteJobMatch?: (jobDescription: string, jobUrl: string) => void;
 }
 
 export default function ExtractionAIAnalysisSection({
@@ -43,6 +44,7 @@ export default function ExtractionAIAnalysisSection({
   onSelectMode,
   onSubmitGeneral,
   onSubmitJobMatch,
+  onCopyPasteJobMatch,
 }: ExtractionAIAnalysisSectionProps) {
   if (aiScore !== null || hideAnalysisSelector) return null;
 
@@ -80,6 +82,7 @@ export default function ExtractionAIAnalysisSection({
       error={aiError}
       hasAIApiKey={hasAIApiKey}
       onOpenSettings={onOpenSettings}
+      onCopyPasteOpen={onCopyPasteJobMatch}
     />
   );
 }
