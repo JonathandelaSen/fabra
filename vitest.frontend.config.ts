@@ -15,7 +15,9 @@ export default defineConfig({
       },
     },
     include: [
+      "src/components/**/*.test.ts",
       "src/components/**/*.test.tsx",
+      "src/features/**/*.test.ts",
       "src/features/**/*.test.tsx",
       "src/frontend/**/*.test.ts",
       "src/frontend/**/*.test.tsx",
