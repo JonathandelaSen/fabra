@@ -75,10 +75,14 @@ export function ManualEditorSectionItem({
         onDropSection();
       }}
     >
-      <AccordionTrigger className={`rounded-xl px-3 py-2 hover:bg-white/[0.03] hover:no-underline data-[state=open]:bg-white/[0.03] [&>svg]:text-zinc-600 ${
-        isHidden ? "bg-zinc-950/10 hover:bg-zinc-950/20" : ""
-      }`}>
-        <div className="flex items-center justify-between w-full pr-2">
+      <div className="relative">
+        <AccordionTrigger className={`rounded-xl px-3 py-2 hover:bg-white/[0.03] hover:no-underline data-[state=open]:bg-white/[0.03] [&>svg]:text-zinc-600 ${
+          isHidden ? "bg-zinc-950/10 hover:bg-zinc-950/20" : ""
+        }`}>
+          <span className="block h-6 w-full" />
+        </AccordionTrigger>
+
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-between px-3 pr-8">
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <button
               draggable
@@ -93,7 +97,7 @@ export function ManualEditorSectionItem({
                 onDragEnd();
               }}
               onClick={(event) => event.stopPropagation()}
-              className="inline-flex h-6 w-5 cursor-grab items-center justify-center text-zinc-600 hover:text-zinc-300 active:cursor-grabbing opacity-40 hover:opacity-100 transition-opacity"
+              className="pointer-events-auto inline-flex h-6 w-5 cursor-grab items-center justify-center text-zinc-600 hover:text-zinc-300 active:cursor-grabbing opacity-40 hover:opacity-100 transition-opacity"
               title={t("dragSection")}
               type="button"
             >
@@ -110,7 +114,7 @@ export function ManualEditorSectionItem({
               onClick={(event) => event.stopPropagation()}
               onKeyDown={(event) => event.stopPropagation()}
               placeholder={getSectionTitle(sectionId, locale)}
-              className={`h-6 w-full min-w-[100px] max-w-[180px] bg-transparent px-1 text-xs font-medium placeholder:text-zinc-600 focus:text-white focus:outline-none transition-colors border-b border-transparent focus:border-teal-500/30 ${
+              className={`pointer-events-auto h-6 w-full min-w-[100px] max-w-[180px] bg-transparent px-1 text-xs font-medium placeholder:text-zinc-600 focus:text-white focus:outline-none transition-colors border-b border-transparent focus:border-teal-500/30 ${
                 isHidden ? "text-zinc-500 opacity-50" : "text-zinc-300"
               }`}
             />
@@ -122,26 +126,28 @@ export function ManualEditorSectionItem({
             )}
           </div>
 
-          <div className="flex items-center gap-1.5 shrink-0" onClick={(event) => event.stopPropagation()}>
+          <div className="flex items-center gap-1.5 shrink-0">
             <div className="flex items-center opacity-0 group-hover/accordion-item:opacity-100 transition-opacity">
               <button
+                type="button"
                 onClick={(event) => {
                   event.stopPropagation();
                   onMoveSection(sectionId, -1);
                 }}
                 disabled={index === 0}
-                className="inline-flex h-6 w-6 items-center justify-center text-zinc-500 hover:text-white disabled:pointer-events-none disabled:opacity-20"
+                className="pointer-events-auto inline-flex h-6 w-6 items-center justify-center text-zinc-500 hover:text-white disabled:pointer-events-none disabled:opacity-20"
                 title={t("moveUp")}
               >
                 <ArrowUp className="h-3.5 w-3.5" />
               </button>
               <button
+                type="button"
                 onClick={(event) => {
                   event.stopPropagation();
                   onMoveSection(sectionId, 1);
                 }}
                 disabled={index === sectionOrderLength - 1}
-                className="inline-flex h-6 w-6 items-center justify-center text-zinc-500 hover:text-white disabled:pointer-events-none disabled:opacity-20"
+                className="pointer-events-auto inline-flex h-6 w-6 items-center justify-center text-zinc-500 hover:text-white disabled:pointer-events-none disabled:opacity-20"
                 title={t("moveDown")}
               >
                 <ArrowDown className="h-3.5 w-3.5" />
@@ -149,11 +155,12 @@ export function ManualEditorSectionItem({
             </div>
 
             <button
+              type="button"
               onClick={(event) => {
                 event.stopPropagation();
                 onToggleVisibility(sectionId);
               }}
-              className={`inline-flex h-6 w-6 items-center justify-center rounded-md transition-colors ${
+              className={`pointer-events-auto inline-flex h-6 w-6 items-center justify-center rounded-md transition-colors ${
                 isHidden
                   ? "text-rose-400 bg-rose-500/10 hover:bg-rose-500/20"
                   : "text-zinc-500 hover:text-white hover:bg-white/5"
@@ -164,7 +171,7 @@ export function ManualEditorSectionItem({
             </button>
           </div>
         </div>
-      </AccordionTrigger>
+      </div>
       <AccordionContent className="px-1 pt-2 pb-1">
         {section.content}
       </AccordionContent>

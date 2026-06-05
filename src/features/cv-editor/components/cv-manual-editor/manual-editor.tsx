@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Accordion } from "@/components/ui/accordion";
 import { Briefcase, Code, GraduationCap, Languages, User, FileText, Wrench, Award, FolderOpen, Heart, Trophy, BookOpen } from "lucide-react";
@@ -36,15 +36,17 @@ export function ManualEditor({
 }: ManualEditorProps) {
   const t = useTranslations("cvEditor.manual");
   const sectionOrder = getOrderedRenderableSections(profile);
+  const sectionOrderKey = sectionOrder.join("|");
+  const stableSectionOrder = useMemo(() => sectionOrder, [sectionOrderKey]);
   const [visualSectionOrder, setVisualSectionOrder] = useState<CVRenderableSectionId[]>(sectionOrder);
   const [draggedSection, setDraggedSection] = useState<CVRenderableSectionId | null>(null);
   const [originalSectionOrder, setOriginalSectionOrder] = useState<CVRenderableSectionId[] | null>(null);
 
   useEffect(() => {
     if (!draggedSection) {
-      setVisualSectionOrder(sectionOrder);
+      setVisualSectionOrder(stableSectionOrder);
     }
-  }, [sectionOrder, draggedSection]);
+  }, [stableSectionOrder, draggedSection]);
 
   const startDrag = (sectionId: CVRenderableSectionId) => {
     setDraggedSection(sectionId);
