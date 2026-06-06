@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { InterviewQuestionSummary } from "../types";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
+import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import {
   useJobMatchAnalysisList,
   useJobMatchAnalysisDetail,
@@ -103,9 +104,11 @@ export default function JobMatchAnalysisView({
   const isResolvingList = listQuery.isFetching;
   const isListPending = listQuery.isPending;
   const isDetailPending = detailQuery.isPending;
+  const isDesktopLayout = useIsDesktopLayout();
 
   useEffect(() => {
     if (
+      isDesktopLayout &&
       shouldAutoSelectJobMatchAnalysis({
         analysisCount: analyses.length,
         analysisId,
@@ -118,7 +121,7 @@ export default function JobMatchAnalysisView({
       const firstHasScore = analyses[0].aiScore !== null && analyses[0].aiScore !== undefined;
       replaceAnalysis(analyses[0].id, firstHasScore);
     }
-  }, [analysisId, analyses, isListPending, mode, replaceAnalysis, routeState.pathname, view]);
+  }, [analysisId, analyses, isDesktopLayout, isListPending, mode, replaceAnalysis, routeState.pathname, view]);
 
   const selectItem = (id: string) => {
     const item = analyses.find((a) => a.id === id);
@@ -282,6 +285,8 @@ export default function JobMatchAnalysisView({
   return (
     <FeatureScreenShell
       title={listT("jobTitle")}
+      mobileBackActive={view === "list" && Boolean(analysisId)}
+      onMobileBack={clearSelection}
       bodyContentClassName={view === "kanban" && !analysisId ? "max-w-none" : undefined}
       actions={
         <JobMatchAnalysisHeaderActions

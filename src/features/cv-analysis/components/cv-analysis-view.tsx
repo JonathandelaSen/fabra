@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import type { InterviewQuestionSummary } from "../types";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
+import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import { AnalysisDetailSkeleton } from "@/components/shared/skeletons";
 import {
   useCreateCVAnalysis,
@@ -85,9 +86,11 @@ export default function CVAnalysisView({
   const isResolvingList = analysesQuery.isFetching;
   const isListPending = analysesQuery.isPending;
   const isDetailPending = detailQuery.isPending;
+  const isDesktopLayout = useIsDesktopLayout();
 
   useEffect(() => {
     if (
+      isDesktopLayout &&
       route.pathname === "/cv-analysis" &&
       shouldAutoSelectCVAnalysis({
         analysisCount: analyses.length,
@@ -99,7 +102,7 @@ export default function CVAnalysisView({
       setSelectedAnalysisId(analyses[0].id);
       route.replaceDetail(analyses[0].id);
     }
-  }, [analyses, isListPending, route]);
+  }, [analyses, isDesktopLayout, isListPending, route]);
 
   useEffect(() => {
     setSelectedAnalysisId(route.analysisId);
@@ -144,6 +147,8 @@ export default function CVAnalysisView({
   return (
     <FeatureScreenShell
       title={listT("cvTitle")}
+      mobileBackActive={route.mode === "detail"}
+      onMobileBack={route.goToList}
       actions={
         <FeatureHeaderActionButton
           label={listT("newAnalysis")}
@@ -152,6 +157,9 @@ export default function CVAnalysisView({
       }
     >
       <FeatureTwoPaneLayout
+        mobileDetailActive={
+          route.mode === "detail" ? true : route.mode === "list" ? false : undefined
+        }
         sidebar={
           <CVAnalysesListView
             analyses={filteredAnalyses}

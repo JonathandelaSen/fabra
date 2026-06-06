@@ -11,6 +11,8 @@ import {
   type StoredAIProvider,
 } from "@/lib/browser-preferences";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
+import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
+import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import { useCVDocumentList } from "@/features/cv-library";
 import { useCreateCVTemplateVersion } from "../hooks/use-cv-template-mutations";
 import { CVTemplatesSidebar } from "./cv-templates-sidebar";
@@ -64,6 +66,15 @@ export default function CVTemplatesView({
     onCreated: (version) => onOpenEditor(version.id),
   });
   const isCvsPending = listQuery.isPending;
+  const isDesktopLayout = useIsDesktopLayout();
+  const showTemplatesLoader =
+    (isDesktopLayout || pathname !== "/templates") &&
+    shouldShowCVTemplatesLoader({
+      isCvsPending,
+      pathname,
+      templateCount: CV_TEMPLATES.length,
+      templateId: selectedTemplateId,
+    });
 
   const filteredCvs = cvs.filter(
     (cv) =>
@@ -82,7 +93,7 @@ export default function CVTemplatesView({
 
   useEffect(() => {
     const firstTemplateId = CV_TEMPLATES[0]?.templateId;
-    if (pathname === "/templates" && firstTemplateId) {
+    if (isDesktopLayout && pathname === "/templates" && firstTemplateId) {
       const query = cvIdFromQuery
         ? `?cvId=${encodeURIComponent(cvIdFromQuery)}`
         : "";
@@ -90,7 +101,7 @@ export default function CVTemplatesView({
         `/templates/${encodeURIComponent(firstTemplateId)}${query}`,
       );
     }
-  }, [cvIdFromQuery, pathname, router]);
+  }, [cvIdFromQuery, isDesktopLayout, pathname, router]);
 
   useEffect(() => {
     if (!cvIdFromQuery || selectedCvId) return;
@@ -106,6 +117,13 @@ export default function CVTemplatesView({
       ? `?cvId=${encodeURIComponent(queryCvId)}`
       : "";
     router.push(`/templates/${encodeURIComponent(templateId)}${query}`);
+  };
+
+  const handleBackToList = () => {
+    const query = cvIdFromQuery
+      ? `?cvId=${encodeURIComponent(cvIdFromQuery)}`
+      : "";
+    router.push(`/templates${query}`);
   };
 
   const handleCreateVersion = async () => {
@@ -134,22 +152,25 @@ export default function CVTemplatesView({
   };
 
   return (
-    <FeatureScreenShell title={t("title")} bodyClassName="overflow-hidden">
-      {shouldShowCVTemplatesLoader({
-        isCvsPending,
-        pathname,
-        templateCount: CV_TEMPLATES.length,
-        templateId: selectedTemplateId,
-      }) ? (
+    <FeatureScreenShell
+      title={t("title")}
+      mobileBackActive={Boolean(templateIdFromPath)}
+      onMobileBack={handleBackToList}
+      bodyClassName="overflow-hidden"
+    >
+      {showTemplatesLoader ? (
         <CVTemplatesSkeleton />
       ) : (
-        <div className="grid h-full w-full gap-6 lg:grid-cols-[320px_1fr]">
-          <CVTemplatesSidebar
-            templates={CV_TEMPLATES}
-            selectedId={selectedTemplateId}
-            onSelect={handleSelectTemplate}
-          />
-
+        <FeatureTwoPaneLayout
+          mobileDetailActive={templateIdFromPath ? true : false}
+          sidebar={
+            <CVTemplatesSidebar
+              templates={CV_TEMPLATES}
+              selectedId={selectedTemplateId}
+              onSelect={handleSelectTemplate}
+            />
+          }
+        >
           <CVTemplateDetail
             template={selectedTemplate}
             cvs={cvs}
@@ -180,7 +201,7 @@ export default function CVTemplatesView({
               }
             }}
           />
-        </div>
+        </FeatureTwoPaneLayout>
       )}
     </FeatureScreenShell>
   );

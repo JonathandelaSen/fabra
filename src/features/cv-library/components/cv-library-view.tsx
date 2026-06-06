@@ -14,6 +14,8 @@ import {
 } from "../hooks/use-cv-library-queries";
 import { useCVLibraryRouteState } from "../hooks/use-cv-library-route-state";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
+import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
+import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import { CVLibraryDetail } from "./cv-library-detail";
 import { CVLibraryImportPanel } from "./cv-library-import-panel";
 import {
@@ -91,10 +93,12 @@ export default function CVLibraryView({
       : null;
   const isListPending = listQuery.isPending;
   const isDetailPending = detailQuery.isPending;
+  const isDesktopLayout = useIsDesktopLayout();
 
   useEffect(() => {
     const firstCvId = cvs[0]?.id ?? null;
     if (
+      isDesktopLayout &&
       shouldAutoSelectCVLibraryItem({
         cvCount: cvs.length,
         isListPending,
@@ -108,7 +112,7 @@ export default function CVLibraryView({
       setSelectedCvId(firstCvId);
       routeState.replaceCV(firstCvId);
     }
-  }, [cvs, isListPending, routeState.cvId, routeState.pathname, routeState.replaceCV]);
+  }, [cvs, isDesktopLayout, isListPending, routeState.cvId, routeState.pathname, routeState.replaceCV]);
 
   const startEditing = (cv: CVDocumentListItem) => {
     setEditingId(cv.id);
@@ -175,23 +179,29 @@ export default function CVLibraryView({
   return (
     <FeatureScreenShell
       title={navT("cvLibrary")}
+      mobileBackActive={!showImport && Boolean(routeState.cvId)}
+      onMobileBack={() => routeState.replaceCV(null)}
       bodyClassName="overflow-hidden"
     >
-      <div className="grid h-full w-full gap-6 lg:grid-cols-[320px_1fr]">
-        <CVLibrarySidebar
-          cvs={cvs}
-          selectedId={selectedCvId}
-          analysesByCv={analysesByCv}
-          error={error ?? queryError}
-          blockingAnalyses={blockingAnalyses}
-          onSelect={(id) => {
-            setShowImport(false);
-            setSelectedCvId(id);
-            routeState.selectCV(id);
-          }}
-          onOpenAnalysis={onOpenAnalysis}
-          onImportJsonResume={() => setShowImport(true)}
-        />
+      <FeatureTwoPaneLayout
+        mobileDetailActive={showImport ? undefined : routeState.cvId ? true : false}
+        sidebar={
+          <CVLibrarySidebar
+            cvs={cvs}
+            selectedId={selectedCvId}
+            analysesByCv={analysesByCv}
+            error={error ?? queryError}
+            blockingAnalyses={blockingAnalyses}
+            onSelect={(id) => {
+              setShowImport(false);
+              setSelectedCvId(id);
+              routeState.selectCV(id);
+            }}
+            onOpenAnalysis={onOpenAnalysis}
+            onImportJsonResume={() => setShowImport(true)}
+          />
+        }
+      >
         {showImport ? (
           <CVLibraryImportPanel onClose={() => setShowImport(false)} />
         ) : shouldShowCVLibraryDetailLoader({
@@ -221,7 +231,7 @@ export default function CVLibraryView({
             onOpenQuestions={onOpenQuestions}
           />
         )}
-      </div>
+      </FeatureTwoPaneLayout>
     </FeatureScreenShell>
   );
 }

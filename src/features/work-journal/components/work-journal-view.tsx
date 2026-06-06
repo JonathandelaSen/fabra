@@ -8,6 +8,7 @@ import { FeatureHeaderActionButton } from "@/components/shared/feature-header-ac
 import { getErrorMessage } from "@/lib/errors";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
+import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import {
   useWorkJournalContexts,
   useWorkJournalEntries,
@@ -129,9 +130,11 @@ export default function WorkJournalView({
   const selectedEntry = useMemo(() => {
     return entries.find(e => e.id === activeEntryId) ?? null;
   }, [entries, activeEntryId]);
+  const isDesktopLayout = useIsDesktopLayout();
 
   useEffect(() => {
     if (
+      isDesktopLayout &&
       shouldAutoSelectWorkJournalEntry({
         activeEntryId,
         entryCount: filteredEntries.length,
@@ -143,7 +146,7 @@ export default function WorkJournalView({
       const nextId = filteredEntries[0].id;
       replaceListEntry(nextId);
     }
-  }, [activeEntryId, filteredEntries, isResolvingQueries, replaceListEntry, showForm, view]);
+  }, [activeEntryId, filteredEntries, isDesktopLayout, isResolvingQueries, replaceListEntry, showForm, view]);
 
   useEffect(() => {
     if (
@@ -233,6 +236,8 @@ export default function WorkJournalView({
   return (
     <FeatureScreenShell
       title={t("title")}
+      mobileBackActive={view === "list" && !showForm && Boolean(listEntryId)}
+      onMobileBack={goToList}
       actions={
         <>
           <WorkJournalViewToggle
@@ -250,6 +255,9 @@ export default function WorkJournalView({
       }
     >
       <FeatureTwoPaneLayout
+        mobileDetailActive={
+          view === "list" && !showForm ? (listEntryId ? true : false) : undefined
+        }
         sidebar={
           <WorkJournalSidebar
             entries={filteredEntries}

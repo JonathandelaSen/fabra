@@ -106,6 +106,7 @@ export function JobMatchAnalysisBody({
 
   return (
     <FeatureTwoPaneLayout
+      mobileDetailActive={analysisId ? true : false}
       sidebar={
         <JobMatchAnalysisList
           analyses={analyses}

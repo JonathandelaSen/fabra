@@ -6,6 +6,7 @@ import { getErrorMessage } from "@/lib/errors";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
+import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import { useFeedbackNotesMutations } from "../hooks/use-feedback-notes-mutations";
 import {
   useFeedbackEntries,
@@ -79,6 +80,7 @@ export default function FeedbackNotesView({
   const isListPending = listQuery.isPending;
   const isDetailPending = detailQuery.isPending;
   const isInitialListLoading = isListPending && feedbacks.length === 0;
+  const isDesktopLayout = useIsDesktopLayout();
 
   const isSaving = useMemo(
     () =>
@@ -94,6 +96,7 @@ export default function FeedbackNotesView({
 
   useEffect(() => {
     if (
+      isDesktopLayout &&
       shouldAutoSelectFeedbackNote({
         feedbackCount: feedbacks.length,
         isListPending,
@@ -105,7 +108,7 @@ export default function FeedbackNotesView({
       setSelectedFeedbackId(feedbacks[0].id);
       replaceFeedback(feedbacks[0].id);
     }
-  }, [feedbackId, feedbacks, isListPending, pathname, replaceFeedback]);
+  }, [feedbackId, feedbacks, isDesktopLayout, isListPending, pathname, replaceFeedback]);
 
   useEffect(() => {
     const queryError = listQuery.error ?? detailQuery.error ?? entriesQuery.error;
@@ -128,8 +131,11 @@ export default function FeedbackNotesView({
   return (
     <FeatureScreenShell
       title={t("title")}
+      mobileBackActive={Boolean(feedbackId)}
+      onMobileBack={clearSelection}
     >
       <FeatureTwoPaneLayout
+        mobileDetailActive={feedbackId ? true : false}
         sidebar={
           <FeedbackNotesSidebar
             feedbacks={feedbacks}

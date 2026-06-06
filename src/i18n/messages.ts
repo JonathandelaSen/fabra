@@ -4,6 +4,9 @@ export const messages = {
   en: {
     common: {
       appName: "Fabra",
+      listDetail: {
+        backToList: "Back to list",
+      },
       actions: {
         save: "Save",
         saved: "Saved",
@@ -1402,6 +1405,9 @@ export const messages = {
   es: {
     common: {
       appName: "Fabra",
+      listDetail: {
+        backToList: "Volver a la lista",
+      },
       actions: {
         save: "Guardar",
         saved: "Guardada",

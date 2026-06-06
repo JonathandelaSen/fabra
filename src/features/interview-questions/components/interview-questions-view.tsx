@@ -6,6 +6,7 @@ import { getErrorMessage } from "@/lib/errors";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
+import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import type {
   InterviewQuestion,
   UpdateInterviewQuestionInput,
@@ -91,9 +92,11 @@ export default function InterviewQuestionsView({
       : null;
   const isListPending = listQuery.isPending;
   const isDetailPending = detailQuery.isPending;
+  const isDesktopLayout = useIsDesktopLayout();
 
   useEffect(() => {
     if (
+      isDesktopLayout &&
       shouldAutoSelectInterviewQuestion({
         isListPending,
         pathname,
@@ -105,7 +108,7 @@ export default function InterviewQuestionsView({
       setSelectedQuestionId(questions[0].id);
       replaceQuestion(questions[0].id);
     }
-  }, [isListPending, pathname, questions, questionId, replaceQuestion]);
+  }, [isDesktopLayout, isListPending, pathname, questions, questionId, replaceQuestion]);
 
   const setMutationError = (err: unknown) => setError(getErrorMessage(err));
 
@@ -207,8 +210,11 @@ export default function InterviewQuestionsView({
   return (
     <FeatureScreenShell
       title={t("title")}
+      mobileBackActive={Boolean(questionId)}
+      onMobileBack={clearQuestion}
     >
       <FeatureTwoPaneLayout
+        mobileDetailActive={questionId ? true : false}
         sidebar={
           <InterviewQuestionsSidebar
             questions={questions}

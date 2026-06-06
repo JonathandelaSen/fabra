@@ -19,7 +19,9 @@ export default function ObjectivesView() {
     commitments,
     hasLoadedWorkspace,
     selectedIdInCurrentList,
+    objectiveId,
     selectObjective,
+    clearObjective,
     clearInlineEdits,
     visibleError,
     saving,
@@ -72,6 +74,8 @@ export default function ObjectivesView() {
 
   return (
     <FeatureScreenShell
+      mobileBackActive={!form && Boolean(objectiveId)}
+      onMobileBack={clearObjective}
       title={
         <span className="flex items-center gap-2">
           <Target className="h-6 w-6 text-zinc-400" />
@@ -87,6 +91,7 @@ export default function ObjectivesView() {
       }
     >
       <FeatureTwoPaneLayout
+        mobileDetailActive={form ? undefined : objectiveId ? true : false}
         sidebar={
           <ObjectivesSidebar
             contexts={contexts}

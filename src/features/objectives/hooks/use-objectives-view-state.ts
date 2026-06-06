@@ -17,6 +17,7 @@ import { getErrorMessage } from "@/lib/errors";
 import { useObjectivesMutations } from "./use-objectives-mutations";
 import { useObjectivesWorkspace } from "./use-objectives-queries";
 import { useObjectivesRouteState } from "./use-objectives-route-state";
+import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import type {
   ItemEditForm,
   ObjectiveForm,
@@ -38,6 +39,7 @@ export function useObjectivesViewState() {
     selectObjective,
   } = routeState;
   const [selectedObjectiveId, setSelectedObjectiveId] = useState<string | null>(objectiveId);
+  const isDesktopLayout = useIsDesktopLayout();
 
   useEffect(() => {
     setSelectedObjectiveId(objectiveId);
@@ -81,11 +83,16 @@ export function useObjectivesViewState() {
   const visibleError = error ?? queryError;
 
   useEffect(() => {
-    if (pathname === "/objectives" && !objectiveId && commitments[0]?.id) {
+    if (
+      isDesktopLayout &&
+      pathname === "/objectives" &&
+      !objectiveId &&
+      commitments[0]?.id
+    ) {
       setSelectedObjectiveId(commitments[0].id);
       replaceObjective(commitments[0].id);
     }
-  }, [commitments, objectiveId, pathname, replaceObjective]);
+  }, [commitments, isDesktopLayout, objectiveId, pathname, replaceObjective]);
 
   useEffect(() => {
     const activityContextId = searchParams.get("activityContextId");
@@ -421,10 +428,12 @@ export function useObjectivesViewState() {
     commitments,
     hasLoadedWorkspace,
     selectedIdInCurrentList,
+    objectiveId,
     selectObjective: (id: string) => {
       setSelectedObjectiveId(id);
       selectObjective(id);
     },
+    clearObjective,
     clearInlineEdits,
     visibleError,
     saving,

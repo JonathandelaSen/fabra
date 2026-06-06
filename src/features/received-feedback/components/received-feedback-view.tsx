@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
+import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import type { ActivityContext, ReceivedFeedbackItem } from "../types";
 import { useReceivedFeedbackMutations } from "../hooks/use-received-feedback-mutations";
 import { useReceivedFeedbackContexts, useReceivedFeedbackList } from "../hooks/use-received-feedback-queries";
@@ -77,9 +78,11 @@ export default function ReceivedFeedbackView() {
 
   const queryError = feedbackQuery.error ? getErrorMessage(feedbackQuery.error) : contextsQuery.error ? getErrorMessage(contextsQuery.error) : null;
   const visibleError = error ?? queryError;
+  const isDesktopLayout = useIsDesktopLayout();
 
   useEffect(() => {
     if (
+      isDesktopLayout &&
       shouldAutoSelectReceivedFeedback({
         activeSelectedId,
         isCreating,
@@ -90,7 +93,7 @@ export default function ReceivedFeedbackView() {
       const nextId = items[0].id;
       replaceRouteItem(nextId);
     }
-  }, [activeSelectedId, items, isCreating, isResolvingQueries, replaceRouteItem]);
+  }, [activeSelectedId, isCreating, isDesktopLayout, isResolvingQueries, items, replaceRouteItem]);
 
   useEffect(() => {
     if (
@@ -235,6 +238,8 @@ export default function ReceivedFeedbackView() {
   return (
     <FeatureScreenShell
       title={t("title")}
+      mobileBackActive={!isCreating && Boolean(routeSelectedId)}
+      onMobileBack={goToList}
       actions={
         <FeatureHeaderActionButton
           label={t("newFeedback")}
@@ -244,6 +249,7 @@ export default function ReceivedFeedbackView() {
       }
     >
       <FeatureTwoPaneLayout
+        mobileDetailActive={isCreating ? undefined : routeSelectedId ? true : false}
         sidebar={
           <ReceivedFeedbackSidebar
             contexts={contexts}

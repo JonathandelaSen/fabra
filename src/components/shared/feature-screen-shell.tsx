@@ -1,12 +1,17 @@
 "use client";
 
 import React from "react";
+import { ArrowLeft } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface FeatureScreenShellProps {
   title: React.ReactNode;
   actions?: React.ReactNode;
   children: React.ReactNode;
+  mobileBackActive?: boolean;
+  onMobileBack?: () => void;
   className?: string;
   headerClassName?: string;
   bodyClassName?: string;
@@ -18,12 +23,16 @@ export function FeatureScreenShell({
   title,
   actions,
   children,
+  mobileBackActive = false,
+  onMobileBack,
   className,
   headerClassName,
   bodyClassName,
   contentClassName,
   bodyContentClassName,
 }: FeatureScreenShellProps) {
+  const t = useTranslations("common.listDetail");
+
   return (
     <div
       className={cn(
@@ -43,9 +52,21 @@ export function FeatureScreenShell({
             contentClassName
           )}
         >
-          <div className="min-w-0">
+          <div className="flex min-w-0 items-center gap-2">
+            {mobileBackActive && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="-ml-2 lg:hidden"
+                onClick={onMobileBack}
+                aria-label={t("backToList")}
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            )}
             {typeof title === "string" ? (
-              <h1 className="text-2xl font-semibold tracking-tight text-text-main">
+              <h1 className="truncate text-2xl font-semibold tracking-tight text-text-main">
                 {title}
               </h1>
             ) : (
