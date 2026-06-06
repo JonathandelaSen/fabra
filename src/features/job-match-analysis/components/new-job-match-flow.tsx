@@ -159,7 +159,7 @@ export default function NewJobMatchFlow({
   const shownError = localError ?? error;
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 md:p-8">
+    <div className="flex-1 overflow-y-auto py-6 md:py-8">
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
@@ -167,12 +167,7 @@ export default function NewJobMatchFlow({
         className="mx-auto flex w-full max-w-5xl flex-col gap-6"
       >
         <div className="flex flex-col gap-2">
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-300">
-            <Zap className="h-3.5 w-3.5" />
-            {t("badge")}
-          </div>
           <h1 className="text-3xl font-bold text-zinc-100">{t("title")}</h1>
-          <p className="max-w-2xl text-sm text-zinc-500">{t("description")}</p>
         </div>
 
         <NewJobMatchCVSourceSelector
