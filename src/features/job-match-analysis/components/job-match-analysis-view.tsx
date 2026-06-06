@@ -285,7 +285,7 @@ export default function JobMatchAnalysisView({
   return (
     <FeatureScreenShell
       title={listT("jobTitle")}
-      mobileBackActive={view === "list" && Boolean(analysisId)}
+      mobileBackActive={(view === "list" && Boolean(analysisId)) || mode === "new"}
       onMobileBack={clearSelection}
       bodyContentClassName={view === "kanban" && !analysisId ? "max-w-none" : undefined}
       actions={

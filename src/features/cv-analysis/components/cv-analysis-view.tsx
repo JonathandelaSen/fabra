@@ -147,7 +147,7 @@ export default function CVAnalysisView({
   return (
     <FeatureScreenShell
       title={listT("cvTitle")}
-      mobileBackActive={route.mode === "detail"}
+      mobileBackActive={route.mode === "detail" || route.mode === "new"}
       onMobileBack={route.goToList}
       actions={
         <FeatureHeaderActionButton
@@ -158,7 +158,11 @@ export default function CVAnalysisView({
     >
       <FeatureTwoPaneLayout
         mobileDetailActive={
-          route.mode === "detail" ? true : route.mode === "list" ? false : undefined
+          route.mode === "detail" || route.mode === "new"
+            ? true
+            : route.mode === "list"
+              ? false
+              : undefined
         }
         sidebar={
           <CVAnalysesListView

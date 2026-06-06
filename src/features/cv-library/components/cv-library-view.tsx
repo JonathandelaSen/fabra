@@ -179,12 +179,12 @@ export default function CVLibraryView({
   return (
     <FeatureScreenShell
       title={navT("cvLibrary")}
-      mobileBackActive={!showImport && Boolean(routeState.cvId)}
-      onMobileBack={() => routeState.replaceCV(null)}
+      mobileBackActive={showImport || Boolean(routeState.cvId)}
+      onMobileBack={showImport ? () => setShowImport(false) : () => routeState.replaceCV(null)}
       bodyClassName="overflow-hidden"
     >
       <FeatureTwoPaneLayout
-        mobileDetailActive={showImport ? undefined : routeState.cvId ? true : false}
+        mobileDetailActive={showImport || routeState.cvId ? true : false}
         sidebar={
           <CVLibrarySidebar
             cvs={cvs}

@@ -236,8 +236,8 @@ export default function WorkJournalView({
   return (
     <FeatureScreenShell
       title={t("title")}
-      mobileBackActive={view === "list" && !showForm && Boolean(listEntryId)}
-      onMobileBack={goToList}
+      mobileBackActive={view === "list" && (Boolean(listEntryId) || showForm)}
+      onMobileBack={showForm ? () => setShowForm(false) : goToList}
       actions={
         <>
           <WorkJournalViewToggle
@@ -256,7 +256,7 @@ export default function WorkJournalView({
     >
       <FeatureTwoPaneLayout
         mobileDetailActive={
-          view === "list" && !showForm ? (listEntryId ? true : false) : undefined
+          view === "list" ? (listEntryId || showForm ? true : false) : undefined
         }
         sidebar={
           <WorkJournalSidebar
