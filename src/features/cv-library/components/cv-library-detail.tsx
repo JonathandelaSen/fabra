@@ -72,7 +72,7 @@ export function CVLibraryDetail({
   const displayScore = latestWithScore ? Math.round(latestWithScore.ai_score!) : null;
 
   return (
-    <BasicPanel as="section" radius="xl" className="overflow-hidden">
+    <BasicPanel as="section" radius="xl" className="shrink-0 overflow-hidden">
       <div className="flex flex-col">
         <CVLibraryDetailHeader
           selected={selected}
