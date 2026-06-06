@@ -25,7 +25,7 @@ export function FeatureDetailTabBar<T extends string = string>({
   return (
     <div
       className={cn(
-        "shrink-0 flex items-center gap-1 px-4 sm:px-6 pt-4",
+        "shrink-0 flex items-center gap-1 pb-4 sm:pb-0 pt-2 sm:pt-0",
         className,
       )}
     >

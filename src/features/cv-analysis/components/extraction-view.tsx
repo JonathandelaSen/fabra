@@ -208,7 +208,7 @@ export default function ExtractionView({
         }}
       />
 
-      <div className="flex-1 flex flex-col overflow-auto p-4 sm:p-6 gap-4 sm:gap-6">
+      <div className="flex-1 flex flex-col overflow-auto px-2 py-4 sm:p-6 gap-4 sm:gap-6">
         <HowAtsWorksEducationBanner />
 
         <ExtractionWorkspace

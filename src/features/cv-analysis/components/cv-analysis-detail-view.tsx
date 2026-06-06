@@ -101,7 +101,7 @@ export default function CVAnalysisDetailView({
 
   if (loading) {
     return (
-      <div key="loading" className="flex-1 overflow-y-auto p-6">
+      <div key="loading" className="flex-1 overflow-y-auto py-4 sm:py-6">
         <AnalysisDetailSkeleton />
       </div>
     );
