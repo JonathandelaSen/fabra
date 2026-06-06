@@ -178,7 +178,6 @@ export default function CVAnalysisView({
             onDelete={(id) => void handleDelete(id)}
           />
         }
-        mainClassName="overflow-hidden"
       >
         {route.mode === "new" ? (
           <NewAnalysisFlow

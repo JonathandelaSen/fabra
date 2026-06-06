@@ -130,7 +130,7 @@ export default function JobMatchExtractionView({
   };
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex flex-col">
       <JobMatchExtractionHeader
         filename={analysis.filename}
         analysisId={analysis.id}
@@ -165,7 +165,7 @@ export default function JobMatchExtractionView({
         }}
       />
 
-      <div className="flex-1 flex flex-col overflow-auto px-2 py-4 sm:p-6 gap-4 sm:gap-6">
+      <div className="flex flex-col py-4 sm:py-6 gap-4 sm:gap-6">
         <HowAtsWorksEducationBanner />
 
         <JobMatchExtractionParserTabs
@@ -176,7 +176,7 @@ export default function JobMatchExtractionView({
           getErrorForTab={getErrorForTab}
         />
 
-        <div className="flex-1 flex flex-col lg:flex-row gap-4 sm:gap-6 min-h-0">
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
           <JobMatchExtractionTextPanel
             activeTab={activeTab}
             currentText={currentText}

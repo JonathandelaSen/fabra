@@ -46,7 +46,7 @@ export default function ExtractionWorkspace({
         getErrorForTab={getErrorForTab}
       />
 
-      <div className="flex-1 flex flex-col lg:flex-row gap-4 sm:gap-6 min-h-0">
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
         <CvExtractionTextPanel
           activeTab={activeTab}
           currentText={currentText}

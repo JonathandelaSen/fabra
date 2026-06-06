@@ -108,7 +108,7 @@ export function CVAnalysisDetailPanel({
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden">
+    <div className="flex flex-col">
       <FeatureDetailTabBar
         tabs={[
           { id: "extraction" as const, label: t("extractionTab"), icon: <FileText /> },
@@ -134,7 +134,7 @@ export function CVAnalysisDetailPanel({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 10 }}
             transition={{ duration: 0.15 }}
-            className="flex min-h-0 flex-1 flex-col overflow-hidden"
+            className="flex flex-col"
           >
             <ExtractionView
               analysis={extractionAnalysis}
@@ -155,7 +155,7 @@ export function CVAnalysisDetailPanel({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -10 }}
             transition={{ duration: 0.15 }}
-            className="flex min-h-0 flex-1 flex-col overflow-hidden"
+            className="flex flex-col"
           >
             <AIAnalysisView
               analysis={toAIAnalysisProps(selectedAnalysis)}

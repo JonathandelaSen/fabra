@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import {
@@ -9,6 +10,8 @@ import {
   Maximize2,
   Minimize2,
   AlertCircle,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 
 interface ExtractionTextPanelProps {
@@ -35,6 +38,7 @@ export function ExtractionTextPanel({
   onToggleFullscreen,
 }: ExtractionTextPanelProps) {
   const t = useTranslations("analysisFlow.extraction");
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <motion.div
@@ -44,17 +48,20 @@ export function ExtractionTextPanel({
       exit={{ opacity: 0, x: 20 }}
       transition={{ duration: 0.15 }}
       className={`
-        flex-1 flex flex-col rounded-2xl border border-line bg-panel-base overflow-hidden min-h-[300px] lg:min-h-0
+        flex flex-col rounded-2xl border border-line bg-panel-base overflow-hidden lg:min-h-0
+        ${isCollapsed ? "flex-initial" : "flex-1 min-h-[300px]"}
         ${fullscreen ? "fixed inset-4 z-50" : "relative"}
       `}
     >
-      <motion.div
-        key={activeTab + "-scan"}
-        initial={{ top: "0%" }}
-        animate={{ top: "100%" }}
-        transition={{ duration: 1.4, ease: "easeInOut" }}
-        className="absolute left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-indigo-500/70 to-transparent shadow-[0_0_10px_rgba(99,102,241,0.7)] z-10 pointer-events-none"
-      />
+      {!isCollapsed && (
+        <motion.div
+          key={activeTab + "-scan"}
+          initial={{ top: "0%" }}
+          animate={{ top: "100%" }}
+          transition={{ duration: 1.4, ease: "easeInOut" }}
+          className="absolute left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-indigo-500/70 to-transparent shadow-[0_0_10px_rgba(99,102,241,0.7)] z-10 pointer-events-none"
+        />
+      )}
 
       <div className="shrink-0 flex items-center justify-between px-3 sm:px-4 py-2 border-b border-line bg-panel-subtle">
         <div className="flex items-center gap-2 min-w-0">
@@ -78,6 +85,22 @@ export function ExtractionTextPanel({
               {copied ? t("copied") : t("copy")}
             </span>
           </button>
+          {!fullscreen && (
+            <button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg text-xs text-text-muted hover:text-text-main hover:bg-panel-hover transition-all"
+              title={isCollapsed ? t("expand") : t("collapse")}
+            >
+              {isCollapsed ? (
+                <ChevronDown className="w-3.5 h-3.5" />
+              ) : (
+                <ChevronUp className="w-3.5 h-3.5" />
+              )}
+              <span className="hidden xs:inline">
+                {isCollapsed ? t("expand") : t("collapse")}
+              </span>
+            </button>
+          )}
           <button
             onClick={onToggleFullscreen}
             className="flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg text-xs text-text-muted hover:text-text-main hover:bg-panel-hover transition-all"
@@ -91,7 +114,8 @@ export function ExtractionTextPanel({
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto p-4 sm:p-5">
+      {!isCollapsed && (
+        <div className="flex-1 overflow-auto p-4 sm:p-5">
         {currentError && !currentText ? (
           <div className="flex items-start gap-3 text-rose-300">
             <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
@@ -113,6 +137,7 @@ export function ExtractionTextPanel({
           </div>
         )}
       </div>
+      )}
     </motion.div>
   );
 }

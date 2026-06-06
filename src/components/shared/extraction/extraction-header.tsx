@@ -45,7 +45,7 @@ export default function ExtractionHeader({
   const t = useTranslations("analysisFlow.extraction");
 
   return (
-    <div className="shrink-0 px-2 sm:px-6 py-4 border-b border-line flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="shrink-0 py-4 border-b border-line flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div className="flex items-center gap-3">
         <div className="w-9 h-9 rounded-xl bg-indigo-500/15 flex items-center justify-center shrink-0">
           <FileText className="w-4.5 h-4.5 text-indigo-400" />

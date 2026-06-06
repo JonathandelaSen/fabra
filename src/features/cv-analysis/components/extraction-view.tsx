@@ -143,7 +143,7 @@ export default function ExtractionView({
   };
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex flex-col">
       {analysis.analysis_mode === "job_match" ? (
         <JobMatchScoreCopyPasteModal
           analysisId={analysis.id}
@@ -208,7 +208,7 @@ export default function ExtractionView({
         }}
       />
 
-      <div className="flex-1 flex flex-col overflow-auto px-2 py-4 sm:p-6 gap-4 sm:gap-6">
+      <div className="flex flex-col py-4 sm:py-6 gap-4 sm:gap-6">
         <HowAtsWorksEducationBanner />
 
         <ExtractionWorkspace
