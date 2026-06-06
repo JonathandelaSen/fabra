@@ -68,6 +68,7 @@ export default function HomeView({ userEmail, onNavigate }: HomeViewProps) {
   return (
     <FeatureScreenShell
       title={t("title")}
+      bodyClassName="overflow-y-auto"
     >
       <div className="space-y-10">
         <HeroSection userEmail={userEmail} />
