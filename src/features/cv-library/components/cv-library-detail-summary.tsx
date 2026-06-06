@@ -34,7 +34,7 @@ export function CVLibraryDetailSummary({
   const t = useTranslations("analysisFlow.cvLibrary");
 
   return (
-    <div className="grid gap-5 border-b border-white/[0.06] bg-white/[0.015] p-5 lg:grid-cols-[auto_1fr]">
+    <div className="grid gap-5 border-b border-white/[0.06] bg-white/[0.015] p-5 lg:grid-cols-[auto_1fr] items-start">
       <CVLibraryAtsScoreCircle displayScore={displayScore} />
 
       <div className="flex min-w-0 flex-col justify-between">
