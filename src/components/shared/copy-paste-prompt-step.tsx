@@ -1,13 +1,15 @@
 "use client";
 
 import { Check, Clipboard } from "lucide-react";
+import { ExternalAIQuickActions } from "./external-ai-quick-actions";
 
 interface CopyPastePromptStepProps {
   prompt: string;
   copyLabel: string;
   copiedLabel: string;
-  onCopyPrompt: () => void;
+  onCopyPrompt: () => Promise<void> | void;
   copiedPrompt: boolean;
+  isPreparing?: boolean;
 }
 
 export function CopyPastePromptStep({
@@ -16,7 +18,10 @@ export function CopyPastePromptStep({
   copiedLabel,
   onCopyPrompt,
   copiedPrompt,
+  isPreparing = false,
 }: CopyPastePromptStepProps) {
+  const disabled = !prompt || isPreparing;
+
   return (
     <div className="space-y-3">
       <textarea
@@ -27,7 +32,7 @@ export function CopyPastePromptStep({
       <button
         type="button"
         onClick={onCopyPrompt}
-        disabled={!prompt}
+        disabled={disabled}
         className="inline-flex items-center gap-2 rounded-lg bg-text-main px-3 py-2 text-xs font-semibold text-text-inverse transition-colors hover:bg-white disabled:opacity-50"
       >
         {copiedPrompt ? (
@@ -37,6 +42,11 @@ export function CopyPastePromptStep({
         )}
         {copiedPrompt ? copiedLabel : copyLabel}
       </button>
+      <ExternalAIQuickActions
+        prompt={prompt}
+        disabled={isPreparing}
+        onCopyPrompt={onCopyPrompt}
+      />
     </div>
   );
 }

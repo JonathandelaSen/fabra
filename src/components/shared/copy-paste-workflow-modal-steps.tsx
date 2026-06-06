@@ -2,6 +2,7 @@
 
 import { Check, Clipboard, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { ExternalAIQuickActions } from "./external-ai-quick-actions";
 
 export function CopyPasteWorkflowCopyStep({
   prompt,
@@ -13,13 +14,18 @@ export function CopyPasteWorkflowCopyStep({
   prompt: string;
   isPreparing: boolean;
   copiedPrompt: boolean;
-  onCopyPrompt: () => void;
+  onCopyPrompt: () => Promise<void> | void;
   onContinue: () => void;
 }) {
   const t = useTranslations("analysisFlow.copyPaste");
   return (
     <div className="space-y-4">
       <textarea readOnly value={isPreparing ? t("preparing") : prompt} className="h-80 w-full resize-none rounded-lg border border-line bg-field-code p-4 text-sm text-text-soft focus:outline-none" />
+      <ExternalAIQuickActions
+        prompt={prompt}
+        disabled={isPreparing}
+        onCopyPrompt={onCopyPrompt}
+      />
       <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
         <button type="button" onClick={onCopyPrompt} disabled={!prompt || isPreparing} className="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-400 disabled:opacity-50">
           {copiedPrompt ? <Check className="h-4 w-4" /> : <Clipboard className="h-4 w-4" />}
