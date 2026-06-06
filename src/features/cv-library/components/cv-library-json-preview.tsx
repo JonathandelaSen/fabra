@@ -27,7 +27,7 @@ export function CVLibraryJsonPreview({ profile }: CVLibraryJsonPreviewProps) {
   }
 
   return (
-    <div className="relative min-h-0 flex-1 flex flex-col bg-zinc-950">
+    <div className="relative flex flex-col bg-zinc-950">
       <div className="flex items-center justify-end gap-1 border-b border-zinc-800/60 px-4 py-1.5">
         <button
           onClick={() => setView("formatted")}
@@ -54,7 +54,7 @@ export function CVLibraryJsonPreview({ profile }: CVLibraryJsonPreviewProps) {
       </div>
 
       {view === "raw" ? (
-        <div className="flex-1 overflow-auto p-6">
+        <div className="p-6">
           <SyntaxHighlightedJson value={profile} />
         </div>
       ) : (
@@ -72,7 +72,7 @@ function FormattedProfile({
   t: ReturnType<typeof useTranslations<"jsonResumeImport.preview">>;
 }) {
   return (
-    <div className="flex-1 overflow-y-auto p-6">
+    <div className="p-6">
       <ProfileSection title={profile.basics?.name ?? "CV"}>
         {profile.basics?.headline && (
           <p className="text-sm text-indigo-300">{profile.basics.headline}</p>

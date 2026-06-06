@@ -25,7 +25,7 @@ export function CVLibraryAssociatedAnalyses({
   }
 
   return (
-    <div className="grid gap-2 max-h-36 overflow-y-auto pr-1 sm:grid-cols-2">
+    <div className="grid gap-2 sm:grid-cols-2">
       {analyses.map((analysis) => (
         <a
           key={analysis.id}

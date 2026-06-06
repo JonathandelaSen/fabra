@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 import { Document, Page, pdfjs } from "react-pdf";
 import { ZoomIn, ZoomOut, Loader2 } from "lucide-react";
 import {
@@ -16,9 +17,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 
 interface PDFPreviewProps {
   url: string;
+  expanded?: boolean;
 }
 
-export function PDFPreview({ url }: PDFPreviewProps) {
+export function PDFPreview({ url, expanded = false }: PDFPreviewProps) {
   const [scale, setScale] = useState(0.85);
   const [urls, setUrls] = useState<string[]>([url]);
   const [numPagesMap, setNumPagesMap] = useState<Record<string, number>>({});
@@ -39,25 +41,27 @@ export function PDFPreview({ url }: PDFPreviewProps) {
   }
 
   return (
-    <div className="relative flex h-full w-full flex-col">
-      <div className="absolute bottom-6 right-6 z-10 flex items-center gap-2 rounded-full border border-line-default bg-floating-toolbar p-1.5 shadow-xl backdrop-blur-md">
-        <ActionIconButton
-          icon={ZoomOut}
-          buttonSize={ACTION_ICON_BUTTON_SIZES.MD}
-          onClick={() => setScale((s) => Math.max(0.5, s - 0.1))}
-        />
-        <span className="w-12 text-center text-xs font-medium text-text-soft">
-          {Math.round(scale * 100)}%
-        </span>
-        <ActionIconButton
-          icon={ZoomIn}
-          buttonSize={ACTION_ICON_BUTTON_SIZES.MD}
-          onClick={() => setScale((s) => Math.min(2, s + 0.1))}
-        />
-      </div>
+    <div className={cn("relative w-full flex flex-col", expanded ? "" : "h-full")}>
+      {!expanded && (
+        <div className="absolute bottom-6 right-6 z-10 flex items-center gap-2 rounded-full border border-line-default bg-floating-toolbar p-1.5 shadow-xl backdrop-blur-md">
+          <ActionIconButton
+            icon={ZoomOut}
+            buttonSize={ACTION_ICON_BUTTON_SIZES.MD}
+            onClick={() => setScale((s) => Math.max(0.5, s - 0.1))}
+          />
+          <span className="w-12 text-center text-xs font-medium text-text-soft">
+            {Math.round(scale * 100)}%
+          </span>
+          <ActionIconButton
+            icon={ZoomIn}
+            buttonSize={ACTION_ICON_BUTTON_SIZES.MD}
+            onClick={() => setScale((s) => Math.min(2, s + 0.1))}
+          />
+        </div>
+      )}
 
-      <div className="flex-1 overflow-auto bg-pdf-canvas pb-20 scrollbar-thin">
-        <div className="grid min-h-full items-start justify-center p-8">
+      <div className={cn("bg-pdf-canvas pb-20", expanded ? "" : "flex-1 overflow-auto scrollbar-thin")}>
+        <div className={cn("grid min-h-full items-start p-8", expanded ? "w-full justify-items-stretch justify-stretch" : "justify-center")}>
           {urls.map((u, i) => {
             const isLatest = i === urls.length - 1;
             const isOld = !isLatest;
@@ -66,7 +70,7 @@ export function PDFPreview({ url }: PDFPreviewProps) {
             return (
               <div 
                 key={u} 
-                className="col-start-1 row-start-1 transition-opacity duration-300"
+                className={cn("col-start-1 row-start-1 transition-opacity duration-300", expanded ? "w-full" : "")}
                 style={{ 
                   zIndex: isLatest ? 10 : 1,
                   opacity: isOld ? 0.4 : 1,
@@ -84,21 +88,26 @@ export function PDFPreview({ url }: PDFPreviewProps) {
                       </div>
                     ) : null
                   }
-                  className="flex flex-col items-center gap-4"
+                  className={cn("flex flex-col gap-4", expanded ? "w-full items-stretch" : "items-center")}
                 >
                   {Array.from(new Array(pagesToRender), (el, index) => (
                     <div 
                       key={`page_${index + 1}`} 
-                      className="relative overflow-hidden border border-line bg-white shadow-[0_0_40px_rgba(0,0,0,0.5)]"
+                      className={cn(
+                        "relative overflow-hidden border border-line bg-white shadow-[0_0_40px_rgba(0,0,0,0.5)] max-w-full",
+                        expanded 
+                          ? "w-full [&_.react-pdf__Page]:!w-full [&_.react-pdf__Page]:!h-auto [&_.react-pdf__Page]:!min-w-0 [&_canvas]:!w-full [&_canvas]:!h-auto"
+                          : ""
+                      )}
                     >
                       <Page
                         pageNumber={index + 1}
-                        scale={scale}
+                        scale={expanded ? 2.0 : scale}
                         renderAnnotationLayer={true}
                         renderTextLayer={false}
                         loading={
                           urls.length === 1 ? (
-                            <div className="flex items-center justify-center p-12 text-text-muted" style={{ width: 595 * scale, height: 842 * scale }}>
+                            <div className="flex items-center justify-center p-12 text-text-muted max-w-full" style={{ width: 595 * (expanded ? 2.0 : scale), height: 842 * (expanded ? 2.0 : scale) }}>
                               <Loader2 className="h-8 w-8 animate-spin" />
                             </div>
                           ) : null

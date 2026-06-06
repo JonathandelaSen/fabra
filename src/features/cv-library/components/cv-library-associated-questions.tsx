@@ -33,7 +33,7 @@ export function CVLibraryAssociatedQuestions({
         </button>
       </div>
       {questions.length > 0 ? (
-        <div className="grid gap-2 max-h-28 overflow-y-auto pr-1 sm:grid-cols-2">
+        <div className="grid gap-2 sm:grid-cols-2">
           {questions.map((question) => (
             <button
               key={question.id}

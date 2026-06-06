@@ -25,7 +25,7 @@ export function CVLibraryTemplateVersions({
   }
 
   return (
-    <div className="grid gap-2 max-h-36 overflow-y-auto pr-1 sm:grid-cols-2">
+    <div className="grid gap-2 sm:grid-cols-2">
       {templateVersions.map((template) => (
         <button
           key={template.id}

@@ -38,7 +38,7 @@ export function CVLibraryDetailSummary({
       <CVLibraryAtsScoreCircle displayScore={displayScore} />
 
       <div className="flex min-w-0 flex-col justify-between">
-        <Tabs defaultValue="analyses" className="w-full flex-1 flex flex-col min-h-0">
+        <Tabs defaultValue="analyses" className="w-full flex flex-col">
           <TabsList variant="default" className="mb-4 bg-zinc-950/40">
             <TabsTrigger value="analyses" className="flex items-center gap-1.5">
               <FileSearch className="h-3.5 w-3.5" />
@@ -63,14 +63,14 @@ export function CVLibraryDetailSummary({
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="analyses" className="min-h-0 flex-1 overflow-y-auto">
+          <TabsContent value="analyses" className="focus-visible:outline-none">
             <CVLibraryAssociatedAnalyses
               analyses={analyses}
               onOpenAnalysis={onOpenAnalysis}
             />
           </TabsContent>
 
-          <TabsContent value="questions" className="min-h-0 flex-1 overflow-y-auto">
+          <TabsContent value="questions" className="focus-visible:outline-none">
             <CVLibraryAssociatedQuestions
               selectedCvId={selectedCvId}
               questions={questions}
@@ -78,7 +78,7 @@ export function CVLibraryDetailSummary({
             />
           </TabsContent>
 
-          <TabsContent value="templates" className="min-h-0 flex-1 overflow-y-auto">
+          <TabsContent value="templates" className="focus-visible:outline-none">
             <CVLibraryTemplateVersions
               templateVersions={templateVersions}
               onOpenEditor={onOpenEditor}

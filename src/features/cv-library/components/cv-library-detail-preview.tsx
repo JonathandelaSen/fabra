@@ -1,5 +1,20 @@
 "use client";
 
+import dynamic from "next/dynamic";
+import { Loader2 } from "lucide-react";
+
+const PDFPreview = dynamic(
+  () => import("@/components/shared/pdf-preview").then((mod) => mod.PDFPreview),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex min-h-[400px] w-full items-center justify-center bg-zinc-950 text-zinc-500">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    ),
+  },
+);
+
 interface CVLibraryDetailPreviewProps {
   pdfPath: string;
   title: string;
@@ -7,15 +22,10 @@ interface CVLibraryDetailPreviewProps {
 
 export function CVLibraryDetailPreview({
   pdfPath,
-  title,
 }: CVLibraryDetailPreviewProps) {
   return (
-    <div className="relative min-h-0 flex-1 bg-zinc-950">
-      <iframe
-        src={`${pdfPath}#toolbar=0`}
-        className="h-full w-full bg-zinc-950 border-0"
-        title={title}
-      />
+    <div className="relative w-full bg-zinc-950">
+      <PDFPreview url={pdfPath} expanded />
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { CVLibraryDetailHeader } from "./cv-library-detail-header";
 import { CVLibraryDetailSummary } from "./cv-library-detail-summary";
 import { CVLibraryDetailPreview } from "./cv-library-detail-preview";
 import { CVLibraryJsonPreview } from "./cv-library-json-preview";
+import { BasicPanel } from "@/components/shared/basic-panel";
 
 interface CVLibraryDetailProps {
   selected: CVDocumentListItem | null;
@@ -49,11 +50,11 @@ export function CVLibraryDetail({
 
   if (!selected) {
     return (
-      <section className="min-h-0 overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]">
-        <div className="flex h-full min-h-[520px] items-center justify-center text-sm text-zinc-500">
+      <BasicPanel as="section" radius="xl" className="overflow-hidden">
+        <div className="flex min-h-[520px] items-center justify-center text-sm text-zinc-500">
           {t("selectToPreview")}
         </div>
-      </section>
+      </BasicPanel>
     );
   }
 
@@ -71,8 +72,8 @@ export function CVLibraryDetail({
   const displayScore = latestWithScore ? Math.round(latestWithScore.ai_score!) : null;
 
   return (
-    <section className="min-h-0 overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] shadow-[0_8px_32px_rgba(0,0,0,0.24)]">
-      <div className="flex h-full min-h-[620px] flex-col">
+    <BasicPanel as="section" radius="xl" className="overflow-hidden">
+      <div className="flex flex-col">
         <CVLibraryDetailHeader
           selected={selected}
           editing={editing}
@@ -109,6 +110,6 @@ export function CVLibraryDetail({
           />
         )}
       </div>
-    </section>
+    </BasicPanel>
   );
 }
