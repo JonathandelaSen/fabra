@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: ["192.168.1.130"],
   serverExternalPackages: ["@napi-rs/canvas", "pdf-parse"],
   outputFileTracingIncludes: {
     "/api/**/*": [
