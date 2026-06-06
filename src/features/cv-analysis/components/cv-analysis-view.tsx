@@ -83,14 +83,15 @@ export default function CVAnalysisView({
   const selectedIdInCurrentList =
     filteredAnalyses.find((analysis) => analysis.id === selectedAnalysisId)?.id ?? null;
   const isResolvingList = analysesQuery.isFetching;
-  const isResolvingDetail = detailQuery.isFetching;
+  const isListPending = analysesQuery.isPending;
+  const isDetailPending = detailQuery.isPending;
 
   useEffect(() => {
     if (
       route.pathname === "/cv-analysis" &&
       shouldAutoSelectCVAnalysis({
         analysisCount: analyses.length,
-        isResolvingList,
+        isListPending,
         mode: route.mode,
         selectedAnalysisId: route.analysisId,
       })
@@ -98,7 +99,7 @@ export default function CVAnalysisView({
       setSelectedAnalysisId(analyses[0].id);
       route.replaceDetail(analyses[0].id);
     }
-  }, [analyses, isResolvingList, route]);
+  }, [analyses, isListPending, route]);
 
   useEffect(() => {
     setSelectedAnalysisId(route.analysisId);
@@ -179,8 +180,8 @@ export default function CVAnalysisView({
           />
         ) : shouldShowCVAnalysisMainLoader({
           analysisCount: filteredAnalyses.length,
-          isResolvingDetail,
-          isResolvingList,
+          isDetailPending,
+          isListPending,
           mode: route.mode,
           selectedAnalysisId,
         }) ? (

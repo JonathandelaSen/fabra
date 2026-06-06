@@ -89,15 +89,15 @@ export default function CVLibraryView({
     : detailQuery.error
       ? getErrorMessage(detailQuery.error)
       : null;
-  const isResolvingList = listQuery.isFetching;
-  const isResolvingDetail = detailQuery.isFetching;
+  const isListPending = listQuery.isPending;
+  const isDetailPending = detailQuery.isPending;
 
   useEffect(() => {
     const firstCvId = cvs[0]?.id ?? null;
     if (
       shouldAutoSelectCVLibraryItem({
         cvCount: cvs.length,
-        isResolvingList,
+        isListPending,
         pathname: routeState.pathname,
         selectedCvId: routeState.cvId,
       }) &&
@@ -108,7 +108,7 @@ export default function CVLibraryView({
       setSelectedCvId(firstCvId);
       routeState.replaceCV(firstCvId);
     }
-  }, [cvs, isResolvingList, routeState.cvId, routeState.pathname, routeState.replaceCV]);
+  }, [cvs, isListPending, routeState.cvId, routeState.pathname, routeState.replaceCV]);
 
   const startEditing = (cv: CVDocumentListItem) => {
     setEditingId(cv.id);
@@ -156,8 +156,8 @@ export default function CVLibraryView({
   if (
     shouldShowCVLibraryShellLoader({
       cvCount: cvs.length,
-      isResolvingDetail,
-      isResolvingList,
+      isDetailPending,
+      isListPending,
       pathname: routeState.pathname,
       selectedCvId,
     })
@@ -196,8 +196,8 @@ export default function CVLibraryView({
           <CVLibraryImportPanel onClose={() => setShowImport(false)} />
         ) : shouldShowCVLibraryDetailLoader({
           cvCount: cvs.length,
-          isResolvingDetail,
-          isResolvingList,
+          isDetailPending,
+          isListPending,
           pathname: routeState.pathname,
           selectedCvId,
         }) ? (

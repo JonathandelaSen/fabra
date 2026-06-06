@@ -15,7 +15,10 @@ import { useCVDocumentList } from "@/features/cv-library";
 import { useCreateCVTemplateVersion } from "../hooks/use-cv-template-mutations";
 import { CVTemplatesSidebar } from "./cv-templates-sidebar";
 import { CVTemplateDetail } from "./cv-template-detail";
-import { shouldShowCVTemplatesLoader } from "./cv-templates-loading-state";
+import {
+  resolveActiveTemplateId,
+  shouldShowCVTemplatesLoader,
+} from "./cv-templates-loading-state";
 import { CVTemplatesSkeleton } from "./cv-templates-skeleton";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 
@@ -40,7 +43,10 @@ export default function CVTemplatesView({
 
   const hasAIApiKey = aiProviderValue === "mock" || aiApiKey.length > 0;
   const t = useTranslations("analysisFlow.templates");
-  const templateIdFromPath = pathname.split("/").filter(Boolean)[1] ?? null;
+  const templateIdFromPath = resolveActiveTemplateId(
+    pathname,
+    CV_TEMPLATES.map((template) => template.templateId),
+  );
   const cvIdFromQuery = searchParams.get("cvId");
 
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
@@ -57,7 +63,7 @@ export default function CVTemplatesView({
   const createVersion = useCreateCVTemplateVersion({
     onCreated: (version) => onOpenEditor(version.id),
   });
-  const isResolvingCvs = listQuery.isFetching;
+  const isCvsPending = listQuery.isPending;
 
   const filteredCvs = cvs.filter(
     (cv) =>
@@ -130,10 +136,10 @@ export default function CVTemplatesView({
   return (
     <FeatureScreenShell title={t("title")} bodyClassName="overflow-hidden">
       {shouldShowCVTemplatesLoader({
-        isResolvingCvs,
+        isCvsPending,
         pathname,
         templateCount: CV_TEMPLATES.length,
-        templateId: templateIdFromPath,
+        templateId: selectedTemplateId,
       }) ? (
         <CVTemplatesSkeleton />
       ) : (

@@ -1,30 +1,41 @@
+import {
+  shouldAutoSelectFirstItem,
+  shouldShowDetailLoader,
+  shouldShowListShellLoader,
+  type ListDetailLoadingState,
+} from "@/frontend/list-detail/list-detail-loading-state";
+
 interface CVLibraryAutoSelectionState {
   cvCount: number;
-  isResolvingList: boolean;
+  isListPending: boolean;
   pathname: string;
   selectedCvId: string | null;
 }
 
 interface CVLibraryLoaderState extends CVLibraryAutoSelectionState {
-  isResolvingDetail: boolean;
+  isDetailPending: boolean;
 }
 
-export function shouldAutoSelectCVLibraryItem({
-  cvCount,
-  isResolvingList,
-  pathname,
-  selectedCvId,
-}: CVLibraryAutoSelectionState) {
-  return pathname === "/cvs" && !selectedCvId && !isResolvingList && cvCount > 0;
+function toListDetailState(
+  state: CVLibraryAutoSelectionState & { isDetailPending?: boolean },
+): ListDetailLoadingState {
+  return {
+    isListPending: state.isListPending,
+    isDetailPending: state.isDetailPending ?? false,
+    itemCount: state.cvCount,
+    selectedId: state.selectedCvId,
+    isOnListRoute: state.pathname === "/cvs",
+  };
 }
 
-export function shouldShowCVLibraryShellLoader({
-  cvCount,
-  isResolvingList,
-}: CVLibraryLoaderState) {
-  return isResolvingList && cvCount === 0;
+export function shouldAutoSelectCVLibraryItem(state: CVLibraryAutoSelectionState) {
+  return shouldAutoSelectFirstItem(toListDetailState(state));
+}
+
+export function shouldShowCVLibraryShellLoader(state: CVLibraryLoaderState) {
+  return shouldShowListShellLoader(toListDetailState(state));
 }
 
 export function shouldShowCVLibraryDetailLoader(state: CVLibraryLoaderState) {
-  return state.isResolvingDetail || shouldAutoSelectCVLibraryItem(state);
+  return shouldShowDetailLoader(toListDetailState(state));
 }

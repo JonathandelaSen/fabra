@@ -1,37 +1,47 @@
+import {
+  shouldAutoSelectFirstItem,
+  shouldShowDetailLoader,
+  shouldShowListShellLoader,
+  type ListDetailLoadingState,
+} from "@/frontend/list-detail/list-detail-loading-state";
+
 interface InterviewQuestionsAutoSelectionState {
-  isResolvingList: boolean;
+  isListPending: boolean;
   pathname: string;
   questionCount: number;
   questionId: string | null;
 }
 
 interface InterviewQuestionsLoaderState extends InterviewQuestionsAutoSelectionState {
-  isResolvingDetail: boolean;
+  isDetailPending: boolean;
 }
 
-export function shouldAutoSelectInterviewQuestion({
-  isResolvingList,
-  pathname,
-  questionCount,
-  questionId,
-}: InterviewQuestionsAutoSelectionState) {
-  return (
-    pathname === "/interview-questions" &&
-    !questionId &&
-    !isResolvingList &&
-    questionCount > 0
-  );
+function toListDetailState(
+  state: InterviewQuestionsAutoSelectionState & { isDetailPending?: boolean },
+): ListDetailLoadingState {
+  return {
+    isListPending: state.isListPending,
+    isDetailPending: state.isDetailPending ?? false,
+    itemCount: state.questionCount,
+    selectedId: state.questionId,
+    isOnListRoute: state.pathname === "/interview-questions",
+  };
 }
 
-export function shouldShowInterviewQuestionsShellLoader({
-  isResolvingList,
-  questionCount,
-}: InterviewQuestionsLoaderState) {
-  return isResolvingList && questionCount === 0;
+export function shouldAutoSelectInterviewQuestion(
+  state: InterviewQuestionsAutoSelectionState,
+) {
+  return shouldAutoSelectFirstItem(toListDetailState(state));
+}
+
+export function shouldShowInterviewQuestionsShellLoader(
+  state: InterviewQuestionsLoaderState,
+) {
+  return shouldShowListShellLoader(toListDetailState(state));
 }
 
 export function shouldShowInterviewQuestionsDetailLoader(
   state: InterviewQuestionsLoaderState,
 ) {
-  return state.isResolvingDetail || shouldAutoSelectInterviewQuestion(state);
+  return shouldShowDetailLoader(toListDetailState(state));
 }

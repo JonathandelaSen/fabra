@@ -1,3 +1,8 @@
+import {
+  shouldAutoSelectFirstItem,
+  shouldShowMainLoader,
+  type ListDetailLoadingState,
+} from "@/frontend/list-detail/list-detail-loading-state";
 import type {
   JobMatchAnalysisRouteMode,
   JobMatchAnalysisRouteView,
@@ -6,39 +11,40 @@ import type {
 interface JobMatchAnalysisAutoSelectionState {
   analysisCount: number;
   analysisId: string | null;
-  isResolvingList: boolean;
+  isListPending: boolean;
   mode: JobMatchAnalysisRouteMode;
   pathname: string;
   view: JobMatchAnalysisRouteView;
 }
 
 interface JobMatchAnalysisMainLoaderState extends JobMatchAnalysisAutoSelectionState {
-  isResolvingDetail: boolean;
+  isDetailPending: boolean;
 }
 
-export function shouldAutoSelectJobMatchAnalysis({
-  analysisCount,
-  analysisId,
-  isResolvingList,
-  mode,
-  pathname,
-  view,
-}: JobMatchAnalysisAutoSelectionState) {
-  return (
-    view === "list" &&
-    mode === "list" &&
-    pathname === "/job-analyses" &&
-    !analysisId &&
-    !isResolvingList &&
-    analysisCount > 0
-  );
+function toListDetailState(
+  state: JobMatchAnalysisAutoSelectionState & { isDetailPending?: boolean },
+): ListDetailLoadingState {
+  return {
+    isListPending: state.isListPending,
+    isDetailPending: state.isDetailPending ?? false,
+    itemCount: state.analysisCount,
+    selectedId: state.analysisId,
+    isOnListRoute:
+      state.view === "list" &&
+      state.mode === "list" &&
+      state.pathname === "/job-analyses",
+  };
 }
 
-export function shouldShowJobMatchAnalysisMainLoader(state: JobMatchAnalysisMainLoaderState) {
+export function shouldAutoSelectJobMatchAnalysis(
+  state: JobMatchAnalysisAutoSelectionState,
+) {
+  return shouldAutoSelectFirstItem(toListDetailState(state));
+}
+
+export function shouldShowJobMatchAnalysisMainLoader(
+  state: JobMatchAnalysisMainLoaderState,
+) {
   if (state.mode === "new") return false;
-  return (
-    state.isResolvingList ||
-    state.isResolvingDetail ||
-    shouldAutoSelectJobMatchAnalysis(state)
-  );
+  return shouldShowMainLoader(toListDetailState(state));
 }

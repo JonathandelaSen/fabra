@@ -16,6 +16,10 @@ import { useFeedbackNotesRouteState } from "../hooks/use-feedback-notes-route-st
 import { useActivityContexts } from "@/features/activity-context";
 import { FeedbackNotesDetailSkeleton } from "./feedback-notes-skeleton";
 import { FeedbackNotesDetail } from "./feedback-notes-detail";
+import {
+  shouldAutoSelectFeedbackNote,
+  shouldShowFeedbackNotesContentLoader,
+} from "./feedback-notes-loading-state";
 import { FeedbackNotesSidebar } from "./feedback-notes-sidebar";
 import { FeedbackCopyPastePanel } from "./feedback-copy-paste-panel";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
@@ -72,7 +76,9 @@ export default function FeedbackNotesView({
   const selectedFeedback = detailQuery.data ?? listSelectedFeedback;
   const entries = entriesQuery.data ?? [];
   const selectedIdInCurrentList = listSelectedFeedback?.id ?? null;
-  const isInitialListLoading = listQuery.isLoading && feedbacks.length === 0;
+  const isListPending = listQuery.isPending;
+  const isDetailPending = detailQuery.isPending;
+  const isInitialListLoading = isListPending && feedbacks.length === 0;
 
   const isSaving = useMemo(
     () =>
@@ -87,11 +93,19 @@ export default function FeedbackNotesView({
   );
 
   useEffect(() => {
-    if (pathname === "/feedback-notes" && !feedbackId && feedbacks[0]?.id) {
+    if (
+      shouldAutoSelectFeedbackNote({
+        feedbackCount: feedbacks.length,
+        isListPending,
+        pathname,
+        selectedFeedbackId: feedbackId,
+      }) &&
+      feedbacks[0]?.id
+    ) {
       setSelectedFeedbackId(feedbacks[0].id);
       replaceFeedback(feedbacks[0].id);
     }
-  }, [feedbackId, feedbacks, pathname, replaceFeedback]);
+  }, [feedbackId, feedbacks, isListPending, pathname, replaceFeedback]);
 
   useEffect(() => {
     const queryError = listQuery.error ?? detailQuery.error ?? entriesQuery.error;
@@ -148,7 +162,13 @@ export default function FeedbackNotesView({
           </AlertBanner>
         )}
 
-        {isInitialListLoading || (selectedFeedbackId && detailQuery.isLoading) ? (
+        {shouldShowFeedbackNotesContentLoader({
+          feedbackCount: feedbacks.length,
+          isDetailPending,
+          isListPending,
+          pathname,
+          selectedFeedbackId,
+        }) ? (
           <FeedbackNotesDetailSkeleton />
         ) : !selectedFeedback ? (
           <div className="flex h-full items-center justify-center text-sm text-zinc-600">

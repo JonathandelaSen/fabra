@@ -89,13 +89,13 @@ export default function InterviewQuestionsView({
     : mutations.editAnswer.isPending
       ? "edit"
       : null;
-  const isResolvingList = listQuery.isFetching;
-  const isResolvingDetail = detailQuery.isFetching;
+  const isListPending = listQuery.isPending;
+  const isDetailPending = detailQuery.isPending;
 
   useEffect(() => {
     if (
       shouldAutoSelectInterviewQuestion({
-        isResolvingList,
+        isListPending,
         pathname,
         questionCount: questions.length,
         questionId,
@@ -105,7 +105,7 @@ export default function InterviewQuestionsView({
       setSelectedQuestionId(questions[0].id);
       replaceQuestion(questions[0].id);
     }
-  }, [isResolvingList, pathname, questions, questionId, replaceQuestion]);
+  }, [isListPending, pathname, questions, questionId, replaceQuestion]);
 
   const setMutationError = (err: unknown) => setError(getErrorMessage(err));
 
@@ -194,8 +194,8 @@ export default function InterviewQuestionsView({
 
   if (
     shouldShowInterviewQuestionsShellLoader({
-      isResolvingDetail,
-      isResolvingList,
+      isDetailPending,
+      isListPending,
       pathname,
       questionCount: questions.length,
       questionId: selectedQuestionId,
@@ -231,8 +231,8 @@ export default function InterviewQuestionsView({
         )}
 
         {shouldShowInterviewQuestionsDetailLoader({
-          isResolvingDetail,
-          isResolvingList,
+          isDetailPending,
+          isListPending,
           pathname,
           questionCount: questions.length,
           questionId: selectedQuestionId,

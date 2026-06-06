@@ -101,14 +101,15 @@ export default function JobMatchAnalysisView({
   const selectedIdInCurrentList =
     filteredAnalyses.find((analysis) => analysis.id === selectedAnalysisId)?.id ?? null;
   const isResolvingList = listQuery.isFetching;
-  const isResolvingDetail = detailQuery.isFetching;
+  const isListPending = listQuery.isPending;
+  const isDetailPending = detailQuery.isPending;
 
   useEffect(() => {
     if (
       shouldAutoSelectJobMatchAnalysis({
         analysisCount: analyses.length,
         analysisId,
-        isResolvingList,
+        isListPending,
         mode,
         pathname: routeState.pathname,
         view,
@@ -117,7 +118,7 @@ export default function JobMatchAnalysisView({
       const firstHasScore = analyses[0].aiScore !== null && analyses[0].aiScore !== undefined;
       replaceAnalysis(analyses[0].id, firstHasScore);
     }
-  }, [analysisId, analyses, isResolvingList, mode, replaceAnalysis, routeState.pathname, view]);
+  }, [analysisId, analyses, isListPending, mode, replaceAnalysis, routeState.pathname, view]);
 
   const selectItem = (id: string) => {
     const item = analyses.find((a) => a.id === id);
@@ -235,8 +236,8 @@ export default function JobMatchAnalysisView({
       isLoading={shouldShowJobMatchAnalysisMainLoader({
         analysisCount: filteredAnalyses.length,
         analysisId,
-        isResolvingDetail,
-        isResolvingList,
+        isDetailPending,
+        isListPending,
         mode,
         pathname: routeState.pathname,
         view,

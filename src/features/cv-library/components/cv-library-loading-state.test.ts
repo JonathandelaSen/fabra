@@ -6,23 +6,34 @@ import {
 } from "./cv-library-loading-state";
 
 describe("cv library loading state", () => {
-  it("does not auto-select while the cv list query is in flight", () => {
+  it("does not auto-select while the initial cv list is still pending", () => {
     expect(
       shouldAutoSelectCVLibraryItem({
-        cvCount: 2,
-        isResolvingList: true,
+        cvCount: 0,
+        isListPending: true,
         pathname: "/cvs",
         selectedCvId: null,
       })
     ).toBe(false);
   });
 
-  it("keeps the sidebar visible while resolving the selected cv detail", () => {
+  it("auto-selects from cached rows during a background refetch", () => {
+    expect(
+      shouldAutoSelectCVLibraryItem({
+        cvCount: 2,
+        isListPending: false,
+        pathname: "/cvs",
+        selectedCvId: null,
+      })
+    ).toBe(true);
+  });
+
+  it("keeps the sidebar visible and shows the detail skeleton before auto-selection", () => {
     expect(
       shouldShowCVLibraryShellLoader({
         cvCount: 2,
-        isResolvingDetail: false,
-        isResolvingList: false,
+        isDetailPending: false,
+        isListPending: false,
         pathname: "/cvs",
         selectedCvId: null,
       })
@@ -31,8 +42,8 @@ describe("cv library loading state", () => {
     expect(
       shouldShowCVLibraryDetailLoader({
         cvCount: 2,
-        isResolvingDetail: false,
-        isResolvingList: false,
+        isDetailPending: false,
+        isListPending: false,
         pathname: "/cvs",
         selectedCvId: null,
       })
@@ -43,8 +54,8 @@ describe("cv library loading state", () => {
     expect(
       shouldShowCVLibraryShellLoader({
         cvCount: 0,
-        isResolvingDetail: false,
-        isResolvingList: true,
+        isDetailPending: false,
+        isListPending: true,
         pathname: "/cvs",
         selectedCvId: null,
       })
@@ -53,8 +64,8 @@ describe("cv library loading state", () => {
     expect(
       shouldShowCVLibraryShellLoader({
         cvCount: 2,
-        isResolvingDetail: false,
-        isResolvingList: true,
+        isDetailPending: false,
+        isListPending: true,
         pathname: "/cvs/one",
         selectedCvId: "one",
       })
