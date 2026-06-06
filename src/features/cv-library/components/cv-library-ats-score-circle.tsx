@@ -24,7 +24,7 @@ export function CVLibraryAtsScoreCircle({
   if (displayScore !== null && scoreColors) {
     return (
       <div className="flex flex-col items-center justify-center rounded-xl border border-white/[0.04] bg-[#0c0c14]/50 p-4">
-        <span className="mb-2 text-[10px] font-semibold tracking-wider uppercase text-zinc-500">
+        <span className="hidden md:block mb-2 text-[10px] font-semibold tracking-wider uppercase text-zinc-500">
           {t("generalAtsScore")}
         </span>
         <AnalysisScoreCircle
@@ -39,7 +39,7 @@ export function CVLibraryAtsScoreCircle({
   return (
     <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-white/[0.08] p-5 text-center max-w-[170px] mx-auto lg:mx-0">
       <Sparkles className="mb-2 h-6 w-6 text-zinc-600 animate-pulse" />
-      <span className="text-[10px] font-semibold tracking-wider uppercase text-zinc-500">
+      <span className="hidden md:block text-[10px] font-semibold tracking-wider uppercase text-zinc-500">
         {t("generalAtsScore")}
       </span>
       <p className="mt-1 text-[11px] text-zinc-600 leading-normal">

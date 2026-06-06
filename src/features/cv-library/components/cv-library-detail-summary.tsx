@@ -39,7 +39,10 @@ export function CVLibraryDetailSummary({
 
       <div className="flex min-w-0 flex-col justify-between">
         <Tabs defaultValue="analyses" className="w-full flex flex-col">
-          <TabsList variant="default" className="mb-4 bg-zinc-950/40">
+          <TabsList
+            variant="default"
+            className="mb-4 bg-zinc-950/40 w-full max-w-full overflow-x-auto justify-start flex-nowrap md:justify-center [&::-webkit-scrollbar]:hidden [scrollbar-width:none]"
+          >
             <TabsTrigger value="analyses" className="flex items-center gap-1.5">
               <FileSearch className="h-3.5 w-3.5" />
               <span>{t("associatedAnalyses")}</span>

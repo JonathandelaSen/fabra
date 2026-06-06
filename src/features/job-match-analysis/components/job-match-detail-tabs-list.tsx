@@ -22,7 +22,7 @@ export function JobMatchDetailTabsList({
 
   return (
     <div className="sticky top-[-24px] z-20 -mx-6 mb-8 px-6 py-4 backdrop-blur-md">
-      <TabsList className="gap-1 rounded-2xl border-white/[0.05] bg-white/[0.03] p-1">
+      <TabsList className="gap-1 rounded-2xl border-white/[0.05] bg-white/[0.03] p-1 w-full max-w-full overflow-x-auto justify-start flex-nowrap md:justify-center [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
         <TabsTrigger value={DETAIL_TABS.summary} className="gap-2 px-5 py-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]">
           <Sparkles className="size-4" />
           {t("tabs.summary")}
