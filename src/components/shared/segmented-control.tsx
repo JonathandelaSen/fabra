@@ -21,12 +21,14 @@ export function SegmentedControl<T extends string>({
 }: SegmentedControlProps<T>) {
   return (
     <div
+      role="group"
       className={`flex rounded-lg border border-line bg-panel-control p-1 ${className}`}
     >
       {options.map((option) => (
         <button
           key={option.value}
           type="button"
+          aria-pressed={value === option.value}
           onClick={() => onChange(option.value)}
           className={`flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
             value === option.value

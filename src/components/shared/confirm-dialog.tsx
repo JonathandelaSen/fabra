@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import { AlertTriangle, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
@@ -25,14 +26,15 @@ export function ConfirmDialog({
   open,
   title,
   description,
-  confirmLabel = "Confirm",
-  cancelLabel = "Cancel",
+  confirmLabel,
+  cancelLabel,
   headerTitle,
   variant = "danger",
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
   const t = useTranslations("common.actions");
+  const titleId = useId();
   if (!open) return null;
 
   return (
@@ -40,6 +42,7 @@ export function ConfirmDialog({
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-0 sm:p-4 backdrop-blur-xs animate-fade-in"
       role="dialog"
       aria-modal="true"
+      aria-labelledby={titleId}
     >
       <div className="flex h-full w-full sm:h-auto sm:max-h-[90vh] sm:max-w-md flex-col overflow-hidden rounded-none sm:rounded-xl border-0 sm:border border-line bg-modal shadow-2xl animate-in fade-in-50 zoom-in-95 duration-200">
         <div className="flex items-center justify-between border-b border-line px-5 py-4">
@@ -54,11 +57,15 @@ export function ConfirmDialog({
           <ActionIconButton
             icon={X}
             onClick={onCancel}
+            aria-label={t("close")}
           />
         </div>
 
         <div className="p-5 space-y-2 flex-1 sm:flex-initial">
-          <h3 className="text-base font-bold text-text-main leading-snug">
+          <h3
+            id={titleId}
+            className="text-base font-bold text-text-main leading-snug"
+          >
             {title}
           </h3>
           <p className="text-sm text-text-muted leading-relaxed">{description}</p>
@@ -70,11 +77,11 @@ export function ConfirmDialog({
             onClick={onCancel}
             strong
           >
-            {cancelLabel}
+            {cancelLabel ?? t("cancel")}
           </IconTextButton>
           {variant === "danger" ? (
             <DeleteButton onClick={onConfirm} strong>
-              {confirmLabel}
+              {confirmLabel ?? t("confirmAction")}
             </DeleteButton>
           ) : (
             <IconTextButton
@@ -83,7 +90,7 @@ export function ConfirmDialog({
               onClick={onConfirm}
               strong
             >
-              {confirmLabel}
+              {confirmLabel ?? t("confirmAction")}
             </IconTextButton>
           )}
         </div>

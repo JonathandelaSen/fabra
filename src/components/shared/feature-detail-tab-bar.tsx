@@ -24,6 +24,7 @@ export function FeatureDetailTabBar<T extends string = string>({
 }: FeatureDetailTabBarProps<T>) {
   return (
     <div
+      role="tablist"
       className={cn(
         "shrink-0 flex items-center gap-1 pb-4 sm:pb-0 pt-2 sm:pt-0",
         className,
@@ -32,6 +33,9 @@ export function FeatureDetailTabBar<T extends string = string>({
       {tabs.map((tab) => (
         <button
           key={tab.id}
+          type="button"
+          role="tab"
+          aria-selected={activeTab === tab.id}
           onClick={() => onTabChange(tab.id)}
           className={cn(
             "flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all",

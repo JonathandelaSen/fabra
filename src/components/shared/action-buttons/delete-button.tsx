@@ -15,11 +15,13 @@ export function DeleteButton({
   fullWidth = false,
   loading = false,
   strong = false,
+  type = "button",
   disabled,
   ...props
 }: DeleteButtonProps) {
   return (
     <Button
+      type={type}
       variant="destructive"
       size="sm"
       disabled={disabled || loading}
