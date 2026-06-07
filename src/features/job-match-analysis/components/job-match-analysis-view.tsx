@@ -12,7 +12,10 @@ import {
   useJobMatchAnalysisCVOptions,
 } from "../hooks/use-job-match-analysis-queries";
 import { useJobMatchAnalysisMutations } from "../hooks/use-job-match-analysis-mutations";
-import { useJobMatchAnalysisRouteState } from "../hooks/use-job-match-analysis-route-state";
+import {
+  shouldShowJobMatchAnalysisView,
+  useJobMatchAnalysisRouteState,
+} from "../hooks/use-job-match-analysis-route-state";
 import { useJobMatchCopyPasteApplied } from "../hooks/use-job-match-copy-paste-applied";
 import { useNewJobMatchFlowActions } from "../hooks/use-new-job-match-flow-actions";
 import { JobMatchAnalysisContent } from "./job-match-analysis-content";
@@ -55,6 +58,7 @@ export default function JobMatchAnalysisView({
   const {
     analysisId,
     isAnalysisView,
+    isExplicitExtractionView,
     analysisTab,
     view,
     mode,
@@ -232,6 +236,11 @@ export default function JobMatchAnalysisView({
   );
 
   const hasScore = detail?.aiScore !== null && detail?.aiScore !== undefined;
+  const shouldShowAnalysisView = shouldShowJobMatchAnalysisView({
+    hasScore,
+    isAnalysisView,
+    isExplicitExtractionView,
+  });
   const detailContent = (
     <JobMatchAnalysisContent
       analysisId={selectedAnalysisId}
@@ -245,7 +254,7 @@ export default function JobMatchAnalysisView({
         pathname: routeState.pathname,
         view,
       })}
-      isAnalysisView={isAnalysisView}
+      isAnalysisView={shouldShowAnalysisView}
       hasScore={hasScore}
       analysisTab={analysisTab}
       aiApiKey={aiApiKey}

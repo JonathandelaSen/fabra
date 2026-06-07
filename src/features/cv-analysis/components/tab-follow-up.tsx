@@ -5,7 +5,7 @@ import { CalendarClock, Loader2, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { OFFER_STATUSES, type OfferStatus } from "@/lib/analysis-types";
 
-interface TabSeguimientoProps {
+interface TabFollowUpProps {
   offerStatus: OfferStatus;
   onOfferStatusChange: (status: OfferStatus) => void;
   offerNotes: string;
@@ -18,7 +18,7 @@ interface TabSeguimientoProps {
   onSaveTracking: () => void;
 }
 
-export default function TabSeguimiento({
+export default function TabFollowUp({
   offerStatus,
   onOfferStatusChange,
   offerNotes,
@@ -29,7 +29,7 @@ export default function TabSeguimiento({
   onOfferNextActionAtChange,
   isSavingTracking,
   onSaveTracking,
-}: TabSeguimientoProps) {
+}: TabFollowUpProps) {
   const t = useTranslations("analysisDetail.tracking");
   const common = useTranslations("common.actions");
   const navigation = useTranslations("navigation");
@@ -69,7 +69,7 @@ export default function TabSeguimiento({
         <div className="grid gap-3">
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="space-y-1.5">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-text-faint">
                 {t("status")}
               </span>
               <select
@@ -87,7 +87,7 @@ export default function TabSeguimiento({
               </select>
             </label>
             <label className="space-y-1.5">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-text-faint">
                 {t("date")}
               </span>
               <input
@@ -101,7 +101,7 @@ export default function TabSeguimiento({
             </label>
           </div>
           <label className="space-y-1.5">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-text-faint">
               {t("nextAction")}
             </span>
             <input
@@ -113,7 +113,7 @@ export default function TabSeguimiento({
             />
           </label>
           <label className="space-y-1.5">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-600">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-text-faint">
               {t("note")}
             </span>
             <textarea

@@ -10,11 +10,11 @@ import type { InterviewQuestionSummary } from "../types";
 import type { JobMatchAnalysisDetail as JobMatchAnalysisDetailType } from "../types";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import ScoreHero from "./score-hero";
-import TabResumen from "./tab-resumen";
-import TabOferta from "./tab-oferta";
-import TabEntrevista from "./tab-entrevista";
-import TabSeguimiento from "./tab-seguimiento";
-import TabChatOferta from "./tab-chat-oferta";
+import TabSummary from "./tab-summary";
+import TabOffer from "./tab-offer";
+import TabInterview from "./tab-interview";
+import TabFollowUp from "./tab-follow-up";
+import TabOfferChat from "./tab-offer-chat";
 import { useQuickInterviewQuestion } from "../hooks/use-quick-interview-question";
 import { useJobMatchAnalysisExport } from "../hooks/use-job-match-analysis-export";
 import { DETAIL_TABS, JobMatchDetailTabsList } from "./job-match-detail-tabs-list";
@@ -190,7 +190,7 @@ export default function JobMatchAnalysisDetail({
 
             <div className="min-h-0">
               <TabsContent value={DETAIL_TABS.summary}>
-                <TabResumen
+                <TabSummary
                   improvements={improvements}
                   keywords={keywords}
                   jobKeywords={jobKeywords}
@@ -201,14 +201,14 @@ export default function JobMatchAnalysisDetail({
               </TabsContent>
 
               <TabsContent value={DETAIL_TABS.offer}>
-                <TabOferta
+                <TabOffer
                   jobKeyData={jobKeyData}
                   jobDescription={analysis.jobDescription}
                 />
               </TabsContent>
 
               <TabsContent value={DETAIL_TABS.questions}>
-                <TabEntrevista
+                <TabInterview
                   interviewQuestions={interviewQuestions}
                   onOpenQuestions={onOpenQuestions}
                   quickQuestion={quickInterviewQuestion.question}
@@ -225,7 +225,7 @@ export default function JobMatchAnalysisDetail({
               </TabsContent>
 
               <TabsContent value={DETAIL_TABS.chat}>
-                <TabChatOferta
+                <TabOfferChat
                   analysisId={analysis.id}
                   aiProvider={aiProvider ?? "gemini"}
                   aiApiKey={aiApiKey}
@@ -235,7 +235,7 @@ export default function JobMatchAnalysisDetail({
               </TabsContent>
 
               <TabsContent value={DETAIL_TABS.tracking}>
-                <TabSeguimiento
+                <TabFollowUp
                   offerStatus={tracking.status}
                   onOfferStatusChange={(status) =>
                     setTracking((prev) => ({ ...prev, status }))

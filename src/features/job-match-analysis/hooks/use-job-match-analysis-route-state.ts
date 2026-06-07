@@ -22,6 +22,18 @@ export interface ParsedJobMatchAnalysisRoute {
   isAnalysisView: boolean;
 }
 
+export function shouldShowJobMatchAnalysisView({
+  hasScore,
+  isAnalysisView,
+  isExplicitExtractionView,
+}: {
+  hasScore: boolean;
+  isAnalysisView: boolean;
+  isExplicitExtractionView: boolean;
+}) {
+  return isAnalysisView || (hasScore && !isExplicitExtractionView);
+}
+
 export function parseJobMatchAnalysisRoute(pathname: string): ParsedJobMatchAnalysisRoute {
   const segments = pathname.startsWith("/job-analyses/")
     ? pathname.slice("/job-analyses/".length).split("/").map(decodeURIComponent)
@@ -54,12 +66,14 @@ export function parseJobMatchAnalysisRoute(pathname: string): ParsedJobMatchAnal
 export function getJobMatchAnalysisHref({
   id,
   analysis = false,
+  extraction = false,
   tab = "summary",
   view = "list",
   mode,
 }: {
   id?: string | null;
   analysis?: boolean;
+  extraction?: boolean;
   tab?: AnalysisTab;
   view?: JobMatchAnalysisRouteView;
   mode?: JobMatchAnalysisRouteMode;
@@ -68,7 +82,9 @@ export function getJobMatchAnalysisHref({
   const base = view === "kanban" ? "/job-analyses/kanban" : "/job-analyses";
   if (!id) return base;
   const encodedId = encodeURIComponent(id);
-  if (!analysis) return `${base}/${encodedId}`;
+  if (!analysis) {
+    return `${base}/${encodedId}${extraction ? "?view=extraction" : ""}`;
+  }
   if (tab === "summary") return `${base}/${encodedId}/analysis`;
   return `${base}/${encodedId}/analysis?tab=${tab}`;
 }
@@ -81,6 +97,7 @@ export function useJobMatchAnalysisRouteState() {
   const { mode, view, analysisId, isAnalysisView } =
     parseJobMatchAnalysisRoute(pathname);
   const analysisTab = normalizeTab(searchParams.get("tab"));
+  const isExplicitExtractionView = searchParams.get("view") === "extraction";
 
   const hrefFor = useCallback(
     (
@@ -150,8 +167,14 @@ export function useJobMatchAnalysisRouteState() {
 
   const goToExtraction = useCallback(() => {
     if (!analysisId) return;
-    router.push(hrefFor(analysisId));
-  }, [hrefFor, analysisId, router]);
+    router.push(
+      getJobMatchAnalysisHref({
+        id: analysisId,
+        extraction: true,
+        view,
+      }),
+    );
+  }, [analysisId, router, view]);
 
   const setAnalysisTab = useCallback(
     (tab: AnalysisTab) => {
@@ -166,6 +189,7 @@ export function useJobMatchAnalysisRouteState() {
     view,
     analysisId,
     isAnalysisView,
+    isExplicitExtractionView,
     analysisTab,
     pathname,
     hrefFor,

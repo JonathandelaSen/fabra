@@ -9,11 +9,11 @@ import {
   Check,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { InterviewQuestionResponse as InterviewQuestionSummary } from "@/app/api/interview-questions/responses";
+import type { InterviewQuestionSummary } from "../types";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
 
-interface TabEntrevistaProps {
+interface TabInterviewProps {
   interviewQuestions: InterviewQuestionSummary[];
   onOpenQuestions?: () => void;
   quickQuestion: string;
@@ -29,7 +29,7 @@ interface TabEntrevistaProps {
   onOpenSettings?: () => void;
 }
 
-export default function TabEntrevista({
+export default function TabInterview({
   interviewQuestions,
   onOpenQuestions,
   quickQuestion,
@@ -43,7 +43,7 @@ export default function TabEntrevista({
   aiProvider,
   hasAIApiKey,
   onOpenSettings,
-}: TabEntrevistaProps) {
+}: TabInterviewProps) {
   const [selectedProvider, setSelectedProvider] = useState<StoredAIProvider>(aiProvider);
   const t = useTranslations("analysisDetail.interview");
 
@@ -88,7 +88,7 @@ export default function TabEntrevista({
                 onClick={onOpenQuestions}
                 className="group rounded-xl border border-line bg-panel-elevated p-3 text-left transition-colors hover:border-fuchsia-500/25 hover:bg-fuchsia-500/10"
               >
-                <span className="block text-sm font-semibold leading-5 text-zinc-100">
+                <span className="block text-sm font-semibold leading-5 text-text-main">
                   {question.question}
                 </span>
                 {question.answer ? (
@@ -104,13 +104,13 @@ export default function TabEntrevista({
             ))}
           </div>
         ) : (
-          <p className="mb-5 rounded-xl border border-line bg-panel-elevated px-4 py-4 text-sm text-text-faint">
+          <p className="mb-5 rounded-xl border border-line bg-panel-subtle px-4 py-4 text-sm text-text-faint">
             {t("empty")}
           </p>
         )}
 
         <div className="rounded-xl border border-line bg-panel-elevated p-4">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-text-faint">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-600">
             {t("createTitle")}
           </p>
           <div className="grid gap-3 lg:grid-cols-2">

@@ -1,46 +1,41 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
-import { useJobMatchOfferChat } from "../hooks/use-job-match-offer-chat";
+import { ChatMessagesArea } from "@/components/shared/chat/chat-messages-area";
+import { useAnalysisChat } from "../hooks/use-analysis-chat";
 import { ConversationList } from "./conversation-list";
 import { ChatHeader } from "./chat-header";
-import { ChatMessagesArea } from "@/components/shared/chat/chat-messages-area";
 import { ChatInput } from "./chat-input";
-import { OfferChatCopyPasteModal } from "./offer-chat-copy-paste-modal";
+import type { StoredAIProvider } from "@/lib/browser-preferences";
 
-interface TabChatOfertaProps {
+interface TabOfferChatProps {
   analysisId: string;
-  aiProvider: "gemini" | "mock";
+  aiProvider: StoredAIProvider;
   aiApiKey: string;
   aiModel: string;
   hasAIApiKey: boolean;
 }
 
-export default function TabChatOferta({
+export default function TabOfferChat({
   analysisId,
   aiProvider,
   aiApiKey,
   aiModel,
   hasAIApiKey,
-}: TabChatOfertaProps) {
+}: TabOfferChatProps) {
   const { locale } = useInterfaceLanguage();
   const timeLocale = locale === "es" ? "es-ES" : "en-US";
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-
-  const focusComposer = useCallback(() => {
-    textareaRef.current?.focus();
-  }, []);
-
-  const chat = useJobMatchOfferChat({
+  const chat = useAnalysisChat({
     analysisId,
     aiProvider,
     aiApiKey,
     aiModel,
     hasAIApiKey,
-    focusComposer,
+    focusInput: () => textareaRef.current?.focus(),
   });
 
   useEffect(() => {
@@ -60,7 +55,7 @@ export default function TabChatOferta({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
-      className="flex h-[calc(100dvh-280px)] min-h-[400px] overflow-hidden rounded-2xl border border-line bg-panel-base"
+      className="flex h-[calc(100dvh-280px)] min-h-[400px] overflow-hidden rounded-2xl border border-line bg-field"
     >
       <ConversationList
         conversations={chat.conversations}
@@ -72,16 +67,21 @@ export default function TabChatOferta({
       />
 
       <div className="flex min-w-0 min-h-0 flex-1 flex-col">
-        <ChatHeader />
+        <ChatHeader
+          provider={chat.provider}
+          onProviderChange={chat.setProvider}
+          model={chat.model}
+          onModelChange={chat.setModel}
+        />
 
         <ChatMessagesArea
-          isLoading={chat.isLoadingConversations || chat.isLoadingMessages}
-          activeConversationId={chat.activeConversationId}
           messages={chat.messages}
+          isLoading={chat.isLoadingConversations || chat.isLoadingMessages}
           isSending={chat.isSending}
+          activeConversationId={chat.activeConversationId}
+          onNewConversation={chat.createConversation}
           formatTime={formatTime}
           scrollRef={scrollRef}
-          onNewConversation={chat.createConversation}
         />
 
         <AnimatePresence>
@@ -102,28 +102,11 @@ export default function TabChatOferta({
         <ChatInput
           draft={chat.draft}
           onDraftChange={chat.setDraft}
-          textareaRef={textareaRef}
           isSending={chat.isSending}
-          isPreparingCopyPaste={chat.isPreparingCopyPaste}
-          hasAIApiKey={hasAIApiKey}
-          provider={chat.provider}
-          onProviderChange={chat.setProvider}
-          model={chat.model}
-          aiModel={aiModel}
-          onModelChange={chat.setModel}
-          onSubmit={chat.handleSubmit}
-          onOpenCopyPasteFlow={() => void chat.openCopyPasteFlow()}
+          onSubmit={chat.sendMessage}
+          textareaRef={textareaRef}
         />
       </div>
-
-      <OfferChatCopyPasteModal
-        isOpen={chat.isCopyPasteOpen}
-        isApplying={chat.isApplyingCopyPaste}
-        prompt={chat.copyPastePrompt}
-        privacyNotice={chat.copyPastePrivacyNotice}
-        onClose={() => chat.setIsCopyPasteOpen(false)}
-        onApplyText={chat.applyCopyPasteText}
-      />
     </motion.div>
   );
 }

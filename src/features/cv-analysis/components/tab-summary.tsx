@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import type { AnalysisMode } from "@/lib/analysis-types";
 import { BasicPanel } from "@/components/shared/basic-panel";
 
-interface TabResumenProps {
+interface TabSummaryProps {
   improvements: string[];
   keywords: string[];
   jobKeywords: string[];
@@ -17,7 +17,7 @@ interface TabResumenProps {
   additionalContext?: string;
 }
 
-export default function TabResumen({
+export default function TabSummary({
   improvements,
   keywords,
   jobKeywords,
@@ -26,7 +26,7 @@ export default function TabResumen({
   missingKeywords,
   analysisMode,
   additionalContext,
-}: TabResumenProps) {
+}: TabSummaryProps) {
   const t = useTranslations("analysisDetail.summary");
   const tDetail = useTranslations("analysisDetail");
 

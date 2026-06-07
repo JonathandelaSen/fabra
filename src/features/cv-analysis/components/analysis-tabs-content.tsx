@@ -4,11 +4,11 @@ import type { AnalysisMode, JobKeyData, OfferStatus } from "@/lib/analysis-types
 import { TabsContent } from "@/components/ui/tabs";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import type { InterviewQuestionSummary } from "../types";
-import TabResumen from "./tab-resumen";
-import TabOferta from "./tab-oferta";
-import TabEntrevista from "./tab-entrevista";
-import TabSeguimiento from "./tab-seguimiento";
-import TabChatOferta from "./tab-chat-oferta";
+import TabSummary from "./tab-summary";
+import TabOffer from "./tab-offer";
+import TabInterview from "./tab-interview";
+import TabFollowUp from "./tab-follow-up";
+import TabOfferChat from "./tab-offer-chat";
 
 interface AnalysisTabsContentProps {
   isJobMatch: boolean;
@@ -92,7 +92,7 @@ export function AnalysisTabsContent({
   return (
     <div className="min-h-0">
       <TabsContent value="resumen">
-        <TabResumen
+        <TabSummary
           improvements={improvements}
           keywords={keywords}
           jobKeywords={jobKeywords}
@@ -107,11 +107,11 @@ export function AnalysisTabsContent({
       {isJobMatch && (
         <>
           <TabsContent value="oferta">
-            <TabOferta jobKeyData={jobKeyData} jobDescription={jobDescription} />
+            <TabOffer jobKeyData={jobKeyData} jobDescription={jobDescription} />
           </TabsContent>
 
           <TabsContent value="entrevista">
-            <TabEntrevista
+            <TabInterview
               interviewQuestions={interviewQuestions}
               onOpenQuestions={onOpenQuestions}
               quickQuestion={quickQuestion}
@@ -129,7 +129,7 @@ export function AnalysisTabsContent({
           </TabsContent>
 
           <TabsContent value="chat">
-            <TabChatOferta
+            <TabOfferChat
               analysisId={analysisId}
               aiProvider={aiProvider}
               aiApiKey={aiApiKey}
@@ -139,7 +139,7 @@ export function AnalysisTabsContent({
           </TabsContent>
 
           <TabsContent value="seguimiento">
-            <TabSeguimiento
+            <TabFollowUp
               offerStatus={offerStatus}
               onOfferStatusChange={onOfferStatusChange}
               offerNotes={offerNotes}

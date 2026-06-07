@@ -2,7 +2,30 @@ import { describe, expect, it } from "vitest";
 import {
   getJobMatchAnalysisHref,
   parseJobMatchAnalysisRoute,
+  shouldShowJobMatchAnalysisView,
 } from "./use-job-match-analysis-route-state";
+
+describe("shouldShowJobMatchAnalysisView", () => {
+  it("defaults to AI analysis when a score exists", () => {
+    expect(
+      shouldShowJobMatchAnalysisView({
+        hasScore: true,
+        isAnalysisView: false,
+        isExplicitExtractionView: false,
+      }),
+    ).toBe(true);
+  });
+
+  it("respects an explicit extraction selection", () => {
+    expect(
+      shouldShowJobMatchAnalysisView({
+        hasScore: true,
+        isAnalysisView: false,
+        isExplicitExtractionView: true,
+      }),
+    ).toBe(false);
+  });
+});
 
 describe("parseJobMatchAnalysisRoute", () => {
   it("treats the list root as the list view with no selection", () => {
@@ -113,6 +136,12 @@ describe("getJobMatchAnalysisHref", () => {
     expect(getJobMatchAnalysisHref({ id: "offer-1" })).toBe(
       "/job-analyses/offer-1",
     );
+  });
+
+  it("marks extraction explicitly when the user selects it", () => {
+    expect(
+      getJobMatchAnalysisHref({ id: "offer-1", extraction: true }),
+    ).toBe("/job-analyses/offer-1?view=extraction");
   });
 
   it("omits the tab query string for the default summary tab", () => {

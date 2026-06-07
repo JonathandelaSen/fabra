@@ -12,15 +12,15 @@ import {
 import type { JobKeyData } from "@/lib/analysis-types";
 import { BasicPanel } from "@/components/shared/basic-panel";
 
-interface TabOfertaProps {
+interface TabOfferProps {
   jobKeyData: JobKeyData | null;
   jobDescription: string | null;
 }
 
-export default function TabOferta({
+export default function TabOffer({
   jobKeyData,
   jobDescription,
-}: TabOfertaProps) {
+}: TabOfferProps) {
   const t = useTranslations("analysisDetail.offer");
 
   return (

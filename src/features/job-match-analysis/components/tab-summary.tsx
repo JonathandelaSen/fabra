@@ -5,7 +5,7 @@ import { CheckCircle2, Star, ChevronRight, XCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { BasicPanel } from "@/components/shared/basic-panel";
 
-interface TabResumenProps {
+interface TabSummaryProps {
   improvements: string[];
   keywords: string[];
   jobKeywords: string[];
@@ -14,14 +14,14 @@ interface TabResumenProps {
   missingKeywords: string[];
 }
 
-export default function TabResumen({
+export default function TabSummary({
   improvements,
   keywords,
   jobKeywords,
   cvKeywords,
   matchingKeywords,
   missingKeywords,
-}: TabResumenProps) {
+}: TabSummaryProps) {
   const t = useTranslations("analysisDetail.summary");
 
   return (
