@@ -59,7 +59,7 @@ export function AlertBanner({
     <div
       className={cn(
         "rounded-xl border",
-        "p-4",
+        "p-3 sm:p-4",
         t.container,
         className,
       )}

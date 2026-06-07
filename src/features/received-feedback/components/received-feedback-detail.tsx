@@ -36,7 +36,7 @@ export function ReceivedFeedbackDetail({
 
   return (
     <div className="flex flex-col gap-5">
-      <BasicPanel as="section" className="p-6">
+      <BasicPanel as="section" className="p-3 sm:p-6">
         <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between border-b border-line pb-5">
           <div className="min-w-0 flex-1">
             <h2 className="truncate text-xl font-bold tracking-tight text-text-main">
@@ -66,7 +66,7 @@ export function ReceivedFeedbackDetail({
         </div>
 
         <div className="mt-6 flex flex-col gap-6">
-          <div className="relative overflow-hidden rounded-xl border border-line bg-panel-subtle p-6 shadow-inner">
+          <div className="relative overflow-hidden rounded-xl border border-line bg-panel-subtle p-3 sm:p-6 shadow-inner">
             <div className="relative">
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-action-text mb-3">
                 <MessageSquareQuote className="h-4 w-4" />
