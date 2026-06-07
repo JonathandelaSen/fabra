@@ -56,7 +56,7 @@ export function FeatureTwoPaneLayout({
           mobileDetailActive === true
             ? "hidden"
             : mobileDetailActive === false
-              ? "motion-safe:animate-in motion-safe:slide-in-from-left-4 motion-safe:duration-200"
+              ? "max-lg:motion-safe:animate-in max-lg:motion-safe:slide-in-from-left-4 max-lg:motion-safe:duration-200"
               : undefined,
           sidebarClassName
         )}
@@ -78,7 +78,7 @@ export function FeatureTwoPaneLayout({
         className={cn(
           "min-h-0 min-w-0 overflow-y-auto outline-none lg:block",
           mobileDetailActive === true
-            ? "flex flex-col motion-safe:animate-in motion-safe:slide-in-from-right-4 motion-safe:duration-200"
+            ? "flex flex-col max-lg:motion-safe:animate-in max-lg:motion-safe:slide-in-from-right-4 max-lg:motion-safe:duration-200"
             : mobileDetailActive === false
               ? "hidden"
               : undefined,
