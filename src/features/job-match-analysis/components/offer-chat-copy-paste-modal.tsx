@@ -39,7 +39,7 @@ export function OfferChatCopyPasteModal({
             initial={{ opacity: 0, scale: 0.97, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: 12 }}
-            className="fixed left-1/2 top-1/2 z-50 max-h-[86vh] w-[min(760px,calc(100vw-32px))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl border border-line bg-panel-elevated p-5 shadow-2xl"
+            className="fixed left-0 top-0 sm:left-1/2 sm:top-1/2 z-50 h-full w-full sm:max-h-[86vh] sm:w-[min(760px,calc(100vw-32px))] sm:-translate-x-1/2 sm:-translate-y-1/2 overflow-y-auto rounded-none sm:rounded-xl border-0 sm:border border-line bg-panel-elevated p-5 shadow-2xl"
           >
             <button
               type="button"

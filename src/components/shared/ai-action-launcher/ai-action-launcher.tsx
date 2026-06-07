@@ -70,11 +70,12 @@ export default function AIActionLauncher({
       <PopoverContent
         align="end"
         sideOffset={8}
-        className="w-[360px] xs:w-[380px] p-0 overflow-hidden bg-panel-overlay/95 backdrop-blur-xl border border-line rounded-2xl shadow-2xl shadow-black/80 animate-in fade-in-0 zoom-in-95 duration-200"
+        positionerClassName="max-sm:!fixed max-sm:!inset-0 max-sm:!transform-none"
+        className="w-[360px] xs:w-[380px] p-0 overflow-hidden bg-panel-overlay/95 backdrop-blur-xl border border-line rounded-2xl shadow-2xl shadow-black/80 animate-in fade-in-0 zoom-in-95 duration-200 max-sm:!w-full max-sm:!h-full max-sm:!max-w-none max-sm:!max-h-none max-sm:!rounded-none max-sm:!border-none max-sm:flex max-sm:flex-col"
       >
-        <AIActionLauncherHeader />
+        <AIActionLauncherHeader onClose={handleClose} />
 
-        <div className="p-4 flex flex-col gap-3">
+        <div className="p-4 flex flex-col gap-3 max-sm:flex-1 max-sm:overflow-y-auto">
           <AIActionLauncherIntegrated
             available={integrated.available}
             selectedProvider={integrated.selectedProvider}

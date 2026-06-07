@@ -25,14 +25,14 @@ export function CopyPasteDialog({
 }: CopyPasteDialogProps) {
   return (
     <div
-      className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-scrim p-4"
+      className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-scrim p-0 sm:p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby={labelledById}
     >
       <div
         className={cn(
-          "flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-line-default bg-modal shadow-2xl animate-in fade-in-50 zoom-in-95 duration-200",
+          "flex h-full w-full sm:h-auto sm:max-h-[90vh] sm:max-w-2xl flex-col overflow-hidden rounded-none sm:rounded-xl border-0 sm:border border-line-default bg-modal shadow-2xl animate-in fade-in-50 zoom-in-95 duration-200",
           className
         )}
       >

@@ -26,12 +26,12 @@ export function CVEditorSaveModal({
   const t = useTranslations("cvEditor");
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-0 sm:p-4 backdrop-blur-sm">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="w-full max-w-sm rounded-3xl border border-line bg-modal p-6 shadow-2xl"
+        className="h-full w-full sm:h-auto sm:max-w-sm rounded-none sm:rounded-3xl border-0 sm:border border-line bg-modal p-6 shadow-2xl flex flex-col justify-center"
       >
         <h3 className="text-lg font-semibold text-text-main">
           {t("saveModal.title")}

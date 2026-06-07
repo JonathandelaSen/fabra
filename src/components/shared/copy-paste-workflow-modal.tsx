@@ -80,12 +80,12 @@ export default function CopyPasteWorkflowModal<TPreview>({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-0 sm:p-4"
       role="dialog"
       aria-modal="true"
       aria-label={title}
     >
-      <div className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-xl border border-line bg-modal shadow-2xl">
+      <div className="flex h-full w-full sm:h-auto sm:max-h-[90vh] sm:max-w-3xl flex-col overflow-hidden rounded-none sm:rounded-xl border-0 sm:border border-line bg-modal shadow-2xl">
         <CopyPasteWorkflowModalHeader
           title={title}
           intro={intro}

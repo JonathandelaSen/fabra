@@ -37,11 +37,11 @@ export function ConfirmDialog({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-xs animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-0 sm:p-4 backdrop-blur-xs animate-fade-in"
       role="dialog"
       aria-modal="true"
     >
-      <div className="flex max-h-[90vh] w-full max-w-md flex-col overflow-hidden rounded-xl border border-line bg-modal shadow-2xl animate-in fade-in-50 zoom-in-95 duration-200">
+      <div className="flex h-full w-full sm:h-auto sm:max-h-[90vh] sm:max-w-md flex-col overflow-hidden rounded-none sm:rounded-xl border-0 sm:border border-line bg-modal shadow-2xl animate-in fade-in-50 zoom-in-95 duration-200">
         <div className="flex items-center justify-between border-b border-line px-5 py-4">
           <div
             className={`flex items-center gap-2 font-semibold text-sm ${
@@ -57,7 +57,7 @@ export function ConfirmDialog({
           />
         </div>
 
-        <div className="p-5 space-y-2">
+        <div className="p-5 space-y-2 flex-1 sm:flex-initial">
           <h3 className="text-base font-bold text-text-main leading-snug">
             {title}
           </h3>
