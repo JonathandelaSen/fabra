@@ -64,7 +64,7 @@ export function EditableBulletList({ items, onChange, placeholder }: EditableBul
             placeholder={inputPlaceholder}
             className="flex-1 rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-teal-500/30 focus:outline-none"
           />
-          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all shrink-0">
+          <div className="flex items-center gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all shrink-0">
             <button
               type="button"
               onClick={() => move(i, -1)}

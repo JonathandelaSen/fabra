@@ -25,7 +25,7 @@ export function SectionLanguages({ items, onChange }: Props) {
         <div key={i} className="group flex items-center gap-2">
           <input type="text" value={lang.name ?? ""} onChange={(e) => update(i, { ...lang, name: e.target.value })} placeholder={t("language")} className={`${inputClass} flex-1`} />
           <input type="text" value={lang.level ?? ""} onChange={(e) => update(i, { ...lang, level: e.target.value })} placeholder={t("level")} className={`${inputClass} w-1/3`} />
-          <button onClick={() => onChange(items.filter((_, idx) => idx !== i))} className="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-rose-400">
+          <button onClick={() => onChange(items.filter((_, idx) => idx !== i))} className="opacity-100 md:opacity-0 md:group-hover:opacity-100 text-zinc-600 hover:text-rose-400 transition-opacity">
             <Trash2 className="h-3.5 w-3.5" />
           </button>
         </div>

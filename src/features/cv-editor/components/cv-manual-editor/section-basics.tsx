@@ -61,7 +61,7 @@ export function SectionBasics({ basics, onChange }: SectionBasicsProps) {
                 <input type="text" value={link.label ?? ""} onChange={(e) => updateLink(i, "label", e.target.value)} placeholder={t("linkLabel")} className={inputClass} />
                 <input type="url" value={link.url} onChange={(e) => updateLink(i, "url", e.target.value)} placeholder={URL_PLACEHOLDER} className={inputClass} />
               </div>
-              <button onClick={() => removeLink(i)} className="shrink-0 mt-2 opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-rose-400">
+              <button onClick={() => removeLink(i)} className="shrink-0 mt-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 text-zinc-600 hover:text-rose-400 transition-opacity">
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
             </div>

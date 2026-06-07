@@ -218,7 +218,7 @@ export function ObjectiveItems({
                           </div>
                         )}
                       </div>
-                      <div className="flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                      <div className="flex shrink-0 items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                         <ActionIconButton
                           icon={Pencil}
                           tone={ACTION_ICON_BUTTON_TONES.MUTED}

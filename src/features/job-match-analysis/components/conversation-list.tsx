@@ -107,7 +107,7 @@ export function ConversationList({
               <DropdownMenu>
                 <DropdownMenuTrigger
                   onClick={(e) => e.stopPropagation()}
-                  className="shrink-0 rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-white/10"
+                  className="shrink-0 rounded p-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-white/10 transition-opacity"
                 >
                   <MoreHorizontal className="size-3.5" />
                 </DropdownMenuTrigger>

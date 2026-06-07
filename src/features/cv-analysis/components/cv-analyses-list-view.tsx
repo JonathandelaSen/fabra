@@ -137,7 +137,7 @@ export default function CVAnalysesListView({
                     onDelete(analysis.id);
                   }
                 }}
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-zinc-600 opacity-0 transition-all hover:bg-rose-500/10 hover:text-rose-400 group-hover:opacity-100 group-focus-visible:opacity-100"
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-zinc-600 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-visible:opacity-100 hover:bg-rose-500/10 hover:text-rose-400 transition-all"
                 aria-label={t("deleteAnalysis")}
               >
                 <Trash2 className="h-3.5 w-3.5" />

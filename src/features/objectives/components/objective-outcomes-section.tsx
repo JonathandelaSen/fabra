@@ -217,7 +217,7 @@ export function ObjectiveOutcomes({
                             <option key={status} value={status} className="bg-panel-elevated text-text-main">{outcomeStatusLabel(status as ObjectiveOutcomeStatus)}</option>
                           ))}
                         </Select>
-                        <div className="flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
+                        <div className="flex items-center gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                           <ActionIconButton
                             icon={Pencil}
                             tone={ACTION_ICON_BUTTON_TONES.MUTED}
