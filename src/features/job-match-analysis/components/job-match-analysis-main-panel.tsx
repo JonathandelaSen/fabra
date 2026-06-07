@@ -9,6 +9,7 @@ import type { InterviewQuestionSummary, JobMatchAnalysisDetailResponse } from ".
 import type { AnalysisTab } from "../hooks/use-job-match-analysis-route-state";
 import JobMatchAnalysisDetail from "./job-match-analysis-detail";
 import JobMatchExtractionView from "./job-match-extraction-view";
+import { PendingJobMatchAnalysisView } from "./pending-job-match-analysis-view";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface JobMatchAnalysisMainPanelProps {
@@ -114,19 +115,19 @@ export function JobMatchAnalysisMainPanel({
           </motion.div>
         ) : (
           <motion.div
-            key="analysis-selector-view"
+            key="pending-analysis-view"
             initial={{ opacity: 0, x: 10 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -10 }}
             transition={{ duration: 0.15 }}
             className="flex flex-col"
           >
-            <JobMatchExtractionView
-              analysis={detail}
-              onScore={onScore}
+            <PendingJobMatchAnalysisView
+              analysisId={detail.id}
               hasAIApiKey={hasAIApiKey}
-              onOpenSettings={onOpenSettings}
               onCopyPasteApplied={onCopyPasteApplied}
+              onOpenSettings={onOpenSettings}
+              onScore={onScore}
             />
           </motion.div>
         )}
