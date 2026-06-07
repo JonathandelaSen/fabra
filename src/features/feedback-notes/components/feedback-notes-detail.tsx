@@ -88,7 +88,7 @@ export function FeedbackNotesDetail({
 
   return (
     <div className="flex w-full max-w-[1600px] mx-auto flex-col gap-5">
-      <BasicPanel as="section" className="p-5">
+      <BasicPanel as="section" className="p-3 sm:p-5">
         <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
           <div className="min-w-0 flex-1">
             {!isClosed && isEditing ? (
