@@ -64,7 +64,7 @@ export function ObjectiveItems({
     <BasicPanel className="flex flex-col overflow-hidden">
       <ObjectiveItemsHeader completion={completion} doneCount={doneCount} totalItems={totalItems} t={t} />
 
-      <div className="p-5 flex flex-col gap-4">
+      <div className="p-3 sm:p-5 flex flex-col gap-4">
         {items.length === 0 ? (
           <div className="py-8 text-center text-xs text-zinc-600 italic">
             {t("items.empty")}

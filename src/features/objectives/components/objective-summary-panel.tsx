@@ -37,7 +37,7 @@ export function ObjectiveSummaryPanel({
   t,
 }: ObjectiveSummaryPanelProps) {
   return (
-    <BasicPanel className="p-5 flex flex-col gap-5">
+    <BasicPanel className="p-3 sm:p-5 flex flex-col gap-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2 text-xs">
