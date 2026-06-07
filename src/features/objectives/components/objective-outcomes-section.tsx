@@ -182,7 +182,7 @@ export function ObjectiveOutcomes({
                       </div>
                     </div>
                   ) : (
-                    <div className="flex items-start gap-3 p-3.5">
+                    <div className="flex flex-col sm:flex-row sm:items-start gap-3 p-3.5">
                       <div className="min-w-0 flex-1">
                         <p className="text-sm font-semibold text-amber-100">{outcome.title}</p>
                         {outcome.description && (
@@ -204,7 +204,7 @@ export function ObjectiveOutcomes({
                           )}
                         </div>
                       </div>
-                      <div className="flex shrink-0 items-center gap-1.5">
+                      <div className="flex items-center gap-1.5 w-full sm:w-auto justify-between sm:justify-start mt-3 sm:mt-0 pt-3 sm:pt-0 border-t border-white/[0.04] sm:border-t-0 shrink-0">
                         <Select
                           className="h-8 py-0.5 text-xs font-semibold w-auto px-2"
                           value={outcome.status}
