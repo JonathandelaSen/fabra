@@ -7,6 +7,7 @@ import { WorkJournalEntryEditor } from "./work-journal-entry-editor";
 import { WorkJournalEmptyState } from "./work-journal-empty-state";
 import { FilePenLine } from "lucide-react";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
+import { cn } from "@/lib/utils";
 
 interface WorkJournalDetailProps {
   entry: WorkJournalEntry | null;
@@ -31,6 +32,7 @@ interface WorkJournalDetailProps {
     provider: StoredAIProvider,
     modelId: string
   ) => Promise<string>;
+  isTimelineView?: boolean;
 }
 
 export function WorkJournalDetail({
@@ -48,6 +50,7 @@ export function WorkJournalDetail({
   selectedModel,
   setSelectedModel,
   onDraftEditWithAI,
+  isTimelineView = false,
 }: WorkJournalDetailProps) {
   const t = useTranslations("workJournal");
 
@@ -56,7 +59,7 @@ export function WorkJournalDetail({
   }
 
   return (
-    <div className="py-4 lg:py-8 w-full px-4 md:px-8">
+    <div className={cn("pb-4 w-full", isTimelineView ? "lg:pt-2 lg:pb-8" : "lg:py-8")}>
       {isEditing ? (
         <WorkJournalEntryEditor
           entry={entry}

@@ -104,7 +104,7 @@ export function WorkJournalMainPane({
 
   if (showForm) {
     return (
-      <div className="px-2 md:px-6 py-4">
+      <div className="pb-4">
         <WorkJournalForm
           draft={draft}
           setDraft={setDraft}
@@ -157,14 +157,21 @@ export function WorkJournalMainPane({
       selectedModel={selectedModel}
       setSelectedModel={setSelectedModel}
       onDraftEditWithAI={draftEditWithAI}
+      isTimelineView={view === "timeline"}
     />
   );
 
   if (view === "timeline") {
     return (
       <div className="flex flex-col">
-        <div className="px-2 md:px-6 pt-4">
-          <Button type="button" variant="ghost" size="sm" onClick={onBackToTimeline}>
+        <div className="pb-4 -ml-2.5 ">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onBackToTimeline}
+            className="text-zinc-400 hover:text-zinc-200"
+          >
             <ArrowLeft className="h-4 w-4" />
             {t("timeline.backToTimeline")}
           </Button>

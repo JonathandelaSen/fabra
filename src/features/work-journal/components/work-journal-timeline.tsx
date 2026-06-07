@@ -39,7 +39,7 @@ export function WorkJournalTimeline({
   );
 
   return (
-    <div className="flex flex-col gap-4 px-2 py-4 md:px-6">
+    <div className="flex flex-col gap-4 pb-4">
       <div className="flex items-center justify-end">
         <WorkJournalTimelineGranularityToggle
           granularity={granularity}
