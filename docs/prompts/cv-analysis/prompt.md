@@ -1,4 +1,4 @@
-# Analisis de CV
+# CV Analysis
 
 ## Source
 - Prompt source file: `src/modules/cv-analysis/infrastructure/services/cv-scoring-prompts.ts`

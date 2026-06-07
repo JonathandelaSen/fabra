@@ -521,7 +521,7 @@ Migration actions:
 - Backfill from `analyses` where `analysis_mode = 'general'`.
 - Add public query used by `analysis-chat` if chat supports general analysis later.
 - Keep `/api/analyses` facade until UI is split.
-- Move prompt/controller effects carefully and update docs under `docs/prompts/analisis-cv/prompt.md` if behavior changes.
+- Move prompt/controller effects carefully and update docs under `docs/prompts/cv-analysis/prompt.md` if behavior changes.
 
 Frontend/API compatibility:
 
@@ -598,7 +598,7 @@ Migration actions:
 - Store job snapshot on the analysis.
 - Move follow-up fields to `selection-process.FollowUp`.
 - Expose `GetJobMatchAnalysisChatContextQuery` and update `analysis-chat` away from legacy context query.
-- Update docs under `docs/prompts/analisis-oferta/prompt.md` if prompt input/output changes.
+- Update docs under `docs/prompts/job-match-analysis/prompt.md` if prompt input/output changes.
 
 Frontend/API compatibility:
 
@@ -691,12 +691,12 @@ When changing prompt input shape, prompt builders, AI controller behavior, or re
 
 Likely docs:
 
-- `docs/prompts/analisis-cv/prompt.md`
-- `docs/prompts/analisis-oferta/prompt.md`
-- `docs/prompts/chat-oferta-ai/prompt.md`
-- `docs/prompts/preguntas-entrevista/prompt.md`
-- `docs/prompts/extraccion-info-cv/prompt.md`
-- `docs/prompts/editado-cv/prompt.md`
+- `docs/prompts/cv-analysis/prompt.md`
+- `docs/prompts/job-match-analysis/prompt.md`
+- `docs/prompts/analysis-chat/prompt.md`
+- `docs/prompts/interview-questions/prompt.md`
+- `docs/prompts/cv-profile-structuring/prompt.md`
+- `docs/prompts/cv-profile-editing/prompt.md`
 
 Prompt builders stay separate from model-call controllers/services.
 

@@ -1,4 +1,4 @@
-# Preguntas de Entrevista
+# Interview Questions
 
 ## Source
 - Prompt source file: `src/modules/selection-process/infrastructure/services/interview-question-prompts.ts`

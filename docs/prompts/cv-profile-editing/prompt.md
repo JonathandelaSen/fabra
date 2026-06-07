@@ -1,4 +1,4 @@
-# Editado de CV
+# CV Profile Editing
 
 ## Source
 - Prompt source file: `src/modules/cv-library/infrastructure/services/cv-profile-editing-prompts.ts`

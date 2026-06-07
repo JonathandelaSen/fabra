@@ -1,4 +1,4 @@
-# Extraccion de Info del CV
+# CV Profile Structuring
 
 ## Source
 - Prompt source file: `src/modules/cv-library/infrastructure/services/cv-profile-structuring-prompts.ts`
