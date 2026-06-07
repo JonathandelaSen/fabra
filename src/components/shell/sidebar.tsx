@@ -19,6 +19,7 @@ import {
   Inbox,
   Target,
   Home,
+  X,
 } from "lucide-react";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import SidebarNavSection from "./sidebar-nav-section";
@@ -67,6 +68,7 @@ export default function Sidebar({
   useInterfaceLanguage();
   const [internalCollapsed, setInternalCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState(0);
   const [cvSectionOpen, setCvSectionOpen] = useState(true);
   const [jobSectionOpen, setJobSectionOpen] = useState(true);
 
@@ -77,16 +79,30 @@ export default function Sidebar({
   };
 
   useEffect(() => {
-    const checkMobile = () => {
-      const mobile = window.innerWidth < 768;
+    let previousWidth = window.innerWidth;
+    let previousMobile = previousWidth < 768;
+
+    const checkMobile = (initial = false) => {
+      const width = window.innerWidth;
+      const mobile = width < 768;
       setIsMobile(mobile);
-      if (mobile) {
+
+      if (width !== previousWidth || initial) {
+        setViewportWidth(width);
+      }
+
+      if (mobile && (initial || !previousMobile)) {
         setCollapsed(true);
       }
+
+      previousWidth = width;
+      previousMobile = mobile;
     };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+
+    checkMobile(true);
+    const onResize = () => checkMobile();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 
   
@@ -124,12 +140,12 @@ export default function Sidebar({
       <motion.aside
         initial={false}
         animate={{
-          width: isMobile ? (collapsed ? 0 : 280) : collapsed ? 56 : 280,
-          x: isMobile && collapsed ? -280 : 0,
+          width: isMobile ? viewportWidth : collapsed ? 56 : 280,
+          x: isMobile && collapsed ? -viewportWidth : 0,
         }}
         transition={{ duration: 0.2, ease: "easeInOut" }}
         className={`h-screen flex flex-col border-r border-sidebar-border bg-sidebar/95 backdrop-blur-xl shrink-0 overflow-hidden z-50 ${
-          isMobile ? "fixed left-0 top-0 bottom-0" : "relative"
+          isMobile ? "fixed left-0 top-0 bottom-0 w-screen" : "relative"
         }`}
       >
         <div className="flex items-center justify-between p-3 h-14 shrink-0">
@@ -162,14 +178,21 @@ export default function Sidebar({
           {!collapsed && (
             <button
               onClick={() => setCollapsed(true)}
-              className="w-7 h-7 rounded-md flex items-center justify-center text-text-muted hover:text-text-soft hover:bg-panel-hover transition-colors shrink-0 cursor-pointer"
+              aria-label={common("actions.close")}
+              className={`rounded-md flex items-center justify-center text-text-muted hover:text-text-soft hover:bg-panel-hover transition-colors shrink-0 cursor-pointer ${
+                isMobile ? "w-9 h-9" : "w-7 h-7"
+              }`}
             >
-              <ChevronLeft className="w-4 h-4" />
+              {isMobile ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <ChevronLeft className="w-4 h-4" />
+              )}
             </button>
           )}
         </div>
 
-        <div className="px-2 pb-2 shrink-0 space-y-1">
+        <div className="px-2 pb-2 flex-1 min-h-0 overflow-y-auto space-y-1">
           <button
             onClick={onOpenHome}
             className={`w-full flex items-center gap-2 rounded-md px-2 py-1.5 text-sm cursor-pointer transition-colors ${
