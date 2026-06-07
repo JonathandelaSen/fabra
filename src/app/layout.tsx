@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import { I18nProvider } from "@/components/shared/i18n-provider";
 import { FrontendQueryClientProvider } from "@/frontend/query/query-client-provider";
 import { getMessages } from "@/i18n/messages";
@@ -54,6 +55,7 @@ try {
         <I18nProvider initialLocale={locale}>
           <FrontendQueryClientProvider>{children}</FrontendQueryClientProvider>
         </I18nProvider>
+        <Analytics />
       </body>
     </html>
   );
