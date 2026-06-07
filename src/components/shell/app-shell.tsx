@@ -359,7 +359,10 @@ export default function AppShell({
   }, []);
 
   const rememberCVLibraryLocation = useCallback(() => {
-    if (window.location.pathname.startsWith("/cvs")) {
+    if (
+      window.location.pathname.startsWith("/cvs") &&
+      !window.location.pathname.startsWith("/cvs/editor")
+    ) {
       lastCVLibraryHrefRef.current = `${window.location.pathname}${window.location.search}`;
     }
   }, []);
