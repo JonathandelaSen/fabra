@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, type LucideIcon } from "lucide-react";
 import SidebarNavItem from "./sidebar-nav-item";
 
@@ -12,7 +11,6 @@ interface SidebarNavSectionItem {
 }
 
 interface SidebarNavSectionProps {
-  id: string;
   icon: LucideIcon;
   label: string;
   collapsed: boolean;
@@ -22,7 +20,6 @@ interface SidebarNavSectionProps {
 }
 
 export default function SidebarNavSection({
-  id,
   icon: Icon,
   label,
   collapsed,
@@ -44,31 +41,20 @@ export default function SidebarNavSection({
           />
         </button>
       )}
-      <AnimatePresence initial={false}>
-        {(collapsed || open) && (
-          <motion.div
-            key={id}
-            initial={collapsed ? false : { height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.15, ease: "easeInOut" }}
-            className="overflow-hidden"
-          >
-            <div className={`space-y-0.5 ${!collapsed ? "pl-2" : ""}`}>
-              {items.map((item) => (
-                <SidebarNavItem
-                  key={item.label}
-                  icon={item.icon}
-                  label={item.label}
-                  active={item.active}
-                  collapsed={collapsed}
-                  onClick={item.onClick}
-                />
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {(collapsed || open) && (
+        <div className={`space-y-0.5 ${!collapsed ? "pl-2" : ""}`}>
+          {items.map((item) => (
+            <SidebarNavItem
+              key={item.label}
+              icon={item.icon}
+              label={item.label}
+              active={item.active}
+              collapsed={collapsed}
+              onClick={item.onClick}
+            />
+          ))}
+        </div>
+      )}
     </>
   );
 }

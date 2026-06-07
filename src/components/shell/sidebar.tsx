@@ -4,9 +4,7 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  FileText,
   ChevronLeft,
-  ChevronRight,
   FileSearch,
   Briefcase,
   FolderOpen,
@@ -76,6 +74,13 @@ export default function Sidebar({
 
   const setCollapsed = (val: boolean) => {
     setInternalCollapsed(val);
+  };
+
+  const handleNavigationClick = (navigate: () => void) => {
+    navigate();
+    if (isMobile) {
+      setCollapsed(true);
+    }
   };
 
   useEffect(() => {
@@ -194,7 +199,7 @@ export default function Sidebar({
 
         <div className="px-2 pb-2 flex-1 min-h-0 overflow-y-auto space-y-1">
           <button
-            onClick={onOpenHome}
+            onClick={() => handleNavigationClick(onOpenHome)}
             className={`w-full flex items-center gap-2 rounded-md px-2 py-1.5 text-sm cursor-pointer transition-colors ${
               activeView === "home"
                 ? "bg-sidebar-accent text-sidebar-accent-foreground"
@@ -205,33 +210,31 @@ export default function Sidebar({
             {!collapsed && <span>{t("home")}</span>}
           </button>
           <SidebarNavSection
-            id="cv-section"
             icon={FolderOpen}
             label={t("cvSection")}
             collapsed={collapsed}
             open={cvSectionOpen}
             onToggle={() => setCvSectionOpen((open) => !open)}
             items={[
-              { icon: FileSearch, label: t("cvAnalyses"), active: activeView === "cv-analyses", onClick: onOpenCVAnalyses },
-              { icon: FolderOpen, label: t("cvLibrary"), active: activeView === "cvs", onClick: onOpenCVs },
-              { icon: LayoutTemplate, label: t("templates"), active: activeView === "templates", onClick: onOpenTemplates },
-              { icon: Wand2, label: t("cvEditor"), active: activeView === "editor", onClick: onOpenEditor },
+              { icon: FileSearch, label: t("cvAnalyses"), active: activeView === "cv-analyses", onClick: () => handleNavigationClick(onOpenCVAnalyses) },
+              { icon: FolderOpen, label: t("cvLibrary"), active: activeView === "cvs", onClick: () => handleNavigationClick(onOpenCVs) },
+              { icon: LayoutTemplate, label: t("templates"), active: activeView === "templates", onClick: () => handleNavigationClick(onOpenTemplates) },
+              { icon: Wand2, label: t("cvEditor"), active: activeView === "editor", onClick: () => handleNavigationClick(onOpenEditor) },
             ]}
           />
           <SidebarNavSection
-            id="job-section"
             icon={Briefcase}
             label={t("careerSection")}
             collapsed={collapsed}
             open={jobSectionOpen}
             onToggle={() => setJobSectionOpen((open) => !open)}
             items={[
-              { icon: Briefcase, label: t("jobAnalyses"), active: activeView === "job-analyses", onClick: onOpenJobAnalyses },
-              { icon: MessageSquareQuote, label: t("interviewQuestions"), active: activeView === "questions", onClick: onOpenQuestions },
-              { icon: BookOpenText, label: t("workJournal"), active: activeView === "journal", onClick: onOpenJournal },
-              { icon: Target, label: t("objectives"), active: activeView === "objectives", onClick: onOpenObjectives },
-              { icon: Inbox, label: t("receivedFeedback"), active: activeView === "received-feedback", onClick: onOpenReceivedFeedback },
-              { icon: NotebookPen, label: t("feedbackNotes"), active: activeView === "feedback-notes", onClick: onOpenFeedbackNotes },
+              { icon: Briefcase, label: t("jobAnalyses"), active: activeView === "job-analyses", onClick: () => handleNavigationClick(onOpenJobAnalyses) },
+              { icon: MessageSquareQuote, label: t("interviewQuestions"), active: activeView === "questions", onClick: () => handleNavigationClick(onOpenQuestions) },
+              { icon: BookOpenText, label: t("workJournal"), active: activeView === "journal", onClick: () => handleNavigationClick(onOpenJournal) },
+              { icon: Target, label: t("objectives"), active: activeView === "objectives", onClick: () => handleNavigationClick(onOpenObjectives) },
+              { icon: Inbox, label: t("receivedFeedback"), active: activeView === "received-feedback", onClick: () => handleNavigationClick(onOpenReceivedFeedback) },
+              { icon: NotebookPen, label: t("feedbackNotes"), active: activeView === "feedback-notes", onClick: () => handleNavigationClick(onOpenFeedbackNotes) },
             ]}
           />
         </div>
@@ -242,8 +245,8 @@ export default function Sidebar({
           userEmail={userEmail}
           settingsLabel={t("settings")}
           observabilityLabel={t("observability")}
-          onOpenSettings={onOpenSettings}
-          onOpenAdmin={onOpenAdmin}
+          onOpenSettings={() => handleNavigationClick(onOpenSettings)}
+          onOpenAdmin={() => handleNavigationClick(onOpenAdmin)}
         />
       </motion.aside>
     </>

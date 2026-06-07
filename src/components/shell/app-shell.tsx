@@ -66,8 +66,31 @@ interface AppShellProps {
   initialIsAdmin?: boolean;
 }
 
+function resolveViewFromLocation(
+  pathname: string,
+  searchParams: URLSearchParams,
+): AppView {
+  if (pathname === "/") {
+    return searchParams.get("analysis") ? "analysis" : "home";
+  }
+  if (pathname.startsWith("/cv-analysis")) return "cv-analyses";
+  if (pathname.startsWith("/job-analyses")) return "job-analyses";
+  if (pathname.startsWith("/cvs/editor")) return "editor";
+  if (pathname.startsWith("/cvs")) return "cvs";
+  if (pathname.startsWith("/templates")) return "templates";
+  if (pathname.startsWith("/work-journal")) return "journal";
+  if (pathname.startsWith("/objectives")) return "objectives";
+  if (pathname.startsWith("/feedback-notes")) return "feedback-notes";
+  if (pathname.startsWith("/received-feedback")) return "received-feedback";
+  if (pathname.startsWith("/interview-questions")) return "questions";
+  if (pathname.startsWith("/activity-contexts")) return "activity-context";
+  if (pathname.startsWith("/settings")) return "settings";
+  if (pathname.startsWith("/admin")) return "admin";
+  return "home";
+}
+
 export default function AppShell({
-  initialView = "home",
+  initialView,
   initialUserEmail = null,
   initialIsAdmin = false,
 }: AppShellProps) {
@@ -92,7 +115,9 @@ export default function AppShell({
   const setViewTab = (tab: CVAnalysisDetailTab) => {
     router.replace(`${pathname}?tab=${tab}`, { scroll: false });
   };
-  const [activeView, setActiveView] = useState<AppView>(initialView);
+  const [activeView, setActiveView] = useState<AppView>(
+    () => initialView ?? resolveViewFromLocation(pathname, searchParams),
+  );
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(initialUserEmail);
   const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
