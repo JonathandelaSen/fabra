@@ -1,6 +1,5 @@
 "use client";
 
-import { Target } from "lucide-react";
 import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
@@ -76,12 +75,7 @@ export default function ObjectivesView() {
     <FeatureScreenShell
       mobileBackActive={Boolean(form) || Boolean(objectiveId)}
       onMobileBack={form ? () => setForm(null) : clearObjective}
-      title={
-        <span className="flex items-center gap-2">
-          <Target className="h-6 w-6 text-zinc-400" />
-          {t("title")}
-        </span>
-      }
+      title={t("title")}
       actions={
         <FeatureHeaderActionButton
           label={t("newObjective")}

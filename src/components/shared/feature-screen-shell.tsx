@@ -42,7 +42,7 @@ export function FeatureScreenShell({
     >
       <header
         className={cn(
-          "shrink-0 border-b border-line bg-canvas-header px-5 py-4",
+          "shrink-0 border-b border-line bg-canvas-header px-5 py-4 lg:py-0 lg:h-16 flex items-center",
           headerClassName
         )}
       >
