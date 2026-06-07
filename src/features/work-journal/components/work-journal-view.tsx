@@ -71,7 +71,8 @@ export default function WorkJournalView({
 
   const contexts = contextsQuery.data?.contexts ?? [];
   const entries: import("../api/work-journal-types").WorkJournalEntryLegacy[] = entriesQuery.data ?? [];
-  const isResolvingQueries = contextsQuery.isFetching || entriesQuery.isFetching;
+  const isListPending = entriesQuery.isPending;
+  const isContextsPending = contextsQuery.isPending;
   const queryError = contextsQuery.error
     ? getErrorMessage(contextsQuery.error)
     : entriesQuery.error
@@ -138,7 +139,7 @@ export default function WorkJournalView({
       shouldAutoSelectWorkJournalEntry({
         activeEntryId,
         entryCount: filteredEntries.length,
-        isResolvingQueries,
+        isListPending,
         showForm,
         view,
       })
@@ -146,13 +147,13 @@ export default function WorkJournalView({
       const nextId = filteredEntries[0].id;
       replaceListEntry(nextId);
     }
-  }, [activeEntryId, filteredEntries, isDesktopLayout, isResolvingQueries, replaceListEntry, showForm, view]);
+  }, [activeEntryId, filteredEntries, isDesktopLayout, isListPending, replaceListEntry, showForm, view]);
 
   useEffect(() => {
     if (
       view === "timeline" &&
       shouldClearMissingWorkJournalSelection({
-        isResolvingQueries,
+        isListPending,
         routeEntryId: timelineEntryId,
         selectedEntryExists: Boolean(selectedEntry),
       })
@@ -161,14 +162,14 @@ export default function WorkJournalView({
     } else if (
       view === "list" &&
       shouldClearMissingWorkJournalSelection({
-        isResolvingQueries,
+        isListPending,
         routeEntryId: listEntryId,
         selectedEntryExists: Boolean(selectedEntry),
       })
     ) {
       goToList();
     }
-  }, [view, timelineEntryId, listEntryId, isResolvingQueries, selectedEntry, backToTimeline, goToList]);
+  }, [view, timelineEntryId, listEntryId, isListPending, selectedEntry, backToTimeline, goToList]);
 
   useEffect(() => {
     const selectedContextId = searchParams.get("activityContextId");
@@ -273,7 +274,7 @@ export default function WorkJournalView({
             entries={filteredEntries}
             contexts={contexts}
             selectedId={activeEntryId}
-            isLoading={isResolvingQueries}
+            isLoading={isListPending}
             search={search}
             setSearch={setSearch}
             contextFilter={contextFilter}
@@ -304,7 +305,8 @@ export default function WorkJournalView({
             isResolvingQueries={shouldShowWorkJournalMainLoader({
               activeEntryId,
               entryCount: filteredEntries.length,
-              isResolvingQueries,
+              isContextsPending,
+              isListPending,
               showForm,
               view,
             })}

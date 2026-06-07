@@ -74,7 +74,8 @@ export default function ReceivedFeedbackView() {
   }, [rawItems, activeSelectedId]);
 
   const saving = mutations.createFeedback.isPending || mutations.updateFeedback.isPending || mutations.deleteFeedback.isPending;
-  const isResolvingQueries = feedbackQuery.isFetching || contextsQuery.isFetching;
+  const isListPending = feedbackQuery.isPending;
+  const isContextsPending = contextsQuery.isPending;
 
   const queryError = feedbackQuery.error ? getErrorMessage(feedbackQuery.error) : contextsQuery.error ? getErrorMessage(contextsQuery.error) : null;
   const visibleError = error ?? queryError;
@@ -86,26 +87,26 @@ export default function ReceivedFeedbackView() {
       shouldAutoSelectReceivedFeedback({
         activeSelectedId,
         isCreating,
-        isResolvingQueries,
+        isListPending,
         itemCount: items.length,
       })
     ) {
       const nextId = items[0].id;
       replaceRouteItem(nextId);
     }
-  }, [activeSelectedId, isCreating, isDesktopLayout, isResolvingQueries, items, replaceRouteItem]);
+  }, [activeSelectedId, isCreating, isDesktopLayout, isListPending, items, replaceRouteItem]);
 
   useEffect(() => {
     if (
       shouldClearMissingReceivedFeedbackSelection({
-        isResolvingQueries,
+        isListPending,
         routeSelectedId,
         selectedItemExists: Boolean(selectedItem),
       })
     ) {
       goToList();
     }
-  }, [routeSelectedId, isResolvingQueries, selectedItem, goToList]);
+  }, [routeSelectedId, isListPending, selectedItem, goToList]);
 
   useEffect(() => {
     const selectedContextId = searchParams.get("activityContextId");
@@ -254,7 +255,7 @@ export default function ReceivedFeedbackView() {
           <ReceivedFeedbackSidebar
             contexts={contexts}
             items={items}
-            loading={isResolvingQueries}
+            loading={isListPending}
             searchQuery={searchQuery}
             selectedId={activeSelectedId}
             onSearchChange={setSearchQuery}
@@ -270,8 +271,9 @@ export default function ReceivedFeedbackView() {
           isEditing={isEditing}
           loading={shouldShowReceivedFeedbackMainLoader({
             activeSelectedId,
+            isContextsPending,
             isCreating,
-            isResolvingQueries,
+            isListPending,
             itemCount: items.length,
           })}
           saving={saving}

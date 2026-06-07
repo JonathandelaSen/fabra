@@ -1,33 +1,52 @@
+import {
+  shouldAutoSelectFirstItem,
+  shouldShowMainLoader,
+  type ListDetailLoadingState,
+} from "@/frontend/list-detail/list-detail-loading-state";
+
 interface ReceivedFeedbackAutoSelectionState {
   activeSelectedId: string | null;
   isCreating: boolean;
-  isResolvingQueries: boolean;
+  isListPending: boolean;
   itemCount: number;
 }
 
+interface ReceivedFeedbackMainLoaderState extends ReceivedFeedbackAutoSelectionState {
+  isContextsPending: boolean;
+}
+
 interface ReceivedFeedbackMissingSelectionState {
-  isResolvingQueries: boolean;
+  isListPending: boolean;
   routeSelectedId: string | null;
   selectedItemExists: boolean;
 }
 
-export function shouldAutoSelectReceivedFeedback({
-  activeSelectedId,
-  isCreating,
-  isResolvingQueries,
-  itemCount,
-}: ReceivedFeedbackAutoSelectionState) {
-  return !isResolvingQueries && !activeSelectedId && !isCreating && itemCount > 0;
+function toListDetailState(
+  state: ReceivedFeedbackAutoSelectionState & { isContextsPending?: boolean },
+): ListDetailLoadingState {
+  return {
+    isListPending: state.isListPending,
+    isDetailPending: state.isContextsPending ?? false,
+    itemCount: state.itemCount,
+    selectedId: state.activeSelectedId,
+    isOnListRoute: true,
+  };
 }
 
-export function shouldShowReceivedFeedbackMainLoader(state: ReceivedFeedbackAutoSelectionState) {
-  return state.isResolvingQueries || shouldAutoSelectReceivedFeedback(state);
+export function shouldAutoSelectReceivedFeedback(state: ReceivedFeedbackAutoSelectionState) {
+  if (state.isCreating) return false;
+  return shouldAutoSelectFirstItem(toListDetailState(state));
+}
+
+export function shouldShowReceivedFeedbackMainLoader(state: ReceivedFeedbackMainLoaderState) {
+  if (state.isCreating) return false;
+  return shouldShowMainLoader(toListDetailState(state));
 }
 
 export function shouldClearMissingReceivedFeedbackSelection({
-  isResolvingQueries,
+  isListPending,
   routeSelectedId,
   selectedItemExists,
 }: ReceivedFeedbackMissingSelectionState) {
-  return Boolean(routeSelectedId && !isResolvingQueries && !selectedItemExists);
+  return Boolean(routeSelectedId && !isListPending && !selectedItemExists);
 }
