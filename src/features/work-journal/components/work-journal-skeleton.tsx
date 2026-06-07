@@ -23,15 +23,21 @@ export function WorkJournalSkeleton() {
 
 export function WorkJournalSidebarSkeleton() {
   return (
-    <div className="space-y-3 px-2">
+    <div className="w-full">
       {Array.from({ length: 5 }).map((_, index) => (
-        <Skeleton
-          key={index}
-          className="h-20 w-full rounded-xl bg-white/[0.03]"
-        />
+        <div key={index} className="mb-2 w-full rounded-xl border border-transparent p-3.5">
+          <div className="flex items-start justify-between gap-3">
+            <Skeleton className="h-4 w-4/5 bg-white/[0.03]" />
+            <Skeleton className="h-4 w-4 rounded-md bg-white/[0.03]" />
+          </div>
+          <Skeleton className="mt-1.5 h-3 w-3/4 bg-white/[0.03]" />
+          <div className="mt-3 flex items-center justify-between gap-2">
+            <Skeleton className="h-5 w-24 rounded bg-white/[0.03]" />
+            <Skeleton className="h-3 w-16 bg-white/[0.03]" />
+          </div>
+        </div>
       ))}
     </div>
   );
 }
-
 

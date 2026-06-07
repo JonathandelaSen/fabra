@@ -34,6 +34,96 @@ It's not just a CV parser; it's a complete operating system for your career:
 
 ---
 
+## 📸 Product Tour
+
+### Build, refine, and share your CV
+
+<p align="center">
+  <img src="public/screenshots/cv-library.png" alt="Fabra CV library" width="100%" />
+</p>
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <img src="public/screenshots/cv-ai-analysis.png" alt="AI-powered CV analysis" width="100%" />
+      <br /><strong>AI-powered CV analysis</strong>
+    </td>
+    <td width="50%" align="center">
+      <img src="public/screenshots/cv-ai-editor.png" alt="AI-assisted CV editor" width="100%" />
+      <br /><strong>AI-assisted CV editor</strong>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <img src="public/screenshots/ats-friendly-cv-templates.png" alt="ATS-friendly CV templates" width="100%" />
+      <br /><strong>ATS-friendly templates</strong>
+    </td>
+    <td width="50%" align="center">
+      <img src="public/screenshots/public-cv-url.png" alt="Public CV URL" width="100%" />
+      <br /><strong>Shareable public CV</strong>
+    </td>
+  </tr>
+</table>
+
+### Run a focused job search
+
+<p align="center">
+  <img src="public/screenshots/job-search-tracking-kanban.png" alt="Job search tracking Kanban board" width="100%" />
+</p>
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <img src="public/screenshots/job-ai-analysis.png" alt="AI-powered job match analysis" width="100%" />
+      <br /><strong>Job match and gap analysis</strong>
+    </td>
+    <td width="50%" align="center">
+      <img src="public/screenshots/job-ai-chat.png" alt="AI job application chat" width="100%" />
+      <br /><strong>Context-aware job chat</strong>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <img src="public/screenshots/interview-questions.png" alt="Tailored interview questions" width="74%" />
+      <br /><strong>Tailored interview preparation</strong>
+    </td>
+  </tr>
+</table>
+
+### Turn everyday work into career momentum
+
+<p align="center">
+  <img src="public/screenshots/work-journal.png" alt="Work journal" width="100%" />
+</p>
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <img src="public/screenshots/work-career-objectives.png" alt="Career objectives planner" width="100%" />
+      <br /><strong>Career objectives and milestones</strong>
+    </td>
+    <td width="50%" align="center">
+      <img src="public/screenshots/received-feedback.png" alt="Received feedback tracker" width="100%" />
+      <br /><strong>Received feedback tracker</strong>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <img src="public/screenshots/feedback-notes.png" alt="Professional feedback notes" width="74%" />
+      <br /><strong>Professional feedback notes</strong>
+    </td>
+  </tr>
+</table>
+
+### Choose how AI assists you
+
+<p align="center">
+  <img src="public/screenshots/ai-model-options.png" alt="AI provider and model options" width="62%" />
+  <br /><strong>Integrated providers, local models, copy-paste workflows, or manual control</strong>
+</p>
+
+---
+
 ## 🛠️ Quick Start (Local Setup)
 
 Get the project running on your local machine in just a few minutes.

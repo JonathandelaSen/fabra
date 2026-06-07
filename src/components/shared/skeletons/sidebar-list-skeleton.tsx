@@ -6,10 +6,10 @@ interface SidebarListSkeletonProps {
 
 export function SidebarListSkeleton({ itemCount = 5 }: SidebarListSkeletonProps) {
   return (
-    <div className="w-full space-y-0">
+    <div className="w-full">
       {Array.from({ length: itemCount }).map((_, index) => (
-        <div key={index} className="mb-2 rounded-xl border border-transparent p-3.5">
-          <div className="flex items-center justify-between gap-3">
+        <div key={index} className="mb-2 w-full rounded-xl border border-transparent p-3.5">
+          <div className="flex items-start justify-between gap-3">
             <Skeleton className="h-4 w-4/5" />
             <Skeleton className="h-4 w-4 rounded-md" />
           </div>

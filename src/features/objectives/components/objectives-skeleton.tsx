@@ -3,18 +3,18 @@ import { BasicPanel } from "@/components/shared/basic-panel";
 
 export function ObjectivesSidebarSkeleton() {
   return (
-    <div className="space-y-5 py-1">
+    <div className="w-full space-y-5">
       {Array.from({ length: 2 }).map((_, groupIndex) => (
         <section key={groupIndex}>
           <div className="mb-2.5 flex items-center justify-between px-2">
             <Skeleton className="h-3.5 w-24 bg-white/[0.04]" />
             <Skeleton className="h-4.5 w-7 rounded-full bg-white/[0.04]" />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1">
             {Array.from({ length: groupIndex === 0 ? 3 : 2 }).map((_, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-white/[0.04] bg-white/[0.01] p-3.5"
+                className="w-full rounded-xl border border-transparent p-3.5"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 space-y-2">

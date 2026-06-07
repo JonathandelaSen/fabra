@@ -19,10 +19,10 @@ export function InterviewQuestionsSkeleton() {
 
   const sidebarSkeleton = (
     <FeatureSidebarPanel header={sidebarHeaderSkeleton}>
-      <div className="space-y-1.5 animate-pulse">
+      <div className="w-full animate-pulse">
         {Array.from({ length: 6 }).map((_, index) => (
-          <div key={index} className="rounded-xl p-3.5 border border-transparent">
-            <div className="flex items-center justify-between gap-3">
+          <div key={index} className="mb-2 w-full rounded-xl border border-transparent p-3.5">
+            <div className="flex items-start justify-between gap-3">
               <Skeleton className="h-4 w-4/5" />
               <Skeleton className="h-4 w-4 rounded-md" />
             </div>

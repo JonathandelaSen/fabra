@@ -3,18 +3,18 @@ import { BasicPanel } from "@/components/shared/basic-panel";
 
 export function ReceivedFeedbackListSkeleton() {
   return (
-    <div className="space-y-3">
+    <div className="w-full">
       {Array.from({ length: 5 }).map((_, index) => (
         <div
           key={index}
-          className="rounded-xl border border-line bg-panel-subtle p-3.5 space-y-2.5"
+          className="mb-2 w-full rounded-xl border border-transparent p-3.5"
         >
           <div className="flex justify-between items-center">
             <Skeleton className="h-4 w-3/4" />
             <Skeleton className="h-3 w-16" />
           </div>
-          <Skeleton className="h-3 w-4/5" />
-          <div className="flex justify-between items-center pt-2">
+          <Skeleton className="mt-1.5 h-3 w-4/5" />
+          <div className="mt-3 flex items-center justify-between gap-2">
             <Skeleton className="h-4 w-12 rounded" />
             <Skeleton className="h-3.5 w-16 rounded" />
           </div>

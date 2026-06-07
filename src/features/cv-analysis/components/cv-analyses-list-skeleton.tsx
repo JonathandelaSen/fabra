@@ -2,11 +2,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function CVAnalysesListSkeleton() {
   return (
-    <div className="space-y-2">
+    <div className="flex w-full flex-col gap-2">
       {Array.from({ length: 6 }).map((_, index) => (
         <div
           key={index}
-          className="flex w-full items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] p-3.5"
+          className="flex w-full items-start gap-3 rounded-xl border border-transparent p-3.5"
         >
           <Skeleton className="h-9 w-9 shrink-0 rounded-lg bg-indigo-500/10" />
           <div className="min-w-0 flex-1">
@@ -15,7 +15,6 @@ export function CVAnalysesListSkeleton() {
               <Skeleton className="h-3 w-24" />
             </div>
           </div>
-          <Skeleton className="h-7 w-10 shrink-0 rounded-lg" />
           <Skeleton className="h-7 w-7 shrink-0 rounded-lg" />
         </div>
       ))}
