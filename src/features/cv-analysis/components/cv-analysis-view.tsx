@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
 import { useTranslations } from "next-intl";
 import type { InterviewQuestionSummary } from "../types";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import { AnalysisDetailSkeleton } from "@/components/shared/skeletons";
+import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
+import { FileText, Sparkles } from "lucide-react";
 import {
   useCreateCVAnalysis,
   useDeleteCVAnalysis,
@@ -30,6 +31,7 @@ import {
   shouldShowCVAnalysisMainLoader,
 } from "./cv-analysis-loading-state";
 import NewAnalysisFlow from "./new-analysis-flow";
+import { CVAnalysisHeaderActions } from "./cv-analysis-header-actions";
 
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
@@ -142,7 +144,12 @@ export default function CVAnalysisView({
         route.goToList();
       }
     }
-  }
+  };
+
+  const showSelectedAnalysisActions =
+    route.mode === "detail" &&
+    selectedAnalysis !== null &&
+    selectedAnalysis.ai_score !== null;
 
   return (
     <FeatureScreenShell
@@ -150,9 +157,12 @@ export default function CVAnalysisView({
       mobileBackActive={route.mode === "detail" || route.mode === "new"}
       onMobileBack={route.goToList}
       actions={
-        <FeatureHeaderActionButton
-          label={listT("newAnalysis")}
-          onClick={route.goToNew}
+        <CVAnalysisHeaderActions
+          selectedAnalysis={selectedAnalysis}
+          showAnalysisActions={showSelectedAnalysisActions}
+          isDeleting={deleteAnalysis.isPending}
+          onNewAnalysis={route.goToNew}
+          onDeleteAnalysis={handleDelete}
         />
       }
     >
@@ -196,8 +206,18 @@ export default function CVAnalysisView({
           mode: route.mode,
           selectedAnalysisId,
         }) ? (
-          <div className="h-full overflow-y-auto p-6">
-            <AnalysisDetailSkeleton />
+          <div className="flex flex-col h-full">
+            <FeatureDetailTabBar
+              tabs={[
+                { id: "extraction" as const, label: t("extractionTab"), icon: <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
+                { id: "analysis" as const, label: t("analysisTab"), icon: <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
+              ]}
+              activeTab="analysis"
+              onTabChange={() => {}}
+            />
+            <div className="flex-1 py-4 sm:py-6">
+              <AnalysisDetailSkeleton isJobMatch={false} />
+            </div>
           </div>
         ) : !selectedAnalysis ? (
           <div className="flex h-full items-center justify-center text-sm text-zinc-600">
@@ -214,7 +234,6 @@ export default function CVAnalysisView({
             interviewQuestions={
               (interviewQuestionsQuery.data ?? []) as InterviewQuestionSummary[]
             }
-            onDelete={handleDelete}
             onOpenSettings={onOpenSettings}
             onOpenQuestions={onOpenQuestions}
             onRefetchAnalysis={() => void detailQuery.refetch()}

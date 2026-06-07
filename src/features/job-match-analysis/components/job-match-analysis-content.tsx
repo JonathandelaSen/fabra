@@ -2,6 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { AnalysisDetailSkeleton } from "@/components/shared/skeletons";
+import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
+import { FileText, Sparkles } from "lucide-react";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { JobMatchAnalysisDetailResponse } from "../types";
 import type { AnalysisTab } from "../hooks/use-job-match-analysis-route-state";
@@ -64,8 +66,18 @@ export function JobMatchAnalysisContent({
 
   if (isLoading) {
     return (
-      <div className="h-full overflow-y-auto p-6">
-        <AnalysisDetailSkeleton />
+      <div className="flex flex-col h-full">
+        <FeatureDetailTabBar
+          tabs={[
+            { id: "extraction" as const, label: t("extractionTab"), icon: <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
+            { id: "analysis" as const, label: t("analysisTab"), icon: <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
+          ]}
+          activeTab="analysis"
+          onTabChange={() => {}}
+        />
+        <div className="flex-1 py-4 sm:py-6">
+          <AnalysisDetailSkeleton isJobMatch={true} />
+        </div>
       </div>
     );
   }

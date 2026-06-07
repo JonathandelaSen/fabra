@@ -5,6 +5,20 @@ import { server } from "./msw/server";
 
 const originalFetch = globalThis.fetch;
 
+if (typeof window !== "undefined" && typeof window.matchMedia !== "function") {
+  window.matchMedia = (query: string) =>
+    ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      dispatchEvent: () => false,
+    }) as unknown as MediaQueryList;
+}
+
 beforeAll(() => {
   server.listen({ onUnhandledRequest: "error" });
   const interceptedFetch = globalThis.fetch;

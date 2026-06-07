@@ -12,7 +12,6 @@ import type { AnalysisMode, OfferStatus } from "@/lib/analysis-types";
 import AnalysisScoreCircle from "@/components/shared/analysis-score-circle";
 import { FormattedDate } from "@/components/shared/formatted-date";
 import { getScoreColor } from "@/lib/format";
-import { ScoreHeroActions } from "./score-hero-actions";
 import { ScoreHeroJobUrl } from "./score-hero-job-url";
 import { ScoreHeroOfferStatusBadge } from "./score-hero-offer-status-badge";
 
@@ -28,9 +27,6 @@ interface ScoreHeroProps {
   cv: { id: string; name: string; filename: string; type?: string } | null;
   cvId: string | null;
   filename: string;
-  onExport: () => void;
-  onDelete: () => void;
-  isDeleting: boolean;
   onSaveUrl: (url: string) => Promise<void>;
   isSavingUrl: boolean;
   offerStatus?: OfferStatus | null;
@@ -55,9 +51,6 @@ export default function ScoreHero({
   cv,
   cvId,
   filename,
-  onExport,
-  onDelete,
-  isDeleting,
   onSaveUrl,
   isSavingUrl,
   offerStatus,
@@ -164,12 +157,6 @@ export default function ScoreHero({
               />
             )}
           </div>
-
-          <ScoreHeroActions
-            onExport={onExport}
-            onDelete={onDelete}
-            isDeleting={isDeleting}
-          />
         </div>
       </div>
     </div>

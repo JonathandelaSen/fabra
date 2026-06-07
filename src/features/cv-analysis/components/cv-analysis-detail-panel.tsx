@@ -1,13 +1,18 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion, MotionConfig } from "framer-motion";
+import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import { FileText, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
 import type { AIContext, Analysis } from "@/lib/analysis-types";
 import type { InterviewQuestionSummary } from "../types";
 import type { ScoreCVAnalysisInput } from "../hooks/use-cv-analysis-mutations";
-import type { useCVAnalysisRouteState } from "../hooks/use-cv-analysis-route-state";
+import type {
+  CVAnalysisRouteTab,
+  useCVAnalysisRouteState,
+} from "../hooks/use-cv-analysis-route-state";
 import AIAnalysisView from "./analysis-view";
 import ExtractionView from "./extraction-view";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
@@ -20,7 +25,6 @@ interface CVAnalysisDetailPanelProps {
   aiModel: string;
   hasAIApiKey: boolean;
   interviewQuestions: InterviewQuestionSummary[];
-  onDelete: (id: string) => Promise<void>;
   onOpenSettings: () => void;
   onOpenQuestions: (options?: {
     cvId?: string | null;
@@ -89,7 +93,6 @@ export function CVAnalysisDetailPanel({
   aiModel,
   hasAIApiKey,
   interviewQuestions,
-  onDelete,
   onOpenSettings,
   onOpenQuestions,
   onRefetchAnalysis,
@@ -99,16 +102,29 @@ export function CVAnalysisDetailPanel({
   const t = useTranslations("analysisFlow.appShell");
   const extractionAnalysis = toExtractionAnalysis(selectedAnalysis);
   const hasAnalysis = selectedAnalysis.ai_score !== null;
-  const effectiveTab = hasAnalysis
-    ? (route.tab ?? "analysis")
-    : "extraction";
-  const handleAnalysisComplete = () => {
-    onRefetchAnalysis();
-    route.setTab("analysis");
+  const routeTab = hasAnalysis ? (route.tab ?? "analysis") : "extraction";
+  const [activeTab, setActiveTab] = useState<CVAnalysisRouteTab>(routeTab);
+  const effectiveTab = hasAnalysis ? activeTab : "extraction";
+
+  useEffect(() => {
+    setActiveTab(routeTab);
+  }, [routeTab, selectedAnalysis.id]);
+
+  const handleTabChange = (tab: CVAnalysisRouteTab) => {
+    setActiveTab(tab);
+    route.setTab(tab);
   };
 
+  const handleAnalysisComplete = () => {
+    onRefetchAnalysis();
+    handleTabChange("analysis");
+  };
+
+  const isDesktop = useIsDesktopLayout();
+
   return (
-    <div className="flex flex-col">
+    <MotionConfig reducedMotion={isDesktop ? "always" : "never"}>
+      <div className="flex flex-col">
       <FeatureDetailTabBar
         tabs={[
           { id: "extraction" as const, label: t("extractionTab"), icon: <FileText /> },
@@ -123,7 +139,7 @@ export function CVAnalysisDetailPanel({
             : []),
         ]}
         activeTab={effectiveTab}
-        onTabChange={(tab) => route.setTab(tab)}
+        onTabChange={handleTabChange}
       />
 
       <AnimatePresence mode="wait">
@@ -163,7 +179,6 @@ export function CVAnalysisDetailPanel({
               aiApiKey={aiApiKey}
               aiModel={aiModel}
               hasAIApiKey={hasAIApiKey}
-              onDelete={onDelete}
               onUpdate={onRefetchAnalysis}
               interviewQuestions={interviewQuestions}
               onInterviewQuestionCreated={onRefetchQuestions}
@@ -177,6 +192,7 @@ export function CVAnalysisDetailPanel({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+      </div>
+    </MotionConfig>
   );
 }

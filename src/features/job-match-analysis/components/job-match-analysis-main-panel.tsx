@@ -1,6 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, MotionConfig } from "framer-motion";
+import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import { FileText, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
@@ -61,8 +62,11 @@ export function JobMatchAnalysisMainPanel({
 }: JobMatchAnalysisMainPanelProps) {
   const t = useTranslations("analysisFlow.appShell");
 
+  const isDesktop = useIsDesktopLayout();
+
   return (
-    <div className="flex flex-col">
+    <MotionConfig reducedMotion={isDesktop ? "always" : "never"}>
+      <div className="flex flex-col">
       <FeatureDetailTabBar
         tabs={[
           { id: "extraction" as const, label: t("extractionTab"), icon: <FileText /> },
@@ -132,6 +136,7 @@ export function JobMatchAnalysisMainPanel({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+      </div>
+    </MotionConfig>
   );
 }

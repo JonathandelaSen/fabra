@@ -1,6 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, MotionConfig } from "framer-motion";
+import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import { FileText, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
@@ -101,8 +102,18 @@ export default function CVAnalysisDetailView({
 
   if (loading) {
     return (
-      <div key="loading" className="flex-1 overflow-y-auto py-4 sm:py-6">
-        <AnalysisDetailSkeleton />
+      <div key="loading" className="flex-1 flex flex-col overflow-hidden min-h-0">
+        <FeatureDetailTabBar
+          tabs={[
+            { id: "extraction" as const, label: t("extractionTab"), icon: <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
+            { id: "analysis" as const, label: t("analysisTab"), icon: <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
+          ]}
+          activeTab="analysis"
+          onTabChange={() => {}}
+        />
+        <div className="flex-1 overflow-y-auto py-4 sm:py-6">
+          <AnalysisDetailSkeleton isJobMatch={false} />
+        </div>
       </div>
     );
   }
@@ -135,11 +146,14 @@ export default function CVAnalysisDetailView({
       : []),
   ];
 
+  const isDesktop = useIsDesktopLayout();
+
   return (
-    <div
-      key={analysis.id}
-      className="flex-1 flex flex-col overflow-hidden min-h-0"
-    >
+    <MotionConfig reducedMotion={isDesktop ? "always" : "never"}>
+      <div
+        key={analysis.id}
+        className="flex-1 flex flex-col overflow-hidden min-h-0"
+      >
       <FeatureDetailTabBar
         tabs={tabs}
         activeTab={effectiveTab}
@@ -207,7 +221,6 @@ export default function CVAnalysisDetailView({
               aiApiKey={aiApiKey}
               aiModel={aiModel}
               hasAIApiKey={hasAIApiKey}
-              onDelete={onDelete}
               onUpdate={() => onUpdate(analysis.id)}
               interviewQuestions={interviewQuestions.filter(
                 (question) => question.analysisId === analysis.id,
@@ -223,6 +236,7 @@ export default function CVAnalysisDetailView({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+      </div>
+    </MotionConfig>
   );
 }

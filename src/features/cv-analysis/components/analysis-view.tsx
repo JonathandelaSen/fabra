@@ -10,15 +10,13 @@ import {
   type OfferStatus,
 } from "@/lib/analysis-types";
 import { Tabs } from "@/components/ui/tabs";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
-import type { DeleteAnalysisHandler, InterviewQuestionSummary } from "../types";
+import type { InterviewQuestionSummary } from "../types";
 import { useAnalysisViewActions } from "../hooks/use-analysis-view-actions";
 import ScoreHero from "./score-hero";
 import { AnalysisNextStep } from "./analysis-next-step";
 import { AnalysisTabsContent } from "./analysis-tabs-content";
 import { AnalysisTabsList } from "./analysis-tabs-list";
-import { exportAnalysisReport } from "./analysis-report-export";
 
 interface AIAnalysisViewProps {
   analysis: {
@@ -59,7 +57,6 @@ interface AIAnalysisViewProps {
   interviewQuestions?: InterviewQuestionSummary[];
   onInterviewQuestionCreated?: () => void;
   onOpenQuestions?: () => void;
-  onDelete?: DeleteAnalysisHandler;
   onUpdate?: () => void;
 }
 
@@ -92,13 +89,9 @@ export default function AIAnalysisView({
   interviewQuestions = [],
   onInterviewQuestionCreated,
   onOpenQuestions,
-  onDelete,
   onUpdate,
 }: AIAnalysisViewProps) {
   const t = useTranslations("analysisDetail");
-  const { locale } = useInterfaceLanguage();
-  const dateLocale = locale === "es" ? "es-ES" : "en-US";
-  const [isDeleting, setIsDeleting] = useState(false);
   const [activeTab, setActiveTab] = useState("resumen");
 
   const keywords = safeParseArray(analysis.ai_keywords);
@@ -130,33 +123,6 @@ export default function AIAnalysisView({
     },
   });
 
-  const handleExport = () => {
-    exportAnalysisReport({
-      analysis,
-      dateLocale,
-      keywords,
-      improvements,
-      jobKeywords,
-      cvKeywords,
-      missingKeywords,
-      t,
-    });
-  };
-
-  const handleDelete = async () => {
-    if (!onDelete) return;
-    if (!confirm(t("alerts.confirmDelete"))) return;
-    setIsDeleting(true);
-    try {
-      await onDelete(analysis.id);
-    } catch (error) {
-      console.error("Error deleting analysis:", error);
-      alert(t("alerts.deleteFailed"));
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -178,9 +144,6 @@ export default function AIAnalysisView({
             cv={analysis.cv}
             cvId={analysis.cv_id}
             filename={analysis.filename}
-            onExport={handleExport}
-            onDelete={handleDelete}
-            isDeleting={isDeleting}
             onSaveUrl={actions.handleSaveUrl}
             isSavingUrl={actions.isSavingUrl}
             offerStatus={actions.offerStatus}
