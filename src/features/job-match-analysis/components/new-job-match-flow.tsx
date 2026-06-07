@@ -159,7 +159,7 @@ export default function NewJobMatchFlow({
   const shownError = localError ?? error;
 
   return (
-    <div className="flex-1 overflow-y-auto py-6 md:py-8">
+    <div className="h-full w-full overflow-y-auto py-6 md:py-8">
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
