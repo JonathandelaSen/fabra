@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { I18nProvider } from "@/components/shared/i18n-provider";
 import { FrontendQueryClientProvider } from "@/frontend/query/query-client-provider";
 import { getMessages } from "@/i18n/messages";
@@ -56,6 +57,7 @@ try {
           <FrontendQueryClientProvider>{children}</FrontendQueryClientProvider>
         </I18nProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
