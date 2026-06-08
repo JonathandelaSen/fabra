@@ -1152,6 +1152,7 @@ export const messages = {
         expected: "Expected",
         achieved: "Achieved",
         missed: "Missed",
+        changed: "Changed",
       },
       priority: {
         none: "None",
@@ -2565,6 +2566,7 @@ export const messages = {
         expected: "Esperado",
         achieved: "Logrado",
         missed: "No logrado",
+        changed: "Cambiado",
       },
       priority: {
         none: "Ninguna",
