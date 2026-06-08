@@ -5,12 +5,12 @@ import { useTranslations } from "next-intl";
 import { copyToClipboard } from "@/lib/clipboard";
 import HowAtsWorksEducationBanner from "@/components/shared/how-ats-works-education-banner";
 import JobMatchForm from "./job-match-form";
-import JobMatchScoreCopyPasteModal from "./job-match-score-copy-paste-modal";
+import JobMatchScoreCopyPasteModal from "../copy-paste/job-match-score-copy-paste-modal";
 import { ExtractionTextPanel as JobMatchExtractionTextPanel } from "@/components/shared/extraction/extraction-text-panel";
 import JobMatchExtractionHeader from "@/components/shared/extraction/extraction-header";
 import JobMatchExtractionParserTabs from "@/components/shared/extraction/extraction-parser-tabs";
 import JobMatchExtractionPdfPreview from "./job-match-extraction-pdf-preview";
-import { useJobMatchScoringState } from "../hooks/use-job-match-scoring-state";
+import { useJobMatchScoringState } from "../../hooks/use-job-match-scoring-state";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 type ScoreInput = { jobDescription: string; jobUrl: string; provider: StoredAIProvider; model: string };

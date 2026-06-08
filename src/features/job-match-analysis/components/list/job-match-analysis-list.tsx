@@ -3,7 +3,7 @@
 import { Briefcase, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
-import type { JobMatchAnalysisSummary } from "../api/job-match-analysis-api";
+import type { JobMatchAnalysisSummary } from "../../api/job-match-analysis-api";
 import { JobAnalysesListSkeleton } from "./job-analyses-list-skeleton";
 import { JobMatchAnalysisListItem } from "./job-match-analysis-list-item";
 

@@ -8,7 +8,7 @@ import { useCopyPasteWorkflowState } from "@/components/shared/use-copy-paste-wo
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import type { JobMatchAnalysisDetailResponse } from "@/app/api/job-match-analyses/responses";
 import type { PreviewJobMatchAnalysisCopyPasteResponse } from "@/app/api/job-match-analyses/[id]/score/copy-paste/preview/responses";
-import { useJobMatchAnalysisCopyPaste } from "../hooks/use-job-match-analysis-copy-paste";
+import { useJobMatchAnalysisCopyPaste } from "../../hooks/use-job-match-analysis-copy-paste";
 
 const JOB_MATCH_CORRECTION_INSTRUCTIONS =
   "Please return only the required JSON envelope. Do not include Markdown or explanation outside JSON. Keep workflowId as job_match_analysis.score and schemaVersion as 1.";

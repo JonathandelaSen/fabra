@@ -9,7 +9,7 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
-import type { AnalysisChatConversation } from "../types";
+import type { AnalysisChatConversation } from "../../../types";
 import {
   ActionIconButton,
   ACTION_ICON_BUTTON_TONES,

@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
-import { useJobMatchOfferChat } from "../hooks/use-job-match-offer-chat";
-import { ConversationList } from "./conversation-list";
-import { ChatHeader } from "./chat-header";
+import { useJobMatchOfferChat } from "../../../hooks/use-job-match-offer-chat";
+import { ConversationList } from "../chat/conversation-list";
+import { ChatHeader } from "../chat/chat-header";
 import { ChatMessagesArea } from "@/components/shared/chat/chat-messages-area";
-import { ChatInput } from "./chat-input";
-import { OfferChatCopyPasteModal } from "./offer-chat-copy-paste-modal";
+import { ChatInput } from "../chat/chat-input";
+import { OfferChatCopyPasteModal } from "../../copy-paste/offer-chat-copy-paste-modal";
 
 interface TabOfferChatProps {
   analysisId: string;

@@ -3,7 +3,7 @@
 import { Briefcase, CalendarClock, MessageCircle, MessageSquareQuote, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { AnalysisTab } from "../hooks/use-job-match-analysis-route-state";
+import type { AnalysisTab } from "../../hooks/use-job-match-analysis-route-state";
 
 export const DETAIL_TABS = {
   summary: "summary",

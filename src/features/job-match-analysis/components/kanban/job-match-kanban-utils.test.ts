@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { JobMatchAnalysisSummary } from "../api/job-match-analysis-api";
+import type { JobMatchAnalysisSummary } from "../../api/job-match-analysis-api";
 import {
   buildJobMatchKanbanColumns,
   getJobMatchKanbanStatus,

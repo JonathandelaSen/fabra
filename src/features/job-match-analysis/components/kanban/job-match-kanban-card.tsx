@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import type { JobMatchAnalysisSummary } from "../api/job-match-analysis-api";
+import type { JobMatchAnalysisSummary } from "../../api/job-match-analysis-api";
 import {
   getJobMatchKanbanStatus,
   JOB_MATCH_KANBAN_STATUSES,

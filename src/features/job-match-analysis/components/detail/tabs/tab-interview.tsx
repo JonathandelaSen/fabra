@@ -9,7 +9,7 @@ import {
   Check,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { InterviewQuestionSummary } from "../types";
+import type { InterviewQuestionSummary } from "../../../types";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
 

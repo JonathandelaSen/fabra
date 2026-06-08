@@ -6,15 +6,15 @@ import { getMessages } from "@/i18n/messages";
 import type { JobMatchAnalysisDetailResponse } from "../types";
 import { JobMatchAnalysisMainPanel } from "./job-match-analysis-main-panel";
 
-vi.mock("./job-match-extraction-view", () => ({
+vi.mock("./extraction/job-match-extraction-view", () => ({
   default: () => <div data-testid="extraction-view" />,
 }));
 
-vi.mock("./job-match-analysis-detail", () => ({
+vi.mock("./detail/job-match-analysis-detail", () => ({
   default: () => <div data-testid="completed-analysis-view" />,
 }));
 
-vi.mock("./pending-job-match-analysis-view", () => ({
+vi.mock("./extraction/pending-job-match-analysis-view", () => ({
   PendingJobMatchAnalysisView: () => <div data-testid="pending-analysis-view" />,
 }));
 

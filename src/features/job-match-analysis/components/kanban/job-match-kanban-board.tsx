@@ -13,7 +13,7 @@ import {
 } from "@dnd-kit/core";
 import { useTranslations } from "next-intl";
 import type { JobMatchAnalysisOfferStatus } from "@/app/api/job-match-analyses/responses";
-import type { JobMatchAnalysisSummary } from "../api/job-match-analysis-api";
+import type { JobMatchAnalysisSummary } from "../../api/job-match-analysis-api";
 import { JobMatchKanbanCard } from "./job-match-kanban-card";
 import { JobMatchKanbanColumn } from "./job-match-kanban-column";
 import {

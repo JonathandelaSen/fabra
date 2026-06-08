@@ -27,8 +27,8 @@ import {
   shouldAutoSelectJobMatchAnalysis,
   shouldShowJobMatchAnalysisMainLoader,
 } from "./job-match-analysis-loading-state";
-import NewJobMatchFlow from "./new-job-match-flow";
-import { PendingJobMatchCopyPasteModal } from "./pending-job-match-copy-paste-modal";
+import NewJobMatchFlow from "./new-flow/new-job-match-flow";
+import { PendingJobMatchCopyPasteModal } from "./copy-paste/pending-job-match-copy-paste-modal";
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 
 interface JobMatchAnalysisViewProps {

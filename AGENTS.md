@@ -317,6 +317,22 @@ Do not leave large feature screens as one monolithic component. Route/view compo
 
 Do not use JSX comments to label regions that should be components, such as `{/* Header */}`, `{/* Sidebar */}`, `{/* Tabs */}`, `{/* Panel Body */}`, or `{/* Footer Actions */}`. When a block needs that kind of label to be understandable, extract the block into a clearly named component in a separate sibling file and render that component instead. For example, prefer `ObjectiveFormHeader`, `OfferChatSidebar`, or `ExtractionParserTabs` over keeping a commented block inline.
 
+### Component folder organization within a feature
+
+`src/features/<feature>/components/` organizes its files by **functional region of the product**, not by render hierarchy. The goal is that a folder name tells you which part of the feature a component belongs to (kanban, detail, chat, new-flow), and that the folder stays stable across refactors.
+
+**Threshold — do not reorganize small features.** A feature with roughly **fewer than 15 components** keeps a single flat `components/` directory. Most features are this size and must not grow speculative subfolders. Only once a feature crosses ~15 components, or clearly contains multiple independent UI regions, introduce region subfolders.
+
+**Rules when subfoldering:**
+
+1. **Group by functional region, never by render depth.** Do not create a folder for "the view's direct children" vs "the rest" — membership in such a folder is an implementation detail that churns on every refactor and says nothing about what a component does. Use stable domain regions instead: `kanban/`, `list/`, `detail/`, `new-flow/`, `extraction/`, `copy-paste/`, etc.
+2. **The orchestration spine stays at the root of `components/`.** That is the entry `*-view.tsx`, its `*-skeleton.tsx`, and the thin orchestrators whose only job is to compose regions together (e.g. a `*-body` that switches between list and kanban, or a `*-main-panel` that switches between detail / extraction / pending). Everything that belongs to a single region moves into that region's folder.
+3. **Co-locate by cohesion.** A component goes in the folder of the region that owns it. A component used by only one region lives inside that region (e.g. score/status badges used only by the list row live in `list/`). Nest one extra level only when a region is itself large and has clear sub-areas (e.g. `detail/tabs/`, `detail/chat/`).
+4. **Name folders after the domain region**, as a short noun (`kanban`, `detail`, `new-flow`). Never use catch-all names like `parts/`, `misc/`, `shared/`, or `common/`.
+5. **Folder structure is feature-internal.** Features remain private behind their `index.ts` barrel; no DDD/boundary check inspects the internal shape of `components/`, so regions can be introduced per feature as they grow. The barrel and any test `vi.mock(...)` paths must be updated when files move.
+
+**Reference implementation:** `src/features/job-match-analysis/components/` (root orchestration spine + `list/`, `kanban/`, `new-flow/`, `extraction/`, `detail/` with `detail/tabs/` and `detail/chat/`, and `copy-paste/`).
+
 ### Internationalization (i18n)
 
 All user-visible strings in React components must use `next-intl` translations via `useTranslations()`. Never hardcode UI strings (labels, descriptions, placeholders, error messages, microcopy) directly in components. Add translation keys to `src/i18n/messages.ts` under both the `en` and `es` sections. Use a feature-scoped namespace key (e.g., `activityContexts`, `feedbackNotes`) and call `const t = useTranslations("featureNamespace")` in each component. Existing features that already use translations serve as reference.

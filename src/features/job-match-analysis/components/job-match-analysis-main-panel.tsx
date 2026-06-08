@@ -9,9 +9,9 @@ import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar"
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { InterviewQuestionSummary, JobMatchAnalysisDetailResponse } from "../types";
 import type { AnalysisTab } from "../hooks/use-job-match-analysis-route-state";
-import JobMatchAnalysisDetail from "./job-match-analysis-detail";
-import JobMatchExtractionView from "./job-match-extraction-view";
-import { PendingJobMatchAnalysisView } from "./pending-job-match-analysis-view";
+import JobMatchAnalysisDetail from "./detail/job-match-analysis-detail";
+import JobMatchExtractionView from "./extraction/job-match-extraction-view";
+import { PendingJobMatchAnalysisView } from "./extraction/pending-job-match-analysis-view";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface JobMatchAnalysisMainPanelProps {

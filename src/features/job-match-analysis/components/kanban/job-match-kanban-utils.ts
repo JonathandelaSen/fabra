@@ -1,5 +1,5 @@
 import type { JobMatchAnalysisOfferStatus } from "@/app/api/job-match-analyses/responses";
-import type { JobMatchAnalysisSummary } from "../api/job-match-analysis-api";
+import type { JobMatchAnalysisSummary } from "../../api/job-match-analysis-api";
 
 export const JOB_MATCH_KANBAN_STATUSES: readonly JobMatchAnalysisOfferStatus[] = [
   "interesting",

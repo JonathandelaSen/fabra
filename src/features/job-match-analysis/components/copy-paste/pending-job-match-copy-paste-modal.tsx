@@ -1,6 +1,6 @@
 "use client";
 
-import type { JobMatchAnalysisDetailResponse } from "../types";
+import type { JobMatchAnalysisDetailResponse } from "../../types";
 import JobMatchScoreCopyPasteModal from "./job-match-score-copy-paste-modal";
 
 interface PendingJobMatchCopyPasteModalProps {

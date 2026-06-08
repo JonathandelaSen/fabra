@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { JobMatchAnalysisDetailSkeleton } from "./job-match-analysis-detail-skeleton";
+import { JobMatchAnalysisDetailSkeleton } from "./detail/job-match-analysis-detail-skeleton";
 import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
 import { FileText, Sparkles } from "lucide-react";
 import type { OfferStatus } from "@/lib/analysis-types";

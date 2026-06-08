@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import type { WheelEvent } from "react";
 import type { JobMatchAnalysisOfferStatus } from "@/app/api/job-match-analyses/responses";
 import { cn } from "@/lib/utils";
-import type { JobMatchAnalysisSummary } from "../api/job-match-analysis-api";
+import type { JobMatchAnalysisSummary } from "../../api/job-match-analysis-api";
 import { getJobMatchKanbanStatus } from "./job-match-kanban-utils";
 
 interface JobMatchKanbanColumnProps {

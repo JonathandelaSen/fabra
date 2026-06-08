@@ -3,7 +3,7 @@
 import { FormattedDate } from "@/components/shared/formatted-date";
 import { featureListItemClassName } from "@/components/shared/feature-visual-system";
 import { cn } from "@/lib/utils";
-import type { JobMatchAnalysisSummary } from "../api/job-match-analysis-api";
+import type { JobMatchAnalysisSummary } from "../../api/job-match-analysis-api";
 import { JobMatchAnalysisScoreBadge } from "./job-match-analysis-score-badge";
 import { JobMatchAnalysisStatusBadge } from "./job-match-analysis-status-badge";
 

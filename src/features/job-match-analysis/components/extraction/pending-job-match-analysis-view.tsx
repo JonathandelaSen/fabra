@@ -2,9 +2,9 @@
 
 import type { ComponentProps } from "react";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
-import { useJobMatchScoringState } from "../hooks/use-job-match-scoring-state";
+import { useJobMatchScoringState } from "../../hooks/use-job-match-scoring-state";
 import JobMatchForm from "./job-match-form";
-import JobMatchScoreCopyPasteModal from "./job-match-score-copy-paste-modal";
+import JobMatchScoreCopyPasteModal from "../copy-paste/job-match-score-copy-paste-modal";
 
 interface PendingJobMatchAnalysisViewProps {
   analysisId: string;

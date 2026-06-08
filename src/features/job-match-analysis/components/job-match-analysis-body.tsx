@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { JobMatchAnalysisSummary } from "../api/job-match-analysis-api";
 import type { JobMatchAnalysisRouteMode, JobMatchAnalysisRouteView } from "../hooks/use-job-match-analysis-route-state";
-import JobMatchAnalysisList from "./job-match-analysis-list";
-import { JobMatchKanbanBoard } from "./job-match-kanban-board";
+import JobMatchAnalysisList from "./list/job-match-analysis-list";
+import { JobMatchKanbanBoard } from "./kanban/job-match-kanban-board";
 
 interface JobMatchAnalysisBodyProps {
   mode: JobMatchAnalysisRouteMode;
