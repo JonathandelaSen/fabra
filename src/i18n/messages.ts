@@ -60,7 +60,7 @@ export const messages = {
       },
       signup: {
         title: "Create your account",
-        description: "Register to save your analyses.",
+        description: "",
         tab: "Sign up",
         submit: "Create account",
       },
@@ -1472,7 +1472,7 @@ export const messages = {
       },
       signup: {
         title: "Crea tu cuenta",
-        description: "Regístrate para guardar tus análisis.",
+        description: "",
         tab: "Registro",
         submit: "Crear cuenta",
       },
