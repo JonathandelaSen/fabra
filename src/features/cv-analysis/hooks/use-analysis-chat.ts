@@ -11,7 +11,7 @@ import {
   renameAnalysisChatConversation,
   sendAnalysisChatMessage,
 } from "../api/cv-analysis-chat-api";
-import type { AnalysisChatConversation, AnalysisChatMessage } from "../components/chat-types";
+import type { AnalysisChatConversation, AnalysisChatMessage } from "../components/detail/chat/chat-types";
 
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 interface UseAnalysisChatParams {

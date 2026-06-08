@@ -24,13 +24,13 @@ import {
   useCVAnalysisInterviewQuestions,
 } from "../hooks/use-cv-analysis-queries";
 import { useCVAnalysisRouteState } from "../hooks/use-cv-analysis-route-state";
-import CVAnalysesListView from "./cv-analyses-list-view";
+import CVAnalysesListView from "./list/cv-analyses-list-view";
 import { CVAnalysisDetailPanel } from "./cv-analysis-detail-panel";
 import {
   shouldAutoSelectCVAnalysis,
   shouldShowCVAnalysisMainLoader,
 } from "./cv-analysis-loading-state";
-import NewAnalysisFlow from "./new-analysis-flow";
+import NewAnalysisFlow from "./new-flow/new-analysis-flow";
 import { CVAnalysisHeaderActions } from "./cv-analysis-header-actions";
 
 import type { StoredAIProvider } from "@/lib/browser-preferences";

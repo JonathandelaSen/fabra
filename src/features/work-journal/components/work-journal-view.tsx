@@ -15,7 +15,7 @@ import {
 } from "../hooks/use-work-journal-queries";
 import { useWorkJournalMutations } from "../hooks/use-work-journal-mutations";
 import { useWorkJournalRouteState } from "../hooks/use-work-journal-route-state";
-import { WorkJournalSidebar } from "./work-journal-sidebar";
+import { WorkJournalSidebar } from "./sidebar/work-journal-sidebar";
 import { WorkJournalMainPane } from "./work-journal-main-pane";
 import { WorkJournalViewToggle } from "./work-journal-view-toggle";
 import {
@@ -23,7 +23,7 @@ import {
   shouldClearMissingWorkJournalSelection,
   shouldShowWorkJournalMainLoader,
 } from "./work-journal-loading-state";
-import type { TimelineGranularity } from "./work-journal-timeline-utils";
+import type { TimelineGranularity } from "./timeline/work-journal-timeline-utils";
 
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 

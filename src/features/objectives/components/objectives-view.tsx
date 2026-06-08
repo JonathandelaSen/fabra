@@ -4,10 +4,10 @@ import { FeatureHeaderActionButton } from "@/components/shared/feature-header-ac
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
-import { ObjectiveDetail } from "./objective-detail";
-import { ObjectiveFormPanel } from "./objective-form-panel";
+import { ObjectiveDetail } from "./detail/objective-detail";
+import { ObjectiveFormPanel } from "./form/objective-form-panel";
 import { ObjectivesDetailSkeleton } from "./objectives-skeleton";
-import { ObjectivesSidebar } from "./objectives-sidebar";
+import { ObjectivesSidebar } from "./sidebar/objectives-sidebar";
 import { ObjectiveConfirmDialog } from "./objective-confirm-dialog";
 import { useObjectivesViewState } from "../hooks/use-objectives-view-state";
 

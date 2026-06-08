@@ -3,11 +3,11 @@ import { describe, expect, it, vi } from "vitest";
 import { renderWithProviders } from "@/frontend/testing/render";
 import { CVAnalysisDetailPanel } from "./cv-analysis-detail-panel";
 
-vi.mock("./analysis-view", () => ({
+vi.mock("./detail/analysis-view", () => ({
   default: () => <div data-testid="analysis-content" />,
 }));
 
-vi.mock("./extraction-view", () => ({
+vi.mock("./extraction/extraction-view", () => ({
   default: () => <div data-testid="extraction-content" />,
 }));
 

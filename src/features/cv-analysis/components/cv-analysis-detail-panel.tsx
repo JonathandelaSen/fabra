@@ -13,8 +13,8 @@ import type {
   CVAnalysisRouteTab,
   useCVAnalysisRouteState,
 } from "../hooks/use-cv-analysis-route-state";
-import AIAnalysisView from "./analysis-view";
-import ExtractionView from "./extraction-view";
+import AIAnalysisView from "./detail/analysis-view";
+import ExtractionView from "./extraction/extraction-view";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface CVAnalysisDetailPanelProps {

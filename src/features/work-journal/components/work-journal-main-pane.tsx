@@ -11,11 +11,11 @@ import type {
 } from "../api/work-journal-types";
 import type { WorkJournalDraft } from "../hooks/use-work-journal-mutations";
 import type { WorkJournalRouteView } from "../hooks/use-work-journal-route-state";
-import { WorkJournalDetail } from "./work-journal-detail";
-import { WorkJournalForm } from "./work-journal-form";
+import { WorkJournalDetail } from "./detail/work-journal-detail";
+import { WorkJournalForm } from "./form/work-journal-form";
 import { WorkJournalSkeleton } from "./work-journal-skeleton";
-import { WorkJournalTimeline } from "./work-journal-timeline";
-import type { TimelineGranularity } from "./work-journal-timeline-utils";
+import { WorkJournalTimeline } from "./timeline/work-journal-timeline";
+import type { TimelineGranularity } from "./timeline/work-journal-timeline-utils";
 
 interface WorkJournalMainPaneProps {
   activeContexts: WorkJournalContext[];

@@ -1,7 +1,7 @@
 import type {
   AnalysisChatConversation,
   AnalysisChatMessage,
-} from "../components/chat-types";
+} from "../components/detail/chat/chat-types";
 
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 

@@ -16,14 +16,14 @@ import { useCVLibraryRouteState } from "../hooks/use-cv-library-route-state";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
-import { CVLibraryDetail } from "./cv-library-detail";
-import { CVLibraryImportPanel } from "./cv-library-import-panel";
+import { CVLibraryDetail } from "./detail/cv-library-detail";
+import { CVLibraryImportPanel } from "./import/cv-library-import-panel";
 import {
   shouldAutoSelectCVLibraryItem,
   shouldShowCVLibraryDetailLoader,
   shouldShowCVLibraryShellLoader,
 } from "./cv-library-loading-state";
-import { CVLibrarySidebar } from "./cv-library-sidebar";
+import { CVLibrarySidebar } from "./sidebar/cv-library-sidebar";
 import { CVLibraryDetailSkeleton, CVLibrarySkeleton } from "./cv-library-skeleton";
 
 interface CVLibraryViewProps {
