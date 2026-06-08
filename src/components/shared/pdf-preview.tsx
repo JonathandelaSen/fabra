@@ -20,9 +20,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 interface PDFPreviewProps {
   url: string;
   expanded?: boolean;
+  mini?: boolean;
 }
 
-export function PDFPreview({ url, expanded = false }: PDFPreviewProps) {
+export function PDFPreview({ url, expanded = false, mini = false }: PDFPreviewProps) {
   const [scale, setScale] = useState(0.85);
   const [urls, setUrls] = useState<string[]>([url]);
   const [numPagesMap, setNumPagesMap] = useState<Record<string, number>>({});
@@ -40,6 +41,37 @@ export function PDFPreview({ url, expanded = false }: PDFPreviewProps) {
 
   function handleLoadSuccess(loadedUrl: string, numPages: number) {
     setNumPagesMap((prev) => ({ ...prev, [loadedUrl]: numPages }));
+  }
+
+  if (mini) {
+    return (
+      <div className="w-full flex items-center justify-center">
+        <Document
+          file={url}
+          externalLinkTarget="_blank"
+          loading={
+            <div className="flex items-center justify-center p-8 text-text-muted w-full aspect-[1/1.414]">
+              <Loader2 className="h-6 w-6 animate-spin text-zinc-500" />
+            </div>
+          }
+          className="w-full flex flex-col items-center"
+        >
+          <div className="relative w-full overflow-hidden bg-[#050509] [&_.react-pdf__Page]:!w-full [&_.react-pdf__Page]:!h-auto [&_canvas]:!w-full [&_canvas]:!h-auto">
+            <Page
+              pageNumber={1}
+              width={400}
+              renderAnnotationLayer={false}
+              renderTextLayer={false}
+              loading={
+                <div className="flex items-center justify-center text-text-muted bg-[#050509] w-full aspect-[1/1.414]">
+                  <Loader2 className="h-4 w-4 animate-spin text-zinc-600" />
+                </div>
+              }
+            />
+          </div>
+        </Document>
+      </div>
+    );
   }
 
   return (
