@@ -78,6 +78,7 @@ export default function AppShell({
   );
   const [userEmail, setUserEmail] = useState<string | null>(initialUserEmail);
   const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
+  const [hasLoadedAdminStatus, setHasLoadedAdminStatus] = useState(initialIsAdmin);
   const [aiProvider, setAIProvider] = useState<StoredAIProvider>("gemini");
   const [aiApiKey, setAIApiKey] = useState("");
   const [aiModel, setAIModel] = useState<string>(DEFAULT_GEMINI_MODEL);
@@ -136,12 +137,21 @@ export default function AppShell({
     if (initialIsAdmin) return;
     let cancelled = false;
     loadAdminStatus().then((admin) => {
-      if (!cancelled) setIsAdmin(admin);
+      if (!cancelled) {
+        setIsAdmin(admin);
+        setHasLoadedAdminStatus(true);
+      }
     });
     return () => {
       cancelled = true;
     };
   }, [initialIsAdmin]);
+
+  useEffect(() => {
+    if (pathname.startsWith("/admin") && hasLoadedAdminStatus && !isAdmin) {
+      router.replace("/");
+    }
+  }, [hasLoadedAdminStatus, isAdmin, pathname, router]);
 
   useEffect(() => {
     const syncAISettings = () => {

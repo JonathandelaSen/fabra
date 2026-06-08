@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { messages } from "../src/i18n/messages";
 import { loginViaUI } from "./helpers/auth";
 import { createFixtureViaApi } from "./helpers/cv";
-import { createConfirmedUser, getProcessingEvents } from "./helpers/supabase";
+import { createConfirmedUser } from "./helpers/supabase";
 
 test.setTimeout(90_000);
 
@@ -25,7 +25,6 @@ test("user can score and replace a CV analysis with Copy Paste", async ({
   const { analysis } = await createFixtureViaApi(page.request, "copy-paste");
 
   await page.goto(`/cv-analysis/${analysis.id}`);
-  await page.getByRole("button", { name: messages.en.analysisFlow.appShell.analysisTab }).click();
   await page
     .getByRole("button", { name: messages.en.analysisFlow.modeSelector.generalTitle })
     .click();
