@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import {
   Cpu,
   Briefcase,
-  FileDown,
   FileText,
   ExternalLink,
   Loader2,
@@ -31,7 +30,6 @@ interface ScoreHeroProps {
   cv: { id: string; name: string; filename: string | null; type?: string } | null;
   cvId: string | null;
   filename: string;
-  onExport: () => void;
   onSaveUrl: (url: string) => Promise<void>;
   isSavingUrl: boolean;
   offerStatus?: OfferStatus | null;
@@ -57,7 +55,6 @@ export default function ScoreHero({
   cv,
   cvId,
   filename,
-  onExport,
   onSaveUrl,
   isSavingUrl,
   offerStatus,
@@ -222,16 +219,6 @@ export default function ScoreHero({
                 </button>
               )}
             </>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={onExport}
-              className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-indigo-400 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 px-2.5 py-1 rounded-md transition-all"
-            >
-              <FileDown className="w-3.5 h-3.5" />
-              {t("export")}
-            </button>
           </div>
         </div>
       </div>

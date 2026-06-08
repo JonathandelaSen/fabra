@@ -16,7 +16,6 @@ import TabInterview from "./tab-interview";
 import TabFollowUp from "./tab-follow-up";
 import TabOfferChat from "./tab-offer-chat";
 import { useQuickInterviewQuestion } from "../hooks/use-quick-interview-question";
-import { useJobMatchAnalysisExport } from "../hooks/use-job-match-analysis-export";
 import { DETAIL_TABS, JobMatchDetailTabsList } from "./job-match-detail-tabs-list";
 type DetailTab = "summary" | "offer" | "questions" | "chat" | "tracking";
 interface JobMatchAnalysisDetailProps {
@@ -112,15 +111,6 @@ export default function JobMatchAnalysisDetail({
   const matchingKeywords = safeParseArray(analysis.matchingKeywords);
   const missingKeywords = safeParseArray(analysis.missingKeywords);
   const jobKeyData = safeParseJobKeyData(analysis.jobKeyData);
-  const exportAnalysis = useJobMatchAnalysisExport({
-    analysis,
-    keywords,
-    improvements,
-    jobKeywords,
-    cvKeywords,
-    missingKeywords,
-  });
-
   const handleSaveUrl = async (url: string) => {
     setIsSavingUrl(true);
     try {
@@ -170,7 +160,6 @@ export default function JobMatchAnalysisDetail({
             cv={analysis.cv}
             cvId={analysis.cvId}
             filename={analysis.filename}
-            onExport={exportAnalysis}
             onSaveUrl={handleSaveUrl}
             isSavingUrl={isSavingUrl}
             offerStatus={tracking.status}

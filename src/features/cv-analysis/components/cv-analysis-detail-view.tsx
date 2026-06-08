@@ -112,7 +112,7 @@ export default function CVAnalysisDetailView({
           onTabChange={() => {}}
         />
         <div className="flex-1 overflow-y-auto py-4 sm:py-6">
-          <AnalysisDetailSkeleton isJobMatch={false} />
+          <AnalysisDetailSkeleton />
         </div>
       </div>
     );

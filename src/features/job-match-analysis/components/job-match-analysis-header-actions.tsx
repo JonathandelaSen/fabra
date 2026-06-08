@@ -1,6 +1,6 @@
 "use client";
 
-import { Columns3, List } from "lucide-react";
+import { Columns3, FileDown, List } from "lucide-react";
 import { DeleteButton } from "@/components/shared/action-buttons";
 import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,9 @@ interface JobMatchAnalysisHeaderActionsProps {
   boardLabel: string;
   newOfferLabel: string;
   deleteOfferLabel: string;
+  exportLabel: string;
   isDeleting: boolean;
+  onExport?: () => void;
   onListView: () => void;
   onBoardView: () => void;
   onNewOffer: () => void;
@@ -27,7 +29,9 @@ export function JobMatchAnalysisHeaderActions({
   boardLabel,
   newOfferLabel,
   deleteOfferLabel,
+  exportLabel,
   isDeleting,
+  onExport,
   onListView,
   onBoardView,
   onNewOffer,
@@ -68,6 +72,12 @@ export function JobMatchAnalysisHeaderActions({
         </Button>
       </div>
       <FeatureHeaderActionButton label={newOfferLabel} onClick={onNewOffer} />
+      {onExport && (
+        <Button type="button" variant="outline" onClick={onExport}>
+          <FileDown className="h-4 w-4" />
+          {exportLabel}
+        </Button>
+      )}
       {analysisId && (
         <DeleteButton
           onClick={onDelete}

@@ -7,12 +7,18 @@ import { formatDisplayDate } from "@/lib/date-format";
 import type { JobMatchAnalysisDetail } from "../api/job-match-analysis-api";
 
 interface UseJobMatchAnalysisExportParams {
-  analysis: JobMatchAnalysisDetail;
-  keywords: string[];
-  improvements: string[];
-  jobKeywords: string[];
-  cvKeywords: string[];
-  missingKeywords: string[];
+  analysis: JobMatchAnalysisDetail | null;
+}
+
+function parseArray(value: string | null | undefined): string[] {
+  try {
+    const parsed = JSON.parse(value || "[]");
+    return Array.isArray(parsed)
+      ? parsed.filter((item): item is string => typeof item === "string")
+      : [];
+  } catch {
+    return [];
+  }
 }
 
 function downloadTextFile({ filename, text }: { filename: string; text: string }) {
@@ -30,17 +36,19 @@ function downloadTextFile({ filename, text }: { filename: string; text: string }
 
 export function useJobMatchAnalysisExport({
   analysis,
-  keywords,
-  improvements,
-  jobKeywords,
-  cvKeywords,
-  missingKeywords,
 }: UseJobMatchAnalysisExportParams) {
   const t = useTranslations("analysisDetail");
   const { locale } = useInterfaceLanguage();
   const dateLocale = locale === "es" ? "es-ES" : "en-US";
 
   return useCallback(() => {
+    if (!analysis) return;
+
+    const keywords = parseArray(analysis.aiKeywords);
+    const improvements = parseArray(analysis.aiImprovements);
+    const jobKeywords = parseArray(analysis.jobKeywords);
+    const cvKeywords = parseArray(analysis.cvKeywords);
+    const missingKeywords = parseArray(analysis.missingKeywords);
     const cvName = analysis.cv?.name ?? analysis.filename;
     const cvUrl = analysis.cv
       ? `${window.location.origin}/api/cvs/${analysis.cv.id}/${analysis.cv.type === "template" ? "template-pdf" : "pdf"}`
@@ -85,12 +93,7 @@ ${analysis.jobDescription ? `${t("export.jobDescription")}:\n${analysis.jobDescr
     });
   }, [
     analysis,
-    cvKeywords,
     dateLocale,
-    improvements,
-    jobKeywords,
-    keywords,
-    missingKeywords,
     t,
   ]);
 }

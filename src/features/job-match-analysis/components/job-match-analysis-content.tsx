@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { AnalysisDetailSkeleton } from "@/components/shared/skeletons";
+import { JobMatchAnalysisDetailSkeleton } from "./job-match-analysis-detail-skeleton";
 import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
 import { FileText, Sparkles } from "lucide-react";
 import type { OfferStatus } from "@/lib/analysis-types";
@@ -76,7 +76,7 @@ export function JobMatchAnalysisContent({
           onTabChange={() => {}}
         />
         <div className="flex-1 py-4 sm:py-6">
-          <AnalysisDetailSkeleton isJobMatch={true} />
+          <JobMatchAnalysisDetailSkeleton />
         </div>
       </div>
     );

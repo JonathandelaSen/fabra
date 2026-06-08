@@ -17,6 +17,7 @@ import {
   useJobMatchAnalysisRouteState,
 } from "../hooks/use-job-match-analysis-route-state";
 import { useJobMatchCopyPasteApplied } from "../hooks/use-job-match-copy-paste-applied";
+import { useJobMatchAnalysisExport } from "../hooks/use-job-match-analysis-export";
 import { useNewJobMatchFlowActions } from "../hooks/use-new-job-match-flow-actions";
 import { JobMatchAnalysisContent } from "./job-match-analysis-content";
 import { JobMatchAnalysisBody } from "./job-match-analysis-body";
@@ -27,7 +28,6 @@ import {
 } from "./job-match-analysis-loading-state";
 import NewJobMatchFlow from "./new-job-match-flow";
 import { PendingJobMatchCopyPasteModal } from "./pending-job-match-copy-paste-modal";
-
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 
 interface JobMatchAnalysisViewProps {
@@ -54,6 +54,7 @@ export default function JobMatchAnalysisView({
   const listT = useTranslations("analysisFlow.lists");
   const kanbanT = useTranslations("analysisFlow.kanban");
   const alertsT = useTranslations("analysisFlow.alerts");
+  const scoreT = useTranslations("analysisDetail.score");
   const routeState = useJobMatchAnalysisRouteState();
   const {
     analysisId,
@@ -236,6 +237,7 @@ export default function JobMatchAnalysisView({
   );
 
   const hasScore = detail?.aiScore !== null && detail?.aiScore !== undefined;
+  const exportAnalysis = useJobMatchAnalysisExport({ analysis: detail });
   const shouldShowAnalysisView = shouldShowJobMatchAnalysisView({
     hasScore,
     isAnalysisView,
@@ -305,7 +307,9 @@ export default function JobMatchAnalysisView({
           boardLabel={kanbanT("boardView")}
           newOfferLabel={listT("newOffer")}
           deleteOfferLabel={listT("deleteOffer")}
+          exportLabel={scoreT("export")}
           isDeleting={mutations.deleteAnalysis.isPending}
+          onExport={hasScore ? exportAnalysis : undefined}
           onListView={goToListView}
           onBoardView={goToBoard}
           onNewOffer={goToNew}

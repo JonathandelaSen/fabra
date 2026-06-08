@@ -216,7 +216,7 @@ export default function CVAnalysisView({
               onTabChange={() => {}}
             />
             <div className="flex-1 py-4 sm:py-6">
-              <AnalysisDetailSkeleton isJobMatch={false} />
+              <AnalysisDetailSkeleton />
             </div>
           </div>
         ) : !selectedAnalysis ? (

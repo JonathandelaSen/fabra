@@ -1,10 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface AnalysisDetailSkeletonProps {
-  isJobMatch?: boolean;
-}
-
-export function AnalysisDetailSkeleton({ isJobMatch = false }: AnalysisDetailSkeletonProps) {
+export function AnalysisDetailSkeleton() {
   return (
     <div className="w-full space-y-5">
       {/* Score card / ScoreHero skeleton */}
@@ -41,16 +37,6 @@ export function AnalysisDetailSkeleton({ isJobMatch = false }: AnalysisDetailSke
         </div>
         <Skeleton className="flex-shrink-0 h-10 w-36 rounded-xl" />
       </div>
-
-      {isJobMatch && (
-        <div className="flex items-center gap-1">
-          <Skeleton className="h-10 w-28 rounded-2xl" />
-          <Skeleton className="h-10 w-24 rounded-2xl" />
-          <Skeleton className="h-10 w-32 rounded-2xl" />
-          <Skeleton className="h-10 w-20 rounded-2xl" />
-          <Skeleton className="h-10 w-32 rounded-2xl" />
-        </div>
-      )}
 
       {/* Two columns: Improvements & Keywords */}
       <div className="grid gap-6 md:grid-cols-2">
