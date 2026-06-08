@@ -3,7 +3,7 @@ import { BasicPanel } from "@/components/shared/basic-panel";
 
 export function WorkJournalSkeleton() {
   return (
-    <div className="pb-4 w-full lg:py-8">
+    <div className="pb-4 w-full lg:pt-0 lg:pb-8">
       <div className="flex items-center justify-between mb-6 w-full gap-4">
         <div className="flex items-center gap-4">
           <Skeleton className="h-4 w-28 bg-white/5" />

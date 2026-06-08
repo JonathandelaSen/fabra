@@ -59,7 +59,7 @@ export function WorkJournalDetail({
   }
 
   return (
-    <div className={cn("pb-4 w-full", isTimelineView ? "lg:pt-2 lg:pb-8" : "lg:py-8")}>
+    <div className={cn("pb-4 w-full", isTimelineView ? "lg:pt-2 lg:pb-8" : "lg:pt-0 lg:pb-8")}>
       {isEditing ? (
         <WorkJournalEntryEditor
           entry={entry}
