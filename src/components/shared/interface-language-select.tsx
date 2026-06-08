@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Globe2 } from "lucide-react";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import type { InterfaceLanguage } from "@/i18n/config";
 
@@ -22,7 +21,6 @@ export function InterfaceLanguageSelect({ compact = false }: { compact?: boolean
 
   return (
     <label className={`flex items-center gap-2 ${compact ? "text-xs" : "text-sm"} text-text-muted`}>
-      <Globe2 className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} />
       <span className="sr-only">{t("label")}</span>
       <select
         value={locale}

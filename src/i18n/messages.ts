@@ -54,7 +54,7 @@ export const messages = {
       hero: "Craft your career, your way with Fabra",
       login: {
         title: "Sign in",
-        description: "Sign in to continue with your analyses.",
+        description: "",
         tab: "Login",
         submit: "Sign in",
       },
@@ -1466,7 +1466,7 @@ export const messages = {
       hero: "Construye tu carrera a tu manera con Fabra",
       login: {
         title: "Inicia sesión",
-        description: "Accede para continuar con tus análisis.",
+        description: "",
         tab: "Login",
         submit: "Entrar",
       },

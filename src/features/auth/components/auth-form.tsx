@@ -68,7 +68,7 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
           <InterfaceLanguageSelect compact />
         </div>
         <h2 className="text-2xl font-bold text-zinc-100">{title}</h2>
-        <p className="mt-2 text-sm text-zinc-500">{description}</p>
+        {description && <p className="mt-2 text-sm text-zinc-500">{description}</p>}
       </div>
 
       {!isRecover && (
