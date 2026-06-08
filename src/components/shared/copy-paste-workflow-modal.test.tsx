@@ -142,4 +142,31 @@ describe("CopyPasteWorkflowModal", () => {
 
     expect(screen.queryByText(privacyNotice)).not.toBeInTheDocument();
   });
+
+  it("allows navigating steps by clicking their headers when permitted", async () => {
+    const props = createProps({ previewData: { score: 82 } });
+    const { user } = renderWithProviders(
+      <CopyPasteWorkflowModal {...props} />,
+    );
+
+    await user.click(screen.getByRole("button", { name: copyPasteMessages.stepPaste }));
+    expect(props.onStepChange).toHaveBeenCalledWith("paste");
+
+    await user.click(screen.getByRole("button", { name: copyPasteMessages.stepReview }));
+    expect(props.onStepChange).toHaveBeenCalledWith("review");
+  });
+
+  it("prevents clicking the review step header if review is not available", async () => {
+    const props = createProps({ previewData: null });
+    const { user } = renderWithProviders(
+      <CopyPasteWorkflowModal {...props} />,
+    );
+
+    const reviewButton = screen.getByRole("button", { name: copyPasteMessages.stepReview });
+    expect(reviewButton).toBeDisabled();
+
+    await user.click(reviewButton);
+    expect(props.onStepChange).not.toHaveBeenCalled();
+  });
 });
+

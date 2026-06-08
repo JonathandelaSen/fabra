@@ -436,6 +436,7 @@ export const messages = {
         missingApiKey: "Configure your Gemini API key to enable analysis. The key is stored only in this browser.",
       },
       copyPaste: {
+        workflowProgress: "Workflow progress",
         title: "Analyze with external AI",
         intro: "Copy the prompt, run it in a trusted chat tool, then paste the JSON response here.",
         privacyNotice: "This prompt may include CV data and context you entered. Paste it only into external tools you trust.",
@@ -1846,6 +1847,7 @@ export const messages = {
         missingApiKey: "Configura tu API key de Gemini para activar el análisis. La clave se guarda solo en este navegador.",
       },
       copyPaste: {
+        workflowProgress: "Progreso del flujo de trabajo",
         title: "Analizar con IA externa",
         intro: "Copia el prompt, ejecútalo en un chat de confianza y pega aquí la respuesta JSON.",
         privacyNotice: "Este prompt puede incluir datos del CV y contexto que has introducido. Pégalo solo en herramientas externas en las que confíes.",

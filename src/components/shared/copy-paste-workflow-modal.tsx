@@ -92,7 +92,12 @@ export default function CopyPasteWorkflowModal<TPreview>({
           onClose={onClose}
         />
 
-        <CopyPasteWorkflowSteps step={step} />
+        <CopyPasteWorkflowSteps
+          step={step}
+          onStepChange={onStepChange}
+          canReview={!!previewData}
+          disabled={loading}
+        />
 
         <div className="min-h-0 flex-1 overflow-y-auto p-5">
           {privacyNotice && (
