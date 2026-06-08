@@ -38,6 +38,18 @@ interface ScoreHeroProps {
 
 const URL_PLACEHOLDER = "https://...";
 
+function getUrlHostname(url: string): string {
+  try {
+    return new URL(url).hostname;
+  } catch {
+    try {
+      return new URL(`https://${url}`).hostname;
+    } catch {
+      return url;
+    }
+  }
+}
+
 function getScoreLabelKey(score: number) {
   if (score >= 80) return "excellent";
   if (score >= 60) return "improvable";
@@ -194,7 +206,7 @@ export default function ScoreHero({
                     className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 px-2 py-1 rounded-md transition-colors max-w-[180px] truncate"
                   >
                     <ExternalLink className="w-3 h-3 shrink-0" />
-                    {new URL(jobUrl).hostname}
+                    {getUrlHostname(jobUrl)}
                   </a>
                   <button
                     onClick={() => {
