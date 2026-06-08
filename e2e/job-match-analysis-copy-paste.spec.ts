@@ -44,8 +44,20 @@ async function openAnalysisTab(page: import("@playwright/test").Page) {
 }
 
 async function openCopyPasteViaLauncher(page: import("@playwright/test").Page) {
-  await page.getByRole("button", { name: tForms.compareOffer }).click();
-  await page.getByRole("button", { name: tLauncher.openFlow }).click();
+  const compareButton = page.getByRole("button", { name: tForms.compareOffer });
+  const openFlowButton = page.getByRole("button", { name: tLauncher.openFlow });
+
+  // The launcher is a popover whose trigger can be clicked during a tab/view
+  // transition, leaving the popover unopened. Retry opening it until the copy
+  // paste option is actually visible before clicking it.
+  await expect(async () => {
+    if (!(await openFlowButton.isVisible())) {
+      await compareButton.click();
+    }
+    await expect(openFlowButton).toBeVisible({ timeout: 1000 });
+  }).toPass({ timeout: 15_000 });
+
+  await openFlowButton.click();
 }
 
 async function createJobMatchAnalysisFixture(
