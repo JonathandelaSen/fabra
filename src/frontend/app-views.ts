@@ -1,7 +1,6 @@
 export const APP_VIEWS = {
   home: "home",
   new: "new",
-  analysis: "analysis",
   cvAnalyses: "cv-analyses",
   jobAnalyses: "job-analyses",
   cvs: "cvs",

@@ -4,12 +4,7 @@ import type { ReactNode } from "react";
 import { CVEditorView } from "@/features/cv-editor";
 import { CVLibraryView } from "@/features/cv-library";
 import { CVTemplatesView } from "@/features/cv-templates";
-import {
-  CVAnalysisDetailView,
-  CVAnalysisView,
-  type CVAnalysisDetail,
-  type CVAnalysisDetailTab,
-} from "@/features/cv-analysis";
+import { CVAnalysisView } from "@/features/cv-analysis";
 import { InterviewQuestionsView } from "@/features/interview-questions";
 import { WorkJournalView } from "@/features/work-journal";
 import { ObjectivesView } from "@/features/objectives";
@@ -27,9 +22,6 @@ import type { SidebarActiveView } from "./sidebar-types";
 
 interface AppShellContentProps {
   activeView: SidebarActiveView;
-  activeAnalysis: CVAnalysisDetail | null;
-  loadingDetail: boolean;
-  viewTab: CVAnalysisDetailTab;
   aiProvider: StoredAIProvider;
   aiApiKey: string;
   aiModel: string;
@@ -43,10 +35,6 @@ interface AppShellContentProps {
   onOpenEditor: (cvId?: string | null) => void;
   onOpenTemplates: () => void;
   onOpenCVs: () => void;
-  onTabChange: (tab: CVAnalysisDetailTab) => void;
-  onAIAnalysisComplete: () => void;
-  onDelete: (id: string) => Promise<void>;
-  onUpdateAnalysis: (id: string) => void;
   onInterviewQuestionCreated: () => void;
   onAISettingsChange: (settings: {
     provider: StoredAIProvider;
@@ -72,9 +60,6 @@ function ViewFrame({
 
 export default function AppShellContent({
   activeView,
-  activeAnalysis,
-  loadingDetail,
-  viewTab,
   aiProvider,
   aiApiKey,
   aiModel,
@@ -88,10 +73,6 @@ export default function AppShellContent({
   onOpenEditor,
   onOpenTemplates,
   onOpenCVs,
-  onTabChange,
-  onAIAnalysisComplete,
-  onDelete,
-  onUpdateAnalysis,
   onInterviewQuestionCreated,
   onAISettingsChange,
   onNavigate,
@@ -184,7 +165,7 @@ export default function AppShellContent({
           aiModel={aiModel}
           hasAIApiKey={hasAIApiKey}
           onOpenSettings={onOpenSettings}
-          onOpenAnalysis={onOpenAnalysis}
+          onOpenAnalysis={(id) => onOpenAnalysis(id, "job_match")}
         />
       </ViewFrame>
     );
@@ -264,23 +245,5 @@ export default function AppShellContent({
     );
   }
 
-  return (
-    <CVAnalysisDetailView
-      analysis={activeAnalysis}
-      loading={loadingDetail}
-      activeTab={viewTab}
-      aiProvider={aiProvider}
-      aiApiKey={aiApiKey}
-      aiModel={aiModel}
-      hasAIApiKey={hasAIApiKey}
-      interviewQuestions={interviewQuestions}
-      onTabChange={onTabChange}
-      onAIAnalysisComplete={onAIAnalysisComplete}
-      onDelete={onDelete}
-      onUpdate={onUpdateAnalysis}
-      onInterviewQuestionCreated={onInterviewQuestionCreated}
-      onOpenQuestions={onOpenQuestions}
-      onOpenSettings={onOpenSettings}
-    />
-  );
+  return null;
 }
