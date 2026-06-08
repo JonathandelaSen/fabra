@@ -27,6 +27,7 @@
     "supabase:seed-agent": "npx tsx --tsconfig tsconfig.scripts.json scripts/seed-synthetic-data.ts",
     "supabase:stop": "supabase stop",
     "supabase:sync-email-template": "node scripts/sync-supabase-email-template.mjs",
+    "supabase:preview-email": "node scripts/preview-email.mjs",
     "supabase:migrate:local": "supabase migration up",
     "supabase:migrate:prod": "supabase db push"
   },

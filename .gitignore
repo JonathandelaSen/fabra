@@ -54,5 +54,9 @@ next-env.d.ts
 # antigravity
 .antigravitycli/
 
+# local email previews
+/artifacts/
+
+
 
 

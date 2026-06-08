@@ -39,6 +39,7 @@ async function openAnalysisTab(page: import("@playwright/test").Page) {
 
   await expect(extractionTab).toHaveAttribute("aria-selected", "true");
   await analysisTab.click();
+  await expect(page).toHaveURL(/\/job-analyses\/[^/?]+\/analysis(?:\?|$)/);
   await expect(analysisTab).toHaveAttribute("aria-selected", "true");
 }
 
@@ -140,20 +141,19 @@ test("user can score a job match analysis with Copy Paste", async ({
     page.getByText("Buena coincidencia con la oferta de trabajo."),
   ).toBeVisible();
 
-  await page.waitForTimeout(1000);
-
-  const events = await getProcessingEvents({
-    userId: user.id,
-    analysisId: analysis.id,
-  });
-  expect(events).toEqual(
-    expect.arrayContaining([
-      expect.objectContaining({
-        stage: "job_match_copy_paste_result_applied",
-        status: "success",
-      }),
-    ]),
-  );
+  await expect
+    .poll(async () => {
+      const events = await getProcessingEvents({
+        userId: user.id,
+        analysisId: analysis.id,
+      });
+      return events.some(
+        (event) =>
+          event.stage === "job_match_copy_paste_result_applied" &&
+          event.status === "success",
+      );
+    })
+    .toBe(true);
 });
 
 test("replacement warning appears when analysis already has a score", async ({
@@ -189,6 +189,7 @@ test("replacement warning appears when analysis already has a score", async ({
     name: messages.en.analysisFlow.appShell.extractionTab,
   });
   await extractionTab.click();
+  await expect(page).toHaveURL(/[?&]view=extraction(?:&|$)/);
   await expect(extractionTab).toHaveAttribute("aria-selected", "true");
 
   await openCopyPasteViaLauncher(page);
