@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import { FileText, Sparkles } from "lucide-react";
@@ -61,6 +62,18 @@ export function JobMatchAnalysisMainPanel({
   onUpdateTracking,
 }: JobMatchAnalysisMainPanelProps) {
   const t = useTranslations("analysisFlow.appShell");
+  const [activeView, setActiveView] = useState<"analysis" | "extraction">(
+    isAnalysisView ? "analysis" : "extraction",
+  );
+
+  useEffect(() => {
+    setActiveView(isAnalysisView ? "analysis" : "extraction");
+  }, [detail.id, isAnalysisView]);
+
+  const handleViewModeChange = (view: "analysis" | "extraction") => {
+    setActiveView(view);
+    onViewModeChange(view);
+  };
 
   const isDesktop = useIsDesktopLayout();
 
@@ -72,12 +85,12 @@ export function JobMatchAnalysisMainPanel({
           { id: "extraction" as const, label: t("extractionTab"), icon: <FileText /> },
           { id: "analysis" as const, label: t("analysisTab"), icon: <Sparkles /> },
         ]}
-        activeTab={isAnalysisView ? "analysis" : "extraction"}
-        onTabChange={onViewModeChange}
+        activeTab={activeView}
+        onTabChange={handleViewModeChange}
       />
 
       <AnimatePresence mode="wait">
-        {!isAnalysisView ? (
+        {activeView === "extraction" ? (
           <motion.div
             key="extraction-view"
             initial={{ opacity: 0, x: -10 }}

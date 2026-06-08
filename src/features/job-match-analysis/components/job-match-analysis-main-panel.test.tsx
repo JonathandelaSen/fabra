@@ -1,6 +1,8 @@
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { renderWithProviders } from "@/frontend/testing/render";
+import { getMessages } from "@/i18n/messages";
 import type { JobMatchAnalysisDetailResponse } from "../types";
 import { JobMatchAnalysisMainPanel } from "./job-match-analysis-main-panel";
 
@@ -46,5 +48,39 @@ describe("JobMatchAnalysisMainPanel", () => {
 
     expect(screen.getByTestId("pending-analysis-view")).toBeInTheDocument();
     expect(screen.queryByTestId("extraction-view")).not.toBeInTheDocument();
+  });
+
+  it("switches tabs immediately while route navigation is pending", async () => {
+    const user = userEvent.setup();
+
+    renderWithProviders(
+      <JobMatchAnalysisMainPanel
+        detail={detail}
+        isAnalysisView={true}
+        hasScore={true}
+        analysisTab="summary"
+        aiApiKey=""
+        hasAIApiKey={false}
+        filteredInterviewQuestions={[]}
+        onCopyPasteApplied={vi.fn()}
+        onOpenQuestions={vi.fn()}
+        onOpenSettings={vi.fn()}
+        onScore={noopAsync}
+        onTabChange={vi.fn()}
+        onViewModeChange={vi.fn()}
+        onUpdateUrl={noopAsync}
+        onUpdateTracking={noopAsync}
+      />,
+    );
+
+    const extractionTab = screen.getByRole("tab", {
+      name: getMessages("en").analysisFlow.appShell.extractionTab,
+    });
+    await user.click(extractionTab);
+
+    expect(extractionTab).toHaveAttribute("aria-selected", "true");
+    await waitFor(() => {
+      expect(screen.getByTestId("extraction-view")).toBeInTheDocument();
+    });
   });
 });

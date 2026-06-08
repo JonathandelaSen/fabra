@@ -30,8 +30,8 @@ export function AnalysisTabsList({
   }
 
   return (
-    <div className="sticky top-[-16px] sm:top-[-24px] z-20 -mx-4 sm:-mx-6 px-4 sm:px-6 py-4 backdrop-blur-md mb-8">
-      <TabsList className="bg-white/[0.03] border-white/[0.05] p-1 rounded-2xl gap-1 w-full max-w-full overflow-x-auto justify-start flex-nowrap md:justify-center [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+    <div className="sticky top-[-16px] sm:top-[-24px] z-20 -mx-4 sm:-mx-6 px-4 sm:px-6 py-2 backdrop-blur-md mb-4">
+      <TabsList className="bg-white/[0.03] border-white/[0.05] p-1 rounded-2xl gap-1 w-fit max-w-full overflow-x-auto justify-start flex-nowrap [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
         <TabsTrigger value="resumen" className={tabClassName}>
           <Sparkles className="size-4" />
           {t("tabs.summary")}
