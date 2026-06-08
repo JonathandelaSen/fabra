@@ -28,7 +28,13 @@ test("user can create, edit, and delete work journal entries", async ({ page }) 
   const notesContent = "Completed the first part of the E2E testing framework.";
   await page.getByPlaceholder(t.notesPlaceholder).fill(notesContent);
 
+  const createEntryResponse = page.waitForResponse(
+    (response) =>
+      response.url().endsWith("/api/work-journal/entries") &&
+      response.request().method() === "POST",
+  );
   await page.getByRole("button", { name: t.saveChanges }).click();
+  await createEntryResponse;
 
   await expect(
     page.getByRole("article").getByText(notesContent),
@@ -36,9 +42,12 @@ test("user can create, edit, and delete work journal entries", async ({ page }) 
 
   await page.getByTitle(t.editEntry).click({ force: true });
 
+  const finalDraftInput = page.locator("textarea").first();
+  await expect(finalDraftInput).toHaveValue(notesContent);
+
   const updatedContent = "Updated: Completed E2E testing framework.";
-  const textareas = page.locator("textarea");
-  await textareas.nth(0).fill(updatedContent);
+  await finalDraftInput.fill(updatedContent);
+  await expect(finalDraftInput).toHaveValue(updatedContent);
 
   await page.getByRole("button", { name: t.saveChanges }).click();
 
