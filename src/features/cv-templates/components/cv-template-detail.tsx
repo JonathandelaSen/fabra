@@ -10,7 +10,6 @@ import CVProfileStructureCopyPasteModal from "./cv-profile-structure-copy-paste-
 import CVTemplatePreview from "./cv-template-preview";
 import { CVTemplateCvSelector } from "./cv-template-cv-selector";
 import { CVTemplateLanguageSelector } from "./cv-template-language-selector";
-import { CVTemplateApiKeyAlert } from "./cv-template-api-key-alert";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface CVTemplateDetailProps {
@@ -135,12 +134,6 @@ export function CVTemplateDetail({
             <CVTemplateLanguageSelector
               locale={locale}
               onLocaleChange={onLocaleChange}
-            />
-
-            <CVTemplateApiKeyAlert
-              hasAIApiKey={hasAIApiKey}
-              selectedCvId={selectedCvId}
-              onOpenSettings={onOpenSettings}
             />
 
             <div className="pt-2 flex justify-end">

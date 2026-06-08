@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyToClipboard } from "@/lib/clipboard";
 import { Check, Copy, Pencil, Save, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
@@ -75,7 +76,7 @@ export function FeedbackFinalPanel({
 
   const copyFinalFeedback = async () => {
     if (!finalDraft.trim()) return;
-    await navigator.clipboard.writeText(finalDraft);
+    await copyToClipboard(finalDraft);
     setFinalCopied(true);
     setTimeout(() => setFinalCopied(false), 2000);
   };

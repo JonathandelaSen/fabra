@@ -2,6 +2,7 @@
 
 import { type ComponentProps, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyToClipboard } from "@/lib/clipboard";
 import HowAtsWorksEducationBanner from "@/components/shared/how-ats-works-education-banner";
 import JobMatchForm from "./job-match-form";
 import JobMatchScoreCopyPasteModal from "./job-match-score-copy-paste-modal";
@@ -124,7 +125,7 @@ export default function JobMatchExtractionView({
 
   const handleCopy = async () => {
     if (!currentText) return;
-    await navigator.clipboard.writeText(currentText);
+    await copyToClipboard(currentText);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

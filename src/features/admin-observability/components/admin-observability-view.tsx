@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyToClipboard } from "@/lib/clipboard";
 import {
   Activity,
   RefreshCw,
@@ -52,7 +53,7 @@ export function AdminObservabilityView({
 
   const handleCopy = async (event: ProcessingEventResponse) => {
     try {
-      await navigator.clipboard.writeText(JSON.stringify(event, null, 2));
+      await copyToClipboard(JSON.stringify(event, null, 2));
       setCopiedId(event.id);
       setTimeout(() => setCopiedId(null), 2000);
     } catch (err) {
@@ -61,7 +62,7 @@ export function AdminObservabilityView({
   };
 
   const handleCopyTimeline = () => {
-    navigator.clipboard.writeText(
+    void copyToClipboard(
       JSON.stringify(timelineEvents, null, 2),
     );
     setCopiedId("timeline");

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CopyPastePromptStep } from "./copy-paste-prompt-step";
+import { copyToClipboard } from "@/lib/clipboard";
 
 interface CopyPasteTextPanelProps {
   title: string;
@@ -34,7 +35,7 @@ export function CopyPasteTextPanel({
 
   const copyPrompt = async () => {
     if (!prompt) return;
-    await navigator.clipboard.writeText(prompt);
+    await copyToClipboard(prompt);
     setCopiedPrompt(true);
     window.setTimeout(() => setCopiedPrompt(false), 1800);
   };

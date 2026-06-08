@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, X, Copy, Check } from "lucide-react";
+import { copyToClipboard } from "@/lib/clipboard";
 
 interface CopyPromptModalProps {
   isOpen: boolean;
@@ -31,7 +32,7 @@ export function CopyPromptModal({
 
   const handleCopyAndClose = async () => {
     if (promptContent) {
-      await navigator.clipboard.writeText(promptContent);
+      await copyToClipboard(promptContent);
     }
     setIsCopied(true);
     setTimeout(() => {

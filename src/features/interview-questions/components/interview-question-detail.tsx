@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { copyToClipboard } from "@/lib/clipboard";
 import type {
   InterviewQuestion,
   UpdateInterviewQuestionInput,
@@ -62,7 +63,7 @@ export function InterviewQuestionDetail({
 
   const handleCopy = async () => {
     if (!question.answer) return;
-    await navigator.clipboard.writeText(question.answer);
+    await copyToClipboard(question.answer);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { copyToClipboard } from "@/lib/clipboard";
 import type { AnalysisMode } from "@/lib/analysis-types";
 import HowAtsWorksEducationBanner from "@/components/shared/how-ats-works-education-banner";
 import ExtractionHeader from "@/components/shared/extraction/extraction-header";
@@ -137,7 +138,7 @@ export default function ExtractionView({
 
   const handleCopy = async () => {
     if (!currentText) return;
-    await navigator.clipboard.writeText(currentText);
+    await copyToClipboard(currentText);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

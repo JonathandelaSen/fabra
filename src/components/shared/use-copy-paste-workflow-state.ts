@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { getErrorMessage } from "@/lib/errors";
+import { copyToClipboard } from "@/lib/clipboard";
 
 type Step = "copy" | "paste" | "review";
 
@@ -54,13 +55,13 @@ export function useCopyPasteWorkflowState<
 
   const copyPrompt = useCallback(async () => {
     if (!prepareData) return;
-    await navigator.clipboard.writeText(prepareData.prompt);
+    await copyToClipboard(prepareData.prompt);
     setCopiedPrompt(true);
     setTimeout(() => setCopiedPrompt(false), 1800);
   }, [prepareData]);
 
   const copyCorrection = useCallback(async () => {
-    await navigator.clipboard.writeText(getCorrectionInstructions());
+    await copyToClipboard(getCorrectionInstructions());
     setCopiedCorrection(true);
     setTimeout(() => setCopiedCorrection(false), 1800);
   }, [getCorrectionInstructions]);

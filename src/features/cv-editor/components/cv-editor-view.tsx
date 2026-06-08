@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import { copyToClipboard } from "@/lib/clipboard";
 import { useTranslations } from "next-intl";
 import { AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
@@ -119,7 +120,7 @@ export default function CVEditorView({
 
   const copyPublicUrl = async () => {
     if (!publicUrl) return;
-    await navigator.clipboard.writeText(publicUrl);
+    await copyToClipboard(publicUrl);
     setPublicCopied(true);
     setTimeout(() => setPublicCopied(false), 1800);
   };
