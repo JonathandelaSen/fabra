@@ -51,4 +51,8 @@ next-env.d.ts
 # claude
 .claude/launch.json
 
+# antigravity
+.antigravitycli/
+
+
 
