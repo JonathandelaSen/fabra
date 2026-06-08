@@ -32,8 +32,8 @@ export function ChatMessagesArea({
   const t = useTranslations("analysisDetail.chat");
 
   return (
-    <ScrollArea className="flex-1 overflow-hidden">
-      <div className="flex flex-col gap-1 p-4">
+    <ScrollArea className="min-w-0 flex-1 overflow-hidden">
+      <div className="flex min-w-0 flex-col gap-1 p-3 sm:p-4">
         {isLoading ? (
           <div className="flex flex-1 items-center justify-center py-20 text-sm text-zinc-600">
             <Loader2 className="mr-2 size-4 animate-spin" />

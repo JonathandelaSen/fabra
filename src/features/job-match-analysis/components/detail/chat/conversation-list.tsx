@@ -57,7 +57,7 @@ export function ConversationList({
   };
 
   return (
-    <div className="flex w-64 shrink-0 flex-col border-r border-white/[0.06]">
+    <div className="flex min-w-0 w-full shrink-0 flex-col border-b border-white/[0.06] md:w-64 md:border-b-0 md:border-r">
       <div className="flex items-center justify-between border-b border-white/[0.06] px-3 py-3">
         <span className="text-xs font-medium uppercase tracking-wider text-zinc-500">
           {t("conversations")}
@@ -68,7 +68,7 @@ export function ConversationList({
           onClick={onNew}
         />
       </div>
-      <ScrollArea className="flex-1">
+      <ScrollArea className="h-24 md:h-auto md:flex-1">
         <div className="space-y-0.5 p-2">
           {conversations.length === 0 && (
             <p className="px-2 py-6 text-center text-xs text-zinc-600">

@@ -13,7 +13,7 @@ export function ChatBubble({ message, formatTime }: ChatBubbleProps) {
   const isAssistant = message.role === "assistant";
 
   return (
-    <div className={`flex gap-3 py-2 ${isAssistant ? "" : "flex-row-reverse"}`}>
+    <div className={`flex min-w-0 gap-2 py-2 sm:gap-3 ${isAssistant ? "" : "flex-row-reverse"}`}>
       <div
         className={`flex size-7 shrink-0 items-center justify-center rounded-full ${
           isAssistant
@@ -28,7 +28,7 @@ export function ChatBubble({ message, formatTime }: ChatBubbleProps) {
         )}
       </div>
       <div
-        className={`max-w-[80%] min-w-0 ${
+        className={`min-w-0 max-w-[calc(100%_-_2.25rem)] sm:max-w-[80%] ${
           isAssistant ? "" : "flex flex-col items-end"
         }`}
       >

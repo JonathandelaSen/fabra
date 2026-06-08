@@ -60,7 +60,7 @@ export default function TabOfferChat({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
-      className="flex h-[calc(100dvh-280px)] min-h-[400px] overflow-hidden rounded-2xl border border-line bg-panel-base"
+      className="flex h-[calc(100dvh-280px)] min-h-[400px] min-w-0 flex-col overflow-hidden rounded-2xl border border-line bg-panel-base md:flex-row"
     >
       <ConversationList
         conversations={chat.conversations}
@@ -71,7 +71,7 @@ export default function TabOfferChat({
         onDelete={chat.deleteConversation}
       />
 
-      <div className="flex min-w-0 min-h-0 flex-1 flex-col">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         <ChatHeader />
 
         <ChatMessagesArea
