@@ -11,10 +11,6 @@ const tLauncher = messages.en.aiLauncher;
 test("user can create a job match analysis and view the results", async ({
   page,
 }) => {
-  page.on("console", (msg) => {
-    console.log(`[BROWSER CONSOLE] ${msg.type()}: ${msg.text()}`);
-  });
-
   const user = await createConfirmedUser("job-match");
   await loginViaUI(page, user);
 
