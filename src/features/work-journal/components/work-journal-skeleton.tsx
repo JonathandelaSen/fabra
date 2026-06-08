@@ -3,13 +3,20 @@ import { BasicPanel } from "@/components/shared/basic-panel";
 
 export function WorkJournalSkeleton() {
   return (
-    <div className="py-4 lg:py-8 w-full px-4 md:px-8">
-      <BasicPanel className="w-full p-6 md:p-8">
-        <div className="flex items-center gap-4 mb-6">
-          <Skeleton className="h-3.5 w-28 bg-white/5" />
-          <Skeleton className="h-3.5 w-20 bg-white/5" />
-          <Skeleton className="h-3.5 w-24 bg-white/5" />
+    <div className="pb-4 w-full lg:py-8">
+      <div className="flex items-center justify-between mb-6 w-full gap-4">
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-4 w-28 bg-white/5" />
+          <Skeleton className="h-4 w-20 bg-white/5" />
+          <Skeleton className="h-4 w-24 bg-white/5" />
         </div>
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-8 w-16 bg-white/5 rounded-md" />
+          <Skeleton className="h-8 w-16 bg-white/5 rounded-md" />
+        </div>
+      </div>
+
+      <BasicPanel className="w-full p-6 md:p-8">
         <div className="space-y-4">
           <Skeleton className="h-5 w-full bg-white/5" />
           <Skeleton className="h-5 w-[90%] bg-white/5" />

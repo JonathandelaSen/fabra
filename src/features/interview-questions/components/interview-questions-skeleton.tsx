@@ -41,7 +41,7 @@ export function InterviewQuestionsSkeleton() {
       title={<Skeleton className="h-8 w-60 rounded-md animate-pulse" />}
     >
       <FeatureTwoPaneLayout sidebar={sidebarSkeleton}>
-        <div className="flex w-full flex-col gap-6 p-6 animate-pulse">
+        <div className="flex w-full max-w-[1600px] mx-auto flex-col gap-5 animate-pulse">
           <BasicPanel as="section" className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0 flex-1">
               <Skeleton className="mb-2 h-3.5 w-24 rounded" />
@@ -82,7 +82,7 @@ export function InterviewQuestionsSkeleton() {
 
 export function InterviewQuestionsDetailSkeleton() {
   return (
-    <div className="flex w-full flex-col gap-6 p-6 animate-pulse">
+    <div className="flex w-full max-w-[1600px] mx-auto flex-col gap-5 animate-pulse">
       <BasicPanel as="section" className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 flex-1">
           <Skeleton className="mb-2 h-3.5 w-24 rounded" />
