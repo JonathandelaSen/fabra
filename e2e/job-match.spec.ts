@@ -30,16 +30,7 @@ test("user can create a job match analysis and view the results", async ({
   // This leaves us in the Extraction View with the mode selector
   await createExtractionViaUI(page);
 
-  // 2. Open the AI analysis tab and select the job match mode
-  const extractionTab = page.getByRole("tab", {
-    name: messages.en.analysisFlow.appShell.extractionTab,
-  });
-  const analysisTab = page.getByRole("tab", {
-    name: messages.en.analysisFlow.appShell.analysisTab,
-  });
-  await expect(extractionTab).toHaveAttribute("aria-selected", "true");
-  await analysisTab.click();
-  await expect(analysisTab).toHaveAttribute("aria-selected", "true");
+  // 2. Select the job match mode from the extraction view
   await page
     .getByRole("button", { name: new RegExp(tMode.jobTitle) })
     .click();
