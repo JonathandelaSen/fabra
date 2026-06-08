@@ -13,9 +13,10 @@ import {
 } from "@dnd-kit/core";
 import { useTranslations } from "next-intl";
 import type { JobMatchAnalysisOfferStatus } from "@/app/api/job-match-analyses/responses";
+import { cn } from "@/lib/utils";
 import type { JobMatchAnalysisSummary } from "../../api/job-match-analysis-api";
 import { JobMatchKanbanCard } from "./job-match-kanban-card";
-import { JobMatchKanbanColumn } from "./job-match-kanban-column";
+import { JobMatchKanbanColumn, statusAccent } from "./job-match-kanban-column";
 import {
   buildJobMatchKanbanColumns,
   getJobMatchKanbanStatus,
@@ -47,10 +48,12 @@ export function JobMatchKanbanBoard({
   onMove,
 }: JobMatchKanbanBoardProps) {
   const t = useTranslations("analysisFlow.kanban");
+  const navigation = useTranslations("navigation");
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [overStatus, setOverStatus] = useState<JobMatchAnalysisOfferStatus | null>(null);
   const [pendingMoves, setPendingMoves] = useState<Record<string, JobMatchAnalysisOfferStatus>>({});
+  const [activeTab, setActiveTab] = useState<JobMatchAnalysisOfferStatus>("interesting");
 
   // Sync / clear pending moves that have completed in the backend
   useEffect(() => {
@@ -175,31 +178,74 @@ export function JobMatchKanbanBoard({
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      <div className="flex h-full min-h-0 w-max flex-col">
+      <div className="flex h-full min-h-0 w-full md:w-max flex-col">
         {isMoving && (
           <div className="mb-2 text-xs font-medium text-text-muted">
             {t("saving")}
           </div>
         )}
-        <div className="flex min-h-0 flex-1 w-max flex-col gap-3 overflow-y-auto md:flex-row md:overflow-visible md:pb-2">
-          {JOB_MATCH_KANBAN_STATUSES.map((status) => (
-            <JobMatchKanbanColumn
-              key={status}
-              status={status}
-              items={columns[status]}
-              activeAnalysis={activeId ? analyses.find((a) => a.id === activeId) : null}
-            >
-              {columns[status].map((analysis) => (
-                <JobMatchKanbanCard
-                  key={analysis.id}
-                  analysis={analysis}
-                  onSelect={onSelect}
-                  onDelete={onDelete}
-                  onMove={onMove}
-                />
-              ))}
-            </JobMatchKanbanColumn>
-          ))}
+
+        {/* Mobile Status Tabs Selector */}
+        <div className="md:hidden w-full mb-3 overflow-x-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+          <div className="flex gap-1.5 min-w-max px-1">
+            {JOB_MATCH_KANBAN_STATUSES.map((status) => {
+              const count = columns[status].length;
+              const isActive = activeTab === status;
+              return (
+                <button
+                  key={status}
+                  type="button"
+                  onClick={() => setActiveTab(status)}
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold border transition-all duration-200",
+                    isActive
+                      ? "bg-indigo-500/15 border-indigo-500/35 text-indigo-200"
+                      : "bg-panel-base/60 border-line text-text-muted hover:text-text-main"
+                  )}
+                >
+                  <span
+                    className={cn("h-1.5 w-1.5 rounded-full border", statusAccent[status])}
+                    aria-hidden="true"
+                  />
+                  <span>{navigation(`offerStatuses.${status}`)}</span>
+                  <span className="rounded bg-panel-subtle/80 px-1.5 py-0.2 text-[10px] text-text-muted">
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="flex min-h-0 flex-1 w-full flex-col gap-3 overflow-hidden md:w-max md:flex-row md:overflow-visible md:pb-2">
+          {JOB_MATCH_KANBAN_STATUSES.map((status) => {
+            const isColumnVisible = activeTab === status;
+            return (
+              <div
+                key={status}
+                className={cn(
+                  "h-full w-full min-h-0 md:h-full md:w-auto",
+                  isColumnVisible ? "block" : "hidden md:block"
+                )}
+              >
+                <JobMatchKanbanColumn
+                  status={status}
+                  items={columns[status]}
+                  activeAnalysis={activeId ? analyses.find((a) => a.id === activeId) : null}
+                >
+                  {columns[status].map((analysis) => (
+                    <JobMatchKanbanCard
+                      key={analysis.id}
+                      analysis={analysis}
+                      onSelect={onSelect}
+                      onDelete={onDelete}
+                      onMove={onMove}
+                    />
+                  ))}
+                </JobMatchKanbanColumn>
+              </div>
+            );
+          })}
         </div>
       </div>
       <DragOverlay>

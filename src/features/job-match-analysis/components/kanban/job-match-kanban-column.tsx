@@ -15,7 +15,7 @@ interface JobMatchKanbanColumnProps {
   activeAnalysis?: JobMatchAnalysisSummary | null;
 }
 
-const statusAccent: Record<JobMatchAnalysisOfferStatus, string> = {
+export const statusAccent: Record<JobMatchAnalysisOfferStatus, string> = {
   interesting: "border-sky-500/25 bg-sky-500/10 text-sky-300",
   applied: "border-indigo-500/25 bg-indigo-500/10 text-indigo-300",
   interview: "border-amber-500/25 bg-amber-500/10 text-amber-300",
@@ -83,7 +83,7 @@ export function JobMatchKanbanColumn({
     <section
       ref={setNodeRef}
       className={cn(
-        "flex min-h-[220px] w-full min-w-0 flex-col rounded-lg border border-line bg-panel-base/55 md:h-full md:min-h-0 md:w-[18rem] md:min-w-[18rem]",
+        "flex h-full w-full min-w-0 flex-col rounded-lg border border-line bg-panel-base/55 md:h-full md:min-h-0 md:w-[18rem] md:min-w-[18rem]",
         isTerminal && "opacity-80",
         isOver && "border-action-border bg-panel-selected/80",
       )}
