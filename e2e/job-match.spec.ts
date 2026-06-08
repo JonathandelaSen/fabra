@@ -31,16 +31,24 @@ test("user can create a job match analysis and view the results", async ({
   await createExtractionViaUI(page);
 
   // 2. Open the AI analysis tab and select the job match mode
-  await page
-    .getByRole("button", { name: messages.en.analysisFlow.appShell.analysisTab })
-    .click();
+  const extractionTab = page.getByRole("tab", {
+    name: messages.en.analysisFlow.appShell.extractionTab,
+  });
+  const analysisTab = page.getByRole("tab", {
+    name: messages.en.analysisFlow.appShell.analysisTab,
+  });
+  await expect(extractionTab).toHaveAttribute("aria-selected", "true");
+  await analysisTab.click();
+  await expect(analysisTab).toHaveAttribute("aria-selected", "true");
   await page
     .getByRole("button", { name: new RegExp(tMode.jobTitle) })
     .click();
 
   // 3. Fill Job
   const jobDescription = "We are looking for a Senior React Developer with 5+ years of experience in Next.js.";
-  const jobDescriptionInput = page.locator("textarea");
+  const jobDescriptionInput = page.getByPlaceholder(
+    tForms.jobDescriptionPlaceholder,
+  );
   await expect(jobDescriptionInput).toBeVisible();
   await jobDescriptionInput.fill(jobDescription);
 

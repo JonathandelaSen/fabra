@@ -29,6 +29,19 @@ const tCopyPaste = messages.en.analysisFlow.copyPaste;
 const tJobCopyPaste = messages.en.jobMatchCopyPaste;
 const tLauncher = messages.en.aiLauncher;
 
+async function openAnalysisTab(page: import("@playwright/test").Page) {
+  const extractionTab = page.getByRole("tab", {
+    name: messages.en.analysisFlow.appShell.extractionTab,
+  });
+  const analysisTab = page.getByRole("tab", {
+    name: messages.en.analysisFlow.appShell.analysisTab,
+  });
+
+  await expect(extractionTab).toHaveAttribute("aria-selected", "true");
+  await analysisTab.click();
+  await expect(analysisTab).toHaveAttribute("aria-selected", "true");
+}
+
 async function openCopyPasteViaLauncher(page: import("@playwright/test").Page) {
   await page.getByRole("button", { name: tForms.compareOffer }).click();
   await page.getByRole("button", { name: tLauncher.openFlow }).click();
@@ -75,15 +88,13 @@ test("user can score a job match analysis with Copy Paste", async ({
 }) => {
   const { user, analysis } = await createJobMatchAnalysisFixture(page);
 
-  await page
-    .getByRole("button", {
-      name: messages.en.analysisFlow.appShell.analysisTab,
-    })
-    .click();
+  await openAnalysisTab(page);
 
   const jobDescription =
     "Senior React Dev with TypeScript. Experience with Node.js required.";
-  const jobDescriptionInput = page.locator("textarea").first();
+  const jobDescriptionInput = page.getByPlaceholder(
+    tForms.jobDescriptionPlaceholder,
+  );
   await expect(jobDescriptionInput).toBeVisible();
   await jobDescriptionInput.fill(jobDescription);
 
@@ -150,14 +161,12 @@ test("replacement warning appears when analysis already has a score", async ({
 }) => {
   await createJobMatchAnalysisFixture(page);
 
-  await page
-    .getByRole("button", {
-      name: messages.en.analysisFlow.appShell.analysisTab,
-    })
-    .click();
+  await openAnalysisTab(page);
 
   const jobDescription = "Senior React Developer";
-  const jobDescriptionInput = page.locator("textarea").first();
+  const jobDescriptionInput = page.getByPlaceholder(
+    tForms.jobDescriptionPlaceholder,
+  );
   await jobDescriptionInput.fill(jobDescription);
 
   await openCopyPasteViaLauncher(page);
@@ -176,11 +185,11 @@ test("replacement warning appears when analysis already has a score", async ({
     page.getByText("Buena coincidencia con la oferta de trabajo."),
   ).toBeVisible();
 
-  await page
-    .getByRole("button", {
-      name: messages.en.analysisFlow.appShell.extractionTab,
-    })
-    .click();
+  const extractionTab = page.getByRole("tab", {
+    name: messages.en.analysisFlow.appShell.extractionTab,
+  });
+  await extractionTab.click();
+  await expect(extractionTab).toHaveAttribute("aria-selected", "true");
 
   await openCopyPasteViaLauncher(page);
   await page.getByRole("dialog", { name: tCopyPaste.title }).getByRole("button", { name: tCopyPaste.continue }).click();
