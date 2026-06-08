@@ -30,6 +30,7 @@ export function useAuthFormState(initialError?: string, initialMessage?: string)
   const [recoverState, setRecoverState] = useState<AuthFormState>(INITIAL_STATE);
   const [recoverPending, setRecoverPending] = useState(false);
   const [emailValue, setEmailValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const isSignup = mode === "signup";
@@ -87,10 +88,12 @@ export function useAuthFormState(initialError?: string, initialMessage?: string)
     loginAction,
     mode,
     pending,
+    passwordValue,
     resendAction,
     resendEmail,
     resendPending,
     setEmailValue,
+    setPasswordValue,
     setMode,
     setShowPassword,
     showPassword,

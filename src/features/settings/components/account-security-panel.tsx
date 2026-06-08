@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { AlertCircle, Check, LockKeyhole, LogOut, Save, UserX } from "lucide-react";
 import {
@@ -14,6 +14,7 @@ import {
   type AuthFormState,
 } from "@/app/login/actions";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
+import { isValidPassword } from "@/frontend/auth-validation";
 
 const INITIAL_STATE: AuthFormState = {};
 
@@ -24,6 +25,14 @@ export function AccountSecurityPanel() {
     changePasswordWithCurrent,
     INITIAL_STATE,
   );
+  const [currentPasswordValue, setCurrentPasswordValue] = useState("");
+  const [newPasswordValue, setNewPasswordValue] = useState("");
+  const [confirmPasswordValue, setConfirmPasswordValue] = useState("");
+
+  const isFormValid =
+    isValidPassword(currentPasswordValue) &&
+    isValidPassword(newPasswordValue) &&
+    isValidPassword(confirmPasswordValue);
 
   return (
     <SettingsSectionPanel title={t("title")} icon={UserX}>
@@ -64,6 +73,8 @@ export function AccountSecurityPanel() {
             <input
               name="currentPassword"
               type="password"
+              value={currentPasswordValue}
+              onChange={(e) => setCurrentPasswordValue(e.target.value)}
               autoComplete="current-password"
               placeholder={t("currentPassword")}
               required
@@ -72,6 +83,8 @@ export function AccountSecurityPanel() {
             <input
               name="password"
               type="password"
+              value={newPasswordValue}
+              onChange={(e) => setNewPasswordValue(e.target.value)}
               autoComplete="new-password"
               placeholder={t("newPassword")}
               minLength={6}
@@ -81,6 +94,8 @@ export function AccountSecurityPanel() {
             <input
               name="confirmPassword"
               type="password"
+              value={confirmPasswordValue}
+              onChange={(e) => setConfirmPasswordValue(e.target.value)}
               autoComplete="new-password"
               placeholder={t("repeatNewPassword")}
               minLength={6}
@@ -110,6 +125,7 @@ export function AccountSecurityPanel() {
             type="submit"
             icon={Save}
             loading={passwordPending}
+            disabled={passwordPending || !isFormValid}
             tone={ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT}
             strong
             className="mt-4 h-10"

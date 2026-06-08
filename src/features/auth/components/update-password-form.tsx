@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { AlertCircle, KeyRound } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -12,12 +13,17 @@ import { Label } from "@/components/ui/label";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import { InterfaceLanguageSelect } from "@/components/shared/interface-language-select";
 import { useUpdatePasswordFormState } from "../hooks/use-update-password-form-state";
+import { isValidPassword } from "@/frontend/auth-validation";
 
 export function UpdatePasswordForm() {
   const t = useTranslations("auth.updatePassword");
   const auth = useTranslations("auth");
   const { locale } = useInterfaceLanguage();
   const { state, action, pending } = useUpdatePasswordFormState();
+  const [passwordValue, setPasswordValue] = useState("");
+  const [confirmPasswordValue, setConfirmPasswordValue] = useState("");
+
+  const isFormValid = isValidPassword(passwordValue) && isValidPassword(confirmPasswordValue);
 
   return (
     <div className="rounded-2xl border border-line bg-panel-base/90 p-5 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-6">
@@ -43,6 +49,8 @@ export function UpdatePasswordForm() {
             id="password"
             name="password"
             type="password"
+            value={passwordValue}
+            onChange={(e) => setPasswordValue(e.target.value)}
             autoComplete="new-password"
             placeholder={auth("fields.passwordPlaceholder")}
             minLength={6}
@@ -59,6 +67,8 @@ export function UpdatePasswordForm() {
             id="confirmPassword"
             name="confirmPassword"
             type="password"
+            value={confirmPasswordValue}
+            onChange={(e) => setConfirmPasswordValue(e.target.value)}
             autoComplete="new-password"
             placeholder={t("confirmPlaceholder")}
             minLength={6}
@@ -86,7 +96,7 @@ export function UpdatePasswordForm() {
           tone={ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT}
           fullWidth
           strong
-          disabled={pending}
+          disabled={pending || !isFormValid}
           className="h-11"
         >
           {t("submit")}

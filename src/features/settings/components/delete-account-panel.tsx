@@ -1,12 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { AlertCircle, Trash2 } from "lucide-react";
 import { deleteAccount, type AuthFormState } from "@/app/login/actions";
 import { DeleteButton } from "@/components/shared/action-buttons";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
+import { isValidEmail, isValidPassword } from "@/frontend/auth-validation";
 
 const INITIAL_STATE: AuthFormState = {};
 
@@ -21,6 +22,12 @@ export function DeleteAccountPanel({ userEmail }: DeleteAccountPanelProps) {
     deleteAccount,
     INITIAL_STATE,
   );
+  const [emailValue, setEmailValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
+
+  const isEmailValid = isValidEmail(emailValue);
+  const isPasswordValid = isValidPassword(passwordValue);
+  const isFormValid = isEmailValid && isPasswordValid;
 
   return (
     <form
@@ -42,6 +49,8 @@ export function DeleteAccountPanel({ userEmail }: DeleteAccountPanelProps) {
         <input
           name="emailConfirmation"
           type="email"
+          value={emailValue}
+          onChange={(e) => setEmailValue(e.target.value)}
           autoComplete="email"
           placeholder={userEmail || t("accountEmail")}
           required
@@ -50,6 +59,8 @@ export function DeleteAccountPanel({ userEmail }: DeleteAccountPanelProps) {
         <input
           name="password"
           type="password"
+          value={passwordValue}
+          onChange={(e) => setPasswordValue(e.target.value)}
           autoComplete="current-password"
           placeholder={t("currentPassword")}
           required
@@ -66,6 +77,7 @@ export function DeleteAccountPanel({ userEmail }: DeleteAccountPanelProps) {
       <DeleteButton
         type="submit"
         loading={deletePending}
+        disabled={deletePending || !isFormValid}
         strong
         className="mt-4 h-10"
       >

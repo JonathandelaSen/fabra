@@ -21,6 +21,7 @@ import { Label } from "@/components/ui/label";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import { InterfaceLanguageSelect } from "@/components/shared/interface-language-select";
 import { useAuthFormState } from "../hooks/use-auth-form-state";
+import { isValidEmail, isValidPassword } from "@/frontend/auth-validation";
 
 interface AuthFormProps {
   initialError?: string;
@@ -38,10 +39,12 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
     isSignup,
     loginAction,
     pending,
+    passwordValue,
     resendAction,
     resendEmail,
     resendPending,
     setEmailValue,
+    setPasswordValue,
     setMode,
     setShowPassword,
     showPassword,
@@ -50,6 +53,10 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
     visibleError,
     visibleMessage,
   } = useAuthFormState(initialError, initialMessage);
+
+  const isEmailValid = isValidEmail(emailValue);
+  const isPasswordValid = isValidPassword(passwordValue);
+  const isFormValid = isRecover ? isEmailValid : (isEmailValid && isPasswordValid);
   const title = isRecover
     ? t("recover.title")
     : isSignup
@@ -131,6 +138,8 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
                 id="password"
                 name="password"
                 type={showPassword ? "text" : "password"}
+                value={passwordValue}
+                onChange={(event) => setPasswordValue(event.target.value)}
                 autoComplete={isSignup ? "new-password" : "current-password"}
                 placeholder={t("fields.passwordPlaceholder")}
                 minLength={6}
@@ -181,7 +190,7 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
           tone={ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT}
           fullWidth
           strong
-          disabled={pending}
+          disabled={pending || !isFormValid}
           className="h-11"
         >
           {isRecover
