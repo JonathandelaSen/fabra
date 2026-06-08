@@ -42,8 +42,8 @@ export function CVEditorEmptyState({
   const t = useTranslations("cvEditor");
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center bg-[#050509] p-10 text-center overflow-y-auto">
-      <div className="max-w-3xl w-full">
+    <div className={`flex h-full w-full flex-col items-center bg-[#050509] px-4 py-8 sm:p-10 text-center overflow-y-auto ${templateCvs.length > 0 ? "justify-start" : "justify-center"}`}>
+      <div className="max-w-5xl w-full mx-auto">
         <div className="hidden sm:block">
           <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-500/10 text-teal-400">
             <LayoutTemplate className="h-8 w-8" />
@@ -57,7 +57,7 @@ export function CVEditorEmptyState({
         </div>
 
         {templateCvs.length > 0 ? (
-          <div className="flex flex-wrap justify-center gap-6 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
             {templateCvs.map((cv) => (
               <div
                 key={cv.id}
@@ -70,7 +70,7 @@ export function CVEditorEmptyState({
                     onSelectVersion(cv.id);
                   }
                 }}
-                className="flex w-full sm:w-64 flex-col items-start rounded-xl border border-white/5 bg-white/5 hover:border-teal-500/30 hover:bg-white/10 transition-all duration-300 shadow-md hover:shadow-teal-500/5 hover:-translate-y-0.5 group overflow-hidden cursor-pointer select-none"
+                className="flex w-full flex-col items-start rounded-xl border border-white/5 bg-white/5 hover:border-teal-500/30 hover:bg-white/10 transition-all duration-300 shadow-md hover:shadow-teal-500/5 hover:-translate-y-0.5 group overflow-hidden cursor-pointer select-none"
               >
                 <div className="relative w-full h-48 bg-zinc-950/85 border-b border-white/5 flex items-start justify-center overflow-hidden transition-colors duration-300 group-hover:bg-zinc-950">
                   <div className="w-full pointer-events-none">
