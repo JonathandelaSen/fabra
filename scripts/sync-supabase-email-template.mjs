@@ -75,9 +75,9 @@ async function main() {
       body: JSON.stringify({
         site_url: siteUrl,
         uri_allow_list: uriAllowList,
-        mailer_subjects_recovery: "Restablece tu contraseña",
+        mailer_subjects_recovery: "Reset your password",
         mailer_templates_recovery_content: recoveryTemplate,
-        mailer_subjects_confirmation: "Confirma tu email",
+        mailer_subjects_confirmation: "Confirm your email",
         mailer_templates_confirmation_content: confirmationTemplate,
       }),
     }
