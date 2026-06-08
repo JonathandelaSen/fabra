@@ -714,6 +714,9 @@ export const messages = {
       editedName: "{name} (Edited)",
       saveNewVersion: "Save new version",
       downloadPdf: "Download PDF",
+      editorPanelTitle: "CV editing tools",
+      openEditorPanel: "Open editing tools",
+      closeEditorPanel: "Close editing tools",
       aiHints: {
         shortenSummary: "Shorten the About section",
         improveClarity: "Improve clarity",
@@ -2125,6 +2128,9 @@ export const messages = {
       editedName: "{name} (Editado)",
       saveNewVersion: "Guardar nueva versión",
       downloadPdf: "Descargar PDF",
+      editorPanelTitle: "Herramientas de edición del CV",
+      openEditorPanel: "Abrir herramientas de edición",
+      closeEditorPanel: "Cerrar herramientas de edición",
       aiHints: {
         shortenSummary: "Acorta el Sobre mí",
         improveClarity: "Mejora claridad",

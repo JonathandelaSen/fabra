@@ -7,13 +7,15 @@ import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/acti
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import type { StandardCVProfile } from "@/lib/cv-profile";
 import type { CVTemplateId, CVTemplateLocale } from "@/lib/cv-templates";
+import { cn } from "@/lib/utils";
 import { ManualEditor } from "./cv-manual-editor/manual-editor";
 import { CVEditorAIPanel } from "./cv-editor-ai-panel";
 import { CVEditorRecommendations, type RecommendationAnalysis } from "./cv-editor-recommendations";
 import { CVEditorPublicSection } from "./cv-editor-public-section";
 import { CVEditorSettingsSection } from "./cv-editor-settings-section";
 
-interface CVEditorSidePanelProps {
+export interface CVEditorSidePanelProps {
+  displayMode?: "desktop" | "mobile";
   activeTemplateId: CVTemplateId;
   currentProfile: StandardCVProfile | null;
   currentVersion: { id: string; publicEnabled: boolean; publicId: string | null };
@@ -53,6 +55,7 @@ interface CVEditorSidePanelProps {
 }
 
 export function CVEditorSidePanel({
+  displayMode = "desktop",
   activeTemplateId,
   currentProfile,
   currentVersion,
@@ -94,13 +97,23 @@ export function CVEditorSidePanel({
 
   return (
     <motion.aside
-      initial={{ x: 480 }}
-      animate={{ x: 0 }}
-      exit={{ x: 480 }}
+      initial={displayMode === "desktop" ? { x: 480 } : false}
+      animate={displayMode === "desktop" ? { x: 0 } : undefined}
+      exit={displayMode === "desktop" ? { x: 480 } : undefined}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="fixed inset-y-0 right-0 z-30 w-[480px] border-l border-line bg-panel-base/95 backdrop-blur-xl md:relative"
+      className={cn(
+        "h-full border-l border-line bg-panel-base/95 backdrop-blur-xl",
+        displayMode === "desktop"
+          ? "relative hidden w-[480px] shrink-0 md:block"
+          : "relative w-full border-l-0 bg-transparent",
+      )}
     >
-      <div className="flex h-full flex-col overflow-x-hidden overflow-y-auto p-6 scrollbar-thin">
+      <div
+        className={cn(
+          "flex h-full flex-col overflow-x-hidden overflow-y-auto scrollbar-thin overscroll-contain",
+          displayMode === "desktop" ? "p-6" : "px-4 pb-6 pt-14 sm:px-6",
+        )}
+      >
         <div className="space-y-8">
           <div className="flex gap-1 rounded-xl border border-line bg-panel-control p-1">
             <button onClick={() => onSetEditorTab("ai")} className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-all ${editorTab === "ai" ? "bg-white/10 text-white" : "text-zinc-500 hover:text-zinc-300"}`}>

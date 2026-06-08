@@ -5,12 +5,13 @@ import { copyToClipboard } from "@/lib/clipboard";
 import { useTranslations } from "next-intl";
 import { AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import { GEMINI_MODELS } from "@/frontend/ai-models";
 import { CVEditorEmptyState } from "./cv-editor-empty-state";
 import { CVEditorHeader } from "./cv-editor-header";
 import { CVEditorModals } from "./cv-editor-modals";
-import { CVEditorSidePanel } from "./cv-editor-side-panel";
+import { CVEditorSidePanel, type CVEditorSidePanelProps } from "./cv-editor-side-panel";
 import { useCVEditorMutations } from "../hooks/use-cv-editor-mutations";
 import { useCVEditorRouteState } from "../hooks/use-cv-editor-route-state";
 import { useCVEditorState } from "../hooks/use-cv-editor-state";
@@ -35,7 +36,7 @@ export default function CVEditorView({
   onBackToLibrary,
 }: CVEditorViewProps) {
   const t = useTranslations("cvEditor");
-  const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const [panelState, setPanelState] = useState({ desktopOpen: true, mobileOpen: false });
   const [modalState, setModalState] = useState({ saving: false, public: false });
   const [saveName, setSaveName] = useState("");
   const [publicCopied, setPublicCopied] = useState(false);
@@ -135,6 +136,45 @@ export default function CVEditorView({
     );
   }
 
+  const sidePanelProps = {
+    activeTemplateId: activeTemplate.templateId,
+    currentProfile,
+    currentVersion,
+    editInstruction,
+    editingProfile,
+    editorTab,
+    error,
+    hasAIApiKey,
+    hasPublicSlugChanges,
+    locale,
+    publicCopied,
+    publicSlug: normalizedPublicSlug,
+    publicUrl,
+    recommendationAnalysis,
+    saveState,
+    savingLocale,
+    savingPublicSettings,
+    selectedProvider,
+    selectedModel,
+    onApplyInstruction: () => applyInstruction(),
+    onCopyPublicUrl: () => void copyPublicUrl(),
+    onManualChange: handleManualChange,
+    onOpenCopyPaste: () => setCopyPasteOpen(true),
+    onOpenSettings,
+    onOpenTemplates,
+    onPublish: () => setModalState((current) => ({ ...current, public: true })),
+    onSaveManual: () => void saveProfileToApi(currentProfile),
+    onSaveUrl: () => void handleUpdatePublicSettings(true),
+    onSetEditInstruction: setEditInstruction,
+    onSetEditorTab: setEditorTab,
+    onSetPublicSlugDraft: setPublicSlugDraft,
+    onSetSelectedProvider: setSelectedProvider,
+    onSetSelectedModel: setSelectedModel,
+    onStartAnalysis,
+    onUnpublish: () => void handleUpdatePublicSettings(false),
+    onUpdateLocale: updateLocale,
+  } satisfies Omit<CVEditorSidePanelProps, "displayMode">;
+
   return (
     <div className="flex h-full w-full flex-col overflow-hidden bg-[#050509]">
       <CVEditorHeader
@@ -144,14 +184,17 @@ export default function CVEditorView({
         locale={locale}
         canUndo={canUndo}
         canRedo={canRedo}
-        isPanelOpen={isPanelOpen}
+        isDesktopPanelOpen={panelState.desktopOpen}
         onUndo={undo}
         onRedo={redo}
         onSaveNewVersion={() => {
           setSaveName(t("editedName", { name: currentVersion.name }));
           setModalState((current) => ({ ...current, saving: true }));
         }}
-        onTogglePanel={() => setIsPanelOpen(!isPanelOpen)}
+        onOpenMobilePanel={() => setPanelState((current) => ({ ...current, mobileOpen: true }))}
+        onToggleDesktopPanel={() =>
+          setPanelState((current) => ({ ...current, desktopOpen: !current.desktopOpen }))
+        }
         onBackToLibrary={onBackToLibrary}
       />
 
@@ -166,7 +209,7 @@ export default function CVEditorView({
           />
 
           {currentProfile ? (
-            <PDFPreview url={previewSrc} />
+            <PDFPreview url={previewSrc} fitMobile />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-zinc-900 text-zinc-500">
               <Loader2 className="h-8 w-8 animate-spin" />
@@ -175,48 +218,25 @@ export default function CVEditorView({
         </div>
 
         <AnimatePresence>
-          {isPanelOpen && (
-            <CVEditorSidePanel
-              activeTemplateId={activeTemplate.templateId}
-              currentProfile={currentProfile}
-              currentVersion={currentVersion}
-              editInstruction={editInstruction}
-              editingProfile={editingProfile}
-              editorTab={editorTab}
-              error={error}
-              hasAIApiKey={hasAIApiKey}
-              hasPublicSlugChanges={hasPublicSlugChanges}
-              locale={locale}
-              publicCopied={publicCopied}
-              publicSlug={normalizedPublicSlug}
-              publicUrl={publicUrl}
-              recommendationAnalysis={recommendationAnalysis}
-              saveState={saveState}
-              savingLocale={savingLocale}
-              savingPublicSettings={savingPublicSettings}
-              selectedProvider={selectedProvider}
-              selectedModel={selectedModel}
-              onApplyInstruction={() => applyInstruction()}
-              onCopyPublicUrl={() => void copyPublicUrl()}
-              onManualChange={handleManualChange}
-              onOpenCopyPaste={() => setCopyPasteOpen(true)}
-              onOpenSettings={onOpenSettings}
-              onOpenTemplates={onOpenTemplates}
-              onPublish={() => setModalState((current) => ({ ...current, public: true }))}
-              onSaveManual={() => void saveProfileToApi(currentProfile)}
-              onSaveUrl={() => void handleUpdatePublicSettings(true)}
-              onSetEditInstruction={setEditInstruction}
-              onSetEditorTab={setEditorTab}
-              onSetPublicSlugDraft={setPublicSlugDraft}
-              onSetSelectedProvider={setSelectedProvider}
-              onSetSelectedModel={setSelectedModel}
-              onStartAnalysis={onStartAnalysis}
-              onUnpublish={() => void handleUpdatePublicSettings(false)}
-              onUpdateLocale={updateLocale}
-            />
+          {panelState.desktopOpen && (
+            <CVEditorSidePanel {...sidePanelProps} />
           )}
         </AnimatePresence>
       </div>
+
+      <Sheet
+        open={panelState.mobileOpen}
+        onOpenChange={(mobileOpen) => setPanelState((current) => ({ ...current, mobileOpen }))}
+      >
+        <SheetContent
+          side="right"
+          closeLabel={t("closeEditorPanel")}
+          className="!w-[min(92dvw,480px)] gap-0 border-line bg-panel-base/95 p-0 backdrop-blur-xl md:hidden"
+        >
+          <SheetTitle className="sr-only">{t("editorPanelTitle")}</SheetTitle>
+          <CVEditorSidePanel {...sidePanelProps} displayMode="mobile" />
+        </SheetContent>
+      </Sheet>
 
       <CVEditorModals
         copyPasteOpen={copyPasteOpen}

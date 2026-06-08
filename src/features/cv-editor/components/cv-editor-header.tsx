@@ -4,8 +4,10 @@ import { useTranslations } from "next-intl";
 import {
   ArrowLeft,
   Download,
+  PanelRightClose,
+  PanelRightOpen,
   Redo2,
-  Settings,
+  SlidersHorizontal,
   Sparkles,
   Undo2,
 } from "lucide-react";
@@ -24,11 +26,12 @@ interface CVEditorHeaderProps {
   locale: string;
   canUndo: boolean;
   canRedo: boolean;
-  isPanelOpen: boolean;
+  isDesktopPanelOpen: boolean;
   onUndo: () => void;
   onRedo: () => void;
   onSaveNewVersion: () => void;
-  onTogglePanel: () => void;
+  onOpenMobilePanel: () => void;
+  onToggleDesktopPanel: () => void;
   onBackToLibrary?: () => void;
 }
 
@@ -39,32 +42,33 @@ export function CVEditorHeader({
   locale,
   canUndo,
   canRedo,
-  isPanelOpen,
+  isDesktopPanelOpen,
   onUndo,
   onRedo,
   onSaveNewVersion,
-  onTogglePanel,
+  onOpenMobilePanel,
+  onToggleDesktopPanel,
   onBackToLibrary,
 }: CVEditorHeaderProps) {
   const t = useTranslations("cvEditor");
 
   return (
-    <header className="z-20 flex h-14 shrink-0 items-center justify-between border-b border-line bg-panel-base/80 px-4 backdrop-blur-md">
-      <div className="flex items-center gap-4">
+    <header className="z-20 flex h-14 shrink-0 items-center justify-between gap-2 border-b border-line bg-panel-base/80 px-2 backdrop-blur-md sm:px-4">
+      <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
         <ActionIconButton
           icon={ArrowLeft}
           buttonSize={ACTION_ICON_BUTTON_SIZES.MD}
           tone={ACTION_ICON_BUTTON_TONES.MUTED}
           onClick={onBackToLibrary}
         />
-        <div className="h-4 w-[1px] bg-white/10" />
+        <div className="hidden h-4 w-[1px] bg-white/10 sm:block" />
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <h2 className="truncate text-sm font-semibold text-white">
               {versionName}
             </h2>
-            <span className="text-[10px] text-zinc-600">{t("basedOn")}</span>
-            <span className="truncate text-[11px] font-medium text-teal-500/80 italic">
+            <span className="hidden text-[10px] text-zinc-600 lg:inline">{t("basedOn")}</span>
+            <span className="hidden truncate text-[11px] font-medium text-teal-500/80 italic lg:inline">
               {t("originalCv")}
             </span>
           </div>
@@ -79,8 +83,8 @@ export function CVEditorHeader({
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-1 rounded-md border border-white/5 bg-white/5 p-1">
+      <div className="flex shrink-0 items-center gap-1 sm:gap-3">
+        <div className="hidden items-center gap-1 rounded-md border border-white/5 bg-white/5 p-1 sm:flex">
           <ActionIconButton
             icon={Undo2}
             disabled={!canUndo}
@@ -119,10 +123,21 @@ export function CVEditorHeader({
         </a>
 
         <ActionIconButton
-          icon={Settings}
+          icon={SlidersHorizontal}
           buttonSize={ACTION_ICON_BUTTON_SIZES.MD}
-          onClick={onTogglePanel}
-          tone={isPanelOpen ? ACTION_ICON_BUTTON_TONES.SUCCESS : ACTION_ICON_BUTTON_TONES.MUTED}
+          className="md:hidden"
+          onClick={onOpenMobilePanel}
+          title={t("openEditorPanel")}
+          tone={ACTION_ICON_BUTTON_TONES.MUTED}
+        />
+
+        <ActionIconButton
+          icon={isDesktopPanelOpen ? PanelRightClose : PanelRightOpen}
+          buttonSize={ACTION_ICON_BUTTON_SIZES.MD}
+          className="hidden md:inline-flex"
+          onClick={onToggleDesktopPanel}
+          title={isDesktopPanelOpen ? t("closeEditorPanel") : t("openEditorPanel")}
+          tone={isDesktopPanelOpen ? ACTION_ICON_BUTTON_TONES.SUCCESS : ACTION_ICON_BUTTON_TONES.MUTED}
         />
       </div>
     </header>

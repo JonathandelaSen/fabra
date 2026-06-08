@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Document, Page, pdfjs } from "react-pdf";
 import { ZoomIn, ZoomOut, Loader2 } from "lucide-react";
@@ -20,13 +20,21 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 interface PDFPreviewProps {
   url: string;
   expanded?: boolean;
+  fitMobile?: boolean;
   mini?: boolean;
 }
 
-export function PDFPreview({ url, expanded = false, mini = false }: PDFPreviewProps) {
+export function PDFPreview({
+  url,
+  expanded = false,
+  fitMobile = false,
+  mini = false,
+}: PDFPreviewProps) {
   const [scale, setScale] = useState(0.85);
   const [urls, setUrls] = useState<string[]>([url]);
   const [numPagesMap, setNumPagesMap] = useState<Record<string, number>>({});
+  const [containerWidth, setContainerWidth] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -39,9 +47,26 @@ export function PDFPreview({ url, expanded = false, mini = false }: PDFPreviewPr
     return () => clearTimeout(timer);
   }, [url]);
 
+  useEffect(() => {
+    if (!fitMobile || !containerRef.current) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      setContainerWidth(entry.contentRect.width);
+    });
+    observer.observe(containerRef.current);
+
+    return () => observer.disconnect();
+  }, [fitMobile]);
+
   function handleLoadSuccess(loadedUrl: string, numPages: number) {
     setNumPagesMap((prev) => ({ ...prev, [loadedUrl]: numPages }));
   }
+
+  const mobilePageWidth =
+    fitMobile && containerWidth > 0 && containerWidth < 768
+      ? Math.max(240, containerWidth - 32)
+      : undefined;
+  const pageScale = mobilePageWidth ? scale / 0.85 : scale;
 
   if (mini) {
     return (
@@ -75,9 +100,12 @@ export function PDFPreview({ url, expanded = false, mini = false }: PDFPreviewPr
   }
 
   return (
-    <div className={cn("relative w-full flex flex-col", expanded ? "" : "h-full")}>
+    <div
+      ref={containerRef}
+      className={cn("relative w-full flex flex-col", expanded ? "" : "h-full")}
+    >
       {!expanded && (
-        <div className="absolute bottom-6 right-6 z-10 flex items-center gap-2 rounded-full border border-line-default bg-floating-toolbar p-1.5 shadow-xl backdrop-blur-md">
+        <div className="absolute bottom-3 right-3 z-10 flex items-center gap-2 rounded-full border border-line-default bg-floating-toolbar p-1.5 shadow-xl backdrop-blur-md sm:bottom-6 sm:right-6">
           <ActionIconButton
             icon={ZoomOut}
             buttonSize={ACTION_ICON_BUTTON_SIZES.MD}
@@ -95,7 +123,7 @@ export function PDFPreview({ url, expanded = false, mini = false }: PDFPreviewPr
       )}
 
       <div className={cn("bg-pdf-canvas pb-20", expanded ? "" : "flex-1 overflow-auto scrollbar-thin")}>
-        <div className={cn("grid min-h-full items-start p-8", expanded ? "w-full justify-items-stretch justify-stretch" : "justify-center")}>
+        <div className={cn("grid min-h-full items-start p-4 sm:p-8", expanded ? "w-full justify-items-stretch justify-stretch" : "justify-center")}>
           {urls.map((u, i) => {
             const isLatest = i === urls.length - 1;
             const isOld = !isLatest;
@@ -136,12 +164,19 @@ export function PDFPreview({ url, expanded = false, mini = false }: PDFPreviewPr
                     >
                       <Page
                         pageNumber={index + 1}
-                        scale={expanded ? 2.0 : scale}
+                        width={expanded ? undefined : mobilePageWidth}
+                        scale={expanded ? 2.0 : pageScale}
                         renderAnnotationLayer={true}
                         renderTextLayer={false}
                         loading={
                           urls.length === 1 ? (
-                            <div className="flex items-center justify-center p-12 text-text-muted max-w-full" style={{ width: 595 * (expanded ? 2.0 : scale), height: 842 * (expanded ? 2.0 : scale) }}>
+                            <div
+                              className="flex max-w-full items-center justify-center p-12 text-text-muted"
+                              style={{
+                                width: (mobilePageWidth ?? 595) * (expanded ? 2.0 : pageScale),
+                                height: (mobilePageWidth ? mobilePageWidth * 1.415 : 842) * (expanded ? 2.0 : pageScale),
+                              }}
+                            >
                               <Loader2 className="h-8 w-8 animate-spin" />
                             </div>
                           ) : null
