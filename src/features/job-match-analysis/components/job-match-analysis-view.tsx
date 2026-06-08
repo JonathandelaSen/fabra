@@ -19,6 +19,7 @@ import {
 import { useJobMatchCopyPasteApplied } from "../hooks/use-job-match-copy-paste-applied";
 import { useJobMatchAnalysisExport } from "../hooks/use-job-match-analysis-export";
 import { useNewJobMatchFlowActions } from "../hooks/use-new-job-match-flow-actions";
+import { useImmediateAnalysisSelection } from "../hooks/use-immediate-analysis-selection";
 import { JobMatchAnalysisContent } from "./job-match-analysis-content";
 import { JobMatchAnalysisBody } from "./job-match-analysis-body";
 import { JobMatchAnalysisHeaderActions } from "./job-match-analysis-header-actions";
@@ -78,6 +79,7 @@ export default function JobMatchAnalysisView({
   const cvOptionsQuery = useJobMatchAnalysisCVOptions();
   const mutations = useJobMatchAnalysisMutations();
   const [searchQuery, setSearchQuery] = useState("");
+  const immediateSelection = useImmediateAnalysisSelection(analysisId);
   const {
     newFlowError,
     pendingCopyPasteAnalysis,
@@ -91,9 +93,7 @@ export default function JobMatchAnalysisView({
     replaceAnalysis,
     goToAnalysisById,
   });
-
-  const selectedAnalysisId = analysisId;
-  const detailQuery = useJobMatchAnalysisDetail(selectedAnalysisId);
+  const detailQuery = useJobMatchAnalysisDetail(immediateSelection.selectedAnalysisId);
   const analyses = useMemo(() => listQuery.data ?? [], [listQuery.data]);
   const filteredAnalyses = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -104,13 +104,13 @@ export default function JobMatchAnalysisView({
     });
   }, [analyses, searchQuery]);
   const detail = detailQuery.data ?? null;
-  const selectedIdInCurrentList =
-    filteredAnalyses.find((analysis) => analysis.id === selectedAnalysisId)?.id ?? null;
+  const selectedIdInCurrentList = filteredAnalyses.find(
+    (analysis) => analysis.id === immediateSelection.selectedAnalysisId,
+  )?.id ?? null;
   const isResolvingList = listQuery.isFetching;
   const isListPending = listQuery.isPending;
   const isDetailPending = detailQuery.isPending;
   const isDesktopLayout = useIsDesktopLayout();
-
   useEffect(() => {
     if (
       isDesktopLayout &&
@@ -131,6 +131,7 @@ export default function JobMatchAnalysisView({
   const selectItem = (id: string) => {
     const item = analyses.find((a) => a.id === id);
     const itemHasScore = item?.aiScore !== null && item?.aiScore !== undefined;
+    immediateSelection.selectImmediately(id);
     selectAnalysis(id, itemHasScore);
   };
 
@@ -218,7 +219,6 @@ export default function JobMatchAnalysisView({
     });
     goToAnalysis("summary");
   };
-
   const applyCopyPasteResult = useJobMatchCopyPasteApplied(() => goToAnalysis("summary"));
 
   const openQuestions = () => {
@@ -245,7 +245,7 @@ export default function JobMatchAnalysisView({
   });
   const detailContent = (
     <JobMatchAnalysisContent
-      analysisId={selectedAnalysisId}
+      analysisId={immediateSelection.selectedAnalysisId}
       detail={detail}
       isLoading={shouldShowJobMatchAnalysisMainLoader({
         analysisCount: filteredAnalyses.length,
