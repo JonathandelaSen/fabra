@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
+const port = process.env.PORT ?? "3000";
 
 function detectLanIp() {
   const interfaces = networkInterfaces();
@@ -52,9 +53,9 @@ const mobileSupabaseUrl = supabaseUrl.toString().replace(/\/$/, "");
 
 console.log(`[dev:mobile] IP LAN detectada: ${lanIp}`);
 console.log(`[dev:mobile] NEXT_PUBLIC_SUPABASE_URL=${mobileSupabaseUrl}`);
-console.log(`[dev:mobile] Abre en el móvil: http://${lanIp}:3000`);
+console.log(`[dev:mobile] Abre en el móvil: http://${lanIp}:${port}`);
 
-const child = spawn("next", ["dev", "-H", "0.0.0.0"], {
+const child = spawn("next", ["dev", "-H", "0.0.0.0", "-p", port], {
   cwd: projectRoot,
   stdio: "inherit",
   shell: true,

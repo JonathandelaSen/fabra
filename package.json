@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "dev:mobile": "node scripts/dev-mobile.mjs",
+    "dev:android": "node scripts/dev-emulator.mjs android",
+    "dev:ios": "node scripts/dev-emulator.mjs ios",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
