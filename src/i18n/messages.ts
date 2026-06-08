@@ -571,6 +571,7 @@ export const messages = {
         rename: "Rename",
         delete: "Delete",
         importJsonResume: "Import JSON Resume",
+        save: "Save",
       },
       templates: {
         badge: "Template catalog",
@@ -1986,6 +1987,7 @@ export const messages = {
         rename: "Renombrar",
         delete: "Eliminar",
         importJsonResume: "Importar JSON Resume",
+        save: "Guardar",
       },
       templates: {
         badge: "Catálogo de plantillas",
