@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { Plus, RefreshCw } from "lucide-react";
+import { MessageSquareQuote, Plus, RefreshCw } from "lucide-react";
 import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
@@ -170,8 +170,13 @@ export function FeedbackNotesSidebar({
       {isLoading ? (
         <FeedbackNotesListSkeleton />
       ) : feedbacks.length === 0 ? (
-        <div className="px-4 py-12 text-center text-xs text-text-faint">
-          {t("empty")}
+        <div className="px-4 py-12 text-center">
+          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-500/10">
+            <MessageSquareQuote className="h-5 w-5 text-indigo-400" />
+          </div>
+          <p className="text-sm font-medium text-zinc-400">
+            {t("empty")}
+          </p>
         </div>
       ) : (
         feedbacks.map((feedback) => (

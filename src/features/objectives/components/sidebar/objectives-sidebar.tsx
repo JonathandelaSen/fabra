@@ -2,6 +2,7 @@ import type {
   ObjectiveContext,
   ObjectiveWithRelations,
 } from "../../api/objectives-api";
+import { Target } from "lucide-react";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
 import { SectionGroupHeader } from "@/components/shared/section-group-header";
 import { ObjectivesSidebarSkeleton } from "../objectives-skeleton";
@@ -52,8 +53,13 @@ export function ObjectivesSidebar({
       {!hasLoadedWorkspace ? (
         <ObjectivesSidebarSkeleton />
       ) : commitments.length === 0 ? (
-        <div className="px-4 py-12 text-center text-xs text-text-faint">
-          {t("empty")}
+        <div className="px-4 py-12 text-center">
+          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-500/10">
+            <Target className="h-5 w-5 text-indigo-400" />
+          </div>
+          <p className="text-sm font-medium text-zinc-400">
+            {t("empty")}
+          </p>
         </div>
       ) : (
         groups.map((group) => {

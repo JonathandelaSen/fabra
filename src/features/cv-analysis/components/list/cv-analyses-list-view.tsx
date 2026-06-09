@@ -71,11 +71,6 @@ export default function CVAnalysesListView({
           <p className="text-sm font-medium text-zinc-400">
             {searchQuery ? t("noCvMatches") : t("cvEmptyTitle")}
           </p>
-          {!searchQuery && (
-            <p className="mt-1 text-xs text-zinc-600">
-              {t("cvEmptyDescription")}
-            </p>
-          )}
         </div>
       ) : (
         <div className="flex flex-col gap-2">

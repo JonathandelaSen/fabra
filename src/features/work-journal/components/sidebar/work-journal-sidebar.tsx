@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { BookOpenText } from "lucide-react";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
 import type {
   WorkJournalEntryLegacy as WorkJournalEntry,
@@ -65,8 +66,13 @@ export function WorkJournalSidebar({
       {isLoading ? (
         <WorkJournalSidebarSkeleton />
       ) : entries.length === 0 ? (
-        <div className="px-4 py-12 text-center text-xs text-text-faint">
-          {search || contextFilter ? "No matches found." : t("empty")}
+        <div className="px-4 py-12 text-center">
+          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-500/10">
+            <BookOpenText className="h-5 w-5 text-indigo-400" />
+          </div>
+          <p className="text-sm font-medium text-zinc-400">
+            {search || contextFilter ? "No matches found." : t("empty")}
+          </p>
         </div>
       ) : (
         <div className="flex flex-col">
