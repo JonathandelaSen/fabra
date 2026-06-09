@@ -4,6 +4,8 @@ import {
   UserId,
   type UserId as UserIdType,
 } from "@/modules/shared";
+import { ConversationCreatedEvent } from "../events/conversation-created.event";
+import { ConversationRenamedEvent } from "../events/conversation-renamed.event";
 import { AnalysisChatConversationId } from "../value-objects/analysis-chat-conversation-id.value-object";
 import { AnalysisChatTitle } from "../value-objects/analysis-chat-title.value-object";
 import {
@@ -42,7 +44,7 @@ export class Conversation extends AggregateRoot {
   }
 
   static create(params: ConversationCreateParams): Conversation {
-    return new Conversation(
+    const conversation = new Conversation(
       params.id,
       params.userId,
       params.analysisReference,
@@ -50,6 +52,8 @@ export class Conversation extends AggregateRoot {
       params.createdAt,
       params.updatedAt,
     );
+    conversation.recordDomainEvent(new ConversationCreatedEvent(conversation.id));
+    return conversation;
   }
 
   static fromPrimitives(primitives: ConversationPrimitives): Conversation {
@@ -78,6 +82,7 @@ export class Conversation extends AggregateRoot {
   rename(title: AnalysisChatTitle, updatedAt?: Timestamp): void {
     this.conversationTitle = title;
     if (updatedAt) this.conversationUpdatedAt = updatedAt;
+    this.recordDomainEvent(new ConversationRenamedEvent(this.id));
   }
 
   toPrimitives(): ConversationPrimitives {

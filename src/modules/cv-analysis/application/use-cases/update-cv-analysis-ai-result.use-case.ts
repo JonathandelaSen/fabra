@@ -26,19 +26,16 @@ export class UpdateCVAnalysisAIResultUseCase {
     if (!current) return null;
 
     const now = new Date().toISOString();
-    const primitives = current.toPrimitives();
-    return this.deps.repo.save(
-      CVAnalysis.fromPrimitives({
-        ...primitives,
-        aiModel: input.aiModel,
-        score: input.score,
-        feedback: input.feedback,
-        keywords: input.keywords,
-        improvements: input.improvements,
-        aiContext: input.aiContext,
-        analyzedAt: now,
-        updatedAt: now,
-      }),
-    );
+    current.applyAIResult({
+      aiModel: input.aiModel,
+      score: input.score,
+      feedback: input.feedback,
+      keywords: input.keywords,
+      improvements: input.improvements,
+      aiContext: input.aiContext,
+      analyzedAt: now,
+      updatedAt: now,
+    });
+    return this.deps.repo.save(current);
   }
 }

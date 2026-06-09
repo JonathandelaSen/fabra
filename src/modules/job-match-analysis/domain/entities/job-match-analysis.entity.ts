@@ -4,6 +4,9 @@ import {
   UserId,
   type UserId as UserIdType,
 } from "@/modules/shared";
+import { JobMatchAnalysisCreatedEvent } from "../events/job-match-analysis-created.event";
+import { JobMatchAnalysisJobUrlUpdatedEvent } from "../events/job-match-analysis-job-url-updated.event";
+import { JobMatchAnalysisScoredEvent } from "../events/job-match-analysis-scored.event";
 import { JobMatchAnalysisId } from "../value-objects/job-match-analysis-id.value-object";
 
 export interface JobMatchAnalysisExtractedTextPrimitives {
@@ -81,26 +84,26 @@ export class JobMatchAnalysis extends AggregateRoot {
     private readonly analysisFileSize: number | null,
     private readonly analysisPdfStoragePath: string | null,
     private readonly analysisExtractedText: JobMatchAnalysisExtractedTextPrimitives,
-    private readonly analysisAIModel: string | null,
-    private readonly analysisScore: number | null,
-    private readonly analysisFeedback: string | null,
-    private readonly analysisAIKeywords: string[],
-    private readonly analysisImprovements: string[],
-    private readonly analysisJobSnapshot: unknown | null,
-    private readonly analysisJobKeywords: string[],
-    private readonly analysisCVKeywords: string[],
-    private readonly analysisMatchingKeywords: string[],
-    private readonly analysisMissingKeywords: string[],
-    private readonly analysisAnalyzedAt: string | null,
+    private analysisAIModel: string | null,
+    private analysisScore: number | null,
+    private analysisFeedback: string | null,
+    private analysisAIKeywords: string[],
+    private analysisImprovements: string[],
+    private analysisJobSnapshot: unknown | null,
+    private analysisJobKeywords: string[],
+    private analysisCVKeywords: string[],
+    private analysisMatchingKeywords: string[],
+    private analysisMissingKeywords: string[],
+    private analysisAnalyzedAt: string | null,
     private readonly analysisLegacyAnalysisId: string | null,
     private readonly analysisCreatedAt: Timestamp,
-    private readonly analysisUpdatedAt: Timestamp
+    private analysisUpdatedAt: Timestamp
   ) {
     super();
   }
 
   static create(params: JobMatchAnalysisCreateParams): JobMatchAnalysis {
-    return new JobMatchAnalysis(
+    const analysis = new JobMatchAnalysis(
       params.id,
       params.userId,
       params.cvDocumentId,
@@ -126,39 +129,80 @@ export class JobMatchAnalysis extends AggregateRoot {
       params.createdAt,
       params.updatedAt
     );
+    analysis.recordDomainEvent(new JobMatchAnalysisCreatedEvent(analysis.id));
+    return analysis;
   }
 
   static fromPrimitives(primitives: JobMatchAnalysisPrimitives): JobMatchAnalysis {
-    return JobMatchAnalysis.create({
-      id: JobMatchAnalysisId.fromPrimitives(primitives.id),
-      userId: UserId.fromPrimitives(primitives.userId),
-      cvDocumentId: primitives.cvDocumentId,
-      cvStructuredProfileId: primitives.cvStructuredProfileId,
-      jobOpportunityId: primitives.jobOpportunityId,
-      title: primitives.title,
-      filename: primitives.filename,
-      fileSize: primitives.fileSize,
-      pdfStoragePath: primitives.pdfStoragePath,
-      extractedText: primitives.extractedText,
-      aiModel: primitives.aiModel,
-      score: primitives.score,
-      feedback: primitives.feedback,
-      aiKeywords: primitives.aiKeywords,
-      improvements: primitives.improvements,
-      jobSnapshot: primitives.jobSnapshot,
-      jobKeywords: primitives.jobKeywords,
-      cvKeywords: primitives.cvKeywords,
-      matchingKeywords: primitives.matchingKeywords,
-      missingKeywords: primitives.missingKeywords,
-      analyzedAt: primitives.analyzedAt,
-      legacyAnalysisId: primitives.legacyAnalysisId,
-      createdAt: Timestamp.fromPrimitives(primitives.createdAt),
-      updatedAt: Timestamp.fromPrimitives(primitives.updatedAt),
-    });
+    return new JobMatchAnalysis(
+      JobMatchAnalysisId.fromPrimitives(primitives.id),
+      UserId.fromPrimitives(primitives.userId),
+      primitives.cvDocumentId,
+      primitives.cvStructuredProfileId,
+      primitives.jobOpportunityId,
+      primitives.title,
+      primitives.filename,
+      primitives.fileSize,
+      primitives.pdfStoragePath,
+      primitives.extractedText,
+      primitives.aiModel,
+      primitives.score,
+      primitives.feedback,
+      primitives.aiKeywords,
+      primitives.improvements,
+      primitives.jobSnapshot,
+      primitives.jobKeywords,
+      primitives.cvKeywords,
+      primitives.matchingKeywords,
+      primitives.missingKeywords,
+      primitives.analyzedAt,
+      primitives.legacyAnalysisId,
+      Timestamp.fromPrimitives(primitives.createdAt),
+      Timestamp.fromPrimitives(primitives.updatedAt)
+    );
   }
 
   get id(): string {
     return this.analysisId.toPrimitives();
+  }
+
+  applyAIResult(input: {
+    aiModel: string;
+    score: number;
+    feedback: string;
+    aiKeywords: string[];
+    improvements: string[];
+    jobSnapshot: unknown | null;
+    jobKeywords: string[];
+    cvKeywords: string[];
+    matchingKeywords: string[];
+    missingKeywords: string[];
+    analyzedAt: string;
+    updatedAt: string;
+  }): void {
+    this.analysisAIModel = input.aiModel;
+    this.analysisScore = input.score;
+    this.analysisFeedback = input.feedback;
+    this.analysisAIKeywords = input.aiKeywords;
+    this.analysisImprovements = input.improvements;
+    this.analysisJobSnapshot = input.jobSnapshot;
+    this.analysisJobKeywords = input.jobKeywords;
+    this.analysisCVKeywords = input.cvKeywords;
+    this.analysisMatchingKeywords = input.matchingKeywords;
+    this.analysisMissingKeywords = input.missingKeywords;
+    this.analysisAnalyzedAt = input.analyzedAt;
+    this.analysisUpdatedAt = Timestamp.fromPrimitives(input.updatedAt);
+    this.recordDomainEvent(new JobMatchAnalysisScoredEvent(this.id, input.score, input.aiModel));
+  }
+
+  updateJobUrl(jobUrl: string | null, updatedAt: string): void {
+    const snapshot =
+      this.analysisJobSnapshot && typeof this.analysisJobSnapshot === "object"
+        ? { ...(this.analysisJobSnapshot as Record<string, unknown>) }
+        : {};
+    this.analysisJobSnapshot = { ...snapshot, url: jobUrl };
+    this.analysisUpdatedAt = Timestamp.fromPrimitives(updatedAt);
+    this.recordDomainEvent(new JobMatchAnalysisJobUrlUpdatedEvent(this.id, jobUrl));
   }
 
   toPrimitives(): JobMatchAnalysisPrimitives {

@@ -53,26 +53,24 @@ export class ScoreJobMatchAnalysisUseCase {
     });
 
     const now = new Date().toISOString();
-    return this.deps.repo.save(
-      JobMatchAnalysis.fromPrimitives({
-        ...primitives,
-        aiModel: input.model,
-        score: result.score,
-        feedback: result.feedback,
-        aiKeywords: result.aiKeywords,
-        improvements: result.improvements,
-        jobSnapshot: {
-          description: input.jobDescription,
-          url: input.jobUrl,
-          keyData: result.jobKeyData,
-        },
-        jobKeywords: result.jobKeywords,
-        cvKeywords: result.cvKeywords,
-        matchingKeywords: result.matchingKeywords,
-        missingKeywords: result.missingKeywords,
-        analyzedAt: now,
-        updatedAt: now,
-      }),
-    );
+    current.applyAIResult({
+      aiModel: input.model,
+      score: result.score,
+      feedback: result.feedback,
+      aiKeywords: result.aiKeywords,
+      improvements: result.improvements,
+      jobSnapshot: {
+        description: input.jobDescription,
+        url: input.jobUrl,
+        keyData: result.jobKeyData,
+      },
+      jobKeywords: result.jobKeywords,
+      cvKeywords: result.cvKeywords,
+      matchingKeywords: result.matchingKeywords,
+      missingKeywords: result.missingKeywords,
+      analyzedAt: now,
+      updatedAt: now,
+    });
+    return this.deps.repo.save(current);
   }
 }

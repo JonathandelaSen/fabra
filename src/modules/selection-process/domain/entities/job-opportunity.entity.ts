@@ -4,6 +4,7 @@ import {
   UserId,
   type UserId as UserIdType,
 } from "@/modules/shared";
+import { JobOpportunityCreatedEvent } from "../events/job-opportunity-created.event";
 import { JobOpportunityId } from "../value-objects/job-opportunity-id.value-object";
 
 export interface JobOpportunityPrimitives {
@@ -73,7 +74,7 @@ export class JobOpportunity extends AggregateRoot {
   }
 
   static create(params: JobOpportunityCreateParams): JobOpportunity {
-    return new JobOpportunity(
+    const opportunity = new JobOpportunity(
       params.id,
       params.userId,
       params.title,
@@ -93,29 +94,31 @@ export class JobOpportunity extends AggregateRoot {
       params.createdAt,
       params.updatedAt
     );
+    opportunity.recordDomainEvent(new JobOpportunityCreatedEvent(opportunity.id));
+    return opportunity;
   }
 
   static fromPrimitives(primitives: JobOpportunityPrimitives): JobOpportunity {
-    return JobOpportunity.create({
-      id: JobOpportunityId.fromPrimitives(primitives.id),
-      userId: UserId.fromPrimitives(primitives.userId),
-      title: primitives.title,
-      company: primitives.company,
-      location: primitives.location,
-      remote: primitives.remote,
-      salary: primitives.salary,
-      seniority: primitives.seniority,
-      contractType: primitives.contractType,
-      benefits: primitives.benefits,
-      requirements: primitives.requirements,
-      responsibilities: primitives.responsibilities,
-      notablePoints: primitives.notablePoints,
-      description: primitives.description,
-      url: primitives.url,
-      sourceJobMatchAnalysisId: primitives.sourceJobMatchAnalysisId,
-      createdAt: Timestamp.fromPrimitives(primitives.createdAt),
-      updatedAt: Timestamp.fromPrimitives(primitives.updatedAt),
-    });
+    return new JobOpportunity(
+      JobOpportunityId.fromPrimitives(primitives.id),
+      UserId.fromPrimitives(primitives.userId),
+      primitives.title,
+      primitives.company,
+      primitives.location,
+      primitives.remote,
+      primitives.salary,
+      primitives.seniority,
+      primitives.contractType,
+      primitives.benefits,
+      primitives.requirements,
+      primitives.responsibilities,
+      primitives.notablePoints,
+      primitives.description,
+      primitives.url,
+      primitives.sourceJobMatchAnalysisId,
+      Timestamp.fromPrimitives(primitives.createdAt),
+      Timestamp.fromPrimitives(primitives.updatedAt)
+    );
   }
 
   get id(): string {

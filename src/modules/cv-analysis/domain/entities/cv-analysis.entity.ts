@@ -4,6 +4,8 @@ import {
   UserId,
   type UserId as UserIdType,
 } from "@/modules/shared";
+import { CVAnalysisCreatedEvent } from "../events/cv-analysis-created.event";
+import { CVAnalysisScoredEvent } from "../events/cv-analysis-scored.event";
 import { CVAnalysisId } from "../value-objects/cv-analysis-id.value-object";
 
 export interface CVAnalysisExtractedTextPrimitives {
@@ -70,22 +72,22 @@ export class CVAnalysis extends AggregateRoot {
     private readonly analysisFileSize: number | null,
     private readonly analysisPdfStoragePath: string | null,
     private readonly analysisExtractedText: CVAnalysisExtractedTextPrimitives,
-    private readonly analysisAIModel: string | null,
-    private readonly analysisScore: number | null,
-    private readonly analysisFeedback: string | null,
-    private readonly analysisKeywords: string[],
-    private readonly analysisImprovements: string[],
-    private readonly analysisAIContext: unknown | null,
-    private readonly analysisAnalyzedAt: string | null,
+    private analysisAIModel: string | null,
+    private analysisScore: number | null,
+    private analysisFeedback: string | null,
+    private analysisKeywords: string[],
+    private analysisImprovements: string[],
+    private analysisAIContext: unknown | null,
+    private analysisAnalyzedAt: string | null,
     private readonly analysisLegacyAnalysisId: string | null,
     private readonly analysisCreatedAt: Timestamp,
-    private readonly analysisUpdatedAt: Timestamp
+    private analysisUpdatedAt: Timestamp
   ) {
     super();
   }
 
   static create(params: CVAnalysisCreateParams): CVAnalysis {
-    return new CVAnalysis(
+    const analysis = new CVAnalysis(
       params.id,
       params.userId,
       params.cvDocumentId,
@@ -106,34 +108,57 @@ export class CVAnalysis extends AggregateRoot {
       params.createdAt,
       params.updatedAt
     );
+    analysis.recordDomainEvent(new CVAnalysisCreatedEvent(analysis.id));
+    return analysis;
   }
 
   static fromPrimitives(primitives: CVAnalysisPrimitives): CVAnalysis {
-    return CVAnalysis.create({
-      id: CVAnalysisId.fromPrimitives(primitives.id),
-      userId: UserId.fromPrimitives(primitives.userId),
-      cvDocumentId: primitives.cvDocumentId,
-      cvStructuredProfileId: primitives.cvStructuredProfileId,
-      title: primitives.title,
-      filename: primitives.filename,
-      fileSize: primitives.fileSize,
-      pdfStoragePath: primitives.pdfStoragePath,
-      extractedText: primitives.extractedText,
-      aiModel: primitives.aiModel,
-      score: primitives.score,
-      feedback: primitives.feedback,
-      keywords: primitives.keywords,
-      improvements: primitives.improvements,
-      aiContext: primitives.aiContext,
-      analyzedAt: primitives.analyzedAt,
-      legacyAnalysisId: primitives.legacyAnalysisId,
-      createdAt: Timestamp.fromPrimitives(primitives.createdAt),
-      updatedAt: Timestamp.fromPrimitives(primitives.updatedAt),
-    });
+    return new CVAnalysis(
+      CVAnalysisId.fromPrimitives(primitives.id),
+      UserId.fromPrimitives(primitives.userId),
+      primitives.cvDocumentId,
+      primitives.cvStructuredProfileId,
+      primitives.title,
+      primitives.filename,
+      primitives.fileSize,
+      primitives.pdfStoragePath,
+      primitives.extractedText,
+      primitives.aiModel,
+      primitives.score,
+      primitives.feedback,
+      primitives.keywords,
+      primitives.improvements,
+      primitives.aiContext,
+      primitives.analyzedAt,
+      primitives.legacyAnalysisId,
+      Timestamp.fromPrimitives(primitives.createdAt),
+      Timestamp.fromPrimitives(primitives.updatedAt)
+    );
   }
 
   get id(): string {
     return this.analysisId.toPrimitives();
+  }
+
+  applyAIResult(input: {
+    aiModel: string;
+    score: number;
+    feedback: string;
+    keywords: string[];
+    improvements: string[];
+    aiContext: unknown | null;
+    analyzedAt: string;
+    updatedAt: string;
+  }): void {
+    this.analysisAIModel = input.aiModel;
+    this.analysisScore = input.score;
+    this.analysisFeedback = input.feedback;
+    this.analysisKeywords = input.keywords;
+    this.analysisImprovements = input.improvements;
+    this.analysisAIContext = input.aiContext;
+    this.analysisAnalyzedAt = input.analyzedAt;
+    this.analysisUpdatedAt = Timestamp.fromPrimitives(input.updatedAt);
+    this.recordDomainEvent(new CVAnalysisScoredEvent(this.id, input.score, input.aiModel));
   }
 
   toPrimitives(): CVAnalysisPrimitives {

@@ -4,6 +4,7 @@ import {
   UserId,
   type UserId as UserIdType,
 } from "@/modules/shared";
+import { ChatMessageCreatedEvent } from "../events/chat-message-created.event";
 import { AnalysisChatContent } from "../value-objects/analysis-chat-content.value-object";
 import { AnalysisChatConversationId } from "../value-objects/analysis-chat-conversation-id.value-object";
 import { AnalysisChatMessageId } from "../value-objects/analysis-chat-message-id.value-object";
@@ -58,7 +59,7 @@ export class ChatMessage extends AggregateRoot {
   }
 
   static createUserMessage(params: ChatMessageCreateParams): ChatMessage {
-    return new ChatMessage(
+    const message = new ChatMessage(
       params.id,
       params.userId,
       params.analysisReference,
@@ -69,12 +70,14 @@ export class ChatMessage extends AggregateRoot {
       null,
       params.createdAt,
     );
+    message.recordCreatedEvent();
+    return message;
   }
 
   static createAssistantMessage(
     params: AssistantChatMessageCreateParams,
   ): ChatMessage {
-    return new ChatMessage(
+    const message = new ChatMessage(
       params.id,
       params.userId,
       params.analysisReference,
@@ -84,6 +87,14 @@ export class ChatMessage extends AggregateRoot {
       params.model,
       params.metadata,
       params.createdAt,
+    );
+    message.recordCreatedEvent();
+    return message;
+  }
+
+  private recordCreatedEvent(): void {
+    this.recordDomainEvent(
+      new ChatMessageCreatedEvent(this.id, this.conversationId, this.messageRole.toPrimitives()),
     );
   }
 

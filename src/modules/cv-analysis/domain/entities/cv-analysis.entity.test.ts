@@ -77,5 +77,74 @@ describe("CVAnalysis", () => {
 
     expect(analysis.id).toBe("analysis-1");
     expect(analysis.toPrimitives().score).toBe(80);
+    expect(analysis.pullDomainEvents()).toEqual([]);
+  });
+
+  const buildAnalysis = () =>
+    CVAnalysis.create({
+      id: CVAnalysisId.fromPrimitives("analysis-1"),
+      userId: UserId.fromPrimitives("user-1"),
+      cvDocumentId: "cv-1",
+      cvStructuredProfileId: null,
+      title: "General analysis",
+      filename: "cv.pdf",
+      fileSize: 100,
+      pdfStoragePath: "user-1/cv.pdf",
+      extractedText: {
+        textPython: "text",
+        textPdfjs: null,
+        textNode: null,
+        extractErrorPython: null,
+        extractErrorPdfjs: null,
+        extractErrorNode: null,
+      },
+      aiModel: null,
+      score: null,
+      feedback: null,
+      keywords: [],
+      improvements: [],
+      aiContext: null,
+      analyzedAt: null,
+      legacyAnalysisId: "analysis-1",
+      createdAt: Timestamp.fromPrimitives(now),
+      updatedAt: Timestamp.fromPrimitives(now),
+    });
+
+  it("records a created event on create", () => {
+    const events = buildAnalysis().pullDomainEvents();
+    expect(events.map((e) => e.eventName)).toEqual(["cv_analysis_created"]);
+    expect(events[0].toPrimitives()).toEqual({ analysisId: "analysis-1" });
+  });
+
+  it("records a scored event and applies the AI result", () => {
+    const analysis = buildAnalysis();
+    analysis.pullDomainEvents();
+
+    analysis.applyAIResult({
+      aiModel: "gemini",
+      score: 82,
+      feedback: "Strong profile",
+      keywords: ["React", "Node"],
+      improvements: ["Add metrics"],
+      aiContext: { additionalContext: "Focus on leadership" },
+      analyzedAt: "2026-05-13T11:00:00.000Z",
+      updatedAt: "2026-05-13T11:00:00.000Z",
+    });
+
+    expect(analysis.toPrimitives()).toMatchObject({
+      aiModel: "gemini",
+      score: 82,
+      feedback: "Strong profile",
+      keywords: ["React", "Node"],
+      analyzedAt: "2026-05-13T11:00:00.000Z",
+    });
+
+    const events = analysis.pullDomainEvents();
+    expect(events.map((e) => e.eventName)).toEqual(["cv_analysis_scored"]);
+    expect(events[0].toPrimitives()).toEqual({
+      analysisId: "analysis-1",
+      score: 82,
+      aiModel: "gemini",
+    });
   });
 });

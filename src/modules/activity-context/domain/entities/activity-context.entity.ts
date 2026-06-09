@@ -1,4 +1,9 @@
 import { AggregateRoot, EntityId, UserId } from "@/modules/shared";
+import { ActivityContextArchivedEvent } from "../events/activity-context-archived.event";
+import { ActivityContextCreatedEvent } from "../events/activity-context-created.event";
+import { ActivityContextDeletedEvent } from "../events/activity-context-deleted.event";
+import { ActivityContextRestoredEvent } from "../events/activity-context-restored.event";
+import { ActivityContextUpdatedEvent } from "../events/activity-context-updated.event";
 
 export type ActivityContextType = "employment" | "project" | "personal" | "other";
 export type ActivityContextStatus = "active" | "archived";
@@ -31,7 +36,7 @@ export class ActivityContext extends AggregateRoot {
   }
 
   static create(params: ActivityContextCreateParams): ActivityContext {
-    return new ActivityContext({
+    const context = new ActivityContext({
       id: params.id.toPrimitives(),
       userId: params.userId.toPrimitives(),
       type: assertType(params.type),
@@ -41,6 +46,8 @@ export class ActivityContext extends AggregateRoot {
       createdAt: params.createdAt,
       updatedAt: params.updatedAt,
     });
+    context.recordDomainEvent(new ActivityContextCreatedEvent(context.id));
+    return context;
   }
 
   static fromPrimitives(primitives: ActivityContextPrimitives): ActivityContext {
@@ -64,10 +71,34 @@ export class ActivityContext extends AggregateRoot {
   }
 
   update(input: Partial<Pick<ActivityContextPrimitives, "type" | "name" | "status">> & { updatedAt: string }): void {
-    if (input.type !== undefined) this.state.type = assertType(input.type);
-    if (input.name !== undefined) this.state.name = assertName(input.name);
-    if (input.status !== undefined) this.state.status = assertStatus(input.status);
+    const previousStatus = this.state.status;
+    const fields: string[] = [];
+    if (input.type !== undefined) {
+      this.state.type = assertType(input.type);
+      fields.push("type");
+    }
+    if (input.name !== undefined) {
+      this.state.name = assertName(input.name);
+      fields.push("name");
+    }
+    if (input.status !== undefined) {
+      this.state.status = assertStatus(input.status);
+      fields.push("status");
+    }
     this.state.updatedAt = input.updatedAt;
+
+    if (fields.length > 0) {
+      this.recordDomainEvent(new ActivityContextUpdatedEvent(this.id, fields));
+    }
+    if (previousStatus !== "archived" && this.state.status === "archived") {
+      this.recordDomainEvent(new ActivityContextArchivedEvent(this.id));
+    } else if (previousStatus === "archived" && this.state.status === "active") {
+      this.recordDomainEvent(new ActivityContextRestoredEvent(this.id));
+    }
+  }
+
+  delete(): void {
+    this.recordDomainEvent(new ActivityContextDeletedEvent(this.id));
   }
 
   toPrimitives(): ActivityContextPrimitives {

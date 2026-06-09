@@ -4,6 +4,9 @@ import {
   UserId,
   type UserId as UserIdType,
 } from "@/modules/shared";
+import { ProcessQuestionAnsweredEvent } from "../events/process-question-answered.event";
+import { ProcessQuestionCreatedEvent } from "../events/process-question-created.event";
+import { ProcessQuestionUpdatedEvent } from "../events/process-question-updated.event";
 import { JobOpportunityId } from "../value-objects/job-opportunity-id.value-object";
 import { ProcessQuestionId } from "../value-objects/process-question-id.value-object";
 import { ProcessQuestionText } from "../value-objects/process-question-text.value-object";
@@ -60,7 +63,7 @@ export class ProcessQuestion extends AggregateRoot {
   }
 
   static create(params: ProcessQuestionCreateParams): ProcessQuestion {
-    return new ProcessQuestion(
+    const question = new ProcessQuestion(
       params.id,
       params.userId,
       params.jobOpportunityId,
@@ -75,26 +78,28 @@ export class ProcessQuestion extends AggregateRoot {
       params.createdAt,
       params.updatedAt
     );
+    question.recordDomainEvent(new ProcessQuestionCreatedEvent(question.id));
+    return question;
   }
 
   static fromPrimitives(primitives: ProcessQuestionPrimitives): ProcessQuestion {
-    return ProcessQuestion.create({
-      id: ProcessQuestionId.fromPrimitives(primitives.id),
-      userId: UserId.fromPrimitives(primitives.userId),
-      jobOpportunityId: primitives.jobOpportunityId
+    return new ProcessQuestion(
+      ProcessQuestionId.fromPrimitives(primitives.id),
+      UserId.fromPrimitives(primitives.userId),
+      primitives.jobOpportunityId
         ? JobOpportunityId.fromPrimitives(primitives.jobOpportunityId)
         : null,
-      question: ProcessQuestionText.fromPrimitives(primitives.question),
-      context: primitives.context,
-      answer: primitives.answer,
-      aiModel: primitives.aiModel,
-      aiGeneratedAt: primitives.aiGeneratedAt,
-      sourceJobMatchAnalysisId: primitives.sourceJobMatchAnalysisId,
-      legacyInterviewQuestionId: primitives.legacyInterviewQuestionId,
-      legacyCvId: primitives.legacyCvId,
-      createdAt: Timestamp.fromPrimitives(primitives.createdAt),
-      updatedAt: Timestamp.fromPrimitives(primitives.updatedAt),
-    });
+      ProcessQuestionText.fromPrimitives(primitives.question),
+      primitives.context,
+      primitives.answer,
+      primitives.aiModel,
+      primitives.aiGeneratedAt,
+      primitives.sourceJobMatchAnalysisId,
+      primitives.legacyInterviewQuestionId,
+      primitives.legacyCvId,
+      Timestamp.fromPrimitives(primitives.createdAt),
+      Timestamp.fromPrimitives(primitives.updatedAt)
+    );
   }
 
   updateAnswer(input: {
@@ -107,6 +112,12 @@ export class ProcessQuestion extends AggregateRoot {
     this.processQuestionAIModel = input.aiModel;
     this.processQuestionAIGeneratedAt = input.aiGeneratedAt;
     this.processQuestionUpdatedAt = input.updatedAt;
+
+    if (input.answer && input.answer.trim().length > 0) {
+      this.recordDomainEvent(
+        new ProcessQuestionAnsweredEvent(this.id, input.aiModel !== null)
+      );
+    }
   }
 
   update(input: {
@@ -120,22 +131,45 @@ export class ProcessQuestion extends AggregateRoot {
     aiGeneratedAt?: string | null;
     updatedAt: Timestamp;
   }): void {
-    if (input.question) this.processQuestionText = input.question;
-    if (input.context !== undefined) this.processQuestionContext = input.context;
-    if (input.answer !== undefined) this.processQuestionAnswer = input.answer;
+    const fields: string[] = [];
+    if (input.question) {
+      this.processQuestionText = input.question;
+      fields.push("question");
+    }
+    if (input.context !== undefined) {
+      this.processQuestionContext = input.context;
+      fields.push("context");
+    }
+    if (input.answer !== undefined) {
+      this.processQuestionAnswer = input.answer;
+      fields.push("answer");
+    }
     if (input.jobOpportunityId !== undefined) {
       this.processQuestionJobOpportunityId = input.jobOpportunityId;
+      fields.push("jobOpportunityId");
     }
     if (input.sourceJobMatchAnalysisId !== undefined) {
       this.processQuestionSourceJobMatchAnalysisId =
         input.sourceJobMatchAnalysisId;
+      fields.push("sourceJobMatchAnalysisId");
     }
-    if (input.legacyCvId !== undefined) this.processQuestionLegacyCvId = input.legacyCvId;
-    if (input.aiModel !== undefined) this.processQuestionAIModel = input.aiModel;
+    if (input.legacyCvId !== undefined) {
+      this.processQuestionLegacyCvId = input.legacyCvId;
+      fields.push("legacyCvId");
+    }
+    if (input.aiModel !== undefined) {
+      this.processQuestionAIModel = input.aiModel;
+      fields.push("aiModel");
+    }
     if (input.aiGeneratedAt !== undefined) {
       this.processQuestionAIGeneratedAt = input.aiGeneratedAt;
+      fields.push("aiGeneratedAt");
     }
     this.processQuestionUpdatedAt = input.updatedAt;
+
+    if (fields.length > 0) {
+      this.recordDomainEvent(new ProcessQuestionUpdatedEvent(this.id, fields));
+    }
   }
 
   get id(): string {

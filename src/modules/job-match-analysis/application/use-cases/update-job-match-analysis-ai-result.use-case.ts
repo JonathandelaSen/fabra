@@ -32,27 +32,24 @@ export class UpdateJobMatchAnalysisAIResultUseCase {
     if (!current) return null;
 
     const now = new Date().toISOString();
-    const primitives = current.toPrimitives();
-    return this.deps.repo.save(
-      JobMatchAnalysis.fromPrimitives({
-        ...primitives,
-        aiModel: input.aiModel,
-        score: input.score,
-        feedback: input.feedback,
-        aiKeywords: input.aiKeywords,
-        improvements: input.improvements,
-        jobSnapshot: {
-          description: input.jobDescription,
-          url: input.jobUrl,
-          keyData: input.jobKeyData,
-        },
-        jobKeywords: input.jobKeywords,
-        cvKeywords: input.cvKeywords,
-        matchingKeywords: input.matchingKeywords,
-        missingKeywords: input.missingKeywords,
-        analyzedAt: now,
-        updatedAt: now,
-      }),
-    );
+    current.applyAIResult({
+      aiModel: input.aiModel,
+      score: input.score,
+      feedback: input.feedback,
+      aiKeywords: input.aiKeywords,
+      improvements: input.improvements,
+      jobSnapshot: {
+        description: input.jobDescription,
+        url: input.jobUrl,
+        keyData: input.jobKeyData,
+      },
+      jobKeywords: input.jobKeywords,
+      cvKeywords: input.cvKeywords,
+      matchingKeywords: input.matchingKeywords,
+      missingKeywords: input.missingKeywords,
+      analyzedAt: now,
+      updatedAt: now,
+    });
+    return this.deps.repo.save(current);
   }
 }

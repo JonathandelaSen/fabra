@@ -4,6 +4,9 @@ import {
   UserId,
   type UserId as UserIdType,
 } from "@/modules/shared";
+import { FollowUpCreatedEvent } from "../events/follow-up-created.event";
+import { FollowUpStatusChangedEvent } from "../events/follow-up-status-changed.event";
+import { FollowUpUpdatedEvent } from "../events/follow-up-updated.event";
 import { FollowUpId } from "../value-objects/follow-up-id.value-object";
 import {
   FollowUpStatus,
@@ -54,7 +57,7 @@ export class FollowUp extends AggregateRoot {
   }
 
   static create(params: FollowUpCreateParams): FollowUp {
-    return new FollowUp(
+    const followUp = new FollowUp(
       params.id,
       params.userId,
       params.jobOpportunityId,
@@ -66,21 +69,23 @@ export class FollowUp extends AggregateRoot {
       params.createdAt,
       params.updatedAt
     );
+    followUp.recordDomainEvent(new FollowUpCreatedEvent(followUp.id));
+    return followUp;
   }
 
   static fromPrimitives(primitives: FollowUpPrimitives): FollowUp {
-    return FollowUp.create({
-      id: FollowUpId.fromPrimitives(primitives.id),
-      userId: UserId.fromPrimitives(primitives.userId),
-      jobOpportunityId: JobOpportunityId.fromPrimitives(primitives.jobOpportunityId),
-      status: FollowUpStatus.fromPrimitives(primitives.status),
-      notes: primitives.notes,
-      nextAction: primitives.nextAction,
-      nextActionAt: primitives.nextActionAt,
-      sourceJobMatchAnalysisId: primitives.sourceJobMatchAnalysisId,
-      createdAt: Timestamp.fromPrimitives(primitives.createdAt),
-      updatedAt: Timestamp.fromPrimitives(primitives.updatedAt),
-    });
+    return new FollowUp(
+      FollowUpId.fromPrimitives(primitives.id),
+      UserId.fromPrimitives(primitives.userId),
+      JobOpportunityId.fromPrimitives(primitives.jobOpportunityId),
+      FollowUpStatus.fromPrimitives(primitives.status),
+      primitives.notes,
+      primitives.nextAction,
+      primitives.nextActionAt,
+      primitives.sourceJobMatchAnalysisId,
+      Timestamp.fromPrimitives(primitives.createdAt),
+      Timestamp.fromPrimitives(primitives.updatedAt)
+    );
   }
 
   update(input: {
@@ -90,11 +95,18 @@ export class FollowUp extends AggregateRoot {
     nextActionAt: string | null;
     updatedAt: Timestamp;
   }): void {
+    const previousStatus = this.followUpStatus.toPrimitives();
     this.followUpStatus = input.status;
     this.followUpNotes = input.notes;
     this.followUpNextAction = input.nextAction;
     this.followUpNextActionAt = input.nextActionAt;
     this.followUpUpdatedAt = input.updatedAt;
+
+    this.recordDomainEvent(new FollowUpUpdatedEvent(this.id));
+    const newStatus = input.status.toPrimitives();
+    if (previousStatus !== newStatus) {
+      this.recordDomainEvent(new FollowUpStatusChangedEvent(this.id, previousStatus, newStatus));
+    }
   }
 
   get id(): string {

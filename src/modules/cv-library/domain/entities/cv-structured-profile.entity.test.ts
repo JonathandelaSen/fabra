@@ -34,6 +34,24 @@ describe("CVStructuredProfile", () => {
     });
   });
 
+  it("records a created event on create", () => {
+    const structured = CVStructuredProfile.create({
+      id: CVStructuredProfileId.fromPrimitives("profile-1"),
+      userId: UserId.fromPrimitives("user-1"),
+      cvDocumentId: CVDocumentId.fromPrimitives("cv-1"),
+      schemaVersion: ProfileSchemaVersion.fromPrimitives("standard-v1"),
+      sourceTextHash: SourceTextHash.fromPrimitives("hash-1"),
+      aiModel: AIModelName.fromPrimitives("gemini"),
+      profile,
+      createdAt: Timestamp.fromPrimitives("2026-05-13T10:00:00.000Z"),
+      updatedAt: Timestamp.fromPrimitives("2026-05-13T10:00:00.000Z"),
+    });
+
+    const events = structured.pullDomainEvents();
+    expect(events.map((e) => e.eventName)).toEqual(["cv_structured_profile_created"]);
+    expect(events[0].toPrimitives()).toEqual({ profileId: "profile-1", cvDocumentId: "cv-1" });
+  });
+
   it("hydrates from primitives", () => {
     const structured = CVStructuredProfile.fromPrimitives({
       id: "profile-1",
@@ -49,5 +67,6 @@ describe("CVStructuredProfile", () => {
 
     expect(structured.id).toBe("profile-1");
     expect(structured.cvDocumentId).toBe("cv-1");
+    expect(structured.pullDomainEvents()).toEqual([]);
   });
 });

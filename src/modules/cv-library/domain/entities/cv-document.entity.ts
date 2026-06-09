@@ -4,6 +4,13 @@ import {
   UserId,
   type UserId as UserIdType,
 } from "@/modules/shared";
+import { CVDocumentCreatedEvent } from "../events/cv-document-created.event";
+import { CVDocumentDeletedEvent } from "../events/cv-document-deleted.event";
+import { CVDocumentExtractedTextUpdatedEvent } from "../events/cv-document-extracted-text-updated.event";
+import { CVDocumentProfileUpdatedEvent } from "../events/cv-document-profile-updated.event";
+import { CVDocumentPublishedEvent } from "../events/cv-document-published.event";
+import { CVDocumentRenamedEvent } from "../events/cv-document-renamed.event";
+import { CVDocumentUnpublishedEvent } from "../events/cv-document-unpublished.event";
 import {
   CVDocumentType,
   type CVDocumentTypePrimitives,
@@ -99,7 +106,7 @@ export class CVDocument extends AggregateRoot {
   }
 
   static create(params: CVDocumentCreateParams): CVDocument {
-    return new CVDocument(
+    const document = new CVDocument(
       params.id,
       params.userId,
       params.name,
@@ -119,29 +126,31 @@ export class CVDocument extends AggregateRoot {
       params.createdAt,
       params.updatedAt,
     );
+    document.recordDomainEvent(new CVDocumentCreatedEvent(document.id, document.type));
+    return document;
   }
 
   static fromPrimitives(primitives: CVDocumentPrimitives): CVDocument {
-    return CVDocument.create({
-      id: CVDocumentId.fromPrimitives(primitives.id),
-      userId: UserId.fromPrimitives(primitives.userId),
-      name: CVDocumentName.fromPrimitives(primitives.name),
-      filename: primitives.filename,
-      fileSize: primitives.fileSize,
-      pdfStoragePath: primitives.pdfStoragePath,
-      type: CVDocumentType.fromPrimitives(primitives.type),
-      sourceCvId: primitives.sourceCvId,
-      templateId: primitives.templateId,
-      templateLocale: primitives.templateLocale,
-      schemaVersion: primitives.schemaVersion,
-      sourceTextHash: primitives.sourceTextHash,
-      aiModel: primitives.aiModel,
-      profile: primitives.profile,
-      extractedText: primitives.extractedText,
-      publicSettings: primitives.publicSettings,
-      createdAt: Timestamp.fromPrimitives(primitives.createdAt),
-      updatedAt: Timestamp.fromPrimitives(primitives.updatedAt),
-    });
+    return new CVDocument(
+      CVDocumentId.fromPrimitives(primitives.id),
+      UserId.fromPrimitives(primitives.userId),
+      CVDocumentName.fromPrimitives(primitives.name),
+      primitives.filename,
+      primitives.fileSize,
+      primitives.pdfStoragePath,
+      CVDocumentType.fromPrimitives(primitives.type),
+      primitives.sourceCvId,
+      primitives.templateId,
+      primitives.templateLocale,
+      primitives.schemaVersion,
+      primitives.sourceTextHash,
+      primitives.aiModel,
+      primitives.profile,
+      primitives.extractedText,
+      primitives.publicSettings,
+      Timestamp.fromPrimitives(primitives.createdAt),
+      Timestamp.fromPrimitives(primitives.updatedAt),
+    );
   }
 
   get id(): string {
@@ -167,6 +176,7 @@ export class CVDocument extends AggregateRoot {
   rename(name: CVDocumentName, updatedAt: Timestamp): void {
     this.documentName = name;
     this.documentUpdatedAt = updatedAt;
+    this.recordDomainEvent(new CVDocumentRenamedEvent(this.id));
   }
 
   updateTemplateProfile(input: {
@@ -183,6 +193,7 @@ export class CVDocument extends AggregateRoot {
       this.documentTemplateLocale = input.templateLocale;
     }
     this.documentUpdatedAt = input.updatedAt;
+    this.recordDomainEvent(new CVDocumentProfileUpdatedEvent(this.id));
   }
 
   updateExtractedText(
@@ -191,6 +202,7 @@ export class CVDocument extends AggregateRoot {
   ): void {
     this.documentExtractedText = extractedText;
     this.documentUpdatedAt = updatedAt;
+    this.recordDomainEvent(new CVDocumentExtractedTextUpdatedEvent(this.id));
   }
 
   updatePublicSettings(settings: {
@@ -205,6 +217,15 @@ export class CVDocument extends AggregateRoot {
       slug: settings.slug,
       publishedAt: settings.publishedAt?.toPrimitives() ?? null,
     };
+    if (settings.enabled) {
+      this.recordDomainEvent(new CVDocumentPublishedEvent(this.id, settings.slug));
+    } else {
+      this.recordDomainEvent(new CVDocumentUnpublishedEvent(this.id));
+    }
+  }
+
+  delete(): void {
+    this.recordDomainEvent(new CVDocumentDeletedEvent(this.id));
   }
 
   toPrimitives(): CVDocumentPrimitives {

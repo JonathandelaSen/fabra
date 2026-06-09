@@ -59,6 +59,7 @@ export class DeleteCVDocumentUseCase {
     if (document.pdfStoragePath) {
       await this.deps.documentRepo.deleteStoredPdf(document.pdfStoragePath);
     }
+    document.delete();
     await this.deps.documentRepo.delete(id, userId);
     await this.deps.tracker.record({
       userId: input.userId,

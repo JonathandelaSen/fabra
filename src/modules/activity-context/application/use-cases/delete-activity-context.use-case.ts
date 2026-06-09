@@ -25,6 +25,7 @@ export class DeleteActivityContextUseCase {
       sourceContextId: id,
       defaultContextId: EntityId.fromPrimitives(defaultContext.id),
     });
+    context.delete();
     await this.deps.activityContextRepo.delete(id, userId);
     return { reassignedRecords };
   }

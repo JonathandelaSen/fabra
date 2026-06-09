@@ -48,4 +48,22 @@ describe("Conversation", () => {
 
     expect(conversation.toPrimitives().title).toBe("Nueva oferta");
   });
+
+  it("records a created event on create", () => {
+    const events = createConversation().pullDomainEvents();
+    expect(events.map((e) => e.eventName)).toEqual(["analysis_chat_conversation_created"]);
+    expect(events[0].toPrimitives()).toEqual({ conversationId: "conversation-1" });
+  });
+
+  it("records a renamed event on rename", () => {
+    const conversation = Conversation.fromPrimitives(
+      createConversation().toPrimitives(),
+    );
+
+    conversation.rename(AnalysisChatTitle.fromPrimitives("Nueva oferta"));
+    const events = conversation.pullDomainEvents();
+
+    expect(events.map((e) => e.eventName)).toEqual(["analysis_chat_conversation_renamed"]);
+    expect(events[0].toPrimitives()).toEqual({ conversationId: "conversation-1" });
+  });
 });

@@ -4,6 +4,7 @@ import {
   UserId,
   type UserId as UserIdType,
 } from "@/modules/shared";
+import { CVStructuredProfileCreatedEvent } from "../events/cv-structured-profile-created.event";
 import { AIModelName } from "../value-objects/ai-model-name.value-object";
 import { CVDocumentId } from "../value-objects/cv-document-id.value-object";
 import { CVStructuredProfileId } from "../value-objects/cv-structured-profile-id.value-object";
@@ -50,7 +51,7 @@ export class CVStructuredProfile extends AggregateRoot {
   }
 
   static create(params: CVStructuredProfileCreateParams): CVStructuredProfile {
-    return new CVStructuredProfile(
+    const profile = new CVStructuredProfile(
       params.id,
       params.userId,
       params.cvDocumentId,
@@ -61,22 +62,26 @@ export class CVStructuredProfile extends AggregateRoot {
       params.createdAt,
       params.updatedAt
     );
+    profile.recordDomainEvent(
+      new CVStructuredProfileCreatedEvent(profile.id, profile.cvDocumentId)
+    );
+    return profile;
   }
 
   static fromPrimitives(
     primitives: CVStructuredProfilePrimitives
   ): CVStructuredProfile {
-    return CVStructuredProfile.create({
-      id: CVStructuredProfileId.fromPrimitives(primitives.id),
-      userId: UserId.fromPrimitives(primitives.userId),
-      cvDocumentId: CVDocumentId.fromPrimitives(primitives.cvDocumentId),
-      schemaVersion: ProfileSchemaVersion.fromPrimitives(primitives.schemaVersion),
-      sourceTextHash: SourceTextHash.fromPrimitives(primitives.sourceTextHash),
-      aiModel: AIModelName.fromPrimitives(primitives.aiModel),
-      profile: primitives.profile,
-      createdAt: Timestamp.fromPrimitives(primitives.createdAt),
-      updatedAt: Timestamp.fromPrimitives(primitives.updatedAt),
-    });
+    return new CVStructuredProfile(
+      CVStructuredProfileId.fromPrimitives(primitives.id),
+      UserId.fromPrimitives(primitives.userId),
+      CVDocumentId.fromPrimitives(primitives.cvDocumentId),
+      ProfileSchemaVersion.fromPrimitives(primitives.schemaVersion),
+      SourceTextHash.fromPrimitives(primitives.sourceTextHash),
+      AIModelName.fromPrimitives(primitives.aiModel),
+      primitives.profile,
+      Timestamp.fromPrimitives(primitives.createdAt),
+      Timestamp.fromPrimitives(primitives.updatedAt)
+    );
   }
 
   get id(): string {

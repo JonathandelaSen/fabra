@@ -44,20 +44,18 @@ export class ScoreCVAnalysisUseCase {
     });
 
     const now = new Date().toISOString();
-    return this.deps.repo.save(
-      CVAnalysis.fromPrimitives({
-        ...primitives,
-        aiModel: input.model,
-        score: result.score,
-        feedback: result.feedback,
-        keywords: result.keywords,
-        improvements: result.improvements,
-        aiContext: input.additionalContext
-          ? { additionalContext: input.additionalContext }
-          : primitives.aiContext,
-        analyzedAt: now,
-        updatedAt: now,
-      }),
-    );
+    current.applyAIResult({
+      aiModel: input.model,
+      score: result.score,
+      feedback: result.feedback,
+      keywords: result.keywords,
+      improvements: result.improvements,
+      aiContext: input.additionalContext
+        ? { additionalContext: input.additionalContext }
+        : primitives.aiContext,
+      analyzedAt: now,
+      updatedAt: now,
+    });
+    return this.deps.repo.save(current);
   }
 }

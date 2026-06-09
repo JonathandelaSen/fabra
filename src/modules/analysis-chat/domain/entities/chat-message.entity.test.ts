@@ -59,4 +59,31 @@ describe("ChatMessage", () => {
     expect(message.toPrimitives().role).toBe("user");
     expect(message.pullDomainEvents()).toEqual([]);
   });
+
+  it("records a created event for a user message", () => {
+    const events = ChatMessage.createUserMessage(baseParams).pullDomainEvents();
+    expect(events.map((e) => e.eventName)).toEqual(["analysis_chat_message_created"]);
+    expect(events[0].toPrimitives()).toEqual({
+      messageId: "message-1",
+      conversationId: "conversation-1",
+      role: "user",
+    });
+  });
+
+  it("records a created event for an assistant message", () => {
+    const events = ChatMessage.createAssistantMessage({
+      ...baseParams,
+      id: AnalysisChatMessageId.fromPrimitives("message-2"),
+      content: AnalysisChatContent.fromPrimitives("Respuesta"),
+      model: "gemini-3.1-pro-preview",
+      metadata: { requestId: "req-1" },
+    }).pullDomainEvents();
+
+    expect(events.map((e) => e.eventName)).toEqual(["analysis_chat_message_created"]);
+    expect(events[0].toPrimitives()).toEqual({
+      messageId: "message-2",
+      conversationId: "conversation-1",
+      role: "assistant",
+    });
+  });
 });

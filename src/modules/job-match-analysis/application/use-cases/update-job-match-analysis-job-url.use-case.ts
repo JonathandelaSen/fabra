@@ -17,18 +17,7 @@ export class UpdateJobMatchAnalysisJobUrlUseCase {
     if (!current) return null;
 
     const now = new Date().toISOString();
-    const primitives = current.toPrimitives();
-    const snapshot =
-      primitives.jobSnapshot && typeof primitives.jobSnapshot === "object"
-        ? { ...(primitives.jobSnapshot as Record<string, unknown>) }
-        : {};
-
-    return this.deps.repo.save(
-      JobMatchAnalysis.fromPrimitives({
-        ...primitives,
-        jobSnapshot: { ...snapshot, url: input.jobUrl },
-        updatedAt: now,
-      }),
-    );
+    current.updateJobUrl(input.jobUrl, now);
+    return this.deps.repo.save(current);
   }
 }

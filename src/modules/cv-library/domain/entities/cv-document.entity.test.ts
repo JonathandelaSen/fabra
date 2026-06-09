@@ -82,4 +82,93 @@ describe("CVDocument", () => {
       publishedAt: "2026-05-13T12:00:00.000Z",
     });
   });
+
+  it("records a created event with the document type", () => {
+    const events = createDocument().pullDomainEvents();
+    expect(events.map((e) => e.eventName)).toEqual(["cv_document_created"]);
+    expect(events[0].toPrimitives()).toEqual({ documentId: "cv-1", type: "uploaded" });
+  });
+
+  it("does not record events when hydrated from primitives", () => {
+    const document = CVDocument.fromPrimitives(createDocument().toPrimitives());
+    expect(document.pullDomainEvents()).toEqual([]);
+  });
+
+  it("records a renamed event on rename", () => {
+    const document = CVDocument.fromPrimitives(createDocument().toPrimitives());
+    document.rename(CVDocumentName.fromPrimitives("Updated CV"), Timestamp.fromPrimitives(now));
+
+    const events = document.pullDomainEvents();
+    expect(events.map((e) => e.eventName)).toEqual(["cv_document_renamed"]);
+    expect(events[0].toPrimitives()).toEqual({ documentId: "cv-1" });
+  });
+
+  it("records a profile-updated event on updateTemplateProfile", () => {
+    const document = CVDocument.fromPrimitives(createDocument().toPrimitives());
+    document.updateTemplateProfile({
+      profile: { basics: { name: "Ada" } },
+      aiModel: "gemini",
+      updatedAt: Timestamp.fromPrimitives(now),
+    });
+
+    expect(document.pullDomainEvents().map((e) => e.eventName)).toEqual([
+      "cv_document_profile_updated",
+    ]);
+  });
+
+  it("records an extracted-text-updated event on updateExtractedText", () => {
+    const document = CVDocument.fromPrimitives(createDocument().toPrimitives());
+    document.updateExtractedText(
+      {
+        textPython: "new text",
+        textPdfjs: null,
+        textNode: null,
+        extractErrorPython: null,
+        extractErrorPdfjs: null,
+        extractErrorNode: null,
+      },
+      Timestamp.fromPrimitives(now),
+    );
+
+    expect(document.pullDomainEvents().map((e) => e.eventName)).toEqual([
+      "cv_document_extracted_text_updated",
+    ]);
+  });
+
+  it("records a published event when public settings are enabled", () => {
+    const document = CVDocument.fromPrimitives(createDocument().toPrimitives());
+    document.updatePublicSettings({
+      enabled: true,
+      publicId: "pub-1",
+      slug: "senior-cv",
+      publishedAt: Timestamp.fromPrimitives(now),
+    });
+
+    const events = document.pullDomainEvents();
+    expect(events.map((e) => e.eventName)).toEqual(["cv_document_published"]);
+    expect(events[0].toPrimitives()).toEqual({ documentId: "cv-1", slug: "senior-cv" });
+  });
+
+  it("records an unpublished event when public settings are disabled", () => {
+    const document = CVDocument.fromPrimitives(createDocument().toPrimitives());
+    document.updatePublicSettings({
+      enabled: false,
+      publicId: null,
+      slug: null,
+      publishedAt: null,
+    });
+
+    expect(document.pullDomainEvents().map((e) => e.eventName)).toEqual([
+      "cv_document_unpublished",
+    ]);
+  });
+
+  it("records a deleted event on delete", () => {
+    const document = CVDocument.fromPrimitives(createDocument().toPrimitives());
+    document.delete();
+
+    const events = document.pullDomainEvents();
+    expect(events.map((e) => e.eventName)).toEqual(["cv_document_deleted"]);
+    expect(events[0].toPrimitives()).toEqual({ documentId: "cv-1" });
+  });
 });
