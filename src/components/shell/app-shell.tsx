@@ -15,6 +15,7 @@ import {
 } from "@/lib/browser-preferences";
 import { CV_TEMPLATES } from "@/lib/cv-templates";
 import AppShellContent from "./app-shell-content";
+import { ImpersonationBanner } from "./impersonation-banner";
 import type { SidebarActiveView } from "./sidebar-types";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 import { APP_VIEWS, type AppView } from "@/frontend/app-views";
@@ -520,53 +521,57 @@ export default function AppShell({
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-canvas">
+    <div className="flex h-screen flex-col overflow-hidden bg-canvas">
       <div className="app-glow" aria-hidden="true" />
 
-      <Sidebar
-        activeView={activeView}
-        onOpenHome={handleOpenHome}
-        onOpenCVAnalyses={handleOpenCVAnalyses}
-        onOpenJobAnalyses={handleOpenJobAnalyses}
-        onOpenCVs={handleOpenCVs}
-        onOpenTemplates={handleOpenTemplates}
-        onOpenEditor={() => handleOpenEditor()}
-        onOpenQuestions={() => handleOpenQuestions()}
-        onOpenJournal={handleOpenJournal}
-        onOpenObjectives={handleOpenObjectives}
-        onOpenReceivedFeedback={handleOpenReceivedFeedback}
-        onOpenFeedbackNotes={handleOpenFeedbackNotes}
-        onOpenSettings={handleOpenSettings}
-        onOpenAdmin={handleOpenAdmin}
-        userEmail={userEmail}
-        isAdmin={isAdmin}
-      />
+      <ImpersonationBanner userEmail={userEmail} />
 
-      <main className="flex-1 flex flex-col overflow-hidden min-w-0 min-h-0">
-        <AppShellContent
+      <div className="flex min-h-0 flex-1 overflow-hidden">
+        <Sidebar
           activeView={activeView}
-          aiProvider={aiProvider}
-          aiApiKey={aiApiKey}
-          aiModel={aiModel}
+          onOpenHome={handleOpenHome}
+          onOpenCVAnalyses={handleOpenCVAnalyses}
+          onOpenJobAnalyses={handleOpenJobAnalyses}
+          onOpenCVs={handleOpenCVs}
+          onOpenTemplates={handleOpenTemplates}
+          onOpenEditor={() => handleOpenEditor()}
+          onOpenQuestions={() => handleOpenQuestions()}
+          onOpenJournal={handleOpenJournal}
+          onOpenObjectives={handleOpenObjectives}
+          onOpenReceivedFeedback={handleOpenReceivedFeedback}
+          onOpenFeedbackNotes={handleOpenFeedbackNotes}
+          onOpenSettings={handleOpenSettings}
+          onOpenAdmin={handleOpenAdmin}
           userEmail={userEmail}
           isAdmin={isAdmin}
-          interviewQuestions={interviewQuestions}
-          onOpenSettings={handleOpenSettings}
-          onOpenQuestions={handleOpenQuestions}
-          onNewAnalysis={handleNewAnalysis}
-          onOpenAnalysis={handleSelect}
-          onOpenEditor={handleOpenEditor}
-          onOpenTemplates={handleOpenTemplates}
-          onOpenCVs={handleOpenCVs}
-          onInterviewQuestionCreated={fetchInterviewQuestions}
-          onAISettingsChange={(settings) => {
-            setAIProvider(settings.provider);
-            setAIApiKey(settings.apiKey);
-            setAIModel(settings.model);
-          }}
-          onNavigate={handleNavigate}
         />
-      </main>
+
+        <main className="flex-1 flex flex-col overflow-hidden min-w-0 min-h-0">
+          <AppShellContent
+            activeView={activeView}
+            aiProvider={aiProvider}
+            aiApiKey={aiApiKey}
+            aiModel={aiModel}
+            userEmail={userEmail}
+            isAdmin={isAdmin}
+            interviewQuestions={interviewQuestions}
+            onOpenSettings={handleOpenSettings}
+            onOpenQuestions={handleOpenQuestions}
+            onNewAnalysis={handleNewAnalysis}
+            onOpenAnalysis={handleSelect}
+            onOpenEditor={handleOpenEditor}
+            onOpenTemplates={handleOpenTemplates}
+            onOpenCVs={handleOpenCVs}
+            onInterviewQuestionCreated={fetchInterviewQuestions}
+            onAISettingsChange={(settings) => {
+              setAIProvider(settings.provider);
+              setAIApiKey(settings.apiKey);
+              setAIModel(settings.model);
+            }}
+            onNavigate={handleNavigate}
+          />
+        </main>
+      </div>
     </div>
   );
 }

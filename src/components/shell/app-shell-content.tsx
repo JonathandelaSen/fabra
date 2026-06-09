@@ -11,7 +11,7 @@ import { ObjectivesView } from "@/features/objectives";
 import { FeedbackNotesView } from "@/features/feedback-notes";
 import { ReceivedFeedbackView } from "@/features/received-feedback";
 import { ActivityContextView } from "@/features/activity-context";
-import { AdminObservabilityView } from "@/features/admin-observability";
+import { AdminAreaView } from "@/features/admin";
 import { HomeView } from "@/features/home";
 import { JobMatchAnalysisView } from "@/features/job-match-analysis";
 import { SettingsView } from "@/features/settings";
@@ -239,8 +239,8 @@ export default function AppShellContent({
 
   if (activeView === "admin" && isAdmin) {
     return (
-      <ViewFrame frameKey="admin-observability">
-        <AdminObservabilityView userEmail={userEmail} />
+      <ViewFrame frameKey="admin-area">
+        <AdminAreaView userEmail={userEmail} />
       </ViewFrame>
     );
   }

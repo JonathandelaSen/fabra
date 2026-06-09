@@ -6,7 +6,6 @@ import { copyToClipboard } from "@/lib/clipboard";
 import {
   Activity,
   RefreshCw,
-  ShieldCheck,
 } from "lucide-react";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import type { ProcessingEventResponse } from "@/app/api/admin/processing-events/responses";
@@ -117,17 +116,7 @@ export function AdminObservabilityView({
 
   return (
     <FeatureScreenShell
-      title={
-        <div>
-          <div className="mb-1 flex items-center gap-2 text-xs font-medium text-emerald-300">
-            <ShieldCheck className="h-3.5 w-3.5" />
-            {userEmail ?? t("adminFallback")}
-          </div>
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-50">
-            {t("title")}
-          </h1>
-        </div>
-      }
+      title={t("title")}
       actions={
         <button
           type="button"

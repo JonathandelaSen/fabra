@@ -12,7 +12,7 @@ function renderFooter(
     isAdmin: false,
     userEmail: "user@example.com",
     settingsLabel: "Settings",
-    observabilityLabel: "Observability",
+    observabilityLabel: "Admin",
     onOpenSettings: vi.fn(),
     onOpenAdmin: vi.fn(),
     ...overrides,
@@ -42,14 +42,14 @@ describe("SidebarFooter", () => {
     renderFooter({ isAdmin: false });
 
     expect(
-      screen.queryByRole("button", { name: "Observability" }),
+      screen.queryByRole("button", { name: "Admin" }),
     ).not.toBeInTheDocument();
   });
 
   it("shows the admin entry and wires its handler for admin users", async () => {
     const { props, user } = renderFooter({ isAdmin: true });
 
-    const adminButton = screen.getByRole("button", { name: "Observability" });
+    const adminButton = screen.getByRole("button", { name: "Admin" });
     expect(adminButton).toBeInTheDocument();
 
     await user.click(adminButton);
