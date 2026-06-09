@@ -64,6 +64,13 @@ export const messages = {
         tab: "Sign up",
         submit: "Create account",
       },
+      google: {
+        continue: "Continue with Google",
+        redirecting: "Opening Google...",
+        emailSeparator: "or continue with email",
+        error: "I couldn't start Google sign-in. Please try again.",
+        callbackError: "Google sign-in was cancelled or could not be completed.",
+      },
       recover: {
         title: "Recover password",
         description: "We'll send you a link to set a new password.",
@@ -1481,6 +1488,13 @@ export const messages = {
         description: "",
         tab: "Registro",
         submit: "Crear cuenta",
+      },
+      google: {
+        continue: "Continuar con Google",
+        redirecting: "Abriendo Google...",
+        emailSeparator: "o continúa con email",
+        error: "No he podido iniciar el acceso con Google. Inténtalo de nuevo.",
+        callbackError: "El acceso con Google se canceló o no pudo completarse.",
       },
       recover: {
         title: "Recuperar contraseña",

@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 interface LoginPageProps {
   searchParams: Promise<{
     accountDeleted?: string;
+    oauthError?: string;
     resetError?: string;
   }>;
 }
@@ -41,7 +42,9 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
           <AuthForm
             initialError={
-              params.resetError
+              params.oauthError
+                ? messages.auth.google.callbackError
+                : params.resetError
                 ? messages.auth.resetInvalid
                 : undefined
             }

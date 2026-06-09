@@ -35,6 +35,9 @@ test("login route exposes signup and password recovery modes", async ({
   await page.goto("/login");
 
   await expect(page.getByRole("heading", { name: tAuth.login.title })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: tAuth.google.continue }),
+  ).toBeVisible();
   await expect(page.getByLabel(tAuth.fields.email)).toHaveAttribute(
     "placeholder",
     tAuth.fields.emailPlaceholder,
@@ -60,6 +63,15 @@ test("login route exposes signup and password recovery modes", async ({
 
   await page.getByRole("button", { name: tAuth.recover.backToLogin }).click();
   await expect(page.getByRole("heading", { name: tAuth.login.title })).toBeVisible();
+});
+
+test("failed OAuth callback returns to login with a provider-specific error", async ({
+  page,
+}) => {
+  await page.goto("/auth/callback");
+
+  await expect(page).toHaveURL(/\/login\?oauthError=1$/);
+  await expect(page.getByText(tAuth.google.callbackError)).toBeVisible();
 });
 
 test("authenticated user can open the update-password route", async ({

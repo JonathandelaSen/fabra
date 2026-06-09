@@ -5,7 +5,7 @@
 Section label: Auth
 Route segments: `/login`, `/account/update-password`
 Primary detail resource: none
-Query params: `accountDeleted` and `resetError` on `/login`
+Query params: `accountDeleted`, `oauthError`, and `resetError` on `/login`
 Existing legacy entry point: `src/components/auth/*`
 New feature owner: `src/features/auth`
 Existing server actions: `src/app/login/actions.ts`
@@ -25,9 +25,12 @@ Server/backend interactions:
   are exposed to the feature through `src/features/auth/api/auth-actions.ts`.
 - Password recovery email sending is exposed through
   `src/features/auth/api/auth-api.ts`.
+- Google OAuth starts through `src/features/auth/api/auth-api.ts` and returns
+  through `/auth/callback`.
 
 Local UI state:
 - login/signup/recover mode
+- Google OAuth pending and error state
 - email input draft
 - password visibility
 - action pending states
@@ -44,4 +47,5 @@ only from the feature barrel at `@/features/auth`.
 - anonymous API guard behavior
 - successful UI login with a confirmed local user
 - login/signup/password recovery mode navigation on `/login`
+- Google OAuth entry point and provider-specific callback failure
 - authenticated access to `/account/update-password`
