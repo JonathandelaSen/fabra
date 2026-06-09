@@ -14,6 +14,7 @@ import {
 } from "../hooks/use-cv-library-queries";
 import { useCVLibraryRouteState } from "../hooks/use-cv-library-route-state";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
+import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import { CVLibraryDetail } from "./detail/cv-library-detail";
@@ -30,6 +31,7 @@ interface CVLibraryViewProps {
   onOpenAnalysis: (id: string, mode?: AnalysisMode) => void;
   onOpenEditor: (cvId: string) => void;
   onOpenQuestions: (cvId: string) => void;
+  onStartAnalysis: () => void;
 }
 
 function groupAnalysesByCv(analyses: AnalysisSummary[]) {
@@ -51,6 +53,7 @@ export default function CVLibraryView({
   onOpenAnalysis,
   onOpenEditor,
   onOpenQuestions,
+  onStartAnalysis,
 }: CVLibraryViewProps) {
   const t = useTranslations("analysisFlow.cvLibrary");
   const navT = useTranslations("navigation");
@@ -169,6 +172,12 @@ export default function CVLibraryView({
       <FeatureScreenShell
         title={navT("cvLibrary")}
         bodyClassName="overflow-hidden"
+        actions={
+          <FeatureHeaderActionButton
+            label={t("uploadAndAnalyze")}
+            onClick={onStartAnalysis}
+          />
+        }
       >
         <CVLibrarySkeleton />
       </FeatureScreenShell>
@@ -181,6 +190,12 @@ export default function CVLibraryView({
       mobileBackActive={Boolean(routeState.cvId)}
       onMobileBack={() => routeState.replaceCV(null)}
       bodyClassName="overflow-hidden"
+      actions={
+        <FeatureHeaderActionButton
+          label={t("uploadAndAnalyze")}
+          onClick={onStartAnalysis}
+        />
+      }
     >
       <FeatureTwoPaneLayout
         mobileDetailActive={routeState.cvId ? true : false}
@@ -208,7 +223,10 @@ export default function CVLibraryView({
         }) ? (
           <CVLibraryDetailSkeleton />
         ) : !selected ? (
-          <CVLibraryEmptyState />
+          <CVLibraryEmptyState
+            hasCvs={cvs.length > 0}
+            onStartAnalysis={onStartAnalysis}
+          />
         ) : (
           <CVLibraryDetail
             selected={selected}

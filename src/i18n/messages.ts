@@ -544,6 +544,7 @@ export const messages = {
       cvLibrary: {
         associatedAnalyses: "Associated analyses",
         noSavedCvs: "There are no saved CVs yet.",
+        uploadAndAnalyze: "Upload and analyze CV",
         generalAtsScore: "General CV Score",
         generateMatchScorePrompt: "Generate your first job match analysis to see your compatibility",
         statsAnalyses: "Job Matches",
@@ -1996,6 +1997,7 @@ export const messages = {
       cvLibrary: {
         associatedAnalyses: "Análisis asociados",
         noSavedCvs: "Todavía no hay CVs guardados.",
+        uploadAndAnalyze: "Subir y analizar CV",
         generalAtsScore: "Puntuación general del CV",
         generateMatchScorePrompt: "Genera tu primer análisis de vacante para ver tu compatibilidad",
         statsAnalyses: "Vacantes analizadas",

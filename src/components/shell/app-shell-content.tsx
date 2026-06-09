@@ -126,6 +126,7 @@ export default function AppShellContent({
           onOpenAnalysis={onOpenAnalysis}
           onOpenEditor={onOpenEditor}
           onOpenQuestions={(cvId) => onOpenQuestions({ cvId })}
+          onStartAnalysis={onNewAnalysis}
         />
       </ViewFrame>
     );
