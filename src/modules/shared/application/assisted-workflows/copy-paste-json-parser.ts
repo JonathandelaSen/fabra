@@ -1,3 +1,4 @@
+import { jsonrepair } from "jsonrepair";
 import { badRequest } from "@/modules/shared";
 
 const FENCED_JSON_BLOCK = /^```json\s*\n([\s\S]*?)\n?```\s*$/i;
@@ -24,6 +25,12 @@ export function extractCopyPasteJson(raw: string): unknown {
   try {
     return JSON.parse(jsonText);
   } catch {
-    throw badRequest("The pasted response is not valid JSON.");
+    // LLM chat responses frequently produce almost-valid JSON (unescaped inner
+    // quotes, trailing commas, etc.). Attempt a best-effort repair before failing.
+    try {
+      return JSON.parse(jsonrepair(jsonText));
+    } catch {
+      throw badRequest("The pasted response is not valid JSON.");
+    }
   }
 }

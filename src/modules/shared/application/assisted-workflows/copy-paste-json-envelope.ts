@@ -13,7 +13,7 @@ export function validateCopyPasteEnvelope(
     throw badRequest("The pasted response must be a JSON object.");
   }
   if (input.workflowId !== expected.workflowId) {
-    throw badRequest("The pasted response belongs to a different workflow.");
+    throw badRequest(`The pasted response belongs to a different workflow. Expected ${expected.workflowId}, got ${input.workflowId}`);
   }
   if (input.schemaVersion !== expected.schemaVersion) {
     throw badRequest("The pasted response uses an unsupported schema version.");

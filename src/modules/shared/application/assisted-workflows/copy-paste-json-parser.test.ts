@@ -17,8 +17,24 @@ describe("extractCopyPasteJson", () => {
     expect(() => extractCopyPasteJson(" ")).toThrow(HttpError);
   });
 
-  it("rejects malformed JSON", () => {
-    expect(() => extractCopyPasteJson("{")).toThrow(HttpError);
+  it("rejects irreparable malformed JSON", () => {
+    expect(() => extractCopyPasteJson("}{")).toThrow(HttpError);
+  });
+
+  it("repairs unescaped inner quotes from LLM responses", () => {
+    expect(
+      extractCopyPasteJson('{"bullet":"Led the "Floating" initiative"}'),
+    ).toEqual({ bullet: 'Led the "Floating" initiative' });
+  });
+
+  it("repairs trailing commas", () => {
+    expect(extractCopyPasteJson('{"a":1,"b":2,}')).toEqual({ a: 1, b: 2 });
+  });
+
+  it("repairs unescaped quotes inside a fenced json block", () => {
+    expect(
+      extractCopyPasteJson('```json\n{"name":"the "Querix" product"}\n```'),
+    ).toEqual({ name: 'the "Querix" product' });
   });
 
   it("rejects text before or after JSON", () => {
