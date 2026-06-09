@@ -31,7 +31,7 @@ describe("JobMatchAnalysisContent", () => {
     );
 
     expect(
-      screen.queryByText("Select an analysis or upload a new CV"),
+      screen.queryByText("No analysis to show"),
     ).not.toBeInTheDocument();
     expect(container.querySelector(".animate-pulse")).toBeInTheDocument();
   });

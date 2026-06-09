@@ -23,6 +23,7 @@ import {
 } from "./feedback-notes-loading-state";
 import { FeedbackNotesSidebar } from "./feedback-notes-sidebar";
 import { FeedbackCopyPastePanel } from "./feedback-copy-paste-panel";
+import { FeedbackNotesEmptyState } from "./feedback-notes-empty-state";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
@@ -68,6 +69,7 @@ export default function FeedbackNotesView({
   const [selectedProvider, setSelectedProvider] = useState<StoredAIProvider>("gemini");
   const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_GEMINI_MODEL);
   const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [pendingDraft, setPendingDraft] = useState<string | null>(null);
   const [deletingEntryIds, setDeletingEntryIds] = useState<Set<string>>(new Set());
 
@@ -144,6 +146,8 @@ export default function FeedbackNotesView({
             status={status}
             isLoading={isInitialListLoading}
             isCreating={mutations.createFeedback.isPending}
+            isCreateOpen={isCreateOpen}
+            onToggleCreate={() => setIsCreateOpen(!isCreateOpen)}
             onStatusChange={setStatus}
             onSelect={(id) => {
               setSelectedFeedbackId(id);
@@ -177,9 +181,7 @@ export default function FeedbackNotesView({
         }) ? (
           <FeedbackNotesDetailSkeleton />
         ) : !selectedFeedback ? (
-          <div className="flex h-full items-center justify-center text-sm text-zinc-600">
-            {t("emptySelection")}
-          </div>
+          <FeedbackNotesEmptyState onCreate={() => setIsCreateOpen(true)} />
         ) : (
           <FeedbackNotesDetail
             feedback={selectedFeedback}

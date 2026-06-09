@@ -51,18 +51,8 @@ export default function JobMatchAnalysisList({
       {isLoading ? (
         <JobAnalysesListSkeleton />
       ) : analyses.length === 0 ? (
-        <div className="px-4 py-12 text-center">
-          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-500/10">
-            <Briefcase className="h-5 w-5 text-indigo-400" />
-          </div>
-          <p className="text-sm font-medium text-zinc-400">
-            {searchQuery ? t("noMatches") : t("jobEmptyTitle")}
-          </p>
-          {!searchQuery && (
-            <p className="mt-1 text-xs text-zinc-600">
-              {t("jobEmptyDescription")}
-            </p>
-          )}
+        <div className="px-4 py-12 text-center text-xs text-text-faint">
+          {searchQuery ? t("noMatches") : t("jobEmptyTitle")}
         </div>
       ) : (
         <div className="flex flex-col gap-2">

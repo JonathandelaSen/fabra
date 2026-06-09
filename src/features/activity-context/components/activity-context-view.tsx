@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, Check, Loader2, Sparkles } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
@@ -48,6 +49,7 @@ export function ActivityContextView() {
   const source = params.get("source");
   const returnTo = params.get("returnTo");
   const hasReturnTo = returnTo !== null;
+  const isWorkJournal = source === "work-journal";
 
   const t = useTranslations("activityContexts");
   const query = useActivityContexts();
@@ -132,24 +134,33 @@ export function ActivityContextView() {
     <FeatureScreenShell
       title={
         <div className="min-w-0">
-          {hasReturnTo && (
-            <button
-              type="button"
-              onClick={() => router.push(returnTo)}
-              className="mb-1 inline-flex items-center gap-1.5 text-xs text-zinc-500 transition-colors hover:text-zinc-200"
-            >
-              <ArrowLeft className="h-3 w-3" />
-              {t("back")}
-            </button>
+          <div className="flex items-center gap-3">
+            {hasReturnTo && (
+              <button
+                type="button"
+                onClick={() => router.push(returnTo)}
+                className="inline-flex items-center gap-1.5 text-xs text-zinc-500 transition-colors hover:text-zinc-200"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" />
+                {t("back")}
+              </button>
+            )}
+            {hasReturnTo && (
+              <span className="text-zinc-700" aria-hidden="true">
+                |
+              </span>
+            )}
+            <h1 className="text-2xl font-semibold tracking-tight text-zinc-50">{t("title")}</h1>
+          </div>
+          {!isWorkJournal && (
+            <p className="mt-1 text-sm leading-relaxed text-zinc-500">
+              {t(`description.${resolveSourceKey(source)}`)}
+            </p>
           )}
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-50">{t("title")}</h1>
-          <p className="mt-1 text-sm leading-relaxed text-zinc-500">
-            {t(`description.${resolveSourceKey(source)}`)}
-          </p>
         </div>
       }
     >
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
+      <div className={cn("grid gap-6", !isWorkJournal ? "xl:grid-cols-[minmax(0,1fr)_380px]" : "w-full")}>
         <section className="space-y-4">
           {visibleError && (
             <AlertBanner tone={ALERT_BANNER_TONES.DANGER}>{visibleError}</AlertBanner>
@@ -203,30 +214,32 @@ export function ActivityContextView() {
           )}
         </section>
 
-        <aside className="space-y-3">
-          <div className="flex items-center gap-2 text-sm font-medium text-zinc-400">
-            <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-            {t("suggestionsTitle")}
-          </div>
-          {suggestions.length === 0 ? (
-            <p className="text-xs leading-5 text-zinc-600">
-              {t("suggestionsEmpty")}
-            </p>
-          ) : (
-            <div className="space-y-1">
-              {suggestions.map((suggestion) => (
-                <SuggestionRow
-                  key={`${suggestion.type}:${suggestion.name}`}
-                  suggestion={suggestion}
-                  isPending={ctxSuggester.isPending}
-                  hasReturnTo={hasReturnTo}
-                  onPromote={handlePromote}
-                  onHide={handleHide}
-                />
-              ))}
+        {!isWorkJournal && (
+          <aside className="space-y-3">
+            <div className="flex items-center gap-2 text-sm font-medium text-zinc-400">
+              <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+              {t("suggestionsTitle")}
             </div>
-          )}
-        </aside>
+            {suggestions.length === 0 ? (
+              <p className="text-xs leading-5 text-zinc-600">
+                {t("suggestionsEmpty")}
+              </p>
+            ) : (
+              <div className="space-y-1">
+                {suggestions.map((suggestion) => (
+                  <SuggestionRow
+                    key={`${suggestion.type}:${suggestion.name}`}
+                    suggestion={suggestion}
+                    isPending={ctxSuggester.isPending}
+                    hasReturnTo={hasReturnTo}
+                    onPromote={handlePromote}
+                    onHide={handleHide}
+                  />
+                ))}
+              </div>
+            )}
+          </aside>
+        )}
       </div>
     </FeatureScreenShell>
   );

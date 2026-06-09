@@ -5,14 +5,14 @@ import { useTranslations } from "next-intl";
 import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
 import { FeatureEmptyState } from "@/components/shared/feature-empty-state";
 
-interface ReceivedFeedbackEmptyStateProps {
+interface FeedbackNotesEmptyStateProps {
   onCreate: () => void;
 }
 
-export function ReceivedFeedbackEmptyState({
+export function FeedbackNotesEmptyState({
   onCreate,
-}: ReceivedFeedbackEmptyStateProps) {
-  const t = useTranslations("receivedFeedback");
+}: FeedbackNotesEmptyStateProps) {
+  const t = useTranslations("feedbackNotes");
 
   return (
     <FeatureEmptyState
@@ -24,7 +24,7 @@ export function ReceivedFeedbackEmptyState({
           tone={ICON_TEXT_BUTTON_TONES.PRIMARY}
           onClick={onCreate}
         >
-          {t("newFeedback")}
+          {t("actions.newNote")}
         </IconTextButton>
       }
     />

@@ -87,8 +87,7 @@ export function InterviewQuestionsSidebar({
   return (
     <FeatureSidebarPanel header={filterHeader}>
       {questions.length === 0 ? (
-        <div className="flex h-48 flex-col items-center justify-center text-center text-sm text-zinc-600">
-          <MessageSquareQuote className="mb-3 h-8 w-8 text-zinc-600" />
+        <div className="px-4 py-12 text-center text-xs text-text-faint">
           {t("emptyFiltered")}
         </div>
       ) : (

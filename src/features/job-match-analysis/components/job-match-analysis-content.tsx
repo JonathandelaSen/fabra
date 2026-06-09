@@ -3,13 +3,15 @@
 import { useTranslations } from "next-intl";
 import { JobMatchAnalysisDetailSkeleton } from "./detail/job-match-analysis-detail-skeleton";
 import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
-import { FileText, Sparkles } from "lucide-react";
+import { FileText, Sparkles, Briefcase, Plus } from "lucide-react";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { JobMatchAnalysisDetailResponse } from "../types";
 import type { AnalysisTab } from "../hooks/use-job-match-analysis-route-state";
 import type { InterviewQuestionSummary } from "../types";
 import { JobMatchAnalysisMainPanel } from "./job-match-analysis-main-panel";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import { FeatureEmptyState } from "@/components/shared/feature-empty-state";
 
 interface JobMatchAnalysisContentProps {
   analysisId: string | null;
@@ -40,6 +42,7 @@ interface JobMatchAnalysisContentProps {
     offerNextAction: string;
     offerNextActionAt: string;
   }) => Promise<void>;
+  onCreate?: () => void;
 }
 
 export function JobMatchAnalysisContent({
@@ -61,8 +64,10 @@ export function JobMatchAnalysisContent({
   onInterviewQuestionCreated,
   onUpdateUrl,
   onUpdateTracking,
+  onCreate,
 }: JobMatchAnalysisContentProps) {
   const t = useTranslations("analysisFlow.appShell");
+  const tLists = useTranslations("analysisFlow.lists");
 
   if (isLoading) {
     return (
@@ -82,21 +87,23 @@ export function JobMatchAnalysisContent({
     );
   }
 
-  if (!analysisId) {
+  if (!analysisId || !detail) {
     return (
-      <div className="flex h-full items-center justify-center text-sm text-zinc-600">
-        {t("empty")}
-      </div>
-    );
-  }
-
-  if (!detail) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <div className="text-center text-zinc-600">
-          <p>{t("empty")}</p>
-        </div>
-      </div>
+      <FeatureEmptyState
+        icon={Briefcase}
+        title={t("empty")}
+        action={
+          onCreate && (
+            <IconTextButton
+              icon={Plus}
+              tone={ICON_TEXT_BUTTON_TONES.PRIMARY}
+              onClick={onCreate}
+            >
+              {tLists("newOffer")}
+            </IconTextButton>
+          )
+        }
+      />
     );
   }
 

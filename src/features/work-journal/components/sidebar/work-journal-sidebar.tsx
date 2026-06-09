@@ -65,7 +65,7 @@ export function WorkJournalSidebar({
       {isLoading ? (
         <WorkJournalSidebarSkeleton />
       ) : entries.length === 0 ? (
-        <div className="px-4 py-10 text-center text-sm text-zinc-600">
+        <div className="px-4 py-12 text-center text-xs text-text-faint">
           {search || contextFilter ? "No matches found." : t("empty")}
         </div>
       ) : (

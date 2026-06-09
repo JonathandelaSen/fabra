@@ -20,6 +20,7 @@ interface WorkJournalTimelineProps {
   granularity: TimelineGranularity;
   setGranularity: (granularity: TimelineGranularity) => void;
   onSelect: (entryId: string) => void;
+  onCreate?: () => void;
 }
 
 export function WorkJournalTimeline({
@@ -29,6 +30,7 @@ export function WorkJournalTimeline({
   granularity,
   setGranularity,
   onSelect,
+  onCreate,
 }: WorkJournalTimelineProps) {
   const t = useTranslations("workJournal");
   const locale = useLocale();
@@ -53,6 +55,8 @@ export function WorkJournalTimeline({
         <WorkJournalEmptyState
           icon={CalendarRange}
           text={isFiltered ? t("empty") : t("timeline.empty")}
+          actionLabel={t("newEntry")}
+          onCreate={onCreate}
         />
       ) : (
         <div className="flex flex-col">

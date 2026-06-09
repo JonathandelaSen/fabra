@@ -31,6 +31,8 @@ import {
   InterviewQuestionsSkeleton,
 } from "./interview-questions-skeleton";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
+import { MessageSquareQuote } from "lucide-react";
+import { FeatureEmptyState } from "@/components/shared/feature-empty-state";
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 
 interface InterviewQuestionsViewProps {
@@ -266,9 +268,10 @@ export default function InterviewQuestionsView({
             onOpenCopyPaste={() => setIsCopyPasteOpen(true)}
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-sm text-zinc-600 min-h-[300px]">
-            {t("selectQuestion")}
-          </div>
+          <FeatureEmptyState
+            icon={MessageSquareQuote}
+            title={t("selectQuestion")}
+          />
         )}
       </FeatureTwoPaneLayout>
 

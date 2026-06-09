@@ -330,6 +330,7 @@ export default function WorkJournalView({
             showForm={showForm}
             timelineEntryId={timelineEntryId}
             view={view}
+            onCreate={handleToggleForm}
           />
         </div>
       </FeatureTwoPaneLayout>

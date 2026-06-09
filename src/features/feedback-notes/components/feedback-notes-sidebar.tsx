@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -23,6 +23,8 @@ interface FeedbackNotesSidebarProps {
   status: FeedbackFilter;
   isLoading: boolean;
   isCreating: boolean;
+  isCreateOpen: boolean;
+  onToggleCreate: () => void;
   onStatusChange: (status: FeedbackFilter) => void;
   onSelect: (feedbackId: string) => void;
   onCreate: (personName: string, activityContextId: string) => void;
@@ -35,6 +37,8 @@ export function FeedbackNotesSidebar({
   status,
   isLoading,
   isCreating,
+  isCreateOpen,
+  onToggleCreate,
   onStatusChange,
   onSelect,
 // onRefresh,
@@ -44,7 +48,16 @@ export function FeedbackNotesSidebar({
   const router = useRouter();
   const [personName, setPersonName] = useState("");
   const [selectedContextId, setSelectedContextId] = useState("");
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isCreateOpen) {
+      const timer = setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isCreateOpen]);
 
   const defaultContextId =
     contexts.find((c) => c.isDefault)?.id ?? contexts[0]?.id ?? "";
@@ -54,7 +67,7 @@ export function FeedbackNotesSidebar({
     if (!trimmedName) return;
     onCreate(trimmedName, selectedContextId || defaultContextId);
     setPersonName("");
-    setIsCreateOpen(false);
+    onToggleCreate();
   };
 
   const openActivityContextManager = () => {
@@ -87,7 +100,7 @@ export function FeedbackNotesSidebar({
               }
               fullWidth
               strong
-              onClick={() => setIsCreateOpen(!isCreateOpen)}
+              onClick={onToggleCreate}
             >
               {isCreateOpen ? t("actions.cancel") : t("actions.newNote")}
             </IconTextButton>
@@ -108,6 +121,7 @@ export function FeedbackNotesSidebar({
                       {t("fields.personName")}
                     </label>
                     <input
+                      ref={inputRef}
                       id="feedback-person-name"
                       value={personName}
                       onChange={(event) => setPersonName(event.target.value)}
@@ -156,7 +170,7 @@ export function FeedbackNotesSidebar({
       {isLoading ? (
         <FeedbackNotesListSkeleton />
       ) : feedbacks.length === 0 ? (
-        <div className="px-4 py-10 text-center text-sm text-zinc-600">
+        <div className="px-4 py-12 text-center text-xs text-text-faint">
           {t("empty")}
         </div>
       ) : (

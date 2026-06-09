@@ -59,6 +59,7 @@ interface WorkJournalMainPaneProps {
   timelineEntryId: string | null;
   view: WorkJournalRouteView;
   isFiltered: boolean;
+  onCreate?: () => void;
 }
 
 export function WorkJournalMainPane({
@@ -95,6 +96,7 @@ export function WorkJournalMainPane({
   timelineEntryId,
   view,
   isFiltered,
+  onCreate,
 }: WorkJournalMainPaneProps) {
   const t = useTranslations("workJournal");
 
@@ -137,6 +139,7 @@ export function WorkJournalMainPane({
         granularity={granularity}
         setGranularity={setGranularity}
         onSelect={onSelectTimelineEntry}
+        onCreate={onCreate}
       />
     );
   }
@@ -158,6 +161,8 @@ export function WorkJournalMainPane({
       setSelectedModel={setSelectedModel}
       onDraftEditWithAI={draftEditWithAI}
       isTimelineView={view === "timeline"}
+      actionLabel={t("newEntry")}
+      onCreate={onCreate}
     />
   );
 

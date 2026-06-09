@@ -342,7 +342,7 @@ export const messages = {
       openLinkedOffer: "Open linked offer",
       saving: "Saving...",
       selectOrCreate: "Select or create a question.",
-      selectQuestion: "Select a question.",
+      selectQuestion: "No questions to show",
       noContextSpecified: "No context specified.",
       noAnswerGenerated: "No answer generated yet. Click 'Edit' to generate with AI or write a manual answer.",
       copyAnswer: "Copy answer",
@@ -539,7 +539,7 @@ export const messages = {
       appShell: {
         extractionTab: "Extraction",
         analysisTab: "AI analysis",
-        empty: "Select an analysis or upload a new CV",
+        empty: "No analysis to show",
       },
       cvLibrary: {
         associatedAnalyses: "Associated analyses",
@@ -1089,6 +1089,7 @@ export const messages = {
       newObjective: "New objective",
       editObjective: "Edit objective",
       loading: "Loading objectives",
+      empty: "No objectives here yet.",
       emptySelection: "No objective selected.",
       sampleNotice: "A sample objective is shown here so the view has shape. Create your first objective to replace it.",
       fallbackContext: "General",
@@ -1765,7 +1766,7 @@ export const messages = {
       openLinkedOffer: "Abrir oferta asociada",
       saving: "Guardando...",
       selectOrCreate: "Selecciona o crea una pregunta.",
-      selectQuestion: "Selecciona una pregunta.",
+      selectQuestion: "No hay preguntas para mostrar",
       noContextSpecified: "Sin contexto especificado.",
       noAnswerGenerated: "Aún no hay respuesta generada. Haz clic en 'Editar' para generar con IA o escribir una respuesta manual.",
       copyAnswer: "Copiar respuesta",
@@ -1962,7 +1963,7 @@ export const messages = {
       appShell: {
         extractionTab: "Extracción",
         analysisTab: "Análisis IA",
-        empty: "Selecciona un análisis o sube un nuevo CV",
+        empty: "No hay análisis para mostrar",
       },
       cvLibrary: {
         associatedAnalyses: "Análisis asociados",
@@ -2512,6 +2513,7 @@ export const messages = {
       newObjective: "Nuevo objetivo",
       editObjective: "Editar objetivo",
       loading: "Cargando objetivos",
+      empty: "No hay objetivos aquí todavía.",
       emptySelection: "No hay ningún objetivo seleccionado.",
       fallbackContext: "General",
       doneCount: "{done}/{total} completadas",

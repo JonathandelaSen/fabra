@@ -51,6 +51,10 @@ export function ObjectivesSidebar({
     <FeatureSidebarPanel>
       {!hasLoadedWorkspace ? (
         <ObjectivesSidebarSkeleton />
+      ) : commitments.length === 0 ? (
+        <div className="px-4 py-12 text-center text-xs text-text-faint">
+          {t("empty")}
+        </div>
       ) : (
         groups.map((group) => {
           if (group.commitments.length === 0) return null;

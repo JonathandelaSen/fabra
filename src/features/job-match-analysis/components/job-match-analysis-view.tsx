@@ -6,16 +6,9 @@ import type { OfferStatus } from "@/lib/analysis-types";
 import type { InterviewQuestionSummary } from "../types";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
-import {
-  useJobMatchAnalysisList,
-  useJobMatchAnalysisDetail,
-  useJobMatchAnalysisCVOptions,
-} from "../hooks/use-job-match-analysis-queries";
+import { useJobMatchAnalysisList, useJobMatchAnalysisDetail, useJobMatchAnalysisCVOptions } from "../hooks/use-job-match-analysis-queries";
 import { useJobMatchAnalysisMutations } from "../hooks/use-job-match-analysis-mutations";
-import {
-  shouldShowJobMatchAnalysisView,
-  useJobMatchAnalysisRouteState,
-} from "../hooks/use-job-match-analysis-route-state";
+import { shouldShowJobMatchAnalysisView, useJobMatchAnalysisRouteState } from "../hooks/use-job-match-analysis-route-state";
 import { useJobMatchCopyPasteApplied } from "../hooks/use-job-match-copy-paste-applied";
 import { useJobMatchAnalysisExport } from "../hooks/use-job-match-analysis-export";
 import { useNewJobMatchFlowActions } from "../hooks/use-new-job-match-flow-actions";
@@ -23,10 +16,7 @@ import { useImmediateAnalysisSelection } from "../hooks/use-immediate-analysis-s
 import { JobMatchAnalysisContent } from "./job-match-analysis-content";
 import { JobMatchAnalysisBody } from "./job-match-analysis-body";
 import { JobMatchAnalysisHeaderActions } from "./job-match-analysis-header-actions";
-import {
-  shouldAutoSelectJobMatchAnalysis,
-  shouldShowJobMatchAnalysisMainLoader,
-} from "./job-match-analysis-loading-state";
+import { shouldAutoSelectJobMatchAnalysis, shouldShowJobMatchAnalysisMainLoader } from "./job-match-analysis-loading-state";
 import NewJobMatchFlow from "./new-flow/new-job-match-flow";
 import { PendingJobMatchCopyPasteModal } from "./copy-paste/pending-job-match-copy-paste-modal";
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
@@ -270,9 +260,10 @@ export default function JobMatchAnalysisView({
       onViewModeChange={(tab) =>
         tab === "analysis" ? goToAnalysis() : goToExtraction()
       }
-      onInterviewQuestionCreated={onInterviewQuestionCreated}
       onUpdateUrl={persistUrl}
       onUpdateTracking={persistTracking}
+      onInterviewQuestionCreated={onInterviewQuestionCreated}
+      onCreate={goToNew}
     />
   );
 

@@ -8,6 +8,9 @@ import { ObjectiveDetail } from "./detail/objective-detail";
 import { ObjectiveFormPanel } from "./form/objective-form-panel";
 import { ObjectivesDetailSkeleton } from "./objectives-skeleton";
 import { ObjectivesSidebar } from "./sidebar/objectives-sidebar";
+import { Target, Plus } from "lucide-react";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import { FeatureEmptyState } from "@/components/shared/feature-empty-state";
 import { ObjectiveConfirmDialog } from "./objective-confirm-dialog";
 import { useObjectivesViewState } from "../hooks/use-objectives-view-state";
 
@@ -162,9 +165,19 @@ export default function ObjectivesView() {
             t={t}
           />
         ) : (
-          <div className="py-20 text-center">
-            <p className="text-sm text-zinc-500">{t("emptySelection")}</p>
-          </div>
+          <FeatureEmptyState
+            icon={Target}
+            title={t("empty")}
+            action={
+              <IconTextButton
+                icon={Plus}
+                tone={ICON_TEXT_BUTTON_TONES.PRIMARY}
+                onClick={startCreate}
+              >
+                {t("newObjective")}
+              </IconTextButton>
+            }
+          />
         )}
       </FeatureTwoPaneLayout>
 

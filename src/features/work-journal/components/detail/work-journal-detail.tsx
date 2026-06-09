@@ -33,6 +33,8 @@ interface WorkJournalDetailProps {
     modelId: string
   ) => Promise<string>;
   isTimelineView?: boolean;
+  actionLabel?: string;
+  onCreate?: () => void;
 }
 
 export function WorkJournalDetail({
@@ -51,11 +53,20 @@ export function WorkJournalDetail({
   setSelectedModel,
   onDraftEditWithAI,
   isTimelineView = false,
+  actionLabel,
+  onCreate,
 }: WorkJournalDetailProps) {
   const t = useTranslations("workJournal");
 
   if (!entry) {
-    return <WorkJournalEmptyState icon={FilePenLine} text={t("empty")} />;
+    return (
+      <WorkJournalEmptyState
+        icon={FilePenLine}
+        text={t("empty")}
+        actionLabel={actionLabel}
+        onCreate={onCreate}
+      />
+    );
   }
 
   return (
