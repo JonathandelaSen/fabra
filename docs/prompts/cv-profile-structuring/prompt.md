@@ -23,7 +23,7 @@ Critical rules:
 - Keep bullets faithful to the source text; only split obvious list items.
 - Return plain data strings only. Do not put Markdown, HTML, mailto:, or clickable-link syntax inside any JSON string.
 - For basics.email, return only the raw email address exactly as written, for example "name@example.com"; never return "[name@example.com](mailto:name@example.com)" or "mailto:name@example.com".
-- For basics.links, keep each link as plain text. If the CV shows a bare URL such as "github.com/JonathandelaSen", use that same text for both label and url. Do not replace it with a platform label such as "GitHub" unless the CV explicitly uses that label.
+- For basics.links, keep each link as plain text: if the CV shows a bare URL such as "github.com/JonathandelaSen", use that same text for both label and url; but if it shows a platform name plus a handle without a full URL (e.g. "LinkedIn: jonathan-de-la-sen"), set "url" to the canonical profile URL and "label" to "Platform/handle" — LinkedIn "https://www.linkedin.com/in/<handle>/", GitHub "https://github.com/<handle>", X/Twitter "https://x.com/<handle>".
 - URLs and emails become clickable in the template renderer, not in the extracted JSON.
 - Respond ONLY with valid JSON.
 
@@ -71,6 +71,8 @@ The Copy Paste flow does not call a real AI provider. The user copies the prompt
 - `basics.email` must be the raw email address only, with no Markdown links, HTML anchors, or `mailto:` prefix.
 - `basics.links[].label` should preserve the visible link text from the CV. For a bare URL, the label and url should both be that same bare URL.
 - `basics.links[].url` must be plain URL text, with no Markdown link syntax.
+- When the CV only provides a platform name plus a handle (no domain), the prompt instructs the model to emit the canonical platform URL and a `Platform/handle` label.
+- As a deterministic safety net independent of the model, `normalizePlatformLink` in `src/modules/cv-library/domain/cv-profile.ts` normalizes links whose label is a platform name (LinkedIn, GitHub, X/Twitter) into a `Platform/handle` label. When the url is a bare handle (no domain) it also builds the canonical platform URL; when the url already contains a domain the url is kept verbatim and only the label is normalized. Links whose label is itself a bare URL are left untouched.
 - Clickability is handled by the CV template renderer after parsing; the AI response must not encode click behavior in the JSON strings.
 
 ## Runtime Flow

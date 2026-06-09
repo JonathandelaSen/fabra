@@ -9,6 +9,11 @@ describe("cv profile structuring prompts", () => {
     expect(SYSTEM_PROMPT).toContain("URLs and emails become clickable in the template renderer");
   });
 
+  it("instructs the model to build canonical platform URLs from bare handles", () => {
+    expect(SYSTEM_PROMPT).toContain("https://www.linkedin.com/in/<handle>/");
+    expect(SYSTEM_PROMPT).toContain('"label" to "Platform/handle"');
+  });
+
   it("includes the plain-data rules in the copy-paste prompt", () => {
     const prompt = buildCVProfileStructuringCopyPastePrompt({
       text: "jonathandelasen@gmail.com\ngithub.com/JonathandelaSen",

@@ -129,6 +129,72 @@ function normalizeLinkUrl(value: string | undefined): string | undefined {
   return (markdownLink?.url ?? value).trim() || undefined;
 }
 
+interface LinkPlatform {
+  label: string;
+  labelAliases: string[];
+  buildUrl: (handle: string) => string;
+}
+
+const LINK_PLATFORMS: LinkPlatform[] = [
+  {
+    label: "LinkedIn",
+    labelAliases: ["linkedin"],
+    buildUrl: (handle) => `https://www.linkedin.com/in/${handle}/`,
+  },
+  {
+    label: "GitHub",
+    labelAliases: ["github"],
+    buildUrl: (handle) => `https://github.com/${handle}`,
+  },
+  {
+    label: "X",
+    labelAliases: ["x", "twitter", "x/twitter"],
+    buildUrl: (handle) => `https://x.com/${handle}`,
+  },
+];
+
+function matchLinkPlatformByLabel(
+  label: string | undefined,
+): LinkPlatform | undefined {
+  if (!label) return undefined;
+  const normalized = label.trim().toLowerCase();
+  return LINK_PLATFORMS.find((platform) =>
+    platform.labelAliases.some(
+      (alias) =>
+        normalized === alias ||
+        normalized.startsWith(`${alias} `) ||
+        normalized.startsWith(`${alias}:`) ||
+        normalized.startsWith(`${alias}/`),
+    ),
+  );
+}
+
+function cleanLinkHandle(value: string): string {
+  const lastSegment = value.split("/").filter(Boolean).pop() ?? "";
+  return lastSegment.replace(/^@/, "").split(/[?#]/)[0].trim();
+}
+
+// When the label is a platform name (e.g. "LinkedIn"), rewrite the label to
+// "Platform/handle" using the handle from the link. If the url is a bare handle
+// without a domain, also build the canonical platform URL; if the url already
+// contains a domain, keep it verbatim and only normalize the label. Links whose
+// label is itself a bare URL are left untouched.
+export function normalizePlatformLink(
+  label: string | undefined,
+  url: string,
+): StandardCVLink | null {
+  const platform = matchLinkPlatformByLabel(label);
+  if (!platform) return null;
+  const handle = cleanLinkHandle(url);
+  if (!handle || handle.includes(".")) return null;
+  const platformLabel = `${platform.label}/${handle}`;
+  const isBareHandle = !url.includes(".") && !/^[a-z][a-z\d+.-]*:/i.test(url);
+  return {
+    label: platformLabel,
+    url: isBareHandle ? platform.buildUrl(handle) : url,
+  };
+}
+
 export function buildExternalLinkHref(value: string): string {
   const trimmed = value.trim();
   if (!trimmed) return "";
@@ -181,6 +247,8 @@ function normalizeBasics(value: unknown): StandardCVBasics {
           const url = normalizeLinkUrl(asString(link.url));
           if (!url) return null;
           const label = normalizeLinkText(asString(link.label));
+          const platformLink = normalizePlatformLink(label, url);
+          if (platformLink) return platformLink;
           return label ? { label, url } : { url };
         })
         .filter((item): item is StandardCVLink => item !== null)
