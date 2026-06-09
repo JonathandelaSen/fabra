@@ -58,6 +58,7 @@ export function CVEditorSaveModal({
               icon={X}
               onClick={onClose}
               fullWidth
+              className="min-w-0 shrink"
             >
               {t("actions.cancel")}
             </IconTextButton>
@@ -69,6 +70,7 @@ export function CVEditorSaveModal({
               disabled={!saveName.trim() || savingAsCv}
               fullWidth
               strong
+              className="min-w-0 shrink"
             >
               {t("actions.save")}
             </IconTextButton>
