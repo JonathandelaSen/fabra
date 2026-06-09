@@ -45,7 +45,6 @@ export function ActivityContextSelector({
           <IconTextButton
             icon={Settings2}
             onClick={onManageClick}
-            className="px-0 hover:bg-transparent"
           >
             {manageLabel}
           </IconTextButton>
