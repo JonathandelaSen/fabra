@@ -267,6 +267,11 @@ export default function InterviewQuestionsView({
             onOpenAnalysis={onOpenAnalysis}
             onOpenCopyPaste={() => setIsCopyPasteOpen(true)}
           />
+        ) : questions.length === 0 ? (
+          <FeatureEmptyState
+            icon={MessageSquareQuote}
+            title={t("empty")}
+          />
         ) : (
           <FeatureEmptyState
             icon={MessageSquareQuote}

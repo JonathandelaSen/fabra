@@ -32,6 +32,7 @@ import {
 } from "./cv-analysis-loading-state";
 import NewAnalysisFlow from "./new-flow/new-analysis-flow";
 import { CVAnalysisHeaderActions } from "./cv-analysis-header-actions";
+import { CVAnalysisEmptyState } from "./cv-analysis-empty-state";
 
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
@@ -220,9 +221,7 @@ export default function CVAnalysisView({
             </div>
           </div>
         ) : !selectedAnalysis ? (
-          <div className="flex h-full items-center justify-center text-sm text-zinc-600">
-            {t("empty")}
-          </div>
+          <CVAnalysisEmptyState onCreate={route.goToNew} />
         ) : (
           <CVAnalysisDetailPanel
             selectedAnalysis={selectedAnalysis}

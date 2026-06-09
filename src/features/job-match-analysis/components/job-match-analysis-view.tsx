@@ -237,6 +237,7 @@ export default function JobMatchAnalysisView({
     <JobMatchAnalysisContent
       analysisId={immediateSelection.selectedAnalysisId}
       detail={detail}
+      analysesCount={analyses.length}
       isLoading={shouldShowJobMatchAnalysisMainLoader({
         analysisCount: filteredAnalyses.length,
         analysisId,

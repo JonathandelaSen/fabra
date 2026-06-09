@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { FileText, Plus, Search } from "lucide-react";
+import { FileText, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { AnalysisMode, AnalysisSummary } from "@/lib/analysis-types";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
@@ -18,7 +18,6 @@ interface CVLibrarySidebarProps {
   blockingAnalyses: AnalysisSummary[];
   onSelect: (id: string) => void;
   onOpenAnalysis: (id: string, mode?: AnalysisMode) => void;
-  onImportJsonResume?: () => void;
 }
 
 export function CVLibrarySidebar({
@@ -29,7 +28,6 @@ export function CVLibrarySidebar({
   blockingAnalyses,
   onSelect,
   onOpenAnalysis,
-  onImportJsonResume,
 }: CVLibrarySidebarProps) {
   const t = useTranslations("analysisFlow.cvLibrary");
   const [searchQuery, setSearchQuery] = useState("");
@@ -58,15 +56,6 @@ export function CVLibrarySidebar({
             onChange={setSearchQuery}
             inputRef={searchInputRef}
           />
-        )}
-        {onImportJsonResume && (
-          <button
-            onClick={onImportJsonResume}
-            title={t("importJsonResume")}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-zinc-800 text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-zinc-200"
-          >
-            <Plus className="h-4 w-4" />
-          </button>
         )}
       </div>
     </div>

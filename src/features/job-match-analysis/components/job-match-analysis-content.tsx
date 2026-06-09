@@ -43,6 +43,7 @@ interface JobMatchAnalysisContentProps {
     offerNextActionAt: string;
   }) => Promise<void>;
   onCreate?: () => void;
+  analysesCount?: number;
 }
 
 export function JobMatchAnalysisContent({
@@ -65,6 +66,7 @@ export function JobMatchAnalysisContent({
   onUpdateUrl,
   onUpdateTracking,
   onCreate,
+  analysesCount = 0,
 }: JobMatchAnalysisContentProps) {
   const t = useTranslations("analysisFlow.appShell");
   const tLists = useTranslations("analysisFlow.lists");
@@ -88,10 +90,11 @@ export function JobMatchAnalysisContent({
   }
 
   if (!analysisId || !detail) {
+    const title = analysesCount === 0 ? tLists("jobEmptyTitle") : t("empty");
     return (
       <FeatureEmptyState
         icon={Briefcase}
-        title={t("empty")}
+        title={title}
         action={
           onCreate && (
             <IconTextButton

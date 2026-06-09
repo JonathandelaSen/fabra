@@ -17,7 +17,7 @@ import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import { CVLibraryDetail } from "./detail/cv-library-detail";
-import { CVLibraryImportPanel } from "./import/cv-library-import-panel";
+import { CVLibraryEmptyState } from "./cv-library-empty-state";
 import {
   shouldAutoSelectCVLibraryItem,
   shouldShowCVLibraryDetailLoader,
@@ -74,7 +74,6 @@ export default function CVLibraryView({
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [blockingAnalyses, setBlockingAnalyses] = useState<AnalysisSummary[]>([]);
-  const [showImport, setShowImport] = useState(false);
 
   const cvs = listQuery.data ?? [];
   const analysesByCv = useMemo(() => groupAnalysesByCv(analyses), [analyses]);
@@ -179,12 +178,12 @@ export default function CVLibraryView({
   return (
     <FeatureScreenShell
       title={navT("cvLibrary")}
-      mobileBackActive={showImport || Boolean(routeState.cvId)}
-      onMobileBack={showImport ? () => setShowImport(false) : () => routeState.replaceCV(null)}
+      mobileBackActive={Boolean(routeState.cvId)}
+      onMobileBack={() => routeState.replaceCV(null)}
       bodyClassName="overflow-hidden"
     >
       <FeatureTwoPaneLayout
-        mobileDetailActive={showImport || routeState.cvId ? true : false}
+        mobileDetailActive={routeState.cvId ? true : false}
         sidebar={
           <CVLibrarySidebar
             cvs={cvs}
@@ -193,18 +192,14 @@ export default function CVLibraryView({
             error={error ?? queryError}
             blockingAnalyses={blockingAnalyses}
             onSelect={(id) => {
-              setShowImport(false);
               setSelectedCvId(id);
               routeState.selectCV(id);
             }}
             onOpenAnalysis={onOpenAnalysis}
-            onImportJsonResume={() => setShowImport(true)}
           />
         }
       >
-        {showImport ? (
-          <CVLibraryImportPanel onClose={() => setShowImport(false)} />
-        ) : shouldShowCVLibraryDetailLoader({
+        {shouldShowCVLibraryDetailLoader({
           cvCount: cvs.length,
           isDetailPending,
           isListPending,
@@ -212,6 +207,8 @@ export default function CVLibraryView({
           selectedCvId,
         }) ? (
           <CVLibraryDetailSkeleton />
+        ) : !selected ? (
+          <CVLibraryEmptyState />
         ) : (
           <CVLibraryDetail
             selected={selected}
