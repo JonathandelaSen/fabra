@@ -1,10 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
-  createMockTracker,
   createTestUser,
   getSupabaseClient,
   testLabel,
 } from "@/modules/test-helpers/setup";
+import { UserId } from "@/modules/shared";
 import { SupabaseCVDataRepository } from "../../infrastructure/repositories/supabase-cv-data.repository";
 import { SupabaseWorkJournalContextRepository } from "../../infrastructure/repositories/supabase-work-journal-context.repository";
 import { SupabaseWorkJournalEntryRepository } from "../../infrastructure/repositories/supabase-work-journal-entry.repository";
@@ -19,23 +19,35 @@ function makeUseCase() {
   entryRepo.bindRequest(supabase);
   const cvDataRepo = new SupabaseCVDataRepository();
   cvDataRepo.bindRequest(supabase);
-  const tracker = createMockTracker();
+  const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
   return {
     contextRepo,
     entryRepo,
-    useCase: new EnsureDefaultContextUseCase({ contextRepo, cvDataRepo, tracker }),
+    eventBus,
+    useCase: new EnsureDefaultContextUseCase({ contextRepo, cvDataRepo, eventBus: eventBus as never }),
   };
 }
 
 describe("EnsureDefaultContextUseCase", () => {
   it("creates General for a user without contexts", async () => {
     const user = await createTestUser("wj-ensure-empty");
-    const { useCase } = makeUseCase();
+    const { useCase, eventBus, contextRepo } = makeUseCase();
 
-    await expect(useCase.execute(user.id).then((context) => context?.toPrimitives())).resolves.toMatchObject({
+    // Delete any contexts auto-created by DB trigger to ensure we hit the creation logic
+    await supabase.from("activity_contexts").delete().eq("user_id", user.id);
+
+    const result = await useCase.execute(user.id);
+    expect(result?.toPrimitives()).toMatchObject({
       name: "General",
       type: "other",
       isDefault: true,
+    });
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("work_journal_context_created");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      contextId: result?.id,
     });
   });
 

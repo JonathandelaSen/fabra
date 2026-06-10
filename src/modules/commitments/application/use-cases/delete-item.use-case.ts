@@ -1,11 +1,9 @@
-import { EntityId, UserId } from "@/modules/shared";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
+import { EntityId, UserId, type EventBus } from "@/modules/shared";
 import { CommitmentItemNotFoundError } from "../../domain/errors/commitment-item-not-found.error";
 import type { CommitmentItemRepository } from "../../domain/repositories/commitment-item.repository";
-import { recordCommitmentEvent } from "./tracking";
 
 export class DeleteCommitmentItemUseCase {
-  constructor(private readonly deps: { itemRepo: CommitmentItemRepository; tracker: EventTracker }) {}
+  constructor(private readonly deps: { itemRepo: CommitmentItemRepository; eventBus: EventBus }) {}
 
   async execute(input: { userId: string; id: string }): Promise<void> {
     const userId = UserId.fromPrimitives(input.userId);
@@ -14,10 +12,8 @@ export class DeleteCommitmentItemUseCase {
     if (!item) throw new CommitmentItemNotFoundError();
     item.delete();
     await this.deps.itemRepo.delete(id, userId);
-    await recordCommitmentEvent(this.deps.tracker, {
-      userId: input.userId,
-      stage: "commitment_item_deleted",
-      metadata: { itemId: input.id },
-    });
+    
+    const events = item.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
   }
 }

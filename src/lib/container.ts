@@ -39,13 +39,13 @@ const queryBus = new InMemoryQueryBus(telemetry);
 export const activityContextsModule = createActivityContextsModule(telemetry, eventBus);
 export const adminModule = createAdminModule(telemetry);
 export const cvAnalysisModule = createCVAnalysisModule(telemetry, eventBus);
-export const cvLibraryModule = createCVLibraryModule(queryBus, telemetry);
-export const commitmentsModule = createCommitmentsModule(telemetry);
-export const feedbackNotesModule = createFeedbackNotesModule(telemetry);
+export const cvLibraryModule = createCVLibraryModule(queryBus, telemetry, eventBus);
+export const commitmentsModule = createCommitmentsModule(telemetry, eventBus);
+export const feedbackNotesModule = createFeedbackNotesModule(telemetry, eventBus);
 export const jobMatchAnalysisModule = createJobMatchAnalysisModule(telemetry, eventBus);
-export const receivedFeedbackModule = createReceivedFeedbackModule(telemetry);
+export const receivedFeedbackModule = createReceivedFeedbackModule(telemetry, eventBus);
 export const selectionProcessModule = createSelectionProcessModule(telemetry);
-export const workJournalModule = createWorkJournalModule(telemetry);
+export const workJournalModule = createWorkJournalModule(telemetry, eventBus);
 
 queryBus.register(
   GetCVAnalysisByIdQuery.queryName,
@@ -76,7 +76,7 @@ queryBus.register(
   ),
 );
 
-const _analysisChatModule = createAnalysisChatModule(queryBus, telemetry);
+const _analysisChatModule = createAnalysisChatModule(queryBus, telemetry, eventBus);
 const originalBind = _analysisChatModule.bindRequest.bind(_analysisChatModule);
 _analysisChatModule.bindRequest = (client) => {
   cvAnalysisModule.bindRequest(client);

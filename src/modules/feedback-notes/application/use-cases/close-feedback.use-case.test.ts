@@ -4,21 +4,26 @@ import { createDefaultContext, createFeedbackFixture, makeFeedbackDeps } from ".
 import { CloseFeedbackUseCase } from "./close-feedback.use-case";
 
 describe("CloseFeedbackUseCase", () => {
-  it("closes feedback and records observability", async () => {
+  it("closes feedback and publishes event", async () => {
     const user = await createTestUser("feedback-close");
-    const { feedbackRepo, tracker } = makeFeedbackDeps();
+    const { feedbackRepo, eventBus } = makeFeedbackDeps();
     const context = await createDefaultContext(user.id);
     const feedback = await createFeedbackFixture(user.id, context.id);
 
     const closed = await new CloseFeedbackUseCase({
       feedbackRepo,
-      tracker,
+      eventBus,
     }).execute(user.id, feedback.id);
 
     expect(closed.toPrimitives().status).toBe("closed");
     expect(closed.toPrimitives().closed_at).toEqual(expect.any(String));
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({ stage: "feedback_closed" })
-    );
+
+    expect(eventBus.publish).toHaveBeenCalledTimes(1);
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("feedback_closed");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      feedbackId: feedback.id,
+    });
   });
 });

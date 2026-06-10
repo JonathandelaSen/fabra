@@ -1,7 +1,6 @@
 import { OllamaCVProfileStructuringAIServiceFactory } from "./infrastructure/services/ollama-cv-profile-structuring-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { QueryBus, Telemetry } from "@/modules/shared";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
+import type { QueryBus, Telemetry, EventBus } from "@/modules/shared";
 import { instrumentUseCases, SupabaseEventTracker } from "@/modules/shared";
 import { CreateUploadedCVDocumentUseCase } from "./application/use-cases/create-uploaded-cv-document.use-case";
 import { GetCVDocumentUseCase } from "./application/use-cases/get-cv-document.use-case";
@@ -29,19 +28,19 @@ const profileStructuringAI = new ProviderCVProfileStructuringAIServiceFactory({
   mockFactory: new MockCVProfileStructuringAIServiceFactory(),
   ollamaFactory: new OllamaCVProfileStructuringAIServiceFactory(),
 });
-const tracker: EventTracker = new SupabaseEventTracker();
+const tracker = new SupabaseEventTracker();
 
-function createE2EUseCases(_queryBus: QueryBus) {
+function createE2EUseCases(_queryBus: QueryBus, eventBus: EventBus) {
   return {
     listCVDocuments: new ListCVDocumentsUseCase({ documentRepo }),
     getCVDocument: new GetCVDocumentUseCase({ documentRepo }),
     createUploadedCVDocument: new CreateUploadedCVDocumentUseCase({
       documentRepo,
-      tracker,
+      eventBus,
     }),
     updateCVDocumentExtraction: new UpdateCVDocumentExtractionUseCase({
       documentRepo,
-      tracker,
+      eventBus,
     }),
     prepareCVAnalysisInput: new PrepareCVAnalysisInputUseCase({
       documentRepo,
@@ -55,7 +54,7 @@ function createE2EUseCases(_queryBus: QueryBus) {
     }),
     upsertCVStructuredProfile: new UpsertCVStructuredProfileUseCase({
       profileRepo,
-      tracker,
+      eventBus,
     }),
   };
 }
@@ -67,10 +66,11 @@ export type CVLibraryE2EModule = ReturnType<typeof createE2EUseCases> & {
 export function createCVLibraryE2EModule(
   queryBus: QueryBus,
   telemetry: Telemetry,
+  eventBus: EventBus,
 ): CVLibraryE2EModule {
   const useCases = instrumentUseCases(
     "cv-library-e2e",
-    createE2EUseCases(queryBus),
+    createE2EUseCases(queryBus, eventBus),
     telemetry,
   );
   return {

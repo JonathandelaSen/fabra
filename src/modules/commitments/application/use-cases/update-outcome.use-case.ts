@@ -1,9 +1,7 @@
-import { EntityId, UserId } from "@/modules/shared";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
+import { EntityId, UserId, type EventBus } from "@/modules/shared";
 import { CommitmentOutcomeNotFoundError } from "../../domain/errors/commitment-outcome-not-found.error";
 import type { CommitmentOutcomeStatus, CommitmentOutcomeType } from "../../domain/entities/commitment-outcome.entity";
 import type { CommitmentOutcomeRepository } from "../../domain/repositories/commitment-outcome.repository";
-import { recordCommitmentEvent } from "./tracking";
 
 export interface UpdateCommitmentOutcomeInput {
   userId: string;
@@ -18,7 +16,7 @@ export interface UpdateCommitmentOutcomeInput {
 }
 
 export class UpdateCommitmentOutcomeUseCase {
-  constructor(private readonly deps: { outcomeRepo: CommitmentOutcomeRepository; tracker: EventTracker }) {}
+  constructor(private readonly deps: { outcomeRepo: CommitmentOutcomeRepository; eventBus: EventBus }) {}
 
   async execute(input: UpdateCommitmentOutcomeInput) {
     const userId = UserId.fromPrimitives(input.userId);
@@ -27,11 +25,10 @@ export class UpdateCommitmentOutcomeUseCase {
     if (!outcome) throw new CommitmentOutcomeNotFoundError();
     outcome.update({ ...input, updatedAt: new Date().toISOString() });
     const saved = await this.deps.outcomeRepo.save(outcome);
-    await recordCommitmentEvent(this.deps.tracker, {
-      userId: input.userId,
-      stage: "commitment_outcome_updated",
-      metadata: { outcomeId: input.id, type: input.type ?? null, status: input.status ?? null },
-    });
+    
+    const events = outcome.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
     return saved;
   }
 }

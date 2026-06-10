@@ -1,10 +1,9 @@
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
+import { type EventBus } from "@/modules/shared";
 import { FeedbackEntry } from "../../domain/entities/feedback-entry.entity";
 import { FeedbackClosedError } from "../../domain/errors/feedback-closed.error";
 import { FeedbackNotFoundError } from "../../domain/errors/feedback-not-found.error";
 import type { FeedbackEntryRepository } from "../../domain/repositories/feedback-entry.repository";
 import type { FeedbackRepository } from "../../domain/repositories/feedback.repository";
-import { recordFeedbackEvent } from "./tracking";
 
 export interface CreateEntryInput {
   user_id: string;
@@ -17,7 +16,7 @@ export class CreateEntryUseCase {
     private readonly deps: {
       feedbackRepo: FeedbackRepository;
       entryRepo: FeedbackEntryRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
@@ -30,22 +29,18 @@ export class CreateEntryUseCase {
     if (!feedback.isActive()) throw new FeedbackClosedError(input.feedback_id);
 
     const now = new Date().toISOString();
-    const entry = await this.deps.entryRepo.save(
-      FeedbackEntry.create({
-        id: crypto.randomUUID(),
-        user_id: input.user_id,
-        feedback_id: input.feedback_id,
-        content: input.content,
-        now,
-      })
-    );
-
-    await recordFeedbackEvent(this.deps.tracker, {
-      userId: input.user_id,
-      stage: "feedback_entry_created",
-      metadata: { feedbackId: input.feedback_id, entryId: entry.id },
+    const entry = FeedbackEntry.create({
+      id: crypto.randomUUID(),
+      user_id: input.user_id,
+      feedback_id: input.feedback_id,
+      content: input.content,
+      now,
     });
+    const saved = await this.deps.entryRepo.save(entry);
 
-    return entry;
+    const events = entry.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
+    return saved;
   }
 }

@@ -1,5 +1,4 @@
-import { Timestamp, UserId, type EventTracker } from "@/modules/shared";
-import { createRequestId } from "@/lib/observability";
+import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 import { CVDocument } from "../../domain/entities/cv-document.entity";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
@@ -18,19 +17,17 @@ export interface CreateTemplateCVDocumentInput {
   profile: unknown;
   filename?: string | null;
   textNode?: string | null;
-  requestId?: string;
 }
 
 export class CreateTemplateCVDocumentUseCase {
   constructor(
     private readonly deps: {
       documentRepo: CVDocumentRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
   async execute(input: CreateTemplateCVDocumentInput): Promise<CVDocument> {
-    const requestId = input.requestId ?? createRequestId("cv-tpl");
     const now = new Date().toISOString();
     const document = CVDocument.create({
       id: CVDocumentId.fromPrimitives(crypto.randomUUID()),
@@ -66,15 +63,10 @@ export class CreateTemplateCVDocumentUseCase {
     });
 
     const saved = await this.deps.documentRepo.save(document);
-    await this.deps.tracker.record({
-      userId: input.userId,
-      requestId,
-      stage: "cv_library_template_document_created",
-      status: "success",
-      source: "cv_library",
-      cvId: saved.id,
-      metadata: { sourceCvId: input.sourceCvId, templateId: input.templateId },
-    });
+
+    const events = document.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
     return saved;
   }
 }

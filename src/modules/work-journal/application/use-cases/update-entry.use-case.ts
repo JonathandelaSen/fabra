@@ -1,9 +1,7 @@
-import { IsoDate, OptionalIsoDate, UserId } from "@/modules/shared";
+import { IsoDate, OptionalIsoDate, UserId, type EventBus } from "@/modules/shared";
 import type { WorkJournalEntry } from "../../domain/entities/journal-entry.entity";
 import type { WorkJournalEntryRepository } from "../../domain/repositories/work-journal-entry.repository";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
 import { EntryNotFoundError } from "../../domain/errors/entry-not-found.error";
-import { createRequestId } from "@/lib/observability";
 import { WorkJournalContextId } from "../../domain/value-objects/work-journal-context-id.value-object";
 import { WorkJournalEntryId } from "../../domain/value-objects/work-journal-entry-id.value-object";
 import { WorkJournalFinalText } from "../../domain/value-objects/work-journal-final-text.value-object";
@@ -25,7 +23,7 @@ export class UpdateEntryUseCase {
   constructor(
     private readonly deps: {
       entryRepo: WorkJournalEntryRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
@@ -48,14 +46,8 @@ export class UpdateEntryUseCase {
     });
     const saved = await this.deps.entryRepo.save(entry);
 
-    const requestId = createRequestId("wj-entry");
-    await this.deps.tracker.record({
-      userId,
-      requestId,
-      stage: "work_journal_entry_update",
-      status: "success",
-      metadata: { entryId: id, fields: Object.keys(data) },
-    });
+    const events = entry.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
 
     return saved;
   }

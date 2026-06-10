@@ -1,9 +1,7 @@
-import { EntityId, UserId } from "@/modules/shared";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
+import { EntityId, UserId, type EventBus } from "@/modules/shared";
 import { CommitmentNotFoundError } from "../../domain/errors/commitment-not-found.error";
 import type { CommitmentPriority, CommitmentSource, CommitmentStatus } from "../../domain/entities/commitment.entity";
 import type { CommitmentRepository } from "../../domain/repositories/commitment.repository";
-import { recordCommitmentEvent } from "./tracking";
 
 export interface UpdateCommitmentInput {
   userId: string;
@@ -21,7 +19,7 @@ export interface UpdateCommitmentInput {
 }
 
 export class UpdateCommitmentUseCase {
-  constructor(private readonly deps: { commitmentRepo: CommitmentRepository; tracker: EventTracker }) {}
+  constructor(private readonly deps: { commitmentRepo: CommitmentRepository; eventBus: EventBus }) {}
 
   async execute(input: UpdateCommitmentInput) {
     const userId = UserId.fromPrimitives(input.userId);
@@ -30,11 +28,10 @@ export class UpdateCommitmentUseCase {
     if (!commitment) throw new CommitmentNotFoundError();
     commitment.update({ ...input, updatedAt: new Date().toISOString() });
     const saved = await this.deps.commitmentRepo.save(commitment);
-    await recordCommitmentEvent(this.deps.tracker, {
-      userId: input.userId,
-      stage: "commitment_updated",
-      metadata: { commitmentId: input.id, status: input.status ?? null },
-    });
+    
+    const events = commitment.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
     return saved;
   }
 }

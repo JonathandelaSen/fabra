@@ -1,5 +1,4 @@
-import { Timestamp, UserId } from "@/modules/shared";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
+import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 import { ConversationNotFoundError } from "../../domain/errors/conversation-not-found.error";
 import type { Conversation } from "../../domain/entities/conversation.entity";
 import type { ConversationRepository } from "../../domain/repositories/conversation.repository";
@@ -18,7 +17,7 @@ export class RenameConversationUseCase {
   constructor(
     private readonly deps: {
       conversationRepo: ConversationRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     },
   ) {}
 
@@ -34,15 +33,8 @@ export class RenameConversationUseCase {
     );
     const saved = await this.deps.conversationRepo.save(conversation);
 
-    await this.deps.tracker.record({
-      userId: input.userId,
-      analysisId: input.analysisId,
-      requestId: input.requestId,
-      stage: "analysis_chat_conversation_renamed",
-      status: "success",
-      source: "api_analysis_chat",
-      metadata: { conversationId: input.conversationId },
-    });
+    const events = conversation.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
 
     return saved;
   }

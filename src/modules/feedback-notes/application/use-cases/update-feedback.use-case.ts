@@ -1,8 +1,7 @@
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
+import { type EventBus } from "@/modules/shared";
 import { FeedbackClosedError } from "../../domain/errors/feedback-closed.error";
 import { FeedbackNotFoundError } from "../../domain/errors/feedback-not-found.error";
 import type { FeedbackRepository } from "../../domain/repositories/feedback.repository";
-import { recordFeedbackEvent } from "./tracking";
 
 export interface UpdateFeedbackInput {
   person_name?: string;
@@ -14,7 +13,7 @@ export class UpdateFeedbackUseCase {
   constructor(
     private readonly deps: {
       feedbackRepo: FeedbackRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
@@ -27,28 +26,21 @@ export class UpdateFeedbackUseCase {
     if (!feedback) throw new FeedbackNotFoundError(feedbackId);
     if (!feedback.isActive()) throw new FeedbackClosedError(feedbackId);
 
-    const fields: string[] = [];
     if (input.person_name !== undefined) {
       feedback.updatePersonName(input.person_name);
-      fields.push("person_name");
     }
     if (input.final_feedback !== undefined) {
       feedback.updateFinalFeedback(input.final_feedback);
-      fields.push("final_feedback");
     }
     if (input.activity_context_id !== undefined) {
       feedback.updateActivityContext(input.activity_context_id);
-      fields.push("activity_context_id");
     }
 
     const saved = await this.deps.feedbackRepo.save(feedback);
-    await recordFeedbackEvent(this.deps.tracker, {
-      userId,
-      stage: fields.includes("final_feedback")
-        ? "feedback_final_feedback_updated"
-        : "feedback_updated",
-      metadata: { feedbackId, fields },
-    });
+    
+    const events = feedback.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
     return saved;
   }
 }

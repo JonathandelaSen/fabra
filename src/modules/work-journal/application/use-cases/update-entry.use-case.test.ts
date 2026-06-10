@@ -1,6 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
-  createMockTracker,
   createTestUser,
   getSupabaseClient,
   testLabel,
@@ -17,11 +16,12 @@ function makeUseCase() {
   contextRepo.bindRequest(supabase);
   const entryRepo = new SupabaseWorkJournalEntryRepository();
   entryRepo.bindRequest(supabase);
-  const tracker = createMockTracker();
+  const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
   return {
     contextRepo,
     entryRepo,
-    useCase: new UpdateEntryUseCase({ entryRepo, tracker }),
+    eventBus,
+    useCase: new UpdateEntryUseCase({ entryRepo, eventBus: eventBus as never }),
   };
 }
 
@@ -34,9 +34,9 @@ async function createContext(contextRepo: SupabaseWorkJournalContextRepository, 
 }
 
 describe("UpdateEntryUseCase", () => {
-  it("updates fields on an existing entry", async () => {
+  it("updates fields on an existing entry and publishes domain events", async () => {
     const user = await createTestUser("wj-update-entry");
-    const { contextRepo, entryRepo, useCase } = makeUseCase();
+    const { contextRepo, entryRepo, eventBus, useCase } = makeUseCase();
     const context = await createContext(contextRepo, user.id);
     const entry = await entryRepo.create({
       user_id: user.id,
@@ -60,6 +60,14 @@ describe("UpdateEntryUseCase", () => {
     ).resolves.toMatchObject({
       topic: "New",
       finalText: "New text",
+    });
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("work_journal_entry_updated");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      entryId: entry.id,
+      fields: ["topic", "finalText"],
     });
   });
 

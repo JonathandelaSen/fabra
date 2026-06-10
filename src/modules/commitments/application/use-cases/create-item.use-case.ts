@@ -1,8 +1,6 @@
-import { EntityId, UserId } from "@/modules/shared";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
+import { EntityId, UserId, type EventBus } from "@/modules/shared";
 import { CommitmentItem, type CommitmentItemStatus } from "../../domain/entities/commitment-item.entity";
 import type { CommitmentItemRepository } from "../../domain/repositories/commitment-item.repository";
-import { recordCommitmentEvent } from "./tracking";
 
 export interface CreateCommitmentItemInput {
   userId: string;
@@ -16,30 +14,28 @@ export interface CreateCommitmentItemInput {
 }
 
 export class CreateCommitmentItemUseCase {
-  constructor(private readonly deps: { itemRepo: CommitmentItemRepository; tracker: EventTracker }) {}
+  constructor(private readonly deps: { itemRepo: CommitmentItemRepository; eventBus: EventBus }) {}
 
   async execute(input: CreateCommitmentItemInput): Promise<CommitmentItem> {
     const now = new Date().toISOString();
-    const item = await this.deps.itemRepo.save(
-      CommitmentItem.create({
-        id: EntityId.fromPrimitives(crypto.randomUUID()),
-        userId: UserId.fromPrimitives(input.userId),
-        commitmentId: EntityId.fromPrimitives(input.commitmentId),
-        title: input.title,
-        notes: input.notes,
-        evidenceNotes: input.evidenceNotes,
-        status: input.status,
-        dueDate: input.dueDate,
-        orderIndex: input.orderIndex ?? 0,
-        createdAt: now,
-        updatedAt: now,
-      })
-    );
-    await recordCommitmentEvent(this.deps.tracker, {
-      userId: input.userId,
-      stage: "commitment_item_created",
-      metadata: { commitmentId: input.commitmentId, itemId: item.id, status: input.status ?? "todo" },
+    const item = CommitmentItem.create({
+      id: EntityId.fromPrimitives(crypto.randomUUID()),
+      userId: UserId.fromPrimitives(input.userId),
+      commitmentId: EntityId.fromPrimitives(input.commitmentId),
+      title: input.title,
+      notes: input.notes,
+      evidenceNotes: input.evidenceNotes,
+      status: input.status,
+      dueDate: input.dueDate,
+      orderIndex: input.orderIndex ?? 0,
+      createdAt: now,
+      updatedAt: now,
     });
-    return item;
+    const saved = await this.deps.itemRepo.save(item);
+
+    const events = item.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
+    return saved;
   }
 }

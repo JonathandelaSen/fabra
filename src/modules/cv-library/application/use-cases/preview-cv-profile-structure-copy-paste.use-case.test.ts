@@ -46,6 +46,6 @@ describe("PreviewCVProfileStructureCopyPasteUseCase", () => {
         userId: "user-1",
         rawResponse: "not json",
       }),
-    ).rejects.toThrow("not valid JSON");
+    ).rejects.toThrow("The pasted response must be a JSON object.");
   });
 });

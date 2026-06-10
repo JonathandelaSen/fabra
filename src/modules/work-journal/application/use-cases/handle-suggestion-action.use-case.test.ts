@@ -1,6 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
-  createMockTracker,
   createTestUser,
   getSupabaseClient,
 } from "@/modules/test-helpers/setup";
@@ -10,12 +9,12 @@ import { HandleSuggestionActionUseCase } from "./handle-suggestion-action.use-ca
 const supabase = getSupabaseClient();
 
 describe("HandleSuggestionActionUseCase", () => {
-  it("promotes a suggestion into a CV-created context and records observability", async () => {
+  it("promotes a suggestion into a CV-created context and publishes domain events", async () => {
     const user = await createTestUser("wj-suggestion-promote");
     const contextRepo = new SupabaseWorkJournalContextRepository();
     contextRepo.bindRequest(supabase);
-    const tracker = createMockTracker();
-    const useCase = new HandleSuggestionActionUseCase({ contextRepo, tracker });
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
+    const useCase = new HandleSuggestionActionUseCase({ contextRepo, eventBus: eventBus as never });
 
     const context = await useCase.execute({
       userId: user.id,
@@ -36,29 +35,21 @@ describe("HandleSuggestionActionUseCase", () => {
       isDefault: false,
     });
 
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        userId: user.id,
-        stage: "work_journal_suggestion_promote",
-        status: "started",
-      })
-    );
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        userId: user.id,
-        stage: "work_journal_suggestion_promote",
-        status: "success",
-        metadata: { contextId: context.id },
-      })
-    );
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("work_journal_context_created");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      contextId: context.id,
+    });
   });
 
-  it("hides a suggestion and records observability", async () => {
+  it("hides a suggestion and publishes no events", async () => {
     const user = await createTestUser("wj-suggestion-hide");
     const contextRepo = new SupabaseWorkJournalContextRepository();
     contextRepo.bindRequest(supabase);
-    const tracker = createMockTracker();
-    const useCase = new HandleSuggestionActionUseCase({ contextRepo, tracker });
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
+    const useCase = new HandleSuggestionActionUseCase({ contextRepo, eventBus: eventBus as never });
 
     await expect(
       useCase.execute({
@@ -75,13 +66,6 @@ describe("HandleSuggestionActionUseCase", () => {
         .listHiddenSuggestionKeys(user.id)
         .then((keys) => new Set(Array.from(keys).map((key) => key.toPrimitives())))
     ).resolves.toEqual(new Set(["project:internal tools"]));
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        userId: user.id,
-        stage: "work_journal_suggestion_hide",
-        status: "success",
-        metadata: { type: "project", name: "Internal Tools" },
-      })
-    );
+    expect(eventBus.publish).not.toHaveBeenCalled();
   });
 });

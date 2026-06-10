@@ -1,6 +1,5 @@
-import { Timestamp, UserId } from "@/modules/shared";
+import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 import { ASSISTANCE_MODE } from "@/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
 import { ConversationNotFoundError } from "../../domain/errors/conversation-not-found.error";
 import { ChatMessage } from "../../domain/entities/chat-message.entity";
 import type { ChatMessageRepository } from "../../domain/repositories/chat-message.repository";
@@ -30,7 +29,7 @@ export class ApplyOfferChatCopyPasteUseCase {
     private readonly deps: {
       conversationRepo: ConversationRepository;
       messageRepo: ChatMessageRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     },
   ) {}
 
@@ -62,6 +61,10 @@ export class ApplyOfferChatCopyPasteUseCase {
         createdAt: Timestamp.fromPrimitives(now),
       }),
     );
+
+    const userEvents = userMessage.pullDomainEvents();
+    await this.deps.eventBus.publish(userEvents);
+
     const assistantMessage = await this.deps.messageRepo.save(
       ChatMessage.createAssistantMessage({
         id: AnalysisChatMessageId.fromPrimitives(crypto.randomUUID()),
@@ -79,27 +82,8 @@ export class ApplyOfferChatCopyPasteUseCase {
       }),
     );
 
-    await this.deps.tracker.record({
-      userId: input.userId,
-      analysisId: input.analysisId,
-      requestId: input.requestId,
-      stage: "offer_chat_copy_paste_response_applied",
-      status: "success",
-      source: "api_analysis_chat_copy_paste",
-      durationMs:
-        input.startedAt === undefined
-          ? null
-          : performance.now() - input.startedAt,
-      textLength: input.assistantResponse.length,
-      metadata: {
-        assistanceMode: ASSISTANCE_MODE.copyPaste,
-        conversationId: input.conversationId,
-        userMessageId: userMessage.id,
-        assistantMessageId: assistantMessage.id,
-        model: "external-chat",
-        provider: "external-chat",
-      },
-    });
+    const assistantEvents = assistantMessage.pullDomainEvents();
+    await this.deps.eventBus.publish(assistantEvents);
 
     return { userMessage, assistantMessage };
   }

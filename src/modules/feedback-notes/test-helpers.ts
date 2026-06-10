@@ -1,10 +1,11 @@
 import {
-  createMockTracker,
   getSupabaseClient,
 } from "@/modules/test-helpers/setup";
 import { activityContextsModule } from "@/lib/container";
 import { SupabaseFeedbackEntryRepository } from "./infrastructure/repositories/supabase-feedback-entry.repository";
 import { SupabaseFeedbackRepository } from "./infrastructure/repositories/supabase-feedback.repository";
+
+import { vi } from "vitest";
 
 export function makeFeedbackDeps() {
   const supabase = getSupabaseClient();
@@ -12,8 +13,10 @@ export function makeFeedbackDeps() {
   feedbackRepo.bindRequest(supabase);
   const entryRepo = new SupabaseFeedbackEntryRepository();
   entryRepo.bindRequest(supabase);
-  const tracker = createMockTracker();
-  return { feedbackRepo, entryRepo, tracker };
+  const eventBus = {
+    publish: vi.fn().mockResolvedValue(undefined),
+  };
+  return { feedbackRepo, entryRepo, eventBus };
 }
 
 export async function createDefaultContext(userId: string) {

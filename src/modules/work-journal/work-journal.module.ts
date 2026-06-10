@@ -1,7 +1,6 @@
 import { OllamaJournalAIServiceFactory } from "./infrastructure/services/ollama-journal-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
-import { instrumentUseCases, SupabaseEventTracker, type Telemetry } from "@/modules/shared";
+import { instrumentUseCases, type Telemetry, type EventBus } from "@/modules/shared";
 import { SupabaseWorkJournalEntryRepository } from "./infrastructure/repositories/supabase-work-journal-entry.repository";
 import { GeminiJournalAIServiceFactory } from "./infrastructure/services/gemini-journal-ai.service";
 import { MockJournalAIServiceFactory } from "./infrastructure/services/mock-journal-ai.service";
@@ -14,7 +13,6 @@ import { DeleteEntryUseCase } from "./application/use-cases/delete-entry.use-cas
 import { DraftEntryUseCase } from "./application/use-cases/draft-entry.use-case";
 
 const entryRepo = new SupabaseWorkJournalEntryRepository();
-const tracker: EventTracker = new SupabaseEventTracker();
 const aiFactory = new ProviderJournalAIServiceFactory({
   geminiFactory: new GeminiJournalAIServiceFactory(),
   openaiFactory: new OpenAIJournalAIServiceFactory(),
@@ -22,13 +20,13 @@ const aiFactory = new ProviderJournalAIServiceFactory({
   ollamaFactory: new OllamaJournalAIServiceFactory(),
 });
 
-function createUseCases() {
+function createUseCases(eventBus: EventBus) {
   return {
     listEntries: new ListEntriesUseCase({ entryRepo }),
-    createEntry: new CreateEntryUseCase({ entryRepo, tracker }),
-    updateEntry: new UpdateEntryUseCase({ entryRepo, tracker }),
-    deleteEntry: new DeleteEntryUseCase({ entryRepo, tracker }),
-    draftEntry: new DraftEntryUseCase({ aiFactory, tracker }),
+    createEntry: new CreateEntryUseCase({ entryRepo, eventBus }),
+    updateEntry: new UpdateEntryUseCase({ entryRepo, eventBus }),
+    deleteEntry: new DeleteEntryUseCase({ entryRepo, eventBus }),
+    draftEntry: new DraftEntryUseCase({ aiFactory }),
   };
 }
 
@@ -36,8 +34,8 @@ export type WorkJournalModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): WorkJournalModule;
 };
 
-export function createWorkJournalModule(telemetry: Telemetry): WorkJournalModule {
-  const useCases = instrumentUseCases("work-journal", createUseCases(), telemetry);
+export function createWorkJournalModule(telemetry: Telemetry, eventBus: EventBus): WorkJournalModule {
+  const useCases = instrumentUseCases("work-journal", createUseCases(eventBus), telemetry);
 
   return {
     ...useCases,

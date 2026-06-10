@@ -1,13 +1,12 @@
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
+import { type EventBus } from "@/modules/shared";
 import { FeedbackNotFoundError } from "../../domain/errors/feedback-not-found.error";
 import type { FeedbackRepository } from "../../domain/repositories/feedback.repository";
-import { recordFeedbackEvent } from "./tracking";
 
 export class ReopenFeedbackUseCase {
   constructor(
     private readonly deps: {
       feedbackRepo: FeedbackRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
@@ -16,11 +15,10 @@ export class ReopenFeedbackUseCase {
     if (!feedback) throw new FeedbackNotFoundError(feedbackId);
     feedback.reopen();
     const saved = await this.deps.feedbackRepo.save(feedback);
-    await recordFeedbackEvent(this.deps.tracker, {
-      userId,
-      stage: "feedback_reopened",
-      metadata: { feedbackId },
-    });
+    
+    const events = feedback.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
     return saved;
   }
 }

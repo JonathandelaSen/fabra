@@ -1,14 +1,14 @@
-import { describe, expect, it } from "vitest";
-import { structuredProfileRepo, tracker } from "./cv-library-test-helpers.test";
+import { describe, expect, it, vi } from "vitest";
+import { structuredProfileRepo } from "./cv-library-test-helpers.test";
 import { UpsertCVStructuredProfileUseCase } from "./upsert-cv-structured-profile.use-case";
 
 describe("UpsertCVStructuredProfileUseCase", () => {
-  it("upserts profile data and records observability", async () => {
+  it("upserts profile data and publishes domain events", async () => {
     const repo = structuredProfileRepo();
-    const events = tracker();
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
     const result = await new UpsertCVStructuredProfileUseCase({
       profileRepo: repo,
-      tracker: events,
+      eventBus: eventBus as never,
     }).execute({
       userId: "user-1",
       cvDocumentId: "cv-1",
@@ -16,13 +16,17 @@ describe("UpsertCVStructuredProfileUseCase", () => {
       sourceTextHash: "hash-1",
       aiModel: "gemini",
       profile: { basics: { name: "Ada" } },
-      requestId: "req-1",
     });
 
     expect(result.toPrimitives()).toMatchObject({ cvDocumentId: "cv-1" });
     expect(repo.save).toHaveBeenCalledOnce();
-    expect(events.record).toHaveBeenCalledWith(
-      expect.objectContaining({ stage: "cv_library_structured_profile_upserted" })
-    );
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("cv_structured_profile_created");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      cvDocumentId: "cv-1",
+      profileId: result.id,
+    });
   });
 });

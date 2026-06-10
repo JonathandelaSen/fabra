@@ -1,6 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
-import { instrumentUseCases, SupabaseEventTracker, type Telemetry } from "@/modules/shared";
+import { instrumentUseCases, type Telemetry, type EventBus } from "@/modules/shared";
 import { CreateReceivedFeedbackUseCase } from "./application/use-cases/create-received-feedback.use-case";
 import { DeleteReceivedFeedbackUseCase } from "./application/use-cases/delete-received-feedback.use-case";
 import { ListReceivedFeedbackUseCase } from "./application/use-cases/list-received-feedback.use-case";
@@ -8,22 +7,21 @@ import { UpdateReceivedFeedbackUseCase } from "./application/use-cases/update-re
 import { SupabaseReceivedFeedbackRepository } from "./infrastructure/repositories/supabase-received-feedback.repository";
 
 const receivedFeedbackRepo = new SupabaseReceivedFeedbackRepository();
-const tracker: EventTracker = new SupabaseEventTracker();
 
-function createUseCases() {
+function createUseCases(eventBus: EventBus) {
   return {
     listReceivedFeedback: new ListReceivedFeedbackUseCase({ receivedFeedbackRepo }),
     createReceivedFeedback: new CreateReceivedFeedbackUseCase({
       receivedFeedbackRepo,
-      tracker,
+      eventBus,
     }),
     updateReceivedFeedback: new UpdateReceivedFeedbackUseCase({
       receivedFeedbackRepo,
-      tracker,
+      eventBus,
     }),
     deleteReceivedFeedback: new DeleteReceivedFeedbackUseCase({
       receivedFeedbackRepo,
-      tracker,
+      eventBus,
     }),
   };
 }
@@ -32,8 +30,8 @@ export type ReceivedFeedbackModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): ReceivedFeedbackModule;
 };
 
-export function createReceivedFeedbackModule(telemetry: Telemetry): ReceivedFeedbackModule {
-  const useCases = instrumentUseCases("received-feedback", createUseCases(), telemetry);
+export function createReceivedFeedbackModule(telemetry: Telemetry, eventBus: EventBus): ReceivedFeedbackModule {
+  const useCases = instrumentUseCases("received-feedback", createUseCases(eventBus), telemetry);
 
   return {
     ...useCases,

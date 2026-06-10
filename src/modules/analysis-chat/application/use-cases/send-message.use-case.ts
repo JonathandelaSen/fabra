@@ -3,8 +3,8 @@ import {
   UserId,
   type AIProvider,
   type QueryBus,
+  type EventBus,
 } from "@/modules/shared";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
 import { AnalysisContextNotFoundError } from "../../domain/errors/analysis-context-not-found.error";
 import { ConversationNotFoundError } from "../../domain/errors/conversation-not-found.error";
 import { ChatMessage } from "../../domain/entities/chat-message.entity";
@@ -19,21 +19,6 @@ import { AnalysisChatConversationId } from "../../domain/value-objects/analysis-
 import { AnalysisChatMessageId } from "../../domain/value-objects/analysis-chat-message-id.value-object";
 import { AnalysisReference } from "../../domain/value-objects/analysis-reference.value-object";
 import { GetAnalysisChatContextQuery } from "../queries/get-analysis-chat-context.query";
-
-function getErrorCode(error: unknown) {
-  if (error instanceof Error) return error.name || "Error";
-  return "UnknownError";
-}
-
-function sanitizeErrorMessage(error: unknown) {
-  const message = error instanceof Error ? error.message : String(error);
-  return message
-    .replace(/AIza[0-9A-Za-z_-]{20,}/g, "[redacted-api-key]")
-    .replace(/Bearer\s+[0-9A-Za-z._-]+/gi, "Bearer [redacted]")
-    .replace(/\s+/g, " ")
-    .trim()
-    .slice(0, 700);
-}
 
 export interface SendMessageInput {
   userId: string;
@@ -60,7 +45,7 @@ export class SendMessageUseCase {
       messageRepo: ChatMessageRepository;
       aiFactory: AnalysisChatAIServiceFactory;
       queryBus: QueryBus;
-      tracker: EventTracker;
+      eventBus: EventBus;
     },
   ) {}
 
@@ -104,23 +89,8 @@ export class SendMessageUseCase {
       }),
     );
 
-    await this.deps.tracker.record({
-      userId: input.userId,
-      cvId: context.cvId,
-      analysisId: input.analysisId,
-      requestId: input.requestId,
-      stage: "analysis_chat_message_sent",
-      status: "started",
-      source: "api_analysis_chat",
-      textLength: input.message.length,
-      metadata: {
-        model: input.model,
-        provider: input.provider,
-        conversationId: input.conversationId,
-        historyLength: history.length,
-        userMessageId: userMessage.id,
-      },
-    });
+    const userEvents = userMessage.pullDomainEvents();
+    await this.deps.eventBus.publish(userEvents);
 
     let answer: string;
     try {
@@ -128,7 +98,7 @@ export class SendMessageUseCase {
         provider: input.provider,
         apiKey: input.apiKey,
         baseUrl: input.baseUrl,
-      model: input.model,
+        model: input.model,
       });
       answer = await aiService.generateAnswer({
         message: input.message,
@@ -136,22 +106,6 @@ export class SendMessageUseCase {
         history: history.map((message) => message.toPrimitives()),
       });
     } catch (error) {
-      await this.deps.tracker.record({
-        userId: input.userId,
-        cvId: context.cvId,
-        analysisId: input.analysisId,
-        requestId: input.requestId,
-        stage: "analysis_chat_ai_response_failed",
-        status: "error",
-        source: "api_analysis_chat",
-        errorCode: getErrorCode(error),
-        errorMessage: sanitizeErrorMessage(error),
-        metadata: {
-          model: input.model,
-          provider: input.provider,
-          conversationId: input.conversationId,
-        },
-      });
       throw error;
     }
 
@@ -168,27 +122,8 @@ export class SendMessageUseCase {
       }),
     );
 
-    await this.deps.tracker.record({
-      userId: input.userId,
-      cvId: context.cvId,
-      analysisId: input.analysisId,
-      requestId: input.requestId,
-      stage: "analysis_chat_ai_response_created",
-      status: "success",
-      source: "api_analysis_chat",
-      durationMs:
-        input.startedAt === undefined
-          ? null
-          : performance.now() - input.startedAt,
-      textLength: answer.length,
-      metadata: {
-        model: input.model,
-        provider: input.provider,
-        conversationId: input.conversationId,
-        userMessageId: userMessage.id,
-        assistantMessageId: assistantMessage.id,
-      },
-    });
+    const assistantEvents = assistantMessage.pullDomainEvents();
+    await this.deps.eventBus.publish(assistantEvents);
 
     return { userMessage, assistantMessage };
   }

@@ -1,5 +1,4 @@
-import { Timestamp, UserId, type EventTracker } from "@/modules/shared";
-import { createRequestId } from "@/lib/observability";
+import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 import type {
   CVDocument,
   CVDocumentExtractedTextPrimitives,
@@ -11,14 +10,13 @@ export interface UpdateCVDocumentExtractionInput {
   id: string;
   userId: string;
   extractedText: CVDocumentExtractedTextPrimitives;
-  requestId?: string;
 }
 
 export class UpdateCVDocumentExtractionUseCase {
   constructor(
     private readonly deps: {
       documentRepo: CVDocumentRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     },
   ) {}
 
@@ -35,14 +33,10 @@ export class UpdateCVDocumentExtractionUseCase {
       Timestamp.fromPrimitives(new Date().toISOString()),
     );
     const saved = await this.deps.documentRepo.save(document);
-    await this.deps.tracker.record({
-      userId: input.userId,
-      requestId: input.requestId ?? createRequestId("cv-extraction"),
-      stage: "cv_library_extraction_updated",
-      status: "success",
-      source: "cv_library",
-      cvId: saved.id,
-    });
+
+    const events = document.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
     return saved;
   }
 }

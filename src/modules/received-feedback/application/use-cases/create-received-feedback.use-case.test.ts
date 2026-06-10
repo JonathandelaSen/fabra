@@ -1,17 +1,20 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { createTestUser, getDefaultActivityContextId } from "@/modules/test-helpers/setup";
 import { makeReceivedFeedbackDeps } from "../../test-helpers";
 import { CreateReceivedFeedbackUseCase } from "./create-received-feedback.use-case";
 
 describe("CreateReceivedFeedbackUseCase", () => {
-  it("creates received feedback and records observability", async () => {
+  it("creates received feedback and publishes domain events", async () => {
     const user = await createTestUser("received-feedback-create");
     const activityContextId = await getDefaultActivityContextId(user.id);
-    const { receivedFeedbackRepo, tracker } = makeReceivedFeedbackDeps();
+    const { receivedFeedbackRepo } = makeReceivedFeedbackDeps();
+    const eventBus = {
+      publish: vi.fn().mockResolvedValue(undefined),
+    };
 
     const feedback = await new CreateReceivedFeedbackUseCase({
       receivedFeedbackRepo,
-      tracker,
+      eventBus: eventBus as never,
     }).execute({
       userId: user.id,
       activityContextId,
@@ -29,8 +32,12 @@ describe("CreateReceivedFeedbackUseCase", () => {
       feedbackText: "Keep raising risks early.",
       userNote: null,
     });
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({ stage: "received_feedback_created", status: "success" })
-    );
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("received_feedback_created");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      feedbackId: feedback.id,
+    });
   });
 });

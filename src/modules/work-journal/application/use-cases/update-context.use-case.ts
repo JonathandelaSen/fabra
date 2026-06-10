@@ -1,9 +1,7 @@
-import { UserId } from "@/modules/shared";
+import { UserId, type EventBus } from "@/modules/shared";
 import type { WorkJournalContext } from "../../domain/entities/journal-context.entity";
 import type { WorkJournalContextRepository } from "../../domain/repositories/work-journal-context.repository";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
 import { ContextNotFoundError } from "../../domain/errors/context-not-found.error";
-import { createRequestId } from "@/lib/observability";
 import { WorkJournalContextId } from "../../domain/value-objects/work-journal-context-id.value-object";
 import { WorkJournalContextName } from "../../domain/value-objects/work-journal-context-name.value-object";
 import { type ContextStatus, WorkJournalContextStatus } from "../../domain/value-objects/work-journal-context-status.value-object";
@@ -21,7 +19,7 @@ export class UpdateContextUseCase {
   constructor(
     private readonly deps: {
       contextRepo: WorkJournalContextRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
@@ -44,14 +42,8 @@ export class UpdateContextUseCase {
     });
     const saved = await this.deps.contextRepo.save(context);
 
-    const requestId = createRequestId("wj-ctx");
-    await this.deps.tracker.record({
-      userId,
-      requestId,
-      stage: "work_journal_context_update",
-      status: "success",
-      metadata: { contextId: id, fields: Object.keys(data) },
-    });
+    const events = context.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
 
     return saved;
   }

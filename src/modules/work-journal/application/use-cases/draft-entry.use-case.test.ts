@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
 import {
-  createMockTracker,
   createTestUser,
   testLabel,
 } from "@/modules/test-helpers/setup";
@@ -15,7 +14,6 @@ describe("DraftEntryUseCase", () => {
     };
     const useCase = new DraftEntryUseCase({
       aiFactory: { create: vi.fn(() => aiService) },
-      tracker: createMockTracker(),
     });
 
     const result = await useCase.execute(user.id, "context-1", {

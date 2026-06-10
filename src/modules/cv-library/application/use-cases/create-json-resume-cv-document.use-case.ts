@@ -1,5 +1,4 @@
-import { Timestamp, UserId, type EventTracker } from "@/modules/shared";
-import { createRequestId } from "@/lib/observability";
+import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 import { CVDocument } from "../../domain/entities/cv-document.entity";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import type { CVPdfStorage } from "../../domain/repositories/cv-analysis-preparation-services";
@@ -30,15 +29,13 @@ export class CreateJsonResumeCVDocumentUseCase {
     private readonly deps: {
       documentRepo: CVDocumentRepository;
       pdfStorage: CVPdfStorage;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
   async execute(
     input: CreateJsonResumeCVDocumentInput
   ): Promise<CreateJsonResumeCVDocumentResult> {
-    const requestId = createRequestId("cv-lib");
-
     let parsed: unknown;
     try {
       parsed = JSON.parse(input.jsonContent);
@@ -98,15 +95,8 @@ export class CreateJsonResumeCVDocumentUseCase {
 
     const saved = await this.deps.documentRepo.save(document);
 
-    await this.deps.tracker.record({
-      userId: input.userId,
-      requestId,
-      stage: "cv_library_document_created",
-      status: "success",
-      source: "cv_library",
-      cvId: saved.id,
-      metadata: { type: "json_resume" },
-    });
+    const events = document.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
 
     return { document: saved, warnings };
   }

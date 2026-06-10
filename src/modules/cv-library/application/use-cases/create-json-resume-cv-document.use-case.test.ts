@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { documentRepo, tracker } from "./cv-library-test-helpers.test";
+import { documentRepo } from "./cv-library-test-helpers.test";
 import { CreateJsonResumeCVDocumentUseCase } from "./create-json-resume-cv-document.use-case";
 import { JsonResumeValidationError } from "../../domain/errors/json-resume-validation.error";
 
@@ -19,15 +19,15 @@ function pdfStorage() {
 }
 
 describe("CreateJsonResumeCVDocumentUseCase", () => {
-  it("creates a json_resume document with mapped profile", async () => {
+  it("creates a json_resume document with mapped profile and publishes domain events", async () => {
     const repo = documentRepo();
-    const events = tracker();
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
     const storage = pdfStorage();
 
     const { document, warnings } = await new CreateJsonResumeCVDocumentUseCase({
       documentRepo: repo,
       pdfStorage: storage,
-      tracker: events,
+      eventBus: eventBus as never,
     }).execute({
       userId: "user-1",
       jsonContent: VALID_JSON_RESUME,
@@ -45,20 +45,23 @@ describe("CreateJsonResumeCVDocumentUseCase", () => {
       expect.objectContaining({ contentType: "application/json" })
     );
     expect(repo.save).toHaveBeenCalledOnce();
-    expect(events.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        stage: "cv_library_document_created",
-        metadata: { type: "json_resume" },
-      })
-    );
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("cv_document_created");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      documentId: document.id,
+      type: "json_resume",
+    });
   });
 
   it("uses basics.name as document name when name not provided", async () => {
     const repo = documentRepo();
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
     const { document } = await new CreateJsonResumeCVDocumentUseCase({
       documentRepo: repo,
       pdfStorage: pdfStorage(),
-      tracker: tracker(),
+      eventBus: eventBus as never,
     }).execute({
       userId: "user-1",
       jsonContent: VALID_JSON_RESUME,
@@ -68,10 +71,11 @@ describe("CreateJsonResumeCVDocumentUseCase", () => {
   });
 
   it("throws on invalid JSON content", async () => {
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
     const useCase = new CreateJsonResumeCVDocumentUseCase({
       documentRepo: documentRepo(),
       pdfStorage: pdfStorage(),
-      tracker: tracker(),
+      eventBus: eventBus as never,
     });
 
     await expect(
@@ -80,10 +84,11 @@ describe("CreateJsonResumeCVDocumentUseCase", () => {
   });
 
   it("throws when basics.name is missing", async () => {
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
     const useCase = new CreateJsonResumeCVDocumentUseCase({
       documentRepo: documentRepo(),
       pdfStorage: pdfStorage(),
-      tracker: tracker(),
+      eventBus: eventBus as never,
     });
 
     await expect(
@@ -93,10 +98,11 @@ describe("CreateJsonResumeCVDocumentUseCase", () => {
 
   it("returns warnings for missing sections", async () => {
     const minimalResume = JSON.stringify({ basics: { name: "John" } });
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
     const { warnings } = await new CreateJsonResumeCVDocumentUseCase({
       documentRepo: documentRepo(),
       pdfStorage: pdfStorage(),
-      tracker: tracker(),
+      eventBus: eventBus as never,
     }).execute({ userId: "user-1", jsonContent: minimalResume });
 
     expect(warnings).toContain("No work experience found");

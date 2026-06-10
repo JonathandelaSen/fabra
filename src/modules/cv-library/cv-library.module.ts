@@ -1,8 +1,7 @@
 import { OllamaCVProfileEditingAIServiceFactory } from "./infrastructure/services/ollama-cv-profile-editing-ai.service";
 import { OllamaCVProfileStructuringAIServiceFactory } from "./infrastructure/services/ollama-cv-profile-structuring-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { QueryBus, Telemetry } from "@/modules/shared";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
+import type { QueryBus, Telemetry, EventBus } from "@/modules/shared";
 import { instrumentUseCases, SupabaseEventTracker } from "@/modules/shared";
 import { ApplyCVEditorCopyPasteUseCase } from "./application/use-cases/apply-cv-editor-copy-paste.use-case";
 import { ApplyCVProfileStructureCopyPasteUseCase } from "./application/use-cases/apply-cv-profile-structure-copy-paste.use-case";
@@ -59,9 +58,9 @@ const profileEditingAI = new ProviderCVProfileEditingAIServiceFactory({
   mockFactory: new MockCVProfileEditingAIServiceFactory(),
   ollamaFactory: new OllamaCVProfileEditingAIServiceFactory(),
 });
-const tracker: EventTracker = new SupabaseEventTracker();
+const tracker = new SupabaseEventTracker();
 
-function createUseCases(queryBus: QueryBus) {
+function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
   const prepareCVAnalysisInput = new PrepareCVAnalysisInputUseCase({
     documentRepo,
     pdfStorage,
@@ -71,11 +70,11 @@ function createUseCases(queryBus: QueryBus) {
   });
   const createTemplateCVDocument = new CreateTemplateCVDocumentUseCase({
     documentRepo,
-    tracker,
+    eventBus,
   });
   const upsertCVStructuredProfile = new UpsertCVStructuredProfileUseCase({
     profileRepo,
-    tracker,
+    eventBus,
   });
 
   return {
@@ -84,36 +83,36 @@ function createUseCases(queryBus: QueryBus) {
     createJsonResumeCVDocument: new CreateJsonResumeCVDocumentUseCase({
       documentRepo,
       pdfStorage,
-      tracker,
+      eventBus,
     }),
     createUploadedCVDocument: new CreateUploadedCVDocumentUseCase({
       documentRepo,
-      tracker,
+      eventBus,
     }),
     createTemplateCVDocument,
     updateCVDocumentName: new UpdateCVDocumentNameUseCase({
       documentRepo,
-      tracker,
+      eventBus,
     }),
     updateCVDocumentExtraction: new UpdateCVDocumentExtractionUseCase({
       documentRepo,
-      tracker,
+      eventBus,
     }),
     prepareCVAnalysisInput,
     updateCVDocumentPublicSettings: new UpdateCVDocumentPublicSettingsUseCase({
       documentRepo,
-      tracker,
+      eventBus,
     }),
     updateTemplateCVDocumentProfile: new UpdateTemplateCVDocumentProfileUseCase(
       {
         documentRepo,
-        tracker,
+        eventBus,
       },
     ),
     deleteCVDocument: new DeleteCVDocumentUseCase({
       documentRepo,
       queryBus,
-      tracker,
+      eventBus,
     }),
     getPublishedCVDocument: new GetPublishedCVDocumentUseCase({ documentRepo }),
     getCVStructuredProfile: new GetCVStructuredProfileUseCase({ profileRepo }),
@@ -137,7 +136,7 @@ function createUseCases(queryBus: QueryBus) {
       documentRepo,
       updateProfile: new UpdateTemplateCVDocumentProfileUseCase({
         documentRepo,
-        tracker,
+        eventBus,
       }),
       tracker,
     }),
@@ -171,8 +170,9 @@ export type CVLibraryModule = ReturnType<typeof createUseCases> & {
 export function createCVLibraryModule(
   queryBus: QueryBus,
   telemetry: Telemetry,
+  eventBus: EventBus,
 ): CVLibraryModule {
-  const useCases = instrumentUseCases("cv-library", createUseCases(queryBus), telemetry);
+  const useCases = instrumentUseCases("cv-library", createUseCases(queryBus, eventBus), telemetry);
   return {
     ...useCases,
     bindRequest(client: SupabaseClient) {

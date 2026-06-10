@@ -1,6 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
-  createMockTracker,
   createTestUser,
   getSupabaseClient,
   testLabel,
@@ -16,19 +15,19 @@ function makeUseCase() {
   contextRepo.bindRequest(supabase);
   const entryRepo = new SupabaseWorkJournalEntryRepository();
   entryRepo.bindRequest(supabase);
-  const tracker = createMockTracker();
+  const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
   return {
     contextRepo,
     entryRepo,
-    tracker,
-    useCase: new CreateEntryUseCase({ entryRepo, tracker }),
+    eventBus,
+    useCase: new CreateEntryUseCase({ entryRepo, eventBus: eventBus as never }),
   };
 }
 
 describe("CreateEntryUseCase", () => {
   it("creates an entry for the provided context id", async () => {
     const user = await createTestUser("wj-create-entry");
-    const { contextRepo, entryRepo, tracker, useCase } = makeUseCase();
+    const { contextRepo, entryRepo, eventBus, useCase } = makeUseCase();
     const context = await contextRepo.create({
       user_id: user.id,
       type: "employment",
@@ -54,12 +53,12 @@ describe("CreateEntryUseCase", () => {
       rawNotes: "Added integration tests",
       finalText: "Added integration tests.",
     });
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        stage: "work_journal_entry_create",
-        status: "success",
-        metadata: { entryId: entry.id, contextId: context.id },
-      })
-    );
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("work_journal_entry_created");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      entryId: entry.id,
+    });
   });
 });

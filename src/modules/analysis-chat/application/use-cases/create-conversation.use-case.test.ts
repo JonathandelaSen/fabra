@@ -1,23 +1,22 @@
 import { describe, expect, it, vi } from "vitest";
-import type { EventTracker } from "@/modules/shared";
 import type { ConversationRepository } from "../../domain/repositories/conversation.repository";
 import { CreateConversationUseCase } from "./create-conversation.use-case";
 
 describe("CreateConversationUseCase", () => {
-  it("creates a conversation and records observability", async () => {
+  it("creates a conversation and publishes domain events", async () => {
     const repo: ConversationRepository = {
       search: vi.fn(),
       findById: vi.fn(),
       save: vi.fn(async (conversation) => conversation),
       delete: vi.fn(),
     };
-    const tracker = {
-      record: vi.fn(async () => undefined),
-    } satisfies EventTracker;
+    const eventBus = {
+      publish: vi.fn().mockResolvedValue(undefined),
+    };
 
     const conversation = await new CreateConversationUseCase({
       conversationRepo: repo,
-      tracker,
+      eventBus: eventBus as never,
     }).execute({
       userId: "user-1",
       analysisId: "analysis-1",
@@ -31,11 +30,12 @@ describe("CreateConversationUseCase", () => {
       title: "Chat",
     });
     expect(repo.save).toHaveBeenCalledOnce();
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        stage: "analysis_chat_conversation_created",
-        status: "success",
-      }),
-    );
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("analysis_chat_conversation_created");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      conversationId: conversation.id,
+    });
   });
 });

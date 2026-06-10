@@ -6,6 +6,7 @@ import {
 } from "@/modules/shared";
 import { ConversationCreatedEvent } from "../events/conversation-created.event";
 import { ConversationRenamedEvent } from "../events/conversation-renamed.event";
+import { ConversationDeletedEvent } from "../events/conversation-deleted.event";
 import { AnalysisChatConversationId } from "../value-objects/analysis-chat-conversation-id.value-object";
 import { AnalysisChatTitle } from "../value-objects/analysis-chat-title.value-object";
 import {
@@ -83,6 +84,10 @@ export class Conversation extends AggregateRoot {
     this.conversationTitle = title;
     if (updatedAt) this.conversationUpdatedAt = updatedAt;
     this.recordDomainEvent(new ConversationRenamedEvent(this.id));
+  }
+
+  delete(): void {
+    this.recordDomainEvent(new ConversationDeletedEvent(this.id));
   }
 
   toPrimitives(): ConversationPrimitives {

@@ -1,6 +1,6 @@
 import { OllamaAnalysisChatAIServiceFactory } from "./infrastructure/services/ollama-analysis-chat-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { EventTracker, QueryBus, Telemetry } from "@/modules/shared";
+import type { EventTracker, QueryBus, Telemetry, EventBus } from "@/modules/shared";
 import { instrumentUseCases, SupabaseEventTracker } from "@/modules/shared";
 import { GetAnalysisChatContextQueryHandler } from "./application/queries/get-analysis-chat-context.query-handler";
 import { GetAnalysisChatContextQuery } from "./application/queries/get-analysis-chat-context.query";
@@ -34,20 +34,21 @@ const tracker: EventTracker = new SupabaseEventTracker();
 function createUseCases(
   queryBus: QueryBus,
   contextReader: AnalysisChatContextRepository,
+  eventBus: EventBus,
 ) {
   return {
     listConversations: new ListConversationsUseCase({ conversationRepo }),
     createConversation: new CreateConversationUseCase({
       conversationRepo,
-      tracker,
+      eventBus,
     }),
     renameConversation: new RenameConversationUseCase({
       conversationRepo,
-      tracker,
+      eventBus,
     }),
     deleteConversation: new DeleteConversationUseCase({
       conversationRepo,
-      tracker,
+      eventBus,
     }),
     listMessages: new ListMessagesUseCase({ messageRepo }),
     sendMessage: new SendMessageUseCase({
@@ -55,7 +56,7 @@ function createUseCases(
       messageRepo,
       aiFactory,
       queryBus,
-      tracker,
+      eventBus,
     }),
     prepareOfferChatCopyPaste: new PrepareOfferChatCopyPasteUseCase({
       conversationRepo,
@@ -66,7 +67,7 @@ function createUseCases(
     applyOfferChatCopyPaste: new ApplyOfferChatCopyPasteUseCase({
       conversationRepo,
       messageRepo,
-      tracker,
+      eventBus,
     }),
     getAnalysisChatContext: new GetAnalysisChatContextUseCase({
       contextReader,
@@ -81,11 +82,12 @@ export type AnalysisChatModule = ReturnType<typeof createUseCases> & {
 export function createAnalysisChatModule(
   queryBus: QueryBus,
   telemetry: Telemetry,
+  eventBus: EventBus,
 ): AnalysisChatModule {
   const contextReader = new AnalysisChatContextRepository(queryBus);
   const useCases = instrumentUseCases(
     "analysis-chat",
-    createUseCases(queryBus, contextReader),
+    createUseCases(queryBus, contextReader, eventBus),
     telemetry,
   );
 

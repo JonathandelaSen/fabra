@@ -1,8 +1,6 @@
-import { Timestamp, UserId } from "@/modules/shared";
+import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 import { WorkJournalContext } from "../../domain/entities/journal-context.entity";
 import type { WorkJournalContextRepository } from "../../domain/repositories/work-journal-context.repository";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
-import { createRequestId } from "@/lib/observability";
 import { WorkJournalContextId } from "../../domain/value-objects/work-journal-context-id.value-object";
 import { WorkJournalContextName } from "../../domain/value-objects/work-journal-context-name.value-object";
 import { WorkJournalContextStatus } from "../../domain/value-objects/work-journal-context-status.value-object";
@@ -24,43 +22,30 @@ export class CreateContextUseCase {
   constructor(
     private readonly deps: {
       contextRepo: WorkJournalContextRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
   async execute(input: CreateContextInput): Promise<WorkJournalContext> {
-    const requestId = createRequestId("wj-ctx");
-    await this.deps.tracker.record({
-      userId: input.user_id,
-      requestId,
-      stage: "work_journal_context_create",
-      status: "started",
-    });
-
     const now = new Date().toISOString();
-    const context = await this.deps.contextRepo.save(
-      WorkJournalContext.create({
-        id: WorkJournalContextId.fromPrimitives(crypto.randomUUID()),
-        userId: UserId.fromPrimitives(input.user_id),
-        type: WorkJournalContextType.fromPrimitives(input.type),
-        name: WorkJournalContextName.fromPrimitives(input.name),
-        roleOrLabel: WorkJournalRoleOrLabel.fromPrimitives(input.role_or_label ?? null),
-        status: WorkJournalContextStatus.fromPrimitives("active"),
-        isDefault: WorkJournalIsDefault.fromPrimitives(false),
-        createdFromCv: WorkJournalCreatedFromCv.fromPrimitives(input.created_from_cv ?? false),
-        createdAt: Timestamp.fromPrimitives(now),
-        updatedAt: Timestamp.fromPrimitives(now),
-      })
-    );
-
-    await this.deps.tracker.record({
-      userId: input.user_id,
-      requestId,
-      stage: "work_journal_context_create",
-      status: "success",
-      metadata: { contextId: context.id, type: context.type },
+    const context = WorkJournalContext.create({
+      id: WorkJournalContextId.fromPrimitives(crypto.randomUUID()),
+      userId: UserId.fromPrimitives(input.user_id),
+      type: WorkJournalContextType.fromPrimitives(input.type),
+      name: WorkJournalContextName.fromPrimitives(input.name),
+      roleOrLabel: WorkJournalRoleOrLabel.fromPrimitives(input.role_or_label ?? null),
+      status: WorkJournalContextStatus.fromPrimitives("active"),
+      isDefault: WorkJournalIsDefault.fromPrimitives(false),
+      createdFromCv: WorkJournalCreatedFromCv.fromPrimitives(input.created_from_cv ?? false),
+      createdAt: Timestamp.fromPrimitives(now),
+      updatedAt: Timestamp.fromPrimitives(now),
     });
 
-    return context;
+    const saved = await this.deps.contextRepo.save(context);
+
+    const events = context.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
+    return saved;
   }
 }

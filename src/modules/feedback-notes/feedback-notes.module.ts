@@ -1,7 +1,6 @@
 import { OllamaFeedbackAIServiceFactory } from "./infrastructure/services/ollama-feedback-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
-import { instrumentUseCases, SupabaseEventTracker, type Telemetry } from "@/modules/shared";
+import { instrumentUseCases, type Telemetry, type EventBus } from "@/modules/shared";
 import { CreateEntryUseCase } from "./application/use-cases/create-entry.use-case";
 import { CreateFeedbackUseCase } from "./application/use-cases/create-feedback.use-case";
 import { DeleteEntryUseCase } from "./application/use-cases/delete-entry.use-case";
@@ -23,7 +22,6 @@ import { ProviderFeedbackAIServiceFactory } from "./infrastructure/services/prov
 
 const feedbackRepo = new SupabaseFeedbackRepository();
 const entryRepo = new SupabaseFeedbackEntryRepository();
-const tracker: EventTracker = new SupabaseEventTracker();
 const aiFactory = new ProviderFeedbackAIServiceFactory({
   geminiFactory: new GeminiFeedbackAIServiceFactory(),
   openaiFactory: new OpenAIFeedbackAIServiceFactory(),
@@ -31,24 +29,24 @@ const aiFactory = new ProviderFeedbackAIServiceFactory({
   ollamaFactory: new OllamaFeedbackAIServiceFactory(),
 });
 
-function createUseCases() {
+function createUseCases(eventBus: EventBus) {
   return {
     listFeedbacks: new ListFeedbacksUseCase({ feedbackRepo }),
     getFeedback: new GetFeedbackUseCase({ feedbackRepo }),
-    createFeedback: new CreateFeedbackUseCase({ feedbackRepo, tracker }),
-    updateFeedback: new UpdateFeedbackUseCase({ feedbackRepo, tracker }),
-    closeFeedback: new CloseFeedbackUseCase({ feedbackRepo, tracker }),
-    reopenFeedback: new ReopenFeedbackUseCase({ feedbackRepo, tracker }),
-    deleteFeedback: new DeleteFeedbackUseCase({ feedbackRepo, tracker }),
+    createFeedback: new CreateFeedbackUseCase({ feedbackRepo, eventBus }),
+    updateFeedback: new UpdateFeedbackUseCase({ feedbackRepo, eventBus }),
+    closeFeedback: new CloseFeedbackUseCase({ feedbackRepo, eventBus }),
+    reopenFeedback: new ReopenFeedbackUseCase({ feedbackRepo, eventBus }),
+    deleteFeedback: new DeleteFeedbackUseCase({ feedbackRepo, eventBus }),
     listEntries: new ListEntriesUseCase({ feedbackRepo, entryRepo }),
-    createEntry: new CreateEntryUseCase({ feedbackRepo, entryRepo, tracker }),
-    updateEntry: new UpdateEntryUseCase({ feedbackRepo, entryRepo, tracker }),
-    deleteEntry: new DeleteEntryUseCase({ feedbackRepo, entryRepo, tracker }),
+    createEntry: new CreateEntryUseCase({ feedbackRepo, entryRepo, eventBus }),
+    updateEntry: new UpdateEntryUseCase({ feedbackRepo, entryRepo, eventBus }),
+    deleteEntry: new DeleteEntryUseCase({ feedbackRepo, entryRepo, eventBus }),
     generateFinalFeedback: new GenerateFinalFeedbackUseCase({
       feedbackRepo,
       entryRepo,
       aiFactory,
-      tracker,
+      eventBus,
     }),
   };
 }
@@ -57,8 +55,8 @@ export type FeedbackNotesModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): FeedbackNotesModule;
 };
 
-export function createFeedbackNotesModule(telemetry: Telemetry): FeedbackNotesModule {
-  const useCases = instrumentUseCases("feedback-notes", createUseCases(), telemetry);
+export function createFeedbackNotesModule(telemetry: Telemetry, eventBus: EventBus): FeedbackNotesModule {
+  const useCases = instrumentUseCases("feedback-notes", createUseCases(eventBus), telemetry);
 
   return {
     ...useCases,

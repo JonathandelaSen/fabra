@@ -1,4 +1,4 @@
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
+import { type EventBus } from "@/modules/shared";
 import type { AIProvider } from "@/modules/shared";
 import { FeedbackClosedError } from "../../domain/errors/feedback-closed.error";
 import { FeedbackEntriesRequiredError } from "../../domain/errors/feedback-entries-required.error";
@@ -6,7 +6,6 @@ import { FeedbackNotFoundError } from "../../domain/errors/feedback-not-found.er
 import type { FeedbackAIServiceFactory } from "../../domain/repositories/feedback-ai-service.repository";
 import type { FeedbackEntryRepository } from "../../domain/repositories/feedback-entry.repository";
 import type { FeedbackRepository } from "../../domain/repositories/feedback.repository";
-import { recordFeedbackEvent } from "./tracking";
 
 export class GenerateFinalFeedbackUseCase {
   constructor(
@@ -14,7 +13,7 @@ export class GenerateFinalFeedbackUseCase {
       feedbackRepo: FeedbackRepository;
       entryRepo: FeedbackEntryRepository;
       aiFactory: FeedbackAIServiceFactory;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
@@ -44,16 +43,8 @@ export class GenerateFinalFeedbackUseCase {
     feedback.updateFinalFeedback(finalFeedback);
     const saved = await this.deps.feedbackRepo.save(feedback);
 
-    await recordFeedbackEvent(this.deps.tracker, {
-      userId,
-      stage: "feedback_final_feedback_generated",
-      metadata: {
-        feedbackId,
-        entryCount: entries.length,
-        provider: aiConfig.provider,
-        model: aiConfig.model,
-      },
-    });
+    const events = feedback.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
 
     return saved;
   }

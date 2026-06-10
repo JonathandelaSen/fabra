@@ -4,8 +4,7 @@ import {
   type ListCVAnalysisUsageByDocumentResult,
 } from "@/modules/cv-analysis";
 import { ListJobMatchAnalysisUsageByDocumentQuery } from "@/modules/job-match-analysis";
-import { UserId, type EventTracker, type QueryBus } from "@/modules/shared";
-import { createRequestId } from "@/lib/observability";
+import { UserId, type EventBus, type QueryBus } from "@/modules/shared";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
 
@@ -17,7 +16,6 @@ export type DeleteCVDocumentResult =
 export interface DeleteCVDocumentInput {
   id: string;
   userId: string;
-  requestId?: string;
 }
 
 export class DeleteCVDocumentUseCase {
@@ -25,7 +23,7 @@ export class DeleteCVDocumentUseCase {
     private readonly deps: {
       documentRepo: CVDocumentRepository;
       queryBus: QueryBus;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
@@ -61,14 +59,10 @@ export class DeleteCVDocumentUseCase {
     }
     document.delete();
     await this.deps.documentRepo.delete(id, userId);
-    await this.deps.tracker.record({
-      userId: input.userId,
-      requestId: input.requestId ?? createRequestId("cv-delete"),
-      stage: "cv_library_document_deleted",
-      status: "success",
-      source: "cv_library",
-      cvId: document.id,
-    });
+
+    const events = document.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
     return { status: "deleted" };
   }
 }

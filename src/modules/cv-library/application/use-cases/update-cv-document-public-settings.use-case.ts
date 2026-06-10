@@ -1,5 +1,4 @@
-import { Timestamp, UserId, type EventTracker } from "@/modules/shared";
-import { createRequestId } from "@/lib/observability";
+import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 import type { CVDocument } from "../../domain/entities/cv-document.entity";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
@@ -10,14 +9,13 @@ export interface UpdateCVDocumentPublicSettingsInput {
   publicEnabled: boolean;
   publicId: string | null;
   publicSlug: string | null;
-  requestId?: string;
 }
 
 export class UpdateCVDocumentPublicSettingsUseCase {
   constructor(
     private readonly deps: {
       documentRepo: CVDocumentRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
@@ -38,15 +36,10 @@ export class UpdateCVDocumentPublicSettingsUseCase {
         : null,
     });
     const saved = await this.deps.documentRepo.save(document);
-    await this.deps.tracker.record({
-      userId: input.userId,
-      requestId: input.requestId ?? createRequestId("cv-public"),
-      stage: "cv_library_public_settings_updated",
-      status: "success",
-      source: "cv_library",
-      cvId: saved.id,
-      metadata: { publicEnabled: input.publicEnabled },
-    });
+
+    const events = document.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
     return saved;
   }
 }

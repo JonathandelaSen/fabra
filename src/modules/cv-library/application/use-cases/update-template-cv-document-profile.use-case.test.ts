@@ -1,13 +1,14 @@
-import { describe, expect, it } from "vitest";
-import { document, documentRepo, tracker } from "./cv-library-test-helpers.test";
+import { describe, expect, it, vi } from "vitest";
+import { document, documentRepo } from "./cv-library-test-helpers.test";
 import { UpdateTemplateCVDocumentProfileUseCase } from "./update-template-cv-document-profile.use-case";
 
 describe("UpdateTemplateCVDocumentProfileUseCase", () => {
-  it("updates profile data only for template documents", async () => {
+  it("updates profile data only for template documents and publishes domain events", async () => {
     const repo = documentRepo({ findById: async () => document({ type: "template" }) });
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
     const result = await new UpdateTemplateCVDocumentProfileUseCase({
       documentRepo: repo,
-      tracker: tracker(),
+      eventBus: eventBus as never,
     }).execute({
       id: "cv-1",
       userId: "user-1",
@@ -20,6 +21,13 @@ describe("UpdateTemplateCVDocumentProfileUseCase", () => {
       name: "Template",
       profile: { basics: { name: "Ada" } },
       templateLocale: "en",
+    });
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("cv_document_profile_updated");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      documentId: "cv-1",
     });
   });
 });

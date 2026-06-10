@@ -1,8 +1,6 @@
-import { IsoDate, OptionalIsoDate, Timestamp, UserId } from "@/modules/shared";
+import { IsoDate, OptionalIsoDate, Timestamp, UserId, type EventBus } from "@/modules/shared";
 import { WorkJournalEntry } from "../../domain/entities/journal-entry.entity";
 import type { WorkJournalEntryRepository } from "../../domain/repositories/work-journal-entry.repository";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
-import { createRequestId } from "@/lib/observability";
 import { WorkJournalContextId } from "../../domain/value-objects/work-journal-context-id.value-object";
 import { WorkJournalEntryId } from "../../domain/value-objects/work-journal-entry-id.value-object";
 import { WorkJournalFinalText } from "../../domain/value-objects/work-journal-final-text.value-object";
@@ -25,7 +23,7 @@ export class CreateEntryUseCase {
   constructor(
     private readonly deps: {
       entryRepo: WorkJournalEntryRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
@@ -33,39 +31,26 @@ export class CreateEntryUseCase {
     const userId = UserId.fromPrimitives(input.user_id);
     const contextId = WorkJournalContextId.fromPrimitives(input.context_id);
 
-    const requestId = createRequestId("wj-entry");
-    await this.deps.tracker.record({
-      userId: input.user_id,
-      requestId,
-      stage: "work_journal_entry_create",
-      status: "started",
-    });
-
     const now = new Date().toISOString();
-    const entry = await this.deps.entryRepo.save(
-      WorkJournalEntry.create({
-        id: WorkJournalEntryId.fromPrimitives(crypto.randomUUID()),
-        userId,
-        contextId,
-        dateStart: IsoDate.fromPrimitives(input.date_start),
-        dateEnd: OptionalIsoDate.fromPrimitives(input.date_end),
-        topic: WorkJournalTopic.fromPrimitives(input.topic),
-        inputMode: WorkJournalInputMode.fromPrimitives(input.input_mode),
-        rawNotes: WorkJournalNotes.fromPrimitives(input.raw_notes),
-        finalText: WorkJournalFinalText.fromPrimitives(input.final_text),
-        createdAt: Timestamp.fromPrimitives(now),
-        updatedAt: Timestamp.fromPrimitives(now),
-      })
-    );
-
-    await this.deps.tracker.record({
-      userId: input.user_id,
-      requestId,
-      stage: "work_journal_entry_create",
-      status: "success",
-      metadata: { entryId: entry.id, contextId: input.context_id },
+    const entry = WorkJournalEntry.create({
+      id: WorkJournalEntryId.fromPrimitives(crypto.randomUUID()),
+      userId,
+      contextId,
+      dateStart: IsoDate.fromPrimitives(input.date_start),
+      dateEnd: OptionalIsoDate.fromPrimitives(input.date_end),
+      topic: WorkJournalTopic.fromPrimitives(input.topic),
+      inputMode: WorkJournalInputMode.fromPrimitives(input.input_mode),
+      rawNotes: WorkJournalNotes.fromPrimitives(input.raw_notes),
+      finalText: WorkJournalFinalText.fromPrimitives(input.final_text),
+      createdAt: Timestamp.fromPrimitives(now),
+      updatedAt: Timestamp.fromPrimitives(now),
     });
 
-    return entry;
+    const saved = await this.deps.entryRepo.save(entry);
+
+    const events = entry.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
+    return saved;
   }
 }

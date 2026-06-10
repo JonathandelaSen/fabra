@@ -1,8 +1,6 @@
-import { EntityId, UserId } from "@/modules/shared";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
+import { EntityId, UserId, type EventBus } from "@/modules/shared";
 import { Commitment, type CommitmentPriority, type CommitmentSource } from "../../domain/entities/commitment.entity";
 import type { CommitmentRepository } from "../../domain/repositories/commitment.repository";
-import { recordCommitmentEvent } from "./tracking";
 
 export interface CreateCommitmentInput {
   userId: string;
@@ -18,33 +16,31 @@ export interface CreateCommitmentInput {
 }
 
 export class CreateCommitmentUseCase {
-  constructor(private readonly deps: { commitmentRepo: CommitmentRepository; tracker: EventTracker }) {}
+  constructor(private readonly deps: { commitmentRepo: CommitmentRepository; eventBus: EventBus }) {}
 
   async execute(input: CreateCommitmentInput): Promise<Commitment> {
     const now = new Date().toISOString();
     const today = now.slice(0, 10);
-    const commitment = await this.deps.commitmentRepo.save(
-      Commitment.create({
-        id: EntityId.fromPrimitives(crypto.randomUUID()),
-        userId: UserId.fromPrimitives(input.userId),
-        contextId: EntityId.fromPrimitives(input.contextId),
-        title: input.title,
-        description: input.description,
-        successCriteria: input.successCriteria,
-        resultNotes: input.resultNotes,
-        source: input.source,
-        priority: input.priority,
-        startDate: input.startDate ?? today,
-        targetDate: input.targetDate,
-        createdAt: now,
-        updatedAt: now,
-      })
-    );
-    await recordCommitmentEvent(this.deps.tracker, {
-      userId: input.userId,
-      stage: "commitment_created",
-      metadata: { commitmentId: commitment.id, source: input.source, priority: input.priority ?? null },
+    const commitment = Commitment.create({
+      id: EntityId.fromPrimitives(crypto.randomUUID()),
+      userId: UserId.fromPrimitives(input.userId),
+      contextId: EntityId.fromPrimitives(input.contextId),
+      title: input.title,
+      description: input.description,
+      successCriteria: input.successCriteria,
+      resultNotes: input.resultNotes,
+      source: input.source,
+      priority: input.priority,
+      startDate: input.startDate ?? today,
+      targetDate: input.targetDate,
+      createdAt: now,
+      updatedAt: now,
     });
-    return commitment;
+    const saved = await this.deps.commitmentRepo.save(commitment);
+
+    const events = commitment.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
+    return saved;
   }
 }

@@ -1,5 +1,4 @@
-import { Timestamp, UserId, type EventTracker } from "@/modules/shared";
-import { createRequestId } from "@/lib/observability";
+import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 import { CVDocument } from "../../domain/entities/cv-document.entity";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
@@ -19,19 +18,17 @@ export interface CreateUploadedCVDocumentInput {
   extractErrorPython: string | null;
   extractErrorPdfjs: string | null;
   extractErrorNode: string | null;
-  requestId?: string;
 }
 
 export class CreateUploadedCVDocumentUseCase {
   constructor(
     private readonly deps: {
       documentRepo: CVDocumentRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
   async execute(input: CreateUploadedCVDocumentInput): Promise<CVDocument> {
-    const requestId = input.requestId ?? createRequestId("cv-lib");
     const now = new Date().toISOString();
     const document = CVDocument.create({
       id: CVDocumentId.fromPrimitives(input.id),
@@ -67,15 +64,10 @@ export class CreateUploadedCVDocumentUseCase {
     });
 
     const saved = await this.deps.documentRepo.save(document);
-    await this.deps.tracker.record({
-      userId: input.userId,
-      requestId,
-      stage: "cv_library_document_created",
-      status: "success",
-      source: "cv_library",
-      cvId: saved.id,
-      metadata: { type: saved.type },
-    });
+
+    const events = document.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
     return saved;
   }
 }

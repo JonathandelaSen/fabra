@@ -1,14 +1,14 @@
-import { describe, expect, it } from "vitest";
-import { documentRepo, tracker } from "./cv-library-test-helpers.test";
+import { describe, expect, it, vi } from "vitest";
+import { documentRepo } from "./cv-library-test-helpers.test";
 import { CreateUploadedCVDocumentUseCase } from "./create-uploaded-cv-document.use-case";
 
 describe("CreateUploadedCVDocumentUseCase", () => {
-  it("creates an uploaded document and records observability", async () => {
+  it("creates an uploaded document and publishes domain events", async () => {
     const repo = documentRepo();
-    const events = tracker();
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
     const result = await new CreateUploadedCVDocumentUseCase({
       documentRepo: repo,
-      tracker: events,
+      eventBus: eventBus as never,
     }).execute({
       id: "cv-1",
       userId: "user-1",
@@ -22,13 +22,17 @@ describe("CreateUploadedCVDocumentUseCase", () => {
       extractErrorPython: null,
       extractErrorPdfjs: null,
       extractErrorNode: null,
-      requestId: "req-1",
     });
 
     expect(result.toPrimitives()).toMatchObject({ id: "cv-1", type: "uploaded" });
     expect(repo.save).toHaveBeenCalledOnce();
-    expect(events.record).toHaveBeenCalledWith(
-      expect.objectContaining({ stage: "cv_library_document_created" })
-    );
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("cv_document_created");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      documentId: "cv-1",
+      type: "uploaded",
+    });
   });
 });

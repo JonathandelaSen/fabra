@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { documentRepo, structuredProfileRepo, tracker } from "./cv-library-test-helpers.test";
 import { CreateTemplateCVDocumentUseCase } from "./create-template-cv-document.use-case";
 import { UpsertCVStructuredProfileUseCase } from "./upsert-cv-structured-profile.use-case";
@@ -10,6 +10,7 @@ describe("ApplyCVProfileStructureCopyPasteUseCase", () => {
     const documents = documentRepo();
     const profileRepo = structuredProfileRepo();
     const events = tracker();
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
     const result = await new ApplyCVProfileStructureCopyPasteUseCase({
       documentRepo: documents,
       prepareAnalysisInput: {
@@ -17,11 +18,11 @@ describe("ApplyCVProfileStructureCopyPasteUseCase", () => {
       } as never,
       upsertProfile: new UpsertCVStructuredProfileUseCase({
         profileRepo,
-        tracker: events,
+        eventBus: eventBus as never,
       }),
       createTemplateDocument: new CreateTemplateCVDocumentUseCase({
         documentRepo: documents,
-        tracker: events,
+        eventBus: eventBus as never,
       }),
       tracker: events,
     }).execute({

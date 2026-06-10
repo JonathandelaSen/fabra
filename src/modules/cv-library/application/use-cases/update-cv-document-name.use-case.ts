@@ -1,5 +1,4 @@
-import { Timestamp, UserId, type EventTracker } from "@/modules/shared";
-import { createRequestId } from "@/lib/observability";
+import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 import type { CVDocument } from "../../domain/entities/cv-document.entity";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
@@ -9,14 +8,13 @@ export interface UpdateCVDocumentNameInput {
   id: string;
   userId: string;
   name: string;
-  requestId?: string;
 }
 
 export class UpdateCVDocumentNameUseCase {
   constructor(
     private readonly deps: {
       documentRepo: CVDocumentRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
@@ -31,14 +29,10 @@ export class UpdateCVDocumentNameUseCase {
       Timestamp.fromPrimitives(new Date().toISOString())
     );
     const saved = await this.deps.documentRepo.save(document);
-    await this.deps.tracker.record({
-      userId: input.userId,
-      requestId: input.requestId ?? createRequestId("cv-rename"),
-      stage: "cv_library_document_renamed",
-      status: "success",
-      source: "cv_library",
-      cvId: saved.id,
-    });
+
+    const events = document.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
     return saved;
   }
 }

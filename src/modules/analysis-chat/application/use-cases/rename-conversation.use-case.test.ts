@@ -1,25 +1,20 @@
 import { describe, expect, it, vi } from "vitest";
-import { Timestamp, UserId } from "@/modules/shared";
-import type { EventTracker } from "@/modules/shared";
 import { Conversation } from "../../domain/entities/conversation.entity";
 import { ConversationNotFoundError } from "../../domain/errors/conversation-not-found.error";
 import type { ConversationRepository } from "../../domain/repositories/conversation.repository";
-import { AnalysisChatConversationId } from "../../domain/value-objects/analysis-chat-conversation-id.value-object";
-import { AnalysisChatTitle } from "../../domain/value-objects/analysis-chat-title.value-object";
-import { AnalysisReference } from "../../domain/value-objects/analysis-reference.value-object";
 import { RenameConversationUseCase } from "./rename-conversation.use-case";
 
 function conversation() {
-  return Conversation.create({
-    id: AnalysisChatConversationId.fromPrimitives("conv-1"),
-    userId: UserId.fromPrimitives("user-1"),
-    analysisReference: AnalysisReference.fromPrimitives({
+  return Conversation.fromPrimitives({
+    id: "conv-1",
+    userId: "user-1",
+    analysisReference: {
       type: "job_match_analysis",
       id: "analysis-1",
-    }),
-    title: AnalysisChatTitle.fromPrimitives("Old"),
-    createdAt: Timestamp.fromPrimitives("2026-05-13T10:00:00.000Z"),
-    updatedAt: Timestamp.fromPrimitives("2026-05-13T10:00:00.000Z"),
+    },
+    title: "Old",
+    createdAt: "2026-05-13T10:00:00.000Z",
+    updatedAt: "2026-05-13T10:00:00.000Z",
   });
 }
 
@@ -31,13 +26,13 @@ describe("RenameConversationUseCase", () => {
       save: vi.fn(async (conv) => conv),
       delete: vi.fn(),
     };
-    const tracker = {
-      record: vi.fn(async () => undefined),
-    } satisfies EventTracker;
+    const eventBus = {
+      publish: vi.fn().mockResolvedValue(undefined),
+    };
 
     const result = await new RenameConversationUseCase({
       conversationRepo: repo,
-      tracker,
+      eventBus: eventBus as never,
     }).execute({
       userId: "user-1",
       analysisId: "analysis-1",
@@ -47,9 +42,14 @@ describe("RenameConversationUseCase", () => {
     });
 
     expect(result.toPrimitives().title).toBe("New");
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({ stage: "analysis_chat_conversation_renamed" }),
-    );
+    expect(repo.save).toHaveBeenCalledOnce();
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("analysis_chat_conversation_renamed");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      conversationId: "conv-1",
+    });
   });
 
   it("throws when the conversation does not exist", async () => {
@@ -63,7 +63,7 @@ describe("RenameConversationUseCase", () => {
     await expect(
       new RenameConversationUseCase({
         conversationRepo: repo,
-        tracker: { record: vi.fn() } as unknown as EventTracker,
+        eventBus: { publish: vi.fn() } as never,
       }).execute({
         userId: "user-1",
         analysisId: "analysis-1",

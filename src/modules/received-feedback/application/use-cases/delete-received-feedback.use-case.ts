@@ -1,15 +1,13 @@
-import { UserId } from "@/modules/shared";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
+import { UserId, type EventBus } from "@/modules/shared";
 import { ReceivedFeedbackNotFoundError } from "../../domain/errors/received-feedback-not-found.error";
 import type { ReceivedFeedbackRepository } from "../../domain/repositories/received-feedback.repository";
 import { ReceivedFeedbackId } from "../../domain/value-objects/received-feedback-id.value-object";
-import { recordReceivedFeedbackEvent } from "./tracking";
 
 export class DeleteReceivedFeedbackUseCase {
   constructor(
     private readonly deps: {
       receivedFeedbackRepo: ReceivedFeedbackRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
@@ -21,10 +19,8 @@ export class DeleteReceivedFeedbackUseCase {
 
     feedback.delete();
     await this.deps.receivedFeedbackRepo.delete(idVo, userIdVo);
-    await recordReceivedFeedbackEvent(this.deps.tracker, {
-      userId,
-      stage: "received_feedback_deleted",
-      metadata: { feedbackId: id },
-    });
+    
+    const events = feedback.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
   }
 }

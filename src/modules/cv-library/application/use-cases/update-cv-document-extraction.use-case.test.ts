@@ -4,7 +4,7 @@ import type { CVDocumentRepository } from "../../domain/repositories/cv-document
 import { UpdateCVDocumentExtractionUseCase } from "./update-cv-document-extraction.use-case";
 
 describe("UpdateCVDocumentExtractionUseCase", () => {
-  it("updates extracted text and records observability", async () => {
+  it("updates extracted text and publishes domain events", async () => {
     const cv = document();
     const repo = {
       search: vi.fn(),
@@ -14,11 +14,11 @@ describe("UpdateCVDocumentExtractionUseCase", () => {
       delete: vi.fn(),
       deleteStoredPdf: vi.fn(),
     } satisfies CVDocumentRepository;
-    const tracker = { record: vi.fn(async () => {}) };
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
 
     const result = await new UpdateCVDocumentExtractionUseCase({
       documentRepo: repo,
-      tracker,
+      eventBus: eventBus as never,
     }).execute({
       id: "cv-1",
       userId: "user-1",
@@ -33,8 +33,12 @@ describe("UpdateCVDocumentExtractionUseCase", () => {
     });
 
     expect(result?.toPrimitives().extractedText.textPython).toBe("new text");
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({ stage: "cv_library_extraction_updated" }),
-    );
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("cv_document_extracted_text_updated");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      documentId: "cv-1",
+    });
   });
 });

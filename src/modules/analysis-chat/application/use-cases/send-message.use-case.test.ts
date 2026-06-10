@@ -4,7 +4,6 @@ import {
   NoOpTelemetry,
   Timestamp,
   UserId,
-  type EventTracker,
 } from "@/modules/shared";
 import { ChatMessage } from "../../domain/entities/chat-message.entity";
 import { Conversation } from "../../domain/entities/conversation.entity";
@@ -49,7 +48,7 @@ function historyMessage() {
 }
 
 describe("SendMessageUseCase", () => {
-  it("gets context through the query bus, saves both messages, calls AI, and records events", async () => {
+  it("gets context through the query bus, saves both messages, calls AI, and publishes events", async () => {
     const queryBus = new InMemoryQueryBus(new NoOpTelemetry());
     queryBus.register(GetAnalysisChatContextQuery.queryName, {
       async handle(query: GetAnalysisChatContextQuery) {
@@ -86,16 +85,16 @@ describe("SendMessageUseCase", () => {
     const aiService: AnalysisChatAIService = {
       generateAnswer: vi.fn(async () => "Respuesta IA"),
     };
-    const tracker = {
-      record: vi.fn(async () => undefined),
-    } satisfies EventTracker;
+    const eventBus = {
+      publish: vi.fn().mockResolvedValue(undefined),
+    };
 
     const result = await new SendMessageUseCase({
       conversationRepo,
       messageRepo,
       aiFactory: { create: vi.fn(() => aiService) },
       queryBus,
-      tracker,
+      eventBus: eventBus as never,
     }).execute({
       userId: "user-1",
       analysisId: "analysis-1",
@@ -120,12 +119,25 @@ describe("SendMessageUseCase", () => {
         history: [expect.objectContaining({ content: "Antes" })],
       }),
     );
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({ stage: "analysis_chat_message_sent" }),
-    );
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({ stage: "analysis_chat_ai_response_created" }),
-    );
+    expect(eventBus.publish).toHaveBeenCalledTimes(2);
+
+    const firstCall = eventBus.publish.mock.calls[0][0];
+    expect(firstCall).toHaveLength(1);
+    expect(firstCall[0].eventName).toBe("analysis_chat_message_created");
+    expect(firstCall[0].toPrimitives()).toEqual({
+      messageId: result.userMessage.id,
+      conversationId: "conv-1",
+      role: "user",
+    });
+
+    const secondCall = eventBus.publish.mock.calls[1][0];
+    expect(secondCall).toHaveLength(1);
+    expect(secondCall[0].eventName).toBe("analysis_chat_message_created");
+    expect(secondCall[0].toPrimitives()).toEqual({
+      messageId: result.assistantMessage.id,
+      conversationId: "conv-1",
+      role: "assistant",
+    });
   });
 
   it("does not call AI when legacy context is missing", async () => {
@@ -154,8 +166,8 @@ describe("SendMessageUseCase", () => {
           delete: vi.fn(),
         },
         aiFactory: { create: vi.fn(() => aiService) },
-      queryBus,
-        tracker: { record: vi.fn() } as unknown as EventTracker,
+        queryBus,
+        eventBus: { publish: vi.fn() } as never,
       }).execute({
         userId: "user-1",
         analysisId: "missing",

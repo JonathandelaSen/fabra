@@ -1,6 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
-  createMockTracker,
   createTestUser,
   getSupabaseClient,
   testLabel,
@@ -13,15 +12,16 @@ import { DeleteEntryUseCase } from "./delete-entry.use-case";
 const supabase = getSupabaseClient();
 
 describe("DeleteEntryUseCase", () => {
-  it("deletes an existing entry", async () => {
+  it("deletes an existing entry and publishes domain events", async () => {
     const user = await createTestUser("wj-delete-entry");
     const contextRepo = new SupabaseWorkJournalContextRepository();
     contextRepo.bindRequest(supabase);
     const entryRepo = new SupabaseWorkJournalEntryRepository();
     entryRepo.bindRequest(supabase);
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
     const useCase = new DeleteEntryUseCase({
       entryRepo,
-      tracker: createMockTracker(),
+      eventBus: eventBus as never,
     });
     const context = await contextRepo.create({
       user_id: user.id,
@@ -42,19 +42,28 @@ describe("DeleteEntryUseCase", () => {
     await useCase.execute(entry.id, user.id);
 
     await expect(entryRepo.getById(entry.id, user.id)).resolves.toBeNull();
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("work_journal_entry_deleted");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      entryId: entry.id,
+    });
   });
 
   it("throws EntryNotFoundError when the entry does not exist", async () => {
     const user = await createTestUser("wj-delete-entry-missing");
     const entryRepo = new SupabaseWorkJournalEntryRepository();
     entryRepo.bindRequest(supabase);
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
     const useCase = new DeleteEntryUseCase({
       entryRepo,
-      tracker: createMockTracker(),
+      eventBus: eventBus as never,
     });
 
     await expect(useCase.execute(crypto.randomUUID(), user.id)).rejects.toBeInstanceOf(
       EntryNotFoundError
     );
+    expect(eventBus.publish).not.toHaveBeenCalled();
   });
 });

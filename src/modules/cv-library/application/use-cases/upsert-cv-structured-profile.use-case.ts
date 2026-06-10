@@ -1,6 +1,5 @@
-import { Timestamp, UserId, type EventTracker } from "@/modules/shared";
+import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 import { CV_PROFILE_SCHEMA_VERSION } from "../../domain/cv-profile";
-import { createRequestId } from "@/lib/observability";
 import { CVStructuredProfile } from "../../domain/entities/cv-structured-profile.entity";
 import type { CVStructuredProfileRepository } from "../../domain/repositories/cv-structured-profile.repository";
 import { AIModelName } from "../../domain/value-objects/ai-model-name.value-object";
@@ -16,19 +15,17 @@ export interface UpsertCVStructuredProfileInput {
   sourceTextHash: string;
   aiModel: string;
   profile: unknown;
-  requestId?: string;
 }
 
 export class UpsertCVStructuredProfileUseCase {
   constructor(
     private readonly deps: {
       profileRepo: CVStructuredProfileRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
   async execute(input: UpsertCVStructuredProfileInput): Promise<CVStructuredProfile> {
-    const requestId = input.requestId ?? createRequestId("cv-profile");
     const now = new Date().toISOString();
     const existing = await this.deps.profileRepo.findByDocumentId(
       CVDocumentId.fromPrimitives(input.cvDocumentId),
@@ -50,15 +47,10 @@ export class UpsertCVStructuredProfileUseCase {
     });
 
     const saved = await this.deps.profileRepo.save(structured);
-    await this.deps.tracker.record({
-      userId: input.userId,
-      requestId,
-      stage: "cv_library_structured_profile_upserted",
-      status: "success",
-      source: "cv_library",
-      cvId: input.cvDocumentId,
-      metadata: { schemaVersion: saved.toPrimitives().schemaVersion },
-    });
+
+    const events = structured.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
     return saved;
   }
 }

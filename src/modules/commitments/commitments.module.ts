@@ -1,6 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
-import { instrumentUseCases, SupabaseEventTracker, type Telemetry } from "@/modules/shared";
+import { instrumentUseCases, type Telemetry, type EventBus } from "@/modules/shared";
 import { CreateCommitmentUseCase } from "./application/use-cases/create-commitment.use-case";
 import { CreateCommitmentItemUseCase } from "./application/use-cases/create-item.use-case";
 import { CreateCommitmentOutcomeUseCase } from "./application/use-cases/create-outcome.use-case";
@@ -18,24 +17,23 @@ import { SupabaseCommitmentRepository } from "./infrastructure/repositories/supa
 const commitmentRepo = new SupabaseCommitmentRepository();
 const itemRepo = new SupabaseCommitmentItemRepository();
 const outcomeRepo = new SupabaseCommitmentOutcomeRepository();
-const tracker: EventTracker = new SupabaseEventTracker();
 
-function createUseCases() {
+function createUseCases(eventBus: EventBus) {
   return {
     listWorkspace: new ListCommitmentsWorkspaceUseCase({
       commitmentRepo,
       itemRepo,
       outcomeRepo,
     }),
-    createCommitment: new CreateCommitmentUseCase({ commitmentRepo, tracker }),
-    updateCommitment: new UpdateCommitmentUseCase({ commitmentRepo, tracker }),
-    deleteCommitment: new DeleteCommitmentUseCase({ commitmentRepo, tracker }),
-    createItem: new CreateCommitmentItemUseCase({ itemRepo, tracker }),
-    updateItem: new UpdateCommitmentItemUseCase({ itemRepo, tracker }),
-    deleteItem: new DeleteCommitmentItemUseCase({ itemRepo, tracker }),
-    createOutcome: new CreateCommitmentOutcomeUseCase({ outcomeRepo, tracker }),
-    updateOutcome: new UpdateCommitmentOutcomeUseCase({ outcomeRepo, tracker }),
-    deleteOutcome: new DeleteCommitmentOutcomeUseCase({ outcomeRepo, tracker }),
+    createCommitment: new CreateCommitmentUseCase({ commitmentRepo, eventBus }),
+    updateCommitment: new UpdateCommitmentUseCase({ commitmentRepo, eventBus }),
+    deleteCommitment: new DeleteCommitmentUseCase({ commitmentRepo, eventBus }),
+    createItem: new CreateCommitmentItemUseCase({ itemRepo, eventBus }),
+    updateItem: new UpdateCommitmentItemUseCase({ itemRepo, eventBus }),
+    deleteItem: new DeleteCommitmentItemUseCase({ itemRepo, eventBus }),
+    createOutcome: new CreateCommitmentOutcomeUseCase({ outcomeRepo, eventBus }),
+    updateOutcome: new UpdateCommitmentOutcomeUseCase({ outcomeRepo, eventBus }),
+    deleteOutcome: new DeleteCommitmentOutcomeUseCase({ outcomeRepo, eventBus }),
   };
 }
 
@@ -43,8 +41,8 @@ export type CommitmentsModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): CommitmentsModule;
 };
 
-export function createCommitmentsModule(telemetry: Telemetry): CommitmentsModule {
-  const useCases = instrumentUseCases("commitments", createUseCases(), telemetry);
+export function createCommitmentsModule(telemetry: Telemetry, eventBus: EventBus): CommitmentsModule {
+  const useCases = instrumentUseCases("commitments", createUseCases(eventBus), telemetry);
 
   return {
     ...useCases,

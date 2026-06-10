@@ -1,6 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
-  createMockTracker,
   createTestUser,
   getSupabaseClient,
   testLabel,
@@ -11,12 +10,12 @@ import { CreateContextUseCase } from "./create-context.use-case";
 const supabase = getSupabaseClient();
 
 describe("CreateContextUseCase", () => {
-  it("creates a context and records observability events", async () => {
+  it("creates a context and publishes domain events", async () => {
     const user = await createTestUser("wj-create-context");
     const contextRepo = new SupabaseWorkJournalContextRepository();
     contextRepo.bindRequest(supabase);
-    const tracker = createMockTracker();
-    const useCase = new CreateContextUseCase({ contextRepo, tracker });
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
+    const useCase = new CreateContextUseCase({ contextRepo, eventBus: eventBus as never });
     const name = testLabel("context");
 
     const created = await useCase.execute({
@@ -30,20 +29,12 @@ describe("CreateContextUseCase", () => {
     await expect(contextRepo.list(user.id)).resolves.toEqual(
       expect.arrayContaining([expect.objectContaining({ id: created.id, name })])
     );
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        userId: user.id,
-        stage: "work_journal_context_create",
-        status: "started",
-      })
-    );
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        userId: user.id,
-        stage: "work_journal_context_create",
-        status: "success",
-        metadata: { contextId: created.id, type: "employment" },
-      })
-    );
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("work_journal_context_created");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      contextId: created.id,
+    });
   });
 });
