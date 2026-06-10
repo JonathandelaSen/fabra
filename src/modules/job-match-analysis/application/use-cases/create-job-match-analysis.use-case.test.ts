@@ -11,7 +11,9 @@ describe("CreateJobMatchAnalysisUseCase", () => {
       delete: vi.fn(),
     } satisfies JobMatchAnalysisRepository;
 
-    const result = await new CreateJobMatchAnalysisUseCase({ repo }).execute({
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
+
+    const result = await new CreateJobMatchAnalysisUseCase({ repo, eventBus: eventBus as never }).execute({
       id: "analysis-1",
       userId: "user-1",
       cvDocumentId: "cv-1",
@@ -32,6 +34,14 @@ describe("CreateJobMatchAnalysisUseCase", () => {
       jobUrl: "https://example.com/job",
     });
 
+    expect(repo.save).toHaveBeenCalledOnce();
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("job_match_analysis_created");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      analysisId: "analysis-1",
+    });
     expect(result.toPrimitives().jobSnapshot).toMatchObject({
       description: "Build things",
       url: "https://example.com/job",

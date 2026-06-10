@@ -27,6 +27,12 @@ describe("UpdateActivityContextUseCase", () => {
 
     expect(result.toPrimitives().name).toBe("New");
     expect(eventBus.publish).toHaveBeenCalledOnce();
-    expect(eventBus.publish.mock.calls[0][0][0].eventName).toBe("activity_context_updated");
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("activity_context_updated");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      contextId: "ctx-1",
+      fields: ["name"],
+    });
   });
 });

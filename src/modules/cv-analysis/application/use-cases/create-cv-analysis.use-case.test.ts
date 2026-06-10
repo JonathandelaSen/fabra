@@ -35,7 +35,12 @@ describe("CreateCVAnalysisUseCase", () => {
 
     expect(repo.save).toHaveBeenCalledOnce();
     expect(eventBus.publish).toHaveBeenCalledOnce();
-    expect(eventBus.publish.mock.calls[0][0][0].eventName).toBe("cv_analysis_created");
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("cv_analysis_created");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      analysisId: "analysis-1",
+    });
     expect(result.toPrimitives()).toMatchObject({
       id: "analysis-1",
       userId: "user-1",

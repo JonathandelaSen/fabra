@@ -74,10 +74,12 @@ describe("ScoreJobMatchAnalysisUseCase", () => {
       delete: vi.fn(),
     } satisfies JobMatchAnalysisRepository;
     const factory = makeMockAIServiceFactory();
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
 
     const result = await new ScoreJobMatchAnalysisUseCase({
       repo,
       aiServiceFactory: factory,
+      eventBus: eventBus as never,
     }).execute({
       id: "analysis-1",
       userId: "user-1",
@@ -105,6 +107,15 @@ describe("ScoreJobMatchAnalysisUseCase", () => {
       url: "https://example.com/job",
     });
     expect(primitives?.analyzedAt).toBeTruthy();
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("job_match_analysis_scored");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      analysisId: "analysis-1",
+      score: 72,
+      aiModel: "gemini-test",
+    });
   });
 
   it("returns null when analysis not found", async () => {
@@ -114,10 +125,12 @@ describe("ScoreJobMatchAnalysisUseCase", () => {
       save: vi.fn(),
       delete: vi.fn(),
     } satisfies JobMatchAnalysisRepository;
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
 
     const result = await new ScoreJobMatchAnalysisUseCase({
       repo,
       aiServiceFactory: makeMockAIServiceFactory(),
+      eventBus: eventBus as never,
     }).execute({
       id: "missing",
       userId: "user-1",
@@ -130,6 +143,7 @@ describe("ScoreJobMatchAnalysisUseCase", () => {
 
     expect(result).toBeNull();
     expect(repo.save).not.toHaveBeenCalled();
+    expect(eventBus.publish).not.toHaveBeenCalled();
   });
 
   it("throws when no extracted text available", async () => {
@@ -150,11 +164,13 @@ describe("ScoreJobMatchAnalysisUseCase", () => {
       save: vi.fn(),
       delete: vi.fn(),
     } satisfies JobMatchAnalysisRepository;
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
 
     await expect(
       new ScoreJobMatchAnalysisUseCase({
         repo,
         aiServiceFactory: makeMockAIServiceFactory(),
+        eventBus: eventBus as never,
       }).execute({
         id: "analysis-1",
         userId: "user-1",
@@ -165,5 +181,6 @@ describe("ScoreJobMatchAnalysisUseCase", () => {
         jobUrl: null,
       }),
     ).rejects.toThrow("No extracted text");
+    expect(eventBus.publish).not.toHaveBeenCalled();
   });
 });

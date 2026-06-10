@@ -62,7 +62,14 @@ describe("UpdateCVAnalysisAIResultUseCase", () => {
       improvements: ["metrics"],
     });
     expect(eventBus.publish).toHaveBeenCalledOnce();
-    expect(eventBus.publish.mock.calls[0][0][0].eventName).toBe("cv_analysis_scored");
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("cv_analysis_scored");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      analysisId: "analysis-1",
+      score: 82,
+      aiModel: "model",
+    });
   });
 
   it("returns null when the analysis does not exist", async () => {

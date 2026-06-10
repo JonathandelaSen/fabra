@@ -1,4 +1,4 @@
-import { Timestamp, UserId } from "@/modules/shared";
+import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 import {
   JobMatchAnalysis,
   type JobMatchAnalysisExtractedTextPrimitives,
@@ -23,41 +23,51 @@ export interface CreateJobMatchAnalysisInput {
 }
 
 export class CreateJobMatchAnalysisUseCase {
-  constructor(private readonly deps: { repo: JobMatchAnalysisRepository }) {}
+  constructor(
+    private readonly deps: {
+      repo: JobMatchAnalysisRepository;
+      eventBus: EventBus;
+    },
+  ) {}
 
   async execute(input: CreateJobMatchAnalysisInput): Promise<JobMatchAnalysis> {
     const now = new Date().toISOString();
-    return this.deps.repo.save(
-      JobMatchAnalysis.create({
-        id: JobMatchAnalysisId.fromPrimitives(input.id),
-        userId: UserId.fromPrimitives(input.userId),
-        cvDocumentId: input.cvDocumentId,
-        cvStructuredProfileId: input.cvStructuredProfileId ?? null,
-        jobOpportunityId: input.jobOpportunityId ?? null,
-        title: input.title,
-        filename: input.filename,
-        fileSize: input.fileSize,
-        pdfStoragePath: input.pdfStoragePath,
-        extractedText: input.extractedText,
-        aiModel: input.aiModel,
-        score: null,
-        feedback: null,
-        aiKeywords: [],
-        improvements: [],
-        jobSnapshot: {
-          description: input.jobDescription,
-          url: input.jobUrl,
-          keyData: null,
-        },
-        jobKeywords: [],
-        cvKeywords: [],
-        matchingKeywords: [],
-        missingKeywords: [],
-        analyzedAt: null,
-        legacyAnalysisId: null,
-        createdAt: Timestamp.fromPrimitives(now),
-        updatedAt: Timestamp.fromPrimitives(now),
-      }),
-    );
+    const analysis = JobMatchAnalysis.create({
+      id: JobMatchAnalysisId.fromPrimitives(input.id),
+      userId: UserId.fromPrimitives(input.userId),
+      cvDocumentId: input.cvDocumentId,
+      cvStructuredProfileId: input.cvStructuredProfileId ?? null,
+      jobOpportunityId: input.jobOpportunityId ?? null,
+      title: input.title,
+      filename: input.filename,
+      fileSize: input.fileSize,
+      pdfStoragePath: input.pdfStoragePath,
+      extractedText: input.extractedText,
+      aiModel: input.aiModel,
+      score: null,
+      feedback: null,
+      aiKeywords: [],
+      improvements: [],
+      jobSnapshot: {
+        description: input.jobDescription,
+        url: input.jobUrl,
+        keyData: null,
+      },
+      jobKeywords: [],
+      cvKeywords: [],
+      matchingKeywords: [],
+      missingKeywords: [],
+      analyzedAt: null,
+      legacyAnalysisId: null,
+      createdAt: Timestamp.fromPrimitives(now),
+      updatedAt: Timestamp.fromPrimitives(now),
+    });
+
+    await this.deps.repo.save(analysis);
+
+    const events = analysis.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
+    return analysis;
   }
 }

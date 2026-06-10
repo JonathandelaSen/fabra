@@ -1,6 +1,6 @@
 import { OllamaJobMatchScoringAIServiceFactory } from "./infrastructure/services/ollama-job-match-scoring-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { instrumentUseCases, SupabaseEventTracker, type Telemetry } from "@/modules/shared";
+import { instrumentUseCases, SupabaseEventTracker, type Telemetry, type EventBus } from "@/modules/shared";
 import { CreateJobMatchAnalysisUseCase } from "./application/use-cases/create-job-match-analysis.use-case";
 import { DeleteJobMatchAnalysisUseCase } from "./application/use-cases/delete-job-match-analysis.use-case";
 import { GetJobMatchAnalysisByIdUseCase } from "./application/use-cases/get-job-match-analysis-by-id.use-case";
@@ -28,9 +28,9 @@ const aiServiceFactory = new ProviderJobMatchScoringAIServiceFactory({
   ollamaFactory: new OllamaJobMatchScoringAIServiceFactory(),
 });
 
-function createUseCases() {
+function createUseCases(eventBus: EventBus) {
   return {
-    createJobMatchAnalysis: new CreateJobMatchAnalysisUseCase({ repo }),
+    createJobMatchAnalysis: new CreateJobMatchAnalysisUseCase({ repo, eventBus }),
     listJobMatchAnalyses: new ListJobMatchAnalysesUseCase({ repo }),
     listJobMatchAnalysisUsageByDocument:
       new ListJobMatchAnalysisUsageByDocumentUseCase({ repo }),
@@ -38,12 +38,15 @@ function createUseCases() {
     scoreJobMatchAnalysis: new ScoreJobMatchAnalysisUseCase({
       repo,
       aiServiceFactory,
+      eventBus,
     }),
     updateJobMatchAnalysisAIResult: new UpdateJobMatchAnalysisAIResultUseCase({
       repo,
+      eventBus,
     }),
     updateJobMatchAnalysisJobUrl: new UpdateJobMatchAnalysisJobUrlUseCase({
       repo,
+      eventBus,
     }),
     deleteJobMatchAnalysis: new DeleteJobMatchAnalysisUseCase({ repo }),
     prepareJobMatchScoreCopyPaste: new PrepareJobMatchScoreCopyPasteUseCase({
@@ -66,8 +69,8 @@ export type JobMatchAnalysisModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): JobMatchAnalysisModule;
 };
 
-export function createJobMatchAnalysisModule(telemetry: Telemetry): JobMatchAnalysisModule {
-  const useCases = instrumentUseCases("job-match-analysis", createUseCases(), telemetry);
+export function createJobMatchAnalysisModule(telemetry: Telemetry, eventBus: EventBus): JobMatchAnalysisModule {
+  const useCases = instrumentUseCases("job-match-analysis", createUseCases(eventBus), telemetry);
   return {
     ...useCases,
     bindRequest(client: SupabaseClient) {

@@ -44,6 +44,11 @@ describe("DeleteActivityContextUseCase", () => {
     ).resolves.toEqual({ reassignedRecords: 2 });
 
     expect(eventBus.publish).toHaveBeenCalledOnce();
-    expect(eventBus.publish.mock.calls[0][0][0].eventName).toBe("activity_context_deleted");
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("activity_context_deleted");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      contextId: "ctx-1",
+    });
   });
 });

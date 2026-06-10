@@ -1,4 +1,4 @@
-import { UserId } from "@/modules/shared";
+import { UserId, type EventBus } from "@/modules/shared";
 import { JobMatchAnalysis } from "../../domain/entities/job-match-analysis.entity";
 import type { JobMatchAnalysisRepository } from "../../domain/repositories/job-match-analysis.repository";
 import { JobMatchAnalysisId } from "../../domain/value-objects/job-match-analysis-id.value-object";
@@ -21,7 +21,12 @@ export interface UpdateJobMatchAnalysisAIResultInput {
 }
 
 export class UpdateJobMatchAnalysisAIResultUseCase {
-  constructor(private readonly deps: { repo: JobMatchAnalysisRepository }) {}
+  constructor(
+    private readonly deps: {
+      repo: JobMatchAnalysisRepository;
+      eventBus: EventBus;
+    },
+  ) {}
 
   async execute(
     input: UpdateJobMatchAnalysisAIResultInput,
@@ -50,6 +55,11 @@ export class UpdateJobMatchAnalysisAIResultUseCase {
       analyzedAt: now,
       updatedAt: now,
     });
-    return this.deps.repo.save(current);
+    await this.deps.repo.save(current);
+
+    const events = current.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
+    return current;
   }
 }
