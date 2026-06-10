@@ -12,6 +12,7 @@ if (enabled) {
     enabled,
     environment:
       process.env.NODE_ENV === "production" ? "production" : "local",
+    enableLogs: true,
     tracesSampleRate: parseTechnicalObservabilitySampleRate(
       process.env.SENTRY_TRACES_SAMPLE_RATE,
     ),

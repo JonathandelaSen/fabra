@@ -19,7 +19,8 @@ function walk(directory) {
     if (
       entry.name === "node_modules" ||
       entry.name === ".next" ||
-      entry.name === ".git"
+      entry.name === ".git" ||
+      entry.name === ".test-infra"
     ) {
       return [];
     }
