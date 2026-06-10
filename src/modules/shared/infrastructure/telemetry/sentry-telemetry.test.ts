@@ -7,6 +7,11 @@ const sentry = vi.hoisted(() => ({
   withScope: vi.fn((callback: (scope: { setAttributes: () => void }) => void) =>
     callback({ setAttributes: vi.fn() }),
   ),
+  logger: {
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+  },
 }));
 
 vi.mock("@sentry/nextjs", () => sentry);
@@ -54,9 +59,12 @@ describe("SentryTelemetry", () => {
     const error = new Error("business failure");
 
     await expect(
-      new SentryTelemetry().trace({ name: "test", operation: "test" }, async () => {
-        throw error;
-      }),
+      new SentryTelemetry().trace(
+        { name: "test", operation: "test" },
+        async () => {
+          throw error;
+        },
+      ),
     ).rejects.toBe(error);
 
     expect(setStatus).toHaveBeenCalledWith({
@@ -113,5 +121,26 @@ describe("SentryTelemetry", () => {
     });
     expect(() => telemetry.captureException(error)).not.toThrow();
     expect(() => telemetry.setUser(null)).not.toThrow();
+  });
+
+  it("maps structured logs and swallows provider failures", () => {
+    const telemetry = new SentryTelemetry();
+
+    telemetry.log({
+      level: "info",
+      message: "Domain event published",
+      attributes: { "fabra.domain_event": "dummy.event" },
+    });
+
+    expect(sentry.logger.info).toHaveBeenCalledWith("Domain event published", {
+      "fabra.domain_event": "dummy.event",
+    });
+
+    sentry.logger.info.mockImplementationOnce(() => {
+      throw new Error("provider failure");
+    });
+    expect(() =>
+      telemetry.log({ level: "info", message: "still safe" }),
+    ).not.toThrow();
   });
 });

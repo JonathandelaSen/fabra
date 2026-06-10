@@ -17,6 +17,7 @@ class FakeTelemetry implements Telemetry {
   }
 
   captureException(): void {}
+  log(): void {}
   setUser(): void {}
 }
 
@@ -35,7 +36,9 @@ describe("instrumentUseCases", () => {
       telemetry,
     );
 
-    await expect(useCases.runThing.execute("world")).resolves.toBe("hello:world");
+    await expect(useCases.runThing.execute("world")).resolves.toBe(
+      "hello:world",
+    );
     expect(useCases.metadata).toBe("unchanged");
     expect(telemetry.traces).toEqual([
       {

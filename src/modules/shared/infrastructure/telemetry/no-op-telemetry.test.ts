@@ -26,8 +26,13 @@ describe("NoOpTelemetry", () => {
   it("ignores captures and user context", () => {
     const telemetry = new NoOpTelemetry();
 
-    expect(() => telemetry.captureException(new Error("ignored"))).not.toThrow();
+    expect(() =>
+      telemetry.captureException(new Error("ignored")),
+    ).not.toThrow();
     expect(() => telemetry.setUser({ id: "user-id" })).not.toThrow();
     expect(() => telemetry.setUser(null)).not.toThrow();
+    expect(() =>
+      telemetry.log({ level: "info", message: "ignored" }),
+    ).not.toThrow();
   });
 });

@@ -6,7 +6,11 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { faker } from "@faker-js/faker";
-import { InMemoryQueryBus, NoOpTelemetry } from "@/modules/shared";
+import {
+  InMemoryEventBus,
+  InMemoryQueryBus,
+  NoOpTelemetry,
+} from "@/modules/shared";
 import { createActivityContextsModule } from "@/modules/activity-context";
 import { createCVLibraryE2EModule } from "@/modules/cv-library/cv-library.e2e.module";
 import {
@@ -110,16 +114,17 @@ const DEMO_CHAT_MESSAGES = [
 // Modules (singleton, wired once)
 // ---------------------------------------------------------------------------
 const telemetry = new NoOpTelemetry();
+const eventBus = new InMemoryEventBus(telemetry);
 const queryBus = new InMemoryQueryBus(telemetry);
-const activityModule = createActivityContextsModule(telemetry);
-const cvLibraryE2E = createCVLibraryE2EModule(queryBus, telemetry);
-const cvAnalysisModule = createCVAnalysisModule(telemetry);
-const jobMatchModule = createJobMatchAnalysisModule(telemetry);
-const analysisChatModule = createAnalysisChatModule(queryBus, telemetry);
-const feedbackNotesModule = createFeedbackNotesModule(telemetry);
-const receivedFeedbackModule = createReceivedFeedbackModule(telemetry);
-const workJournalModule = createWorkJournalModule(telemetry);
-const commitmentsModule = createCommitmentsModule(telemetry);
+const activityModule = createActivityContextsModule(telemetry, eventBus);
+const cvLibraryE2E = createCVLibraryE2EModule(queryBus, telemetry, eventBus);
+const cvAnalysisModule = createCVAnalysisModule(telemetry, eventBus);
+const jobMatchModule = createJobMatchAnalysisModule(telemetry, eventBus);
+const analysisChatModule = createAnalysisChatModule(queryBus, telemetry, eventBus);
+const feedbackNotesModule = createFeedbackNotesModule(telemetry, eventBus);
+const receivedFeedbackModule = createReceivedFeedbackModule(telemetry, eventBus);
+const workJournalModule = createWorkJournalModule(telemetry, eventBus);
+const commitmentsModule = createCommitmentsModule(telemetry, eventBus);
 const selectionProcessModule = createSelectionProcessModule(telemetry);
 
 // Register query handlers needed by analysis-chat

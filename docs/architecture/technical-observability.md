@@ -17,6 +17,7 @@ The initial implementation must provide:
 - traces for successful and failed requests
 - semantic child spans for every application use case
 - semantic child spans for cross-module query bus dispatches
+- semantic child spans and structured logs for domain event bus publications
 - automatic spans produced by the Sentry SDK for supported framework and
   external operations
 - production tracing at a `1.0` sample rate
@@ -298,8 +299,9 @@ No, not initially.
 
 **Decision**
 
-Create custom spans only for use cases and query bus dispatches. Add repository
-or service spans later only when a demonstrated visibility gap justifies them.
+Create custom spans only for use cases, query bus dispatches, and domain event
+bus publications. Add repository or service spans later only when a
+demonstrated visibility gap justifies them.
 
 ### 14. Query bus
 
@@ -315,6 +317,16 @@ Yes.
 
 Every `QueryBus.execute()` creates a `query_bus.execute` span named with the
 query's stable `queryName`.
+
+### 14a. Domain event bus
+
+Every `EventBus.publish()` creates one `event_bus.publish` child span and one
+structured technical log per domain event.
+
+The span and log include only the stable event name and occurrence timestamp.
+They must never call or attach `event.toPrimitives()`, because domain event
+payloads may contain user or business data. Telemetry failures must never
+prevent or duplicate event publication.
 
 ### 15. API exception capture point
 
@@ -534,14 +546,14 @@ use case, or feature module internal may import `@sentry/nextjs`.
 
 Keep the two systems separate:
 
-| Concern | Owner |
-| --- | --- |
-| Exception stack traces | Sentry technical telemetry |
-| Request and use-case duration | Sentry technical telemetry |
-| Execution hierarchy | Sentry technical telemetry |
-| Browser errors and navigation | Sentry technical telemetry |
-| Explicit product action occurred | Existing `EventTracker` |
-| Workflow status and business metadata | Existing `processing_events` |
+| Concern                               | Owner                           |
+| ------------------------------------- | ------------------------------- |
+| Exception stack traces                | Sentry technical telemetry      |
+| Request and use-case duration         | Sentry technical telemetry      |
+| Execution hierarchy                   | Sentry technical telemetry      |
+| Browser errors and navigation         | Sentry technical telemetry      |
+| Explicit product action occurred      | Existing `EventTracker`         |
+| Workflow status and business metadata | Existing `processing_events`    |
 | Admin-facing processing event history | Existing Supabase observability |
 
 Do not migrate `EventTracker` to Sentry as part of this work.
@@ -603,10 +615,11 @@ query_bus.execute GetCVAnalysisByIdQuery
 
 Initial custom operations:
 
-| Boundary | Span `op` |
-| --- | --- |
-| Use case | `use_case.execute` |
-| Query bus | `query_bus.execute` |
+| Boundary         | Span `op`           |
+| ---------------- | ------------------- |
+| Use case         | `use_case.execute`  |
+| Query bus        | `query_bus.execute` |
+| Domain event bus | `event_bus.publish` |
 
 Initial custom span attributes:
 
@@ -615,6 +628,8 @@ fabra.layer
 fabra.module
 fabra.use_case
 fabra.query
+fabra.domain_event
+fabra.occurred_at
 ```
 
 Do not attach use-case arguments or results automatically.
@@ -645,6 +660,12 @@ export interface TelemetryCaptureOptions {
   attributes?: Record<string, TelemetryAttribute>;
 }
 
+export interface TelemetryLogOptions {
+  level: "debug" | "info" | "warn" | "error";
+  message: string;
+  attributes?: Record<string, TelemetryAttribute>;
+}
+
 export interface TelemetryUser {
   id: string;
 }
@@ -655,10 +676,9 @@ export interface Telemetry {
     operation: () => Promise<T>,
   ): Promise<T>;
 
-  captureException(
-    error: unknown,
-    options?: TelemetryCaptureOptions,
-  ): void;
+  log(options: TelemetryLogOptions): void;
+
+  captureException(error: unknown, options?: TelemetryCaptureOptions): void;
 
   setUser(user: TelemetryUser | null): void;
 }
@@ -670,7 +690,6 @@ The initial port intentionally excludes:
 - raw Sentry spans
 - breadcrumbs
 - Session Replay
-- logs
 - metrics
 - attachments
 - transaction IDs
@@ -693,6 +712,7 @@ src/modules/shared/infrastructure/telemetry/sentry-telemetry.ts
 
 - executes `trace` callbacks exactly once
 - returns or throws the callback outcome unchanged
+- ignores `log`
 - ignores `captureException`
 - ignores `setUser`
 - has no Sentry import
@@ -703,11 +723,12 @@ It is the required adapter for tests and disabled runtimes.
 
 `SentryTelemetry` maps:
 
-| Port operation | Sentry operation |
-| --- | --- |
-| `trace` | `Sentry.startSpan` |
+| Port operation     | Sentry operation          |
+| ------------------ | ------------------------- |
+| `trace`            | `Sentry.startSpan`        |
+| `log`              | `Sentry.logger`           |
 | `captureException` | `Sentry.captureException` |
-| `setUser` | `Sentry.setUser` |
+| `setUser`          | `Sentry.setUser`          |
 
 `trace` marks the span as failed when the business callback throws, then
 rethrows the original business error. It does not call `captureException`.
@@ -796,8 +817,7 @@ export function isTechnicalObservabilityEnabled(env: NodeJS.ProcessEnv) {
   if (env.NODE_ENV === "production") return true;
 
   return (
-    env.NODE_ENV === "development" &&
-    env.OBSERVABILITY_ENABLE_LOCAL === "true"
+    env.NODE_ENV === "development" && env.OBSERVABILITY_ENABLE_LOCAL === "true"
   );
 }
 ```
@@ -809,14 +829,14 @@ must verify Vitest and backend-test behavior before relying only on
 
 ### Environment variables
 
-| Variable | Runtime | Purpose |
-| --- | --- | --- |
-| `SENTRY_DSN` | build/server/client-injected | Sentry project destination |
-| `SENTRY_AUTH_TOKEN` | build only | Release and source-map upload |
-| `SENTRY_ORG` | build only | Sentry organization slug |
-| `SENTRY_PROJECT` | build only | Sentry project slug |
-| `SENTRY_TRACES_SAMPLE_RATE` | build/runtime | Trace sampling, initially `1` |
-| `OBSERVABILITY_ENABLE_LOCAL` | local build/runtime | Explicit local opt-in |
+| Variable                     | Runtime                      | Purpose                       |
+| ---------------------------- | ---------------------------- | ----------------------------- |
+| `SENTRY_DSN`                 | build/server/client-injected | Sentry project destination    |
+| `SENTRY_AUTH_TOKEN`          | build only                   | Release and source-map upload |
+| `SENTRY_ORG`                 | build only                   | Sentry organization slug      |
+| `SENTRY_PROJECT`             | build only                   | Sentry project slug           |
+| `SENTRY_TRACES_SAMPLE_RATE`  | build/runtime                | Trace sampling, initially `1` |
+| `OBSERVABILITY_ENABLE_LOCAL` | local build/runtime          | Explicit local opt-in         |
 
 `SENTRY_AUTH_TOKEN` is secret. It must never be exposed to client code, checked
 into git, or retained in runtime responses.
@@ -837,7 +857,7 @@ const nextConfig: NextConfig = {
   env: {
     FABRA_PUBLIC_OBSERVABILITY_ENABLED: String(observabilityEnabled),
     FABRA_PUBLIC_SENTRY_DSN: observabilityEnabled
-      ? process.env.SENTRY_DSN ?? ""
+      ? (process.env.SENTRY_DSN ?? "")
       : "",
   },
 };
@@ -904,7 +924,7 @@ Every migrated module composition root receives `Telemetry` explicitly:
 export function createAnalysisChatModule(
   queryBus: QueryBus,
   telemetry: Telemetry,
-): AnalysisChatModule
+): AnalysisChatModule;
 ```
 
 Modules without a query bus receive only telemetry:
@@ -912,7 +932,7 @@ Modules without a query bus receive only telemetry:
 ```ts
 export function createWorkJournalModule(
   telemetry: Telemetry,
-): WorkJournalModule
+): WorkJournalModule;
 ```
 
 `src/lib/container.ts` passes the single configured telemetry instance into all
@@ -971,6 +991,23 @@ attributes:
 
 The query bus does not capture exceptions. It marks the span failed through
 `Telemetry.trace` and preserves the original error.
+
+## Domain event bus instrumentation
+
+`InMemoryEventBus` receives the `Telemetry` port through constructor injection.
+Each published event creates:
+
+```text
+name: event_bus.publish <event.eventName>
+operation: event_bus.publish
+attributes:
+  fabra.layer: domain
+  fabra.domain_event: <event.eventName>
+```
+
+It also emits an `info` structured log named `Domain event published` with
+`fabra.domain_event` and `fabra.occurred_at`. Event payload primitives are
+intentionally excluded.
 
 ## API error handling
 
@@ -1297,6 +1334,15 @@ Extend the colocated query-bus tests to verify:
 - unregistered query errors are traced and preserved
 - query bus does not capture exceptions
 
+### Domain event bus tests
+
+Verify:
+
+- every published event creates one semantic span and one structured log
+- event names and occurrence timestamps are attached
+- event payload primitives are never read or attached
+- telemetry failures do not prevent or duplicate publication
+
 ### API error handler tests
 
 Add colocated tests for `createApiErrorHandler`.
@@ -1314,14 +1360,14 @@ Verify:
 
 Verify the enablement matrix:
 
-| `NODE_ENV` | DSN | Local flag | Expected |
-| --- | --- | --- | --- |
-| production | present | absent | enabled |
-| production | absent | any | disabled |
-| development | present | `true` | enabled |
+| `NODE_ENV`  | DSN     | Local flag   | Expected |
+| ----------- | ------- | ------------ | -------- |
+| production  | present | absent       | enabled  |
+| production  | absent  | any          | disabled |
+| development | present | `true`       | enabled  |
 | development | present | absent/other | disabled |
-| development | absent | `true` | disabled |
-| test | present | `true` | disabled |
+| development | absent  | `true`       | disabled |
+| test        | present | `true`       | disabled |
 
 ### Build and repository verification
 

@@ -2,6 +2,7 @@ import * as Sentry from "@sentry/nextjs";
 import type {
   Telemetry,
   TelemetryCaptureOptions,
+  TelemetryLogOptions,
   TelemetrySpanOptions,
   TelemetryUser,
 } from "../../application/telemetry/telemetry";
@@ -67,10 +68,15 @@ export class SentryTelemetry implements Telemetry {
     return outcome.value;
   }
 
-  captureException(
-    error: unknown,
-    options?: TelemetryCaptureOptions,
-  ): void {
+  log(options: TelemetryLogOptions): void {
+    try {
+      Sentry.logger[options.level](options.message, options.attributes);
+    } catch (telemetryError) {
+      warnTelemetryFailure("log", telemetryError);
+    }
+  }
+
+  captureException(error: unknown, options?: TelemetryCaptureOptions): void {
     try {
       Sentry.withScope((scope) => {
         if (options?.attributes) scope.setAttributes(options.attributes);

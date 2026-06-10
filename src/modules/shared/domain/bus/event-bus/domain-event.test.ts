@@ -5,7 +5,7 @@ describe("DomainEvent", () => {
   it("carries event details", () => {
     class TestEvent implements DomainEvent {
       readonly eventName = "test.event";
-      readonly occurrences = new Date();
+      readonly occurredAt = new Date();
       toPrimitives(): Record<string, unknown> {
         return { ok: true };
       }

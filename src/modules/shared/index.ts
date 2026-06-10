@@ -34,6 +34,8 @@ export type {
   Telemetry,
   TelemetryAttribute,
   TelemetryCaptureOptions,
+  TelemetryLogLevel,
+  TelemetryLogOptions,
   TelemetrySpanOptions,
   TelemetryUser,
 } from "./application/telemetry/telemetry";

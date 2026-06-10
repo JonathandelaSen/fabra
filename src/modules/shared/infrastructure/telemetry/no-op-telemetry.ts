@@ -1,6 +1,7 @@
 import type {
   Telemetry,
   TelemetryCaptureOptions,
+  TelemetryLogOptions,
   TelemetrySpanOptions,
   TelemetryUser,
 } from "../../application/telemetry/telemetry";
@@ -13,10 +14,9 @@ export class NoOpTelemetry implements Telemetry {
     return operation();
   }
 
-  captureException(
-    _error: unknown,
-    _options?: TelemetryCaptureOptions,
-  ): void {}
+  log(_options: TelemetryLogOptions): void {}
+
+  captureException(_error: unknown, _options?: TelemetryCaptureOptions): void {}
 
   setUser(_user: TelemetryUser | null): void {}
 }

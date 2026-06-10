@@ -22,8 +22,15 @@ import { AnalysisChatContextRepository } from "./analysis-chat-context.repositor
 const supabase = getSupabaseClient();
 
 const queryBus = new InMemoryQueryBus(new NoOpTelemetry());
-const cvAnalysisModule = createCVAnalysisModule(new NoOpTelemetry(), new InMemoryEventBus());
-const jobMatchAnalysisModule = createJobMatchAnalysisModule(new NoOpTelemetry(), new InMemoryEventBus());
+const telemetry = new NoOpTelemetry();
+const cvAnalysisModule = createCVAnalysisModule(
+  telemetry,
+  new InMemoryEventBus(telemetry),
+);
+const jobMatchAnalysisModule = createJobMatchAnalysisModule(
+  telemetry,
+  new InMemoryEventBus(telemetry),
+);
 queryBus.register(
   GetCVAnalysisByIdQuery.queryName,
   new GetCVAnalysisByIdQueryHandler(cvAnalysisModule.getCVAnalysisById),
@@ -59,8 +66,8 @@ describe("AnalysisChatContextRepository", () => {
     cvAnalysisModule.bindRequest(supabase);
     jobMatchAnalysisModule.bindRequest(supabase);
 
-    const analysis = await jobMatchAnalysisModule.createJobMatchAnalysis.execute(
-      {
+    const analysis =
+      await jobMatchAnalysisModule.createJobMatchAnalysis.execute({
         id: crypto.randomUUID(),
         userId: user.id,
         cvDocumentId: cv.id,
@@ -79,8 +86,7 @@ describe("AnalysisChatContextRepository", () => {
         aiModel: "model",
         jobDescription: "Job",
         jobUrl: "https://example.com",
-      },
-    );
+      });
 
     await jobMatchAnalysisModule.updateJobMatchAnalysisAIResult.execute({
       id: analysis.toPrimitives().id,

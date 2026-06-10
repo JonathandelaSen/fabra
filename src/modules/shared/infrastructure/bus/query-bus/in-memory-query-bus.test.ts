@@ -24,6 +24,7 @@ class FakeTelemetry implements Telemetry {
     this.captures.push(error);
   }
 
+  log(): void {}
   setUser(): void {}
 }
 
@@ -62,7 +63,7 @@ describe("InMemoryQueryBus", () => {
     bus.register(TestQuery.queryName, handler);
 
     await expect(bus.execute(new TestQuery({ value: "one" }))).resolves.toBe(
-      "handled:one"
+      "handled:one",
     );
     expect(handledPayloads).toEqual([{ value: "one" }]);
     expect(telemetry.traces).toEqual([
@@ -83,7 +84,7 @@ describe("InMemoryQueryBus", () => {
     const bus = new InMemoryQueryBus(telemetry);
 
     await expect(bus.execute(new OtherQuery())).rejects.toThrow(
-      new UnregisteredQueryHandlerError(OtherQuery.queryName)
+      new UnregisteredQueryHandlerError(OtherQuery.queryName),
     );
     expect(telemetry.traces).toHaveLength(1);
     expect(telemetry.captures).toEqual([]);
@@ -100,7 +101,7 @@ describe("InMemoryQueryBus", () => {
     bus.register(TestQuery.queryName, handler);
 
     expect(() => bus.register(TestQuery.queryName, handler)).toThrow(
-      `Query handler already registered for "${TestQuery.queryName}".`
+      `Query handler already registered for "${TestQuery.queryName}".`,
     );
   });
 });

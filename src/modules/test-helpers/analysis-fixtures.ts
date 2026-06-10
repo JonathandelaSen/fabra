@@ -20,7 +20,11 @@ export async function createTestCVAnalysis(
     text?: string | null;
   },
 ) {
-  const cvAnalysisModule = createCVAnalysisModule(new NoOpTelemetry(), new InMemoryEventBus());
+  const telemetry = new NoOpTelemetry();
+  const cvAnalysisModule = createCVAnalysisModule(
+    telemetry,
+    new InMemoryEventBus(telemetry),
+  );
   cvAnalysisModule.bindRequest(supabase);
 
   const entity = await cvAnalysisModule.createCVAnalysis.execute({
@@ -58,7 +62,11 @@ export async function createTestJobMatchAnalysis(
     score?: number | null;
   },
 ) {
-  const jobMatchAnalysisModule = createJobMatchAnalysisModule(new NoOpTelemetry(), new InMemoryEventBus());
+  const telemetry = new NoOpTelemetry();
+  const jobMatchAnalysisModule = createJobMatchAnalysisModule(
+    telemetry,
+    new InMemoryEventBus(telemetry),
+  );
   jobMatchAnalysisModule.bindRequest(supabase);
 
   const entity = await jobMatchAnalysisModule.createJobMatchAnalysis.execute({
@@ -83,23 +91,26 @@ export async function createTestJobMatchAnalysis(
   });
 
   if (typeof input.score === "number") {
-    const scored = await jobMatchAnalysisModule.updateJobMatchAnalysisAIResult.execute({
-      id: entity.toPrimitives().id,
-      userId: input.userId,
-      aiModel: "model",
-      jobDescription: "Job",
-      jobUrl: null,
-      score: input.score,
-      feedback: "Good",
-      aiKeywords: ["ts"],
-      improvements: ["more"],
-      jobKeyData: null,
-      jobKeywords: [],
-      cvKeywords: ["ts"],
-      matchingKeywords: ["ts"],
-      missingKeywords: [],
-    });
-    return scored ? presentJobMatchAnalysis(scored) : presentJobMatchAnalysis(entity);
+    const scored =
+      await jobMatchAnalysisModule.updateJobMatchAnalysisAIResult.execute({
+        id: entity.toPrimitives().id,
+        userId: input.userId,
+        aiModel: "model",
+        jobDescription: "Job",
+        jobUrl: null,
+        score: input.score,
+        feedback: "Good",
+        aiKeywords: ["ts"],
+        improvements: ["more"],
+        jobKeyData: null,
+        jobKeywords: [],
+        cvKeywords: ["ts"],
+        matchingKeywords: ["ts"],
+        missingKeywords: [],
+      });
+    return scored
+      ? presentJobMatchAnalysis(scored)
+      : presentJobMatchAnalysis(entity);
   }
 
   return presentJobMatchAnalysis(entity);

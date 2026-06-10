@@ -23,6 +23,7 @@ class FakeTelemetry implements Telemetry {
     this.captures.push({ error, options });
   }
 
+  log(): void {}
   setUser(): void {}
 }
 

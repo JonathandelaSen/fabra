@@ -60,6 +60,19 @@ for (const file of sourceFiles) {
   }
 }
 
+const eventBusSource = fs.readFileSync(
+  path.join(
+    root,
+    "src/modules/shared/infrastructure/bus/event-bus/in-memory-event-bus.ts",
+  ),
+  "utf8",
+);
+if (eventBusSource.includes("toPrimitives(")) {
+  failures.push(
+    "InMemoryEventBus must not attach domain event payload primitives to telemetry",
+  );
+}
+
 if (failures.length > 0) {
   console.error(failures.join("\n"));
   process.exitCode = 1;
