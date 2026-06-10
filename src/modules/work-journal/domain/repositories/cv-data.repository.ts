@@ -1,11 +1,4 @@
-import type { StandardCVProfile } from "@/lib/cv-profile";
-
-export interface CVSummaryForSuggestions {
-  name?: string;
-  filename?: string | null;
-  type: string;
-  profile: StandardCVProfile | null;
-}
+import type { CVSummaryForSuggestions } from "../value-objects/cv-summary-for-suggestions.value-object";
 
 export interface CVDataRepository {
   listCVs(userId: string): Promise<CVSummaryForSuggestions[]>;

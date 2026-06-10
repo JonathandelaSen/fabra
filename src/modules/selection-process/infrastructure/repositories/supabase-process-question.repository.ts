@@ -1,9 +1,7 @@
+import { ProcessQuestionReadModel, type ProcessQuestionRelatedCVPrimitives, type ProcessQuestionRelatedAnalysisPrimitives } from "../../domain/value-objects/process-question-read-model.value-object";
 import { BoundSupabaseRepository, type UserId } from "@/modules/shared";
 import { ProcessQuestion } from "../../domain/entities/process-question.entity";
 import type {
-  ProcessQuestionReadModel,
-  ProcessQuestionRelatedAnalysis,
-  ProcessQuestionRelatedCV,
   ProcessQuestionRepository,
   ProcessQuestionSearchCriteria,
 } from "../../domain/repositories/process-question.repository";
@@ -23,9 +21,9 @@ interface ProcessQuestionRow {
   legacy_cv_id: string | null;
   created_at: string;
   updated_at: string;
-  cv?: ProcessQuestionRelatedCV | null;
+  cv?: ProcessQuestionRelatedCVPrimitives | null;
   analysis?:
-    | (Partial<ProcessQuestionRelatedAnalysis> & {
+    | (Partial<ProcessQuestionRelatedAnalysisPrimitives> & {
         id: string;
         cv_document_id?: string | null;
         title: string;
@@ -85,7 +83,7 @@ function rowToReadModel(row: ProcessQuestionRow): ProcessQuestionReadModel {
     row.analysis?.job_snapshot && typeof row.analysis.job_snapshot === "object"
       ? (row.analysis.job_snapshot as Record<string, unknown>)
       : {};
-  return {
+  return ProcessQuestionReadModel.fromPrimitives({
     question: rowToQuestion(row),
     cv: row.cv ?? null,
     analysis: row.analysis
@@ -99,7 +97,7 @@ function rowToReadModel(row: ProcessQuestionRow): ProcessQuestionReadModel {
           offer_status: null,
         }
       : null,
-  };
+  });
 }
 
 export class SupabaseProcessQuestionRepository

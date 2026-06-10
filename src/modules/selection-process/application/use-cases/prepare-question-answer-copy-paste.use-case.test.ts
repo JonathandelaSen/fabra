@@ -24,9 +24,11 @@ function createQuestion(overrides?: { answer?: string | null }) {
   });
 }
 
+import { ProcessQuestionReadModel } from "../../domain/value-objects/process-question-read-model.value-object";
+
 function readModel(overrides?: { answer?: string | null }) {
-  return {
-    question: createQuestion(overrides),
+  return ProcessQuestionReadModel.fromPrimitives({
+    question: createQuestion(overrides?.answer ? { answer: overrides.answer } : {}),
     cv: { id: "cv-1", name: "CV principal", filename: "cv.pdf", type: "uploaded" as const },
     analysis: {
       id: "analysis-1",
@@ -37,7 +39,7 @@ function readModel(overrides?: { answer?: string | null }) {
       job_url: null,
       offer_status: null,
     },
-  };
+  });
 }
 
 describe("PrepareQuestionAnswerCopyPasteUseCase", () => {

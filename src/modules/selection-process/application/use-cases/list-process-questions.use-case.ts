@@ -1,6 +1,6 @@
+import type { ProcessQuestionReadModel, ProcessQuestionRelatedCVPrimitives, ProcessQuestionRelatedAnalysisPrimitives } from "../../domain/value-objects/process-question-read-model.value-object";
 import { UserId } from "@/modules/shared";
 import type {
-  ProcessQuestionReadModel,
   ProcessQuestionRepository,
 } from "../../domain/repositories/process-question.repository";
 

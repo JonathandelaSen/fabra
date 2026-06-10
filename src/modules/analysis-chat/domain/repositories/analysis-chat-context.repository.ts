@@ -1,4 +1,4 @@
-import type { AnalysisChatContext } from "./analysis-chat-ai-service.repository";
+import type { AnalysisChatContext } from "../value-objects/analysis-chat-context.value-object";
 
 export interface AnalysisChatContextReader {
   findByAnalysisId(input: {

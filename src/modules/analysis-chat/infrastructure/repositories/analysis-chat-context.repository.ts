@@ -5,7 +5,7 @@ import type { QueryBus } from "@/modules/shared";
 import type { SupabaseAware } from "@/modules/shared/infrastructure/supabase-aware";
 import { GetCVAnalysisByIdQuery } from "@/modules/cv-analysis";
 import { GetJobMatchAnalysisByIdQuery } from "@/modules/job-match-analysis";
-import type { AnalysisChatContext } from "../../domain/repositories/analysis-chat-ai-service.repository";
+import { AnalysisChatContext } from "../../domain/value-objects/analysis-chat-context.value-object";
 import type { AnalysisChatContextReader } from "../../domain/repositories/analysis-chat-context.repository";
 
 export class AnalysisChatContextRepository
@@ -36,14 +36,14 @@ export class AnalysisChatContextRepository
       : { data: null, error: null };
     if (error) throw error;
 
-    return {
+    return AnalysisChatContext.fromPrimitives({
       analysisId: analysis.id,
       cvId: analysis.cv_id,
       analysisMode: analysis.analysis_mode,
       analysis,
       cv,
       cvText: getBestCVText(analysis),
-    };
+    });
   }
 
   private async getAnalysis(

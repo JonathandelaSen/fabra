@@ -1,14 +1,6 @@
 import type { ChatMessagePrimitives } from "../entities/chat-message.entity";
 import type { AIProvider } from "@/modules/shared";
-
-export interface AnalysisChatContext {
-  analysisId: string;
-  cvId: string | null;
-  analysisMode: string;
-  analysis: unknown;
-  cv: unknown;
-  cvText: string | null;
-}
+import type { AnalysisChatContext } from "../value-objects/analysis-chat-context.value-object";
 
 export interface AnalysisChatAIInput {
   message: string;

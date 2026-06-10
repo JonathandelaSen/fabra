@@ -4,7 +4,7 @@ import {
   GetAnalysisChatContextQuery,
   type GetAnalysisChatContextInput,
 } from "./get-analysis-chat-context.query";
-import type { AnalysisChatContext } from "../../domain/repositories/analysis-chat-ai-service.repository";
+import type { AnalysisChatContext } from "../../domain/value-objects/analysis-chat-context.value-object";
 
 export class GetAnalysisChatContextQueryHandler implements QueryHandler<
   GetAnalysisChatContextQuery,

@@ -1,3 +1,4 @@
+import type { ProcessQuestionReadModel, ProcessQuestionRelatedCVPrimitives, ProcessQuestionRelatedAnalysisPrimitives } from "../../domain/value-objects/process-question-read-model.value-object";
 import type { Analysis, CVRecord } from "@/lib/analysis-types";
 import {
   Timestamp,
@@ -6,7 +7,6 @@ import {
   type EventBus,
 } from "@/modules/shared";
 import type {
-  ProcessQuestionReadModel,
   ProcessQuestionRepository,
 } from "../../domain/repositories/process-question.repository";
 import type { InterviewQuestionAIServiceFactory } from "../../domain/repositories/interview-question-ai.service";

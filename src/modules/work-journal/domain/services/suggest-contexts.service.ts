@@ -1,5 +1,5 @@
 import type { ContextType } from "../entities/journal-context.entity";
-import type { CVSummaryForSuggestions } from "../repositories/cv-data.repository";
+import type { CVSummaryForSuggestions } from "../value-objects/cv-summary-for-suggestions.value-object";
 import { WorkJournalContextSuggestion } from "../value-objects/context-suggestion.value-object";
 
 const contextKey = (type: ContextType, name: string) =>

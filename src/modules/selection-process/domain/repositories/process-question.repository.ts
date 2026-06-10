@@ -1,36 +1,7 @@
 import type { UserId } from "@/modules/shared";
 import type { ProcessQuestion } from "../entities/process-question.entity";
 import type { ProcessQuestionId } from "../value-objects/process-question-id.value-object";
-
-export interface ProcessQuestionRelatedCV {
-  id: string;
-  name: string;
-  filename: string | null;
-  type: "uploaded" | "template";
-}
-
-export interface ProcessQuestionRelatedAnalysis {
-  id: string;
-  cv_id: string | null;
-  title: string;
-  filename: string;
-  analysis_mode: "general" | "job_match";
-  job_url: string | null;
-  offer_status:
-    | "interesting"
-    | "applied"
-    | "interview"
-    | "offer"
-    | "rejected"
-    | "discarded"
-    | null;
-}
-
-export interface ProcessQuestionReadModel {
-  question: ProcessQuestion;
-  cv: ProcessQuestionRelatedCV | null;
-  analysis: ProcessQuestionRelatedAnalysis | null;
-}
+import type { ProcessQuestionReadModel } from "../value-objects/process-question-read-model.value-object";
 
 export interface ProcessQuestionSearchCriteria {
   userId: UserId;

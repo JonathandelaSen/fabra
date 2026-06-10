@@ -1,10 +1,12 @@
 import { suggestActivityContextsFromCVs } from "./suggest-activity-contexts.service";
 import { describe, expect, it } from "vitest";
 
+import { CVSummaryForActivityContextSuggestions } from "../value-objects/cv-summary-for-activity-context-suggestions.value-object";
+
 describe("suggestActivityContextsFromCVs", () => {
   it("suggests employers and projects from CV profiles", () => {
     const suggestions = suggestActivityContextsFromCVs([
-      {
+      CVSummaryForActivityContextSuggestions.fromPrimitives({
         type: "uploaded",
         profile: {
           personalInfo: {},
@@ -19,7 +21,7 @@ describe("suggestActivityContextsFromCVs", () => {
           publications: [],
           volunteering: [],
         },
-      },
+      }),
     ]);
 
     expect(suggestions.map((suggestion) => suggestion.toPrimitives())).toEqual([

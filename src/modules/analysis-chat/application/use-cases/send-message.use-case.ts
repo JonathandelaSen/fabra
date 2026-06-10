@@ -10,10 +10,8 @@ import { ConversationNotFoundError } from "../../domain/errors/conversation-not-
 import { ChatMessage } from "../../domain/entities/chat-message.entity";
 import type { ChatMessageRepository } from "../../domain/repositories/chat-message.repository";
 import type { ConversationRepository } from "../../domain/repositories/conversation.repository";
-import type {
-  AnalysisChatAIServiceFactory,
-  AnalysisChatContext,
-} from "../../domain/repositories/analysis-chat-ai-service.repository";
+import type { AnalysisChatAIServiceFactory } from "../../domain/repositories/analysis-chat-ai-service.repository";
+import type { AnalysisChatContext } from "../../domain/value-objects/analysis-chat-context.value-object";
 import { AnalysisChatContent } from "../../domain/value-objects/analysis-chat-content.value-object";
 import { AnalysisChatConversationId } from "../../domain/value-objects/analysis-chat-conversation-id.value-object";
 import { AnalysisChatMessageId } from "../../domain/value-objects/analysis-chat-message-id.value-object";

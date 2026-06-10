@@ -6,7 +6,7 @@ import { AnalysisContextNotFoundError } from "../../domain/errors/analysis-conte
 import { ConversationNotFoundError } from "../../domain/errors/conversation-not-found.error";
 import type { ChatMessageRepository } from "../../domain/repositories/chat-message.repository";
 import type { ConversationRepository } from "../../domain/repositories/conversation.repository";
-import type { AnalysisChatContext } from "../../domain/repositories/analysis-chat-ai-service.repository";
+import type { AnalysisChatContext } from "../../domain/value-objects/analysis-chat-context.value-object";
 import { AnalysisChatConversationId } from "../../domain/value-objects/analysis-chat-conversation-id.value-object";
 import { GetAnalysisChatContextQuery } from "../queries/get-analysis-chat-context.query";
 import { buildOfferChatCopyPastePrompt } from "../services/offer-chat-copy-paste-prompts";

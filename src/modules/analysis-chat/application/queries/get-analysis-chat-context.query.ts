@@ -1,5 +1,5 @@
 import type { Query } from "@/modules/shared";
-import type { AnalysisChatContext } from "../../domain/repositories/analysis-chat-ai-service.repository";
+import type { AnalysisChatContext } from "../../domain/value-objects/analysis-chat-context.value-object";
 
 export interface GetAnalysisChatContextInput {
   analysisId: string;

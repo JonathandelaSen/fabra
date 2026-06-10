@@ -1,8 +1,6 @@
+import type { ProcessQuestionReadModel, ProcessQuestionRelatedCVPrimitives, ProcessQuestionRelatedAnalysisPrimitives } from "../../domain/value-objects/process-question-read-model.value-object";
 import type {
-  ProcessQuestionReadModel,
-  ProcessQuestionRelatedAnalysis,
-  ProcessQuestionRelatedCV,
-} from "../../domain/repositories/process-question.repository";
+  } from "../../domain/repositories/process-question.repository";
 
 export interface ProcessQuestionResponse {
   id: string;
@@ -16,8 +14,8 @@ export interface ProcessQuestionResponse {
   ai_generated_at: string | null;
   created_at: string;
   updated_at: string;
-  cv?: ProcessQuestionRelatedCV | null;
-  analysis?: ProcessQuestionRelatedAnalysis | null;
+  cv?: ProcessQuestionRelatedCVPrimitives | null;
+  analysis?: ProcessQuestionRelatedAnalysisPrimitives | null;
 }
 
 export function presentProcessQuestion(

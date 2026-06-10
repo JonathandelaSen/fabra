@@ -1,9 +1,7 @@
 import { BoundSupabaseRepository } from "@/modules/shared";
 import { normalizeStandardCVProfile } from "@/lib/cv-profile";
-import type {
-  CVDataRepository,
-  CVSummaryForSuggestions,
-} from "../../domain/repositories/cv-data.repository";
+import type { CVDataRepository } from "../../domain/repositories/cv-data.repository";
+import { CVSummaryForSuggestions } from "../../domain/value-objects/cv-summary-for-suggestions.value-object";
 
 export class SupabaseCVDataRepository
   extends BoundSupabaseRepository
@@ -17,7 +15,7 @@ export class SupabaseCVDataRepository
       .order("created_at", { ascending: false });
 
     if (error) throw error;
-    return (data ?? []).map((row) => ({
+    return (data ?? []).map((row) => CVSummaryForSuggestions.fromPrimitives({
       name: row.name as string,
       filename: row.filename as string | null,
       type: row.type as string,

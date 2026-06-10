@@ -1,8 +1,8 @@
+import { ProcessQuestionReadModel, type ProcessQuestionRelatedCVPrimitives, type ProcessQuestionRelatedAnalysisPrimitives } from "../../domain/value-objects/process-question-read-model.value-object";
 import { describe, expect, it, vi } from "vitest";
 
 import { ProcessQuestion } from "../../domain/entities/process-question.entity";
 import type {
-  ProcessQuestionReadModel,
   ProcessQuestionRepository,
 } from "../../domain/repositories/process-question.repository";
 
@@ -29,10 +29,12 @@ export function processQuestion(
   });
 }
 
+import type { ProcessQuestionReadModelPrimitives } from "../../domain/value-objects/process-question-read-model.value-object";
+
 export function readModel(
-  overrides: Partial<ProcessQuestionReadModel> = {}
+  overrides: Partial<ProcessQuestionReadModelPrimitives> = {}
 ): ProcessQuestionReadModel {
-  return {
+  return ProcessQuestionReadModel.fromPrimitives({
     question: processQuestion(),
     cv: { id: "cv-1", name: "CV", filename: "cv.pdf", type: "uploaded" },
     analysis: {
@@ -45,7 +47,7 @@ export function readModel(
       offer_status: "interesting",
     },
     ...overrides,
-  };
+  });
 }
 
 export function processQuestionRepo(

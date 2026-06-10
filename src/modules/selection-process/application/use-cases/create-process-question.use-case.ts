@@ -1,7 +1,7 @@
+import type { ProcessQuestionReadModel, ProcessQuestionRelatedCVPrimitives, ProcessQuestionRelatedAnalysisPrimitives } from "../../domain/value-objects/process-question-read-model.value-object";
 import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 import { ProcessQuestion } from "../../domain/entities/process-question.entity";
 import type {
-  ProcessQuestionReadModel,
   ProcessQuestionRepository,
 } from "../../domain/repositories/process-question.repository";
 import { JobOpportunityId } from "../../domain/value-objects/job-opportunity-id.value-object";

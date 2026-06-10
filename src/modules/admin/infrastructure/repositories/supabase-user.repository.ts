@@ -3,8 +3,8 @@ import { User } from "../../domain/entities/user.entity";
 import type {
   UserRepository,
   UserSearchCriteria,
-  UserSearchResult,
 } from "../../domain/repositories/user.repository";
+import { UserSearchResult } from "../../domain/value-objects/user-search-result.value-object";
 
 const FETCH_PAGE_SIZE = 1000;
 const MAX_FETCH_PAGES = 10;
@@ -48,6 +48,6 @@ export class SupabaseUserRepository implements UserRepository {
         })
       );
 
-    return { users, total: filtered.length };
+    return UserSearchResult.fromPrimitives({ users, total: filtered.length });
   }
 }

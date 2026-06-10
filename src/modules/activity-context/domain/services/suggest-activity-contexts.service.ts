@@ -1,5 +1,5 @@
 import type { ActivityContextType } from "../entities/activity-context.entity";
-import type { CVSummaryForActivityContextSuggestions } from "../repositories/cv-data.repository";
+import type { CVSummaryForActivityContextSuggestions } from "../value-objects/cv-summary-for-activity-context-suggestions.value-object";
 import { ActivityContextSuggestion } from "../value-objects/activity-context-suggestion.value-object";
 
 export const activityContextSuggestionKey = (type: ActivityContextType, name: string) =>
