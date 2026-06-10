@@ -1,4 +1,4 @@
-import { InMemoryQueryBus } from "@/modules/shared";
+import { InMemoryQueryBus, InMemoryEventBus } from "@/modules/shared";
 import {
   createActivityContextsModule,
 } from "@/modules/activity-context";
@@ -33,11 +33,12 @@ import { createSelectionProcessModule } from "@/modules/selection-process";
 import { createWorkJournalModule } from "@/modules/work-journal";
 import { telemetry } from "@/lib/telemetry";
 
+const eventBus = new InMemoryEventBus();
 const queryBus = new InMemoryQueryBus(telemetry);
 
-export const activityContextsModule = createActivityContextsModule(telemetry);
+export const activityContextsModule = createActivityContextsModule(telemetry, eventBus);
 export const adminModule = createAdminModule(telemetry);
-export const cvAnalysisModule = createCVAnalysisModule(telemetry);
+export const cvAnalysisModule = createCVAnalysisModule(telemetry, eventBus);
 export const cvLibraryModule = createCVLibraryModule(queryBus, telemetry);
 export const commitmentsModule = createCommitmentsModule(telemetry);
 export const feedbackNotesModule = createFeedbackNotesModule(telemetry);

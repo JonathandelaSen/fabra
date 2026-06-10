@@ -1,11 +1,11 @@
 export type { EventTracker, ProcessingEventInput } from "./domain/repositories/event-tracker.repository";
-export type { Query } from "./application/query-bus/query";
-export type { QueryBus } from "./application/query-bus/query-bus";
-export type { QueryHandler } from "./application/query-bus/query-handler";
-export { InMemoryQueryBus } from "./application/query-bus/in-memory-query-bus";
-export { UnregisteredQueryHandlerError } from "./application/query-bus/unregistered-query-handler.error";
+export type { Query } from "./domain/bus/query-bus/query";
+export type { QueryBus } from "./domain/bus/query-bus/query-bus";
+export type { QueryHandler } from "./domain/bus/query-bus/query-handler";
+export { InMemoryQueryBus } from "./infrastructure/bus/query-bus/in-memory-query-bus";
+export { UnregisteredQueryHandlerError } from "./domain/bus/query-bus/unregistered-query-handler.error";
 export { AggregateRoot } from "./domain/entities/aggregate-root";
-export type { DomainEvent } from "./domain/events/domain-event";
+export type { DomainEvent } from "./domain/bus/event-bus/domain-event";
 export { EntityId } from "./domain/value-objects/entity-id.value-object";
 export { IsoDate } from "./domain/value-objects/iso-date.value-object";
 export { OptionalIsoDate } from "./domain/value-objects/optional-iso-date.value-object";
@@ -40,3 +40,5 @@ export type {
 export { NoOpTelemetry } from "./infrastructure/telemetry/no-op-telemetry";
 export { SentryTelemetry } from "./infrastructure/telemetry/sentry-telemetry";
 export { instrumentUseCases } from "./infrastructure/telemetry/instrument-use-cases";
+export type { EventBus } from "./domain/bus/event-bus/event-bus";
+export { InMemoryEventBus } from "./infrastructure/bus/event-bus/in-memory-event-bus";

@@ -60,10 +60,12 @@ describe("ScoreCVAnalysisUseCase", () => {
       delete: vi.fn(),
     } satisfies CVAnalysisRepository;
     const factory = makeMockAIServiceFactory();
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
 
     const result = await new ScoreCVAnalysisUseCase({
       repo,
       aiServiceFactory: factory,
+      eventBus: eventBus as never,
     }).execute({
       id: "analysis-1",
       userId: "user-1",
@@ -86,6 +88,8 @@ describe("ScoreCVAnalysisUseCase", () => {
       aiContext: { additionalContext: "I am a senior dev" },
     });
     expect(result?.toPrimitives().analyzedAt).toBeTruthy();
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    expect(eventBus.publish.mock.calls[0][0][0].eventName).toBe("cv_analysis_scored");
   });
 
   it("returns null when analysis not found", async () => {
@@ -95,10 +99,12 @@ describe("ScoreCVAnalysisUseCase", () => {
       save: vi.fn(),
       delete: vi.fn(),
     } satisfies CVAnalysisRepository;
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
 
     const result = await new ScoreCVAnalysisUseCase({
       repo,
       aiServiceFactory: makeMockAIServiceFactory(),
+      eventBus: eventBus as never,
     }).execute({
       id: "missing",
       userId: "user-1",
@@ -109,6 +115,7 @@ describe("ScoreCVAnalysisUseCase", () => {
 
     expect(result).toBeNull();
     expect(repo.save).not.toHaveBeenCalled();
+    expect(eventBus.publish).not.toHaveBeenCalled();
   });
 
   it("throws when no extracted text available", async () => {
@@ -129,11 +136,13 @@ describe("ScoreCVAnalysisUseCase", () => {
       save: vi.fn(),
       delete: vi.fn(),
     } satisfies CVAnalysisRepository;
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
 
     await expect(
       new ScoreCVAnalysisUseCase({
         repo,
         aiServiceFactory: makeMockAIServiceFactory(),
+        eventBus: eventBus as never,
       }).execute({
         id: "analysis-1",
         userId: "user-1",
@@ -142,5 +151,6 @@ describe("ScoreCVAnalysisUseCase", () => {
         model: "model",
       }),
     ).rejects.toThrow("No extracted text");
+    expect(eventBus.publish).not.toHaveBeenCalled();
   });
 });

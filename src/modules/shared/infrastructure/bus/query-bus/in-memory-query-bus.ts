@@ -1,8 +1,8 @@
-import type { Query } from "./query";
-import type { QueryBus } from "./query-bus";
-import type { QueryHandler } from "./query-handler";
-import { UnregisteredQueryHandlerError } from "./unregistered-query-handler.error";
-import type { Telemetry } from "../telemetry/telemetry";
+import type { Query } from "../../../domain/bus/query-bus/query";
+import type { QueryBus } from "../../../domain/bus/query-bus/query-bus";
+import type { QueryHandler } from "../../../domain/bus/query-bus/query-handler";
+import { UnregisteredQueryHandlerError } from "../../../domain/bus/query-bus/unregistered-query-handler.error";
+import type { Telemetry } from "../../../application/telemetry/telemetry";
 
 export class InMemoryQueryBus implements QueryBus {
   private readonly handlers = new Map<string, QueryHandler<Query<unknown, unknown>, unknown>>();

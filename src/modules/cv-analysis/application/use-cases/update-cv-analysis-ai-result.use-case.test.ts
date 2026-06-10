@@ -42,8 +42,9 @@ describe("UpdateCVAnalysisAIResultUseCase", () => {
       save: vi.fn(async (analysis) => analysis),
       delete: vi.fn(),
     } satisfies CVAnalysisRepository;
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
 
-    const result = await new UpdateCVAnalysisAIResultUseCase({ repo }).execute({
+    const result = await new UpdateCVAnalysisAIResultUseCase({ repo, eventBus: eventBus as never }).execute({
       id: "analysis-1",
       userId: "user-1",
       aiModel: "model",
@@ -60,6 +61,8 @@ describe("UpdateCVAnalysisAIResultUseCase", () => {
       keywords: ["ts"],
       improvements: ["metrics"],
     });
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    expect(eventBus.publish.mock.calls[0][0][0].eventName).toBe("cv_analysis_scored");
   });
 
   it("returns null when the analysis does not exist", async () => {
@@ -69,9 +72,10 @@ describe("UpdateCVAnalysisAIResultUseCase", () => {
       save: vi.fn(),
       delete: vi.fn(),
     } satisfies CVAnalysisRepository;
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
 
     await expect(
-      new UpdateCVAnalysisAIResultUseCase({ repo }).execute({
+      new UpdateCVAnalysisAIResultUseCase({ repo, eventBus: eventBus as never }).execute({
         id: "missing",
         userId: "user-1",
         aiModel: "model",
@@ -83,5 +87,6 @@ describe("UpdateCVAnalysisAIResultUseCase", () => {
       }),
     ).resolves.toBeNull();
     expect(repo.save).not.toHaveBeenCalled();
+    expect(eventBus.publish).not.toHaveBeenCalled();
   });
 });

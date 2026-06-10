@@ -1,4 +1,4 @@
-import { UserId, type AIProvider } from "@/modules/shared";
+import { UserId, type AIProvider, type EventBus } from "@/modules/shared";
 import { CVAnalysis } from "../../domain/entities/cv-analysis.entity";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 import type { CVScoringAIServiceFactory } from "../../domain/repositories/cv-scoring-ai.service";
@@ -20,6 +20,7 @@ export class ScoreCVAnalysisUseCase {
     private readonly deps: {
       repo: CVAnalysisRepository;
       aiServiceFactory: CVScoringAIServiceFactory;
+      eventBus: EventBus;
     },
   ) {}
 
@@ -56,6 +57,11 @@ export class ScoreCVAnalysisUseCase {
       analyzedAt: now,
       updatedAt: now,
     });
-    return this.deps.repo.save(current);
+    await this.deps.repo.save(current);
+
+    const events = current.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
+    return current;
   }
 }

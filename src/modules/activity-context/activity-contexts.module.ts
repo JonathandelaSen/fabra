@@ -6,7 +6,7 @@ import { HandleActivityContextSuggestionUseCase } from "./application/use-cases/
 import { ListActivityContextSuggestionsUseCase } from "./application/use-cases/list-activity-context-suggestions.use-case";
 import { ListActivityContextsUseCase } from "./application/use-cases/list-activity-contexts.use-case";
 import { UpdateActivityContextUseCase } from "./application/use-cases/update-activity-context.use-case";
-import { instrumentUseCases, SupabaseEventTracker, type Telemetry } from "@/modules/shared";
+import { instrumentUseCases, SupabaseEventTracker, type Telemetry, type EventBus } from "@/modules/shared";
 import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
 import { SupabaseActivityContextRepository } from "./infrastructure/repositories/supabase-activity-context.repository";
 import { SupabaseCVDataRepository } from "./infrastructure/repositories/supabase-cv-data.repository";
@@ -15,16 +15,16 @@ const activityContextRepo = new SupabaseActivityContextRepository();
 const cvDataRepo = new SupabaseCVDataRepository();
 const tracker: EventTracker = new SupabaseEventTracker();
 
-function createUseCases() {
+function createUseCases(eventBus: EventBus) {
   return {
     listActivityContexts: new ListActivityContextsUseCase({ activityContextRepo }),
     listActivityContextSuggestions: new ListActivityContextSuggestionsUseCase({
       activityContextRepo,
       cvDataRepo,
     }),
-    createActivityContext: new CreateActivityContextUseCase({ activityContextRepo }),
-    updateActivityContext: new UpdateActivityContextUseCase({ activityContextRepo }),
-    deleteActivityContext: new DeleteActivityContextUseCase({ activityContextRepo }),
+    createActivityContext: new CreateActivityContextUseCase({ activityContextRepo, eventBus }),
+    updateActivityContext: new UpdateActivityContextUseCase({ activityContextRepo, eventBus }),
+    deleteActivityContext: new DeleteActivityContextUseCase({ activityContextRepo, eventBus }),
     countActivityContextRecords: new CountActivityContextRecordsUseCase({ activityContextRepo }),
     handleActivityContextSuggestion: new HandleActivityContextSuggestionUseCase({
       activityContextRepo,
@@ -37,8 +37,8 @@ export type ActivityContextsModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): ActivityContextsModule;
 };
 
-export function createActivityContextsModule(telemetry: Telemetry): ActivityContextsModule {
-  const useCases = instrumentUseCases("activity-context", createUseCases(), telemetry);
+export function createActivityContextsModule(telemetry: Telemetry, eventBus: EventBus): ActivityContextsModule {
+  const useCases = instrumentUseCases("activity-context", createUseCases(eventBus), telemetry);
 
   return {
     ...useCases,

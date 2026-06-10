@@ -1,4 +1,4 @@
-import { UserId } from "@/modules/shared";
+import { UserId, type EventBus } from "@/modules/shared";
 import { CVAnalysis } from "../../domain/entities/cv-analysis.entity";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 import { CVAnalysisId } from "../../domain/value-objects/cv-analysis-id.value-object";
@@ -15,7 +15,12 @@ export interface UpdateCVAnalysisAIResultInput {
 }
 
 export class UpdateCVAnalysisAIResultUseCase {
-  constructor(private readonly deps: { repo: CVAnalysisRepository }) {}
+  constructor(
+    private readonly deps: {
+      repo: CVAnalysisRepository;
+      eventBus: EventBus;
+    },
+  ) {}
 
   async execute(
     input: UpdateCVAnalysisAIResultInput,
@@ -36,6 +41,11 @@ export class UpdateCVAnalysisAIResultUseCase {
       analyzedAt: now,
       updatedAt: now,
     });
-    return this.deps.repo.save(current);
+    await this.deps.repo.save(current);
+
+    const events = current.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
+    return current;
   }
 }

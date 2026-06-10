@@ -1,4 +1,4 @@
-import { EntityId, UserId } from "@/modules/shared";
+import { EntityId, UserId, type EventBus } from "@/modules/shared";
 import { ActivityContextNotFoundError } from "../../domain/errors/activity-context-not-found.error";
 import type { ActivityContext, ActivityContextStatus, ActivityContextType } from "../../domain/entities/activity-context.entity";
 import type { ActivityContextRepository } from "../../domain/repositories/activity-context.repository";
@@ -12,7 +12,12 @@ export interface UpdateActivityContextInput {
 }
 
 export class UpdateActivityContextUseCase {
-  constructor(private readonly deps: { activityContextRepo: ActivityContextRepository }) {}
+  constructor(
+    private readonly deps: {
+      activityContextRepo: ActivityContextRepository;
+      eventBus: EventBus;
+    },
+  ) {}
 
   async execute(input: UpdateActivityContextInput): Promise<ActivityContext> {
     const id = EntityId.fromPrimitives(input.id);
@@ -25,6 +30,11 @@ export class UpdateActivityContextUseCase {
       status: input.status,
       updatedAt: new Date().toISOString(),
     });
-    return this.deps.activityContextRepo.save(context);
+    await this.deps.activityContextRepo.save(context);
+
+    const events = context.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
+    return context;
   }
 }

@@ -1,4 +1,4 @@
-import { Timestamp, UserId } from "@/modules/shared";
+import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 import {
   CVAnalysis,
   type CVAnalysisExtractedTextPrimitives,
@@ -21,32 +21,42 @@ export interface CreateCVAnalysisInput {
 }
 
 export class CreateCVAnalysisUseCase {
-  constructor(private readonly deps: { repo: CVAnalysisRepository }) {}
+  constructor(
+    private readonly deps: {
+      repo: CVAnalysisRepository;
+      eventBus: EventBus;
+    },
+  ) {}
 
   async execute(input: CreateCVAnalysisInput): Promise<CVAnalysis> {
     const now = new Date().toISOString();
-    return this.deps.repo.save(
-      CVAnalysis.create({
-        id: CVAnalysisId.fromPrimitives(input.id),
-        userId: UserId.fromPrimitives(input.userId),
-        cvDocumentId: input.cvDocumentId,
-        cvStructuredProfileId: input.cvStructuredProfileId ?? null,
-        title: input.title,
-        filename: input.filename,
-        fileSize: input.fileSize,
-        pdfStoragePath: input.pdfStoragePath,
-        extractedText: input.extractedText,
-        aiModel: input.aiModel,
-        score: null,
-        feedback: null,
-        keywords: [],
-        improvements: [],
-        aiContext: input.aiContext,
-        analyzedAt: null,
-        legacyAnalysisId: null,
-        createdAt: Timestamp.fromPrimitives(now),
-        updatedAt: Timestamp.fromPrimitives(now),
-      }),
-    );
+    const analysis = CVAnalysis.create({
+      id: CVAnalysisId.fromPrimitives(input.id),
+      userId: UserId.fromPrimitives(input.userId),
+      cvDocumentId: input.cvDocumentId,
+      cvStructuredProfileId: input.cvStructuredProfileId ?? null,
+      title: input.title,
+      filename: input.filename,
+      fileSize: input.fileSize,
+      pdfStoragePath: input.pdfStoragePath,
+      extractedText: input.extractedText,
+      aiModel: input.aiModel,
+      score: null,
+      feedback: null,
+      keywords: [],
+      improvements: [],
+      aiContext: input.aiContext,
+      analyzedAt: null,
+      legacyAnalysisId: null,
+      createdAt: Timestamp.fromPrimitives(now),
+      updatedAt: Timestamp.fromPrimitives(now),
+    });
+
+    await this.deps.repo.save(analysis);
+
+    const events = analysis.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
+    return analysis;
   }
 }

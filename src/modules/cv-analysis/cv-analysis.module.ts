@@ -1,7 +1,7 @@
 import { OllamaCVScoringAIServiceFactory } from "./infrastructure/services/ollama-cv-scoring-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
-import { instrumentUseCases, SupabaseEventTracker, type Telemetry } from "@/modules/shared";
+import { instrumentUseCases, SupabaseEventTracker, type Telemetry, type EventBus } from "@/modules/shared";
 import { ApplyCVScoreCopyPasteUseCase } from "./application/use-cases/apply-cv-score-copy-paste.use-case";
 import { CreateCVAnalysisUseCase } from "./application/use-cases/create-cv-analysis.use-case";
 import { DeleteCVAnalysisUseCase } from "./application/use-cases/delete-cv-analysis.use-case";
@@ -28,15 +28,15 @@ const aiServiceFactory = new ProviderCVScoringAIServiceFactory({
   ollamaFactory: new OllamaCVScoringAIServiceFactory(),
 });
 
-function createUseCases() {
+function createUseCases(eventBus: EventBus) {
   return {
-    createCVAnalysis: new CreateCVAnalysisUseCase({ repo }),
+    createCVAnalysis: new CreateCVAnalysisUseCase({ repo, eventBus }),
     listCVAnalyses: new ListCVAnalysesUseCase({ repo }),
     listCVAnalysisUsageByDocument: new ListCVAnalysisUsageByDocumentUseCase({
       repo,
     }),
     getCVAnalysisById: new GetCVAnalysisByIdUseCase({ repo }),
-    scoreCVAnalysis: new ScoreCVAnalysisUseCase({ repo, aiServiceFactory }),
+    scoreCVAnalysis: new ScoreCVAnalysisUseCase({ repo, aiServiceFactory, eventBus }),
     prepareCVScoreCopyPaste: new PrepareCVScoreCopyPasteUseCase({
       repo,
       tracker,
@@ -50,7 +50,7 @@ function createUseCases() {
       repo,
       tracker,
     }),
-    updateCVAnalysisAIResult: new UpdateCVAnalysisAIResultUseCase({ repo }),
+    updateCVAnalysisAIResult: new UpdateCVAnalysisAIResultUseCase({ repo, eventBus }),
     deleteCVAnalysis: new DeleteCVAnalysisUseCase({ repo }),
   };
 }
@@ -59,8 +59,8 @@ export type CVAnalysisModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): CVAnalysisModule;
 };
 
-export function createCVAnalysisModule(telemetry: Telemetry): CVAnalysisModule {
-  const useCases = instrumentUseCases("cv-analysis", createUseCases(), telemetry);
+export function createCVAnalysisModule(telemetry: Telemetry, eventBus: EventBus): CVAnalysisModule {
+  const useCases = instrumentUseCases("cv-analysis", createUseCases(eventBus), telemetry);
   return {
     ...useCases,
     bindRequest(client: SupabaseClient) {

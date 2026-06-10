@@ -88,9 +88,10 @@ function isQueryHandlerSource(relativePath) {
   );
 }
 
-function isSharedQueryBusSource(relativePath) {
+function isSharedBusSource(relativePath) {
   return (
-    relativePath.startsWith("src/modules/shared/application/query-bus/") &&
+    (relativePath.startsWith("src/modules/shared/domain/bus/") ||
+     relativePath.startsWith("src/modules/shared/infrastructure/bus/")) &&
     relativePath.endsWith(".ts") &&
     !relativePath.endsWith(".test.ts")
   );
@@ -119,7 +120,7 @@ export async function findMissingDddTests({ rootDir = repoRoot } = {}) {
   const domainEntities = files.filter(isDomainEntitySource).sort();
   const valueObjects = files.filter(isValueObjectSource).sort();
   const queryHandlers = files.filter(isQueryHandlerSource).sort();
-  const queryBusSources = files.filter(isSharedQueryBusSource).sort();
+  const busSources = files.filter(isSharedBusSource).sort();
 
   return {
     missingUseCaseTests: await missingTestsFor(useCases, rootDir),
@@ -127,7 +128,7 @@ export async function findMissingDddTests({ rootDir = repoRoot } = {}) {
     missingDomainEntityTests: await missingTestsFor(domainEntities, rootDir),
     missingValueObjectTests: await missingTestsFor(valueObjects, rootDir),
     missingQueryHandlerTests: await missingTestsFor(queryHandlers, rootDir),
-    missingQueryBusTests: await missingTestsFor(queryBusSources, rootDir),
+    missingQueryBusTests: await missingTestsFor(busSources, rootDir),
   };
 }
 
@@ -192,7 +193,7 @@ export function formatMissingDddTests(result) {
   if (result.missingQueryBusTests.length > 0) {
     sections.push(
       [
-        "Shared query bus files without colocated tests:",
+        "Shared bus files without colocated tests:",
         ...result.missingQueryBusTests.map(
           (item) => `- ${item.source} -> expected ${item.expectedTest}`
         ),

@@ -112,8 +112,8 @@ test("DDD test coverage check requires query handler and query bus tests", async
     {
       "src/modules/sales/application/queries/get-sale.query.ts": "export {};",
       "src/modules/sales/application/queries/get-sale.query-handler.ts": "export {};",
-      "src/modules/shared/application/query-bus/in-memory-query-bus.ts": "export {};",
-      "src/modules/shared/application/query-bus/query.ts": "export {};",
+      "src/modules/shared/infrastructure/bus/query-bus/in-memory-query-bus.ts": "export {};",
+      "src/modules/shared/domain/bus/query-bus/query.ts": "export {};",
     },
     async (root) => {
       const result = await findMissingDddTests({ rootDir: root });
@@ -125,8 +125,8 @@ test("DDD test coverage check requires query handler and query bus tests", async
       assert.deepEqual(
         result.missingQueryBusTests.map((item) => item.expectedTest),
         [
-          "src/modules/shared/application/query-bus/in-memory-query-bus.test.ts",
-          "src/modules/shared/application/query-bus/query.test.ts",
+          "src/modules/shared/infrastructure/bus/query-bus/in-memory-query-bus.test.ts",
+          "src/modules/shared/domain/bus/query-bus/query.test.ts",
         ]
       );
       assert.match(formatMissingDddTests(result), /get-sale\.query-handler\.test\.ts/);

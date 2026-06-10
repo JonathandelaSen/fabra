@@ -5,19 +5,22 @@ import { DeleteActivityContextUseCase } from "./delete-activity-context.use-case
 
 describe("DeleteActivityContextUseCase", () => {
   it("reassigns records to General before deleting", async () => {
-    const context = ActivityContext.create({
-      id: EntityId.fromPrimitives("ctx-1"),
-      userId: UserId.fromPrimitives("user-1"),
+    const context = ActivityContext.fromPrimitives({
+      id: "ctx-1",
+      userId: "user-1",
       type: "project",
       name: "Acme",
+      status: "active",
+      isDefault: false,
       createdAt: "2026-05-15T00:00:00.000Z",
       updatedAt: "2026-05-15T00:00:00.000Z",
     });
-    const general = ActivityContext.create({
-      id: EntityId.fromPrimitives("ctx-general"),
-      userId: UserId.fromPrimitives("user-1"),
+    const general = ActivityContext.fromPrimitives({
+      id: "ctx-general",
+      userId: "user-1",
       type: "other",
       name: "General",
+      status: "active",
       isDefault: true,
       createdAt: "2026-05-15T00:00:00.000Z",
       updatedAt: "2026-05-15T00:00:00.000Z",
@@ -28,12 +31,19 @@ describe("DeleteActivityContextUseCase", () => {
       reassignRecordsToDefault: vi.fn(async () => 2),
       delete: vi.fn(async () => undefined),
     };
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
 
     await expect(
-      new DeleteActivityContextUseCase({ activityContextRepo: repo as never }).execute({
+      new DeleteActivityContextUseCase({
+        activityContextRepo: repo as never,
+        eventBus: eventBus as never,
+      }).execute({
         id: "ctx-1",
         userId: "user-1",
       }),
     ).resolves.toEqual({ reassignedRecords: 2 });
+
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    expect(eventBus.publish.mock.calls[0][0][0].eventName).toBe("activity_context_deleted");
   });
 });

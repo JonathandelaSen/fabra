@@ -11,7 +11,9 @@ describe("CreateCVAnalysisUseCase", () => {
       delete: vi.fn(),
     } satisfies CVAnalysisRepository;
 
-    const result = await new CreateCVAnalysisUseCase({ repo }).execute({
+    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
+
+    const result = await new CreateCVAnalysisUseCase({ repo, eventBus: eventBus as never }).execute({
       id: "analysis-1",
       userId: "user-1",
       cvDocumentId: "cv-1",
@@ -32,6 +34,8 @@ describe("CreateCVAnalysisUseCase", () => {
     });
 
     expect(repo.save).toHaveBeenCalledOnce();
+    expect(eventBus.publish).toHaveBeenCalledOnce();
+    expect(eventBus.publish.mock.calls[0][0][0].eventName).toBe("cv_analysis_created");
     expect(result.toPrimitives()).toMatchObject({
       id: "analysis-1",
       userId: "user-1",

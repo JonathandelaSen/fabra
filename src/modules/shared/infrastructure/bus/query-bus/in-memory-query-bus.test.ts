@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { InMemoryQueryBus } from "./in-memory-query-bus";
-import { UnregisteredQueryHandlerError } from "./unregistered-query-handler.error";
-import type { Query } from "./query";
-import type { QueryHandler } from "./query-handler";
+import { UnregisteredQueryHandlerError } from "../../../domain/bus/query-bus/unregistered-query-handler.error";
+import type { Query } from "../../../domain/bus/query-bus/query";
+import type { QueryHandler } from "../../../domain/bus/query-bus/query-handler";
 import type {
   Telemetry,
   TelemetrySpanOptions,
-} from "../telemetry/telemetry";
+} from "../../../application/telemetry/telemetry";
 
 class FakeTelemetry implements Telemetry {
   readonly traces: TelemetrySpanOptions[] = [];
