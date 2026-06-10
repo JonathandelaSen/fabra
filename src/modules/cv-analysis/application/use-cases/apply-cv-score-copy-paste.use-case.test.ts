@@ -1,7 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   copyPasteRepo,
-  copyPasteTracker,
+  eventBus,
   validCopyPasteResult,
 } from "./cv-score-copy-paste-test-helpers";
 import { ApplyCVScoreCopyPasteUseCase } from "./apply-cv-score-copy-paste.use-case";
@@ -9,11 +9,11 @@ import { ApplyCVScoreCopyPasteUseCase } from "./apply-cv-score-copy-paste.use-ca
 describe("ApplyCVScoreCopyPasteUseCase", () => {
   it("applies a valid parsed result with external chat provenance", async () => {
     const repo = copyPasteRepo();
-    const tracker = copyPasteTracker();
+    const bus = eventBus();
 
     const result = await new ApplyCVScoreCopyPasteUseCase({
       repo,
-      tracker,
+      eventBus: bus,
     }).execute({
       id: "analysis-1",
       userId: "user-1",
@@ -27,23 +27,18 @@ describe("ApplyCVScoreCopyPasteUseCase", () => {
       keywords: ["TypeScript", "React"],
       improvements: ["Añade métricas"],
     });
-    expect(tracker.record).toHaveBeenCalledWith(
+    expect(bus.publish).toHaveBeenCalledWith([
       expect.objectContaining({
-        stage: "cv_analysis_copy_paste_result_applied",
-        metadata: expect.objectContaining({
-          assistanceMode: "copy_paste",
-          workflowId: "cv_analysis.score",
-          model: "external-chat",
-        }),
+        eventName: "cv_analysis_scored",
       }),
-    );
+    ]);
   });
 
   it("rejects invalid parsed results", async () => {
     await expect(
       new ApplyCVScoreCopyPasteUseCase({
         repo: copyPasteRepo(),
-        tracker: copyPasteTracker(),
+        eventBus: eventBus(),
       }).execute({
         id: "analysis-1",
         userId: "user-1",
@@ -58,7 +53,7 @@ describe("ApplyCVScoreCopyPasteUseCase", () => {
   it("returns null for missing analysis", async () => {
     const result = await new ApplyCVScoreCopyPasteUseCase({
       repo: copyPasteRepo(null),
-      tracker: copyPasteTracker(),
+      eventBus: eventBus(),
     }).execute({
       id: "missing",
       userId: "user-1",

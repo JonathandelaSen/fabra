@@ -1,5 +1,3 @@
-import { createRequestId } from "@/lib/observability";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
 import { ImpersonationTargetNotFoundError } from "../../domain/errors/impersonation-target-not-found.error";
 import { SelfImpersonationError } from "../../domain/errors/self-impersonation.error";
 import type { ImpersonationSession } from "../../domain/value-objects/impersonation-session.value-object";
@@ -15,7 +13,6 @@ export class StartUserImpersonationUseCase {
   constructor(
     private readonly deps: {
       impersonationSessionService: ImpersonationSessionService;
-      tracker: EventTracker;
     }
   ) {}
 
@@ -30,20 +27,6 @@ export class StartUserImpersonationUseCase {
     if (!session) {
       throw new ImpersonationTargetNotFoundError(input.targetUserId);
     }
-
-    await this.deps.tracker.record({
-      userId: input.actorUserId,
-      requestId: createRequestId("imp"),
-      stage: "admin_impersonation_started",
-      status: "success",
-      source: "admin",
-      metadata: {
-        admin_user_id: input.actorUserId,
-        admin_email: input.actorEmail,
-        target_user_id: session.targetUserId,
-        target_email: session.targetEmail,
-      },
-    });
 
     return session;
   }

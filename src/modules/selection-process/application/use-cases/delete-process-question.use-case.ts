@@ -1,36 +1,32 @@
-import { UserId, type EventTracker } from "@/modules/shared";
-import { createRequestId } from "@/lib/observability";
+import { UserId, type EventBus } from "@/modules/shared";
 import type { ProcessQuestionRepository } from "../../domain/repositories/process-question.repository";
 import { ProcessQuestionId } from "../../domain/value-objects/process-question-id.value-object";
 
 export interface DeleteProcessQuestionInput {
   id: string;
   userId: string;
-  requestId?: string;
 }
 
 export class DeleteProcessQuestionUseCase {
   constructor(
     private readonly deps: {
       questionRepo: ProcessQuestionRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
   async execute(input: DeleteProcessQuestionInput): Promise<boolean> {
-    const deleted = await this.deps.questionRepo.delete(
-      ProcessQuestionId.fromPrimitives(input.id),
-      UserId.fromPrimitives(input.userId)
-    );
+    const questionId = ProcessQuestionId.fromPrimitives(input.id);
+    const userId = UserId.fromPrimitives(input.userId);
+    const existing = await this.deps.questionRepo.findById(questionId, userId);
+    if (!existing) return false;
+
+    existing.question.delete();
+    const deleted = await this.deps.questionRepo.delete(questionId, userId);
+
     if (deleted) {
-      await this.deps.tracker.record({
-        userId: input.userId,
-        requestId: input.requestId ?? createRequestId("process-question"),
-        stage: "selection_process_question_deleted",
-        status: "success",
-        source: "selection_process",
-        metadata: { questionId: input.id },
-      });
+      const events = existing.question.pullDomainEvents();
+      await this.deps.eventBus.publish(events);
     }
     return deleted;
   }

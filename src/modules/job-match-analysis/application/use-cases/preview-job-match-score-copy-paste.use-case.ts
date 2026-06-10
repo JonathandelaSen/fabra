@@ -1,13 +1,10 @@
-import { createRequestId } from "@/lib/observability";
-import { ASSISTANCE_MODE } from "@/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
+import { UserId } from "@/modules/shared";
 import { extractCopyPasteJson } from "@/modules/shared/application/assisted-workflows/copy-paste-json-parser";
 import { validateCopyPasteEnvelope } from "@/modules/shared/application/assisted-workflows/copy-paste-json-envelope";
-import { UserId, type EventTracker } from "@/modules/shared";
 import type { JobMatchScoringAIResult } from "../../domain/repositories/job-match-scoring-ai.service";
 import type { JobMatchAnalysisRepository } from "../../domain/repositories/job-match-analysis.repository";
 import { JobMatchAnalysisId } from "../../domain/value-objects/job-match-analysis-id.value-object";
 import {
-  JOB_MATCH_SCORE_COPY_PASTE_MODEL,
   JOB_MATCH_SCORE_COPY_PASTE_SCHEMA_VERSION,
   JOB_MATCH_SCORE_COPY_PASTE_WORKFLOW_ID,
   validateJobMatchScoreCopyPasteResult,
@@ -38,7 +35,6 @@ export class PreviewJobMatchScoreCopyPasteUseCase {
   constructor(
     private readonly deps: {
       repo: JobMatchAnalysisRepository;
-      tracker: EventTracker;
     },
   ) {}
 
@@ -58,21 +54,6 @@ export class PreviewJobMatchScoreCopyPasteUseCase {
     const parsedResult = validateJobMatchScoreCopyPasteResult(result);
     const primitives = analysis.toPrimitives();
     const willReplaceExistingResult = primitives.score !== null;
-
-    await this.deps.tracker.record({
-      userId: input.userId,
-      analysisId: input.id,
-      requestId: createRequestId("job_match_copy_paste_preview"),
-      stage: "job_match_copy_paste_response_previewed",
-      status: "success",
-      source: "job_match_analysis",
-      metadata: {
-        assistanceMode: ASSISTANCE_MODE.copyPaste,
-        workflowId: JOB_MATCH_SCORE_COPY_PASTE_WORKFLOW_ID,
-        schemaVersion: JOB_MATCH_SCORE_COPY_PASTE_SCHEMA_VERSION,
-        model: JOB_MATCH_SCORE_COPY_PASTE_MODEL,
-      },
-    });
 
     return {
       parsedResult,

@@ -12,7 +12,7 @@ import { GenerateFinalFeedbackUseCase } from "./generate-final-feedback.use-case
 describe("GenerateFinalFeedbackUseCase", () => {
   it("generates and stores final feedback from all entries", async () => {
     const user = await createTestUser("feedback-generate");
-    const { feedbackRepo, entryRepo, tracker } = makeFeedbackDeps();
+    const { feedbackRepo, entryRepo, eventBus } = makeFeedbackDeps();
     const context = await createDefaultContext(user.id);
     const feedback = await createFeedbackFixture(user.id, context.id, "Jon");
     await createEntryFixture(user.id, feedback.id, "First note");
@@ -25,7 +25,7 @@ describe("GenerateFinalFeedbackUseCase", () => {
       feedbackRepo,
       entryRepo,
       aiFactory: { create: vi.fn(() => aiService) },
-        tracker,
+      eventBus,
     }).execute(user.id, feedback.id, { provider: "mock", model: "mock-model" });
 
     expect(aiService.generateFinalFeedback).toHaveBeenCalledWith({
@@ -36,14 +36,20 @@ describe("GenerateFinalFeedbackUseCase", () => {
       ]),
     });
     expect(updated.toPrimitives().final_feedback).toBe("Generated feedback");
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({ stage: "feedback_final_feedback_generated" })
-    );
+
+    expect(eventBus.publish).toHaveBeenCalledTimes(1);
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("feedback_updated");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      feedbackId: feedback.id,
+      fields: ["final_feedback"],
+    });
   });
 
   it("requires at least one entry", async () => {
     const user = await createTestUser("feedback-generate-empty");
-    const { feedbackRepo, entryRepo, tracker } = makeFeedbackDeps();
+    const { feedbackRepo, entryRepo, eventBus } = makeFeedbackDeps();
     const context = await createDefaultContext(user.id);
     const feedback = await createFeedbackFixture(user.id, context.id);
 
@@ -52,7 +58,7 @@ describe("GenerateFinalFeedbackUseCase", () => {
         feedbackRepo,
         entryRepo,
         aiFactory: { create: vi.fn(() => ({ generateFinalFeedback: vi.fn() })) },
-        tracker,
+        eventBus,
       }).execute(user.id, feedback.id, { provider: "mock", model: "mock-model" })
     ).rejects.toBeInstanceOf(FeedbackEntriesRequiredError);
   });

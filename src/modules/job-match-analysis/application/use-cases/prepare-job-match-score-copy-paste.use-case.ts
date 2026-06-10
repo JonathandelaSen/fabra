@@ -1,10 +1,7 @@
-import { createRequestId } from "@/lib/observability";
-import { ASSISTANCE_MODE } from "@/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
-import { UserId, type EventTracker } from "@/modules/shared";
+import { UserId } from "@/modules/shared";
 import type { JobMatchAnalysisRepository } from "../../domain/repositories/job-match-analysis.repository";
 import { JobMatchAnalysisId } from "../../domain/value-objects/job-match-analysis-id.value-object";
 import {
-  JOB_MATCH_SCORE_COPY_PASTE_MODEL,
   JOB_MATCH_SCORE_COPY_PASTE_SCHEMA_VERSION,
   JOB_MATCH_SCORE_COPY_PASTE_WORKFLOW_ID,
 } from "../services/job-match-score-copy-paste-result.validator";
@@ -28,7 +25,6 @@ export class PrepareJobMatchScoreCopyPasteUseCase {
   constructor(
     private readonly deps: {
       repo: JobMatchAnalysisRepository;
-      tracker: EventTracker;
       buildPrompt: (input: {
         text: string;
         jobDescription: string;
@@ -58,21 +54,6 @@ export class PrepareJobMatchScoreCopyPasteUseCase {
       text,
       jobDescription: input.jobDescription,
       jobUrl: input.jobUrl,
-    });
-
-    await this.deps.tracker.record({
-      userId: input.userId,
-      analysisId: input.id,
-      requestId: createRequestId("job_match_copy_paste_prepare"),
-      stage: "job_match_copy_paste_prompt_prepared",
-      status: "success",
-      source: "job_match_analysis",
-      metadata: {
-        assistanceMode: ASSISTANCE_MODE.copyPaste,
-        workflowId: JOB_MATCH_SCORE_COPY_PASTE_WORKFLOW_ID,
-        schemaVersion: JOB_MATCH_SCORE_COPY_PASTE_SCHEMA_VERSION,
-        model: JOB_MATCH_SCORE_COPY_PASTE_MODEL,
-      },
     });
 
     return {

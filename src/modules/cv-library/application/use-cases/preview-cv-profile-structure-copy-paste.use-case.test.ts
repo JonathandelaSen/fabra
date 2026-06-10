@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { documentRepo, tracker } from "./cv-library-test-helpers.test";
+import { documentRepo } from "./cv-library-test-helpers.test";
 import {
   CV_PROFILE_COPY_PASTE_SCHEMA_VERSION,
   CV_PROFILE_COPY_PASTE_WORKFLOW_ID,
@@ -21,7 +21,6 @@ describe("PreviewCVProfileStructureCopyPasteUseCase", () => {
   it("previews a valid structured profile response", async () => {
     const result = await new PreviewCVProfileStructureCopyPasteUseCase({
       documentRepo: documentRepo(),
-      tracker: tracker(),
     }).execute({
       cvDocumentId: "cv-1",
       userId: "user-1",
@@ -40,7 +39,6 @@ describe("PreviewCVProfileStructureCopyPasteUseCase", () => {
     await expect(
       new PreviewCVProfileStructureCopyPasteUseCase({
         documentRepo: documentRepo(),
-        tracker: tracker(),
       }).execute({
         cvDocumentId: "cv-1",
         userId: "user-1",

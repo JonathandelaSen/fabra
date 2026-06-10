@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
   jobMatchRepo,
-  jobMatchTracker,
   makeJobMatchAnalysis,
   validJobMatchEnvelope,
 } from "./job-match-score-copy-paste-test-helpers";
@@ -11,7 +10,6 @@ describe("PreviewJobMatchScoreCopyPasteUseCase", () => {
   it("accepts a valid enveloped response and returns preview", async () => {
     const result = await new PreviewJobMatchScoreCopyPasteUseCase({
       repo: jobMatchRepo(),
-      tracker: jobMatchTracker(),
     }).execute({
       id: "analysis-1",
       userId: "user-1",
@@ -34,7 +32,6 @@ describe("PreviewJobMatchScoreCopyPasteUseCase", () => {
     const scored = makeJobMatchAnalysis({ score: 50 });
     const result = await new PreviewJobMatchScoreCopyPasteUseCase({
       repo: jobMatchRepo(scored),
-      tracker: jobMatchTracker(),
     }).execute({
       id: "analysis-1",
       userId: "user-1",
@@ -56,7 +53,6 @@ describe("PreviewJobMatchScoreCopyPasteUseCase", () => {
     await expect(
       new PreviewJobMatchScoreCopyPasteUseCase({
         repo: jobMatchRepo(),
-        tracker: jobMatchTracker(),
       }).execute({ id: "analysis-1", userId: "user-1", rawResponse: bad }),
     ).rejects.toThrow();
   });
@@ -70,7 +66,6 @@ describe("PreviewJobMatchScoreCopyPasteUseCase", () => {
     await expect(
       new PreviewJobMatchScoreCopyPasteUseCase({
         repo: jobMatchRepo(),
-        tracker: jobMatchTracker(),
       }).execute({ id: "analysis-1", userId: "user-1", rawResponse: bad }),
     ).rejects.toThrow("score must be a number from 0 to 100");
   });
@@ -78,7 +73,6 @@ describe("PreviewJobMatchScoreCopyPasteUseCase", () => {
   it("returns null for missing analysis", async () => {
     const result = await new PreviewJobMatchScoreCopyPasteUseCase({
       repo: jobMatchRepo(null),
-      tracker: jobMatchTracker(),
     }).execute({
       id: "missing",
       userId: "user-1",

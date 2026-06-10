@@ -24,16 +24,11 @@ const mockDocumentRepo = {
   delete: vi.fn(),
 };
 
-const mockTracker = {
-  record: vi.fn().mockResolvedValue(undefined),
-};
-
 const mockBuildPrompt = vi.fn().mockReturnValue("generated-prompt");
 
 function createUseCase() {
   return new PrepareCVEditorCopyPasteUseCase({
     documentRepo: mockDocumentRepo as never,
-    tracker: mockTracker,
     buildPrompt: mockBuildPrompt,
   });
 }
@@ -59,7 +54,6 @@ describe("PrepareCVEditorCopyPasteUseCase", () => {
         locale: "en",
       }),
     );
-    expect(mockTracker.record).toHaveBeenCalled();
   });
 
   it("returns null when CV not found", async () => {

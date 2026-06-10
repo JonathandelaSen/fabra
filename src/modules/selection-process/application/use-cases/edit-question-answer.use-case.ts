@@ -3,7 +3,7 @@ import {
   Timestamp,
   UserId,
   type AIProvider,
-  type EventTracker,
+  type EventBus,
 } from "@/modules/shared";
 import type {
   ProcessQuestionReadModel,
@@ -24,7 +24,6 @@ export interface EditQuestionAnswerInput {
   cv?: CVRecord | null;
   cvText?: string | null;
   analysis?: Analysis | null;
-  requestId: string;
 }
 
 export class EditQuestionAnswerUseCase {
@@ -32,7 +31,7 @@ export class EditQuestionAnswerUseCase {
     private readonly deps: {
       questionRepo: ProcessQuestionRepository;
       aiFactory: InterviewQuestionAIServiceFactory;
-      tracker: EventTracker;
+      eventBus: EventBus;
     },
   ) {}
 
@@ -72,21 +71,8 @@ export class EditQuestionAnswerUseCase {
 
     const saved = await this.deps.questionRepo.save(existing.question);
 
-    await this.deps.tracker.record({
-      userId: input.userId,
-      requestId: input.requestId,
-      stage: "selection_process_question_answer_edited",
-      status: "success",
-      source: "selection_process",
-      cvId: saved.question.toPrimitives().legacyCvId,
-      analysisId: saved.question.toPrimitives().sourceJobMatchAnalysisId,
-      textLength: answer.length,
-      metadata: {
-        questionId: saved.question.id,
-        model: input.model,
-        provider: input.provider,
-      },
-    });
+    const events = existing.question.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
 
     return saved;
   }

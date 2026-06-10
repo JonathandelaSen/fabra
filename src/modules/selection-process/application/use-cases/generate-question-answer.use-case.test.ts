@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { GenerateQuestionAnswerUseCase } from "./generate-question-answer.use-case";
 import {
   processQuestionRepo,
-  tracker,
+  eventBus,
 } from "./selection-process-test-helpers.test";
 import type { InterviewQuestionAIService } from "../../domain/repositories/interview-question-ai.service";
 
@@ -20,10 +20,11 @@ describe("GenerateQuestionAnswerUseCase", () => {
   it("generates an answer via AI and saves it", async () => {
     const ai = aiService();
     const repo = processQuestionRepo();
+    const bus = eventBus();
     const result = await new GenerateQuestionAnswerUseCase({
       questionRepo: repo,
       aiFactory: { create: vi.fn(() => ai) },
-      tracker: tracker(),
+      eventBus: bus,
     }).execute({
       id: "question-1",
       userId: "user-1",
@@ -31,7 +32,6 @@ describe("GenerateQuestionAnswerUseCase", () => {
       apiKey: "key",
       model: "gemini-test",
       context: "My context",
-      requestId: "req-1",
     });
 
     expect(ai.generateAnswer).toHaveBeenCalledOnce();
@@ -39,15 +39,25 @@ describe("GenerateQuestionAnswerUseCase", () => {
       answer: "Generated answer",
       aiModel: "gemini-test",
     });
+
+    expect(bus.publish).toHaveBeenCalledTimes(1);
+    const publishedEvents = bus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("process_question_updated");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      questionId: result?.question.id,
+      fields: ["context", "answer", "aiModel", "aiGeneratedAt"],
+    });
   });
 
   it("returns null when question does not exist", async () => {
     const repo = processQuestionRepo({ findById: async () => null });
     const ai = aiService();
+    const bus = eventBus();
     const result = await new GenerateQuestionAnswerUseCase({
       questionRepo: repo,
       aiFactory: { create: vi.fn(() => ai) },
-      tracker: tracker(),
+      eventBus: bus,
     }).execute({
       id: "missing",
       userId: "user-1",
@@ -55,7 +65,6 @@ describe("GenerateQuestionAnswerUseCase", () => {
       apiKey: "key",
       model: "gemini-test",
       context: "ctx",
-      requestId: "req-1",
     });
 
     expect(result).toBeNull();

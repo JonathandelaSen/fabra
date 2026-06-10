@@ -47,7 +47,6 @@ export async function POST(
       sourceTextHash: templateCV.source_text_hash ?? "",
       aiModel: templateCV.ai_model ?? "",
       textNode: `${summaryText} ${expText}`,
-      requestId: `save-as-cv-${id}`,
     });
 
     const structured = await cvLibraryModule
@@ -58,7 +57,6 @@ export async function POST(
       sourceTextHash: templateCV.source_text_hash ?? "",
       aiModel: templateCV.ai_model ?? "",
       profile: templateCV.profile,
-      requestId: `save-as-cv-profile-${id}`,
     });
     void structured;
 

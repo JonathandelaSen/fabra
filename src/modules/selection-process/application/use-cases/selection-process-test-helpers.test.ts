@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { EventTracker } from "@/modules/shared";
+
 import { ProcessQuestion } from "../../domain/entities/process-question.entity";
 import type {
   ProcessQuestionReadModel,
@@ -60,8 +60,8 @@ export function processQuestionRepo(
   } satisfies ProcessQuestionRepository;
 }
 
-export function tracker() {
-  return { record: vi.fn(async () => undefined) } satisfies EventTracker;
+export function eventBus() {
+  return { publish: vi.fn().mockResolvedValue(undefined) };
 }
 
 describe("selection-process test helpers", () => {

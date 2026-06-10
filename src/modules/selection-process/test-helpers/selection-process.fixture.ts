@@ -27,7 +27,6 @@ export class SelectionProcessFixture {
       answer: faker.datatype.boolean()
         ? faker.lorem.paragraphs(2)
         : null,
-      requestId: crypto.randomUUID(),
       ...overrides,
     };
   }

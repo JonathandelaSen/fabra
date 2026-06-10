@@ -58,7 +58,10 @@ export const receivedFeedbackModule = createReceivedFeedbackModule(
   telemetry,
   eventBus,
 );
-export const selectionProcessModule = createSelectionProcessModule(telemetry);
+export const selectionProcessModule = createSelectionProcessModule(
+  telemetry,
+  eventBus,
+);
 export const workJournalModule = createWorkJournalModule(telemetry, eventBus);
 
 queryBus.register(

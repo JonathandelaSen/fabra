@@ -1,12 +1,10 @@
-import { createRequestId } from "@/lib/observability";
-import { ASSISTANCE_MODE } from "@/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
+import { UserId } from "@/modules/shared";
 import {
   extractCopyPasteJson,
 } from "@/modules/shared/application/assisted-workflows/copy-paste-json-parser";
 import {
   validateCopyPasteEnvelope,
 } from "@/modules/shared/application/assisted-workflows/copy-paste-json-envelope";
-import { UserId, type EventTracker } from "@/modules/shared";
 import type { CVScoringAIResult } from "../../domain/repositories/cv-scoring-ai.service";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 import { CVAnalysisId } from "../../domain/value-objects/cv-analysis-id.value-object";
@@ -40,7 +38,6 @@ export class PreviewCVScoreCopyPasteUseCase {
   constructor(
     private readonly deps: {
       repo: CVAnalysisRepository;
-      tracker: EventTracker;
     },
   ) {}
 
@@ -60,21 +57,6 @@ export class PreviewCVScoreCopyPasteUseCase {
     const parsedResult = validateCVScoreCopyPasteResult(result);
     const primitives = analysis.toPrimitives();
     const willReplaceExistingResult = primitives.score !== null;
-
-    await this.deps.tracker.record({
-      userId: input.userId,
-      analysisId: input.id,
-      requestId: createRequestId("cv_analysis_copy_paste_preview"),
-      stage: "cv_analysis_copy_paste_response_previewed",
-      status: "success",
-      source: "cv_analysis",
-      metadata: {
-        assistanceMode: ASSISTANCE_MODE.copyPaste,
-        workflowId: CV_SCORE_COPY_PASTE_WORKFLOW_ID,
-        schemaVersion: CV_SCORE_COPY_PASTE_SCHEMA_VERSION,
-        model: "external-chat",
-      },
-    });
 
     return {
       parsedResult,

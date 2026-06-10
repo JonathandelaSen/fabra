@@ -5,9 +5,9 @@ import { makeFeedbackDeps } from "../../test-helpers";
 import { CreateFeedbackUseCase } from "./create-feedback.use-case";
 
 describe("CreateFeedbackUseCase", () => {
-  it("creates feedback and records observability", async () => {
+  it("creates feedback and publishes event", async () => {
     const user = await createTestUser("feedback-create");
-    const { feedbackRepo, tracker } = makeFeedbackDeps();
+    const { feedbackRepo, eventBus } = makeFeedbackDeps();
 
     const supabase = getSupabaseClient();
     activityContextsModule.bindRequest(supabase);
@@ -19,7 +19,7 @@ describe("CreateFeedbackUseCase", () => {
 
     const feedback = await new CreateFeedbackUseCase({
       feedbackRepo,
-      tracker,
+      eventBus,
     }).execute({
       user_id: user.id,
       person_name: " Jon ",
@@ -32,8 +32,13 @@ describe("CreateFeedbackUseCase", () => {
       person_name: "Jon",
       status: "active",
     });
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({ stage: "feedback_created", status: "success" })
-    );
+
+    expect(eventBus.publish).toHaveBeenCalledTimes(1);
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("feedback_created");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      feedbackId: feedback.id,
+    });
   });
 });

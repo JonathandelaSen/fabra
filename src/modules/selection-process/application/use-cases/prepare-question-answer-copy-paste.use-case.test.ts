@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { Timestamp, UserId, type EventTracker } from "@/modules/shared";
+import { Timestamp, UserId } from "@/modules/shared";
 import { ProcessQuestion } from "../../domain/entities/process-question.entity";
 import type { ProcessQuestionRepository } from "../../domain/repositories/process-question.repository";
 import { ProcessQuestionId } from "../../domain/value-objects/process-question-id.value-object";
@@ -48,11 +48,9 @@ describe("PrepareQuestionAnswerCopyPasteUseCase", () => {
       save: vi.fn(),
       delete: vi.fn(),
     };
-    const tracker = { record: vi.fn(async () => undefined) } satisfies EventTracker;
 
     const result = await new PrepareQuestionAnswerCopyPasteUseCase({
       questionRepo,
-      tracker,
     }).execute({
       id: "q-1",
       userId: "user-1",
@@ -72,15 +70,6 @@ describe("PrepareQuestionAnswerCopyPasteUseCase", () => {
     expect(result!.prompt).toContain("5 years of React experience");
     expect(result!.prompt).toContain("plain text");
     expect(result!.prompt).not.toContain("Return ONLY valid JSON");
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        stage: "interview_question_copy_paste_prompt_prepared",
-        metadata: expect.objectContaining({
-          assistanceMode: "copy_paste",
-          mode: "generate",
-        }),
-      }),
-    );
   });
 
   it("includes current answer and instruction in edit mode", async () => {
@@ -90,11 +79,9 @@ describe("PrepareQuestionAnswerCopyPasteUseCase", () => {
       save: vi.fn(),
       delete: vi.fn(),
     };
-    const tracker = { record: vi.fn(async () => undefined) } satisfies EventTracker;
 
     const result = await new PrepareQuestionAnswerCopyPasteUseCase({
       questionRepo,
-      tracker,
     }).execute({
       id: "q-1",
       userId: "user-1",
@@ -105,11 +92,6 @@ describe("PrepareQuestionAnswerCopyPasteUseCase", () => {
 
     expect(result!.prompt).toContain("Existing answer");
     expect(result!.prompt).toContain("Make it shorter");
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        metadata: expect.objectContaining({ mode: "edit" }),
-      }),
-    );
   });
 
   it("returns null when question is not found", async () => {
@@ -119,11 +101,9 @@ describe("PrepareQuestionAnswerCopyPasteUseCase", () => {
       save: vi.fn(),
       delete: vi.fn(),
     };
-    const tracker = { record: vi.fn(async () => undefined) } satisfies EventTracker;
 
     const result = await new PrepareQuestionAnswerCopyPasteUseCase({
       questionRepo,
-      tracker,
     }).execute({
       id: "q-missing",
       userId: "user-1",
@@ -132,6 +112,5 @@ describe("PrepareQuestionAnswerCopyPasteUseCase", () => {
     });
 
     expect(result).toBeNull();
-    expect(tracker.record).not.toHaveBeenCalled();
   });
 });

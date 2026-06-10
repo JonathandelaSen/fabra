@@ -4,15 +4,16 @@ import {
   processQuestion,
   processQuestionRepo,
   readModel,
-  tracker,
+  eventBus,
 } from "./selection-process-test-helpers.test";
 
 describe("UpdateProcessQuestionUseCase", () => {
-  it("updates question fields and records observability", async () => {
+  it("updates question fields and publishes event", async () => {
     const repo = processQuestionRepo();
+    const bus = eventBus();
     const result = await new UpdateProcessQuestionUseCase({
       questionRepo: repo,
-      tracker: tracker(),
+      eventBus: bus,
     }).execute({
       id: "question-1",
       userId: "user-1",
@@ -27,13 +28,23 @@ describe("UpdateProcessQuestionUseCase", () => {
       answer: "Answer",
       aiModel: "gemini",
     });
+
+    expect(bus.publish).toHaveBeenCalledTimes(1);
+    const publishedEvents = bus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("process_question_updated");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      questionId: result?.question.id,
+      fields: ["question", "answer", "aiModel", "aiGeneratedAt"],
+    });
   });
 
   it("returns null when the question does not exist", async () => {
     const repo = processQuestionRepo({ findById: async () => null });
+    const bus = eventBus();
     const result = await new UpdateProcessQuestionUseCase({
       questionRepo: repo,
-      tracker: tracker(),
+      eventBus: bus,
     }).execute({ id: "missing", userId: "user-1", answer: "Nope" });
 
     expect(result).toBeNull();
@@ -42,9 +53,10 @@ describe("UpdateProcessQuestionUseCase", () => {
   it("keeps unspecified fields", async () => {
     const existing = readModel({ question: processQuestion({ context: "old" }) });
     const repo = processQuestionRepo({ findById: async () => existing });
+    const bus = eventBus();
     const result = await new UpdateProcessQuestionUseCase({
       questionRepo: repo,
-      tracker: tracker(),
+      eventBus: bus,
     }).execute({ id: "question-1", userId: "user-1", answer: "new" });
 
     expect(result?.question.toPrimitives()).toMatchObject({

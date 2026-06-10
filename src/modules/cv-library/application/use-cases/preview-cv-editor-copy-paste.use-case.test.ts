@@ -24,14 +24,9 @@ const mockDocumentRepo = {
   delete: vi.fn(),
 };
 
-const mockTracker = {
-  record: vi.fn().mockResolvedValue(undefined),
-};
-
 function createUseCase() {
   return new PreviewCVEditorCopyPasteUseCase({
     documentRepo: mockDocumentRepo as never,
-    tracker: mockTracker,
   });
 }
 

@@ -1,5 +1,4 @@
-import { Timestamp, UserId, type EventTracker } from "@/modules/shared";
-import { createRequestId } from "@/lib/observability";
+import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 import type { FollowUp } from "../../domain/entities/follow-up.entity";
 import type { FollowUpRepository } from "../../domain/repositories/follow-up.repository";
 import { FollowUpStatus } from "../../domain/value-objects/follow-up-status.value-object";
@@ -11,14 +10,13 @@ export interface UpdateFollowUpByAnalysisInput {
   notes?: string | null;
   nextAction?: string | null;
   nextActionAt?: string | null;
-  requestId?: string;
 }
 
 export class UpdateFollowUpByAnalysisUseCase {
   constructor(
     private readonly deps: {
       followUpRepo: FollowUpRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
@@ -44,15 +42,10 @@ export class UpdateFollowUpByAnalysisUseCase {
     });
 
     const saved = await this.deps.followUpRepo.save(followUp);
-    await this.deps.tracker.record({
-      userId: input.userId,
-      requestId: input.requestId ?? createRequestId("follow-up"),
-      stage: "selection_process_follow_up_updated",
-      status: "success",
-      source: "selection_process",
-      analysisId: input.analysisId,
-      metadata: { followUpId: saved.id },
-    });
+
+    const events = followUp.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
     return saved;
   }
 }

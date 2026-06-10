@@ -4,7 +4,6 @@ import {
   NoOpTelemetry,
   Timestamp,
   UserId,
-  type EventTracker,
 } from "@/modules/shared";
 import { ChatMessage } from "../../domain/entities/chat-message.entity";
 import { Conversation } from "../../domain/entities/conversation.entity";
@@ -78,13 +77,11 @@ describe("PrepareOfferChatCopyPasteUseCase", () => {
       save: vi.fn(),
       delete: vi.fn(),
     };
-    const tracker = { record: vi.fn(async () => undefined) } satisfies EventTracker;
 
     const result = await new PrepareOfferChatCopyPasteUseCase({
       conversationRepo,
       messageRepo,
       queryBus,
-      tracker,
     }).execute({
       userId: "user-1",
       analysisId: "analysis-1",
@@ -101,11 +98,5 @@ describe("PrepareOfferChatCopyPasteUseCase", () => {
     expect(result.prompt).toContain("Como explico mi experiencia?");
     expect(result.prompt).toContain("React and TypeScript role");
     expect(result.prompt).toContain("Respuesta previa");
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        stage: "offer_chat_copy_paste_prompt_prepared",
-        metadata: expect.objectContaining({ assistanceMode: "copy_paste" }),
-      }),
-    );
   });
 });

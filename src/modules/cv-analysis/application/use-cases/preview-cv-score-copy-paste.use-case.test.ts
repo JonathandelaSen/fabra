@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
   copyPasteRepo,
-  copyPasteTracker,
   makeCopyPasteAnalysis,
   validCopyPasteEnvelope,
 } from "./cv-score-copy-paste-test-helpers";
@@ -12,7 +11,6 @@ describe("PreviewCVScoreCopyPasteUseCase", () => {
     const repo = copyPasteRepo();
     const result = await new PreviewCVScoreCopyPasteUseCase({
       repo,
-      tracker: copyPasteTracker(),
     }).execute({
       id: "analysis-1",
       userId: "user-1",
@@ -33,7 +31,6 @@ describe("PreviewCVScoreCopyPasteUseCase", () => {
   it("marks replacement when an analysis already has a score", async () => {
     const result = await new PreviewCVScoreCopyPasteUseCase({
       repo: copyPasteRepo(makeCopyPasteAnalysis({ score: 70 })),
-      tracker: copyPasteTracker(),
     }).execute({
       id: "analysis-1",
       userId: "user-1",
@@ -46,7 +43,6 @@ describe("PreviewCVScoreCopyPasteUseCase", () => {
   it("rejects invalid workflow and score shape", async () => {
     const useCase = new PreviewCVScoreCopyPasteUseCase({
       repo: copyPasteRepo(),
-      tracker: copyPasteTracker(),
     });
 
     await expect(

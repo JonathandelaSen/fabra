@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { EventTracker } from "@/modules/shared";
+import type { EventTracker, EventBus } from "@/modules/shared";
 import { CVAnalysis } from "../../domain/entities/cv-analysis.entity";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 
@@ -50,6 +50,10 @@ export function copyPasteRepo(
 
 export function copyPasteTracker() {
   return { record: vi.fn(async () => undefined) } satisfies EventTracker;
+}
+
+export function eventBus() {
+  return { publish: vi.fn().mockResolvedValue(undefined) } satisfies EventBus;
 }
 
 export const validCopyPasteResult = {

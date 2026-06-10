@@ -128,7 +128,6 @@ export async function POST(
       cv: links.cv,
       cvText,
       analysis: links.analysis,
-      requestId,
     });
 
     await recordProcessingEvent({

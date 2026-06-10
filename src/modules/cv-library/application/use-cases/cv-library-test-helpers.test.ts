@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { EventTracker } from "@/modules/shared";
+import type { EventTracker, EventBus } from "@/modules/shared";
 import { CVDocument } from "../../domain/entities/cv-document.entity";
 import { CVStructuredProfile } from "../../domain/entities/cv-structured-profile.entity";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
@@ -86,6 +86,10 @@ export function structuredProfileRepo(
 
 export function tracker() {
   return { record: vi.fn(async () => undefined) } satisfies EventTracker;
+}
+
+export function eventBus() {
+  return { publish: vi.fn().mockResolvedValue(undefined) } satisfies EventBus;
 }
 
 describe("cv-library test helpers", () => {

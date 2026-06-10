@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { FollowUp } from "../../domain/entities/follow-up.entity";
 import type { FollowUpRepository } from "../../domain/repositories/follow-up.repository";
 import { UpdateFollowUpByAnalysisUseCase } from "./update-follow-up-by-analysis.use-case";
-import { tracker } from "./selection-process-test-helpers.test";
+import { eventBus } from "./selection-process-test-helpers.test";
 
 function followUp() {
   return FollowUp.fromPrimitives({
@@ -25,10 +25,11 @@ describe("UpdateFollowUpByAnalysisUseCase", () => {
       findBySourceJobMatchAnalysisId: vi.fn(async () => followUp()),
       save: vi.fn(async (item) => item),
     };
+    const bus = eventBus();
 
     const result = await new UpdateFollowUpByAnalysisUseCase({
       followUpRepo: repo,
-      tracker: tracker(),
+      eventBus: bus,
     }).execute({
       analysisId: "analysis-1",
       userId: "user-1",
@@ -44,5 +45,19 @@ describe("UpdateFollowUpByAnalysisUseCase", () => {
       nextAction: "Follow up",
     });
     expect(repo.save).toHaveBeenCalledOnce();
+
+    expect(bus.publish).toHaveBeenCalledTimes(1);
+    const publishedEvents = bus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(2);
+    expect(publishedEvents[0].eventName).toBe("follow_up_updated");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      followUpId: result?.id,
+    });
+    expect(publishedEvents[1].eventName).toBe("follow_up_status_changed");
+    expect(publishedEvents[1].toPrimitives()).toEqual({
+      followUpId: result?.id,
+      previousStatus: "interesting",
+      newStatus: "applied",
+    });
   });
 });

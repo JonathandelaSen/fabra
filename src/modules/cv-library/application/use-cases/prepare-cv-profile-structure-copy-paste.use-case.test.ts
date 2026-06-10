@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { documentRepo, tracker } from "./cv-library-test-helpers.test";
+import { documentRepo } from "./cv-library-test-helpers.test";
 import {
   CV_PROFILE_COPY_PASTE_SCHEMA_VERSION,
   CV_PROFILE_COPY_PASTE_WORKFLOW_ID,
@@ -16,7 +16,6 @@ describe("PrepareCVProfileStructureCopyPasteUseCase", () => {
           analysisText: "python text",
         })),
       } as never,
-      tracker: tracker(),
       buildPrompt,
     }).execute({
       cvDocumentId: "cv-1",

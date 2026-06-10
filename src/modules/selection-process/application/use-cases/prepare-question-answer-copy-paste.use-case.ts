@@ -1,6 +1,5 @@
 import type { Analysis, CVRecord } from "@/lib/analysis-types";
-import { Timestamp, UserId, type EventTracker } from "@/modules/shared";
-import { ASSISTANCE_MODE } from "@/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
+import { UserId } from "@/modules/shared";
 import type { ProcessQuestionRepository } from "../../domain/repositories/process-question.repository";
 import { ProcessQuestionId } from "../../domain/value-objects/process-question-id.value-object";
 import { buildInterviewQuestionCopyPastePrompt } from "../services/interview-question-copy-paste-prompts";
@@ -28,7 +27,6 @@ export class PrepareQuestionAnswerCopyPasteUseCase {
   constructor(
     private readonly deps: {
       questionRepo: ProcessQuestionRepository;
-      tracker: EventTracker;
     },
   ) {}
 
@@ -50,25 +48,6 @@ export class PrepareQuestionAnswerCopyPasteUseCase {
       cv: input.cv,
       cvText: input.cvText,
       analysis: input.analysis,
-    });
-
-    await this.deps.tracker.record({
-      userId: input.userId,
-      cvId: primitives.legacyCvId,
-      analysisId: primitives.sourceJobMatchAnalysisId,
-      requestId: input.requestId,
-      stage: "interview_question_copy_paste_prompt_prepared",
-      status: "success",
-      source: "selection_process",
-      textLength: primitives.question.length,
-      metadata: {
-        assistanceMode: ASSISTANCE_MODE.copyPaste,
-        questionId: input.id,
-        mode: input.mode,
-        preparedAt: Timestamp.fromPrimitives(
-          new Date().toISOString(),
-        ).toPrimitives(),
-      },
     });
 
     return {

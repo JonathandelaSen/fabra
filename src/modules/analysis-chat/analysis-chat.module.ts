@@ -1,7 +1,7 @@
 import { OllamaAnalysisChatAIServiceFactory } from "./infrastructure/services/ollama-analysis-chat-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { EventTracker, QueryBus, Telemetry, EventBus } from "@/modules/shared";
-import { instrumentUseCases, SupabaseEventTracker } from "@/modules/shared";
+import type { QueryBus, Telemetry, EventBus } from "@/modules/shared";
+import { instrumentUseCases } from "@/modules/shared";
 import { GetAnalysisChatContextQueryHandler } from "./application/queries/get-analysis-chat-context.query-handler";
 import { GetAnalysisChatContextQuery } from "./application/queries/get-analysis-chat-context.query";
 import { CreateConversationUseCase } from "./application/use-cases/create-conversation.use-case";
@@ -29,7 +29,6 @@ const aiFactory = new ProviderAnalysisChatAIServiceFactory({
   mockFactory: new MockAnalysisChatAIServiceFactory(),
   ollamaFactory: new OllamaAnalysisChatAIServiceFactory(),
 });
-const tracker: EventTracker = new SupabaseEventTracker();
 
 function createUseCases(
   queryBus: QueryBus,
@@ -62,7 +61,6 @@ function createUseCases(
       conversationRepo,
       messageRepo,
       queryBus,
-      tracker,
     }),
     applyOfferChatCopyPaste: new ApplyOfferChatCopyPasteUseCase({
       conversationRepo,

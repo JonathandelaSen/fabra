@@ -2,7 +2,7 @@ import { OllamaCVProfileEditingAIServiceFactory } from "./infrastructure/service
 import { OllamaCVProfileStructuringAIServiceFactory } from "./infrastructure/services/ollama-cv-profile-structuring-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { QueryBus, Telemetry, EventBus } from "@/modules/shared";
-import { instrumentUseCases, SupabaseEventTracker } from "@/modules/shared";
+import { instrumentUseCases } from "@/modules/shared";
 import { ApplyCVEditorCopyPasteUseCase } from "./application/use-cases/apply-cv-editor-copy-paste.use-case";
 import { ApplyCVProfileStructureCopyPasteUseCase } from "./application/use-cases/apply-cv-profile-structure-copy-paste.use-case";
 import { CreateTemplateCVDocumentUseCase } from "./application/use-cases/create-template-cv-document.use-case";
@@ -58,7 +58,6 @@ const profileEditingAI = new ProviderCVProfileEditingAIServiceFactory({
   mockFactory: new MockCVProfileEditingAIServiceFactory(),
   ollamaFactory: new OllamaCVProfileEditingAIServiceFactory(),
 });
-const tracker = new SupabaseEventTracker();
 
 function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
   const prepareCVAnalysisInput = new PrepareCVAnalysisInputUseCase({
@@ -66,7 +65,7 @@ function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
     pdfStorage,
     textExtractor,
     templateRenderer,
-    tracker,
+    eventBus,
   });
   const createTemplateCVDocument = new CreateTemplateCVDocumentUseCase({
     documentRepo,
@@ -125,12 +124,10 @@ function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
     upsertCVStructuredProfile,
     prepareCVEditorCopyPaste: new PrepareCVEditorCopyPasteUseCase({
       documentRepo,
-      tracker,
       buildPrompt: buildCVProfileEditingCopyPastePrompt,
     }),
     previewCVEditorCopyPaste: new PreviewCVEditorCopyPasteUseCase({
       documentRepo,
-      tracker,
     }),
     applyCVEditorCopyPaste: new ApplyCVEditorCopyPasteUseCase({
       documentRepo,
@@ -138,19 +135,16 @@ function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
         documentRepo,
         eventBus,
       }),
-      tracker,
     }),
     prepareCVProfileStructureCopyPaste:
       new PrepareCVProfileStructureCopyPasteUseCase({
         documentRepo,
         prepareAnalysisInput: prepareCVAnalysisInput,
-        tracker,
         buildPrompt: buildCVProfileStructuringCopyPastePrompt,
       }),
     previewCVProfileStructureCopyPaste:
       new PreviewCVProfileStructureCopyPasteUseCase({
         documentRepo,
-        tracker,
       }),
     applyCVProfileStructureCopyPaste:
       new ApplyCVProfileStructureCopyPasteUseCase({
@@ -158,7 +152,6 @@ function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
         prepareAnalysisInput: prepareCVAnalysisInput,
         upsertProfile: upsertCVStructuredProfile,
         createTemplateDocument: createTemplateCVDocument,
-        tracker,
       }),
   };
 }

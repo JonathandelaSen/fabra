@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   jobMatchRepo,
-  jobMatchTracker,
+  eventBus,
   makeJobMatchAnalysis,
   validJobMatchResult,
 } from "./job-match-score-copy-paste-test-helpers";
@@ -10,10 +10,10 @@ import { ApplyJobMatchScoreCopyPasteUseCase } from "./apply-job-match-score-copy
 describe("ApplyJobMatchScoreCopyPasteUseCase", () => {
   it("applies a valid parsed result", async () => {
     const repo = jobMatchRepo();
-    const tracker = jobMatchTracker();
+    const bus = eventBus();
     const result = await new ApplyJobMatchScoreCopyPasteUseCase({
       repo,
-      tracker,
+      eventBus: bus,
     }).execute({
       id: "analysis-1",
       userId: "user-1",
@@ -31,15 +31,16 @@ describe("ApplyJobMatchScoreCopyPasteUseCase", () => {
     expect(saved.matchingKeywords).toEqual(["React", "TypeScript"]);
     expect(saved.missingKeywords).toEqual(["Node"]);
     expect(saved.analyzedAt).toBeTruthy();
-    expect(tracker.record).toHaveBeenCalled();
+    expect(bus.publish).toHaveBeenCalled();
   });
 
   it("replaces existing score when present", async () => {
     const scored = makeJobMatchAnalysis({ score: 50 });
     const repo = jobMatchRepo(scored);
+    const bus = eventBus();
     const result = await new ApplyJobMatchScoreCopyPasteUseCase({
       repo,
-      tracker: jobMatchTracker(),
+      eventBus: bus,
     }).execute({
       id: "analysis-1",
       userId: "user-1",
@@ -54,10 +55,11 @@ describe("ApplyJobMatchScoreCopyPasteUseCase", () => {
   });
 
   it("rejects invalid parsed result", async () => {
+    const bus = eventBus();
     await expect(
       new ApplyJobMatchScoreCopyPasteUseCase({
         repo: jobMatchRepo(),
-        tracker: jobMatchTracker(),
+        eventBus: bus,
       }).execute({
         id: "analysis-1",
         userId: "user-1",
@@ -69,9 +71,10 @@ describe("ApplyJobMatchScoreCopyPasteUseCase", () => {
   });
 
   it("returns null for missing analysis", async () => {
+    const bus = eventBus();
     const result = await new ApplyJobMatchScoreCopyPasteUseCase({
       repo: jobMatchRepo(null),
-      tracker: jobMatchTracker(),
+      eventBus: bus,
     }).execute({
       id: "missing",
       userId: "user-1",

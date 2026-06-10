@@ -1,7 +1,6 @@
 import { OllamaCVScoringAIServiceFactory } from "./infrastructure/services/ollama-cv-scoring-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
-import { instrumentUseCases, SupabaseEventTracker, type Telemetry, type EventBus } from "@/modules/shared";
+import { instrumentUseCases, type Telemetry, type EventBus } from "@/modules/shared";
 import { ApplyCVScoreCopyPasteUseCase } from "./application/use-cases/apply-cv-score-copy-paste.use-case";
 import { CreateCVAnalysisUseCase } from "./application/use-cases/create-cv-analysis.use-case";
 import { DeleteCVAnalysisUseCase } from "./application/use-cases/delete-cv-analysis.use-case";
@@ -20,7 +19,6 @@ import { ProviderCVScoringAIServiceFactory } from "./infrastructure/services/pro
 import { SupabaseCVAnalysisRepository } from "./infrastructure/repositories/supabase-cv-analysis.repository";
 
 const repo = new SupabaseCVAnalysisRepository();
-const tracker: EventTracker = new SupabaseEventTracker();
 const aiServiceFactory = new ProviderCVScoringAIServiceFactory({
   geminiFactory: new GeminiCVScoringAIServiceFactory(),
   openaiFactory: new OpenAICVScoringAIServiceFactory(),
@@ -39,16 +37,14 @@ function createUseCases(eventBus: EventBus) {
     scoreCVAnalysis: new ScoreCVAnalysisUseCase({ repo, aiServiceFactory, eventBus }),
     prepareCVScoreCopyPaste: new PrepareCVScoreCopyPasteUseCase({
       repo,
-      tracker,
       buildPrompt: buildCVScoringCopyPastePrompt,
     }),
     previewCVScoreCopyPaste: new PreviewCVScoreCopyPasteUseCase({
       repo,
-      tracker,
     }),
     applyCVScoreCopyPaste: new ApplyCVScoreCopyPasteUseCase({
       repo,
-      tracker,
+      eventBus,
     }),
     updateCVAnalysisAIResult: new UpdateCVAnalysisAIResultUseCase({ repo, eventBus }),
     deleteCVAnalysis: new DeleteCVAnalysisUseCase({ repo }),

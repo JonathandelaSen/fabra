@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { EventTracker } from "@/modules/shared";
+import type { EventTracker, EventBus } from "@/modules/shared";
 import { JobMatchAnalysis } from "../../domain/entities/job-match-analysis.entity";
 import type { JobMatchAnalysisRepository } from "../../domain/repositories/job-match-analysis.repository";
 
@@ -55,6 +55,10 @@ export function jobMatchRepo(
 
 export function jobMatchTracker() {
   return { record: vi.fn(async () => undefined) } satisfies EventTracker;
+}
+
+export function eventBus() {
+  return { publish: vi.fn().mockResolvedValue(undefined) } satisfies EventBus;
 }
 
 export const validJobMatchResult = {

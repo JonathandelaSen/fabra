@@ -6,14 +6,12 @@ import { HandleActivityContextSuggestionUseCase } from "./application/use-cases/
 import { ListActivityContextSuggestionsUseCase } from "./application/use-cases/list-activity-context-suggestions.use-case";
 import { ListActivityContextsUseCase } from "./application/use-cases/list-activity-contexts.use-case";
 import { UpdateActivityContextUseCase } from "./application/use-cases/update-activity-context.use-case";
-import { instrumentUseCases, SupabaseEventTracker, type Telemetry, type EventBus } from "@/modules/shared";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
+import { instrumentUseCases, type Telemetry, type EventBus } from "@/modules/shared";
 import { SupabaseActivityContextRepository } from "./infrastructure/repositories/supabase-activity-context.repository";
 import { SupabaseCVDataRepository } from "./infrastructure/repositories/supabase-cv-data.repository";
 
 const activityContextRepo = new SupabaseActivityContextRepository();
 const cvDataRepo = new SupabaseCVDataRepository();
-const tracker: EventTracker = new SupabaseEventTracker();
 
 function createUseCases(eventBus: EventBus) {
   return {
@@ -28,7 +26,7 @@ function createUseCases(eventBus: EventBus) {
     countActivityContextRecords: new CountActivityContextRecordsUseCase({ activityContextRepo }),
     handleActivityContextSuggestion: new HandleActivityContextSuggestionUseCase({
       activityContextRepo,
-      tracker,
+      eventBus,
     }),
   };
 }

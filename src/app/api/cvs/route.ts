@@ -202,7 +202,6 @@ export async function POST(req: NextRequest) {
       extractErrorPython: extracted.extract_error_python,
       extractErrorPdfjs: extracted.extract_error_pdfjs,
       extractErrorNode: extracted.extract_error_node,
-      requestId,
     });
     const responseCV = presentCVDocument(cv);
 

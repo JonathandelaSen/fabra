@@ -1,10 +1,7 @@
 import {
-  Timestamp,
   UserId,
   type QueryBus,
 } from "@/modules/shared";
-import { ASSISTANCE_MODE } from "@/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
-import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
 import { AnalysisContextNotFoundError } from "../../domain/errors/analysis-context-not-found.error";
 import { ConversationNotFoundError } from "../../domain/errors/conversation-not-found.error";
 import type { ChatMessageRepository } from "../../domain/repositories/chat-message.repository";
@@ -36,7 +33,6 @@ export class PrepareOfferChatCopyPasteUseCase {
       conversationRepo: ConversationRepository;
       messageRepo: ChatMessageRepository;
       queryBus: QueryBus;
-      tracker: EventTracker;
     },
   ) {}
 
@@ -70,23 +66,6 @@ export class PrepareOfferChatCopyPasteUseCase {
       message: input.message,
       context,
       history: history.map((message) => message.toPrimitives()),
-    });
-
-    await this.deps.tracker.record({
-      userId: input.userId,
-      cvId: context.cvId,
-      analysisId: input.analysisId,
-      requestId: input.requestId,
-      stage: "offer_chat_copy_paste_prompt_prepared",
-      status: "success",
-      source: "api_analysis_chat_copy_paste",
-      textLength: input.message.length,
-      metadata: {
-        assistanceMode: ASSISTANCE_MODE.copyPaste,
-        conversationId: input.conversationId,
-        historyLength: history.length,
-        preparedAt: Timestamp.fromPrimitives(new Date().toISOString()).toPrimitives(),
-      },
     });
 
     return {

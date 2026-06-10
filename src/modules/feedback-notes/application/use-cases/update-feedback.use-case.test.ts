@@ -8,7 +8,7 @@ import { UpdateFeedbackUseCase } from "./update-feedback.use-case";
 describe("UpdateFeedbackUseCase", () => {
   it("updates person name, final feedback, and context", async () => {
     const user = await createTestUser("feedback-update");
-    const { feedbackRepo, tracker } = makeFeedbackDeps();
+    const { feedbackRepo, eventBus } = makeFeedbackDeps();
 
     const supabase = getSupabaseClient();
     activityContextsModule.bindRequest(supabase);
@@ -27,7 +27,7 @@ describe("UpdateFeedbackUseCase", () => {
 
     const updated = await new UpdateFeedbackUseCase({
       feedbackRepo,
-      tracker,
+      eventBus,
     }).execute(user.id, feedback.id, {
       person_name: "Jon - 2026",
       final_feedback: "Final",
@@ -39,14 +39,33 @@ describe("UpdateFeedbackUseCase", () => {
       final_feedback: "Final",
       activity_context_id: context2.id,
     });
-    expect(tracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({ stage: "feedback_final_feedback_updated" })
-    );
+
+    expect(eventBus.publish).toHaveBeenCalledTimes(1);
+    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(3);
+    
+    expect(publishedEvents[0].eventName).toBe("feedback_updated");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      feedbackId: feedback.id,
+      fields: ["person_name"],
+    });
+
+    expect(publishedEvents[1].eventName).toBe("feedback_updated");
+    expect(publishedEvents[1].toPrimitives()).toEqual({
+      feedbackId: feedback.id,
+      fields: ["final_feedback"],
+    });
+
+    expect(publishedEvents[2].eventName).toBe("feedback_updated");
+    expect(publishedEvents[2].toPrimitives()).toEqual({
+      feedbackId: feedback.id,
+      fields: ["activity_context_id"],
+    });
   });
 
   it("rejects updates when feedback is closed", async () => {
     const user = await createTestUser("feedback-update-closed");
-    const { feedbackRepo, tracker } = makeFeedbackDeps();
+    const { feedbackRepo, eventBus } = makeFeedbackDeps();
 
     const supabase = getSupabaseClient();
     activityContextsModule.bindRequest(supabase);
@@ -61,7 +80,7 @@ describe("UpdateFeedbackUseCase", () => {
     await feedbackRepo.save(feedback);
 
     await expect(
-      new UpdateFeedbackUseCase({ feedbackRepo, tracker }).execute(
+      new UpdateFeedbackUseCase({ feedbackRepo, eventBus }).execute(
         user.id,
         feedback.id,
         { final_feedback: "Nope" }

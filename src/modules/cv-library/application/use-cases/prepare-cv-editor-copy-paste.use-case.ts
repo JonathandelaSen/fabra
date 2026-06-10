@@ -1,10 +1,7 @@
-import { createRequestId } from "@/lib/observability";
-import { ASSISTANCE_MODE } from "@/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
-import { badRequest, UserId, type EventTracker } from "@/modules/shared";
+import { badRequest, UserId } from "@/modules/shared";
 import type { StandardCVProfile } from "../../domain/cv-profile";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import {
-  CV_EDITOR_COPY_PASTE_MODEL,
   CV_EDITOR_COPY_PASTE_SCHEMA_VERSION,
   CV_EDITOR_COPY_PASTE_WORKFLOW_ID,
 } from "../../domain/services/cv-editor-copy-paste-workflow";
@@ -31,7 +28,6 @@ export class PrepareCVEditorCopyPasteUseCase {
   constructor(
     private readonly deps: {
       documentRepo: CVDocumentRepository;
-      tracker: EventTracker;
       buildPrompt: (input: {
         profile: StandardCVProfile;
         instruction: string;
@@ -65,23 +61,6 @@ export class PrepareCVEditorCopyPasteUseCase {
       templateId: input.templateId ?? primitives.templateId,
       locale: input.locale ?? primitives.templateLocale,
       recommendations: input.recommendations,
-    });
-
-    const requestId = createRequestId("cv_editor_copy_paste_prepare");
-    await this.deps.tracker.record({
-      userId: input.userId,
-      cvId: input.cvDocumentId,
-      requestId,
-      stage: "cv_editor_copy_paste_prompt_prepared",
-      status: "success",
-      source: "cv_library",
-      metadata: {
-        assistanceMode: ASSISTANCE_MODE.copyPaste,
-        workflowId: CV_EDITOR_COPY_PASTE_WORKFLOW_ID,
-        schemaVersion: CV_EDITOR_COPY_PASTE_SCHEMA_VERSION,
-        model: CV_EDITOR_COPY_PASTE_MODEL,
-        instruction: input.instruction,
-      },
     });
 
     return {

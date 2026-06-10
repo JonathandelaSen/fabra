@@ -1,12 +1,9 @@
-import { createRequestId } from "@/lib/observability";
-import { ASSISTANCE_MODE } from "@/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
+import { UserId } from "@/modules/shared";
 import { extractCopyPasteJson } from "@/modules/shared/application/assisted-workflows/copy-paste-json-parser";
 import { validateCopyPasteEnvelope } from "@/modules/shared/application/assisted-workflows/copy-paste-json-envelope";
-import { UserId, type EventTracker } from "@/modules/shared";
 import type { StandardCVProfile } from "../../domain/cv-profile";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import {
-  CV_EDITOR_COPY_PASTE_MODEL,
   CV_EDITOR_COPY_PASTE_SCHEMA_VERSION,
   CV_EDITOR_COPY_PASTE_WORKFLOW_ID,
 } from "../../domain/services/cv-editor-copy-paste-workflow";
@@ -34,7 +31,6 @@ export class PreviewCVEditorCopyPasteUseCase {
   constructor(
     private readonly deps: {
       documentRepo: CVDocumentRepository;
-      tracker: EventTracker;
     },
   ) {}
 
@@ -62,22 +58,6 @@ export class PreviewCVEditorCopyPasteUseCase {
     if (changedSections.length > 5) {
       warnings.push("Large rewrite detected — many sections were changed.");
     }
-
-    await this.deps.tracker.record({
-      userId: input.userId,
-      cvId: input.cvDocumentId,
-      requestId: createRequestId("cv_editor_copy_paste_preview"),
-      stage: "cv_editor_copy_paste_response_previewed",
-      status: "success",
-      source: "cv_library",
-      metadata: {
-        assistanceMode: ASSISTANCE_MODE.copyPaste,
-        workflowId: CV_EDITOR_COPY_PASTE_WORKFLOW_ID,
-        schemaVersion: CV_EDITOR_COPY_PASTE_SCHEMA_VERSION,
-        model: CV_EDITOR_COPY_PASTE_MODEL,
-        changedSections,
-      },
-    });
 
     return {
       parsedResult: editedProfile,

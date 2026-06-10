@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { document, documentRepo, tracker } from "./cv-library-test-helpers.test";
+import { document, documentRepo, tracker, eventBus } from "./cv-library-test-helpers.test";
 import { PrepareCVAnalysisInputUseCase } from "./prepare-cv-analysis-input.use-case";
 import type {
   CVPdfStorage,
@@ -16,12 +16,12 @@ function services() {
     } satisfies CVPdfStorage,
     textExtractor: {
       extract: vi.fn(async () => ({
-        textPython: "extracted text",
-        textPdfjs: null,
-        textNode: null,
-        extractErrorPython: null,
-        extractErrorPdfjs: null,
-        extractErrorNode: null,
+        textPython: "extracted text" as string | null,
+        textPdfjs: null as string | null,
+        textNode: null as string | null,
+        extractErrorPython: null as string | null,
+        extractErrorPdfjs: null as string | null,
+        extractErrorNode: null as string | null,
       })),
     } satisfies CVPdfTextExtractor,
     templateRenderer: {
@@ -47,11 +47,11 @@ describe("PrepareCVAnalysisInputUseCase", () => {
       ),
     });
     const deps = services();
-    const eventTracker = tracker();
+    const bus = eventBus();
 
     const result = await new PrepareCVAnalysisInputUseCase({
       documentRepo: repo,
-      tracker: eventTracker,
+      eventBus: bus,
       ...deps,
     }).execute({
       cvId: "cv-1",
@@ -64,13 +64,7 @@ describe("PrepareCVAnalysisInputUseCase", () => {
     expect(deps.pdfStorage.download).not.toHaveBeenCalled();
     expect(deps.textExtractor.extract).not.toHaveBeenCalled();
     expect(repo.save).not.toHaveBeenCalled();
-    expect(eventTracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        stage: "cv_text_extraction",
-        status: "success",
-        source: "stored_pdf_text",
-      }),
-    );
+    expect(bus.publish).not.toHaveBeenCalled();
   });
 
   it("retries uploaded CV extraction when one parser result is missing", async () => {
@@ -97,9 +91,10 @@ describe("PrepareCVAnalysisInputUseCase", () => {
       extractErrorNode: null,
     }));
 
+    const bus = eventBus();
     const result = await new PrepareCVAnalysisInputUseCase({
       documentRepo: repo,
-      tracker: tracker(),
+      eventBus: bus,
       ...deps,
     }).execute({
       cvId: "cv-1",
@@ -132,9 +127,10 @@ describe("PrepareCVAnalysisInputUseCase", () => {
     });
     const deps = services();
 
+    const bus = eventBus();
     const result = await new PrepareCVAnalysisInputUseCase({
       documentRepo: repo,
-      tracker: tracker(),
+      eventBus: bus,
       ...deps,
     }).execute({
       cvId: "cv-1",
@@ -175,9 +171,10 @@ describe("PrepareCVAnalysisInputUseCase", () => {
       extractErrorNode: null,
     }));
 
+    const bus = eventBus();
     const result = await new PrepareCVAnalysisInputUseCase({
       documentRepo: repo,
-      tracker: tracker(),
+      eventBus: bus,
       ...deps,
     }).execute({
       cvId: "cv-1",
@@ -208,11 +205,11 @@ describe("PrepareCVAnalysisInputUseCase", () => {
       findById: vi.fn(async () => cv),
     });
     const deps = services();
-    const eventTracker = tracker();
+    const bus = eventBus();
 
     const result = await new PrepareCVAnalysisInputUseCase({
       documentRepo: repo,
-      tracker: eventTracker,
+      eventBus: bus,
       ...deps,
     }).execute({
       cvId: "cv-1",
@@ -233,9 +230,9 @@ describe("PrepareCVAnalysisInputUseCase", () => {
     expect(repo.save).toHaveBeenCalledOnce();
     expect(result?.analysisText).toBe("extracted text");
     expect(result?.extractedText.textPython).toBe("extracted text");
-    expect(eventTracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({ stage: "cv_library_extraction_updated" }),
-    );
+    expect(bus.publish).toHaveBeenCalledWith([
+      expect.objectContaining({ eventName: "cv_document_extracted_text_updated" }),
+    ]);
   });
 
   it("renders and parses template CVs without persisting temporary extraction", async () => {
@@ -269,11 +266,11 @@ describe("PrepareCVAnalysisInputUseCase", () => {
       ),
     });
     const deps = services();
-    const eventTracker = tracker();
+    const bus = eventBus();
 
     const result = await new PrepareCVAnalysisInputUseCase({
       documentRepo: repo,
-      tracker: eventTracker,
+      eventBus: bus,
       ...deps,
     }).execute({
       cvId: "cv-1",
@@ -294,6 +291,7 @@ describe("PrepareCVAnalysisInputUseCase", () => {
       "user-1/cv-1-req-1-template.pdf",
     ]);
     expect(repo.save).not.toHaveBeenCalled();
+    expect(bus.publish).not.toHaveBeenCalled();
     expect(result?.filename).toBe("Original_CV.pdf");
     expect(result?.analysisText).toBe("extracted text");
   });
@@ -323,11 +321,11 @@ describe("PrepareCVAnalysisInputUseCase", () => {
       ),
     });
     const deps = services();
-    const eventTracker = tracker();
+    const bus = eventBus();
 
     const result = await new PrepareCVAnalysisInputUseCase({
       documentRepo: repo,
-      tracker: eventTracker,
+      eventBus: bus,
       ...deps,
     }).execute({
       cvId: "cv-1",
@@ -343,13 +341,7 @@ describe("PrepareCVAnalysisInputUseCase", () => {
     expect(deps.textExtractor.extract).not.toHaveBeenCalled();
     expect(deps.templateRenderer.render).not.toHaveBeenCalled();
     expect(repo.save).not.toHaveBeenCalled();
-    expect(eventTracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        stage: "cv_text_extraction",
-        status: "success",
-        source: "json_resume_profile",
-      }),
-    );
+    expect(bus.publish).not.toHaveBeenCalled();
   });
 
   it("returns warning when json_resume has no profile data", async () => {
@@ -369,11 +361,11 @@ describe("PrepareCVAnalysisInputUseCase", () => {
         }),
       ),
     });
-    const eventTracker = tracker();
+    const bus = eventBus();
 
     const result = await new PrepareCVAnalysisInputUseCase({
       documentRepo: repo,
-      tracker: eventTracker,
+      eventBus: bus,
       ...services(),
     }).execute({
       cvId: "cv-1",
@@ -383,13 +375,6 @@ describe("PrepareCVAnalysisInputUseCase", () => {
     });
 
     expect(result?.analysisText).toBeNull();
-    expect(eventTracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        stage: "cv_text_extraction",
-        status: "warning",
-        source: "json_resume_profile",
-        errorCode: "no_extracted_text_available",
-      }),
-    );
+    expect(bus.publish).not.toHaveBeenCalled();
   });
 });

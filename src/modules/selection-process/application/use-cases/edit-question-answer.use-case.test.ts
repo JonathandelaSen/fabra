@@ -4,7 +4,7 @@ import {
   processQuestion,
   processQuestionRepo,
   readModel,
-  tracker,
+  eventBus,
 } from "./selection-process-test-helpers.test";
 import type { InterviewQuestionAIService } from "../../domain/repositories/interview-question-ai.service";
 
@@ -25,10 +25,11 @@ describe("EditQuestionAnswerUseCase", () => {
     });
     const ai = aiService();
     const repo = processQuestionRepo({ findById: async () => existing });
+    const bus = eventBus();
     const result = await new EditQuestionAnswerUseCase({
       questionRepo: repo,
       aiFactory: { create: vi.fn(() => ai) },
-      tracker: tracker(),
+      eventBus: bus,
     }).execute({
       id: "question-1",
       userId: "user-1",
@@ -37,7 +38,6 @@ describe("EditQuestionAnswerUseCase", () => {
       model: "gemini-test",
       context: "My context",
       instruction: "Make it shorter",
-      requestId: "req-1",
     });
 
     expect(ai.editAnswer).toHaveBeenCalledOnce();
@@ -51,15 +51,25 @@ describe("EditQuestionAnswerUseCase", () => {
       answer: "Edited answer",
       aiModel: "gemini-test",
     });
+
+    expect(bus.publish).toHaveBeenCalledTimes(1);
+    const publishedEvents = bus.publish.mock.calls[0][0];
+    expect(publishedEvents).toHaveLength(1);
+    expect(publishedEvents[0].eventName).toBe("process_question_updated");
+    expect(publishedEvents[0].toPrimitives()).toEqual({
+      questionId: result?.question.id,
+      fields: ["context", "answer", "aiModel", "aiGeneratedAt"],
+    });
   });
 
   it("returns null when question does not exist", async () => {
     const repo = processQuestionRepo({ findById: async () => null });
     const ai = aiService();
+    const bus = eventBus();
     const result = await new EditQuestionAnswerUseCase({
       questionRepo: repo,
       aiFactory: { create: vi.fn(() => ai) },
-      tracker: tracker(),
+      eventBus: bus,
     }).execute({
       id: "missing",
       userId: "user-1",
@@ -68,7 +78,6 @@ describe("EditQuestionAnswerUseCase", () => {
       model: "gemini-test",
       context: "ctx",
       instruction: "edit",
-      requestId: "req-1",
     });
 
     expect(result).toBeNull();

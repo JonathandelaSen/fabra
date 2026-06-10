@@ -92,7 +92,6 @@ export async function POST(
       sourceTextHash,
       aiModel: parsed.value.model,
       profile: structured.profile,
-      requestId: `cv-profile-${id}`,
     });
 
     return ok({ profile: presentCVStructuredProfile(profile), cached: false });

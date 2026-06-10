@@ -1,12 +1,9 @@
-import { createRequestId } from "@/lib/observability";
-import { ASSISTANCE_MODE } from "@/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
+import { UserId } from "@/modules/shared";
 import { extractCopyPasteJson } from "@/modules/shared/application/assisted-workflows/copy-paste-json-parser";
 import { validateCopyPasteEnvelope } from "@/modules/shared/application/assisted-workflows/copy-paste-json-envelope";
-import { UserId, type EventTracker } from "@/modules/shared";
 import type { StandardCVProfile } from "../../domain/cv-profile";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import {
-  CV_PROFILE_COPY_PASTE_MODEL,
   CV_PROFILE_COPY_PASTE_SCHEMA_VERSION,
   CV_PROFILE_COPY_PASTE_WORKFLOW_ID,
   validateCVProfileCopyPasteResult,
@@ -44,7 +41,6 @@ export class PreviewCVProfileStructureCopyPasteUseCase {
   constructor(
     private readonly deps: {
       documentRepo: CVDocumentRepository;
-      tracker: EventTracker;
     },
   ) {}
 
@@ -67,21 +63,6 @@ export class PreviewCVProfileStructureCopyPasteUseCase {
     const primitives = document.toPrimitives();
     const missingImportantFields = getMissingImportantFields(profile);
     const sectionsCount = countDetectedSections(profile);
-
-    await this.deps.tracker.record({
-      userId: input.userId,
-      cvId: input.cvDocumentId,
-      requestId: createRequestId("cv_profile_copy_paste_preview"),
-      stage: "cv_profile_copy_paste_response_previewed",
-      status: "success",
-      source: "cv_library",
-      metadata: {
-        assistanceMode: ASSISTANCE_MODE.copyPaste,
-        workflowId: CV_PROFILE_COPY_PASTE_WORKFLOW_ID,
-        schemaVersion: CV_PROFILE_COPY_PASTE_SCHEMA_VERSION,
-        model: CV_PROFILE_COPY_PASTE_MODEL,
-      },
-    });
 
     return {
       parsedResult: profile,

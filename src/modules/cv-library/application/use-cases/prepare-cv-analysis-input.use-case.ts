@@ -22,7 +22,7 @@ import type {
   CVTemplatePdfRenderer,
 } from "../../domain/repositories/cv-analysis-preparation-services";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
-import { Timestamp, UserId, type EventTracker } from "@/modules/shared";
+import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 
 export interface PrepareCVAnalysisInputInput {
   cvId: string;
@@ -63,7 +63,7 @@ export class PrepareCVAnalysisInputUseCase {
       pdfStorage: CVPdfStorage;
       textExtractor: CVPdfTextExtractor;
       templateRenderer: CVTemplatePdfRenderer;
-      tracker: EventTracker;
+      eventBus: EventBus;
     },
   ) {}
 
@@ -100,35 +100,7 @@ export class PrepareCVAnalysisInputUseCase {
       ? this.clearParserErrors(analysisExtraction)
       : analysisExtraction;
 
-    await this.deps.tracker.record({
-      userId: input.userId,
-      cvId: input.cvId,
-      requestId: input.requestId,
-      stage: "cv_text_extraction",
-      status: analysisText ? "success" : "warning",
-      source: templatePdfExtraction
-        ? "template_pdf_parse"
-        : analysisText
-          ? "stored_pdf_text"
-          : "no_text_available",
-      fileSize: templatePdfExtraction?.fileSize ?? cvPrimitives.fileSize,
-      textLength: analysisText?.trim().length ?? 0,
-      errorCode: analysisText ? null : "no_extracted_text_available",
-      errorMessage: analysisText
-        ? null
-        : "No parser produced usable text for this CV.",
-      metadata: {
-        cvType: cvPrimitives.type,
-        filename: templatePdfExtraction?.filename ?? cvPrimitives.filename,
-        pythonLength: responseExtraction.textPython?.trim().length ?? 0,
-        pdfjsLength: responseExtraction.textPdfjs?.trim().length ?? 0,
-        nodeLength: responseExtraction.textNode?.trim().length ?? 0,
-        pythonError: Boolean(responseExtraction.extractErrorPython),
-        pdfjsError: Boolean(responseExtraction.extractErrorPdfjs),
-        nodeError: Boolean(responseExtraction.extractErrorNode),
-        templateId: cvPrimitives.templateId,
-      },
-    });
+
 
     return {
       cv: cvPrimitives,
@@ -178,17 +150,7 @@ export class PrepareCVAnalysisInputUseCase {
       extractErrorNode: null,
     };
 
-    await this.deps.tracker.record({
-      userId: input.userId,
-      cvId: input.cvId,
-      requestId: input.requestId,
-      stage: "cv_text_extraction",
-      status: analysisText ? "success" : "warning",
-      source: "json_resume_profile",
-      textLength: analysisText?.trim().length ?? 0,
-      errorCode: analysisText ? null : "no_extracted_text_available",
-      metadata: { cvType: "json_resume" },
-    });
+
 
     return {
       cv: primitives,
@@ -256,14 +218,8 @@ export class PrepareCVAnalysisInputUseCase {
       Timestamp.fromPrimitives(new Date().toISOString()),
     );
     const saved = await this.deps.documentRepo.save(input.cv);
-    await this.deps.tracker.record({
-      userId: input.userId,
-      requestId: input.requestId,
-      stage: "cv_library_extraction_updated",
-      status: "success",
-      source: "cv_library",
-      cvId: saved.id,
-    });
+    const events = input.cv.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
     return saved;
   }
 
@@ -307,19 +263,7 @@ export class PrepareCVAnalysisInputUseCase {
 
     const filename = this.getTemplateAnalysisFilename(input.cv);
     const renderStartedAt = performance.now();
-    await this.deps.tracker.record({
-      userId: input.userId,
-      cvId: input.cv.id,
-      requestId: input.requestId,
-      stage: "template_pdf_render",
-      status: "started",
-      source: input.source,
-      metadata: {
-        filename,
-        templateId: template.templateId,
-        locale: input.cv.templateLocale,
-      },
-    });
+
 
     const templatePdfBuffer = await this.deps.templateRenderer.render({
       profile: input.cv.profile as StandardCVProfile,
@@ -327,36 +271,11 @@ export class PrepareCVAnalysisInputUseCase {
       locale: (input.cv.templateLocale ?? "es") as CVTemplateLocale,
     });
 
-    await this.deps.tracker.record({
-      userId: input.userId,
-      cvId: input.cv.id,
-      requestId: input.requestId,
-      stage: "template_pdf_render",
-      status: "success",
-      source: input.source,
-      durationMs: performance.now() - renderStartedAt,
-      fileSize: templatePdfBuffer.length,
-      metadata: {
-        filename,
-        templateId: template.templateId,
-      },
-    });
+
 
     const pdfStoragePath = `${input.userId}/${input.cv.id}-${input.requestId}-template.pdf`;
     const storageStartedAt = performance.now();
-    await this.deps.tracker.record({
-      userId: input.userId,
-      cvId: input.cv.id,
-      requestId: input.requestId,
-      stage: "storage_upload",
-      status: "started",
-      source: CV_PDFS_BUCKET,
-      fileSize: templatePdfBuffer.length,
-      metadata: {
-        storagePath: pdfStoragePath,
-        temporary: true,
-      },
-    });
+
 
     try {
       await this.deps.pdfStorage.upload({
@@ -366,39 +285,10 @@ export class PrepareCVAnalysisInputUseCase {
         upsert: true,
       });
     } catch (error: unknown) {
-      await this.deps.tracker.record({
-        userId: input.userId,
-        cvId: input.cv.id,
-        requestId: input.requestId,
-        stage: "storage_upload",
-        status: "error",
-        source: CV_PDFS_BUCKET,
-        durationMs: performance.now() - storageStartedAt,
-        fileSize: templatePdfBuffer.length,
-        errorCode: "storage_upload_failed",
-        errorMessage: sanitizeErrorMessage(error),
-        metadata: {
-          storagePath: pdfStoragePath,
-          temporary: true,
-        },
-      });
       throw error;
     }
 
-    await this.deps.tracker.record({
-      userId: input.userId,
-      cvId: input.cv.id,
-      requestId: input.requestId,
-      stage: "storage_upload",
-      status: "success",
-      source: CV_PDFS_BUCKET,
-      durationMs: performance.now() - storageStartedAt,
-      fileSize: templatePdfBuffer.length,
-      metadata: {
-        storagePath: pdfStoragePath,
-        temporary: true,
-      },
-    });
+
 
     try {
       const extracted = await this.deps.textExtractor.extract(

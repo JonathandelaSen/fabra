@@ -1,6 +1,6 @@
 import { OllamaInterviewQuestionAIServiceFactory } from "./infrastructure/services/ollama-interview-question-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { instrumentUseCases, SupabaseEventTracker, type EventTracker, type Telemetry } from "@/modules/shared";
+import { instrumentUseCases, type Telemetry, type EventBus } from "@/modules/shared";
 import { CreateProcessQuestionUseCase } from "./application/use-cases/create-process-question.use-case";
 import { DeleteProcessQuestionUseCase } from "./application/use-cases/delete-process-question.use-case";
 import { EditQuestionAnswerUseCase } from "./application/use-cases/edit-question-answer.use-case";
@@ -19,7 +19,6 @@ import { ProviderInterviewQuestionAIServiceFactory } from "./infrastructure/serv
 
 const questionRepo = new SupabaseProcessQuestionRepository();
 const followUpRepo = new SupabaseFollowUpRepository();
-const tracker: EventTracker = new SupabaseEventTracker();
 const aiFactory = new ProviderInterviewQuestionAIServiceFactory({
   geminiFactory: new GeminiInterviewQuestionAIServiceFactory(),
   openaiFactory: new OpenAIInterviewQuestionAIServiceFactory(),
@@ -27,39 +26,38 @@ const aiFactory = new ProviderInterviewQuestionAIServiceFactory({
   ollamaFactory: new OllamaInterviewQuestionAIServiceFactory(),
 });
 
-function createUseCases() {
+function createUseCases(eventBus: EventBus) {
   return {
     listProcessQuestions: new ListProcessQuestionsUseCase({ questionRepo }),
     getProcessQuestion: new GetProcessQuestionUseCase({ questionRepo }),
     createProcessQuestion: new CreateProcessQuestionUseCase({
       questionRepo,
-      tracker,
+      eventBus,
     }),
     updateProcessQuestion: new UpdateProcessQuestionUseCase({
       questionRepo,
-      tracker,
+      eventBus,
     }),
     generateQuestionAnswer: new GenerateQuestionAnswerUseCase({
       questionRepo,
       aiFactory,
-      tracker,
+      eventBus,
     }),
     editQuestionAnswer: new EditQuestionAnswerUseCase({
       questionRepo,
       aiFactory,
-      tracker,
+      eventBus,
     }),
     updateFollowUpByAnalysis: new UpdateFollowUpByAnalysisUseCase({
       followUpRepo,
-      tracker,
+      eventBus,
     }),
     deleteProcessQuestion: new DeleteProcessQuestionUseCase({
       questionRepo,
-      tracker,
+      eventBus,
     }),
     prepareQuestionAnswerCopyPaste: new PrepareQuestionAnswerCopyPasteUseCase({
       questionRepo,
-      tracker,
     }),
   };
 }
@@ -68,8 +66,8 @@ export type SelectionProcessModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): SelectionProcessModule;
 };
 
-export function createSelectionProcessModule(telemetry: Telemetry): SelectionProcessModule {
-  const useCases = instrumentUseCases("selection-process", createUseCases(), telemetry);
+export function createSelectionProcessModule(telemetry: Telemetry, eventBus: EventBus): SelectionProcessModule {
+  const useCases = instrumentUseCases("selection-process", createUseCases(eventBus), telemetry);
   return {
     ...useCases,
     bindRequest(client: SupabaseClient) {

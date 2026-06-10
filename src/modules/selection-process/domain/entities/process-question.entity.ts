@@ -6,6 +6,7 @@ import {
 } from "@/modules/shared";
 import { ProcessQuestionAnsweredEvent } from "../events/process-question-answered.event";
 import { ProcessQuestionCreatedEvent } from "../events/process-question-created.event";
+import { ProcessQuestionDeletedEvent } from "../events/process-question-deleted.event";
 import { ProcessQuestionUpdatedEvent } from "../events/process-question-updated.event";
 import { JobOpportunityId } from "../value-objects/job-opportunity-id.value-object";
 import { ProcessQuestionId } from "../value-objects/process-question-id.value-object";
@@ -174,6 +175,10 @@ export class ProcessQuestion extends AggregateRoot {
 
   get id(): string {
     return this.processQuestionId.toPrimitives();
+  }
+
+  delete(): void {
+    this.recordDomainEvent(new ProcessQuestionDeletedEvent(this.id));
   }
 
   toPrimitives(): ProcessQuestionPrimitives {

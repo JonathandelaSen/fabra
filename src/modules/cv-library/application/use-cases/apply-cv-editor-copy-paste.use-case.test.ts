@@ -30,15 +30,10 @@ const mockUpdateProfile = {
   execute: vi.fn().mockResolvedValue(mockUpdatedDocument),
 };
 
-const mockTracker = {
-  record: vi.fn().mockResolvedValue(undefined),
-};
-
 function createUseCase() {
   return new ApplyCVEditorCopyPasteUseCase({
     documentRepo: mockDocumentRepo as never,
     updateProfile: mockUpdateProfile as never,
-    tracker: mockTracker,
   });
 }
 
@@ -63,11 +58,6 @@ describe("ApplyCVEditorCopyPasteUseCase", () => {
         id: "cv-1",
         userId: "user-1",
         aiModel: "external-chat",
-      }),
-    );
-    expect(mockTracker.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        stage: "cv_editor_copy_paste_result_applied",
       }),
     );
   });

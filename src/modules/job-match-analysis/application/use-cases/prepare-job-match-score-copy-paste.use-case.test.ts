@@ -1,16 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
-import { jobMatchRepo, jobMatchTracker } from "./job-match-score-copy-paste-test-helpers";
+import { jobMatchRepo } from "./job-match-score-copy-paste-test-helpers";
 import { PrepareJobMatchScoreCopyPasteUseCase } from "./prepare-job-match-score-copy-paste.use-case";
 
 describe("PrepareJobMatchScoreCopyPasteUseCase", () => {
   it("builds an external chat prompt for an owned analysis", async () => {
     const repo = jobMatchRepo();
-    const tracker = jobMatchTracker();
     const buildPrompt = vi.fn(() => "prompt with job_match_analysis.score");
 
     const result = await new PrepareJobMatchScoreCopyPasteUseCase({
       repo,
-      tracker,
       buildPrompt,
     }).execute({
       id: "analysis-1",
@@ -30,13 +28,11 @@ describe("PrepareJobMatchScoreCopyPasteUseCase", () => {
       expectedResponse: { kind: "json", envelope: true },
     });
     expect(result?.privacyNotice).toContain("CV data");
-    expect(tracker.record).toHaveBeenCalled();
   });
 
   it("returns null for a missing analysis", async () => {
     const result = await new PrepareJobMatchScoreCopyPasteUseCase({
       repo: jobMatchRepo(null),
-      tracker: jobMatchTracker(),
       buildPrompt: vi.fn(),
     }).execute({
       id: "missing",
@@ -51,7 +47,6 @@ describe("PrepareJobMatchScoreCopyPasteUseCase", () => {
     const buildPrompt = vi.fn(() => "prompt");
     await new PrepareJobMatchScoreCopyPasteUseCase({
       repo: jobMatchRepo(),
-      tracker: jobMatchTracker(),
       buildPrompt,
     }).execute({
       id: "analysis-1",

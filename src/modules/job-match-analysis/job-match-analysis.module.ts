@@ -1,6 +1,6 @@
 import { OllamaJobMatchScoringAIServiceFactory } from "./infrastructure/services/ollama-job-match-scoring-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { instrumentUseCases, SupabaseEventTracker, type Telemetry, type EventBus } from "@/modules/shared";
+import { instrumentUseCases, type Telemetry, type EventBus } from "@/modules/shared";
 import { CreateJobMatchAnalysisUseCase } from "./application/use-cases/create-job-match-analysis.use-case";
 import { DeleteJobMatchAnalysisUseCase } from "./application/use-cases/delete-job-match-analysis.use-case";
 import { GetJobMatchAnalysisByIdUseCase } from "./application/use-cases/get-job-match-analysis-by-id.use-case";
@@ -20,7 +20,6 @@ import { buildJobMatchScoringCopyPastePrompt } from "./infrastructure/services/j
 import { SupabaseJobMatchAnalysisRepository } from "./infrastructure/repositories/supabase-job-match-analysis.repository";
 
 const repo = new SupabaseJobMatchAnalysisRepository();
-const tracker = new SupabaseEventTracker();
 const aiServiceFactory = new ProviderJobMatchScoringAIServiceFactory({
   geminiFactory: new GeminiJobMatchScoringAIServiceFactory(),
   openaiFactory: new OpenAIJobMatchScoringAIServiceFactory(),
@@ -51,16 +50,14 @@ function createUseCases(eventBus: EventBus) {
     deleteJobMatchAnalysis: new DeleteJobMatchAnalysisUseCase({ repo }),
     prepareJobMatchScoreCopyPaste: new PrepareJobMatchScoreCopyPasteUseCase({
       repo,
-      tracker,
       buildPrompt: buildJobMatchScoringCopyPastePrompt,
     }),
     previewJobMatchScoreCopyPaste: new PreviewJobMatchScoreCopyPasteUseCase({
       repo,
-      tracker,
     }),
     applyJobMatchScoreCopyPaste: new ApplyJobMatchScoreCopyPasteUseCase({
       repo,
-      tracker,
+      eventBus,
     }),
   };
 }

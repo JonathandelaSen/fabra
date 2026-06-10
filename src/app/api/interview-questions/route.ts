@@ -139,7 +139,6 @@ export async function POST(req: NextRequest) {
       answer,
       legacyCvId: linkedCvId,
       sourceJobMatchAnalysisId: analysis_id,
-      requestId,
     });
     const response = presentProcessQuestion(createdQuestion);
 

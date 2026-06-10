@@ -125,7 +125,7 @@ const feedbackNotesModule = createFeedbackNotesModule(telemetry, eventBus);
 const receivedFeedbackModule = createReceivedFeedbackModule(telemetry, eventBus);
 const workJournalModule = createWorkJournalModule(telemetry, eventBus);
 const commitmentsModule = createCommitmentsModule(telemetry, eventBus);
-const selectionProcessModule = createSelectionProcessModule(telemetry);
+const selectionProcessModule = createSelectionProcessModule(telemetry, eventBus);
 
 // Register query handlers needed by analysis-chat
 queryBus.register(

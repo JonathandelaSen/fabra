@@ -97,7 +97,6 @@ export async function POST(
         sourceTextHash: getCVSourceTextHash(text),
         aiModel: ai.model,
         profile: structured.profile,
-        requestId: `cv-template-profile-${id}`,
       });
       profile = presentCVStructuredProfile(savedProfile);
     }
@@ -114,7 +113,6 @@ export async function POST(
       sourceTextHash: profile.source_text_hash,
       aiModel: profile.ai_model,
       profile: profile.profile,
-      requestId: `cv-template-${id}`,
     });
 
     return ok({ version: presentCVDocument(templateCV), profile });

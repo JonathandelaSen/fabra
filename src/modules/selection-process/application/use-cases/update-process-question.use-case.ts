@@ -1,5 +1,4 @@
-import { Timestamp, UserId, type EventTracker } from "@/modules/shared";
-import { createRequestId } from "@/lib/observability";
+import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 import type {
   ProcessQuestionReadModel,
   ProcessQuestionRepository,
@@ -19,14 +18,13 @@ export interface UpdateProcessQuestionInput {
   aiGeneratedAt?: string | null;
   sourceJobMatchAnalysisId?: string | null;
   legacyCvId?: string | null;
-  requestId?: string;
 }
 
 export class UpdateProcessQuestionUseCase {
   constructor(
     private readonly deps: {
       questionRepo: ProcessQuestionRepository;
-      tracker: EventTracker;
+      eventBus: EventBus;
     }
   ) {}
 
@@ -56,16 +54,10 @@ export class UpdateProcessQuestionUseCase {
     });
 
     const saved = await this.deps.questionRepo.save(existing.question);
-    await this.deps.tracker.record({
-      userId: input.userId,
-      requestId: input.requestId ?? createRequestId("process-question"),
-      stage: "selection_process_question_updated",
-      status: "success",
-      source: "selection_process",
-      cvId: saved.question.toPrimitives().legacyCvId,
-      analysisId: saved.question.toPrimitives().sourceJobMatchAnalysisId,
-      metadata: { questionId: saved.question.id },
-    });
+
+    const events = existing.question.pullDomainEvents();
+    await this.deps.eventBus.publish(events);
+
     return saved;
   }
 }
