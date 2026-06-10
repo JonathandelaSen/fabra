@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { useRouter, usePathname } from "next/navigation";
 import { Activity, Users, LayoutDashboard } from "lucide-react";
-import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminObservabilityView } from "@/features/admin-observability";
 import { AdminUsersView } from "@/features/admin-users";
 import { AdminMetricsView } from "@/features/admin-metrics";
@@ -16,32 +16,41 @@ interface AdminAreaViewProps {
 
 export function AdminAreaView({ userEmail }: AdminAreaViewProps) {
   const t = useTranslations("admin.sections");
-  const [section, setSection] = useState<AdminSection>("dashboard");
+  const router = useRouter();
+  const pathname = usePathname();
+
+  let section: AdminSection = "dashboard";
+  if (pathname.startsWith("/admin/users")) {
+    section = "users";
+  } else if (pathname.startsWith("/admin/observability")) {
+    section = "observability";
+  }
+
+  const handleTabChange = (value: string | number | null) => {
+    if (value && typeof value === "string") {
+      router.push(`/admin/${value}`);
+    }
+  };
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col">
-      <div className="shrink-0 border-b border-line bg-canvas-header px-5 py-1.5">
-        <FeatureDetailTabBar<AdminSection>
-          tabs={[
-            {
-              id: "dashboard",
-              label: t("dashboard"),
-              icon: <LayoutDashboard className="h-4 w-4" />,
-            },
-            {
-              id: "users",
-              label: t("users"),
-              icon: <Users className="h-4 w-4" />,
-            },
-            {
-              id: "observability",
-              label: t("observability"),
-              icon: <Activity className="h-4 w-4" />,
-            },
-          ]}
-          activeTab={section}
-          onTabChange={setSection}
-        />
+      <div className="shrink-0 border-b border-line bg-canvas-header px-5 py-2.5">
+        <Tabs value={section} onValueChange={handleTabChange}>
+          <TabsList>
+            <TabsTrigger value="dashboard">
+              <LayoutDashboard />
+              {t("dashboard")}
+            </TabsTrigger>
+            <TabsTrigger value="users">
+              <Users />
+              {t("users")}
+            </TabsTrigger>
+            <TabsTrigger value="observability">
+              <Activity />
+              {t("observability")}
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
       <div className="min-h-0 flex-1 overflow-hidden">
         {section === "dashboard" ? (

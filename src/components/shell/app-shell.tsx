@@ -301,7 +301,7 @@ export default function AppShell({
       queueMicrotask(() => router.replace("/settings"));
     } else if (pathname === "/settings") {
       queueMicrotask(() => setActiveView(APP_VIEWS.settings));
-    } else if (pathname === "/admin" || view === APP_VIEWS.admin) {
+    } else if (pathname.startsWith("/admin") || view === APP_VIEWS.admin) {
       queueMicrotask(() => setActiveView(APP_VIEWS.admin));
     }
   }, [router, pathname, searchParams]);
@@ -497,7 +497,7 @@ export default function AppShell({
     rememberJobAnalysesLocation();
     rememberCVLibraryLocation();
     setActiveView(APP_VIEWS.admin);
-    window.history.replaceState(null, "", "/admin");
+    router.push("/admin/dashboard");
   };
 
   const handleNavigate = (view: SidebarActiveView) => {

@@ -1,15 +1,5 @@
 import { redirect } from "next/navigation";
-import { isAdminUser } from "@/lib/observability";
-import { createClient } from "@/lib/supabase/server";
 
-export default async function AdminPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) redirect("/login");
-  if (!(await isAdminUser(user.id))) redirect("/");
-
-  return null;
+export default function AdminPage() {
+  redirect("/admin/dashboard");
 }
