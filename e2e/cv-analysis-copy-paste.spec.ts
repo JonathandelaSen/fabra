@@ -57,7 +57,7 @@ test("user can score and replace a CV analysis with Copy Paste", async ({
     .click();
   await page
     .getByLabel(messages.en.analysisFlow.copyPaste.pasteResponseLabel)
-    .fill("not json");
+    .fill("}{");
   await page
     .getByRole("button", {
       name: messages.en.analysisFlow.copyPaste.validateResponse,
@@ -66,7 +66,7 @@ test("user can score and replace a CV analysis with Copy Paste", async ({
   await expect(page.getByText("not valid JSON")).toBeVisible();
   await expect(
     page.getByLabel(messages.en.analysisFlow.copyPaste.pasteResponseLabel),
-  ).toHaveValue("not json");
+  ).toHaveValue("}{");
   await expect(
     page.getByRole("button", {
       name: messages.en.analysisFlow.copyPaste.copyCorrection,

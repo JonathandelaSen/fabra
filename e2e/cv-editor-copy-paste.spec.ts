@@ -117,7 +117,7 @@ test.describe("CV editor copy-paste workflow", () => {
 
     await dialog
       .getByLabel(tCopyPaste.pasteResponseLabel)
-      .fill("not json");
+      .fill("}{");
     await dialog
       .getByRole("button", { name: tCopyPaste.validateResponse })
       .click();

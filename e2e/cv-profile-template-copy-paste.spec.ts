@@ -68,7 +68,7 @@ test("user can create a template CV profile with Copy Paste", async ({
   );
 
   await dialog.getByRole("button", { name: tCopyPaste.continue }).click();
-  await dialog.getByLabel(tCopyPaste.pasteResponseLabel).fill("not json");
+  await dialog.getByLabel(tCopyPaste.pasteResponseLabel).fill("}{");
   await dialog
     .getByRole("button", { name: tCopyPaste.validateResponse })
     .click();

@@ -120,13 +120,13 @@ test("user can score a job match analysis with Copy Paste", async ({
 
   await page.getByRole("dialog", { name: tCopyPaste.title }).getByRole("button", { name: tCopyPaste.continue }).click();
 
-  await page.getByLabel(tCopyPaste.pasteResponseLabel).fill("not json");
+  await page.getByLabel(tCopyPaste.pasteResponseLabel).fill("}{");
   await page
     .getByRole("button", { name: tCopyPaste.validateResponse })
     .click();
   await expect(page.getByText("not valid JSON")).toBeVisible();
   await expect(page.getByLabel(tCopyPaste.pasteResponseLabel)).toHaveValue(
-    "not json",
+    "}{",
   );
   await expect(
     page.getByRole("button", { name: tCopyPaste.copyCorrection }),

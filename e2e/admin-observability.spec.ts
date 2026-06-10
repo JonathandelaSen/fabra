@@ -21,6 +21,9 @@ test("admin user can open observability dashboard and filter events", async ({
 
   await loginViaUI(page, user);
   await page.goto("/admin");
+  await page
+    .getByRole("tab", { name: messages.en.admin.sections.observability })
+    .click();
 
   await expect(
     page.getByRole("heading", { name: messages.en.admin.title }),
