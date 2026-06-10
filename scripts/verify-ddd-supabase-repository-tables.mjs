@@ -40,6 +40,24 @@ const legacyCrossModuleReads = new Set([
   "src/modules/work-journal/infrastructure/repositories/supabase-work-journal-context.repository.ts::activity_contexts",
 ]);
 
+// Admin platform read models: aggregate counters for the admin dashboard.
+// Every new dashboard table must be added here deliberately.
+const adminReadModelReads = new Set([
+  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::cvs",
+  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::cv_structured_profiles",
+  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::job_match_analyses",
+  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::analysis_chat_conversations",
+  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::analysis_chat_messages",
+  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::interview_questions",
+  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::job_opportunities",
+  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::process_questions",
+  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::feedback_notes_feedbacks",
+  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::received_feedback",
+  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::work_journal_entries",
+  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::commitments",
+  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::activity_contexts",
+]);
+
 async function walkFiles(dir) {
   let entries;
   try {
@@ -113,6 +131,7 @@ export async function findSupabaseRepositoryTableViolations({
 
     for (const table of tables) {
       if (legacyCrossModuleReads.has(`${file}::${table}`)) continue;
+      if (adminReadModelReads.has(`${file}::${table}`)) continue;
       const owner = inferredOwnerForTable(table);
       if (!owner || owner === moduleName) continue;
       violations.push({
