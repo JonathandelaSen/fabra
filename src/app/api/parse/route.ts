@@ -1,3 +1,4 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import {
@@ -11,7 +12,7 @@ import { extractPdfText } from "@/lib/pdf-extraction";
 import { cvLibraryModule } from "@/lib/container";
 import { CV_PDFS_BUCKET, presentCVDocument } from "@/modules/cv-library";
 import { parseUploadCVFormData } from "../cvs/validation";
-import { ok, errorResponse, handleApiError } from "@/modules/shared";
+import { ok, errorResponse } from "@/modules/shared";
 
 export async function POST(req: NextRequest) {
   const requestId = createRequestId("parse");

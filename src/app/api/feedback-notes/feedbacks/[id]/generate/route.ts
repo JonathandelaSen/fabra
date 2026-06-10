@@ -1,10 +1,11 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { feedbackNotesModule } from "@/lib/container";
 import {
   presentFeedback,
 } from "@/modules/feedback-notes";
-import { ok, errorResponse, handleApiError } from "@/modules/shared";
+import { ok, errorResponse } from "@/modules/shared";
 import { parseGenerateFeedbackRequest } from "../../../validation";
 import {
   toFeedbackResponse,

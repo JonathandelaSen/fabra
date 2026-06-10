@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   InMemoryQueryBus,
+  NoOpTelemetry,
   Timestamp,
   UserId,
   type EventTracker,
@@ -49,7 +50,7 @@ function historyMessage() {
 
 describe("SendMessageUseCase", () => {
   it("gets context through the query bus, saves both messages, calls AI, and records events", async () => {
-    const queryBus = new InMemoryQueryBus();
+    const queryBus = new InMemoryQueryBus(new NoOpTelemetry());
     queryBus.register(GetAnalysisChatContextQuery.queryName, {
       async handle(query: GetAnalysisChatContextQuery) {
         expect(query.payload).toEqual({
@@ -128,7 +129,7 @@ describe("SendMessageUseCase", () => {
   });
 
   it("does not call AI when legacy context is missing", async () => {
-    const queryBus = new InMemoryQueryBus();
+    const queryBus = new InMemoryQueryBus(new NoOpTelemetry());
     queryBus.register(GetAnalysisChatContextQuery.queryName, {
       async handle() {
         return null;

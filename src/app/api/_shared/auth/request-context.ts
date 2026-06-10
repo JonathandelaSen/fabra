@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
+import { telemetry } from "@/lib/telemetry";
 
 type RequestSupabaseClient = Awaited<ReturnType<typeof createClient>>;
 
@@ -24,6 +25,7 @@ export async function getAuthenticatedRequestContext(): Promise<AuthenticatedReq
   } = await supabase.auth.getUser();
 
   if (!user) {
+    telemetry.setUser(null);
     return {
       ok: false,
       supabase,
@@ -32,5 +34,6 @@ export async function getAuthenticatedRequestContext(): Promise<AuthenticatedReq
     };
   }
 
+  telemetry.setUser({ id: user.id });
   return { ok: true, supabase, user };
 }

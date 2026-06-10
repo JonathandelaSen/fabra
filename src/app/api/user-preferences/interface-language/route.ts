@@ -1,6 +1,7 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
-import { errorResponse, handleApiError, ok } from "@/modules/shared";
+import { errorResponse, ok } from "@/modules/shared";
 import { isInterfaceLanguage } from "@/i18n/config";
 import { toInterfaceLanguagePreferenceResponse } from "./responses";
 

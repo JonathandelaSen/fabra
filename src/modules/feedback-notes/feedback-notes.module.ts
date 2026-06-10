@@ -1,7 +1,7 @@
 import { OllamaFeedbackAIServiceFactory } from "./infrastructure/services/ollama-feedback-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
-import { SupabaseEventTracker } from "@/modules/shared";
+import { instrumentUseCases, SupabaseEventTracker, type Telemetry } from "@/modules/shared";
 import { CreateEntryUseCase } from "./application/use-cases/create-entry.use-case";
 import { CreateFeedbackUseCase } from "./application/use-cases/create-feedback.use-case";
 import { DeleteEntryUseCase } from "./application/use-cases/delete-entry.use-case";
@@ -57,8 +57,8 @@ export type FeedbackNotesModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): FeedbackNotesModule;
 };
 
-export function createFeedbackNotesModule(): FeedbackNotesModule {
-  const useCases = createUseCases();
+export function createFeedbackNotesModule(telemetry: Telemetry): FeedbackNotesModule {
+  const useCases = instrumentUseCases("feedback-notes", createUseCases(), telemetry);
 
   return {
     ...useCases,

@@ -1,14 +1,11 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { getBestCVText } from "@/lib/cv-profile";
 import { selectionProcessModule } from "@/lib/container";
 import { presentProcessQuestion } from "@/modules/selection-process";
 import { createRequestId } from "@/lib/observability";
-import {
-  errorResponse,
-  handleApiError,
-  notFound,
-} from "@/modules/shared";
+import { errorResponse, notFound } from "@/modules/shared";
 import { ok } from "@/modules/shared";
 import { validateQuestionLinks } from "../../../validation";
 import { parsePrepareInterviewQuestionCopyPasteRequest } from "./validation";

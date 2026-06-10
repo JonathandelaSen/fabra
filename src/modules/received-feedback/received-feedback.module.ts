@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
-import { SupabaseEventTracker } from "@/modules/shared";
+import { instrumentUseCases, SupabaseEventTracker, type Telemetry } from "@/modules/shared";
 import { CreateReceivedFeedbackUseCase } from "./application/use-cases/create-received-feedback.use-case";
 import { DeleteReceivedFeedbackUseCase } from "./application/use-cases/delete-received-feedback.use-case";
 import { ListReceivedFeedbackUseCase } from "./application/use-cases/list-received-feedback.use-case";
@@ -32,8 +32,8 @@ export type ReceivedFeedbackModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): ReceivedFeedbackModule;
 };
 
-export function createReceivedFeedbackModule(): ReceivedFeedbackModule {
-  const useCases = createUseCases();
+export function createReceivedFeedbackModule(telemetry: Telemetry): ReceivedFeedbackModule {
+  const useCases = instrumentUseCases("received-feedback", createUseCases(), telemetry);
 
   return {
     ...useCases,

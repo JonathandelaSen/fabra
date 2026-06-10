@@ -1,8 +1,9 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { jobMatchAnalysisModule } from "@/lib/container";
 import { presentJobMatchAnalysis } from "@/modules/job-match-analysis";
-import { errorResponse, handleApiError, notFound, ok } from "@/modules/shared";
+import { errorResponse, notFound, ok } from "@/modules/shared";
 import {
   toJobMatchAnalysisDetailResponse,
   type ScoreJobMatchAnalysisResponse,

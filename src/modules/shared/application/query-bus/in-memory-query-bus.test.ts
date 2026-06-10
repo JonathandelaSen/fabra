@@ -3,6 +3,29 @@ import { InMemoryQueryBus } from "./in-memory-query-bus";
 import { UnregisteredQueryHandlerError } from "./unregistered-query-handler.error";
 import type { Query } from "./query";
 import type { QueryHandler } from "./query-handler";
+import type {
+  Telemetry,
+  TelemetrySpanOptions,
+} from "../telemetry/telemetry";
+
+class FakeTelemetry implements Telemetry {
+  readonly traces: TelemetrySpanOptions[] = [];
+  readonly captures: unknown[] = [];
+
+  async trace<T>(
+    options: TelemetrySpanOptions,
+    operation: () => Promise<T>,
+  ): Promise<T> {
+    this.traces.push(options);
+    return operation();
+  }
+
+  captureException(error: unknown): void {
+    this.captures.push(error);
+  }
+
+  setUser(): void {}
+}
 
 interface TestQueryPayload {
   readonly value: string;
@@ -26,7 +49,8 @@ class OtherQuery implements Query<Record<string, never>, string> {
 
 describe("InMemoryQueryBus", () => {
   it("executes the handler registered for the query name", async () => {
-    const bus = new InMemoryQueryBus();
+    const telemetry = new FakeTelemetry();
+    const bus = new InMemoryQueryBus(telemetry);
     const handledPayloads: TestQueryPayload[] = [];
     const handler: QueryHandler<TestQuery, string> = {
       async handle(query) {
@@ -41,18 +65,32 @@ describe("InMemoryQueryBus", () => {
       "handled:one"
     );
     expect(handledPayloads).toEqual([{ value: "one" }]);
+    expect(telemetry.traces).toEqual([
+      {
+        name: `query_bus.execute ${TestQuery.queryName}`,
+        operation: "query_bus.execute",
+        attributes: {
+          "fabra.layer": "application",
+          "fabra.query": TestQuery.queryName,
+        },
+      },
+    ]);
+    expect(telemetry.captures).toEqual([]);
   });
 
   it("throws a named error when no handler is registered", async () => {
-    const bus = new InMemoryQueryBus();
+    const telemetry = new FakeTelemetry();
+    const bus = new InMemoryQueryBus(telemetry);
 
     await expect(bus.execute(new OtherQuery())).rejects.toThrow(
       new UnregisteredQueryHandlerError(OtherQuery.queryName)
     );
+    expect(telemetry.traces).toHaveLength(1);
+    expect(telemetry.captures).toEqual([]);
   });
 
   it("rejects duplicate handler registration for a query name", () => {
-    const bus = new InMemoryQueryBus();
+    const bus = new InMemoryQueryBus(new FakeTelemetry());
     const handler: QueryHandler<TestQuery, string> = {
       async handle() {
         return "ok";

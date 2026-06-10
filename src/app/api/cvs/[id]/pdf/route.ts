@@ -1,9 +1,10 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvLibraryModule } from "@/lib/container";
 import { CV_PDFS_BUCKET, presentCVDocument } from "@/modules/cv-library";
 import { parseTemplatePdfRequest } from "../../validation";
-import { notFound, handleApiError } from "@/modules/shared";
+import { notFound } from "@/modules/shared";
 
 export async function GET(
   req: NextRequest,

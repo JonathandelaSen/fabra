@@ -12,6 +12,7 @@ const checks = [
   ["node", ["scripts/verify-frontend-components.mjs"]],
   ["node", ["scripts/verify-ai-service-di.mjs"]],
   ["node", ["scripts/verify-shared-component-tones.mjs"]],
+  ["node", ["scripts/verify-technical-observability-boundaries.mjs"]],
 ];
 
 function run(command, args) {

@@ -1,6 +1,6 @@
 import { OllamaInterviewQuestionAIServiceFactory } from "./infrastructure/services/ollama-interview-question-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { SupabaseEventTracker, type EventTracker } from "@/modules/shared";
+import { instrumentUseCases, SupabaseEventTracker, type EventTracker, type Telemetry } from "@/modules/shared";
 import { CreateProcessQuestionUseCase } from "./application/use-cases/create-process-question.use-case";
 import { DeleteProcessQuestionUseCase } from "./application/use-cases/delete-process-question.use-case";
 import { EditQuestionAnswerUseCase } from "./application/use-cases/edit-question-answer.use-case";
@@ -68,8 +68,8 @@ export type SelectionProcessModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): SelectionProcessModule;
 };
 
-export function createSelectionProcessModule(): SelectionProcessModule {
-  const useCases = createUseCases();
+export function createSelectionProcessModule(telemetry: Telemetry): SelectionProcessModule {
+  const useCases = instrumentUseCases("selection-process", createUseCases(), telemetry);
   return {
     ...useCases,
     bindRequest(client: SupabaseClient) {

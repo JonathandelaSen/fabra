@@ -7,6 +7,7 @@ import {
   createJobMatchAnalysisModule,
   presentJobMatchAnalysis,
 } from "@/modules/job-match-analysis";
+import { NoOpTelemetry } from "@/modules/shared";
 
 export async function createTestCVAnalysis(
   supabase: SupabaseClient,
@@ -19,7 +20,7 @@ export async function createTestCVAnalysis(
     text?: string | null;
   },
 ) {
-  const cvAnalysisModule = createCVAnalysisModule();
+  const cvAnalysisModule = createCVAnalysisModule(new NoOpTelemetry());
   cvAnalysisModule.bindRequest(supabase);
 
   const entity = await cvAnalysisModule.createCVAnalysis.execute({
@@ -57,7 +58,7 @@ export async function createTestJobMatchAnalysis(
     score?: number | null;
   },
 ) {
-  const jobMatchAnalysisModule = createJobMatchAnalysisModule();
+  const jobMatchAnalysisModule = createJobMatchAnalysisModule(new NoOpTelemetry());
   jobMatchAnalysisModule.bindRequest(supabase);
 
   const entity = await jobMatchAnalysisModule.createJobMatchAnalysis.execute({

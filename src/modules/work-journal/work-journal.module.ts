@@ -1,7 +1,7 @@
 import { OllamaJournalAIServiceFactory } from "./infrastructure/services/ollama-journal-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
-import { SupabaseEventTracker } from "@/modules/shared";
+import { instrumentUseCases, SupabaseEventTracker, type Telemetry } from "@/modules/shared";
 import { SupabaseWorkJournalEntryRepository } from "./infrastructure/repositories/supabase-work-journal-entry.repository";
 import { GeminiJournalAIServiceFactory } from "./infrastructure/services/gemini-journal-ai.service";
 import { MockJournalAIServiceFactory } from "./infrastructure/services/mock-journal-ai.service";
@@ -36,8 +36,8 @@ export type WorkJournalModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): WorkJournalModule;
 };
 
-export function createWorkJournalModule(): WorkJournalModule {
-  const useCases = createUseCases();
+export function createWorkJournalModule(telemetry: Telemetry): WorkJournalModule {
+  const useCases = instrumentUseCases("work-journal", createUseCases(), telemetry);
 
   return {
     ...useCases,

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { InMemoryQueryBus } from "@/modules/shared";
+import { NoOpTelemetry } from "@/modules/shared";
 import {
   createCVAnalysisModule,
   GetCVAnalysisByIdQuery,
@@ -20,9 +21,9 @@ import { AnalysisChatContextRepository } from "./analysis-chat-context.repositor
 
 const supabase = getSupabaseClient();
 
-const queryBus = new InMemoryQueryBus();
-const cvAnalysisModule = createCVAnalysisModule();
-const jobMatchAnalysisModule = createJobMatchAnalysisModule();
+const queryBus = new InMemoryQueryBus(new NoOpTelemetry());
+const cvAnalysisModule = createCVAnalysisModule(new NoOpTelemetry());
+const jobMatchAnalysisModule = createJobMatchAnalysisModule(new NoOpTelemetry());
 queryBus.register(
   GetCVAnalysisByIdQuery.queryName,
   new GetCVAnalysisByIdQueryHandler(cvAnalysisModule.getCVAnalysisById),

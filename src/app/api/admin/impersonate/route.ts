@@ -1,8 +1,9 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { adminModule } from "@/lib/container";
 import { isAdminUser } from "@/lib/observability";
-import { ok, errorResponse, forbidden, handleApiError } from "@/modules/shared";
+import { ok, errorResponse, forbidden } from "@/modules/shared";
 import { parseImpersonateUserRequest } from "./validation";
 import type { ImpersonateUserResponse } from "./responses";
 

@@ -42,7 +42,17 @@ export function errorResponse(error: {
   return NextResponse.json({ error: error.message }, { status: error.status });
 }
 
-export function handleApiError(error: unknown): NextResponse<{ error: string }> {
+export function getApiErrorStatus(error: unknown): number {
+  if (error instanceof HttpError) return error.status;
+  if (error instanceof DomainError) {
+    return error.name.endsWith("NotFoundError") ? 404 : 400;
+  }
+  return 500;
+}
+
+export function mapApiErrorToResponse(
+  error: unknown,
+): NextResponse<{ error: string }> {
   if (error instanceof HttpError) {
     return NextResponse.json({ error: error.message }, { status: error.status });
   }

@@ -1,3 +1,4 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import {
@@ -10,7 +11,7 @@ import {
   toJobMatchAnalysisDetailResponse,
   type JobMatchAnalysisOfferStatus,
 } from "../responses";
-import { ok, errorResponse, notFound, handleApiError } from "@/modules/shared";
+import { ok, errorResponse, notFound } from "@/modules/shared";
 
 interface FollowUpTrackingRow {
   status: JobMatchAnalysisOfferStatus;

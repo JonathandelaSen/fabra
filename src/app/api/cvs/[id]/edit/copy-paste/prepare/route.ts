@@ -1,8 +1,9 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { getLatestRecommendationAnalysisForCV } from "@/lib/analysis-queries";
 import { cvLibraryModule } from "@/lib/container";
-import { errorResponse, handleApiError, notFound, ok } from "@/modules/shared";
+import { errorResponse, notFound, ok } from "@/modules/shared";
 import { parsePrepareCVEditorCopyPasteRequest } from "../../../../validation";
 import type { PrepareCVEditorCopyPasteResponse } from "./responses";
 

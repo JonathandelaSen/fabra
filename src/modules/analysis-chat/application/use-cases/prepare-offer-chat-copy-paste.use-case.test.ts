@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   InMemoryQueryBus,
+  NoOpTelemetry,
   Timestamp,
   UserId,
   type EventTracker,
@@ -49,7 +50,7 @@ function historyMessage() {
 
 describe("PrepareOfferChatCopyPasteUseCase", () => {
   it("builds a plain text external chat prompt with context and history", async () => {
-    const queryBus = new InMemoryQueryBus();
+    const queryBus = new InMemoryQueryBus(new NoOpTelemetry());
     queryBus.register(GetAnalysisChatContextQuery.queryName, {
       async handle() {
         return {

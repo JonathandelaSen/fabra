@@ -6,7 +6,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { faker } from "@faker-js/faker";
-import { InMemoryQueryBus } from "@/modules/shared";
+import { InMemoryQueryBus, NoOpTelemetry } from "@/modules/shared";
 import { createActivityContextsModule } from "@/modules/activity-context";
 import { createCVLibraryE2EModule } from "@/modules/cv-library/cv-library.e2e.module";
 import {
@@ -109,17 +109,18 @@ const DEMO_CHAT_MESSAGES = [
 // ---------------------------------------------------------------------------
 // Modules (singleton, wired once)
 // ---------------------------------------------------------------------------
-const queryBus = new InMemoryQueryBus();
-const activityModule = createActivityContextsModule();
-const cvLibraryE2E = createCVLibraryE2EModule(queryBus);
-const cvAnalysisModule = createCVAnalysisModule();
-const jobMatchModule = createJobMatchAnalysisModule();
-const analysisChatModule = createAnalysisChatModule(queryBus);
-const feedbackNotesModule = createFeedbackNotesModule();
-const receivedFeedbackModule = createReceivedFeedbackModule();
-const workJournalModule = createWorkJournalModule();
-const commitmentsModule = createCommitmentsModule();
-const selectionProcessModule = createSelectionProcessModule();
+const telemetry = new NoOpTelemetry();
+const queryBus = new InMemoryQueryBus(telemetry);
+const activityModule = createActivityContextsModule(telemetry);
+const cvLibraryE2E = createCVLibraryE2EModule(queryBus, telemetry);
+const cvAnalysisModule = createCVAnalysisModule(telemetry);
+const jobMatchModule = createJobMatchAnalysisModule(telemetry);
+const analysisChatModule = createAnalysisChatModule(queryBus, telemetry);
+const feedbackNotesModule = createFeedbackNotesModule(telemetry);
+const receivedFeedbackModule = createReceivedFeedbackModule(telemetry);
+const workJournalModule = createWorkJournalModule(telemetry);
+const commitmentsModule = createCommitmentsModule(telemetry);
+const selectionProcessModule = createSelectionProcessModule(telemetry);
 
 // Register query handlers needed by analysis-chat
 queryBus.register(

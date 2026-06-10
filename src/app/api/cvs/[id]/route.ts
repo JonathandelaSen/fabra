@@ -1,3 +1,4 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import {
@@ -7,7 +8,7 @@ import {
 import { cvLibraryModule } from "@/lib/container";
 import { presentCVDocument } from "@/modules/cv-library";
 import { parseUpdateCVDocumentRequest } from "../validation";
-import { ok, errorResponse, notFound, badRequest, handleApiError } from "@/modules/shared";
+import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
 import {
   type CVDocumentDetailResponse,
   toCVDocumentDetailResponse,

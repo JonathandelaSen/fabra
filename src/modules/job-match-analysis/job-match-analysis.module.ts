@@ -1,6 +1,6 @@
 import { OllamaJobMatchScoringAIServiceFactory } from "./infrastructure/services/ollama-job-match-scoring-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { SupabaseEventTracker } from "@/modules/shared";
+import { instrumentUseCases, SupabaseEventTracker, type Telemetry } from "@/modules/shared";
 import { CreateJobMatchAnalysisUseCase } from "./application/use-cases/create-job-match-analysis.use-case";
 import { DeleteJobMatchAnalysisUseCase } from "./application/use-cases/delete-job-match-analysis.use-case";
 import { GetJobMatchAnalysisByIdUseCase } from "./application/use-cases/get-job-match-analysis-by-id.use-case";
@@ -66,8 +66,8 @@ export type JobMatchAnalysisModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): JobMatchAnalysisModule;
 };
 
-export function createJobMatchAnalysisModule(): JobMatchAnalysisModule {
-  const useCases = createUseCases();
+export function createJobMatchAnalysisModule(telemetry: Telemetry): JobMatchAnalysisModule {
+  const useCases = instrumentUseCases("job-match-analysis", createUseCases(), telemetry);
   return {
     ...useCases,
     bindRequest(client: SupabaseClient) {

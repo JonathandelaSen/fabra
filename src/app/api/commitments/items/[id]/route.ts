@@ -1,8 +1,9 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { commitmentsModule } from "@/lib/container";
 import { presentCommitmentItem } from "@/modules/commitments";
-import { ok, errorResponse, handleApiError } from "@/modules/shared";
+import { ok, errorResponse } from "@/modules/shared";
 import { parseUpdateCommitmentItemRequest } from "../../validation";
 import {
   toCommitmentItemResponse,

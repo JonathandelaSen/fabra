@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
-import { SupabaseEventTracker } from "@/modules/shared";
+import { instrumentUseCases, SupabaseEventTracker, type Telemetry } from "@/modules/shared";
 import { CreateCommitmentUseCase } from "./application/use-cases/create-commitment.use-case";
 import { CreateCommitmentItemUseCase } from "./application/use-cases/create-item.use-case";
 import { CreateCommitmentOutcomeUseCase } from "./application/use-cases/create-outcome.use-case";
@@ -43,8 +43,8 @@ export type CommitmentsModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): CommitmentsModule;
 };
 
-export function createCommitmentsModule(): CommitmentsModule {
-  const useCases = createUseCases();
+export function createCommitmentsModule(telemetry: Telemetry): CommitmentsModule {
+  const useCases = instrumentUseCases("commitments", createUseCases(), telemetry);
 
   return {
     ...useCases,

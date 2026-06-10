@@ -1,3 +1,4 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import {
@@ -17,7 +18,7 @@ import {
   toJobMatchAnalysisDetailResponse,
   type JobMatchAnalysisOfferStatus,
 } from "./responses";
-import { ok, errorResponse, notFound, badRequest, handleApiError } from "@/modules/shared";
+import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
 
 const ROUTE_SOURCE = "api_job_match_analyses";
 

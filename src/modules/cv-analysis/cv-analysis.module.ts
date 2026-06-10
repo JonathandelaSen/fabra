@@ -1,7 +1,7 @@
 import { OllamaCVScoringAIServiceFactory } from "./infrastructure/services/ollama-cv-scoring-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
-import { SupabaseEventTracker } from "@/modules/shared";
+import { instrumentUseCases, SupabaseEventTracker, type Telemetry } from "@/modules/shared";
 import { ApplyCVScoreCopyPasteUseCase } from "./application/use-cases/apply-cv-score-copy-paste.use-case";
 import { CreateCVAnalysisUseCase } from "./application/use-cases/create-cv-analysis.use-case";
 import { DeleteCVAnalysisUseCase } from "./application/use-cases/delete-cv-analysis.use-case";
@@ -59,8 +59,8 @@ export type CVAnalysisModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): CVAnalysisModule;
 };
 
-export function createCVAnalysisModule(): CVAnalysisModule {
-  const useCases = createUseCases();
+export function createCVAnalysisModule(telemetry: Telemetry): CVAnalysisModule {
+  const useCases = instrumentUseCases("cv-analysis", createUseCases(), telemetry);
   return {
     ...useCases,
     bindRequest(client: SupabaseClient) {

@@ -27,6 +27,16 @@ export {
   ok,
   created,
   errorResponse,
-  handleApiError,
 } from "./infrastructure/http/api-errors";
+export { createApiErrorHandler } from "./infrastructure/http/create-api-error-handler";
 export type { SupabaseAware } from "./infrastructure/supabase-aware";
+export type {
+  Telemetry,
+  TelemetryAttribute,
+  TelemetryCaptureOptions,
+  TelemetrySpanOptions,
+  TelemetryUser,
+} from "./application/telemetry/telemetry";
+export { NoOpTelemetry } from "./infrastructure/telemetry/no-op-telemetry";
+export { SentryTelemetry } from "./infrastructure/telemetry/sentry-telemetry";
+export { instrumentUseCases } from "./infrastructure/telemetry/instrument-use-cases";

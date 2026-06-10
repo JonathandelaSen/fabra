@@ -1,9 +1,9 @@
 import { OllamaCVProfileEditingAIServiceFactory } from "./infrastructure/services/ollama-cv-profile-editing-ai.service";
 import { OllamaCVProfileStructuringAIServiceFactory } from "./infrastructure/services/ollama-cv-profile-structuring-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { QueryBus } from "@/modules/shared";
+import type { QueryBus, Telemetry } from "@/modules/shared";
 import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
-import { SupabaseEventTracker } from "@/modules/shared";
+import { instrumentUseCases, SupabaseEventTracker } from "@/modules/shared";
 import { ApplyCVEditorCopyPasteUseCase } from "./application/use-cases/apply-cv-editor-copy-paste.use-case";
 import { ApplyCVProfileStructureCopyPasteUseCase } from "./application/use-cases/apply-cv-profile-structure-copy-paste.use-case";
 import { CreateTemplateCVDocumentUseCase } from "./application/use-cases/create-template-cv-document.use-case";
@@ -168,8 +168,11 @@ export type CVLibraryModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): CVLibraryModule;
 };
 
-export function createCVLibraryModule(queryBus: QueryBus): CVLibraryModule {
-  const useCases = createUseCases(queryBus);
+export function createCVLibraryModule(
+  queryBus: QueryBus,
+  telemetry: Telemetry,
+): CVLibraryModule {
+  const useCases = instrumentUseCases("cv-library", createUseCases(queryBus), telemetry);
   return {
     ...useCases,
     bindRequest(client: SupabaseClient) {

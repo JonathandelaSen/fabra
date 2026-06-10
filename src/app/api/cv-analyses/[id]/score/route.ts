@@ -1,3 +1,4 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import {
@@ -13,7 +14,7 @@ import {
   toCVAnalysisDetailResponse,
   type ScoreCVAnalysisResponse,
 } from "../../responses";
-import { ok, errorResponse, notFound, handleApiError } from "@/modules/shared";
+import { ok, errorResponse, notFound } from "@/modules/shared";
 
 export const maxDuration = 60;
 

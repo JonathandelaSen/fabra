@@ -1,8 +1,9 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { adminModule } from "@/lib/container";
 import { isAdminUser } from "@/lib/observability";
-import { ok, forbidden, handleApiError } from "@/modules/shared";
+import { ok, forbidden } from "@/modules/shared";
 import { parseListAdminUsersRequest } from "./validation";
 import type { ListAdminUsersResponse } from "./responses";
 

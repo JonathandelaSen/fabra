@@ -31,19 +31,20 @@ import {
 import { createReceivedFeedbackModule } from "@/modules/received-feedback";
 import { createSelectionProcessModule } from "@/modules/selection-process";
 import { createWorkJournalModule } from "@/modules/work-journal";
+import { telemetry } from "@/lib/telemetry";
 
-const queryBus = new InMemoryQueryBus();
+const queryBus = new InMemoryQueryBus(telemetry);
 
-export const activityContextsModule = createActivityContextsModule();
-export const adminModule = createAdminModule();
-export const cvAnalysisModule = createCVAnalysisModule();
-export const cvLibraryModule = createCVLibraryModule(queryBus);
-export const commitmentsModule = createCommitmentsModule();
-export const feedbackNotesModule = createFeedbackNotesModule();
-export const jobMatchAnalysisModule = createJobMatchAnalysisModule();
-export const receivedFeedbackModule = createReceivedFeedbackModule();
-export const selectionProcessModule = createSelectionProcessModule();
-export const workJournalModule = createWorkJournalModule();
+export const activityContextsModule = createActivityContextsModule(telemetry);
+export const adminModule = createAdminModule(telemetry);
+export const cvAnalysisModule = createCVAnalysisModule(telemetry);
+export const cvLibraryModule = createCVLibraryModule(queryBus, telemetry);
+export const commitmentsModule = createCommitmentsModule(telemetry);
+export const feedbackNotesModule = createFeedbackNotesModule(telemetry);
+export const jobMatchAnalysisModule = createJobMatchAnalysisModule(telemetry);
+export const receivedFeedbackModule = createReceivedFeedbackModule(telemetry);
+export const selectionProcessModule = createSelectionProcessModule(telemetry);
+export const workJournalModule = createWorkJournalModule(telemetry);
 
 queryBus.register(
   GetCVAnalysisByIdQuery.queryName,
@@ -74,7 +75,7 @@ queryBus.register(
   ),
 );
 
-const _analysisChatModule = createAnalysisChatModule(queryBus);
+const _analysisChatModule = createAnalysisChatModule(queryBus, telemetry);
 const originalBind = _analysisChatModule.bindRequest.bind(_analysisChatModule);
 _analysisChatModule.bindRequest = (client) => {
   cvAnalysisModule.bindRequest(client);

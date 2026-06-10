@@ -33,7 +33,21 @@ hierarchy.
 
 Design approved through a `grill-me` interview on June 10, 2026.
 
-Implementation has not started.
+Implemented locally on June 10, 2026.
+
+Automated verification covers the telemetry port, NoOp and Sentry adapters,
+exactly-once execution, use-case instrumentation, query-bus instrumentation,
+API exception capture, runtime enablement policy, provider boundaries, frontend
+tests, and the production build.
+
+Pending operational verification:
+
+- configure `SENTRY_DSN`, `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, and
+  `SENTRY_PROJECT` in the deployment environment
+- perform the manual local opt-in checks with
+  `OBSERVABILITY_ENABLE_LOCAL=true`
+- verify production issue capture, traces, release association, and source maps
+- configure and record Sentry alert rules
 
 ## Raw decision interview
 

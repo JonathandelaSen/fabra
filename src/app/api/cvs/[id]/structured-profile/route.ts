@@ -1,10 +1,11 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { getBestCVText, getCVSourceTextHash } from "@/lib/cv-profile";
 import { cvLibraryModule } from "@/lib/container";
 import { presentCVDocument, presentCVStructuredProfile } from "@/modules/cv-library";
 import { parseStructureCVProfileRequest } from "../../validation";
-import { ok, errorResponse, notFound, badRequest, handleApiError } from "@/modules/shared";
+import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
 
 export async function GET(
   _req: NextRequest,

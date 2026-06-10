@@ -1,8 +1,8 @@
 import { OllamaCVProfileStructuringAIServiceFactory } from "./infrastructure/services/ollama-cv-profile-structuring-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { QueryBus } from "@/modules/shared";
+import type { QueryBus, Telemetry } from "@/modules/shared";
 import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
-import { SupabaseEventTracker } from "@/modules/shared";
+import { instrumentUseCases, SupabaseEventTracker } from "@/modules/shared";
 import { CreateUploadedCVDocumentUseCase } from "./application/use-cases/create-uploaded-cv-document.use-case";
 import { GetCVDocumentUseCase } from "./application/use-cases/get-cv-document.use-case";
 import { ListCVDocumentsUseCase } from "./application/use-cases/list-cv-documents.use-case";
@@ -66,8 +66,13 @@ export type CVLibraryE2EModule = ReturnType<typeof createE2EUseCases> & {
 
 export function createCVLibraryE2EModule(
   queryBus: QueryBus,
+  telemetry: Telemetry,
 ): CVLibraryE2EModule {
-  const useCases = createE2EUseCases(queryBus);
+  const useCases = instrumentUseCases(
+    "cv-library-e2e",
+    createE2EUseCases(queryBus),
+    telemetry,
+  );
   return {
     ...useCases,
     bindRequest(client: SupabaseClient) {
@@ -78,4 +83,3 @@ export function createCVLibraryE2EModule(
     },
   };
 }
-

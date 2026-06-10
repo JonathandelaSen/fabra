@@ -1,10 +1,11 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvLibraryModule, jobMatchAnalysisModule } from "@/lib/container";
 import {
   presentCVDocumentSummary,
 } from "@/modules/cv-library";
 import { presentJobMatchAnalysisSummary } from "@/modules/job-match-analysis";
-import { handleApiError, ok } from "@/modules/shared";
+import { ok } from "@/modules/shared";
 import type { InterviewQuestionOptionsResponse } from "../responses";
 
 export async function GET() {

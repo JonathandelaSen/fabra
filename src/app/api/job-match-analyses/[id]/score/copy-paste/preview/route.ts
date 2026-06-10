@@ -1,7 +1,8 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { jobMatchAnalysisModule } from "@/lib/container";
-import { errorResponse, handleApiError, notFound, ok } from "@/modules/shared";
+import { errorResponse, notFound, ok } from "@/modules/shared";
 import { parsePreviewJobMatchAnalysisCopyPasteRequest } from "./validation";
 import type { PreviewJobMatchAnalysisCopyPasteResponse } from "./responses";
 

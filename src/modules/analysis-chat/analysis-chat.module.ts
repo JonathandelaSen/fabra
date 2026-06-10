@@ -1,7 +1,7 @@
 import { OllamaAnalysisChatAIServiceFactory } from "./infrastructure/services/ollama-analysis-chat-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { EventTracker, QueryBus } from "@/modules/shared";
-import { SupabaseEventTracker } from "@/modules/shared";
+import type { EventTracker, QueryBus, Telemetry } from "@/modules/shared";
+import { instrumentUseCases, SupabaseEventTracker } from "@/modules/shared";
 import { GetAnalysisChatContextQueryHandler } from "./application/queries/get-analysis-chat-context.query-handler";
 import { GetAnalysisChatContextQuery } from "./application/queries/get-analysis-chat-context.query";
 import { CreateConversationUseCase } from "./application/use-cases/create-conversation.use-case";
@@ -80,9 +80,14 @@ export type AnalysisChatModule = ReturnType<typeof createUseCases> & {
 
 export function createAnalysisChatModule(
   queryBus: QueryBus,
+  telemetry: Telemetry,
 ): AnalysisChatModule {
   const contextReader = new AnalysisChatContextRepository(queryBus);
-  const useCases = createUseCases(queryBus, contextReader);
+  const useCases = instrumentUseCases(
+    "analysis-chat",
+    createUseCases(queryBus, contextReader),
+    telemetry,
+  );
 
   return {
     ...useCases,

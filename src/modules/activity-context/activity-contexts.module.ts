@@ -6,7 +6,7 @@ import { HandleActivityContextSuggestionUseCase } from "./application/use-cases/
 import { ListActivityContextSuggestionsUseCase } from "./application/use-cases/list-activity-context-suggestions.use-case";
 import { ListActivityContextsUseCase } from "./application/use-cases/list-activity-contexts.use-case";
 import { UpdateActivityContextUseCase } from "./application/use-cases/update-activity-context.use-case";
-import { SupabaseEventTracker } from "@/modules/shared";
+import { instrumentUseCases, SupabaseEventTracker, type Telemetry } from "@/modules/shared";
 import type { EventTracker } from "@/modules/shared/domain/repositories/event-tracker.repository";
 import { SupabaseActivityContextRepository } from "./infrastructure/repositories/supabase-activity-context.repository";
 import { SupabaseCVDataRepository } from "./infrastructure/repositories/supabase-cv-data.repository";
@@ -37,8 +37,8 @@ export type ActivityContextsModule = ReturnType<typeof createUseCases> & {
   bindRequest(client: SupabaseClient): ActivityContextsModule;
 };
 
-export function createActivityContextsModule(): ActivityContextsModule {
-  const useCases = createUseCases();
+export function createActivityContextsModule(telemetry: Telemetry): ActivityContextsModule {
+  const useCases = instrumentUseCases("activity-context", createUseCases(), telemetry);
 
   return {
     ...useCases,

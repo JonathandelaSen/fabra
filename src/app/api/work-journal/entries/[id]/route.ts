@@ -1,8 +1,9 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { activityContextsModule, workJournalModule } from "@/lib/container";
 import { presentWorkJournalEntry } from "@/modules/work-journal";
-import { ok, errorResponse, handleApiError } from "@/modules/shared";
+import { ok, errorResponse } from "@/modules/shared";
 import { parseUpdateWorkJournalEntryRequest } from "../../validation";
 import {
   toWorkJournalEntryResponse,

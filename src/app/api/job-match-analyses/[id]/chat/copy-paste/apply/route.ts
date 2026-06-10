@@ -1,14 +1,9 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { analysisChatModule } from "@/lib/container";
 import { createRequestId } from "@/lib/observability";
-import {
-  badRequest,
-  errorResponse,
-  handleApiError,
-  notFound,
-  ok,
-} from "@/modules/shared";
+import { badRequest, errorResponse, notFound, ok } from "@/modules/shared";
 import { presentMessage } from "@/modules/analysis-chat";
 import { parseApplyOfferChatCopyPasteRequest } from "./validation";
 import type { ApplyOfferChatCopyPasteResponse } from "./responses";

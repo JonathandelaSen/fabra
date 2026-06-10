@@ -1,3 +1,4 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import {
@@ -6,7 +7,7 @@ import {
 } from "../validation";
 import { selectionProcessModule } from "@/lib/container";
 import { presentProcessQuestion } from "@/modules/selection-process";
-import { ok, errorResponse, notFound, handleApiError } from "@/modules/shared";
+import { ok, errorResponse, notFound } from "@/modules/shared";
 import {
   toInterviewQuestionResponse,
   type DeleteInterviewQuestionResponse,

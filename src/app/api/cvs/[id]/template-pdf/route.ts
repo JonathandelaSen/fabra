@@ -1,3 +1,4 @@
+import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { getCVTemplate, type CVTemplateId, type CVTemplateLocale } from "@/lib/cv-templates";
@@ -5,7 +6,7 @@ import { renderTemplatePDF } from "@/lib/cv-template-pdf";
 import { cvLibraryModule } from "@/lib/container";
 import { presentCVDocument } from "@/modules/cv-library";
 import { parseTemplatePdfRequest } from "../../validation";
-import { notFound, badRequest, handleApiError } from "@/modules/shared";
+import { notFound, badRequest } from "@/modules/shared";
 
 export async function GET(
   req: NextRequest,
