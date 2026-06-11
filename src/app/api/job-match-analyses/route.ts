@@ -1,12 +1,7 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
-import {
-  createRequestId,
-  getErrorCode,
-  recordProcessingEvent,
-  sanitizeErrorMessage,
-} from "@/lib/observability";
+import { createRequestId } from "@/lib/observability";
 import { cvLibraryModule, jobMatchAnalysisModule } from "@/lib/container";
 import {
   presentJobMatchAnalysis,
@@ -79,15 +74,11 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const requestId = createRequestId("job_match_analysis");
-  let userId: string | null = null;
-  let cvIdForEvents: string | null = null;
-  let analysisIdForEvents: string | null = null;
 
   try {
     const authContext = await getAuthenticatedRequestContext();
     if (!authContext.ok) return authContext.response;
     const { supabase, user } = authContext;
-    userId = user.id;
 
     const body = await req.json();
     const parsed = parseCreateJobMatchAnalysisRequest(body);
@@ -95,7 +86,6 @@ export async function POST(req: NextRequest) {
       return errorResponse(parsed.error);
     }
     const { cvId, title, jobDescription, jobUrl, model } = parsed.value;
-    cvIdForEvents = cvId;
 
     const prepared = await cvLibraryModule
       .bindRequest(supabase)
@@ -110,42 +100,14 @@ export async function POST(req: NextRequest) {
     }
 
     if (!prepared.analysisText) {
-      await recordProcessingEvent({
-        userId,
-        cvId,
-        requestId,
-        stage: "analysis_preflight",
-        status: "error",
-        source: ROUTE_SOURCE,
-        fileSize: prepared.extractionDiagnostics.fileSize,
-        errorCode: "no_extracted_text_available",
-        errorMessage: "No extracted text available for this CV.",
-        metadata: prepared.extractionDiagnostics,
-      });
       throw badRequest("No extracted text available for this CV");
     }
-
-    analysisIdForEvents = crypto.randomUUID();
-    const persistStartedAt = performance.now();
-    await recordProcessingEvent({
-      userId,
-      cvId,
-      analysisId: analysisIdForEvents,
-      requestId,
-      stage: "analysis_persist",
-      status: "started",
-      source: ROUTE_SOURCE,
-      metadata: {
-        mode: "job_match",
-        model,
-      },
-    });
 
     const analysisLegacy = presentJobMatchAnalysis(
       await jobMatchAnalysisModule
         .bindRequest(supabase)
         .createJobMatchAnalysis.execute({
-          id: analysisIdForEvents,
+          id: crypto.randomUUID(),
           userId: user.id,
           cvDocumentId: prepared.cv.id,
           title,
@@ -160,35 +122,8 @@ export async function POST(req: NextRequest) {
     );
     const analysis = toJobMatchAnalysisDetailResponse(analysisLegacy);
 
-    await recordProcessingEvent({
-      userId,
-      cvId,
-      analysisId: analysis.id,
-      requestId,
-      stage: "analysis_persist",
-      status: "success",
-      source: ROUTE_SOURCE,
-      durationMs: performance.now() - persistStartedAt,
-      metadata: {
-        mode: "job_match",
-        model,
-        score: analysis.aiScore,
-      },
-    });
-
     return ok(analysis);
   } catch (error: unknown) {
-    await recordProcessingEvent({
-      userId,
-      cvId: cvIdForEvents,
-      analysisId: analysisIdForEvents,
-      requestId,
-      stage: "analysis_request",
-      status: "error",
-      source: ROUTE_SOURCE,
-      errorCode: getErrorCode(error),
-      errorMessage: sanitizeErrorMessage(error),
-    });
     return handleApiError(error);
   }
 }

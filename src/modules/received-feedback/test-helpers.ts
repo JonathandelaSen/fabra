@@ -1,5 +1,5 @@
 import { EntityId, UserId } from "@/modules/shared";
-import { createMockTracker, getDefaultActivityContextId, getSupabaseClient } from "@/modules/test-helpers/setup";
+import { getDefaultActivityContextId, getSupabaseClient } from "@/modules/test-helpers/setup";
 import { ReceivedFeedback } from "./domain/entities/received-feedback.entity";
 import { ReceivedFeedbackDate } from "./domain/value-objects/received-feedback-date.value-object";
 import { ReceivedFeedbackGiverName } from "./domain/value-objects/received-feedback-giver-name.value-object";
@@ -11,8 +11,7 @@ import { SupabaseReceivedFeedbackRepository } from "./infrastructure/repositorie
 export function makeReceivedFeedbackDeps() {
   const receivedFeedbackRepo = new SupabaseReceivedFeedbackRepository();
   receivedFeedbackRepo.bindRequest(getSupabaseClient());
-  const tracker = createMockTracker();
-  return { receivedFeedbackRepo, tracker };
+  return { receivedFeedbackRepo };
 }
 
 export async function createReceivedFeedbackFixture(

@@ -1,5 +1,12 @@
 # Technical observability
 
+> **Update (June 11, 2026):** The internal `EventTracker` /
+> `processing_events` product-observability system and its admin UI
+> (`/admin/observability`) have been removed. Sentry is now the single
+> observability provider for the platform. Statements below that describe
+> `EventTracker` or `processing_events` as a coexisting system are retained for
+> historical context only and no longer reflect the codebase.
+
 ## Purpose
 
 This document defines the technical observability architecture for Fabra.

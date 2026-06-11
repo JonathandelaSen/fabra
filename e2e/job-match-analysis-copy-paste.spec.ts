@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
 import { messages } from "../src/i18n/messages";
 import { loginViaUI } from "./helpers/auth";
 import { uniqueLabel } from "./helpers/env";
-import { createConfirmedUser, getProcessingEvents } from "./helpers/supabase";
+import { createConfirmedUser } from "./helpers/supabase";
 
 test.setTimeout(90_000);
 
@@ -99,7 +99,7 @@ async function createJobMatchAnalysisFixture(
 test("user can score a job match analysis with Copy Paste", async ({
   page,
 }) => {
-  const { user, analysis } = await createJobMatchAnalysisFixture(page);
+  await createJobMatchAnalysisFixture(page);
 
   await openAnalysisTab(page);
 
@@ -152,20 +152,6 @@ test("user can score a job match analysis with Copy Paste", async ({
   await expect(
     page.getByText("Buena coincidencia con la oferta de trabajo."),
   ).toBeVisible();
-
-  await expect
-    .poll(async () => {
-      const events = await getProcessingEvents({
-        userId: user.id,
-        analysisId: analysis.id,
-      });
-      return events.some(
-        (event) =>
-          event.stage === "job_match_copy_paste_result_applied" &&
-          event.status === "success",
-      );
-    })
-    .toBe(true);
 });
 
 test("replacement warning appears when analysis already has a score", async ({

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { EventTracker, EventBus } from "@/modules/shared";
+import type { EventBus } from "@/modules/shared";
 import { CVDocument } from "../../domain/entities/cv-document.entity";
 import { CVStructuredProfile } from "../../domain/entities/cv-structured-profile.entity";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
@@ -82,10 +82,6 @@ export function structuredProfileRepo(
     save: vi.fn(async (structured: CVStructuredProfile) => structured),
     ...overrides,
   } satisfies CVStructuredProfileRepository;
-}
-
-export function tracker() {
-  return { record: vi.fn(async () => undefined) } satisfies EventTracker;
 }
 
 export function eventBus() {

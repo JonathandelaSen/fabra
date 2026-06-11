@@ -53,7 +53,7 @@ We will use shadcn/ui whenever there is a useful component in the library. We wi
 
 ## Observability
 
-All new or edited actions that occur on the platform and have backend interaction must be added to observability.
+Observability is handled exclusively through Sentry (see `docs/architecture/technical-observability.md`). The legacy internal `EventTracker` / `processing_events` product-observability system and its `/admin/observability` UI have been removed. Do not reintroduce a `recordProcessingEvent`-style tracker; rely on Sentry technical telemetry instead.
 
 ## Hexagonal architecture (DDD modules)
 
@@ -64,8 +64,8 @@ The backend is being migrated progressively from `src/lib/db.ts` to hexagonal ar
 ```
 src/modules/
   shared/                              ← Cross-module infrastructure
-    domain/repositories/               ← Interfaces (EventTracker)
-    infrastructure/repositories/       ← Implementations (SupabaseEventTracker)
+    domain/repositories/               ← Cross-module port interfaces
+    infrastructure/repositories/       ← Shared infrastructure implementations
     infrastructure/supabase-aware.ts   ← SupabaseAware interface for bindRequest pattern
     infrastructure/http/               ← HTTP helpers (handleDomainError)
   <module-name>/
@@ -93,7 +93,7 @@ src/modules/
 - **Primitives are boundary data**: `EntityPrimitives` interfaces live with the entity and use camelCase. Only `fromPrimitives` and `toPrimitives` convert between VOs and primitives. Do not pass primitives into entity constructors or domain methods.
 - **Repositories work with aggregates and VOs**: aggregate repositories expose `search(criteria)`, `findById(id VO, userId VO)`, `save(aggregate)`, and `delete(id VO, userId VO)`. They must not accept or return `*Primitives`, `Create*Input`, `Update*Input`, or primitive entity fields. Infrastructure repositories map DB `snake_case` rows to domain camelCase primitives and hydrate aggregates.
 - **Associations use IDs in the domain**. Do not nest aggregate instances inside other aggregates. Compose read models for UI/API responses in the application/route boundary.
-- **Domain events are internal for now**. Aggregate methods record events with `recordDomainEvent`; use cases may call `pullDomainEvents()` later, but `EventTracker` observability stays separate until explicitly migrated.
+- **Domain events are internal for now**. Aggregate methods record events with `recordDomainEvent`; use cases may call `pullDomainEvents()` later. Technical observability is handled by Sentry, not by a domain-level tracker.
 - **Use cases** receive dependencies via constructor injection (`{ repo, tracker, ... }`).
 - **Modules are singletons** constructed once at import time — not rebuilt per request. The app container (`src/lib/container.ts`) is the composition root that wires up all modules, query buses, and query handler registrations. Route handlers import modules from the container.
 - **Infrastructure repositories implement `SupabaseAware`** (`src/modules/shared/infrastructure/supabase-aware.ts`). They have no constructor parameters. Instead they expose a `bindRequest(client: SupabaseClient)` method that sets the Supabase client for the current request. The module's own `bindRequest` method delegates to all its repositories. Route handlers call `myModule.bindRequest(supabase)` once per request before calling any use case. **Reference implementation:** `analysis-chat` module.
@@ -242,7 +242,6 @@ export async function POST(req: NextRequest) {
 5. Wire it in the module factory (`<module>.module.ts`).
 6. If a new repository was added, include it in the module's `bindRequest` method.
 7. Call it from the route handler via `analysisChatModule.<useCase>.execute(...)` (importing from `src/lib/container.ts`).
-8. Record observability events via the `EventTracker` in the use case.
 
 ### When migrating a new module
 
@@ -262,7 +261,7 @@ Each step should be a separate commit.
 
 - **Domain layer:** Aggregate roots and value objects must have colocated tests. Test `create`, `fromPrimitives`, `toPrimitives`, validation, domain methods, and recorded events. Domain services with logic also need colocated tests.
 - **Infrastructure layer:** Backend tests (`*.test.ts`) against real Supabase E2E stack (ports 56431+). Test each repository method. One test user per test via `createConfirmedUser()`. Repositories are instantiated without arguments and configured with `repo.bindRequest(supabase)` before use.
-- **Application layer:** Backend tests with real repositories against real DB. Mock only external services (AI) and cross-cutting concerns (EventTracker). Test happy paths, domain error cases, and orchestration logic.
+- **Application layer:** Backend tests with real repositories against real DB. Mock only external services (AI) and cross-cutting concerns. Test happy paths, domain error cases, and orchestration logic.
 - **No mocks for database** — all DB interactions use the real Supabase E2E instance.
 - **Never test AI services directly** — AI service implementations must not be exercised in automated tests. Use mocks injected into use cases whenever AI behavior is required.
 - Run with `npm run test:backend` (auto-starts Supabase E2E stack if not running).

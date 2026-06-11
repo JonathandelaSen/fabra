@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { EventTracker, EventBus } from "@/modules/shared";
+import type { EventBus } from "@/modules/shared";
 import { JobMatchAnalysis } from "../../domain/entities/job-match-analysis.entity";
 import type { JobMatchAnalysisRepository } from "../../domain/repositories/job-match-analysis.repository";
 
@@ -51,10 +51,6 @@ export function jobMatchRepo(
     save: vi.fn(async (item) => item),
     delete: vi.fn(),
   } satisfies JobMatchAnalysisRepository;
-}
-
-export function jobMatchTracker() {
-  return { record: vi.fn(async () => undefined) } satisfies EventTracker;
 }
 
 export function eventBus() {

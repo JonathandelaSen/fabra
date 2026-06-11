@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { document, documentRepo, tracker, eventBus } from "./cv-library-test-helpers.test";
+import { document, documentRepo, eventBus } from "./cv-library-test-helpers.test";
 import { PrepareCVAnalysisInputUseCase } from "./prepare-cv-analysis-input.use-case";
 import type {
   CVPdfStorage,

@@ -1,12 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
-import {
-  createRequestId,
-  getErrorCode,
-  recordProcessingEvent,
-  sanitizeErrorMessage,
-} from "@/lib/observability";
 import { cvAnalysisModule } from "@/lib/container";
 import { presentCVAnalysis } from "@/modules/cv-analysis";
 import { parseScoreCVAnalysisRequest } from "../../validation";
@@ -22,15 +16,12 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const requestId = createRequestId("cv_analysis_score");
-  let userId: string | null = null;
   const { id: analysisId } = await params;
 
   try {
     const authContext = await getAuthenticatedRequestContext();
     if (!authContext.ok) return authContext.response;
     const { supabase, user } = authContext;
-    userId = user.id;
 
     const body = await req.json();
     const parsed = parseScoreCVAnalysisRequest(body);
@@ -58,16 +49,6 @@ export async function POST(
       toCVAnalysisDetailResponse(presentCVAnalysis(updated)) satisfies ScoreCVAnalysisResponse,
     );
   } catch (error: unknown) {
-    await recordProcessingEvent({
-      userId,
-      analysisId,
-      requestId,
-      stage: "cv_analysis_score",
-      status: "error",
-      source: "api_cv_analyses",
-      errorCode: getErrorCode(error),
-      errorMessage: sanitizeErrorMessage(error),
-    });
     return handleApiError(error);
   }
 }

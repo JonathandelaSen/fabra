@@ -244,7 +244,7 @@ export default function Sidebar({
           isAdmin={isAdmin}
           userEmail={userEmail}
           settingsLabel={t("settings")}
-          observabilityLabel={t("observability")}
+          adminLabel={t("admin")}
           onOpenSettings={() => handleNavigationClick(onOpenSettings)}
           onOpenAdmin={() => handleNavigationClick(onOpenAdmin)}
         />

@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { EventTracker, EventBus } from "@/modules/shared";
+import type { EventBus } from "@/modules/shared";
 import { CVAnalysis } from "../../domain/entities/cv-analysis.entity";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 
@@ -46,10 +46,6 @@ export function copyPasteRepo(
     save: vi.fn(async (item) => item),
     delete: vi.fn(),
   } satisfies CVAnalysisRepository;
-}
-
-export function copyPasteTracker() {
-  return { record: vi.fn(async () => undefined) } satisfies EventTracker;
 }
 
 export function eventBus() {

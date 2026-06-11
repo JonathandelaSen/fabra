@@ -2,13 +2,12 @@
 
 import { useTranslations } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
-import { Activity, Users, LayoutDashboard } from "lucide-react";
+import { Users, LayoutDashboard } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AdminObservabilityView } from "@/features/admin-observability";
 import { AdminUsersView } from "@/features/admin-users";
 import { AdminMetricsView } from "@/features/admin-metrics";
 
-type AdminSection = "dashboard" | "users" | "observability";
+type AdminSection = "dashboard" | "users";
 
 interface AdminAreaViewProps {
   userEmail: string | null;
@@ -22,8 +21,6 @@ export function AdminAreaView({ userEmail }: AdminAreaViewProps) {
   let section: AdminSection = "dashboard";
   if (pathname.startsWith("/admin/users")) {
     section = "users";
-  } else if (pathname.startsWith("/admin/observability")) {
-    section = "observability";
   }
 
   const handleTabChange = (value: string | number | null) => {
@@ -46,10 +43,6 @@ export function AdminAreaView({ userEmail }: AdminAreaViewProps) {
                 <Users />
                 {t("users")}
               </TabsTrigger>
-              <TabsTrigger value="observability">
-                <Activity />
-                {t("observability")}
-              </TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -57,10 +50,8 @@ export function AdminAreaView({ userEmail }: AdminAreaViewProps) {
       <div className="min-h-0 flex-1 overflow-hidden">
         {section === "dashboard" ? (
           <AdminMetricsView />
-        ) : section === "users" ? (
-          <AdminUsersView userEmail={userEmail} />
         ) : (
-          <AdminObservabilityView userEmail={userEmail} />
+          <AdminUsersView userEmail={userEmail} />
         )}
       </div>
     </div>

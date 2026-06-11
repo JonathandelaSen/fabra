@@ -3,12 +3,6 @@ import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { getBestCVText } from "@/lib/cv-profile";
 import {
-  createRequestId,
-  getErrorCode,
-  recordProcessingEvent,
-  sanitizeErrorMessage,
-} from "@/lib/observability";
-import {
   parseEditInterviewQuestionRequest,
   validateQuestionLinks,
 } from "../../validation";
@@ -26,20 +20,12 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const requestId = createRequestId("interview_question");
-  const startedAt = performance.now();
-  let userId: string | null = null;
-  let cvIdForEvents: string | null = null;
-  let analysisIdForEvents: string | null = null;
-  let questionIdForEvents: string | null = null;
   try {
     const authContext = await getAuthenticatedRequestContext();
     if (!authContext.ok) return authContext.response;
     const { supabase, user } = authContext;
-    userId = user.id;
 
     const { id } = await params;
-    questionIdForEvents = id;
     const existingReadModel = await selectionProcessModule
       .bindRequest(supabase)
       .getProcessQuestion.execute({ id, userId: user.id });
@@ -47,57 +33,16 @@ export async function POST(
       ? presentProcessQuestion(existingReadModel)
       : null;
     if (!existing) {
-      await recordProcessingEvent({
-        userId,
-        requestId,
-        stage: "interview_question_edit",
-        status: "warning",
-        source: "api_interview_questions",
-        durationMs: performance.now() - startedAt,
-        errorCode: "question_not_found",
-        errorMessage: "Question not found",
-        metadata: { questionId: id },
-      });
       throw notFound("Question not found");
     }
-    cvIdForEvents = existing.cv_id;
-    analysisIdForEvents = existing.analysis_id;
 
     const body = await req.json();
     const parsed = parseEditInterviewQuestionRequest(body, existing.context);
     if (!parsed.ok) {
-      await recordProcessingEvent({
-        userId,
-        cvId: cvIdForEvents,
-        analysisId: analysisIdForEvents,
-        requestId,
-        stage: "interview_question_edit",
-        status: "warning",
-        source: "api_interview_questions",
-        durationMs: performance.now() - startedAt,
-        errorCode:
-          parsed.error.message.includes("Gemini") ? "missing_gemini_api_key" :
-          parsed.error.message.includes("Instruction") ? "instruction_required" : "context_required",
-        errorMessage: parsed.error.message,
-        metadata: { questionId: id },
-      });
       return errorResponse(parsed.error);
     }
     const { provider, apiKey, baseUrl, model, context, instruction } = parsed.value;
     if (!existing.answer?.trim()) {
-      await recordProcessingEvent({
-        userId,
-        cvId: cvIdForEvents,
-        analysisId: analysisIdForEvents,
-        requestId,
-        stage: "interview_question_edit",
-        status: "warning",
-        source: "api_interview_questions",
-        durationMs: performance.now() - startedAt,
-        errorCode: "answer_required",
-        errorMessage: "There is no answer to edit",
-        metadata: { questionId: id, model },
-      });
       throw badRequest("There is no answer to edit");
     }
 
@@ -106,19 +51,6 @@ export async function POST(
       analysis_id: existing.analysis_id,
     });
     if (!links.ok) {
-      await recordProcessingEvent({
-        userId,
-        cvId: cvIdForEvents,
-        analysisId: analysisIdForEvents,
-        requestId,
-        stage: "interview_question_edit",
-        status: "warning",
-        source: "api_interview_questions",
-        durationMs: performance.now() - startedAt,
-        errorCode: "invalid_question_links",
-        errorMessage: "Invalid linked CV or offer",
-        metadata: { questionId: id, model },
-      });
       return links.response;
     }
     if (links.analysis && links.analysis.analysis_mode !== "job_match") {
@@ -143,42 +75,12 @@ export async function POST(
       analysis: links.analysis,
     });
 
-    await recordProcessingEvent({
-      userId,
-      cvId: cvIdForEvents,
-      analysisId: analysisIdForEvents,
-      requestId,
-      stage: "interview_question_edit",
-      status: "success",
-      source: "api_interview_questions",
-      durationMs: performance.now() - startedAt,
-      metadata: {
-        questionId: id,
-        model,
-      },
-    });
-
     return ok(
       (updated
         ? toInterviewQuestionResponse(presentProcessQuestion(updated))
         : null) satisfies EditInterviewQuestionResponse
     );
   } catch (error: unknown) {
-    await recordProcessingEvent({
-      userId,
-      cvId: cvIdForEvents,
-      analysisId: analysisIdForEvents,
-      requestId,
-      stage: "interview_question_edit",
-      status: "error",
-      source: "api_interview_questions",
-      durationMs: performance.now() - startedAt,
-      errorCode: getErrorCode(error),
-      errorMessage: sanitizeErrorMessage(error),
-      metadata: {
-        questionId: questionIdForEvents,
-      },
-    });
     return handleApiError(error);
   }
 }

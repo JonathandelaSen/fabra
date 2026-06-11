@@ -1,11 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { loginViaUI } from "./helpers/auth";
 import { createExtractionViaUI, createFixtureViaApi } from "./helpers/cv";
-import {
-  adminClient,
-  createConfirmedUser,
-  getProcessingEvents,
-} from "./helpers/supabase";
+import { adminClient, createConfirmedUser } from "./helpers/supabase";
 import { messages } from "../src/i18n/messages";
 
 test("user can upload a PDF, create an extraction, and read persisted backend state", async ({
@@ -50,42 +46,6 @@ test("user can upload a PDF, create an extraction, and read persisted backend st
   expect(storageError).toBeNull();
   expect(storageObjects?.some((object) => object.name.includes(analysis.cv_id))).toBe(
     true
-  );
-
-  const events = await getProcessingEvents({
-    userId: user.id,
-    cvId: analysis.cv_id,
-    analysisId: analysis.id,
-  });
-  expect(events).toEqual(
-    expect.arrayContaining([
-      expect.objectContaining({ stage: "analysis_persist", status: "success" }),
-    ])
-  );
-
-  const cvEvents = await getProcessingEvents({
-    userId: user.id,
-    cvId: analysis.cv_id,
-  });
-  expect(cvEvents).toEqual(
-    expect.arrayContaining([
-      expect.objectContaining({ stage: "cv_upload", status: "success" }),
-      expect.objectContaining({
-        stage: "pdf_parser",
-        source: "node_plain_text_scanner",
-        status: "success",
-      }),
-      expect.objectContaining({
-        stage: "pdf_parser",
-        source: "node_pdfjs",
-        status: "success",
-      }),
-      expect.objectContaining({
-        stage: "pdf_parser",
-        source: "python_pdfminer_service",
-        status: "success",
-      }),
-    ])
   );
 });
 

@@ -9,7 +9,7 @@ interface SidebarFooterProps {
   isAdmin: boolean;
   userEmail: string | null;
   settingsLabel: string;
-  observabilityLabel: string;
+  adminLabel: string;
   onOpenSettings: () => void;
   onOpenAdmin: () => void;
 }
@@ -20,7 +20,7 @@ export default function SidebarFooter({
   isAdmin,
   userEmail,
   settingsLabel,
-  observabilityLabel,
+  adminLabel,
   onOpenSettings,
   onOpenAdmin,
 }: SidebarFooterProps) {
@@ -47,10 +47,10 @@ export default function SidebarFooter({
             ${activeView === "admin" ? "bg-emerald-500/10 text-emerald-200" : "text-emerald-300 hover:bg-emerald-500/10 hover:text-emerald-200"}
             ${collapsed ? "justify-center p-2" : "px-3 py-2.5 text-sm"}
           `}
-          title={observabilityLabel}
+          title={adminLabel}
         >
           <ShieldCheck className="w-4 h-4 shrink-0" />
-          {!collapsed && <span>{observabilityLabel}</span>}
+          {!collapsed && <span>{adminLabel}</span>}
         </button>
       )}
       {!collapsed && (

@@ -12,7 +12,7 @@ function renderFooter(
     isAdmin: false,
     userEmail: "user@example.com",
     settingsLabel: "Settings",
-    observabilityLabel: "Admin",
+    adminLabel: "Admin",
     onOpenSettings: vi.fn(),
     onOpenAdmin: vi.fn(),
     ...overrides,

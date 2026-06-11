@@ -1,15 +1,10 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { vi, type Mock } from "vitest";
 import {
   createConfirmedUser,
   e2eEnv,
   type E2EUser,
 } from "../../../e2e/helpers/supabase";
 import { uniqueLabel } from "../../../e2e/helpers/env";
-import type {
-  EventTracker,
-  ProcessingEventInput,
-} from "@/modules/shared/domain/repositories/event-tracker.repository";
 
 export const supabase = createClient(
   e2eEnv.supabaseUrl,
@@ -47,12 +42,4 @@ export async function getDefaultActivityContextId(userId: string): Promise<strin
 
 export function testLabel(prefix: string): string {
   return uniqueLabel(prefix);
-}
-
-export function createMockTracker(): EventTracker & {
-  record: Mock<(event: ProcessingEventInput) => Promise<void>>;
-} {
-  return {
-    record: vi.fn(async () => undefined),
-  };
 }

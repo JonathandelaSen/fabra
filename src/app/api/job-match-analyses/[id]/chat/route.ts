@@ -8,12 +8,7 @@ import {
   presentMessages,
 } from "@/modules/analysis-chat";
 import { analysisChatModule } from "@/lib/container";
-import {
-  createRequestId,
-  getErrorCode,
-  recordProcessingEvent,
-  sanitizeErrorMessage,
-} from "@/lib/observability";
+import { createRequestId } from "@/lib/observability";
 import { parseListOfferChatRequest, parseOfferChatPostRequest } from "./validation";
 import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
 
@@ -78,18 +73,13 @@ export async function POST(
 ) {
   const requestId = createRequestId("offer_chat");
   const startedAt = performance.now();
-  let userId: string | null = null;
-  let analysisIdForEvents: string | null = null;
-  let cvIdForEvents: string | null = null;
 
   try {
     const authContext = await getAuthenticatedRequestContext();
     if (!authContext.ok) return authContext.response;
     const { supabase, user } = authContext;
-    userId = user.id;
 
     const { id } = await params;
-    analysisIdForEvents = id;
     const body = await req.json();
     const parsed = parseOfferChatPostRequest(body);
     if (!parsed.ok) {
@@ -134,12 +124,6 @@ export async function POST(
       return ok({ ok: true });
     }
 
-    const context = await analysisChatModule.getAnalysisChatContext.execute({
-      analysisId: id,
-      userId: user.id,
-    });
-    cvIdForEvents = context?.cvId ?? null;
-
     const result = await analysisChatModule.sendMessage.execute({
       userId: user.id,
       analysisId: id,
@@ -158,18 +142,6 @@ export async function POST(
       assistantMessage: presentMessage(result.assistantMessage),
     });
   } catch (error: unknown) {
-    await recordProcessingEvent({
-      userId,
-      cvId: cvIdForEvents,
-      analysisId: analysisIdForEvents,
-      requestId,
-      stage: "offer_chat_generate",
-      status: "error",
-      source: "api_analysis_chat",
-      durationMs: performance.now() - startedAt,
-      errorCode: getErrorCode(error),
-      errorMessage: sanitizeErrorMessage(error),
-    });
     return handleApiError(error);
   }
 }

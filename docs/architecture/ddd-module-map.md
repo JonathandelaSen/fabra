@@ -403,7 +403,6 @@ Known legacy references that need attention:
 - `interview_questions.analysis_id`
 - `analysis_chat_conversations.analysis_id`
 - `analysis_chat_messages.analysis_id`
-- `processing_events.analysis_id`
 - routes under `/api/analyses`
 - components and types importing from `@/lib/db`
 
