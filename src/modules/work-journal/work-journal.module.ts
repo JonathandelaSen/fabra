@@ -11,6 +11,7 @@ import { CreateEntryUseCase } from "./application/use-cases/create-entry.use-cas
 import { UpdateEntryUseCase } from "./application/use-cases/update-entry.use-case";
 import { DeleteEntryUseCase } from "./application/use-cases/delete-entry.use-case";
 import { DraftEntryUseCase } from "./application/use-cases/draft-entry.use-case";
+import { ListJournalEntriesInRangeUseCase } from "./application/use-cases/list-journal-entries-in-range.use-case";
 
 const entryRepo = new SupabaseWorkJournalEntryRepository();
 const aiFactory = new ProviderJournalAIServiceFactory({
@@ -27,6 +28,9 @@ function createUseCases(eventBus: EventBus) {
     updateEntry: new UpdateEntryUseCase({ entryRepo, eventBus }),
     deleteEntry: new DeleteEntryUseCase({ entryRepo, eventBus }),
     draftEntry: new DraftEntryUseCase({ aiFactory }),
+    listJournalEntriesInRange: new ListJournalEntriesInRangeUseCase({
+      entryRepo,
+    }),
   };
 }
 

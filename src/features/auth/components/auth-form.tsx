@@ -22,7 +22,6 @@ import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import { InterfaceLanguageSelect } from "@/components/shared/interface-language-select";
 import { useAuthFormState } from "../hooks/use-auth-form-state";
 import { isValidEmail, isValidPassword } from "@/frontend/auth-validation";
-import { GoogleSignInButton } from "./google-sign-in-button";
 
 interface AuthFormProps {
   initialError?: string;
@@ -35,8 +34,6 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
   const { locale } = useInterfaceLanguage();
   const {
     emailValue,
-    googlePending,
-    handleGoogleSignIn,
     handleRecoverSubmit,
     isRecover,
     isSignup,
@@ -108,16 +105,6 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
             </button>
           </div>
 
-          <GoogleSignInButton
-            loading={googlePending}
-            onClick={handleGoogleSignIn}
-          />
-
-          <div className="my-5 flex items-center gap-3 text-xs text-zinc-500">
-            <span className="h-px flex-1 bg-white/[0.08]" />
-            <span>{t("google.emailSeparator")}</span>
-            <span className="h-px flex-1 bg-white/[0.08]" />
-          </div>
         </>
       )}
 

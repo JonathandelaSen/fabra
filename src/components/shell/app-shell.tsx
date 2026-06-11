@@ -56,6 +56,7 @@ function resolveViewFromLocation(pathname: string): AppView {
   if (pathname.startsWith("/objectives")) return APP_VIEWS.objectives;
   if (pathname.startsWith("/feedback-notes")) return APP_VIEWS.feedbackNotes;
   if (pathname.startsWith("/received-feedback")) return APP_VIEWS.receivedFeedback;
+  if (pathname.startsWith("/reviews")) return APP_VIEWS.reviews;
   if (pathname.startsWith("/interview-questions")) return APP_VIEWS.questions;
   if (pathname.startsWith("/activity-contexts")) return APP_VIEWS.activityContext;
   if (pathname.startsWith("/settings")) return APP_VIEWS.settings;
@@ -295,6 +296,10 @@ export default function AppShell({
       queueMicrotask(() => router.replace("/received-feedback"));
     } else if (pathname.startsWith("/received-feedback")) {
       queueMicrotask(() => setActiveView(APP_VIEWS.receivedFeedback));
+    } else if (pathname.startsWith("/reviews")) {
+      queueMicrotask(() => setActiveView(APP_VIEWS.reviews));
+    } else if (view === APP_VIEWS.reviews) {
+      queueMicrotask(() => router.replace("/reviews"));
     } else if (pathname.startsWith("/activity-contexts")) {
       queueMicrotask(() => setActiveView(APP_VIEWS.activityContext));
     } else if (view === APP_VIEWS.settings) {
@@ -452,6 +457,18 @@ export default function AppShell({
     router.push(lastReceivedFeedbackHrefRef.current);
   };
 
+  const handleOpenReviews = () => {
+    rememberWorkJournalLocation();
+    rememberObjectivesLocation();
+    rememberFeedbackNotesLocation();
+    rememberReceivedFeedbackLocation();
+    rememberInterviewQuestionsLocation();
+    rememberJobAnalysesLocation();
+    rememberCVLibraryLocation();
+    setActiveView(APP_VIEWS.reviews);
+    router.push("/reviews");
+  };
+
   const handleOpenCVAnalyses = () => {
     rememberWorkJournalLocation();
     rememberObjectivesLocation();
@@ -512,6 +529,7 @@ export default function AppShell({
       [APP_VIEWS.journal]: handleOpenJournal,
       [APP_VIEWS.objectives]: handleOpenObjectives,
       [APP_VIEWS.receivedFeedback]: handleOpenReceivedFeedback,
+      [APP_VIEWS.reviews]: handleOpenReviews,
       [APP_VIEWS.feedbackNotes]: handleOpenFeedbackNotes,
       [APP_VIEWS.settings]: handleOpenSettings,
       [APP_VIEWS.admin]: handleOpenAdmin,
@@ -539,6 +557,7 @@ export default function AppShell({
           onOpenJournal={handleOpenJournal}
           onOpenObjectives={handleOpenObjectives}
           onOpenReceivedFeedback={handleOpenReceivedFeedback}
+          onOpenReviews={handleOpenReviews}
           onOpenFeedbackNotes={handleOpenFeedbackNotes}
           onOpenSettings={handleOpenSettings}
           onOpenAdmin={handleOpenAdmin}

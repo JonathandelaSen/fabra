@@ -19,6 +19,13 @@ export type WorkJournalContextSuggestion = ReturnType<
   typeof presentWorkJournalContextSuggestion
 >;
 
+export { ListJournalEntriesInRangeQuery } from "./application/queries/list-journal-entries-in-range.query";
+export type {
+  EvidenceCandidateResult,
+  ListJournalEntriesInRangeInput,
+} from "./application/queries/list-journal-entries-in-range.query";
+export { ListJournalEntriesInRangeQueryHandler } from "./application/queries/list-journal-entries-in-range.query-handler";
+
 export { ContextNotFoundError } from "./domain/errors/context-not-found.error";
 export { ContextArchivedError } from "./domain/errors/context-archived.error";
 export { EntryNotFoundError } from "./domain/errors/entry-not-found.error";

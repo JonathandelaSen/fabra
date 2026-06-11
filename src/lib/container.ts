@@ -15,8 +15,13 @@ import {
   ListCVAnalysisUsageByDocumentQueryHandler,
 } from "@/modules/cv-analysis";
 import { createCVLibraryModule } from "@/modules/cv-library";
-import { createCommitmentsModule } from "@/modules/commitments";
+import {
+  createCommitmentsModule,
+  ListCommitmentsInRangeQuery,
+  ListCommitmentsInRangeQueryHandler,
+} from "@/modules/commitments";
 import { createFeedbackNotesModule } from "@/modules/feedback-notes";
+import { createPerformanceReviewModule } from "@/modules/performance-review";
 import {
   createJobMatchAnalysisModule,
   GetJobMatchAnalysisByIdQuery,
@@ -26,9 +31,17 @@ import {
   ListJobMatchAnalysisUsageByDocumentQuery,
   ListJobMatchAnalysisUsageByDocumentQueryHandler,
 } from "@/modules/job-match-analysis";
-import { createReceivedFeedbackModule } from "@/modules/received-feedback";
+import {
+  createReceivedFeedbackModule,
+  ListReceivedFeedbackInRangeQuery,
+  ListReceivedFeedbackInRangeQueryHandler,
+} from "@/modules/received-feedback";
 import { createSelectionProcessModule } from "@/modules/selection-process";
-import { createWorkJournalModule } from "@/modules/work-journal";
+import {
+  createWorkJournalModule,
+  ListJournalEntriesInRangeQuery,
+  ListJournalEntriesInRangeQueryHandler,
+} from "@/modules/work-journal";
 import { telemetry } from "@/lib/telemetry";
 
 const eventBus = new InMemoryEventBus(telemetry);
@@ -63,6 +76,30 @@ export const selectionProcessModule = createSelectionProcessModule(
   eventBus,
 );
 export const workJournalModule = createWorkJournalModule(telemetry, eventBus);
+export const performanceReviewModule = createPerformanceReviewModule(
+  queryBus,
+  telemetry,
+  eventBus,
+);
+
+queryBus.register(
+  ListJournalEntriesInRangeQuery.queryName,
+  new ListJournalEntriesInRangeQueryHandler(
+    workJournalModule.listJournalEntriesInRange,
+  ),
+);
+queryBus.register(
+  ListReceivedFeedbackInRangeQuery.queryName,
+  new ListReceivedFeedbackInRangeQueryHandler(
+    receivedFeedbackModule.listReceivedFeedbackInRange,
+  ),
+);
+queryBus.register(
+  ListCommitmentsInRangeQuery.queryName,
+  new ListCommitmentsInRangeQueryHandler(
+    commitmentsModule.listCommitmentsInRange,
+  ),
+);
 
 queryBus.register(
   GetCVAnalysisByIdQuery.queryName,

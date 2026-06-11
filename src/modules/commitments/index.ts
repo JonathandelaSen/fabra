@@ -20,3 +20,6 @@ export type {
   CommitmentSource,
   CommitmentStatus,
 } from "./domain/entities/commitment.entity";
+export { ListCommitmentsInRangeQuery } from "./application/queries/list-commitments-in-range.query";
+export type { ListCommitmentsInRangeInput } from "./application/queries/list-commitments-in-range.query";
+export { ListCommitmentsInRangeQueryHandler } from "./application/queries/list-commitments-in-range.query-handler";

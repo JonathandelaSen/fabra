@@ -10,6 +10,7 @@ import { WorkJournalView } from "@/features/work-journal";
 import { ObjectivesView } from "@/features/objectives";
 import { FeedbackNotesView } from "@/features/feedback-notes";
 import { ReceivedFeedbackView } from "@/features/received-feedback";
+import { PerformanceReviewView } from "@/features/performance-review";
 import { ActivityContextView } from "@/features/activity-context";
 import { AdminAreaView } from "@/features/admin";
 import { HomeView } from "@/features/home";
@@ -212,6 +213,20 @@ export default function AppShellContent({
     return (
       <ViewFrame frameKey="received-feedback">
         <ReceivedFeedbackView />
+      </ViewFrame>
+    );
+  }
+
+  if (activeView === "reviews") {
+    return (
+      <ViewFrame frameKey="reviews">
+        <PerformanceReviewView
+          aiProvider={aiProvider}
+          aiApiKey={aiApiKey}
+          aiModel={aiModel}
+          hasAIApiKey={hasAIApiKey}
+          onOpenSettings={onOpenSettings}
+        />
       </ViewFrame>
     );
   }

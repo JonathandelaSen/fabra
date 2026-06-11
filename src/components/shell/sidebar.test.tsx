@@ -22,6 +22,7 @@ function renderSidebar(onOpenCVAnalyses = vi.fn()) {
         onOpenJournal={vi.fn()}
         onOpenObjectives={vi.fn()}
         onOpenReceivedFeedback={vi.fn()}
+        onOpenReviews={vi.fn()}
         onOpenFeedbackNotes={vi.fn()}
         onOpenSettings={vi.fn()}
         onOpenAdmin={vi.fn()}

@@ -249,6 +249,8 @@ async function main() {
   const deletionOrder = [
     "analysis_chat_messages",
     "analysis_chat_conversations",
+    "review_evidence_items",
+    "performance_reviews",
     "process_questions",
     "follow_ups",
     "job_match_analyses",
@@ -832,6 +834,68 @@ async function main() {
     }
   }
   log(`  ${totalCommitments} commitments, ${totalItems} items, ${totalOutcomes} outcomes`);
+
+  // -----------------------------------------------------------------------
+  // 10. Performance reviews
+  // -----------------------------------------------------------------------
+  log("Creating performance reviews...");
+  const reviewRows = [
+    {
+      id: crypto.randomUUID(),
+      user_id: userId,
+      title: "Mid-year performance review",
+      review_type: "performance_review",
+      review_date: "2026-07-15",
+      period_start: "2026-01-01",
+      period_end: "2026-06-30",
+      status: "draft",
+    },
+    {
+      id: crypto.randomUUID(),
+      user_id: userId,
+      title: "Staff engineer promotion case",
+      review_type: "promotion_case",
+      review_date: "2026-09-30",
+      period_start: "2025-10-01",
+      period_end: "2026-09-15",
+      status: "prepared",
+      self_assessment_content:
+        "I increased delivery reliability, mentored engineers, and clarified platform ownership across teams.",
+      self_assessment_generated_at: new Date().toISOString(),
+      self_assessment_mode: "manual",
+    },
+  ];
+  const { error: reviewsError } = await adminClient
+    .from("performance_reviews")
+    .insert(reviewRows);
+  if (reviewsError) throw reviewsError;
+
+  const { error: evidenceError } = await adminClient
+    .from("review_evidence_items")
+    .insert([
+      {
+        id: crypto.randomUUID(),
+        user_id: userId,
+        review_id: reviewRows[0].id,
+        source: "custom",
+        source_id: null,
+        content: "Shipped the reliability dashboard and cut incident triage time.",
+        highlighted: true,
+        position: 0,
+      },
+      {
+        id: crypto.randomUUID(),
+        user_id: userId,
+        review_id: reviewRows[0].id,
+        source: "custom",
+        source_id: null,
+        content: "Mentored two engineers through their first cross-team launches.",
+        highlighted: false,
+        position: 1,
+      },
+    ]);
+  if (evidenceError) throw evidenceError;
+  log(`  ${reviewRows.length} reviews, 2 evidence items`);
 
   console.log(`\n  Done! User: ${EMAIL}\n`);
 }

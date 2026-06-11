@@ -7,6 +7,7 @@ import { DeleteCommitmentUseCase } from "./application/use-cases/delete-commitme
 import { DeleteCommitmentItemUseCase } from "./application/use-cases/delete-item.use-case";
 import { DeleteCommitmentOutcomeUseCase } from "./application/use-cases/delete-outcome.use-case";
 import { ListCommitmentsWorkspaceUseCase } from "./application/use-cases/list-commitments-workspace.use-case";
+import { ListCommitmentsInRangeUseCase } from "./application/use-cases/list-commitments-in-range.use-case";
 import { UpdateCommitmentUseCase } from "./application/use-cases/update-commitment.use-case";
 import { UpdateCommitmentItemUseCase } from "./application/use-cases/update-item.use-case";
 import { UpdateCommitmentOutcomeUseCase } from "./application/use-cases/update-outcome.use-case";
@@ -23,6 +24,10 @@ function createUseCases(eventBus: EventBus) {
     listWorkspace: new ListCommitmentsWorkspaceUseCase({
       commitmentRepo,
       itemRepo,
+      outcomeRepo,
+    }),
+    listCommitmentsInRange: new ListCommitmentsInRangeUseCase({
+      commitmentRepo,
       outcomeRepo,
     }),
     createCommitment: new CreateCommitmentUseCase({ commitmentRepo, eventBus }),

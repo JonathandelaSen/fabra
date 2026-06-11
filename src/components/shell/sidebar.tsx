@@ -16,6 +16,7 @@ import {
   NotebookPen,
   Inbox,
   Target,
+  Award,
   Home,
   X,
 } from "lucide-react";
@@ -36,6 +37,7 @@ interface SidebarProps {
   onOpenJournal: () => void;
   onOpenObjectives: () => void;
   onOpenReceivedFeedback: () => void;
+  onOpenReviews: () => void;
   onOpenFeedbackNotes: () => void;
   onOpenSettings: () => void;
   onOpenAdmin: () => void;
@@ -55,6 +57,7 @@ export default function Sidebar({
   onOpenJournal,
   onOpenObjectives,
   onOpenReceivedFeedback,
+  onOpenReviews,
   onOpenFeedbackNotes,
   onOpenSettings,
   onOpenAdmin,
@@ -234,6 +237,7 @@ export default function Sidebar({
               { icon: BookOpenText, label: t("workJournal"), active: activeView === "journal", onClick: () => handleNavigationClick(onOpenJournal) },
               { icon: Target, label: t("objectives"), active: activeView === "objectives", onClick: () => handleNavigationClick(onOpenObjectives) },
               { icon: Inbox, label: t("receivedFeedback"), active: activeView === "received-feedback", onClick: () => handleNavigationClick(onOpenReceivedFeedback) },
+              { icon: Award, label: t("reviews"), active: activeView === "reviews", onClick: () => handleNavigationClick(onOpenReviews) },
               { icon: NotebookPen, label: t("feedbackNotes"), active: activeView === "feedback-notes", onClick: () => handleNavigationClick(onOpenFeedbackNotes) },
             ]}
           />

@@ -8,7 +8,7 @@ import {
   signUp,
   type AuthFormState,
 } from "../api/auth-actions";
-import { sendPasswordRecoveryEmail, signInWithGoogle } from "../api/auth-api";
+import { sendPasswordRecoveryEmail } from "../api/auth-api";
 
 const INITIAL_STATE: AuthFormState = {};
 
@@ -29,8 +29,6 @@ export function useAuthFormState(initialError?: string, initialMessage?: string)
   );
   const [recoverState, setRecoverState] = useState<AuthFormState>(INITIAL_STATE);
   const [recoverPending, setRecoverPending] = useState(false);
-  const [googlePending, setGooglePending] = useState(false);
-  const [googleError, setGoogleError] = useState<string>();
   const [emailValue, setEmailValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -43,9 +41,9 @@ export function useAuthFormState(initialError?: string, initialMessage?: string)
     : isSignup
       ? signupPending
       : loginPending;
-  const visibleError = googleError || (resendState.message
+  const visibleError = resendState.message
     ? initialError
-    : resendState.error || state.error || initialError);
+    : resendState.error || state.error || initialError;
   const visibleMessage = resendState.message || state.message || initialMessage;
   const resendEmail = state.email || resendState.email || emailValue.trim();
   const showResendConfirmation =
@@ -82,21 +80,8 @@ export function useAuthFormState(initialError?: string, initialMessage?: string)
     });
   }
 
-  async function handleGoogleSignIn() {
-    setGooglePending(true);
-    setGoogleError(undefined);
-
-    const { error } = await signInWithGoogle();
-    if (error) {
-      setGooglePending(false);
-      setGoogleError(t("google.error"));
-    }
-  }
-
   return {
     emailValue,
-    googlePending,
-    handleGoogleSignIn,
     handleRecoverSubmit,
     isRecover,
     isSignup,
