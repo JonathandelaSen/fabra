@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useActionState, useState } from "react";
+import { FormEvent, useActionState, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import {
   resendConfirmationEmail,
@@ -29,6 +29,7 @@ export function useAuthFormState(initialError?: string, initialMessage?: string)
   );
   const [recoverState, setRecoverState] = useState<AuthFormState>(INITIAL_STATE);
   const [recoverPending, setRecoverPending] = useState(false);
+  const [signupOptimisticPending, startSignupTransition] = useTransition();
   const [emailValue, setEmailValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -39,7 +40,7 @@ export function useAuthFormState(initialError?: string, initialMessage?: string)
   const pending = isRecover
     ? recoverPending
     : isSignup
-      ? signupPending
+      ? signupOptimisticPending || signupPending
       : loginPending;
   const visibleError = resendState.message
     ? initialError
@@ -80,6 +81,12 @@ export function useAuthFormState(initialError?: string, initialMessage?: string)
     });
   }
 
+  function handleSignupAction(formData: FormData) {
+    startSignupTransition(() => {
+      signupAction(formData);
+    });
+  }
+
   return {
     emailValue,
     handleRecoverSubmit,
@@ -98,7 +105,7 @@ export function useAuthFormState(initialError?: string, initialMessage?: string)
     setShowPassword,
     showPassword,
     showResendConfirmation,
-    signupAction,
+    signupAction: handleSignupAction,
     visibleError,
     visibleMessage,
   };
