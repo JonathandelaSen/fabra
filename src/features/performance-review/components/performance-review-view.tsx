@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
@@ -61,6 +61,7 @@ export function PerformanceReviewView({
   const [model, setModel] = useState<string>(aiModel);
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
+  const pendingAutoSelectionRef = useRef<string | null>(null);
 
   const contexts = contextsQuery.data?.contexts ?? [];
   const reviews = useMemo(() => list.data ?? [], [list.data]);
@@ -90,13 +91,20 @@ export function PerformanceReviewView({
   };
 
   useEffect(() => {
+    if (pathname !== "/reviews") {
+      pendingAutoSelectionRef.current = null;
+      return;
+    }
+
+    const firstReviewId = reviews[0]?.id;
     if (
       isDesktopLayout &&
-      pathname === "/reviews" &&
       !list.isPending &&
-      reviews[0]?.id
+      firstReviewId &&
+      pendingAutoSelectionRef.current !== firstReviewId
     ) {
-      selectReview(reviews[0].id);
+      pendingAutoSelectionRef.current = firstReviewId;
+      selectReview(firstReviewId);
     }
   }, [isDesktopLayout, list.isPending, pathname, reviews, selectReview]);
 
@@ -114,9 +122,11 @@ export function PerformanceReviewView({
           {reviewId && detail.data && (
             <>
               <EditButton
+                aria-label={t("actions.edit")}
                 onClick={() => route.editReview(reviewId)}
               />
               <DeleteButton
+                aria-label={t("actions.delete")}
                 onClick={async () => {
                   await actions.deleteReview(reviewId);
                   route.goToList();
