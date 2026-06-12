@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import type { AnalysisMode, OfferStatus } from "@/lib/analysis-types";
 import AnalysisScoreCircle from "@/components/shared/analysis-score-circle";
+import { AnalysisMarkdown } from "@/components/shared/analysis-markdown";
 import { FormattedDate } from "@/components/shared/formatted-date";
 import { getScoreColor } from "@/lib/format";
 import { ScoreHeroJobUrl } from "./score-hero-job-url";
@@ -112,9 +113,7 @@ export default function ScoreHero({
                   : t("matchScore"))}
             </h3>
           </div>
-          <p className="text-zinc-300 leading-relaxed text-base">
-            {feedback}
-          </p>
+          <AnalysisMarkdown content={feedback} className="text-base" />
 
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
             <span className="inline-flex items-center gap-1.5 text-[11px] text-zinc-500 bg-zinc-800/50 px-2 py-1 rounded-md">

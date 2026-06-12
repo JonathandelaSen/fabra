@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { CheckCircle2, Star, ChevronRight, XCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { BasicPanel } from "@/components/shared/basic-panel";
+import { AnalysisMarkdown } from "@/components/shared/analysis-markdown";
 
 interface TabSummaryProps {
   improvements: string[];
@@ -49,7 +50,7 @@ export default function TabSummary({
                   className="flex items-start gap-2.5 text-sm sm:text-base text-zinc-200"
                 >
                   <ChevronRight className="w-4 h-4 mt-0.5 text-amber-500/70 shrink-0" />
-                  <span>{imp}</span>
+                  <AnalysisMarkdown content={imp} className="min-w-0 flex-1" />
                 </motion.li>
               ))
             ) : (
