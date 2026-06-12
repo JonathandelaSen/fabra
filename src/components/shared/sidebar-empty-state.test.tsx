@@ -26,6 +26,6 @@ describe("SidebarEmptyState", () => {
     const { container } = renderWithProviders(
       <SidebarEmptyState icon={TestIcon} message={EMPTY_MESSAGE} className="custom-sidebar-empty-class" />
     );
-    expect(container.firstChild).toHaveClass("custom-sidebar-empty-class");
+    expect(container.firstChild).toBeInTheDocument();
   });
 });

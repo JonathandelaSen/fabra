@@ -27,7 +27,7 @@ describe("CopyPasteDialog", () => {
     const handleClose = vi.fn();
     const { user } = renderWithProviders(
       <CopyPasteDialog title={DIALOG_TITLE} onClose={handleClose} closeLabel={CLOSE_LABEL}>
-        <div>Content</div>
+        <div>{CONTENT_TEXT}</div>
       </CopyPasteDialog>
     );
 
@@ -47,7 +47,7 @@ describe("CopyPasteDialog", () => {
         className="custom-dialog-wrapper"
         bodyClassName="custom-body-wrapper"
       >
-        <div>Content</div>
+        <div>{CONTENT_TEXT}</div>
       </CopyPasteDialog>
     );
 

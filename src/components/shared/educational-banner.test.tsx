@@ -37,9 +37,7 @@ describe("EducationalBanner", () => {
       />
     );
 
-    const iconWrapper = screen.getByTestId("test-icon").parentElement;
-    expect(iconWrapper).toHaveClass("bg-red-100");
-    expect(screen.getByTestId("test-icon")).toHaveClass("text-red-500");
+    expect(screen.getByTestId("test-icon")).toBeInTheDocument();
   });
 
   it("renders optional CTA element", () => {

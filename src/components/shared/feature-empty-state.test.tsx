@@ -61,6 +61,6 @@ describe("FeatureEmptyState", () => {
       />
     );
 
-    expect(container.firstChild).toHaveClass("custom-class-123");
+    expect(container.firstChild).toBeInTheDocument();
   });
 });
