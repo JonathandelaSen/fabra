@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import CopyPasteWorkflowModal, {
   CopyPastePreviewItem,
 } from "@/components/shared/copy-paste-workflow-modal";
@@ -32,6 +32,7 @@ export default function CVScoreCopyPasteModal({
   onApplied,
 }: CVScoreCopyPasteModalProps) {
   const t = useTranslations("analysisFlow.copyPaste");
+  const locale = useLocale();
   const {
     prepareCVAnalysisCopyPaste,
     previewCVAnalysisCopyPaste,
@@ -41,7 +42,10 @@ export default function CVScoreCopyPasteModal({
   const state = useCopyPasteWorkflowState({
     open,
     prepare: () =>
-      prepareCVAnalysisCopyPaste(analysisId, { additionalContext }),
+      prepareCVAnalysisCopyPaste(analysisId, {
+        additionalContext,
+        language: locale,
+      }),
     preview: (rawResponse) =>
       previewCVAnalysisCopyPaste(analysisId, { rawResponse }),
     apply: (previewData) =>

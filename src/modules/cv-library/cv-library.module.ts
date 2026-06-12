@@ -28,6 +28,8 @@ import { UpsertCVStructuredProfileUseCase } from "./application/use-cases/upsert
 import { SupabaseCVDocumentRepository } from "./infrastructure/repositories/supabase-cv-document.repository";
 import { SupabaseCVStructuredProfileRepository } from "./infrastructure/repositories/supabase-cv-structured-profile.repository";
 import { SupabaseCVPublicNoteRepository } from "./infrastructure/repositories/supabase-cv-public-note.repository";
+import { SupabaseCVPublicFeedbackRepository } from "./infrastructure/repositories/supabase-cv-public-feedback.repository";
+import { DeleteCVPublicFeedbackUseCase, ListCVPublicFeedbackUseCase } from "./application/use-cases/manage-cv-public-feedback.use-case";
 import { ListCVPublicNotesUseCase, ListPublishedCVPublicNotesUseCase, ReplaceCVPublicNotesUseCase } from "./application/use-cases/manage-cv-public-notes.use-case";
 import { PdfTextExtractor } from "./infrastructure/services/pdf-text-extractor.service";
 import { GeminiCVProfileEditingAIServiceFactory } from "./infrastructure/services/gemini-cv-profile-editing-ai.service";
@@ -46,6 +48,7 @@ import { buildCVProfileStructuringCopyPastePrompt } from "./infrastructure/servi
 const documentRepo = new SupabaseCVDocumentRepository();
 const profileRepo = new SupabaseCVStructuredProfileRepository();
 const publicNoteRepo = new SupabaseCVPublicNoteRepository();
+const publicFeedbackRepo = new SupabaseCVPublicFeedbackRepository();
 const pdfStorage = new SupabaseCVPdfStorage();
 const textExtractor = new PdfTextExtractor();
 const templateRenderer = new TemplateCVPdfRenderer();
@@ -120,6 +123,8 @@ function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
     listCVPublicNotes: new ListCVPublicNotesUseCase(publicNoteRepo),
     listPublishedCVPublicNotes: new ListPublishedCVPublicNotesUseCase(publicNoteRepo),
     replaceCVPublicNotes: new ReplaceCVPublicNotesUseCase(publicNoteRepo),
+    listCVPublicFeedback: new ListCVPublicFeedbackUseCase(publicFeedbackRepo),
+    deleteCVPublicFeedback: new DeleteCVPublicFeedbackUseCase(publicFeedbackRepo),
     getCVStructuredProfile: new GetCVStructuredProfileUseCase({ profileRepo }),
     structureCVProfileWithAI: new StructureCVProfileWithAIUseCase({
       aiFactory: profileStructuringAI,
@@ -178,6 +183,7 @@ export function createCVLibraryModule(
       documentRepo.bindRequest(client);
       profileRepo.bindRequest(client);
       publicNoteRepo.bindRequest(client);
+      publicFeedbackRepo.bindRequest(client);
       pdfStorage.bindRequest(client);
       return this;
     },

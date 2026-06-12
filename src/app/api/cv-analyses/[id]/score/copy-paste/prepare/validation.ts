@@ -1,3 +1,5 @@
+import { isInterfaceLanguage, type InterfaceLanguage } from "@/i18n/config";
+
 type Result<TValue, TError> =
   | { ok: true; value: TValue }
   | { ok: false; error: TError };
@@ -9,6 +11,7 @@ interface HttpValidationError {
 
 export interface PrepareCVAnalysisCopyPasteRequest {
   additionalContext: string | null;
+  language: InterfaceLanguage | null;
 }
 
 function validationError(message: string): Result<never, HttpValidationError> {
@@ -29,6 +32,7 @@ export function parsePrepareCVAnalysisCopyPasteRequest(
         typeof record.additionalContext === "string"
           ? record.additionalContext.trim() || null
           : null,
+      language: isInterfaceLanguage(record.language) ? record.language : null,
     },
   };
 }

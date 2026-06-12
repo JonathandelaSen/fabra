@@ -36,7 +36,13 @@ class OpenAICVScoringAIService implements CVScoringAIService {
     const response = await openai.chat.completions.create({
       model: this.config.model,
       messages: [
-        { role: "system", content: buildGeneralScoringPrompt(input.additionalContext) },
+        {
+          role: "system",
+          content: buildGeneralScoringPrompt(
+            input.additionalContext,
+            input.language,
+          ),
+        },
         { role: "user", content: input.text },
       ],
       response_format: { type: "json_object" },

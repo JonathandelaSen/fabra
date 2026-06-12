@@ -39,6 +39,7 @@ export async function POST(
         baseUrl: parsed.value.baseUrl,
         model: parsed.value.model,
         additionalContext: parsed.value.additionalContext,
+        language: parsed.value.language,
       });
 
     if (!updated) {

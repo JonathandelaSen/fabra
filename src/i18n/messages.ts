@@ -51,8 +51,9 @@ export const messages = {
       createMyCv: "Create my CV",
       ownerNoteLabel: "Note from the owner",
       closeLabel: "Close",
-      feedback: { title: "Share private feedback", description: "Only the CV owner will see your message.", name: "Name (optional)", context: "How you know them (optional)", message: "Your feedback", send: "Send privately", sending: "Sending...", sent: "Thanks. Your feedback was sent privately.", error: "Feedback could not be sent.", successTitle: "Feedback Sent Successfully", namePlaceholder: "e.g. Recruiter, Colleague...", contextPlaceholder: "e.g. Worked together at Acme Corp...", messagePlaceholder: "Write your constructive feedback here..." },
+      feedback: { title: "Send a private message", description: "Only the CV owner will see your message.", name: "Name (optional)", context: "How you know them (optional)", message: "Your message", send: "Send privately", sending: "Sending...", sent: "Thanks. Your message was sent privately.", error: "Message could not be sent.", successTitle: "Message Sent Successfully", namePlaceholder: "e.g. Recruiter, Colleague...", contextPlaceholder: "e.g. Worked together at Acme Corp...", messagePlaceholder: "Write your private message here..." },
     },
+    publicCvMessages: { title: "Anonymous messages", cvSelector: "Select CV", loading: "Loading messages...", empty: "No messages received yet.", visitor: "Visitor", delete: "Delete", select: "Select a message to see its details.", confirmDelete: "Are you sure you want to delete this message?" },
     auth: {
       hero: "Craft your career, your way with Fabra",
       login: {
@@ -836,7 +837,7 @@ export const messages = {
       },
     },
     cvEditor: {
-      publicNotes: { title: "Public owner notes", description: "Add context visible to everyone visiting the public CV.", acceptFeedback: "Accept private visitor feedback", presentation: "Presentation", section: "Section", item: "Item", bullet: "Bullet", anchorPlaceholder: "Stable item or bullet ID", remove: "Remove", add: "Add note", saving: "Saving...", save: "Save notes", anchorTypeLabel: "Anchor Type", sectionLabel: "Section", targetItemLabel: "Target Item", chooseItemLabel: "Choose item...", targetBulletLabel: "Target Bullet", chooseBulletLabel: "Choose bullet...", noteContentLabel: "Note Content", notePlaceholderText: "Explain or add context for this part of your CV..." },
+      publicNotes: { title: "Public owner notes", description: "Add context visible to everyone visiting the public CV.", acceptFeedback: "Accept anonymous visitor messages", presentation: "Presentation", section: "Section", item: "Item", bullet: "Bullet", anchorPlaceholder: "Stable item or bullet ID", remove: "Remove", add: "Add note", saving: "Saving...", save: "Save notes", anchorTypeLabel: "Anchor Type", sectionLabel: "Section", targetItemLabel: "Target Item", chooseItemLabel: "Choose item...", targetBulletLabel: "Target Bullet", chooseBulletLabel: "Choose bullet...", noteContentLabel: "Note Content", notePlaceholderText: "Explain or add context for this part of your CV...", receivedFeedbackTitle: "Anonymous Messages", noFeedbackText: "No messages received yet.", deleteFeedbackConfirm: "Are you sure you want to delete this message?", loadingFeedback: "Loading messages..." },
       aiEditor: "AI Editor",
       aiPlaceholder: "Describe the changes you want to make...",
       actions: {
@@ -1621,8 +1622,9 @@ export const messages = {
       createMyCv: "Crear mi CV",
       ownerNoteLabel: "Nota de la persona propietaria",
       closeLabel: "Cerrar",
-      feedback: { title: "Comparte feedback privado", description: "Solo la persona propietaria del CV verá tu mensaje.", name: "Nombre (opcional)", context: "Cómo le conoces (opcional)", message: "Tu feedback", send: "Enviar en privado", sending: "Enviando...", sent: "Gracias. Tu feedback se ha enviado en privado.", error: "No se pudo enviar el feedback.", successTitle: "Comentarios enviados correctamente", namePlaceholder: "ej. Reclutador, Compañero...", contextPlaceholder: "ej. Trabajamos juntos en Acme Corp...", messagePlaceholder: "Escribe tus comentarios constructivos aquí..." },
+      feedback: { title: "Enviar un mensaje privado", description: "Solo la persona propietaria del CV verá tu mensaje.", name: "Nombre (opcional)", context: "Cómo le conoces (opcional)", message: "Tu mensaje", send: "Enviar en privado", sending: "Enviando...", sent: "Gracias. Tu mensaje se ha enviado en privado.", error: "No se pudo enviar el mensaje.", successTitle: "Mensaje enviado correctamente", namePlaceholder: "ej. Reclutador, Compañero...", contextPlaceholder: "ej. Trabajamos juntos en Acme Corp...", messagePlaceholder: "Escribe tu mensaje privado aquí..." },
     },
+    publicCvMessages: { title: "Mensajes anónimos", cvSelector: "Seleccionar CV", loading: "Cargando mensajes...", empty: "Aún no se han recibido mensajes.", visitor: "Visitante", delete: "Eliminar", select: "Selecciona un mensaje para ver sus detalles.", confirmDelete: "¿Estás seguro de que quieres eliminar este mensaje?" },
     auth: {
       hero: "Construye tu carrera a tu manera con Fabra",
       login: {
@@ -2404,7 +2406,7 @@ export const messages = {
       },
     },
     cvEditor: {
-      publicNotes: { title: "Notas públicas de la persona propietaria", description: "Añade contexto visible para quienes visiten el CV público.", acceptFeedback: "Aceptar feedback privado de visitantes", presentation: "Presentación", section: "Sección", item: "Elemento", bullet: "Punto", anchorPlaceholder: "ID estable del elemento o punto", remove: "Eliminar", add: "Añadir nota", saving: "Guardando...", save: "Guardar notas", anchorTypeLabel: "Tipo de anclaje", sectionLabel: "Sección", targetItemLabel: "Elemento de destino", chooseItemLabel: "Elegir elemento...", targetBulletLabel: "Punto de destino", chooseBulletLabel: "Elegir punto...", noteContentLabel: "Contenido de la nota", notePlaceholderText: "Explica o añade contexto para esta parte de tu CV..." },
+      publicNotes: { title: "Notas públicas de la persona propietaria", description: "Añade contexto visible para quienes visiten el CV público.", acceptFeedback: "Aceptar mensajes anónimos de visitantes", presentation: "Presentación", section: "Sección", item: "Elemento", bullet: "Punto", anchorPlaceholder: "ID estable del elemento o punto", remove: "Eliminar", add: "Añadir nota", saving: "Guardando...", save: "Guardar notas", anchorTypeLabel: "Tipo de anclaje", sectionLabel: "Sección", targetItemLabel: "Elemento de destino", chooseItemLabel: "Elegir elemento...", targetBulletLabel: "Punto de destino", chooseBulletLabel: "Elegir punto...", noteContentLabel: "Contenido de la nota", notePlaceholderText: "Explica o añade contexto para esta parte de tu CV...", receivedFeedbackTitle: "Mensajes anónimos recibidos", noFeedbackText: "Aún no se han recibido mensajes anónimos.", deleteFeedbackConfirm: "¿Estás seguro de que quieres eliminar este mensaje?", loadingFeedback: "Cargando mensajes..." },
       aiEditor: "Editor IA",
       aiPlaceholder: "Describe los cambios que quieres hacer...",
       actions: {

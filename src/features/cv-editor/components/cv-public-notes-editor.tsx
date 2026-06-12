@@ -1,86 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { Plus, Trash2, Save, Globe } from "lucide-react";
+import { Plus, Trash2, Save, Globe, MessageSquare, ArrowRight } from "lucide-react";
 import type { StandardCVProfile } from "@/lib/cv-profile";
 import type { PublicCVNoteResponse } from "@/app/api/cvs/[id]/public-notes/responses";
 import { usePublicCVNotes } from "@/features/public-cv";
 import { cn } from "@/lib/utils";
 
+import { getSectionItems, getAvailableSections } from "./cv-public-notes-helpers";
+
 type Draft = Omit<PublicCVNoteResponse, "id">;
-const sections = ["summary", "experience", "education", "skills", "languages", "certifications", "projects", "awards", "publications", "volunteering"];
-
-interface SectionItem {
-  id: string;
-  label: string;
-  bullets: string[];
-  bulletIds: string[];
-}
-
-function getSectionItems(sectionId: string, profile: any): SectionItem[] {
-  const data = profile[sectionId];
-  if (!Array.isArray(data)) return [];
-
-  return data.map((item: any, idx: number) => {
-    const id = item.id || `${sectionId}-${idx}`;
-    let label = "";
-
-    switch (sectionId) {
-      case "experience":
-        label = `${item.role || "Role"} at ${item.company || "Company"}`;
-        break;
-      case "education":
-        label = `${item.degree || "Degree"} at ${item.institution || "Institution"}`;
-        break;
-      case "skills":
-        label = item.name || `Skill Group ${idx + 1}`;
-        break;
-      case "languages":
-        label = `${item.name || "Language"} (${item.level || "No Level"})`;
-        break;
-      case "certifications":
-        label = `${item.name || "Certification"} from ${item.issuer || item.organization || "Issuer"}`;
-        break;
-      case "projects":
-        label = item.name || `Project ${idx + 1}`;
-        break;
-      case "awards":
-        label = `${item.name || "Award"} from ${item.organization || item.issuer || "Issuer"}`;
-        break;
-      case "publications":
-        label = item.name || `Publication ${idx + 1}`;
-        break;
-      case "volunteering":
-        label = `${item.role || "Volunteer"} at ${item.organization || "Organization"}`;
-        break;
-      default:
-        label = item.name || `Item ${idx + 1}`;
-    }
-
-    const bullets = item.bullets || item.details || [];
-    const bulletIds = item.bulletIds || item.detailIds || [];
-
-    return { id, label, bullets, bulletIds };
-  });
-}
-
-function getAvailableSections(anchorType: Draft["anchorType"], profile: any) {
-  if (anchorType === "presentation") return [];
-  if (anchorType === "section") {
-    return sections.filter((s) => profile[s] !== undefined);
-  }
-  if (anchorType === "item") {
-    return ["experience", "education", "skills", "languages", "certifications", "projects", "awards", "publications", "volunteering"].filter((s) => Array.isArray(profile[s]) && profile[s].length > 0);
-  }
-  if (anchorType === "bullet") {
-    return ["experience", "education", "certifications", "projects", "volunteering"].filter((s) => {
-      const arr = profile[s];
-      return Array.isArray(arr) && arr.some((item: any) => (item.bullets || item.details || []).length > 0);
-    });
-  }
-  return [];
-}
 
 export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: string; profile: StandardCVProfile; feedbackEnabled: boolean }) {
   const t = useTranslations("cvEditor.publicNotes");
@@ -309,7 +240,7 @@ export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: 
         <button
           type="button"
           onClick={add}
-          className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/5 bg-white/5 px-4 py-2.5 text-xs font-medium text-white transition-all hover:bg-white/10 active:bg-white/15"
+          className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/5 bg-white/5 px-4 py-2.5 text-xs font-medium text-white transition-all hover:bg-white/10 active:bg-white/15 cursor-pointer"
         >
           <Plus className="h-4 w-4" />
           {t("add")}
@@ -318,12 +249,22 @@ export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: 
           type="button"
           onClick={() => publicNotes.replace.mutate(notes)}
           disabled={publicNotes.replace.isPending}
-          className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-sky-600 px-4 py-2.5 text-xs font-semibold text-white transition-all hover:bg-sky-500 active:bg-sky-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-sky-600 px-4 py-2.5 text-xs font-semibold text-white transition-all hover:bg-sky-500 active:bg-sky-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           <Save className="h-4 w-4" />
           {publicNotes.replace.isPending ? t("saving") : t("save")}
         </button>
       </div>
+
+      {feedbackEnabled && (
+        <Link href={`/public-cv-messages/${encodeURIComponent(cvId)}`} className="flex items-center justify-between gap-3 rounded-xl border border-white/5 bg-white/5 p-3 transition-colors hover:bg-white/10">
+          <span className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5 uppercase tracking-wider">
+            <MessageSquare className="h-3.5 w-3.5" />
+            {t("receivedFeedbackTitle")}
+          </span>
+          <ArrowRight className="h-4 w-4 text-zinc-500" />
+        </Link>
+      )}
     </section>
   );
 }

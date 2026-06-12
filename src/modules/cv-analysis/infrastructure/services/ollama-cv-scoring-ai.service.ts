@@ -36,7 +36,7 @@ class OllamaCVScoringAIService implements CVScoringAIService {
       stream: false,
       model: this.config.model,
       prompt: input.text,
-      system: buildGeneralScoringPrompt(input.additionalContext),
+      system: buildGeneralScoringPrompt(input.additionalContext, input.language),
       format: "json",
     });
 

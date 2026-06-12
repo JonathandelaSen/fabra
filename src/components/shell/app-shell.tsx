@@ -56,6 +56,7 @@ function resolveViewFromLocation(pathname: string): AppView {
   if (pathname.startsWith("/objectives")) return APP_VIEWS.objectives;
   if (pathname.startsWith("/feedback-notes")) return APP_VIEWS.feedbackNotes;
   if (pathname.startsWith("/received-feedback")) return APP_VIEWS.receivedFeedback;
+  if (pathname.startsWith("/public-cv-messages")) return APP_VIEWS.publicCVMessages;
   if (pathname.startsWith("/reviews")) return APP_VIEWS.reviews;
   if (pathname.startsWith("/interview-questions")) return APP_VIEWS.questions;
   if (pathname.startsWith("/activity-contexts")) return APP_VIEWS.activityContext;
@@ -296,6 +297,8 @@ export default function AppShell({
       queueMicrotask(() => router.replace("/received-feedback"));
     } else if (pathname.startsWith("/received-feedback")) {
       queueMicrotask(() => setActiveView(APP_VIEWS.receivedFeedback));
+    } else if (pathname.startsWith("/public-cv-messages")) {
+      queueMicrotask(() => setActiveView(APP_VIEWS.publicCVMessages));
     } else if (pathname.startsWith("/reviews")) {
       queueMicrotask(() => setActiveView(APP_VIEWS.reviews));
     } else if (view === APP_VIEWS.reviews) {

@@ -13,6 +13,7 @@ export interface ScoreCVAnalysisInput {
   baseUrl?: string;
   model: string;
   additionalContext?: string | null;
+  language?: string | null;
 }
 
 export class ScoreCVAnalysisUseCase {
@@ -42,6 +43,7 @@ export class ScoreCVAnalysisUseCase {
     const result = await aiService.score({
       text,
       additionalContext: input.additionalContext,
+      language: input.language,
     });
 
     const now = new Date().toISOString();

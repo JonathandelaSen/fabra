@@ -11,6 +11,7 @@ export interface PrepareCVScoreCopyPasteInput {
   id: string;
   userId: string;
   additionalContext?: string | null;
+  language?: string | null;
 }
 
 export interface PrepareCVScoreCopyPasteResult {
@@ -28,6 +29,7 @@ export class PrepareCVScoreCopyPasteUseCase {
       buildPrompt: (input: {
         text: string;
         additionalContext?: string | null;
+        language?: string | null;
       }) => string;
     },
   ) {}
@@ -43,6 +45,7 @@ export class PrepareCVScoreCopyPasteUseCase {
     const prompt = this.deps.buildPrompt({
       text: selectBestCVAnalysisText(analysis),
       additionalContext: input.additionalContext,
+      language: input.language,
     });
 
     return {

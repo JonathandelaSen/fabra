@@ -10,6 +10,7 @@ export interface CVScoringAIResult {
 export interface CVScoringAIInput {
   text: string;
   additionalContext?: string | null;
+  language?: string | null;
 }
 
 export interface CVScoringAIService {

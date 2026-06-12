@@ -18,7 +18,7 @@ async function readJsonResponse<T>(
 
 export function prepareCVAnalysisCopyPaste(
   id: string,
-  input: { additionalContext: string | null },
+  input: { additionalContext: string | null; language?: string },
 ) {
   return fetch(`/api/cv-analyses/${id}/score/copy-paste/prepare`, {
     method: "POST",

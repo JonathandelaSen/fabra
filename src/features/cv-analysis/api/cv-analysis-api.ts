@@ -26,6 +26,7 @@ export interface ScoreCVAnalysisInput {
   baseUrl?: string;
   model: string;
   additionalContext: string | null;
+  language?: string;
 }
 
 export interface UpdateJobMatchAnalysisInput {

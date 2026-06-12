@@ -37,7 +37,10 @@ class GeminiCVScoringAIService implements CVScoringAIService {
       model: this.config.model,
       contents: [{ role: "user", parts: [{ text: input.text }] }],
       config: {
-        systemInstruction: buildGeneralScoringPrompt(input.additionalContext),
+        systemInstruction: buildGeneralScoringPrompt(
+          input.additionalContext,
+          input.language,
+        ),
         responseMimeType: "application/json",
       },
     });

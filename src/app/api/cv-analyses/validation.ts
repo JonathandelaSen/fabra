@@ -1,6 +1,7 @@
 import type { AIContext } from "@/lib/analysis-types";
 import { parseAIRequestConfig, type AIRequestConfig } from "@/app/api/_shared/ai-request";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
+import { isInterfaceLanguage, type InterfaceLanguage } from "@/i18n/config";
 
 type Result<TValue, TError> =
   | { ok: true; value: TValue }
@@ -20,6 +21,7 @@ export interface CreateCVAnalysisHttpInput {
 
 export interface ScoreCVAnalysisHttpInput extends AIRequestConfig {
   additionalContext: string | null;
+  language: InterfaceLanguage | null;
 }
 
 function validationError(message: string): Result<never, HttpValidationError> {
@@ -58,5 +60,6 @@ export function parseScoreCVAnalysisRequest(
     ? body.additionalContext.trim() || null
     : null;
   if (!ai.ok) return validationError(ai.message);
-  return { ok: true, value: { ...ai.value, additionalContext } };
+  const language = isInterfaceLanguage(body.language) ? body.language : null;
+  return { ok: true, value: { ...ai.value, additionalContext, language } };
 }

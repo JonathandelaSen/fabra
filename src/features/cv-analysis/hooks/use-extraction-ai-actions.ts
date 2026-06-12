@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
 import { getErrorMessage } from "@/lib/errors";
 import type { AIContext } from "@/lib/analysis-types";
@@ -38,6 +38,7 @@ export function useExtractionAIActions({
 }: UseExtractionAIActionsParams) {
   const t = useTranslations("analysisFlow.extraction");
   const formsT = useTranslations("analysisFlow.forms");
+  const locale = useLocale();
   const scoreCVAnalysis = useScoreCVAnalysis();
   const jobMatchMutations = useJobMatchAnalysisMutations();
   const [loadingAI, setLoadingAI] = useState(false);
@@ -74,6 +75,7 @@ export function useExtractionAIActions({
           apiKey: aiConfig.apiKey,
           baseUrl: aiConfig.baseUrl,
           model: aiConfig.model,
+          language: locale,
         });
       } else {
         await scoreCVAnalysis.mutateAsync({
@@ -84,6 +86,7 @@ export function useExtractionAIActions({
             apiKey: aiConfig.apiKey,
             baseUrl: aiConfig.baseUrl,
             model: aiConfig.model,
+            language: locale,
           },
         });
       }

@@ -10,6 +10,7 @@ import { WorkJournalView } from "@/features/work-journal";
 import { ObjectivesView } from "@/features/objectives";
 import { FeedbackNotesView } from "@/features/feedback-notes";
 import { ReceivedFeedbackView } from "@/features/received-feedback";
+import { PublicCVMessagesView } from "@/features/public-cv";
 import { PerformanceReviewView } from "@/features/performance-review";
 import { ActivityContextView } from "@/features/activity-context";
 import { AdminAreaView } from "@/features/admin";
@@ -215,6 +216,10 @@ export default function AppShellContent({
         <ReceivedFeedbackView />
       </ViewFrame>
     );
+  }
+
+  if (activeView === "public-cv-messages") {
+    return <ViewFrame frameKey="public-cv-messages"><PublicCVMessagesView /></ViewFrame>;
   }
 
   if (activeView === "reviews") {

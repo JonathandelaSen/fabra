@@ -25,6 +25,7 @@ export async function POST(
       id,
       userId: user.id,
       additionalContext: parsed.value.additionalContext,
+      language: parsed.value.language,
     });
     if (!result) throw notFound("Analysis not found");
 

@@ -10,6 +10,7 @@ export const APP_VIEWS = {
   journal: "journal",
   objectives: "objectives",
   receivedFeedback: "received-feedback",
+  publicCVMessages: "public-cv-messages",
   reviews: "reviews",
   activityContext: "activity-context",
   feedbackNotes: "feedback-notes",
