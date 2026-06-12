@@ -1,6 +1,7 @@
 import { OFFER_STATUSES, type OfferStatus } from "@/lib/analysis-types";
 import { parseAIRequestConfig, type AIRequestConfig } from "@/app/api/_shared/ai-request";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
+import { isInterfaceLanguage, type InterfaceLanguage } from "@/i18n/config";
 
 type Result<TValue, TError> =
   | { ok: true; value: TValue }
@@ -22,6 +23,7 @@ export interface CreateJobMatchAnalysisHttpInput {
 export interface ScoreJobMatchAnalysisHttpInput extends AIRequestConfig {
   jobDescription: string;
   jobUrl: string | null;
+  language: InterfaceLanguage | null;
 }
 
 export interface UpdateJobMatchAnalysisHttpInput {
@@ -84,7 +86,8 @@ export function parseScoreJobMatchAnalysisRequest(
   const jobUrl = text(body.jobUrl) || null;
   if (!ai.ok) return validationError(ai.message);
   if (!jobDescription) return validationError("Job description is required for job match analysis");
-  return { ok: true, value: { ...ai.value, jobDescription, jobUrl } };
+  const language = isInterfaceLanguage(body.language) ? body.language : null;
+  return { ok: true, value: { ...ai.value, jobDescription, jobUrl, language } };
 }
 
 export function parseUpdateJobMatchAnalysisRequest(

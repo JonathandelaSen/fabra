@@ -38,6 +38,7 @@ export interface ScoreJobMatchAnalysisInput {
   model: string;
   jobDescription: string;
   jobUrl: string | null;
+  language?: string;
 }
 
 export interface UpdateJobMatchAnalysisInput {

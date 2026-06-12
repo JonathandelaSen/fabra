@@ -30,7 +30,7 @@ Scoring calibration bands instruct the model to use the full 0-100 range and avo
 
 Output requirements ask for: a diagnosis that opens with the verdict and strongest asset and references concrete CV fragments as evidence; improvements ordered by screening impact and specific to the analyzed CV (e.g., before/after bullet rewrites); and keywords actually present in the CV.
 
-**Response language:** both builders accept an optional `language` parameter (interface language, currently `en` or `es`). When provided, the prompt instructs the model to write `feedback` and `improvements` in that language. When absent, the model is told to match the predominant language of the CV itself. The frontend passes the active `next-intl` locale (`useLocale()`) on both the integrated score request and the Copy Paste `prepare` request; the route handlers validate it with `isInterfaceLanguage` and forward it through `ScoreCVAnalysisUseCase` / `PrepareCVScoreCopyPasteUseCase` into the prompt builders.
+**Response language:** both builders accept an optional `language` parameter (interface language, currently `en` or `es`). When provided, the prompt instructs the model to write `feedback` and `improvements` in that language. When absent, the model is told to match the predominant language of the CV itself. The frontend injects the active `next-intl` locale: `useScoreCVAnalysis()` defaults `language` to `useLocale()` for the integrated flow, and the Copy Paste modal passes it on `prepare`; the route handlers validate it with `isInterfaceLanguage` and forward it through `ScoreCVAnalysisUseCase` / `PrepareCVScoreCopyPasteUseCase` into the prompt builders.
 
 The JSON contract is unchanged:
 

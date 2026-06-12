@@ -13,6 +13,7 @@ export interface ScoreJobMatchAnalysisInput {
   model: string;
   jobDescription: string;
   jobUrl: string | null;
+  language?: string | null;
 }
 
 export class ScoreJobMatchAnalysisUseCase {
@@ -51,6 +52,7 @@ export class ScoreJobMatchAnalysisUseCase {
       text,
       jobDescription: input.jobDescription,
       jobUrl: input.jobUrl,
+      language: input.language,
     });
 
     const now = new Date().toISOString();

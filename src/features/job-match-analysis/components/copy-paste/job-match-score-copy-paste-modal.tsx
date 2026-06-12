@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import CopyPasteWorkflowModal, {
   CopyPastePreviewItem,
 } from "@/components/shared/copy-paste-workflow-modal";
@@ -31,6 +31,7 @@ export default function JobMatchScoreCopyPasteModal({
   onApplied,
 }: JobMatchScoreCopyPasteModalProps) {
   const t = useTranslations("analysisFlow.copyPaste");
+  const locale = useLocale();
   const {
     prepareJobMatchAnalysisCopyPaste,
     previewJobMatchAnalysisCopyPaste,
@@ -43,6 +44,7 @@ export default function JobMatchScoreCopyPasteModal({
       prepareJobMatchAnalysisCopyPaste(analysisId, {
         jobDescription,
         jobUrl,
+        language: locale,
       }),
     preview: (rawResponse) =>
       previewJobMatchAnalysisCopyPaste(analysisId, { rawResponse }),

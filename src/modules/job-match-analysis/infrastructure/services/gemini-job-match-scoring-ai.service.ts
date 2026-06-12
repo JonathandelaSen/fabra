@@ -64,6 +64,7 @@ class GeminiJobMatchScoringAIService implements JobMatchScoringAIService {
         systemInstruction: buildJobMatchScoringPrompt(
           input.jobDescription,
           input.jobUrl,
+          input.language,
         ),
         responseMimeType: "application/json",
       },

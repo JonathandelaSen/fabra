@@ -1,3 +1,5 @@
+import { isInterfaceLanguage, type InterfaceLanguage } from "@/i18n/config";
+
 type Result<TValue, TError> =
   | { ok: true; value: TValue }
   | { ok: false; error: TError };
@@ -10,6 +12,7 @@ interface HttpValidationError {
 export interface PrepareJobMatchAnalysisCopyPasteRequest {
   jobDescription: string;
   jobUrl: string | null;
+  language: InterfaceLanguage | null;
 }
 
 function validationError(message: string): Result<never, HttpValidationError> {
@@ -34,6 +37,7 @@ export function parsePrepareJobMatchAnalysisCopyPasteRequest(
         typeof record.jobUrl === "string" && record.jobUrl.trim()
           ? record.jobUrl.trim()
           : null,
+      language: isInterfaceLanguage(record.language) ? record.language : null,
     },
   };
 }

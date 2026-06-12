@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useLocale } from "next-intl";
 import type {
   CVAnalysisDetailResponse,
   ListCVAnalysesResponse,
@@ -58,6 +59,7 @@ export function useUploadCVForAnalysis() {
 
 export function useScoreCVAnalysis() {
   const queryClient = useQueryClient();
+  const locale = useLocale();
 
   return useMutation({
     mutationFn: ({
@@ -66,7 +68,7 @@ export function useScoreCVAnalysis() {
     }: {
       id: string;
       input: ScoreCVAnalysisInput;
-    }) => scoreCVAnalysis(id, input),
+    }) => scoreCVAnalysis(id, { language: locale, ...input }),
     onSuccess: (analysis) => {
       queryClient.setQueryData(cvAnalysisQueryKeys.detail(analysis.id), analysis);
       queryClient.setQueryData(

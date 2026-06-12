@@ -37,6 +37,7 @@ export async function POST(
         model: parsed.value.model,
         jobDescription: parsed.value.jobDescription,
         jobUrl: parsed.value.jobUrl,
+        language: parsed.value.language,
       });
 
     if (!updated) {

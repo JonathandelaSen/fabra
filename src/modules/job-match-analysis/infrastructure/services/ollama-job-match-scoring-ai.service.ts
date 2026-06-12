@@ -62,6 +62,7 @@ class OllamaJobMatchScoringAIService implements JobMatchScoringAIService {
       system: buildJobMatchScoringPrompt(
         input.jobDescription,
         input.jobUrl,
+        input.language,
       ),
       format: "json",
       stream: false,

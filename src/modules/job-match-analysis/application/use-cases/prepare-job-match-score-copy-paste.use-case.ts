@@ -11,6 +11,7 @@ export interface PrepareJobMatchScoreCopyPasteInput {
   userId: string;
   jobDescription: string;
   jobUrl?: string | null;
+  language?: string | null;
 }
 
 export interface PrepareJobMatchScoreCopyPasteResult {
@@ -29,6 +30,7 @@ export class PrepareJobMatchScoreCopyPasteUseCase {
         text: string;
         jobDescription: string;
         jobUrl?: string | null;
+        language?: string | null;
       }) => string;
     },
   ) {}
@@ -54,6 +56,7 @@ export class PrepareJobMatchScoreCopyPasteUseCase {
       text,
       jobDescription: input.jobDescription,
       jobUrl: input.jobUrl,
+      language: input.language,
     });
 
     return {

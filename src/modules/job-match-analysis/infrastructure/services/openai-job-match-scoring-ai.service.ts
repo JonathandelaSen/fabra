@@ -60,7 +60,14 @@ class OpenAIJobMatchScoringAIService implements JobMatchScoringAIService {
     const response = await openai.chat.completions.create({
       model: this.config.model,
       messages: [
-        { role: "system", content: buildJobMatchScoringPrompt(input.jobDescription, input.jobUrl) },
+        {
+          role: "system",
+          content: buildJobMatchScoringPrompt(
+            input.jobDescription,
+            input.jobUrl,
+            input.language,
+          ),
+        },
         { role: "user", content: input.text },
       ],
       response_format: { type: "json_object" },

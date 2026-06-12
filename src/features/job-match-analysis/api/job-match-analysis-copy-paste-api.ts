@@ -20,7 +20,7 @@ export type { JobMatchAnalysisCopyPasteResult };
 
 export function prepareJobMatchAnalysisCopyPaste(
   id: string,
-  input: { jobDescription: string; jobUrl: string | null },
+  input: { jobDescription: string; jobUrl: string | null; language?: string },
 ) {
   return fetch(
     `/api/job-match-analyses/${encodeURIComponent(id)}/score/copy-paste/prepare`,

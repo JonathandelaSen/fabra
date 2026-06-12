@@ -16,6 +16,7 @@ export interface JobMatchScoringAIInput {
   text: string;
   jobDescription: string;
   jobUrl?: string | null;
+  language?: string | null;
 }
 
 export interface JobMatchScoringAIService {

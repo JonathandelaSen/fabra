@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useLocale } from "next-intl";
 import type {
   CreateJobMatchAnalysisInput,
   UpdateJobMatchAnalysisInput,
@@ -25,6 +26,7 @@ interface OptimisticContext {
 
 export function useJobMatchAnalysisMutations() {
   const queryClient = useQueryClient();
+  const locale = useLocale();
   const listKey = jobMatchAnalysisQueryKeys.lists();
 
   const startOptimisticUpdate = async (id?: string) => {
@@ -208,7 +210,7 @@ export function useJobMatchAnalysisMutations() {
       }: {
         id: string;
         input: ScoreJobMatchAnalysisInput;
-      }) => scoreJobMatchAnalysis({ id, input }),
+      }) => scoreJobMatchAnalysis({ id, input: { language: locale, ...input } }),
       onSuccess: (detail) => {
         queryClient.setQueryData(
           jobMatchAnalysisQueryKeys.detail(detail.id),

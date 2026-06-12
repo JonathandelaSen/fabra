@@ -27,6 +27,7 @@ export async function POST(
         userId: user.id,
         jobDescription: parsed.value.jobDescription,
         jobUrl: parsed.value.jobUrl,
+        language: parsed.value.language,
       });
     if (!result) throw notFound("Analysis not found");
 

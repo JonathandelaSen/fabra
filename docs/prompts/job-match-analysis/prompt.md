@@ -12,28 +12,37 @@
   - `POST /api/job-match-analyses/[id]/score/copy-paste/apply`
 
 ## Current Prompt
-```text
-You are a strict ATS recruiter and job-posting analyst. Compare the extracted text from a PDF resume against a specific job posting.
 
-The job description is:
----
-{job_description}
----
+The prompt frames the model as an elite technical recruiter and hiring-committee screener (agency search, in-house Big Tech recruiting, ATS keyword-matching systems, 50,000+ CVs screened against specs) and structures the analysis in three steps. See `buildJobMatchScoringPrompt` in `src/modules/job-match-analysis/infrastructure/services/job-match-scoring-prompts.ts` for the full literal text.
 
-The source URL provided by the user is: {job_url}
+**Step 1 — Job-posting deconstruction (intake briefing):** separate must-have requirements (explicit "required", years, technologies, certifications, languages, work authorization, location constraints) from nice-to-haves; infer the role's real seniority from scope rather than title; extract structured job data faithfully (never inventing salary, holidays, company, or benefits); surface hidden signals (on-call, travel, equity-heavy comp, scope/title mismatch, red flags) in `notablePoints`.
 
-Return the comparison and the job-posting summary as structured data. If a field is not present in the job posting, use null or an empty array. Do not invent salary, holidays, company, or benefits.
+**Step 2 — Weighted match rubric:**
 
-You must respond ONLY with valid JSON using this exact format:
+1. **Must-have requirements coverage (35%)** — semantic matching (synonyms, equivalent tech, umbrella terms), evidence strength (quantified achievement > bare skills-list mention > missing), timeline-based years estimation. A missing true must-have caps the overall score at ~60.
+2. **Nice-to-have coverage and differentiators (10%)**.
+3. **Seniority and scope alignment (15%)** — penalizes both under- and overqualification, naming which.
+4. **Domain, industry and context fit (10%)** — partial credit for transferable domains with explanation.
+5. **Recency and currency of matching skills (10%)** — matches weighted by recency and centrality in the history.
+6. **ATS keyword alignment (10%)** — literal vocabulary gaps flagged even when the competence exists under another spelling.
+7. **Practical and logistical fit (10%)** — location/remote, working language, authorization, contract type; unknowns flagged as risks rather than assumed.
+
+**Step 3 — Score calibration** as a screener deciding who gets a call, using the full 0-100 range without clustering in 70-85: 90-100 fast-track, 75-89 clear interview, 60-74 phone screen at best, 40-59 likely auto-rejected, 0-39 not a match.
+
+Output requirements ask for: feedback that opens with the screener's verdict, then strongest matches with evidence, then decisive gaps by severity, distinguishing real competence gaps from presentation/keyword gaps; improvements prioritized by screening impact, presentation fixes first (exact-term additions, before/after rewrites) then honest guidance on real gaps, never advising invented experience; keyword fields in the posting's terminology, deduplicated and ordered by importance.
+
+The JSON contract is unchanged:
+
+```json
 {
   "score": <number from 0 to 100, where 100 means perfect match>,
-  "feedback": "<Detailed analysis in Spanish of how well the resume matches the job posting. Highlight strongest matches and biggest gaps.>",
+  "feedback": "<Detailed screener-style analysis, in the response language defined above.>",
   "keywordsFound": ["<keyword from job description found in resume>", ...],
   "jobKeywords": ["<important keyword or requirement from the job posting>", ...],
   "cvKeywords": ["<relevant keyword or skill found in the CV>", ...],
   "matchingKeywords": ["<keyword present in both job posting and CV>", ...],
   "missingKeywords": ["<important job keyword missing from the CV>", ...],
-  "improvements": ["<specific change to better match this job posting, in Spanish>", ...],
+  "improvements": ["<specific change to better match this job posting, in the response language defined above>", ...],
   "jobKeyData": {
     "title": "<job title or null>",
     "company": "<company name or null>",
@@ -52,9 +61,11 @@ You must respond ONLY with valid JSON using this exact format:
 
 If `job_url` is empty, the URL block is omitted.
 
+**Response language:** both builders accept an optional `language` parameter (interface language, currently `en` or `es`). When provided, the prompt instructs the model to write `feedback`, `improvements`, and `jobKeyData.notablePoints` in that language; when absent, to match the predominant language of the CV. Extracted job-posting fields (`requirements`, `responsibilities`, `benefits`, etc.) stay faithful to the posting's own wording. The frontend injects the active `next-intl` locale: `useJobMatchAnalysisMutations().scoreAnalysis` defaults `language` to `useLocale()` for the integrated flow, and the Copy Paste modal passes it on `prepare`. Route handlers validate it with `isInterfaceLanguage` and forward it through `ScoreJobMatchAnalysisUseCase` / `PrepareJobMatchScoreCopyPasteUseCase` into the prompt builders.
+
 ## Data Inputs
 - User content sent to the model: extracted CV text from the selected analysis.
-- System instruction data: `job_description` and optional `job_url`.
+- System instruction data: `job_description`, optional `job_url`, and optional `language` (interface language used for the response language instruction).
 - Output parser: `parseAIResult`, including `jobKeyData`, `jobKeywords`, `matchingKeywords`, and `missingKeywords`.
 
 ## Runtime Flow
