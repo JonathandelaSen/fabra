@@ -48,6 +48,23 @@ function isModuleInternalImport(specifier) {
   return true;
 }
 
+function isCrossRouteRelativeImport(file, specifier) {
+  if (!file.startsWith("src/app/api/") || !specifier.startsWith(".")) {
+    return false;
+  }
+
+  const routeDirectory = path.posix.dirname(file);
+  const resolvedImport = path.posix.normalize(
+    path.posix.join(routeDirectory, specifier),
+  );
+  const routeFamily = file.split("/")[3];
+  const importedRouteFamily = resolvedImport.split("/")[3];
+  return (
+    routeFamily !== importedRouteFamily &&
+    !importedRouteFamily.startsWith("_")
+  );
+}
+
 async function findRouteImportViolations() {
   const appDir = path.join(repoRoot, "src/app");
   const componentDir = path.join(repoRoot, "src/components");
@@ -76,6 +93,9 @@ async function findRouteImportViolations() {
       if (isModuleInternalImport(specifier)) {
         violations.push({ file, import: specifier });
       }
+      if (isCrossRouteRelativeImport(file, specifier)) {
+        violations.push({ file, import: specifier });
+      }
     }
   }
 
@@ -86,7 +106,9 @@ async function main() {
   const violations = await findRouteImportViolations();
 
   if (violations.length > 0) {
-    console.error("Route/component/lib files must import modules via barrel (index.ts) only:");
+    console.error(
+      "Route/component/lib imports violate module barrel or API route boundary rules:",
+    );
     for (const v of violations) {
       console.error(`- ${v.file} imports "${v.import}"`);
     }
