@@ -9,7 +9,7 @@ export function CVTemplatePreviewEducationItem({
   item,
 }: CVTemplatePreviewEducationItemProps) {
   return (
-    <article className="cvp-item">
+    <article className="cvp-item" data-item-id={item.id}>
       <div className="cvp-item-head">
         <div>
           <h3>{item.degree || item.institution}</h3>
@@ -23,7 +23,14 @@ export function CVTemplatePreviewEducationItem({
       </div>
       {hasItems(item.details) && (
         <ul>
-          {item.details?.map((detail, index) => <li key={index}>{detail}</li>)}
+          {item.details?.map((detail, index) => {
+            const bulletId = item.detailIds?.[index];
+            return (
+              <li key={index} data-bullet-id={bulletId}>
+                {detail}
+              </li>
+            );
+          })}
         </ul>
       )}
     </article>

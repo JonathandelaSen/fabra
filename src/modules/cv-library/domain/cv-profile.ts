@@ -30,33 +30,40 @@ export interface StandardCVDateRange {
 }
 
 export interface StandardCVExperience {
+  id?: string;
   company?: string;
   role?: string;
   location?: string;
   dates?: StandardCVDateRange;
   bullets?: string[];
+  bulletIds?: string[];
 }
 
 export interface StandardCVEducation {
+  id?: string;
   institution?: string;
   degree?: string;
   field?: string;
   location?: string;
   dates?: StandardCVDateRange;
   details?: string[];
+  detailIds?: string[];
 }
 
 export interface StandardCVSkillGroup {
+  id?: string;
   name?: string;
   items?: string[];
 }
 
 export interface StandardCVLanguage {
+  id?: string;
   name?: string;
   level?: string;
 }
 
 export interface StandardCVNamedItem {
+  id?: string;
   name?: string;
   issuer?: string;
   organization?: string;
@@ -64,6 +71,7 @@ export interface StandardCVNamedItem {
   url?: string;
   description?: string;
   bullets?: string[];
+  bulletIds?: string[];
 }
 
 export interface StandardCVPresentation {
@@ -150,6 +158,22 @@ const asStringArray = (value: unknown): string[] =>
         .map((item) => item.trim())
     : [];
 
+function generatedShortId(value: unknown): string {
+  return createHash("sha256")
+    .update(JSON.stringify(value))
+    .digest("base64url")
+    .slice(0, 8);
+}
+
+function normalizeId(value: unknown, fallback: unknown): string {
+  return asString(value) ?? generatedShortId(fallback);
+}
+
+function normalizeTextIds(texts: string[], value: unknown): string[] {
+  const ids = Array.isArray(value) ? value : [];
+  return texts.map((text, index) => normalizeId(ids[index], { text, index }));
+}
+
 const withDefined = <T extends Record<string, unknown>>(value: T): T => {
   for (const key of Object.keys(value)) {
     if (
@@ -196,55 +220,66 @@ function normalizeBasics(value: unknown): StandardCVBasics {
   });
 }
 
-function normalizeExperience(value: unknown): StandardCVExperience {
+function normalizeExperience(value: unknown, index = 0): StandardCVExperience {
   const raw = asRecord(value);
+  const bullets = asStringArray(raw.bullets);
   return withDefined({
+    id: normalizeId(raw.id, { raw, index }),
     company: asString(raw.company),
     role: asString(raw.role),
     location: asString(raw.location),
     dates: normalizeDateRange(raw.dates),
-    bullets: asStringArray(raw.bullets),
+    bullets,
+    bulletIds: normalizeTextIds(bullets, raw.bulletIds),
   });
 }
 
-function normalizeEducation(value: unknown): StandardCVEducation {
+function normalizeEducation(value: unknown, index = 0): StandardCVEducation {
   const raw = asRecord(value);
+  const details = asStringArray(raw.details);
   return withDefined({
+    id: normalizeId(raw.id, { raw, index }),
     institution: asString(raw.institution),
     degree: asString(raw.degree),
     field: asString(raw.field),
     location: asString(raw.location),
     dates: normalizeDateRange(raw.dates),
-    details: asStringArray(raw.details),
+    details,
+    detailIds: normalizeTextIds(details, raw.detailIds),
   });
 }
 
-function normalizeSkillGroup(value: unknown): StandardCVSkillGroup {
+function normalizeSkillGroup(value: unknown, index = 0): StandardCVSkillGroup {
   const raw = asRecord(value);
   return withDefined({
+    id: normalizeId(raw.id, { raw, index }),
     name: asString(raw.name),
     items: asStringArray(raw.items),
   });
 }
 
-function normalizeLanguage(value: unknown): StandardCVLanguage {
+function normalizeLanguage(value: unknown, index = 0): StandardCVLanguage {
   const raw = asRecord(value);
   return withDefined({
+    id: normalizeId(raw.id, { raw, index }),
     name: asString(raw.name),
     level: asString(raw.level),
   });
 }
 
-function normalizeNamedItem(value: unknown): StandardCVNamedItem {
+function normalizeNamedItem(value: unknown, index = 0): StandardCVNamedItem {
   const raw = asRecord(value);
+  const bullets = asStringArray(raw.bullets);
   return withDefined({
+    id: normalizeId(raw.id, { raw, index }),
     name: asString(raw.name),
     issuer: asString(raw.issuer),
     organization: asString(raw.organization),
     date: asString(raw.date),
     url: normalizeLinkUrl(asString(raw.url)),
     description: asString(raw.description),
-    bullets: asStringArray(raw.bullets),
+    bullets,
+    bulletIds: normalizeTextIds(bullets, raw.bulletIds),
   });
 }
 
@@ -271,7 +306,7 @@ function normalizePresentation(value: unknown): StandardCVPresentation | undefin
 
 function normalizeArray<T>(
   value: unknown,
-  normalize: (item: unknown) => T
+  normalize: (item: unknown, index: number) => T
 ): T[] {
   if (!Array.isArray(value)) return [];
   return value

@@ -29,6 +29,7 @@ export interface CVDocumentExtractedTextPrimitives {
 
 export interface CVPublicSettingsPrimitives {
   enabled: boolean;
+  feedbackEnabled?: boolean;
   publicId: string | null;
   slug: string | null;
   publishedAt: string | null;
@@ -73,6 +74,7 @@ export interface CVDocumentCreateParams {
   extractedText: CVDocumentExtractedTextPrimitives;
   publicSettings: {
     enabled: boolean;
+    feedbackEnabled?: boolean;
     publicId: string | null;
     slug: string | null;
     publishedAt: string | null;
@@ -122,7 +124,7 @@ export class CVDocument extends AggregateRoot {
       params.aiModel,
       params.profile,
       params.extractedText,
-      params.publicSettings,
+      { ...params.publicSettings, feedbackEnabled: params.publicSettings.feedbackEnabled ?? false },
       params.createdAt,
       params.updatedAt,
     );
@@ -147,7 +149,7 @@ export class CVDocument extends AggregateRoot {
       primitives.aiModel,
       primitives.profile,
       primitives.extractedText,
-      primitives.publicSettings,
+      { ...primitives.publicSettings, feedbackEnabled: primitives.publicSettings.feedbackEnabled ?? false },
       Timestamp.fromPrimitives(primitives.createdAt),
       Timestamp.fromPrimitives(primitives.updatedAt),
     );
@@ -207,12 +209,14 @@ export class CVDocument extends AggregateRoot {
 
   updatePublicSettings(settings: {
     enabled: boolean;
+    feedbackEnabled?: boolean;
     publicId: string | null;
     slug: string | null;
     publishedAt: Timestamp | null;
   }): void {
     this.documentPublicSettings = {
       enabled: settings.enabled,
+      feedbackEnabled: settings.feedbackEnabled ?? this.documentPublicSettings.feedbackEnabled ?? false,
       publicId: settings.publicId,
       slug: settings.slug,
       publishedAt: settings.publishedAt?.toPrimitives() ?? null,

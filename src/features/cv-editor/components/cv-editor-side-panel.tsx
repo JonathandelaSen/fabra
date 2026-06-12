@@ -13,12 +13,13 @@ import { CVEditorAIPanel } from "./cv-editor-ai-panel";
 import { CVEditorRecommendations, type RecommendationAnalysis } from "./cv-editor-recommendations";
 import { CVEditorPublicSection } from "./cv-editor-public-section";
 import { CVEditorSettingsSection } from "./cv-editor-settings-section";
+import { CVPublicNotesEditor } from "./cv-public-notes-editor";
 
 export interface CVEditorSidePanelProps {
   displayMode?: "desktop" | "mobile";
   activeTemplateId: CVTemplateId;
   currentProfile: StandardCVProfile | null;
-  currentVersion: { id: string; publicEnabled: boolean; publicId: string | null };
+  currentVersion: { id: string; publicEnabled: boolean; publicFeedbackEnabled: boolean; publicId: string | null };
   editInstruction: string;
   editingProfile: boolean;
   editorTab: "ai" | "manual";
@@ -164,6 +165,7 @@ export function CVEditorSidePanel({
             onSaveUrl={onSaveUrl}
             onCopyPublicUrl={onCopyPublicUrl}
           />
+          {currentProfile && <CVPublicNotesEditor cvId={currentVersion.id} profile={currentProfile} feedbackEnabled={currentVersion.publicFeedbackEnabled} />}
           <CVEditorSettingsSection locale={locale} savingLocale={savingLocale} onUpdateLocale={onUpdateLocale} onOpenTemplates={onOpenTemplates} />
 
           {!hasAIApiKey && (

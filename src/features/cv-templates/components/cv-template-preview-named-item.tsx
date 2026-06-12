@@ -10,7 +10,7 @@ export function CVTemplatePreviewNamedItem({
 }: CVTemplatePreviewNamedItemProps) {
   const metaParts = [item.issuer, item.organization].filter(Boolean);
   return (
-    <article className="cvp-item cvp-small-item">
+    <article className="cvp-item cvp-small-item" data-item-id={item.id}>
       <div className="cvp-item-head">
         <div>
           <h3>{item.name}</h3>
@@ -25,7 +25,14 @@ export function CVTemplatePreviewNamedItem({
       {item.description && <p className="cvp-description">{item.description}</p>}
       {hasItems(item.bullets) && (
         <ul>
-          {item.bullets?.map((bullet, index) => <li key={index}>{bullet}</li>)}
+          {item.bullets?.map((bullet, index) => {
+            const bulletId = item.bulletIds?.[index];
+            return (
+              <li key={index} data-bullet-id={bulletId}>
+                {bullet}
+              </li>
+            );
+          })}
         </ul>
       )}
     </article>

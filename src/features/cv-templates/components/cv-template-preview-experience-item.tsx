@@ -11,7 +11,7 @@ export function CVTemplatePreviewExperienceItem({
   companyFirst,
 }: CVTemplatePreviewExperienceItemProps) {
   return (
-    <article className="cvp-item">
+    <article className="cvp-item" data-item-id={item.id}>
       <div className="cvp-item-head">
         <div>
           <h3>{companyFirst ? (item.company || item.role) : (item.role || item.company)}</h3>
@@ -25,7 +25,14 @@ export function CVTemplatePreviewExperienceItem({
       </div>
       {hasItems(item.bullets) && (
         <ul>
-          {item.bullets?.map((bullet, index) => <li key={index}>{bullet}</li>)}
+          {item.bullets?.map((bullet, index) => {
+            const bulletId = item.bulletIds?.[index];
+            return (
+              <li key={index} data-bullet-id={bulletId}>
+                {bullet}
+              </li>
+            );
+          })}
         </ul>
       )}
     </article>

@@ -57,7 +57,7 @@ export default function CVTemplatePreview({
 
     if (section === "summary" && profile.summary) {
       return (
-        <CVTemplatePreviewSection key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title} sectionId={section}>
           <p className="cvp-summary">
             {profile.summary}
           </p>
@@ -67,7 +67,7 @@ export default function CVTemplatePreview({
 
     if (section === "skills" && hasItems(profile.skills)) {
       return (
-        <CVTemplatePreviewSection key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title} sectionId={section}>
           {isClassic || isFilo ? (
             <p className="cvp-summary">
               {profile.skills?.flatMap((g) => g.items || []).join(", ")}
@@ -89,7 +89,7 @@ export default function CVTemplatePreview({
     if (section === "technicalSkills" && hasItems(profile.technicalSkills)) {
       const tagsColor = profile.presentation?.tagsColor;
       return (
-        <CVTemplatePreviewSection key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title} sectionId={section}>
           {isFilo ? (
             <p className="cvp-summary">
               {profile.technicalSkills?.join(skillSeparator)}
@@ -113,7 +113,7 @@ export default function CVTemplatePreview({
 
     if (section === "experience" && hasItems(profile.experience)) {
       return (
-        <CVTemplatePreviewSection key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title} sectionId={section}>
           {profile.experience?.map((item, index) => (
             <CVTemplatePreviewExperienceItem key={index} item={item} companyFirst={isModern} />
           ))}
@@ -123,7 +123,7 @@ export default function CVTemplatePreview({
 
     if (section === "projects" && hasItems(profile.projects)) {
       return (
-        <CVTemplatePreviewSection key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title} sectionId={section}>
           {profile.projects?.map((item, index) => (
             <CVTemplatePreviewNamedItem key={index} item={item} />
           ))}
@@ -133,7 +133,7 @@ export default function CVTemplatePreview({
 
     if (section === "education" && hasItems(profile.education)) {
       return (
-        <CVTemplatePreviewSection key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title} sectionId={section}>
           {profile.education?.map((item, index) => (
             <CVTemplatePreviewEducationItem key={index} item={item} />
           ))}
@@ -144,7 +144,7 @@ export default function CVTemplatePreview({
     if (section === "languages" && hasItems(profile.languages)) {
       const tagsColor = profile.presentation?.tagsColor;
       return (
-        <CVTemplatePreviewSection key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title} sectionId={section}>
           <div className="cvp-tags">
             {profile.languages?.map((language, index) => (
               <span 
@@ -161,7 +161,7 @@ export default function CVTemplatePreview({
 
     if (section === "certifications" && hasItems(profile.certifications)) {
       return (
-        <CVTemplatePreviewSection key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title} sectionId={section}>
           {profile.certifications?.map((item, index) => (
             <CVTemplatePreviewNamedItem key={index} item={item} />
           ))}
@@ -171,7 +171,7 @@ export default function CVTemplatePreview({
 
     if (section === "awards" && hasItems(profile.awards)) {
       return (
-        <CVTemplatePreviewSection key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title} sectionId={section}>
           {profile.awards?.map((item, index) => (
             <CVTemplatePreviewNamedItem key={index} item={item} />
           ))}
@@ -181,7 +181,7 @@ export default function CVTemplatePreview({
 
     if (section === "publications" && hasItems(profile.publications)) {
       return (
-        <CVTemplatePreviewSection key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title} sectionId={section}>
           {profile.publications?.map((item, index) => (
             <CVTemplatePreviewNamedItem key={index} item={item} />
           ))}
@@ -191,7 +191,7 @@ export default function CVTemplatePreview({
 
     if (section === "volunteering" && hasItems(profile.volunteering)) {
       return (
-        <CVTemplatePreviewSection key={section} title={title}>
+        <CVTemplatePreviewSection key={section} title={title} sectionId={section}>
           {profile.volunteering?.map((item, index) => (
             <CVTemplatePreviewNamedItem key={index} item={item} />
           ))}

@@ -25,6 +25,7 @@ export interface CVDocumentResponse extends ExtractedPdfText {
   ai_model: string | null;
   profile: StandardCVProfile | null;
   public_enabled: boolean;
+  public_feedback_enabled: boolean;
   public_id: string | null;
   public_slug: string | null;
   public_published_at: string | null;
@@ -43,6 +44,7 @@ export interface CVDocumentSummaryResponse {
   template_locale: string | null;
   profile: StandardCVProfile | null;
   public_enabled: boolean;
+  public_feedback_enabled: boolean;
   public_id: string | null;
   public_slug: string | null;
   public_published_at: string | null;
@@ -84,6 +86,7 @@ export function presentCVDocument(document: CVDocument): CVDocumentResponse {
     ai_model: primitives.aiModel,
     profile: primitives.profile as StandardCVProfile | null,
     public_enabled: primitives.publicSettings.enabled,
+    public_feedback_enabled: primitives.publicSettings.feedbackEnabled ?? false,
     public_id: primitives.publicSettings.publicId,
     public_slug: primitives.publicSettings.slug,
     public_published_at: primitives.publicSettings.publishedAt,
@@ -113,6 +116,7 @@ export function presentCVDocumentSummary(
     template_locale: primitives.templateLocale,
     profile: primitives.profile as StandardCVProfile | null,
     public_enabled: primitives.publicSettings.enabled,
+    public_feedback_enabled: primitives.publicSettings.feedbackEnabled ?? false,
     public_id: primitives.publicSettings.publicId,
     public_slug: primitives.publicSettings.slug,
     public_published_at: primitives.publicSettings.publishedAt,

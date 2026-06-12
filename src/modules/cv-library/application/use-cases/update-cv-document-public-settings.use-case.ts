@@ -7,6 +7,7 @@ export interface UpdateCVDocumentPublicSettingsInput {
   id: string;
   userId: string;
   publicEnabled: boolean;
+  feedbackEnabled?: boolean;
   publicId: string | null;
   publicSlug: string | null;
 }
@@ -29,6 +30,7 @@ export class UpdateCVDocumentPublicSettingsUseCase {
 
     document.updatePublicSettings({
       enabled: input.publicEnabled,
+      feedbackEnabled: input.feedbackEnabled,
       publicId: input.publicId,
       slug: input.publicSlug,
       publishedAt: input.publicEnabled

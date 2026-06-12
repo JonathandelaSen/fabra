@@ -26,6 +26,7 @@ interface CVDocumentRow {
   ai_model: string | null;
   profile: unknown | null;
   public_enabled: boolean;
+  public_feedback_enabled: boolean;
   public_id: string | null;
   public_slug: string | null;
   public_published_at: string | null;
@@ -65,6 +66,7 @@ function rowToDocument(row: CVDocumentRow): CVDocument {
     },
     publicSettings: {
       enabled: row.public_enabled,
+      feedbackEnabled: row.public_feedback_enabled,
       publicId: row.public_id,
       slug: row.public_slug,
       publishedAt: row.public_published_at,
@@ -92,6 +94,7 @@ function documentToRow(document: CVDocument): CVDocumentRow {
     ai_model: primitives.aiModel,
     profile: primitives.profile,
     public_enabled: primitives.publicSettings.enabled,
+    public_feedback_enabled: primitives.publicSettings.feedbackEnabled ?? false,
     public_id: primitives.publicSettings.publicId,
     public_slug: primitives.publicSettings.slug,
     public_published_at: primitives.publicSettings.publishedAt,

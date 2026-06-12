@@ -27,6 +27,8 @@ import { UpdateTemplateCVDocumentProfileUseCase } from "./application/use-cases/
 import { UpsertCVStructuredProfileUseCase } from "./application/use-cases/upsert-cv-structured-profile.use-case";
 import { SupabaseCVDocumentRepository } from "./infrastructure/repositories/supabase-cv-document.repository";
 import { SupabaseCVStructuredProfileRepository } from "./infrastructure/repositories/supabase-cv-structured-profile.repository";
+import { SupabaseCVPublicNoteRepository } from "./infrastructure/repositories/supabase-cv-public-note.repository";
+import { ListCVPublicNotesUseCase, ListPublishedCVPublicNotesUseCase, ReplaceCVPublicNotesUseCase } from "./application/use-cases/manage-cv-public-notes.use-case";
 import { PdfTextExtractor } from "./infrastructure/services/pdf-text-extractor.service";
 import { GeminiCVProfileEditingAIServiceFactory } from "./infrastructure/services/gemini-cv-profile-editing-ai.service";
 import { GeminiCVProfileStructuringAIServiceFactory } from "./infrastructure/services/gemini-cv-profile-structuring-ai.service";
@@ -43,6 +45,7 @@ import { buildCVProfileStructuringCopyPastePrompt } from "./infrastructure/servi
 
 const documentRepo = new SupabaseCVDocumentRepository();
 const profileRepo = new SupabaseCVStructuredProfileRepository();
+const publicNoteRepo = new SupabaseCVPublicNoteRepository();
 const pdfStorage = new SupabaseCVPdfStorage();
 const textExtractor = new PdfTextExtractor();
 const templateRenderer = new TemplateCVPdfRenderer();
@@ -114,6 +117,9 @@ function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
       eventBus,
     }),
     getPublishedCVDocument: new GetPublishedCVDocumentUseCase({ documentRepo }),
+    listCVPublicNotes: new ListCVPublicNotesUseCase(publicNoteRepo),
+    listPublishedCVPublicNotes: new ListPublishedCVPublicNotesUseCase(publicNoteRepo),
+    replaceCVPublicNotes: new ReplaceCVPublicNotesUseCase(publicNoteRepo),
     getCVStructuredProfile: new GetCVStructuredProfileUseCase({ profileRepo }),
     structureCVProfileWithAI: new StructureCVProfileWithAIUseCase({
       aiFactory: profileStructuringAI,
@@ -171,6 +177,7 @@ export function createCVLibraryModule(
     bindRequest(client: SupabaseClient) {
       documentRepo.bindRequest(client);
       profileRepo.bindRequest(client);
+      publicNoteRepo.bindRequest(client);
       pdfStorage.bindRequest(client);
       return this;
     },

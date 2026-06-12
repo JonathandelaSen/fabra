@@ -20,6 +20,7 @@ export {
   profileToPlainText,
   getCVSourceTextHash,
 } from "./domain/cv-profile";
+export type { CVPublicNotePrimitives, CVPublicNoteAnchorType } from "./domain/entities/cv-public-note.entity";
 export {
   type CVTemplateId,
   type CVTemplateLocale,

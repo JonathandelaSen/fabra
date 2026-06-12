@@ -51,3 +51,53 @@ describe("cv profile contact normalization", () => {
     ]);
   });
 });
+
+describe("cv profile stable ids", () => {
+  it("adds stable ids to anchorable entries and bullets", () => {
+    const profile = normalizeStandardCVProfile({
+      experience: [{ company: "Fabra", bullets: ["Built the editor"] }],
+      education: [{ institution: "University", details: ["Computer science"] }],
+      projects: [{ name: "Public CV", bullets: ["Published it"] }],
+    });
+
+    expect(profile.experience?.[0]?.id).toMatch(/^[a-zA-Z0-9_-]{8}$/);
+    expect(profile.experience?.[0]?.bullets?.[0]).toBe("Built the editor");
+    expect(profile.experience?.[0]?.bulletIds?.[0]).toMatch(/^[a-zA-Z0-9_-]{8}$/);
+    expect(profile.education?.[0]?.id).toMatch(/^[a-zA-Z0-9_-]{8}$/);
+    expect(profile.education?.[0]?.details?.[0]).toBe("Computer science");
+    expect(profile.education?.[0]?.detailIds?.[0]).toMatch(/^[a-zA-Z0-9_-]{8}$/);
+    expect(profile.projects?.[0]?.id).toMatch(/^[a-zA-Z0-9_-]{8}$/);
+  });
+
+  it("preserves existing ids while normalizing text", () => {
+    const profile = normalizeStandardCVProfile({
+      experience: [{
+        id: "exp_1234",
+        company: " Fabra ",
+        bullets: [" Shipped it "],
+        bulletIds: ["bul_1234"],
+      }],
+    });
+
+    expect(profile.experience?.[0]).toMatchObject({
+      id: "exp_1234",
+      company: "Fabra",
+      bullets: ["Shipped it"],
+      bulletIds: ["bul_1234"],
+    });
+  });
+
+  it("gives duplicate entries and bullets distinct ids", () => {
+    const profile = normalizeStandardCVProfile({
+      experience: [
+        { company: "Same", bullets: ["Same", "Same"] },
+        { company: "Same", bullets: ["Same", "Same"] },
+      ],
+    });
+
+    expect(profile.experience?.[0]?.id).not.toBe(profile.experience?.[1]?.id);
+    expect(profile.experience?.[0]?.bulletIds?.[0]).not.toBe(
+      profile.experience?.[0]?.bulletIds?.[1],
+    );
+  });
+});

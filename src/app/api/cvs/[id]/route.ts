@@ -68,6 +68,7 @@ export async function PATCH(
 
     if (
       body.public_enabled !== undefined ||
+      body.public_feedback_enabled !== undefined ||
       body.public_slug !== undefined ||
       body.confirmPublicExposure !== undefined
     ) {
@@ -101,6 +102,7 @@ export async function PATCH(
           id,
           userId: user.id,
           publicEnabled: nextEnabled,
+          feedbackEnabled: body.public_feedback_enabled ?? existing.public_feedback_enabled,
           publicId: existing.public_id ?? generatePublicCVId(),
           publicSlug: normalizedSlug,
         });

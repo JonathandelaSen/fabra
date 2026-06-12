@@ -16,6 +16,8 @@ const tableOwners = new Map(
     commitments: "commitments",
     cv_analyses: "cv-analysis",
     cv_structured_profiles: "cv-library",
+    cv_public_notes: "cv-library",
+    cv_public_feedback: "cv-library",
     cvs: "cv-library",
     feedback_notes_entries: "feedback-notes",
     feedback_notes_feedbacks: "feedback-notes",

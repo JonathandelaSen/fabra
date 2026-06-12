@@ -13,6 +13,7 @@ export interface CVDocumentSummaryResponse {
   templateLocale: string | null;
   profile: StandardCVProfile | null;
   publicEnabled: boolean;
+  publicFeedbackEnabled: boolean;
   publicId: string | null;
   publicSlug: string | null;
   publicPublishedAt: string | null;
@@ -65,6 +66,7 @@ interface LegacyCVDocumentSummary {
   template_locale: string | null;
   profile: StandardCVProfile | null;
   public_enabled: boolean;
+  public_feedback_enabled?: boolean;
   public_id: string | null;
   public_slug: string | null;
   public_published_at: string | null;
@@ -100,6 +102,7 @@ export function toCVDocumentSummaryResponse(
     templateLocale: input.template_locale,
     profile: input.profile,
     publicEnabled: input.public_enabled,
+    publicFeedbackEnabled: input.public_feedback_enabled ?? false,
     publicId: input.public_id,
     publicSlug: input.public_slug,
     publicPublishedAt: input.public_published_at,

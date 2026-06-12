@@ -17,6 +17,7 @@ export function normalizeCVResponse(data: any): CVDocumentListItem {
     templateLocale: data.templateLocale ?? data.template_locale ?? null,
     profile: data.profile ?? null,
     publicEnabled: data.publicEnabled ?? data.public_enabled ?? false,
+    publicFeedbackEnabled: data.publicFeedbackEnabled ?? data.public_feedback_enabled ?? false,
     publicId: data.publicId ?? data.public_id ?? null,
     publicSlug: data.publicSlug ?? data.public_slug ?? null,
     publicPublishedAt:
@@ -130,6 +131,17 @@ export async function updatePublicSettings({
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || "Could not update public page.");
+  return normalizeCVResponse(data);
+}
+
+export async function updatePublicFeedbackEnabled(cvId: string, enabled: boolean) {
+  const res = await fetch(`/api/cvs/${encodeURIComponent(cvId)}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ public_feedback_enabled: enabled }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Could not update feedback setting.");
   return normalizeCVResponse(data);
 }
 

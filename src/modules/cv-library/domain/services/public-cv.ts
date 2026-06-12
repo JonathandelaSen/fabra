@@ -6,6 +6,7 @@ const PUBLIC_ID_ALPHABET =
 
 export interface PublicCVSettingsRequest {
   public_enabled?: boolean;
+  public_feedback_enabled?: boolean;
   public_slug?: string | null;
   confirmPublicExposure?: boolean;
 }
