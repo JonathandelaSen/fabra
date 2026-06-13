@@ -96,7 +96,7 @@ src/modules/
 - **Domain events are internal for now**. Aggregate methods record events with `recordDomainEvent`; use cases may call `pullDomainEvents()` later. Technical observability is handled by Sentry, not by a domain-level tracker.
 - **Use cases** receive dependencies via constructor injection (`{ repo, tracker, ... }`).
 - **Modules are singletons** constructed once at import time — not rebuilt per request. The app container (`src/lib/container.ts`) is the composition root that wires up all modules, query buses, and query handler registrations. Route handlers import modules from the container.
-- **Infrastructure repositories implement `SupabaseAware`** (`src/modules/shared/infrastructure/supabase-aware.ts`). They have no constructor parameters. Instead they expose a `bindRequest(client: SupabaseClient)` method that sets the Supabase client for the current request. The module's own `bindRequest` method delegates to all its repositories. Route handlers call `myModule.bindRequest(supabase)` once per request before calling any use case. **Reference implementation:** `analysis-chat` module.
+- **Infrastructure repositories implement `SupabaseAware`** (`src/modules/shared/infrastructure/supabase-aware.ts`). They have no constructor parameters. Instead they expose a `bindRequest(client: SupabaseClient)` method that sets the Supabase client for the current request. The module's own `bindRequest` method delegates to all its repositories. Route handlers call `myModule.bindRequest(supabase)` once per request before calling any use case. **Reference implementation:** `job-analysis-chat` module.
 - **Route handlers** import the module singleton from `src/lib/container.ts`, call `module.bindRequest(supabase)`, and then call use case `.execute()`. HTTP validation (`normalize*` functions) stays in the route handlers.
 - **Domain errors** are caught by `handleDomainError()` which maps them to HTTP status codes.
 - **AI prompts and controllers live inside their module** under `infrastructure/services/`. Prompt builders go in a `*-prompts.ts` file, and the SDK client call goes in a separate `gemini-*-ai.service.ts` file. Both files are colocated in the same directory. **Reference:** `feedback-notes` module.
@@ -241,11 +241,11 @@ export async function POST(req: NextRequest) {
 4. Create a new use case class.
 5. Wire it in the module factory (`<module>.module.ts`).
 6. If a new repository was added, include it in the module's `bindRequest` method.
-7. Call it from the route handler via `analysisChatModule.<useCase>.execute(...)` (importing from `src/lib/container.ts`).
+7. Call it from the route handler via `jobAnalysisChatModule.<useCase>.execute(...)` (importing from `src/lib/container.ts`).
 
 ### When migrating a new module
 
-Follow the `analysis-chat` module as the reference pattern for the singleton/`bindRequest` architecture. Steps:
+Follow the `job-analysis-chat` module as the reference pattern for the singleton/`bindRequest` architecture. Steps:
 
 1. Create domain layer (entities, VOs, errors, repository ports).
 2. Create infrastructure repositories implementing both the domain port and `SupabaseAware`. Constructors take no parameters; the Supabase client is received via `bindRequest`.

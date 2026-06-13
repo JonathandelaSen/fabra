@@ -57,7 +57,7 @@ const analysis = await this.queryBus.execute(
 );
 ```
 
-This lets a use case in `analysis-chat` obtain a `JobMatchAnalysis` aggregate from `job-match-analysis` without importing the other module's repository or querying its tables directly.
+This lets a use case in `job-analysis-chat` obtain a `JobMatchAnalysis` aggregate from `job-match-analysis` without importing the other module's repository or querying its tables directly.
 
 ## Current migration status
 
@@ -292,7 +292,7 @@ Likely owned tables:
 - New/final tables for job opportunities, follow-ups, and process questions.
 - Legacy source: `interview_questions` and offer tracking fields on `analyses`.
 
-### `analysis-chat`
+### `job-analysis-chat`
 
 Purpose: conversations over analysis context.
 
@@ -303,7 +303,7 @@ Aggregates:
 
 Responsibilities:
 
-- Store analysis chat conversations and messages.
+- Store job analysis chat conversations and messages.
 - Generate assistant responses using an analysis context.
 - Remain separate from `selection-process` even if the UI currently shows it under a job-offer analysis tab.
 
@@ -315,7 +315,7 @@ Important decisions:
 
 Open design point:
 
-- Decide whether `analysis-chat` supports both `cv-analysis` and `job-match-analysis`, or only `job-match-analysis` at first.
+- Keep `job-analysis-chat` scoped to `job-match-analysis`; a future CV-specific chat belongs in a separate `cv-analysis-chat` module.
 
 Likely owned tables:
 
@@ -395,7 +395,7 @@ Splitting legacy `analyses` requires migration scripts/files for:
 - `job_opportunities`
 - `follow_ups`
 - updated process question references
-- updated analysis chat references
+- updated job analysis chat references
 - updated observability references or polymorphic event fields
 
 Known legacy references that need attention:
@@ -427,7 +427,7 @@ Do not spend the next module-boundary decision on:
 
 ## Candidate next migration slices
 
-### Lower-risk slice: `analysis-chat`
+### Lower-risk slice: `job-analysis-chat`
 
 Pros:
 
@@ -478,7 +478,7 @@ Cons:
 
 ## Open questions
 
-- Should `analysis-chat` initially support both `cv-analysis` and `job-match-analysis`, or only `job-match-analysis`?
+- What shared abstractions, if any, should be extracted only after a separate `cv-analysis-chat` module exists?
 - What should the final table names be for `cv-analysis` and `job-match-analysis`?
 - Should observability keep one `analysis_id`, or move to typed references such as `{ subjectType, subjectId }`?
 - During migration, should old analysis IDs be preserved as IDs in new tables, or stored as `legacyAnalysisId`?

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { ProviderAnalysisChatAIServiceFactory } from "@/modules/analysis-chat/infrastructure/services/provider-analysis-chat-ai-service.factory";
+import { ProviderJobAnalysisChatAIServiceFactory } from "@/modules/job-analysis-chat/infrastructure/services/provider-job-analysis-chat-ai-service.factory";
 import { ProviderCVScoringAIServiceFactory } from "@/modules/cv-analysis/infrastructure/services/provider-cv-scoring-ai-service.factory";
 import { ProviderCVProfileEditingAIServiceFactory } from "@/modules/cv-library/infrastructure/services/provider-cv-profile-editing-ai-service.factory";
 import { ProviderCVProfileStructuringAIServiceFactory } from "@/modules/cv-library/infrastructure/services/provider-cv-profile-structuring-ai-service.factory";
@@ -18,7 +18,7 @@ function createDeps() {
 }
 
 const factories = [
-  ["analysis chat", ProviderAnalysisChatAIServiceFactory],
+  ["job analysis chat", ProviderJobAnalysisChatAIServiceFactory],
   ["CV scoring", ProviderCVScoringAIServiceFactory],
   ["CV profile editing", ProviderCVProfileEditingAIServiceFactory],
   ["CV profile structuring", ProviderCVProfileStructuringAIServiceFactory],

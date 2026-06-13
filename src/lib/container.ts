@@ -2,9 +2,9 @@ import { InMemoryQueryBus, InMemoryEventBus } from "@/modules/shared";
 import { createActivityContextsModule } from "@/modules/activity-context";
 import { createAdminModule } from "@/modules/admin";
 import {
-  createAnalysisChatModule,
-  registerAnalysisChatQueries,
-} from "@/modules/analysis-chat";
+  createJobAnalysisChatModule,
+  registerJobAnalysisChatQueries,
+} from "@/modules/job-analysis-chat";
 import {
   createCVAnalysisModule,
   GetCVAnalysisByIdQuery,
@@ -138,16 +138,16 @@ queryBus.register(
   ),
 );
 
-const _analysisChatModule = createAnalysisChatModule(
+const _jobAnalysisChatModule = createJobAnalysisChatModule(
   queryBus,
   telemetry,
   eventBus,
 );
-const originalBind = _analysisChatModule.bindRequest.bind(_analysisChatModule);
-_analysisChatModule.bindRequest = (client) => {
+const originalBind = _jobAnalysisChatModule.bindRequest.bind(_jobAnalysisChatModule);
+_jobAnalysisChatModule.bindRequest = (client) => {
   cvAnalysisModule.bindRequest(client);
   jobMatchAnalysisModule.bindRequest(client);
   return originalBind(client);
 };
-export const analysisChatModule = _analysisChatModule;
-registerAnalysisChatQueries(queryBus, analysisChatModule);
+export const jobAnalysisChatModule = _jobAnalysisChatModule;
+registerJobAnalysisChatQueries(queryBus, jobAnalysisChatModule);

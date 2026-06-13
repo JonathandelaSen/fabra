@@ -9,7 +9,7 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
-import type { AnalysisChatConversation } from "../../../types";
+import type { JobAnalysisChatConversation } from "../../../types";
 import {
   ActionIconButton,
   ACTION_ICON_BUTTON_TONES,
@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface ConversationListProps {
-  conversations: AnalysisChatConversation[];
+  conversations: JobAnalysisChatConversation[];
   activeId: string | null;
   onSelect: (id: string) => void;
   onNew: () => void;
@@ -44,7 +44,7 @@ export function ConversationList({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
 
-  const startEditing = (conv: AnalysisChatConversation) => {
+  const startEditing = (conv: JobAnalysisChatConversation) => {
     setEditingId(conv.id);
     setEditTitle(conv.title);
   };

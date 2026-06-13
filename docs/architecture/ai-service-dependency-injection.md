@@ -38,7 +38,7 @@ Examples:
 - `ProviderCVProfileEditingAIServiceFactory`
 - `ProviderCVScoringAIServiceFactory`
 - `ProviderJobMatchScoringAIServiceFactory`
-- `ProviderAnalysisChatAIServiceFactory`
+- `ProviderJobAnalysisChatAIServiceFactory`
 - `ProviderInterviewQuestionAIServiceFactory`
 - `ProviderJournalAIServiceFactory`
 - `ProviderFeedbackAIServiceFactory`

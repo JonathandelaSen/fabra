@@ -15,8 +15,8 @@ import type {
   SaveInterviewQuestionResponse,
 } from "@/app/api/interview-questions/responses";
 import type {
-  AnalysisChatConversation,
-  AnalysisChatMessage,
+  JobAnalysisChatConversation,
+  JobAnalysisChatMessage,
 } from "../types";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
@@ -247,7 +247,7 @@ export async function listJobMatchOfferChatConversations(analysisId: string) {
   const res = await fetch(
     `/api/job-match-analyses/${encodeURIComponent(analysisId)}/chat`
   );
-  return readJsonResponse<{ conversations: AnalysisChatConversation[] }>(
+  return readJsonResponse<{ conversations: JobAnalysisChatConversation[] }>(
     res,
     "Could not load chat conversations."
   );
@@ -264,7 +264,7 @@ export async function listJobMatchOfferChatMessages({
   const res = await fetch(
     `/api/job-match-analyses/${encodeURIComponent(analysisId)}/chat?${params.toString()}`
   );
-  return readJsonResponse<{ messages: AnalysisChatMessage[] }>(
+  return readJsonResponse<{ messages: JobAnalysisChatMessage[] }>(
     res,
     "Could not load chat messages."
   );
@@ -279,7 +279,7 @@ export async function createJobMatchOfferChatConversation(analysisId: string) {
       body: JSON.stringify({ action: "create_conversation" }),
     }
   );
-  return readJsonResponse<{ conversation: AnalysisChatConversation }>(
+  return readJsonResponse<{ conversation: JobAnalysisChatConversation }>(
     res,
     "Could not create chat conversation."
   );
@@ -306,7 +306,7 @@ export async function renameJobMatchOfferChatConversation({
       }),
     }
   );
-  return readJsonResponse<{ conversation: AnalysisChatConversation }>(
+  return readJsonResponse<{ conversation: JobAnalysisChatConversation }>(
     res,
     "Could not rename chat conversation."
   );
@@ -352,8 +352,8 @@ export async function sendJobMatchOfferChatMessage({
     }
   );
   return readJsonResponse<{
-    userMessage: AnalysisChatMessage;
-    assistantMessage: AnalysisChatMessage;
+    userMessage: JobAnalysisChatMessage;
+    assistantMessage: JobAnalysisChatMessage;
   }>(res, "Could not send chat message.");
 }
 
@@ -394,7 +394,7 @@ export async function applyJobMatchOfferChatCopyPaste({
     }
   );
   return readJsonResponse<{
-    userMessage: AnalysisChatMessage;
-    assistantMessage: AnalysisChatMessage;
+    userMessage: JobAnalysisChatMessage;
+    assistantMessage: JobAnalysisChatMessage;
   }>(res, "Could not apply copy paste chat.");
 }

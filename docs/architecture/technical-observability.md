@@ -607,7 +607,7 @@ use_case <module-name>.<use-case-key>
 Examples:
 
 ```text
-use_case analysis-chat.sendMessage
+use_case job-analysis-chat.sendMessage
 use_case cv-library.prepareCVAnalysisInput
 use_case work-journal.createEntry
 ```
@@ -909,7 +909,7 @@ Conceptual API:
 
 ```ts
 const useCases = instrumentUseCases(
-  "analysis-chat",
+  "job-analysis-chat",
   createUseCases(queryBus, contextReader),
   telemetry,
 );
@@ -928,10 +928,10 @@ return {
 Every migrated module composition root receives `Telemetry` explicitly:
 
 ```ts
-export function createAnalysisChatModule(
+export function createJobAnalysisChatModule(
   queryBus: QueryBus,
   telemetry: Telemetry,
-): AnalysisChatModule;
+): JobAnalysisChatModule;
 ```
 
 Modules without a query bus receive only telemetry:
@@ -956,7 +956,7 @@ At design time, the primary composition roots include:
 src/modules/activity-context/activity-contexts.module.ts
 src/modules/admin/admin.module.ts
 src/modules/admin-users/admin-users.module.ts
-src/modules/analysis-chat/analysis-chat.module.ts
+src/modules/job-analysis-chat/job-analysis-chat.module.ts
 src/modules/commitments/commitments.module.ts
 src/modules/cv-analysis/cv-analysis.module.ts
 src/modules/cv-library/cv-library.module.ts

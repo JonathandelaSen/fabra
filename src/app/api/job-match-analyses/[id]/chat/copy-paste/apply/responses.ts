@@ -1,6 +1,6 @@
-import type { AnalysisChatMessage } from "@/modules/analysis-chat";
+import type { JobAnalysisChatMessage } from "@/modules/job-analysis-chat";
 
 export interface ApplyOfferChatCopyPasteResponse {
-  userMessage: AnalysisChatMessage;
-  assistantMessage: AnalysisChatMessage;
+  userMessage: JobAnalysisChatMessage;
+  assistantMessage: JobAnalysisChatMessage;
 }

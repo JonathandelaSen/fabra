@@ -1,15 +1,15 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
-import { analysisChatModule } from "@/lib/container";
+import { jobAnalysisChatModule } from "@/lib/container";
 import { createRequestId } from "@/lib/observability";
 import { badRequest, errorResponse, notFound, ok } from "@/modules/shared";
-import { presentMessage } from "@/modules/analysis-chat";
+import { presentMessage } from "@/modules/job-analysis-chat";
 import { parseApplyOfferChatCopyPasteRequest } from "./validation";
 import type { ApplyOfferChatCopyPasteResponse } from "./responses";
 
 async function validateJobMatch(analysisId: string, userId: string) {
-  const context = await analysisChatModule.getAnalysisChatContext.execute({
+  const context = await jobAnalysisChatModule.getJobAnalysisChatContext.execute({
     analysisId,
     userId,
   });
@@ -40,14 +40,14 @@ export async function POST(
     if (!parsed.ok) return errorResponse(parsed.error);
 
     const { id } = await params;
-    analysisChatModule.bindRequest(supabase);
+    jobAnalysisChatModule.bindRequest(supabase);
     const validationError = await validateJobMatch(id, user.id);
     if (validationError) {
       if (validationError.status === 404) throw notFound(validationError.error);
       throw badRequest(validationError.error);
     }
 
-    const result = await analysisChatModule.applyOfferChatCopyPaste.execute({
+    const result = await jobAnalysisChatModule.applyOfferChatCopyPaste.execute({
       userId: user.id,
       analysisId: id,
       conversationId: parsed.value.conversationId,

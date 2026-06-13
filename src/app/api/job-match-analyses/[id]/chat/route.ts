@@ -6,8 +6,8 @@ import {
   presentConversations,
   presentMessage,
   presentMessages,
-} from "@/modules/analysis-chat";
-import { analysisChatModule } from "@/lib/container";
+} from "@/modules/job-analysis-chat";
+import { jobAnalysisChatModule } from "@/lib/container";
 import { createRequestId } from "@/lib/observability";
 import { parseListOfferChatRequest, parseOfferChatPostRequest } from "./validation";
 import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
@@ -15,7 +15,7 @@ import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
 export const maxDuration = 60;
 
 async function validateJobMatch(analysisId: string, userId: string) {
-  const context = await analysisChatModule.getAnalysisChatContext.execute({
+  const context = await jobAnalysisChatModule.getJobAnalysisChatContext.execute({
     analysisId,
     userId,
   });
@@ -39,7 +39,7 @@ export async function GET(
     const { supabase, user } = authContext;
 
     const { id } = await params;
-    analysisChatModule.bindRequest(supabase);
+    jobAnalysisChatModule.bindRequest(supabase);
     const validationError = await validateJobMatch(id, user.id);
     if (validationError) {
       if (validationError.status === 404) throw notFound(validationError.error);
@@ -50,14 +50,14 @@ export async function GET(
     const { conversationId } = parsed.value;
 
     if (conversationId) {
-      const messages = await analysisChatModule.listMessages.execute({
+      const messages = await jobAnalysisChatModule.listMessages.execute({
         userId: user.id,
         conversationId,
       });
       return ok({ messages: presentMessages(messages) });
     }
 
-    const conversations = await analysisChatModule.listConversations.execute({
+    const conversations = await jobAnalysisChatModule.listConversations.execute({
       userId: user.id,
       analysisId: id,
     });
@@ -86,7 +86,7 @@ export async function POST(
       return errorResponse(parsed.error);
     }
 
-    analysisChatModule.bindRequest(supabase);
+    jobAnalysisChatModule.bindRequest(supabase);
     const validationError = await validateJobMatch(id, user.id);
     if (validationError) {
       if (validationError.status === 404) throw notFound(validationError.error);
@@ -94,7 +94,7 @@ export async function POST(
     }
 
     if (parsed.value.action === "create_conversation") {
-      const conversation = await analysisChatModule.createConversation.execute({
+      const conversation = await jobAnalysisChatModule.createConversation.execute({
         userId: user.id,
         analysisId: id,
         title: parsed.value.title,
@@ -104,7 +104,7 @@ export async function POST(
     }
 
     if (parsed.value.action === "rename_conversation") {
-      const conversation = await analysisChatModule.renameConversation.execute({
+      const conversation = await jobAnalysisChatModule.renameConversation.execute({
         userId: user.id,
         analysisId: id,
         conversationId: parsed.value.conversationId,
@@ -115,7 +115,7 @@ export async function POST(
     }
 
     if (parsed.value.action === "delete_conversation") {
-      await analysisChatModule.deleteConversation.execute({
+      await jobAnalysisChatModule.deleteConversation.execute({
         userId: user.id,
         analysisId: id,
         conversationId: parsed.value.conversationId,
@@ -124,7 +124,7 @@ export async function POST(
       return ok({ ok: true });
     }
 
-    const result = await analysisChatModule.sendMessage.execute({
+    const result = await jobAnalysisChatModule.sendMessage.execute({
       userId: user.id,
       analysisId: id,
       conversationId: parsed.value.conversationId,

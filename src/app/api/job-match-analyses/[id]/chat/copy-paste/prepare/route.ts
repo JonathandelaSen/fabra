@@ -1,14 +1,14 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
-import { analysisChatModule } from "@/lib/container";
+import { jobAnalysisChatModule } from "@/lib/container";
 import { createRequestId } from "@/lib/observability";
 import { badRequest, errorResponse, notFound, ok } from "@/modules/shared";
 import { parsePrepareOfferChatCopyPasteRequest } from "./validation";
 import type { PrepareOfferChatCopyPasteResponse } from "./responses";
 
 async function validateJobMatch(analysisId: string, userId: string) {
-  const context = await analysisChatModule.getAnalysisChatContext.execute({
+  const context = await jobAnalysisChatModule.getJobAnalysisChatContext.execute({
     analysisId,
     userId,
   });
@@ -36,14 +36,14 @@ export async function POST(
     if (!parsed.ok) return errorResponse(parsed.error);
 
     const { id } = await params;
-    analysisChatModule.bindRequest(supabase);
+    jobAnalysisChatModule.bindRequest(supabase);
     const validationError = await validateJobMatch(id, user.id);
     if (validationError) {
       if (validationError.status === 404) throw notFound(validationError.error);
       throw badRequest(validationError.error);
     }
 
-    const result = await analysisChatModule.prepareOfferChatCopyPaste.execute({
+    const result = await jobAnalysisChatModule.prepareOfferChatCopyPaste.execute({
       userId: user.id,
       analysisId: id,
       conversationId: parsed.value.conversationId,

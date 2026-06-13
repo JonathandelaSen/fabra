@@ -24,9 +24,9 @@ import {
   GetJobMatchAnalysisByIdQueryHandler,
 } from "@/modules/job-match-analysis";
 import {
-  createAnalysisChatModule,
-  registerAnalysisChatQueries,
-} from "@/modules/analysis-chat";
+  createJobAnalysisChatModule,
+  registerJobAnalysisChatQueries,
+} from "@/modules/job-analysis-chat";
 import { createFeedbackNotesModule } from "@/modules/feedback-notes";
 import { createReceivedFeedbackModule } from "@/modules/received-feedback";
 import { createWorkJournalModule } from "@/modules/work-journal";
@@ -120,14 +120,14 @@ const activityModule = createActivityContextsModule(telemetry, eventBus);
 const cvLibraryE2E = createCVLibraryE2EModule(queryBus, telemetry, eventBus);
 const cvAnalysisModule = createCVAnalysisModule(telemetry, eventBus);
 const jobMatchModule = createJobMatchAnalysisModule(telemetry, eventBus);
-const analysisChatModule = createAnalysisChatModule(queryBus, telemetry, eventBus);
+const jobAnalysisChatModule = createJobAnalysisChatModule(queryBus, telemetry, eventBus);
 const feedbackNotesModule = createFeedbackNotesModule(telemetry, eventBus);
 const receivedFeedbackModule = createReceivedFeedbackModule(telemetry, eventBus);
 const workJournalModule = createWorkJournalModule(telemetry, eventBus);
 const commitmentsModule = createCommitmentsModule(telemetry, eventBus);
 const selectionProcessModule = createSelectionProcessModule(telemetry, eventBus);
 
-// Register query handlers needed by analysis-chat
+// Register query handlers needed by job-analysis-chat
 queryBus.register(
   GetCVAnalysisByIdQuery.queryName,
   new GetCVAnalysisByIdQueryHandler(cvAnalysisModule.getCVAnalysisById),
@@ -136,14 +136,14 @@ queryBus.register(
   GetJobMatchAnalysisByIdQuery.queryName,
   new GetJobMatchAnalysisByIdQueryHandler(jobMatchModule.getJobMatchAnalysisById),
 );
-registerAnalysisChatQueries(queryBus, analysisChatModule);
+registerJobAnalysisChatQueries(queryBus, jobAnalysisChatModule);
 
 function bindAll(client: SupabaseClient) {
   activityModule.bindRequest(client);
   cvLibraryE2E.bindRequest(client);
   cvAnalysisModule.bindRequest(client);
   jobMatchModule.bindRequest(client);
-  analysisChatModule.bindRequest(client);
+  jobAnalysisChatModule.bindRequest(client);
   feedbackNotesModule.bindRequest(client);
   receivedFeedbackModule.bindRequest(client);
   workJournalModule.bindRequest(client);
@@ -533,7 +533,7 @@ async function main() {
         .eq("id", matchId);
 
       if (CREATE_JOB_MATCH_CHATS && faker.datatype.boolean({ probability: 0.4 })) {
-        const convo = await analysisChatModule.createConversation.execute({
+        const convo = await jobAnalysisChatModule.createConversation.execute({
           userId,
           analysisId: matchId,
           title: `Chat about ${oppRow.title} at ${oppRow.company}`,
@@ -548,7 +548,7 @@ async function main() {
         ];
         const numMessages = faker.number.int({ min: 1, max: 3 });
         for (let cm = 0; cm < numMessages; cm++) {
-          await analysisChatModule.sendMessage.execute({
+          await jobAnalysisChatModule.sendMessage.execute({
             userId,
             analysisId: matchId,
             conversationId: convoId,

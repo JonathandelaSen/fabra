@@ -7,8 +7,8 @@ const fromTablePattern = /\.from\s*\(\s*["']([^"']+)["']\s*\)/g;
 
 const tableOwners = new Map(
   Object.entries({
-    analysis_chat_conversations: "analysis-chat",
-    analysis_chat_messages: "analysis-chat",
+    analysis_chat_conversations: "job-analysis-chat",
+    analysis_chat_messages: "job-analysis-chat",
     activity_contexts: "activity-context",
     commitment_contexts: "commitments",
     commitment_items: "commitments",

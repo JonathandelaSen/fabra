@@ -12,7 +12,7 @@ export interface InterviewQuestionSummary {
   updatedAt: string;
 }
 
-export interface AnalysisChatConversation {
+export interface JobAnalysisChatConversation {
   id: string;
   user_id: string;
   analysis_id: string;
@@ -21,7 +21,7 @@ export interface AnalysisChatConversation {
   updated_at: string;
 }
 
-export interface AnalysisChatMessage {
+export interface JobAnalysisChatMessage {
   id: string;
   user_id: string;
   analysis_id: string;

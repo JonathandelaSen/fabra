@@ -4,8 +4,8 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 import type {
-  AnalysisChatConversation,
-  AnalysisChatMessage,
+  JobAnalysisChatConversation,
+  JobAnalysisChatMessage,
 } from "../types";
 import {
   applyJobMatchOfferChatCopyPaste,
@@ -39,12 +39,12 @@ export function useJobMatchOfferChat({
 }: UseJobMatchOfferChatParams) {
   const t = useTranslations("analysisDetail.chat");
   const [conversations, setConversations] = useState<
-    AnalysisChatConversation[]
+    JobAnalysisChatConversation[]
   >([]);
   const [activeConversationId, setActiveConversationId] = useState<
     string | null
   >(null);
-  const [messages, setMessages] = useState<AnalysisChatMessage[]>([]);
+  const [messages, setMessages] = useState<JobAnalysisChatMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [provider, setProvider] = useState<StoredAIProvider>("gemini");
   const [model, setModel] = useState<string>(DEFAULT_GEMINI_MODEL);

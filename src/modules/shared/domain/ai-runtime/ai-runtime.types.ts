@@ -5,7 +5,7 @@ export enum AIModule {
   JobMatchAnalysis = "job_match_analysis",
   CVLibrary = "cv_library",
   FeedbackNotes = "feedback_notes",
-  AnalysisChat = "analysis_chat",
+  JobAnalysisChat = "analysis_chat",
   SelectionProcess = "selection_process",
   WorkJournal = "work_journal",
   PerformanceReview = "performance_review",
