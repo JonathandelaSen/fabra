@@ -1,5 +1,7 @@
 # Job Match Analysis
 
+Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
+
 ## Source
 - Prompt source file: `src/modules/job-match-analysis/infrastructure/services/job-match-scoring-prompts.ts`
 - Integrated prompt builder: `buildJobMatchScoringPrompt`

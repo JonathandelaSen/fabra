@@ -40,8 +40,8 @@ describe("GenerateQuestionAnswerUseCase", () => {
       aiModel: "gemini-test",
     });
 
-    expect(bus.publish).toHaveBeenCalledTimes(1);
-    const publishedEvents = bus.publish.mock.calls[0][0];
+    expect(bus.publish).toHaveBeenCalledTimes(4);
+    const publishedEvents = bus.publish.mock.calls[2][0];
     expect(publishedEvents).toHaveLength(1);
     expect(publishedEvents[0].eventName).toBe("process_question_updated");
     expect(publishedEvents[0].toPrimitives()).toEqual({

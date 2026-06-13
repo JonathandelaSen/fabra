@@ -119,7 +119,7 @@ describe("SendMessageUseCase", () => {
         history: [expect.objectContaining({ content: "Antes" })],
       }),
     );
-    expect(eventBus.publish).toHaveBeenCalledTimes(2);
+    expect(eventBus.publish).toHaveBeenCalledTimes(5);
 
     const firstCall = eventBus.publish.mock.calls[0][0];
     expect(firstCall).toHaveLength(1);
@@ -130,7 +130,7 @@ describe("SendMessageUseCase", () => {
       role: "user",
     });
 
-    const secondCall = eventBus.publish.mock.calls[1][0];
+    const secondCall = eventBus.publish.mock.calls[3][0];
     expect(secondCall).toHaveLength(1);
     expect(secondCall[0].eventName).toBe("analysis_chat_message_created");
     expect(secondCall[0].toPrimitives()).toEqual({

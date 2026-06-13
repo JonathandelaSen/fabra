@@ -81,6 +81,8 @@ export async function POST(
         baseUrl: parsed.value.baseUrl,
         model: parsed.value.model,
         text,
+        userId: user.id,
+        documentId: id,
       });
 
     const profile = await cvLibraryModule

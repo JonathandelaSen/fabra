@@ -1,4 +1,4 @@
-import { type EventBus } from "@/modules/shared";
+import { AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext, publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt, type EventBus } from "@/modules/shared";
 import type { AIProvider } from "@/modules/shared";
 import { FeedbackClosedError } from "../../domain/errors/feedback-closed.error";
 import { FeedbackEntriesRequiredError } from "../../domain/errors/feedback-entries-required.error";
@@ -30,7 +30,7 @@ export class GenerateFinalFeedbackUseCase {
 
     const feedbackPrimitives = feedback.toPrimitives();
     const aiService = this.deps.aiFactory.create(aiConfig);
-    const finalFeedback = await aiService.generateFinalFeedback({
+    const aiInput = {
       personName: feedbackPrimitives.person_name,
       entries: entries.map((entry) => {
         const primitives = entry.toPrimitives();
@@ -39,12 +39,23 @@ export class GenerateFinalFeedbackUseCase {
           created_at: primitives.created_at,
         };
       }),
+    };
+    const context = createIntegratedAIInteractionContext({
+      userId, module: AIModule.FeedbackNotes, operation: AIOperation.GenerateFeedback,
+      entityType: AIEntityType.Feedback, entityId: feedbackId,
+      provider: aiConfig.provider, model: aiConfig.model,
+    });
+    const finalFeedback = await runTrackedAIInteraction({
+      eventBus: this.deps.eventBus, context,
+      prompt: serializeAIInteractionPrompt(aiInput),
+      execute: () => aiService.generateFinalFeedback(aiInput),
     });
     feedback.updateFinalFeedback(finalFeedback);
     const saved = await this.deps.feedbackRepo.save(feedback);
 
     const events = feedback.pullDomainEvents();
     await this.deps.eventBus.publish(events);
+    await publishAIInteractionApplied(this.deps.eventBus, context);
 
     return saved;
   }

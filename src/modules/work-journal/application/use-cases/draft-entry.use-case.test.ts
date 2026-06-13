@@ -14,6 +14,7 @@ describe("DraftEntryUseCase", () => {
     };
     const useCase = new DraftEntryUseCase({
       aiFactory: { create: vi.fn(() => aiService) },
+      eventBus: { async publish() {} },
     });
 
     const result = await useCase.execute(user.id, "context-1", {

@@ -37,8 +37,8 @@ describe("GenerateFinalFeedbackUseCase", () => {
     });
     expect(updated.toPrimitives().final_feedback).toBe("Generated feedback");
 
-    expect(eventBus.publish).toHaveBeenCalledTimes(1);
-    const publishedEvents = eventBus.publish.mock.calls[0][0];
+    expect(eventBus.publish).toHaveBeenCalledTimes(4);
+    const publishedEvents = eventBus.publish.mock.calls[2][0];
     expect(publishedEvents).toHaveLength(1);
     expect(publishedEvents[0].eventName).toBe("feedback_updated");
     expect(publishedEvents[0].toPrimitives()).toEqual({

@@ -1,5 +1,7 @@
 # Interview Questions
 
+Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
+
 ## Source
 - Prompt source file: `src/modules/selection-process/infrastructure/services/interview-question-prompts.ts`
 - System prompt constant: `INTERVIEW_QUESTION_SYSTEM_PROMPT`

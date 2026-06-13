@@ -1,4 +1,6 @@
 import {
+  AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext,
+  publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt,
   Timestamp,
   UserId,
   type AIProvider,
@@ -90,6 +92,11 @@ export class SendMessageUseCase {
     const userEvents = userMessage.pullDomainEvents();
     await this.deps.eventBus.publish(userEvents);
 
+    const interactionContext = createIntegratedAIInteractionContext({
+      requestId: input.requestId, userId: input.userId, module: AIModule.AnalysisChat,
+      operation: AIOperation.GenerateChatAnswer, entityType: AIEntityType.AnalysisConversation,
+      entityId: input.conversationId, provider: input.provider, model: input.model,
+    });
     let answer: string;
     try {
       const aiService = this.deps.aiFactory.create({
@@ -98,10 +105,15 @@ export class SendMessageUseCase {
         baseUrl: input.baseUrl,
         model: input.model,
       });
-      answer = await aiService.generateAnswer({
+      const aiInput = {
         message: input.message,
         context,
         history: history.map((message) => message.toPrimitives()),
+      };
+      answer = await runTrackedAIInteraction({
+        eventBus: this.deps.eventBus, context: interactionContext,
+        prompt: serializeAIInteractionPrompt(aiInput),
+        execute: () => aiService.generateAnswer(aiInput),
       });
     } catch (error) {
       throw error;
@@ -122,6 +134,7 @@ export class SendMessageUseCase {
 
     const assistantEvents = assistantMessage.pullDomainEvents();
     await this.deps.eventBus.publish(assistantEvents);
+    await publishAIInteractionApplied(this.deps.eventBus, interactionContext);
 
     return { userMessage, assistantMessage };
   }

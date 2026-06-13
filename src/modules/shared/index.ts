@@ -61,3 +61,9 @@ export { SentryTelemetry } from "./infrastructure/telemetry/sentry-telemetry";
 export { instrumentUseCases } from "./infrastructure/telemetry/instrument-use-cases";
 export type { EventBus, EventHandler } from "./domain/bus/event-bus/event-bus";
 export { InMemoryEventBus } from "./infrastructure/bus/event-bus/in-memory-event-bus";
+export {
+  createIntegratedAIInteractionContext,
+  publishAIInteractionApplied,
+  runTrackedAIInteraction,
+  serializeAIInteractionPrompt,
+} from "./application/ai-runtime/track-integrated-ai-interaction";

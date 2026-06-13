@@ -1,5 +1,7 @@
 # CV Profile Editing
 
+Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
+
 ## Source
 - Prompt source file: `src/modules/cv-library/infrastructure/services/cv-profile-editing-prompts.ts`
 - Copy Paste prompt builder: `src/modules/cv-library/infrastructure/services/cv-profile-editing-copy-paste-prompts.ts`

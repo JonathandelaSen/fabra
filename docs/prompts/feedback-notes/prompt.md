@@ -1,5 +1,7 @@
 # Feedback Notes Prompt
 
+Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
+
 ## Current Prompt
 
 System prompt source: `src/modules/feedback-notes/domain/services/feedback-notes-prompts.ts`

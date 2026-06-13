@@ -19,6 +19,7 @@ export enum AIOperation {
   GenerateFeedback = "generate_feedback",
   GenerateChatAnswer = "generate_chat_answer",
   GenerateInterviewAnswer = "generate_interview_answer",
+  EditInterviewAnswer = "edit_interview_answer",
   DraftJournalEntry = "draft_journal_entry",
   GenerateSelfAssessment = "generate_self_assessment",
 }

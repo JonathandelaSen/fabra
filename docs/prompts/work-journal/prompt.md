@@ -1,5 +1,7 @@
 # Work journal AI prompt
 
+Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
+
 ## Source files
 
 - Prompt builders and system instructions: `src/modules/work-journal/infrastructure/services/work-journal-prompts.ts`

@@ -1,4 +1,4 @@
-import type { AIProvider } from "@/modules/shared";
+import { AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext, publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt, type AIProvider, type EventBus } from "@/modules/shared";
 import type {
   DraftEntryInput,
   JournalAIServiceFactory,
@@ -8,6 +8,7 @@ export class DraftEntryUseCase {
   constructor(
     private readonly deps: {
       aiFactory: JournalAIServiceFactory;
+      eventBus: EventBus;
     }
   ) {}
 
@@ -28,9 +29,16 @@ export class DraftEntryUseCase {
       baseUrl,
       model,
     });
-    const finalText = await aiService.draftEntry({
-      ...draftInput,
+    const context = createIntegratedAIInteractionContext({
+      userId, module: AIModule.WorkJournal, operation: AIOperation.DraftJournalEntry,
+      entityType: AIEntityType.WorkJournalEntry, entityId: contextId, provider, model,
     });
+    const finalText = await runTrackedAIInteraction({
+      eventBus: this.deps.eventBus, context,
+      prompt: serializeAIInteractionPrompt(draftInput),
+      execute: () => aiService.draftEntry(draftInput),
+    });
+    await publishAIInteractionApplied(this.deps.eventBus, context);
 
     return finalText;
   }

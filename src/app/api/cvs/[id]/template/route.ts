@@ -87,6 +87,8 @@ export async function POST(
           apiKey: ai.apiKey,
           model: ai.model,
           text,
+          userId: user.id,
+          documentId: id,
         });
       const savedProfile = await cvLibraryModule
         .bindRequest(supabase)

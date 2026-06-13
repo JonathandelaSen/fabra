@@ -101,6 +101,8 @@ export async function POST(
         templateId: selectedTemplateId,
         locale: selectedLocale,
         recommendations,
+        userId: user.id,
+        documentId: id,
       });
 
     const profile = await cvLibraryModule

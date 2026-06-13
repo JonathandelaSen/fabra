@@ -127,10 +127,10 @@ function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
     deleteCVPublicFeedback: new DeleteCVPublicFeedbackUseCase(publicFeedbackRepo),
     getCVStructuredProfile: new GetCVStructuredProfileUseCase({ profileRepo }),
     structureCVProfileWithAI: new StructureCVProfileWithAIUseCase({
-      aiFactory: profileStructuringAI,
+      aiFactory: profileStructuringAI, eventBus,
     }),
     editCVProfileWithAI: new EditCVProfileWithAIUseCase({
-      aiFactory: profileEditingAI,
+      aiFactory: profileEditingAI, eventBus,
     }),
     upsertCVStructuredProfile,
     prepareCVEditorCopyPaste: new PrepareCVEditorCopyPasteUseCase({

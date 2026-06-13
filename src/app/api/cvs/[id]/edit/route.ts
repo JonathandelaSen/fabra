@@ -78,6 +78,8 @@ export async function POST(
         templateId: (cv.template_id ?? "compact") as CVTemplateId,
         locale: (cv.template_locale ?? "es") as CVTemplateLocale,
         recommendations,
+        userId: user.id,
+        documentId: id,
       });
 
     const updated = await cvLibraryModule

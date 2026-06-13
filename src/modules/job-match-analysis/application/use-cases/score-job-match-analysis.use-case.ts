@@ -1,4 +1,4 @@
-import { UserId, type AIProvider, type EventBus } from "@/modules/shared";
+import { AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext, publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt, UserId, type AIProvider, type EventBus } from "@/modules/shared";
 import { JobMatchAnalysis } from "../../domain/entities/job-match-analysis.entity";
 import type { JobMatchAnalysisRepository } from "../../domain/repositories/job-match-analysis.repository";
 import type { JobMatchScoringAIServiceFactory } from "../../domain/repositories/job-match-scoring-ai.service";
@@ -48,11 +48,21 @@ export class ScoreJobMatchAnalysisUseCase {
       baseUrl: input.baseUrl,
       model: input.model,
     });
-    const result = await aiService.score({
+    const aiInput = {
       text,
       jobDescription: input.jobDescription,
       jobUrl: input.jobUrl,
       language: input.language,
+    };
+    const interactionContext = createIntegratedAIInteractionContext({
+      userId: input.userId, module: AIModule.JobMatchAnalysis,
+      operation: AIOperation.ScoreJobMatch, entityType: AIEntityType.JobMatchAnalysis,
+      entityId: input.id, provider: input.provider, model: input.model,
+    });
+    const result = await runTrackedAIInteraction({
+      eventBus: this.deps.eventBus, context: interactionContext,
+      prompt: serializeAIInteractionPrompt(aiInput),
+      execute: () => aiService.score(aiInput),
     });
 
     const now = new Date().toISOString();
@@ -78,6 +88,7 @@ export class ScoreJobMatchAnalysisUseCase {
 
     const events = current.pullDomainEvents();
     await this.deps.eventBus.publish(events);
+    await publishAIInteractionApplied(this.deps.eventBus, interactionContext);
 
     return current;
   }

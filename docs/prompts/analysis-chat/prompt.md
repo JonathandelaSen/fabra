@@ -1,5 +1,7 @@
 # Analysis AI Chat
 
+Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
+
 ## Source
 - Prompt source file: `src/modules/analysis-chat/infrastructure/services/analysis-chat-prompts.ts`
 - System prompt constant: `OFFER_CHAT_SYSTEM_PROMPT`

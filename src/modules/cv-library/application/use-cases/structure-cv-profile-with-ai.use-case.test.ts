@@ -25,11 +25,14 @@ describe("StructureCVProfileWithAIUseCase", () => {
 
     const result = await new StructureCVProfileWithAIUseCase({
       aiFactory: factory,
+      eventBus: { async publish() {} },
     }).execute({
       provider: "mock",
       apiKey: "key",
       model: "gemini-test",
       text: "Ada Lovelace",
+      userId: "user-1",
+      documentId: "document-1",
     });
 
     expect(calls).toEqual([

@@ -1,5 +1,7 @@
 # Review Self-Assessment
 
+Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
+
 Generates a self-assessment document for a performance review or promotion case, grouping achievements by theme with each claim citing its curated evidence (source + date).
 
 ## Source

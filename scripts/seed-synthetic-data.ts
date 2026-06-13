@@ -370,6 +370,8 @@ async function main() {
       provider: "mock",
       model: DEMO_AI_MODEL,
       text: cvInput.textNode ?? "Mock text",
+      userId,
+      documentId: cvPrimitives.id,
     });
 
     const sp = await cvLibraryE2E.upsertCVStructuredProfile.execute({

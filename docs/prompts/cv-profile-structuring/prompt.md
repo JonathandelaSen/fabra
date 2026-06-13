@@ -1,5 +1,7 @@
 # CV Profile Structuring
 
+Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
+
 ## Source
 - Prompt source file: `src/modules/cv-library/infrastructure/services/cv-profile-structuring-prompts.ts`
 - System prompt constant: `SYSTEM_PROMPT`

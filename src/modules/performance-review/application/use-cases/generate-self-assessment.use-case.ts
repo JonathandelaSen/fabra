@@ -1,4 +1,4 @@
-import { Timestamp, UserId, type AIProvider, type EventBus } from "@/modules/shared";
+import { AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext, publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt, Timestamp, UserId, type AIProvider, type EventBus } from "@/modules/shared";
 import type { PerformanceReview } from "../../domain/entities/performance-review.entity";
 import { PerformanceReviewNotFoundError } from "../../domain/errors/performance-review-not-found.error";
 import type { PerformanceReviewRepository } from "../../domain/repositories/performance-review.repository";
@@ -40,7 +40,16 @@ export class GenerateSelfAssessmentUseCase {
       apiKey: input.apiKey,
       model: input.model,
     });
-    const content = await service.generate(aiInput);
+    const interactionContext = createIntegratedAIInteractionContext({
+      userId: input.userId, module: AIModule.PerformanceReview,
+      operation: AIOperation.GenerateSelfAssessment, entityType: AIEntityType.PerformanceReview,
+      entityId: input.reviewId, provider: input.provider, model: input.model,
+    });
+    const content = await runTrackedAIInteraction({
+      eventBus: this.deps.eventBus, context: interactionContext,
+      prompt: serializeAIInteractionPrompt(aiInput),
+      execute: () => service.generate(aiInput),
+    });
 
     const now = Timestamp.fromPrimitives(new Date().toISOString());
     review.attachSelfAssessment({
@@ -52,6 +61,7 @@ export class GenerateSelfAssessmentUseCase {
 
     const saved = await this.deps.reviewRepo.save(review);
     await this.deps.eventBus.publish(review.pullDomainEvents());
+    await publishAIInteractionApplied(this.deps.eventBus, interactionContext);
     return saved;
   }
 }

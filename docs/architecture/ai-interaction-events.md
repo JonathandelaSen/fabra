@@ -22,3 +22,7 @@ The lifecycle event names are:
 - `ai_runtime.failed`
 
 Integrated flows publish lifecycle events around provider calls. Copy Paste `prepare` returns the generated correlation IDs, and subsequent `preview` and `apply` requests send those IDs back so their events belong to the same interaction.
+
+All integrated AI use cases publish this lifecycle. The prepared event stores the
+prompt-builder input snapshot so prompts can be inspected consistently across
+providers and features.

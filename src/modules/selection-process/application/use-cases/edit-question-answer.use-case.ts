@@ -1,6 +1,8 @@
 import type { ProcessQuestionReadModel, ProcessQuestionRelatedCVPrimitives, ProcessQuestionRelatedAnalysisPrimitives } from "../../domain/value-objects/process-question-read-model.value-object";
 import type { Analysis, CVRecord } from "@/lib/analysis-types";
 import {
+  AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext,
+  publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt,
   Timestamp,
   UserId,
   type AIProvider,
@@ -51,7 +53,7 @@ export class EditQuestionAnswerUseCase {
       baseUrl: input.baseUrl,
       model: input.model,
     });
-    const answer = await aiService.editAnswer({
+    const aiInput = {
       question: question.question,
       context: input.context,
       currentAnswer: question.answer,
@@ -59,6 +61,16 @@ export class EditQuestionAnswerUseCase {
       cv: input.cv,
       cvText: input.cvText,
       analysis: input.analysis,
+    };
+    const interactionContext = createIntegratedAIInteractionContext({
+      userId: input.userId, module: AIModule.SelectionProcess,
+      operation: AIOperation.EditInterviewAnswer, entityType: AIEntityType.ProcessQuestion,
+      entityId: input.id, provider: input.provider, model: input.model,
+    });
+    const answer = await runTrackedAIInteraction({
+      eventBus: this.deps.eventBus, context: interactionContext,
+      prompt: serializeAIInteractionPrompt(aiInput),
+      execute: () => aiService.editAnswer(aiInput),
     });
 
     existing.question.update({
@@ -73,6 +85,7 @@ export class EditQuestionAnswerUseCase {
 
     const events = existing.question.pullDomainEvents();
     await this.deps.eventBus.publish(events);
+    await publishAIInteractionApplied(this.deps.eventBus, interactionContext);
 
     return saved;
   }

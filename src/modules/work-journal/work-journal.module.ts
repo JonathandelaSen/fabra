@@ -27,7 +27,7 @@ function createUseCases(eventBus: EventBus) {
     createEntry: new CreateEntryUseCase({ entryRepo, eventBus }),
     updateEntry: new UpdateEntryUseCase({ entryRepo, eventBus }),
     deleteEntry: new DeleteEntryUseCase({ entryRepo, eventBus }),
-    draftEntry: new DraftEntryUseCase({ aiFactory }),
+    draftEntry: new DraftEntryUseCase({ aiFactory, eventBus }),
     listJournalEntriesInRange: new ListJournalEntriesInRangeUseCase({
       entryRepo,
     }),

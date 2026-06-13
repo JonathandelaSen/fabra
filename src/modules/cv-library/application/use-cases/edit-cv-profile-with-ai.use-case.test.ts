@@ -30,6 +30,7 @@ describe("EditCVProfileWithAIUseCase", () => {
 
     const result = await new EditCVProfileWithAIUseCase({
       aiFactory: factory,
+      eventBus: { async publish() {} },
     }).execute({
       provider: "mock",
       apiKey: "key",
@@ -39,6 +40,8 @@ describe("EditCVProfileWithAIUseCase", () => {
       templateId: "compact",
       locale: "es",
       recommendations: ["Add truthful TypeScript impact"],
+      userId: "user-1",
+      documentId: "document-1",
     });
 
     expect(calls).toEqual([
