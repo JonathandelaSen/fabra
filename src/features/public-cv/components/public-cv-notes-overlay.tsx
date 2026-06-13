@@ -137,7 +137,7 @@ export function PublicCVNotesOverlay({ notes }: { notes: Note[] }) {
             {/* The Figma-style popover comment box */}
             {isActive && (
               <div
-                className="absolute z-50 mt-3 w-72 rounded-2xl border border-zinc-200 bg-white p-4 shadow-xl text-zinc-950 animate-in fade-in slide-in-from-top-2 duration-200 pointer-events-auto"
+                className="absolute z-50 mt-3 w-72 rounded-2xl border border-zinc-200 bg-white p-4 shadow-xl text-zinc-950 animate-in fade-in slide-in-from-top-2 duration-200 pointer-events-auto dark:border-border dark:bg-popover dark:text-popover-foreground"
                 style={{
                   // Position relative to the pin
                   left: -12,
@@ -145,22 +145,22 @@ export function PublicCVNotesOverlay({ notes }: { notes: Note[] }) {
                 }}
               >
                 {/* Caret pointing to pin */}
-                <div className="absolute -top-1.5 left-4 h-3 w-3 rotate-45 border-t border-l border-zinc-200 bg-white" />
+                <div className="absolute -top-1.5 left-4 h-3 w-3 rotate-45 border-t border-l border-zinc-200 bg-white dark:border-border dark:bg-popover" />
 
                 <div className="relative">
                   <div className="flex items-center justify-between gap-3 mb-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md dark:text-amber-400 dark:bg-amber-950/40">
                       {t("ownerNoteLabel")}
                     </span>
                     <button
                       type="button"
                       onClick={() => setActiveNoteId(null)}
-                      className="rounded-lg p-0.5 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 cursor-pointer"
+                      className="rounded-lg p-0.5 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 cursor-pointer dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-foreground"
                     >
                       <X className="h-4 w-4" />
                     </button>
                   </div>
-                  <p className="text-xs leading-relaxed text-zinc-700 font-medium whitespace-pre-wrap">
+                  <p className="text-xs leading-relaxed text-zinc-700 font-medium whitespace-pre-wrap dark:text-muted-foreground">
                     {note.body}
                   </p>
                 </div>

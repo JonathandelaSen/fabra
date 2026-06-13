@@ -1,4 +1,13 @@
-import { UserId, type EventBus } from "@/modules/shared";
+import {
+  AIAssistanceMode,
+  AIEntityType,
+  AIInteractionAppliedEvent,
+  AIInteractionProvider,
+  AIModule,
+  AIOperation,
+  UserId,
+  type EventBus,
+} from "@/modules/shared";
 import { CVAnalysis } from "../../domain/entities/cv-analysis.entity";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 import type { CVScoringAIResult } from "../../domain/repositories/cv-scoring-ai.service";
@@ -15,6 +24,8 @@ export interface ApplyCVScoreCopyPasteInput {
   id: string;
   userId: string;
   parsedResult: CVScoringAIResult;
+  interactionId?: string;
+  attemptId?: string;
 }
 
 export class ApplyCVScoreCopyPasteUseCase {
@@ -59,6 +70,24 @@ export class ApplyCVScoreCopyPasteUseCase {
 
     const events = current.pullDomainEvents();
     await this.deps.eventBus.publish(events);
+    await this.deps.eventBus.publish([
+      new AIInteractionAppliedEvent({
+        context: {
+          interactionId: input.interactionId ?? crypto.randomUUID(),
+          attemptId: input.attemptId ?? crypto.randomUUID(),
+          userId: input.userId,
+          module: AIModule.CVAnalysis,
+          operation: AIOperation.ScoreCV,
+          entityType: AIEntityType.CVAnalysis,
+          entityId: input.id,
+          assistanceMode: AIAssistanceMode.CopyPaste,
+          workflowId: CV_SCORE_COPY_PASTE_WORKFLOW_ID,
+          schemaVersion: CV_SCORE_COPY_PASTE_SCHEMA_VERSION,
+          provider: AIInteractionProvider.ExternalChat,
+          model: null,
+        },
+      }),
+    ]);
 
     return updated;
   }

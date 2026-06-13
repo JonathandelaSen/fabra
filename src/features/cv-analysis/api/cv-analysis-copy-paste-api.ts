@@ -34,7 +34,7 @@ export function prepareCVAnalysisCopyPaste(
 
 export function previewCVAnalysisCopyPaste(
   id: string,
-  input: { rawResponse: string },
+  input: { rawResponse: string; interactionId: string; attemptId: string },
 ) {
   return fetch(`/api/cv-analyses/${id}/score/copy-paste/preview`, {
     method: "POST",
@@ -50,7 +50,11 @@ export function previewCVAnalysisCopyPaste(
 
 export function applyCVAnalysisCopyPaste(
   id: string,
-  input: { parsedResult: CVAnalysisCopyPasteResult },
+  input: {
+    parsedResult: CVAnalysisCopyPasteResult;
+    interactionId: string;
+    attemptId: string;
+  },
 ) {
   return fetch(`/api/cv-analyses/${id}/score/copy-paste/apply`, {
     method: "POST",

@@ -43,9 +43,13 @@ import {
   ListJournalEntriesInRangeQueryHandler,
 } from "@/modules/work-journal";
 import { telemetry } from "@/lib/telemetry";
+import { createAIInteractionsModule } from "@/modules/ai-interactions";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 const eventBus = new InMemoryEventBus(telemetry);
 const queryBus = new InMemoryQueryBus(telemetry);
+export const aiInteractionsModule = createAIInteractionsModule(eventBus);
+aiInteractionsModule.bindRequest(createAdminClient());
 
 export const activityContextsModule = createActivityContextsModule(
   telemetry,

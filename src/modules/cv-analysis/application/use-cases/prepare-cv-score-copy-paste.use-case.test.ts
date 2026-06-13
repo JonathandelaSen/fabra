@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { copyPasteRepo } from "./cv-score-copy-paste-test-helpers";
+import { copyPasteRepo, eventBus } from "./cv-score-copy-paste-test-helpers";
 import { PrepareCVScoreCopyPasteUseCase } from "./prepare-cv-score-copy-paste.use-case";
 
 describe("PrepareCVScoreCopyPasteUseCase", () => {
@@ -10,6 +10,7 @@ describe("PrepareCVScoreCopyPasteUseCase", () => {
     const result = await new PrepareCVScoreCopyPasteUseCase({
       repo,
       buildPrompt,
+      eventBus: eventBus(),
     }).execute({
       id: "analysis-1",
       userId: "user-1",
@@ -25,13 +26,15 @@ describe("PrepareCVScoreCopyPasteUseCase", () => {
       schemaVersion: "1",
       expectedResponse: { kind: "json", envelope: true },
     });
-    expect(result?.privacyNotice).toContain("CV data");
+    expect(result?.interactionId).toBeTruthy();
+    expect(result?.attemptId).toBeTruthy();
   });
 
   it("returns null for a missing analysis", async () => {
     const result = await new PrepareCVScoreCopyPasteUseCase({
       repo: copyPasteRepo(null),
       buildPrompt: vi.fn(),
+      eventBus: eventBus(),
     }).execute({ id: "missing", userId: "user-1" });
 
     expect(result).toBeNull();

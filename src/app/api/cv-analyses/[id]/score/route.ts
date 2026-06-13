@@ -9,6 +9,7 @@ import {
   type ScoreCVAnalysisResponse,
 } from "../../responses";
 import { ok, errorResponse, notFound } from "@/modules/shared";
+import { createRequestId } from "@/lib/observability";
 
 export const maxDuration = 60;
 
@@ -40,6 +41,7 @@ export async function POST(
         model: parsed.value.model,
         additionalContext: parsed.value.additionalContext,
         language: parsed.value.language,
+        requestId: createRequestId("cv_score"),
       });
 
     if (!updated) {

@@ -9,6 +9,8 @@ interface HttpValidationError {
 
 export interface PreviewCVAnalysisCopyPasteRequest {
   rawResponse: string;
+  interactionId: string;
+  attemptId: string;
 }
 
 function validationError(message: string): Result<never, HttpValidationError> {
@@ -22,8 +24,13 @@ export function parsePreviewCVAnalysisCopyPasteRequest(
     return validationError("Request body must be a JSON object");
   }
   const rawResponse = (body as Record<string, unknown>).rawResponse;
+  const interactionId = (body as Record<string, unknown>).interactionId;
+  const attemptId = (body as Record<string, unknown>).attemptId;
   if (typeof rawResponse !== "string" || !rawResponse.trim()) {
     return validationError("rawResponse is required");
   }
-  return { ok: true, value: { rawResponse } };
+  if (typeof interactionId !== "string" || typeof attemptId !== "string") {
+    return validationError("interactionId and attemptId are required");
+  }
+  return { ok: true, value: { rawResponse, interactionId, attemptId } };
 }

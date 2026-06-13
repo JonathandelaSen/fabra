@@ -5,6 +5,7 @@ export { InMemoryQueryBus } from "./infrastructure/bus/query-bus/in-memory-query
 export { UnregisteredQueryHandlerError } from "./domain/bus/query-bus/unregistered-query-handler.error";
 export { AggregateRoot } from "./domain/entities/aggregate-root";
 export type { DomainEvent } from "./domain/bus/event-bus/domain-event";
+export type { InfrastructureEvent } from "./domain/bus/event-bus/infrastructure-event";
 export { EntityId } from "./domain/value-objects/entity-id.value-object";
 export { IsoDate } from "./domain/value-objects/iso-date.value-object";
 export { OptionalIsoDate } from "./domain/value-objects/optional-iso-date.value-object";
@@ -13,6 +14,24 @@ export { UserId } from "./domain/value-objects/user-id.value-object";
 export { ValueObject } from "./domain/value-objects/value-object";
 export type { AIProvider } from "./domain/value-objects/ai-provider.value-object";
 export { AI_PROVIDER, AI_PROVIDERS, isAIProvider, parseAIProvider } from "./domain/value-objects/ai-provider.value-object";
+export {
+  AIAssistanceMode,
+  AIEntityType,
+  AIInteractionFailureStage,
+  AIInteractionProvider,
+  AIModule,
+  AIOperation,
+} from "./domain/ai-runtime/ai-runtime.types";
+export type { AIInteractionContext } from "./domain/ai-runtime/ai-runtime.types";
+export {
+  AIInfrastructureEventName,
+  AIInteractionAppliedEvent,
+  AIInteractionFailedEvent,
+  AIInteractionPreparedEvent,
+  AIInteractionRequestSentEvent,
+  AIInteractionResponseReceivedEvent,
+  AIInteractionResponseValidatedEvent,
+} from "./domain/ai-runtime/ai-runtime.events";
 export { BoundSupabaseRepository } from "./infrastructure/repositories/bound-supabase-repository";
 export { assertAIProviderAllowedForRuntime } from "./infrastructure/ai-provider-runtime-guard";
 export { DomainError } from "./domain/errors/domain-error";
@@ -40,5 +59,5 @@ export type {
 export { NoOpTelemetry } from "./infrastructure/telemetry/no-op-telemetry";
 export { SentryTelemetry } from "./infrastructure/telemetry/sentry-telemetry";
 export { instrumentUseCases } from "./infrastructure/telemetry/instrument-use-cases";
-export type { EventBus } from "./domain/bus/event-bus/event-bus";
+export type { EventBus, EventHandler } from "./domain/bus/event-bus/event-bus";
 export { InMemoryEventBus } from "./infrastructure/bus/event-bus/in-memory-event-bus";

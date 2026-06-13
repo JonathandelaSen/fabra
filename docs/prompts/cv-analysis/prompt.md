@@ -82,15 +82,18 @@ The Copy Paste parser accepts pure JSON or one fenced `json` block, but the prom
 ## Runtime Flow
 1. `POST /api/cv-analyses/[id]/score` validates the authenticated request and scoring payload.
 2. `ScoreCVAnalysisUseCase` loads the analysis owned by the current user.
-3. `GeminiCVScoringAIService` builds this prompt with `buildGeneralScoringPrompt` and sends the extracted CV text as the user message.
-4. The JSON result is persisted through `UpdateCVAnalysisAIResultUseCase` on `cv_analyses`.
+3. `ScoreCVAnalysisUseCase` creates an AI interaction and attempt ID, publishes infrastructure events for the prepared prompt and sent request, and calls the provider-aware AI service.
+4. The provider service builds this prompt with `buildGeneralScoringPrompt` and sends the extracted CV text as the user message.
+5. The parsed JSON result produces a validated-response infrastructure event before it is applied to the analysis.
+6. The JSON result is persisted on `cv_analyses`, the domain event is published, and an applied infrastructure event completes the interaction.
+7. Provider failures publish an `ai_runtime.failed` infrastructure event before being rethrown.
 
 ## Copy Paste Runtime Flow
 
-1. `prepare` authenticates the user, loads the selected analysis, selects the extracted CV text, builds the external-chat prompt, returns the expected JSON envelope, and shows a privacy notice.
+1. `prepare` authenticates the user, loads the selected analysis, selects the extracted CV text, builds the external-chat prompt, creates interaction and attempt IDs, publishes `ai_runtime.prompt_prepared`, and returns the prompt with its correlation IDs.
 2. The user runs the prompt in an external chat product and pastes the response back into the app.
-3. `preview` parses the response, validates the envelope and result shape, and returns a summary preview without persisting the analysis.
-4. `apply` revalidates the previewed result, persists it on `cv_analyses` with `aiModel: "external-chat"`, and records Copy Paste observability metadata.
+3. `preview` receives the correlation IDs, publishes the raw received response, parses and validates the envelope and result shape, publishes the validated result or validation failure, and returns a summary preview without persisting the analysis.
+4. `apply` receives the same correlation IDs, revalidates the previewed result, persists it on `cv_analyses` with `aiModel: "external-chat"`, and publishes `ai_runtime.result_applied`.
 
 ## JSON Envelope
 

@@ -8,14 +8,14 @@ type Step = "copy" | "paste" | "review";
 
 interface PrepareResult {
   prompt: string;
-  privacyNotice: string;
+  privacyNotice?: string;
 }
 
 interface UseCopyPasteWorkflowStateOptions<TPrepare extends PrepareResult, TPreview> {
   open: boolean;
   prepare: () => Promise<TPrepare>;
-  preview: (rawResponse: string) => Promise<TPreview>;
-  apply: (previewData: TPreview) => Promise<unknown>;
+  preview: (rawResponse: string, prepareData: TPrepare) => Promise<TPreview>;
+  apply: (previewData: TPreview, prepareData: TPrepare) => Promise<unknown>;
   getCorrectionInstructions: () => string;
   onApplied: (result: unknown) => void;
   onClose: () => void;
@@ -70,7 +70,8 @@ export function useCopyPasteWorkflowState<
     setIsPreviewing(true);
     setError(null);
     try {
-      const data = await preview(rawResponse);
+      if (!prepareData) return;
+      const data = await preview(rawResponse, prepareData);
       setPreviewData(data);
       setStep("review");
     } catch (err) {
@@ -78,14 +79,14 @@ export function useCopyPasteWorkflowState<
     } finally {
       setIsPreviewing(false);
     }
-  }, [preview, rawResponse]);
+  }, [preview, prepareData, rawResponse]);
 
   const applyResult = useCallback(async () => {
-    if (!previewData) return;
+    if (!previewData || !prepareData) return;
     setIsApplying(true);
     setError(null);
     try {
-      const result = await apply(previewData);
+      const result = await apply(previewData, prepareData);
       onApplied(result);
       onClose();
     } catch (err) {
@@ -93,7 +94,7 @@ export function useCopyPasteWorkflowState<
     } finally {
       setIsApplying(false);
     }
-  }, [apply, previewData, onApplied, onClose]);
+  }, [apply, prepareData, previewData, onApplied, onClose]);
 
   return {
     step,

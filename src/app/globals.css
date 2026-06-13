@@ -331,7 +331,28 @@
   color: #171717;
   padding: 22mm;
   font-family: Georgia, "Times New Roman", serif;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+  box-shadow: none;
+}
+
+/* Prevent dark theme overrides inside the CV preview sheet */
+.dark .cvp-shell {
+  color-scheme: light !important;
+  --background: oklch(0.985 0.004 255) !important;
+  --foreground: oklch(0.18 0.018 255) !important;
+  --card: oklch(1 0 0) !important;
+  --card-foreground: oklch(0.18 0.018 255) !important;
+  --muted: oklch(0.95 0.008 255) !important;
+  --muted-foreground: oklch(0.48 0.018 255) !important;
+  --border: oklch(0.88 0.012 255) !important;
+  background: #fbfaf7 !important;
+  color: #171717 !important;
+}
+
+.dark .cvp-compact,
+.dark .cvp-classic,
+.dark .cvp-modern,
+.dark .cvp-filo {
+  background: #ffffff !important;
 }
 
 .cvp-card-scale {
@@ -533,7 +554,7 @@
     padding: 40px 24px;
     margin: 0 auto;
     transform: none;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    box-shadow: none;
     border-radius: 8px;
   }
 
@@ -837,3 +858,6 @@
   background: #ffffff;
   padding: 5px 7px;
 }
+
+
+

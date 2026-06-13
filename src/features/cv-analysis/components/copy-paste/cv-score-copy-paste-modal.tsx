@@ -46,11 +46,17 @@ export default function CVScoreCopyPasteModal({
         additionalContext,
         language: locale,
       }),
-    preview: (rawResponse) =>
-      previewCVAnalysisCopyPaste(analysisId, { rawResponse }),
-    apply: (previewData) =>
+    preview: (rawResponse, prepared) =>
+      previewCVAnalysisCopyPaste(analysisId, {
+        rawResponse,
+        interactionId: prepared.interactionId,
+        attemptId: prepared.attemptId,
+      }),
+    apply: (previewData, prepared) =>
       applyCVAnalysisCopyPaste(analysisId, {
         parsedResult: previewData.parsedResult as CVAnalysisCopyPasteResult,
+        interactionId: prepared.interactionId,
+        attemptId: prepared.attemptId,
       }),
     getCorrectionInstructions: () => CV_CORRECTION_INSTRUCTIONS,
     onApplied: (result) => onApplied(result as CVAnalysisDetailResponse),

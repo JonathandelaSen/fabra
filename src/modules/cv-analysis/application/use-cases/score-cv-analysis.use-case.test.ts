@@ -88,11 +88,18 @@ describe("ScoreCVAnalysisUseCase", () => {
       aiContext: { additionalContext: "I am a senior dev" },
     });
     expect(result?.toPrimitives().analyzedAt).toBeTruthy();
-    expect(eventBus.publish).toHaveBeenCalledOnce();
-    const publishedEvents = eventBus.publish.mock.calls[0][0];
-    expect(publishedEvents).toHaveLength(1);
-    expect(publishedEvents[0].eventName).toBe("cv_analysis_scored");
-    expect(publishedEvents[0].toPrimitives()).toEqual({
+    const publishedEvents = eventBus.publish.mock.calls.flatMap(([events]) => events);
+    expect(publishedEvents.map((event) => event.eventName)).toEqual([
+      "ai_runtime.prompt_prepared",
+      "ai_runtime.request_sent",
+      "ai_runtime.response_validated",
+      "cv_analysis_scored",
+      "ai_runtime.result_applied",
+    ]);
+    const scoredEvent = publishedEvents.find(
+      (event) => event.eventName === "cv_analysis_scored",
+    );
+    expect(scoredEvent?.toPrimitives()).toEqual({
       analysisId: "analysis-1",
       score: 85,
       aiModel: "gemini-test",

@@ -14,6 +14,8 @@ export interface ApplyCVAnalysisCopyPasteRequest {
     keywords: string[];
     improvements: string[];
   };
+  interactionId: string;
+  attemptId: string;
 }
 
 function validationError(message: string): Result<never, HttpValidationError> {
@@ -27,13 +29,20 @@ export function parseApplyCVAnalysisCopyPasteRequest(
     return validationError("Request body must be a JSON object");
   }
   const parsedResult = (body as Record<string, unknown>).parsedResult;
+  const interactionId = (body as Record<string, unknown>).interactionId;
+  const attemptId = (body as Record<string, unknown>).attemptId;
   if (typeof parsedResult !== "object" || parsedResult === null || Array.isArray(parsedResult)) {
     return validationError("parsedResult is required");
+  }
+  if (typeof interactionId !== "string" || typeof attemptId !== "string") {
+    return validationError("interactionId and attemptId are required");
   }
   return {
     ok: true,
     value: {
       parsedResult: parsedResult as ApplyCVAnalysisCopyPasteRequest["parsedResult"],
+      interactionId,
+      attemptId,
     },
   };
 }

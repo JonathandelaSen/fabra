@@ -25,6 +25,8 @@ export async function POST(
       id,
       userId: user.id,
       rawResponse: parsed.value.rawResponse,
+      interactionId: parsed.value.interactionId,
+      attemptId: parsed.value.attemptId,
     });
     if (!result) throw notFound("Analysis not found");
 

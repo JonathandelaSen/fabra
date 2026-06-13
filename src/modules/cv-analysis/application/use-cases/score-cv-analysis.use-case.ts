@@ -1,4 +1,19 @@
-import { UserId, type AIProvider, type EventBus } from "@/modules/shared";
+import {
+  AIAssistanceMode,
+  AIEntityType,
+  AIInteractionAppliedEvent,
+  AIInteractionFailedEvent,
+  AIInteractionFailureStage,
+  AIInteractionPreparedEvent,
+  AIInteractionRequestSentEvent,
+  AIInteractionResponseValidatedEvent,
+  AIModule,
+  AIOperation,
+  UserId,
+  type AIInteractionContext,
+  type AIProvider,
+  type EventBus,
+} from "@/modules/shared";
 import { CVAnalysis } from "../../domain/entities/cv-analysis.entity";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 import type { CVScoringAIServiceFactory } from "../../domain/repositories/cv-scoring-ai.service";
@@ -14,6 +29,7 @@ export interface ScoreCVAnalysisInput {
   model: string;
   additionalContext?: string | null;
   language?: string | null;
+  requestId?: string;
 }
 
 export class ScoreCVAnalysisUseCase {
@@ -22,6 +38,7 @@ export class ScoreCVAnalysisUseCase {
       repo: CVAnalysisRepository;
       aiServiceFactory: CVScoringAIServiceFactory;
       eventBus: EventBus;
+      buildPrompt?: (additionalContext?: string | null, language?: string | null) => string;
     },
   ) {}
 
@@ -34,17 +51,54 @@ export class ScoreCVAnalysisUseCase {
     const primitives = current.toPrimitives();
     const text = selectBestCVAnalysisText(current);
 
+    const context: AIInteractionContext = {
+      interactionId: crypto.randomUUID(),
+      attemptId: crypto.randomUUID(),
+      requestId: input.requestId,
+      userId: input.userId,
+      module: AIModule.CVAnalysis,
+      operation: AIOperation.ScoreCV,
+      entityType: AIEntityType.CVAnalysis,
+      entityId: input.id,
+      assistanceMode: AIAssistanceMode.Integrated,
+      provider: input.provider,
+      model: input.model,
+    };
+    await this.deps.eventBus.publish([
+      new AIInteractionPreparedEvent({
+        context,
+        prompt: `${this.deps.buildPrompt?.(input.additionalContext, input.language) ?? ""}\n\n${text}`,
+      }),
+      new AIInteractionRequestSentEvent({ context }),
+    ]);
+
     const aiService = this.deps.aiServiceFactory.create({
       provider: input.provider,
       apiKey: input.apiKey,
       baseUrl: input.baseUrl,
       model: input.model,
     });
-    const result = await aiService.score({
-      text,
-      additionalContext: input.additionalContext,
-      language: input.language,
-    });
+    let result;
+    try {
+      result = await aiService.score({
+        text,
+        additionalContext: input.additionalContext,
+        language: input.language,
+      });
+      await this.deps.eventBus.publish([
+        new AIInteractionResponseValidatedEvent({ context, parsedResult: result }),
+      ]);
+    } catch (error) {
+      await this.deps.eventBus.publish([
+        new AIInteractionFailedEvent({
+          context,
+          stage: AIInteractionFailureStage.Request,
+          errorName: error instanceof Error ? error.name : "UnknownError",
+          errorMessage: error instanceof Error ? error.message : String(error),
+        }),
+      ]);
+      throw error;
+    }
 
     const now = new Date().toISOString();
     current.applyAIResult({
@@ -63,6 +117,7 @@ export class ScoreCVAnalysisUseCase {
 
     const events = current.pullDomainEvents();
     await this.deps.eventBus.publish(events);
+    await this.deps.eventBus.publish([new AIInteractionAppliedEvent({ context })]);
 
     return current;
   }

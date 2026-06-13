@@ -11,7 +11,7 @@ import { PrepareCVScoreCopyPasteUseCase } from "./application/use-cases/prepare-
 import { PreviewCVScoreCopyPasteUseCase } from "./application/use-cases/preview-cv-score-copy-paste.use-case";
 import { ScoreCVAnalysisUseCase } from "./application/use-cases/score-cv-analysis.use-case";
 import { UpdateCVAnalysisAIResultUseCase } from "./application/use-cases/update-cv-analysis-ai-result.use-case";
-import { buildCVScoringCopyPastePrompt } from "./infrastructure/services/cv-scoring-prompts";
+import { buildCVScoringCopyPastePrompt, buildGeneralScoringPrompt } from "./infrastructure/services/cv-scoring-prompts";
 import { GeminiCVScoringAIServiceFactory } from "./infrastructure/services/gemini-cv-scoring-ai.service";
 import { MockCVScoringAIServiceFactory } from "./infrastructure/services/mock-cv-scoring-ai.service";
 import { OpenAICVScoringAIServiceFactory } from "./infrastructure/services/openai-cv-scoring-ai.service";
@@ -34,13 +34,20 @@ function createUseCases(eventBus: EventBus) {
       repo,
     }),
     getCVAnalysisById: new GetCVAnalysisByIdUseCase({ repo }),
-    scoreCVAnalysis: new ScoreCVAnalysisUseCase({ repo, aiServiceFactory, eventBus }),
+    scoreCVAnalysis: new ScoreCVAnalysisUseCase({
+      repo,
+      aiServiceFactory,
+      eventBus,
+      buildPrompt: buildGeneralScoringPrompt,
+    }),
     prepareCVScoreCopyPaste: new PrepareCVScoreCopyPasteUseCase({
       repo,
       buildPrompt: buildCVScoringCopyPastePrompt,
+      eventBus,
     }),
     previewCVScoreCopyPaste: new PreviewCVScoreCopyPasteUseCase({
       repo,
+      eventBus,
     }),
     applyCVScoreCopyPaste: new ApplyCVScoreCopyPasteUseCase({
       repo,

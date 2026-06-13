@@ -1,9 +1,13 @@
 import type { DomainEvent } from "../../../domain/bus/event-bus/domain-event";
-import type { EventBus } from "../../../domain/bus/event-bus/event-bus";
+import type {
+  EventBus,
+  EventHandler,
+} from "../../../domain/bus/event-bus/event-bus";
 import type { Telemetry } from "../../../application/telemetry/telemetry";
 
 export class InMemoryEventBus implements EventBus {
   private publishedEvents: DomainEvent[] = [];
+  private readonly handlers = new Map<string, EventHandler[]>();
 
   constructor(private readonly telemetry: Telemetry) {}
 
@@ -14,6 +18,9 @@ export class InMemoryEventBus implements EventBus {
         if (published) return;
         published = true;
         this.publishedEvents.push(event);
+        for (const handler of this.handlers.get(event.eventName) ?? []) {
+          await handler.handle(event);
+        }
 
         try {
           this.telemetry.log({
@@ -46,6 +53,15 @@ export class InMemoryEventBus implements EventBus {
         await publishOnce();
       }
     }
+  }
+
+  subscribe<TEvent extends DomainEvent>(
+    eventName: string,
+    handler: EventHandler<TEvent>,
+  ): void {
+    const handlers = this.handlers.get(eventName) ?? [];
+    handlers.push(handler as EventHandler);
+    this.handlers.set(eventName, handlers);
   }
 
   getEvents(): DomainEvent[] {

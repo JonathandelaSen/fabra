@@ -36,6 +36,18 @@ class FakeTelemetry implements Telemetry {
 }
 
 describe("InMemoryEventBus", () => {
+  it("delivers published events to subscribed handlers", async () => {
+    const telemetry = new FakeTelemetry();
+    const bus = new InMemoryEventBus(telemetry);
+    const handle = vi.fn().mockResolvedValue(undefined);
+    const event = new DummyEvent();
+
+    bus.subscribe(event.eventName, { handle });
+    await bus.publish([event]);
+
+    expect(handle).toHaveBeenCalledWith(event);
+  });
+
   it("tracks published events with semantic spans and structured logs", async () => {
     const telemetry = new FakeTelemetry();
     const bus = new InMemoryEventBus(telemetry);

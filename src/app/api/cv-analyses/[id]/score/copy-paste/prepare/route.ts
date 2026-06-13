@@ -5,6 +5,7 @@ import { cvAnalysisModule } from "@/lib/container";
 import { errorResponse, notFound, ok } from "@/modules/shared";
 import { parsePrepareCVAnalysisCopyPasteRequest } from "./validation";
 import type { PrepareCVAnalysisCopyPasteResponse } from "./responses";
+import { createRequestId } from "@/lib/observability";
 
 export async function POST(
   req: NextRequest,
@@ -26,6 +27,7 @@ export async function POST(
       userId: user.id,
       additionalContext: parsed.value.additionalContext,
       language: parsed.value.language,
+      requestId: createRequestId("cv_score_copy_paste"),
     });
     if (!result) throw notFound("Analysis not found");
 

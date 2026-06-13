@@ -1,4 +1,13 @@
-import { UserId } from "@/modules/shared";
+import {
+  AIAssistanceMode,
+  AIEntityType,
+  AIInteractionPreparedEvent,
+  AIInteractionProvider,
+  AIModule,
+  AIOperation,
+  UserId,
+  type EventBus,
+} from "@/modules/shared";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 import { CVAnalysisId } from "../../domain/value-objects/cv-analysis-id.value-object";
 import { selectBestCVAnalysisText } from "../services/cv-analysis-text";
@@ -12,14 +21,16 @@ export interface PrepareCVScoreCopyPasteInput {
   userId: string;
   additionalContext?: string | null;
   language?: string | null;
+  requestId?: string;
 }
 
 export interface PrepareCVScoreCopyPasteResult {
   workflowId: typeof CV_SCORE_COPY_PASTE_WORKFLOW_ID;
   schemaVersion: typeof CV_SCORE_COPY_PASTE_SCHEMA_VERSION;
+  interactionId: string;
+  attemptId: string;
   prompt: string;
   expectedResponse: { kind: "json"; envelope: true };
-  privacyNotice: string;
 }
 
 export class PrepareCVScoreCopyPasteUseCase {
@@ -31,6 +42,7 @@ export class PrepareCVScoreCopyPasteUseCase {
         additionalContext?: string | null;
         language?: string | null;
       }) => string;
+      eventBus?: EventBus;
     },
   ) {}
 
@@ -47,14 +59,34 @@ export class PrepareCVScoreCopyPasteUseCase {
       additionalContext: input.additionalContext,
       language: input.language,
     });
+    const interactionId = crypto.randomUUID();
+    const attemptId = crypto.randomUUID();
+    const context = {
+      interactionId,
+      attemptId,
+      requestId: input.requestId,
+      userId: input.userId,
+      module: AIModule.CVAnalysis,
+      operation: AIOperation.ScoreCV,
+      entityType: AIEntityType.CVAnalysis,
+      entityId: input.id,
+      assistanceMode: AIAssistanceMode.CopyPaste,
+      workflowId: CV_SCORE_COPY_PASTE_WORKFLOW_ID,
+      schemaVersion: CV_SCORE_COPY_PASTE_SCHEMA_VERSION,
+      provider: AIInteractionProvider.ExternalChat,
+      model: null,
+    };
+    await this.deps.eventBus?.publish([
+      new AIInteractionPreparedEvent({ context, prompt }),
+    ]);
 
     return {
       workflowId: CV_SCORE_COPY_PASTE_WORKFLOW_ID,
       schemaVersion: CV_SCORE_COPY_PASTE_SCHEMA_VERSION,
+      interactionId,
+      attemptId,
       prompt,
       expectedResponse: { kind: "json", envelope: true },
-      privacyNotice:
-        "This prompt may include CV data and context you entered. Paste it only into external tools you trust.",
     };
   }
 }
