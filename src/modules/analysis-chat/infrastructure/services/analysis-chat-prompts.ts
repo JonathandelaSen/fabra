@@ -1,4 +1,5 @@
 import type { Analysis, CVRecord } from "@/lib/analysis-types";
+import { OFFER_CHAT_COACHING_INSTRUCTIONS } from "../../domain/services/analysis-chat-coaching-instructions";
 
 export interface OfferChatHistoryMessage {
   role: "user" | "assistant";
@@ -13,17 +14,8 @@ export interface OfferChatPromptInput {
   history?: OfferChatHistoryMessage[];
 }
 
-export const OFFER_CHAT_SYSTEM_PROMPT = `You are an expert job-search coach and ATS recruiter.
-
-Reply in Spanish unless the user clearly asks for another language.
-
-Rules:
-- Return ONLY valid JSON with this shape: { "answer": "<final answer>" }.
-- Use the CV, offer, and analysis context as the source of truth.
-- Do not invent experience, dates, companies, achievements, or technical depth.
-- When the user asks about a missing skill such as Redis, explain how important it appears in the offer, what not to claim, and what credible counter-positioning they can use.
-- Be practical, candid, and specific. Give wording the user could actually say in an interview or cover message.
-- If context is insufficient, say what is missing and ask for the smallest useful clarification.`;
+export const OFFER_CHAT_SYSTEM_PROMPT = `${OFFER_CHAT_COACHING_INSTRUCTIONS}
+- Return ONLY valid JSON with this shape: { "answer": "<final assistant answer>" }.`;
 
 function section(title: string, value: string | null | undefined) {
   const trimmed = value?.trim();
@@ -88,8 +80,8 @@ export function buildOfferChatPrompt(input: OfferChatPromptInput): string {
     .filter(Boolean)
     .join("\n");
 
-  return `User question:
-${input.message.trim()}${section("Recent conversation", recentConversation(input.history))}${section("Linked offer analysis", analysisSummary)}${section("Linked job posting", input.analysis.job_description)}${section("Linked CV summary", cvSummary)}${section("Linked CV extracted text", input.cvText)}
+  return `LATEST USER QUESTION:
+${input.message.trim()}${section("RECENT CONVERSATION", recentConversation(input.history))}${section("LINKED ANALYSIS (secondary interpretation; verify against primary evidence)", analysisSummary)}${section("JOB POSTING (primary evidence)", input.analysis.job_description)}${section("CV SUMMARY (primary evidence)", cvSummary)}${section("CV EXTRACTED TEXT (primary evidence)", input.cvText)}
 
-Answer the user using only this context.`;
+Answer the latest user question now. Use only the supplied context for claims about the candidate and opportunity.`;
 }

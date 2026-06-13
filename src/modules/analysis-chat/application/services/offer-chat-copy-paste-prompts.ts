@@ -1,5 +1,6 @@
 import type { AnalysisChatContext } from "../../domain/value-objects/analysis-chat-context.value-object";
 import type { ChatMessagePrimitives } from "../../domain/entities/chat-message.entity";
+import { OFFER_CHAT_COACHING_INSTRUCTIONS } from "../../domain/services/analysis-chat-coaching-instructions";
 
 export interface OfferChatCopyPastePromptInput {
   message: string;
@@ -84,22 +85,14 @@ export function buildOfferChatCopyPastePrompt(
     .filter(Boolean)
     .join("\n");
 
-  return `You are an expert job-search coach and ATS recruiter.
-
-Reply in Spanish unless the user clearly asks for another language.
+  return `${OFFER_CHAT_COACHING_INSTRUCTIONS}
 
 Privacy note for the user: this prompt may include CV, offer, and analysis data. Paste it only into external AI tools you trust.
 
-Task:
-- Answer the user's latest question as the assistant in this offer chat.
-- Use only the CV, offer, analysis context, and recent conversation below as source material.
-- Do not invent experience, dates, companies, achievements, or technical depth.
-- Be practical, candid, and specific. Give wording the user could actually say in an interview or cover message.
-- If context is insufficient, say what is missing and ask for the smallest useful clarification.
-- Return only the assistant message as plain text. Do not wrap it in JSON.
+Return only the assistant message as plain text. Do not wrap it in JSON.
 
-User question:
-${input.message.trim()}${section("Recent conversation", recentConversation(input.history))}${section("Linked offer analysis", analysisSummary)}${section("Linked job posting", stringField(analysis, "job_description"))}${section("Linked CV summary", cvSummary)}${section("Linked CV extracted text", context.cvText)}
+LATEST USER QUESTION:
+${input.message.trim()}${section("RECENT CONVERSATION", recentConversation(input.history))}${section("LINKED ANALYSIS (secondary interpretation; verify against primary evidence)", analysisSummary)}${section("JOB POSTING (primary evidence)", stringField(analysis, "job_description"))}${section("CV SUMMARY (primary evidence)", cvSummary)}${section("CV EXTRACTED TEXT (primary evidence)", context.cvText)}
 
-Answer the user using only this context.`;
+Answer the latest user question now. Use only the supplied context for claims about the candidate and opportunity.`;
 }
