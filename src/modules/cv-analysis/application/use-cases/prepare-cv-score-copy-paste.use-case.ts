@@ -77,7 +77,7 @@ export class PrepareCVScoreCopyPasteUseCase {
       model: null,
     };
     await this.deps.eventBus?.publish([
-      new AIInteractionPreparedEvent({ context, prompt }),
+      new AIInteractionPreparedEvent({ context, prompt, promptVersion: "1" }),
     ]);
 
     return {

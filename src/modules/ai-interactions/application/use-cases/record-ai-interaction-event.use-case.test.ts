@@ -6,6 +6,7 @@ describe("RecordAIInteractionEventUseCase", () => {
   it("creates and saves an AI interaction event entity", async () => {
     const repository = {
       save: vi.fn(async (event) => event),
+      searchByUser: vi.fn(),
     } satisfies AIInteractionEventRepository;
     const useCase = new RecordAIInteractionEventUseCase({ repository });
 

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { BoundSupabaseRepository } from "@/modules/shared";
+import { BoundSupabaseRepository, type UserId } from "@/modules/shared";
 import { AIInteractionEvent, type AIInteractionEventPrimitives } from "../domain/entities/ai-interaction-event.entity";
 import type { AIInteractionEventRepository } from "../domain/repositories/ai-interaction-event.repository";
 
@@ -8,6 +8,16 @@ export class SupabaseAIInteractionEventRepository
   extends BoundSupabaseRepository
   implements AIInteractionEventRepository
 {
+  async searchByUser(userId: UserId): Promise<AIInteractionEvent[]> {
+    const { data, error } = await this.client
+      .from("ai_interaction_events")
+      .select("*")
+      .eq("user_id", userId.toPrimitives())
+      .order("occurred_at", { ascending: false });
+    if (error) throw error;
+    return (data ?? []).map((row) => rowToEntity(row as Record<string, unknown>));
+  }
+
   async save(event: AIInteractionEvent): Promise<AIInteractionEvent> {
     const p = event.toPrimitives();
     const { data, error } = await this.client.from("ai_interaction_events").insert({
@@ -28,8 +38,12 @@ export class SupabaseAIInteractionEventRepository
       created_at: p.createdAt,
     }).select("*").single();
     if (error) throw error;
-    const row = data as Record<string, unknown>;
-    return AIInteractionEvent.fromPrimitives({
+    return rowToEntity(data as Record<string, unknown>);
+  }
+}
+
+function rowToEntity(row: Record<string, unknown>): AIInteractionEvent {
+  return AIInteractionEvent.fromPrimitives({
       id: row.id as string,
       interactionId: row.interaction_id as string,
       attemptId: row.attempt_id as string,
@@ -45,6 +59,5 @@ export class SupabaseAIInteractionEventRepository
       payload: row.payload as Record<string, unknown>,
       occurredAt: row.occurred_at as string,
       createdAt: row.created_at as string,
-    } satisfies AIInteractionEventPrimitives);
-  }
+  } satisfies AIInteractionEventPrimitives);
 }

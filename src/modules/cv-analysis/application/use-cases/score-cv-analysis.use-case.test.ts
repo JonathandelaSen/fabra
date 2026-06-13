@@ -92,6 +92,7 @@ describe("ScoreCVAnalysisUseCase", () => {
     expect(publishedEvents.map((event) => event.eventName)).toEqual([
       "ai_runtime.prompt_prepared",
       "ai_runtime.request_sent",
+      "ai_runtime.response_received",
       "ai_runtime.response_validated",
       "cv_analysis_scored",
       "ai_runtime.result_applied",

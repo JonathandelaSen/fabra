@@ -29,6 +29,7 @@ abstract class AIInfrastructureEvent<T extends Record<string, unknown>>
 export class AIInteractionPreparedEvent extends AIInfrastructureEvent<{
   context: AIInteractionContext;
   prompt: string;
+  promptVersion: string;
 }> {
   readonly eventName = AIInfrastructureEventName.Prepared;
 }

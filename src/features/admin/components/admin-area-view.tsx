@@ -2,12 +2,13 @@
 
 import { useTranslations } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
-import { Users, LayoutDashboard } from "lucide-react";
+import { Users, LayoutDashboard, Sparkles } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminUsersView } from "@/features/admin-users";
 import { AdminMetricsView } from "@/features/admin-metrics";
+import { AdminAIInteractionsView } from "@/features/admin-ai-interactions";
 
-type AdminSection = "dashboard" | "users";
+type AdminSection = "dashboard" | "users" | "ai-interactions";
 
 interface AdminAreaViewProps {
   userEmail: string | null;
@@ -21,6 +22,8 @@ export function AdminAreaView({ userEmail }: AdminAreaViewProps) {
   let section: AdminSection = "dashboard";
   if (pathname.startsWith("/admin/users")) {
     section = "users";
+  } else if (pathname.startsWith("/admin/ai-interactions")) {
+    section = "ai-interactions";
   }
 
   const handleTabChange = (value: string | number | null) => {
@@ -43,6 +46,10 @@ export function AdminAreaView({ userEmail }: AdminAreaViewProps) {
                 <Users />
                 {t("users")}
               </TabsTrigger>
+              <TabsTrigger value="ai-interactions">
+                <Sparkles />
+                {t("aiInteractions")}
+              </TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -50,8 +57,10 @@ export function AdminAreaView({ userEmail }: AdminAreaViewProps) {
       <div className="min-h-0 flex-1 overflow-hidden">
         {section === "dashboard" ? (
           <AdminMetricsView />
-        ) : (
+        ) : section === "users" ? (
           <AdminUsersView userEmail={userEmail} />
+        ) : (
+          <AdminAIInteractionsView />
         )}
       </div>
     </div>

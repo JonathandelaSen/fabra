@@ -27,6 +27,7 @@ describe("PersistAIInteractionEventHandler", () => {
         model: null,
       },
       prompt: "prompt",
+      promptVersion: "1",
     });
 
     await handler.handle(event);

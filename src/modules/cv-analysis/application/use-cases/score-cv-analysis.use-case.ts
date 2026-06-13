@@ -6,6 +6,7 @@ import {
   AIInteractionFailureStage,
   AIInteractionPreparedEvent,
   AIInteractionRequestSentEvent,
+  AIInteractionResponseReceivedEvent,
   AIInteractionResponseValidatedEvent,
   AIModule,
   AIOperation,
@@ -68,6 +69,7 @@ export class ScoreCVAnalysisUseCase {
       new AIInteractionPreparedEvent({
         context,
         prompt: `${this.deps.buildPrompt?.(input.additionalContext, input.language) ?? ""}\n\n${text}`,
+        promptVersion: "1",
       }),
       new AIInteractionRequestSentEvent({ context }),
     ]);
@@ -79,6 +81,7 @@ export class ScoreCVAnalysisUseCase {
       model: input.model,
     });
     let result;
+    const startedAt = Date.now();
     try {
       result = await aiService.score({
         text,
@@ -86,6 +89,11 @@ export class ScoreCVAnalysisUseCase {
         language: input.language,
       });
       await this.deps.eventBus.publish([
+        new AIInteractionResponseReceivedEvent({
+          context,
+          rawResponse: JSON.stringify(result),
+          durationMs: Date.now() - startedAt,
+        }),
         new AIInteractionResponseValidatedEvent({ context, parsedResult: result }),
       ]);
     } catch (error) {
