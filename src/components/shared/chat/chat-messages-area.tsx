@@ -48,7 +48,7 @@ export function ChatMessagesArea({
           </div>
         ) : !activeConversationId ? (
           <ChatEmptyState onNew={onNewConversation} labels={labels?.emptyState} />
-        ) : messages.length === 0 ? (
+        ) : messages.length === 0 && !isSending ? (
           <ChatEmptyChat labels={labels?.emptyChat} />
         ) : (
           <AnimatePresence initial={false}>
