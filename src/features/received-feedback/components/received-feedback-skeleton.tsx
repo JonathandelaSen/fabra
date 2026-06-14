@@ -50,10 +50,10 @@ export function ReceivedFeedbackDetailSkeleton() {
             <Skeleton className="h-4 w-3/4" />
           </div>
 
-          <div className="rounded-xl border border-warning-border bg-warning-soft p-5 space-y-2">
-            <Skeleton className="h-3.5 w-24 bg-warning-soft" />
-            <Skeleton className="h-4 w-full bg-warning-soft" />
-            <Skeleton className="h-4 w-2/3 bg-warning-soft" />
+          <div className="rounded-xl border border-line bg-panel-subtle p-5 space-y-2">
+            <Skeleton className="h-3.5 w-24" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-2/3" />
           </div>
         </div>
       </BasicPanel>

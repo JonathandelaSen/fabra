@@ -8,7 +8,7 @@ export function CVAnalysesListSkeleton() {
           key={index}
           className="flex w-full items-start gap-3 rounded-xl border border-transparent p-3.5"
         >
-          <Skeleton className="h-9 w-9 shrink-0 rounded-lg bg-indigo-500/10" />
+          <Skeleton className="h-9 w-9 shrink-0 rounded-lg" />
           <div className="min-w-0 flex-1">
             <Skeleton className="h-4 w-3/4" />
             <div className="mt-2 flex items-center gap-3">

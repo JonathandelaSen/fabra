@@ -65,6 +65,11 @@ export function PerformanceReviewView({
 
   const contexts = contextsQuery.data?.contexts ?? [];
   const reviews = useMemo(() => list.data ?? [], [list.data]);
+  const isAutoSelectionPending =
+    isDesktopLayout &&
+    pathname === "/reviews" &&
+    !reviewId &&
+    reviews.length > 0;
   const contextName = detail.data?.activityContextId
     ? contexts.find((context) => context.id === detail.data.activityContextId)
         ?.name ?? null
@@ -149,7 +154,7 @@ export function PerformanceReviewView({
           />
         }
       >
-        {list.isPending ? (
+        {list.isPending || isAutoSelectionPending ? (
           <PerformanceReviewDetailSkeleton />
         ) : route.isCreating ? (
           <PerformanceReviewForm
