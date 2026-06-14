@@ -13,7 +13,6 @@ import {
   getStoredAIProvider,
   type StoredAIProvider,
 } from "@/lib/browser-preferences";
-import { CV_TEMPLATES } from "@/lib/cv-templates";
 import AppShellContent from "./app-shell-content";
 import { ImpersonationBanner } from "./impersonation-banner";
 import type { SidebarActiveView } from "./sidebar-types";
@@ -377,8 +376,7 @@ export default function AppShell({
     rememberJobAnalysesLocation();
     rememberCVLibraryLocation();
     setActiveView(APP_VIEWS.templates);
-    const firstTemplateId = CV_TEMPLATES[0]?.templateId;
-    router.push(firstTemplateId ? `/templates/${firstTemplateId}` : "/templates");
+    router.push("/templates");
   };
 
   const handleOpenEditor = (cvId?: string | null) => {
