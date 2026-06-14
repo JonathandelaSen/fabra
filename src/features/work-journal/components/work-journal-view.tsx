@@ -51,6 +51,7 @@ export default function WorkJournalView({
     view,
     listEntryId,
     timelineEntryId,
+    pathname,
     goToList,
     goToTimeline,
     replaceListEntry,
@@ -58,6 +59,7 @@ export default function WorkJournalView({
     selectTimelineEntry,
     backToTimeline,
   } = useWorkJournalRouteState();
+  const isOnWorkJournalRoute = pathname.startsWith("/work-journal");
 
   const [search, setSearch] = useState("");
   const [selectedEntryId, setSelectedEntryId] = useState<string | null>(null);
@@ -135,6 +137,7 @@ export default function WorkJournalView({
 
   useEffect(() => {
     if (
+      isOnWorkJournalRoute &&
       isDesktopLayout &&
       shouldAutoSelectWorkJournalEntry({
         activeEntryId,
@@ -147,9 +150,12 @@ export default function WorkJournalView({
       const nextId = filteredEntries[0].id;
       replaceListEntry(nextId);
     }
-  }, [activeEntryId, filteredEntries, isDesktopLayout, isListPending, replaceListEntry, showForm, view]);
+  }, [activeEntryId, filteredEntries, isDesktopLayout, isListPending, isOnWorkJournalRoute, replaceListEntry, showForm, view]);
 
   useEffect(() => {
+    if (!isOnWorkJournalRoute) {
+      return;
+    }
     if (
       view === "timeline" &&
       shouldClearMissingWorkJournalSelection({
@@ -169,7 +175,7 @@ export default function WorkJournalView({
     ) {
       goToList();
     }
-  }, [view, timelineEntryId, listEntryId, isListPending, selectedEntry, backToTimeline, goToList]);
+  }, [view, timelineEntryId, listEntryId, isListPending, isOnWorkJournalRoute, selectedEntry, backToTimeline, goToList]);
 
   useEffect(() => {
     const selectedContextId = searchParams.get("activityContextId");

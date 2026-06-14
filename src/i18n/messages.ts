@@ -1601,9 +1601,9 @@ export const messages = {
     activityContexts: {
       title: "Activity contexts",
       description: {
-        generic: "Manage the companies, projects, and areas where your professional activities take place.",
+        generic: "",
         workJournal: "Create or select a context to classify your work journal entries by company, project, or area.",
-        objectives: "Create or select a context to associate your objectives with a company, project, or area.",
+        objectives: "",
         receivedFeedback: "Create or select a context to place received feedback within a company, project, or area.",
       },
       back: "Back",
@@ -3266,9 +3266,9 @@ export const messages = {
     activityContexts: {
       title: "Contextos de actividad",
       description: {
-        generic: "Gestiona las empresas, proyectos y ámbitos donde ocurren tus actividades profesionales.",
+        generic: "",
         workJournal: "Crea o selecciona un contexto para clasificar las entradas de tu diario de trabajo por empresa, proyecto o ámbito.",
-        objectives: "Crea o selecciona un contexto para asociar tus objetivos a una empresa, proyecto o ámbito.",
+        objectives: "",
         receivedFeedback: "Crea o selecciona un contexto para ubicar el feedback recibido en una empresa, proyecto o ámbito.",
       },
       back: "Volver",

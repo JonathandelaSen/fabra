@@ -55,11 +55,13 @@ export function ReceivedFeedbackDetail({
           <div className="flex flex-wrap items-center gap-2 md:justify-end">
             <EditButton
               type="button"
+              aria-label={t("actions.edit")}
               onClick={onEdit}
             />
 
             <DeleteButton
               type="button"
+              aria-label={t("actions.delete")}
               onClick={onDelete}
             />
           </div>
