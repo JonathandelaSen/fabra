@@ -18,17 +18,17 @@
 ## Product Demos
 
 <p align="center">
+  <br /><strong>CV analysis</strong>
   <a href="public/demos/cv-analysis.mp4">
     <img src="public/demos/cv-analysis-preview.gif" alt="Watch Fabra analyze a CV" width="100%" />
   </a>
-  <br /><strong>Watch the full CV analysis demo</strong>
 </p>
 
 <p align="center">
+  <br /><strong>Job offer analysis</strong>
   <a href="public/demos/job-offer-analysis.mp4">
     <img src="public/demos/job-offer-analysis-preview.gif" alt="Watch Fabra analyze a job offer" width="100%" />
   </a>
-  <br /><strong>Watch the full job offer analysis demo</strong>
 </p>
 
 ## ✨ Key Features
