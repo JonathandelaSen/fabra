@@ -8,6 +8,7 @@ import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { getErrorMessage } from "@/lib/errors";
 import { BasicPanel } from "@/components/shared/basic-panel";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
+import { WorkJournalCopyPastePanel } from "../form/work-journal-copy-paste-panel";
 
 interface WorkJournalEntryEditorProps {
   entry: WorkJournalEntry;
@@ -51,6 +52,10 @@ export function WorkJournalEntryEditor({
   const [edit, setEdit] = useState(entry);
   const [aiLoading, setAiLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
+
+  const currentContext =
+    activeContexts.find((context) => context.id === edit.context_id) ?? null;
 
   const handleGenerate = async () => {
     if (!edit.context_id || !edit.raw_notes.trim()) {
@@ -182,12 +187,26 @@ export function WorkJournalEntryEditor({
                 onConfigure: onOpenSettings,
               }}
               copyPaste={{
-                available: false, // Omitted for simplicity in edit mode
-                onOpenFlow: () => {},
+                available: true,
+                onOpenFlow: () => setIsCopyPasteOpen((open) => !open),
               }}
             />
           </div>
         </div>
+
+        {isCopyPasteOpen && (
+          <WorkJournalCopyPastePanel
+            context={currentContext}
+            dateStart={edit.date_start}
+            dateEnd={edit.date_end}
+            topic={edit.topic}
+            notes={edit.raw_notes}
+            onPasteText={(finalText) =>
+              setEdit((current) => ({ ...current, final_text: finalText }))
+            }
+            onClose={() => setIsCopyPasteOpen(false)}
+          />
+        )}
       </BasicPanel>
     </div>
   );
