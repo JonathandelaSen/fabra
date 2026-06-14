@@ -77,7 +77,10 @@ describe("useCopyPasteWorkflowState", () => {
       await result.current.validateResponse();
     });
 
-    expect(options.preview).toHaveBeenCalledWith('{"score":82}');
+    expect(options.preview).toHaveBeenCalledWith('{"score":82}', {
+      prompt: PROMPT,
+      privacyNotice: PRIVACY_NOTICE,
+    });
     expect(result.current.previewData).toEqual({ score: 82 });
     expect(result.current.step).toBe("review");
     expect(result.current.error).toBeNull();
@@ -125,7 +128,13 @@ describe("useCopyPasteWorkflowState", () => {
       await result.current.applyResult();
     });
 
-    expect(options.apply).toHaveBeenCalledWith({ score: 82 });
+    expect(options.apply).toHaveBeenCalledWith(
+      { score: 82 },
+      {
+        prompt: PROMPT,
+        privacyNotice: PRIVACY_NOTICE,
+      },
+    );
     expect(options.onApplied).toHaveBeenCalledWith({ id: "result-1" });
     expect(options.onClose).toHaveBeenCalledOnce();
     expect(result.current.error).toBeNull();

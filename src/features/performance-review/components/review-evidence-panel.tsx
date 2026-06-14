@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { LabelBadge } from "@/components/shared/label-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { EvidenceCandidate, EvidenceItem } from "../api/performance-review-api";
@@ -32,6 +31,8 @@ interface ReviewEvidencePanelProps {
 export function ReviewEvidencePanel(props: ReviewEvidencePanelProps) {
   const t = useTranslations("performanceReview");
   const [customEvidence, setCustomEvidence] = useState("");
+  const [selectedSource, setSelectedSource] =
+    useState<(typeof CANDIDATE_SOURCE_ORDER)[number]>(CANDIDATE_SOURCE_ORDER[0]);
   const curatedSourceIds = new Set(props.evidence.map((item) => item.sourceId));
   const available = props.candidates.filter(
     (candidate) => !curatedSourceIds.has(candidate.sourceId),
@@ -85,16 +86,24 @@ export function ReviewEvidencePanel(props: ReviewEvidencePanelProps) {
                 </p>
               </div>
             )}
-            <Tabs defaultValue={CANDIDATE_SOURCE_ORDER[0]}>
-              <TabsList className="w-full justify-start overflow-x-auto">
+            <div>
+              <div className="flex w-full justify-start gap-1 overflow-x-auto rounded-xl border border-border/50 bg-muted/50 p-1">
                 {groups.map((group) => (
-                  <TabsTrigger key={group.source} value={group.source}>
+                  <Button
+                    key={group.source}
+                    type="button"
+                    variant={selectedSource === group.source ? "secondary" : "ghost"}
+                    size="sm"
+                    onClick={() => setSelectedSource(group.source)}
+                  >
                     {t(`sources.${group.source}`)} · {group.items.length}
-                  </TabsTrigger>
+                  </Button>
                 ))}
-              </TabsList>
-              {groups.map((group) => (
-                <TabsContent key={group.source} value={group.source} className="space-y-2">
+              </div>
+              {groups
+                .filter((group) => group.source === selectedSource)
+                .map((group) => (
+                <div key={group.source} className="mt-2 space-y-2">
                   {group.items.length === 0 && (
                     <p className="rounded-lg border border-dashed border-line p-4 text-sm text-text-muted">
                       {t("evidence.sourceEmpty", { source: t(`sources.${group.source}`) })}
@@ -125,9 +134,9 @@ export function ReviewEvidencePanel(props: ReviewEvidencePanelProps) {
                     </div>
                   </div>
                   ))}
-                </TabsContent>
+                </div>
               ))}
-            </Tabs>
+            </div>
           </CardContent>
         </Card>
       </div>

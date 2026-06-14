@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { SelfAssessmentCopyPasteResponse } from "../api/performance-review-api";
 
@@ -35,16 +35,16 @@ export function useSelfAssessmentCopyPaste({
   const [isApplying, setIsApplying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copiedCorrection, setCopiedCorrection] = useState(false);
+  const onPrepareRef = useRef(onPrepare);
 
   useEffect(() => {
-    if (prepared || !isPreparing) return;
-    onPrepare()
+    onPrepareRef.current()
       .then(setPrepared)
       .catch((err: unknown) =>
         setError(err instanceof Error ? err.message : t("prepareError")),
       )
       .finally(() => setIsPreparing(false));
-  }, [prepared, isPreparing, onPrepare, t]);
+  }, [t]);
 
   const copyPrompt = useCallback(() => {
     if (!prepared) return;
