@@ -133,6 +133,10 @@ export function CVAnalysisDetailPanel({
             <ExtractionView
               analysis={extractionAnalysis}
               onAIAnalysisComplete={handleAnalysisComplete}
+              aiProvider={aiProvider}
+              aiApiKey={aiApiKey}
+              aiModel={aiModel}
+              hasAIApiKey={hasAIApiKey}
               onOpenSettings={onOpenSettings}
               onScoreAnalysis={onScoreAnalysis}
               hideAnalysisSelector={hasAnalysis}
@@ -149,10 +153,6 @@ export function CVAnalysisDetailPanel({
           >
             <AIAnalysisView
               analysis={toAIAnalysisProps(selectedAnalysis)}
-              aiProvider={aiProvider}
-              aiApiKey={aiApiKey}
-              aiModel={aiModel}
-              hasAIApiKey={hasAIApiKey}
             />
           </motion.div>
         )}
