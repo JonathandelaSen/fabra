@@ -37,11 +37,13 @@ function findDefaultContext(contexts: ActivityContext[]) {
 
 export default function ReceivedFeedbackView() {
   const {
+    pathname,
     selectedId: routeSelectedId,
     goToList,
     replaceItem: replaceRouteItem,
     selectItem: selectRouteItem,
   } = useReceivedFeedbackRouteState();
+  const isOnReceivedFeedbackRoute = pathname.startsWith("/received-feedback");
   const t = useTranslations("receivedFeedback");
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -83,6 +85,7 @@ export default function ReceivedFeedbackView() {
 
   useEffect(() => {
     if (
+      isOnReceivedFeedbackRoute &&
       isDesktopLayout &&
       shouldAutoSelectReceivedFeedback({
         activeSelectedId,
@@ -94,9 +97,12 @@ export default function ReceivedFeedbackView() {
       const nextId = items[0].id;
       replaceRouteItem(nextId);
     }
-  }, [activeSelectedId, isCreating, isDesktopLayout, isListPending, items, replaceRouteItem]);
+  }, [activeSelectedId, isCreating, isDesktopLayout, isListPending, isOnReceivedFeedbackRoute, items, replaceRouteItem]);
 
   useEffect(() => {
+    if (!isOnReceivedFeedbackRoute) {
+      return;
+    }
     if (
       shouldClearMissingReceivedFeedbackSelection({
         isListPending,
@@ -106,7 +112,7 @@ export default function ReceivedFeedbackView() {
     ) {
       goToList();
     }
-  }, [routeSelectedId, isListPending, selectedItem, goToList]);
+  }, [routeSelectedId, isListPending, isOnReceivedFeedbackRoute, selectedItem, goToList]);
 
   useEffect(() => {
     const selectedContextId = searchParams.get("activityContextId");
