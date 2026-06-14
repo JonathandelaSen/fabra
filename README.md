@@ -15,6 +15,22 @@
 
 <br/>
 
+## Product Demos
+
+<p align="center">
+  <a href="public/demos/cv-analysis.mp4">
+    <img src="public/demos/cv-analysis-preview.gif" alt="Watch Fabra analyze a CV" width="100%" />
+  </a>
+  <br /><strong>Watch the full CV analysis demo</strong>
+</p>
+
+<p align="center">
+  <a href="public/demos/job-offer-analysis.mp4">
+    <img src="public/demos/job-offer-analysis-preview.gif" alt="Watch Fabra analyze a job offer" width="100%" />
+  </a>
+  <br /><strong>Watch the full job offer analysis demo</strong>
+</p>
+
 ## ✨ Key Features
 
 It's not just a CV parser; it's a complete operating system for your career:
@@ -37,13 +53,6 @@ It's not just a CV parser; it's a complete operating system for your career:
 ## 📸 Product Tour
 
 ### Build, refine, and share your CV
-
-<p align="center">
-  <a href="public/demos/cv-analysis.mp4">
-    <img src="public/demos/cv-analysis-preview.gif" alt="Watch Fabra analyze a CV" width="100%" />
-  </a>
-  <br /><strong>Watch the full CV analysis demo</strong>
-</p>
 
 <p align="center">
   <img src="public/screenshots/cv-library.png" alt="Fabra CV library" width="100%" />
@@ -73,13 +82,6 @@ It's not just a CV parser; it's a complete operating system for your career:
 </table>
 
 ### Run a focused job search
-
-<p align="center">
-  <a href="public/demos/job-offer-analysis.mp4">
-    <img src="public/demos/job-offer-analysis-preview.gif" alt="Watch Fabra analyze a job offer" width="100%" />
-  </a>
-  <br /><strong>Watch the full job offer analysis demo</strong>
-</p>
 
 <p align="center">
   <img src="public/screenshots/job-search-tracking-kanban.png" alt="Job search tracking Kanban board" width="100%" />
