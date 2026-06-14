@@ -2,6 +2,12 @@ import { spawn } from "node:child_process";
 
 const checks = [
   {
+    name: "API controllers",
+    command: "npm",
+    args: ["run", "api:check", "--silent"],
+    successSummary: "API controller architecture checks passed.",
+  },
+  {
     name: "architecture",
     command: "npm",
     args: ["run", "ddd:check", "--silent"],
