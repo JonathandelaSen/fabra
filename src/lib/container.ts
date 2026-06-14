@@ -5,6 +5,7 @@ import {
   createJobAnalysisChatModule,
   registerJobAnalysisChatQueries,
 } from "@/modules/job-analysis-chat";
+import { createCVChatModule } from "@/modules/cv-chat";
 import {
   createCVAnalysisModule,
   GetCVAnalysisByIdQuery,
@@ -151,3 +152,4 @@ _jobAnalysisChatModule.bindRequest = (client) => {
 };
 export const jobAnalysisChatModule = _jobAnalysisChatModule;
 registerJobAnalysisChatQueries(queryBus, jobAnalysisChatModule);
+export const cvChatModule = createCVChatModule(telemetry, eventBus);

@@ -1,13 +1,9 @@
 "use client";
 
-import { Sparkles, ArrowLeft } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-interface GeneralAnalysisFormHeaderProps {
-  onBack: () => void;
-}
-
-export function GeneralAnalysisFormHeader({ onBack }: GeneralAnalysisFormHeaderProps) {
+export function GeneralAnalysisFormHeader() {
   const t = useTranslations("analysisFlow.forms");
 
   return (
@@ -21,13 +17,6 @@ export function GeneralAnalysisFormHeader({ onBack }: GeneralAnalysisFormHeaderP
           {t("allFieldsOptional")}
         </span>
       </div>
-      <button
-        onClick={onBack}
-        className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
-      >
-        <ArrowLeft className="w-3.5 h-3.5" />
-        {t("changeMode")}
-      </button>
     </div>
   );
 }

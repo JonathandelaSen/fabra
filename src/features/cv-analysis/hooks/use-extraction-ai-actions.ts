@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
 import { getErrorMessage } from "@/lib/errors";
 import type { AIContext } from "@/lib/analysis-types";
-import { useJobMatchAnalysisMutations } from "@/features/job-match-analysis";
 import {
   useScoreCVAnalysis,
   type ScoreCVAnalysisInput,
@@ -22,7 +21,6 @@ interface UseExtractionAIActionsParams {
   aiApiKey: string;
   aiModel: string;
   aiProvider: StoredAIProvider;
-  hasAIApiKey: boolean;
   onAIAnalysisComplete: () => void;
   onScoreAnalysis?: ScoreAnalysisHandler;
 }
@@ -32,20 +30,15 @@ export function useExtractionAIActions({
   aiApiKey,
   aiModel,
   aiProvider,
-  hasAIApiKey,
   onAIAnalysisComplete,
   onScoreAnalysis,
 }: UseExtractionAIActionsParams) {
-  const t = useTranslations("analysisFlow.extraction");
   const formsT = useTranslations("analysisFlow.forms");
   const scoreCVAnalysis = useScoreCVAnalysis();
-  const jobMatchMutations = useJobMatchAnalysisMutations();
   const [loadingAI, setLoadingAI] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
   const [copyPasteContext, setCopyPasteContext] = useState<string | null>(null);
   const [copyPasteOpen, setCopyPasteOpen] = useState(false);
-  const [copyPasteJobDescription, setCopyPasteJobDescription] = useState("");
-  const [copyPasteJobUrl, setCopyPasteJobUrl] = useState<string | null>(null);
   const [selectedProvider, setSelectedProvider] = useState<StoredAIProvider>(aiProvider);
   const [selectedModel, setSelectedModel] = useState<string>(
     aiModel || DEFAULT_GEMINI_MODEL,
@@ -101,59 +94,15 @@ export function useExtractionAIActions({
     setCopyPasteOpen(true);
   };
 
-  const handleJobMatchCopyPasteOpen = (jobDescription: string, jobUrl: string) => {
-    setCopyPasteJobDescription(jobDescription);
-    setCopyPasteJobUrl(jobUrl || null);
-    setCopyPasteOpen(true);
-  };
-
-  const handleJobMatchAnalysis = async (
-    jobDescription: string,
-    jobUrl: string,
-  ) => {
-    const aiConfig = getAIRequestConfigForProvider(selectedProvider, aiApiKey, selectedModel);
-    if (aiConfig.error) {
-      setAiError(aiConfig.error);
-      return;
-    }
-
-    setLoadingAI(true);
-    setAiError(null);
-
-    try {
-      await jobMatchMutations.scoreAnalysis.mutateAsync({
-        id: analysisId,
-        input: {
-          jobDescription,
-          jobUrl: jobUrl || null,
-          provider: aiConfig.provider,
-          apiKey: aiConfig.apiKey,
-          baseUrl: aiConfig.baseUrl,
-          model: aiConfig.model,
-        },
-      });
-
-      onAIAnalysisComplete();
-    } catch (err: unknown) {
-      setAiError(getErrorMessage(err));
-    } finally {
-      setLoadingAI(false);
-    }
-  };
-
   return {
     aiError,
     copyPasteContext,
     copyPasteOpen,
-    copyPasteJobDescription,
-    copyPasteJobUrl,
     loadingAI,
     models,
     selectedModel,
     handleExternalChatAnalysis,
-    handleJobMatchCopyPasteOpen,
     handleGeneralAnalysis,
-    handleJobMatchAnalysis,
     setCopyPasteContext,
     setCopyPasteOpen,
     selectedProvider,

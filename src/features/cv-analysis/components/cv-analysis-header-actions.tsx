@@ -54,9 +54,6 @@ export function CVAnalysisHeaderActions({
       dateLocale: locale === "es" ? "es-ES" : "en-US",
       keywords: parseArray(selectedAnalysis.ai_keywords),
       improvements: parseArray(selectedAnalysis.ai_improvements),
-      jobKeywords: parseArray(selectedAnalysis.job_keywords),
-      cvKeywords: parseArray(selectedAnalysis.cv_keywords),
-      missingKeywords: parseArray(selectedAnalysis.missing_keywords),
       t: detailT,
     });
   };

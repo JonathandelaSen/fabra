@@ -1,31 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, Star, ChevronRight, XCircle, FileSearch } from "lucide-react";
+import { CheckCircle2, Star, ChevronRight, FileSearch } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { AnalysisMode } from "@/lib/analysis-types";
 import { BasicPanel } from "@/components/shared/basic-panel";
 import { AnalysisMarkdown } from "@/components/shared/analysis-markdown";
 
 interface TabSummaryProps {
   improvements: string[];
   keywords: string[];
-  jobKeywords: string[];
-  cvKeywords: string[];
-  matchingKeywords: string[];
-  missingKeywords: string[];
-  analysisMode: AnalysisMode;
   additionalContext?: string;
 }
 
 export default function TabSummary({
   improvements,
   keywords,
-  jobKeywords,
-  cvKeywords,
-  matchingKeywords,
-  missingKeywords,
-  analysisMode,
   additionalContext,
 }: TabSummaryProps) {
   const t = useTranslations("analysisDetail.summary");
@@ -77,38 +66,6 @@ export default function TabSummary({
             <CheckCircle2 className="w-4 h-4" />
             {t("keywordsFound")}
           </h4>
-          {analysisMode === "job_match" && (
-            <div className="mb-4 grid gap-3">
-              <div>
-                <p className="mb-2 text-xs sm:text-sm font-semibold text-zinc-400">
-                  {t("offer")}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {jobKeywords.map((kw) => (
-                    <span
-                      key={kw}
-                      className="rounded-lg border border-sky-500/20 bg-sky-500/10 px-2.5 py-1 text-xs sm:text-sm font-medium text-sky-300"
-                    >
-                      {kw}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <p className="mb-2 text-xs sm:text-sm font-semibold text-zinc-400">{t("cv")}</p>
-                <div className="flex flex-wrap gap-2">
-                  {cvKeywords.map((kw) => (
-                    <span
-                      key={kw}
-                      className="rounded-lg border border-violet-500/20 bg-violet-500/10 px-2.5 py-1 text-xs sm:text-sm font-medium text-violet-300"
-                    >
-                      {kw}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
           <div className="flex flex-wrap gap-2">
             {keywords.length > 0 ? (
               keywords.map((kw, i) => (
@@ -132,67 +89,6 @@ export default function TabSummary({
       </motion.div>
       </div>
 
-      {/* Matching & Missing Keywords */}
-      {analysisMode === "job_match" && (
-        <div className="grid gap-6 lg:grid-cols-2">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <BasicPanel className="p-6">
-            <h4 className="text-sm font-semibold text-emerald-400 flex items-center gap-2 mb-4">
-              <CheckCircle2 className="w-4 h-4" />
-              {t("matchingKeywords")}
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {matchingKeywords.length > 0 ? (
-                matchingKeywords.map((kw) => (
-                  <span
-                    key={kw}
-                    className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs sm:text-sm font-medium text-emerald-300"
-                  >
-                    {kw}
-                  </span>
-                ))
-              ) : (
-                <span className="text-sm italic text-zinc-500">
-                  {t("noMatches")}
-                </span>
-              )}
-            </div>
-          </BasicPanel>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25 }}
-        >
-          <BasicPanel className="p-6">
-            <h4 className="text-sm font-semibold text-rose-400 flex items-center gap-2 mb-4">
-              <XCircle className="w-4 h-4" />
-              {t("missingKeywords")}
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {missingKeywords.length > 0 ? (
-                missingKeywords.map((kw) => (
-                  <span
-                    key={kw}
-                    className="rounded-lg border border-rose-500/20 bg-rose-500/10 px-3 py-1.5 text-xs sm:text-sm font-medium text-rose-300"
-                  >
-                    {kw}
-                  </span>
-                ))
-              ) : (
-                <span className="text-sm italic text-zinc-500">
-                  {t("noMissingKeywords")}
-                </span>
-              )}
-            </div>
-          </BasicPanel>
-        </motion.div>
-      </div>
-      )}
       {additionalContext && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}

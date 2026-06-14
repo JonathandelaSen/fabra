@@ -9,9 +9,7 @@ import type {
   CreateCVDocumentResponse,
   ListCVDocumentsResponse,
 } from "@/app/api/cvs/responses";
-import type { ListInterviewQuestionsResponse } from "@/app/api/interview-questions/responses";
 import type { AIContext } from "@/lib/analysis-types";
-import type { OfferStatus } from "@/lib/analysis-types";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 export interface CreateCVAnalysisInput {
@@ -27,31 +25,6 @@ export interface ScoreCVAnalysisInput {
   model: string;
   additionalContext: string | null;
   language?: string;
-}
-
-export interface UpdateJobMatchAnalysisInput {
-  job_url?: string | null;
-  offer_status?: OfferStatus;
-  offer_notes?: string;
-  offer_next_action?: string;
-  offer_next_action_at?: string | null;
-}
-
-export interface CreateInterviewQuestionInput {
-  question: string;
-  context: string | null;
-  cv_id: string | null;
-  analysis_id: string;
-}
-
-export interface GenerateInterviewQuestionInput {
-  provider: StoredAIProvider;
-  apiKey: string;
-  baseUrl?: string;
-  model: string;
-  context: string;
-  cv_id: string | null;
-  analysis_id: string;
 }
 
 async function readJsonResponse<T>(
@@ -140,48 +113,6 @@ export async function uploadCV(file: File, name: string) {
     res,
     "Could not upload CV.",
   );
-}
-
-export async function listInterviewQuestionsForAnalysis(analysisId: string) {
-  const res = await fetch("/api/interview-questions");
-  const questions = await readJsonResponse<ListInterviewQuestionsResponse>(
-    res,
-    "Could not load interview questions.",
-  );
-  return questions.filter((question) => question.analysisId === analysisId);
-}
-
-export async function updateJobMatchAnalysis(
-  id: string,
-  input: UpdateJobMatchAnalysisInput,
-) {
-  const res = await fetch(`/api/job-match-analyses/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(input),
-  });
-  return readJsonResponse<unknown>(res, "Could not save job match analysis.");
-}
-
-export async function createInterviewQuestion(input: CreateInterviewQuestionInput) {
-  const res = await fetch("/api/interview-questions", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(input),
-  });
-  return readJsonResponse<{ id: string }>(res, "Could not create question.");
-}
-
-export async function generateInterviewQuestionAnswer(
-  id: string,
-  input: GenerateInterviewQuestionInput,
-) {
-  const res = await fetch(`/api/interview-questions/${id}/generate`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(input),
-  });
-  return readJsonResponse<unknown>(res, "Could not generate answer.");
 }
 
 export function toAdditionalContext(context: AIContext) {

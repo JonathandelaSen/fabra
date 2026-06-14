@@ -6,7 +6,6 @@ interface ExportAnalysisReportParams {
     ai_feedback: string;
     ai_model: string;
     ai_analyzed_at: string;
-    job_description: string | null;
     id: string;
     cv: {
       id: string;
@@ -19,9 +18,6 @@ interface ExportAnalysisReportParams {
   dateLocale: string;
   keywords: string[];
   improvements: string[];
-  jobKeywords: string[];
-  cvKeywords: string[];
-  missingKeywords: string[];
   t: (key: string) => string;
 }
 
@@ -30,9 +26,6 @@ export function exportAnalysisReport({
   dateLocale,
   keywords,
   improvements,
-  jobKeywords,
-  cvKeywords,
-  missingKeywords,
   t,
 }: ExportAnalysisReportParams) {
   const cvName = analysis.cv?.name ?? analysis.filename;
@@ -58,19 +51,8 @@ ${analysis.ai_feedback}
 ${t("export.detectedKeywords")}:
 ${keywords.join(", ") || t("export.none")}
 
-${t("export.jobKeywords")}:
-${jobKeywords.join(", ") || t("export.none")}
-
-${t("export.cvKeywords")}:
-${cvKeywords.join(", ") || t("export.none")}
-
-${t("export.missingKeywords")}:
-${missingKeywords.join(", ") || t("export.none")}
-
 ${t("export.improvements")}:
 ${improvements.map((imp) => `- ${imp}`).join("\n") || t("export.noSuggestions")}
-
-${analysis.job_description ? `${t("export.jobDescription")}:\n${analysis.job_description}` : ""}
     `.trim();
 
   const blob = new Blob([report], { type: "text/plain" });

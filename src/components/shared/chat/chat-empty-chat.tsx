@@ -3,7 +3,11 @@
 import { useTranslations } from "next-intl";
 import { Sparkles } from "lucide-react";
 
-export function ChatEmptyChat() {
+export function ChatEmptyChat({
+  labels,
+}: {
+  labels?: { title: string; description: string };
+}) {
   const t = useTranslations("analysisDetail.chat");
 
   return (
@@ -12,9 +16,9 @@ export function ChatEmptyChat() {
         <Sparkles className="size-5" />
       </div>
       <div>
-        <p className="text-sm text-text-muted">{t("firstQuestion")}</p>
+        <p className="text-sm text-text-muted">{labels?.title ?? t("firstQuestion")}</p>
         <p className="mt-1 text-xs text-text-faint">
-          {t("firstQuestionDescription")}
+          {labels?.description ?? t("firstQuestionDescription")}
         </p>
       </div>
     </div>

@@ -18,6 +18,12 @@ interface ChatMessagesAreaProps {
   onNewConversation: () => void;
   formatTime: (d: string) => string;
   scrollRef: RefObject<HTMLDivElement | null>;
+  labels?: {
+    loading: string;
+    thinking: string;
+    emptyState: { title: string; description: string; newConversation: string };
+    emptyChat: { title: string; description: string };
+  };
 }
 
 export function ChatMessagesArea({
@@ -28,6 +34,7 @@ export function ChatMessagesArea({
   onNewConversation,
   formatTime,
   scrollRef,
+  labels,
 }: ChatMessagesAreaProps) {
   const t = useTranslations("analysisDetail.chat");
 
@@ -37,12 +44,12 @@ export function ChatMessagesArea({
         {isLoading ? (
           <div className="flex flex-1 items-center justify-center py-20 text-sm text-zinc-600">
             <Loader2 className="mr-2 size-4 animate-spin" />
-            {t("loading")}
+            {labels?.loading ?? t("loading")}
           </div>
         ) : !activeConversationId ? (
-          <ChatEmptyState onNew={onNewConversation} />
+          <ChatEmptyState onNew={onNewConversation} labels={labels?.emptyState} />
         ) : messages.length === 0 ? (
-          <ChatEmptyChat />
+          <ChatEmptyChat labels={labels?.emptyChat} />
         ) : (
           <AnimatePresence initial={false}>
             {messages.map((msg) => (
@@ -68,7 +75,7 @@ export function ChatMessagesArea({
             </div>
             <div className="flex items-center gap-2 rounded-2xl rounded-tl-md bg-panel-subtle px-4 py-2.5 text-sm text-text-muted">
               <Loader2 className="size-3.5 animate-spin" />
-              {t("thinking")}
+              {labels?.thinking ?? t("thinking")}
             </div>
           </motion.div>
         )}

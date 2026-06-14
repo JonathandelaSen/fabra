@@ -98,7 +98,6 @@ export default function AppShellContent({
           aiModel={aiModel}
           hasAIApiKey={hasAIApiKey}
           onOpenSettings={onOpenSettings}
-          onOpenQuestions={(options) => onOpenQuestions(options)}
         />
       </ViewFrame>
     );

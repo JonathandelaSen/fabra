@@ -3,18 +3,14 @@
 import { useTranslations } from "next-intl";
 import {
   Cpu,
-  Briefcase,
   FileSearch,
   FileText,
   ExternalLink,
 } from "lucide-react";
-import type { AnalysisMode, OfferStatus } from "@/lib/analysis-types";
 import AnalysisScoreCircle from "@/components/shared/analysis-score-circle";
 import { AnalysisMarkdown } from "@/components/shared/analysis-markdown";
 import { FormattedDate } from "@/components/shared/formatted-date";
 import { getScoreColor } from "@/lib/format";
-import { ScoreHeroJobUrl } from "./score-hero-job-url";
-import { ScoreHeroOfferStatusBadge } from "./score-hero-offer-status-badge";
 
 interface ScoreHeroProps {
   score: number;
@@ -22,16 +18,9 @@ interface ScoreHeroProps {
   feedback: string;
   model: string;
   analyzedAt: string;
-  analysisMode: AnalysisMode;
-  jobDescription: string | null;
-  jobUrl: string | null;
   cv: { id: string; name: string; filename: string; type?: string } | null;
   cvId: string | null;
   filename: string;
-  onSaveUrl: (url: string) => Promise<void>;
-  isSavingUrl: boolean;
-  offerStatus?: OfferStatus | null;
-  onTabChange?: (tab: string) => void;
 }
 
 function getScoreLabelKey(score: number) {
@@ -46,16 +35,9 @@ export default function ScoreHero({
   feedback,
   model,
   analyzedAt,
-  analysisMode,
-  jobDescription,
-  jobUrl,
   cv,
   cvId,
   filename,
-  onSaveUrl,
-  isSavingUrl,
-  offerStatus,
-  onTabChange,
 }: ScoreHeroProps) {
   const t = useTranslations("analysisDetail.score");
   const colors = getScoreColor(score);
@@ -86,31 +68,13 @@ export default function ScoreHero({
               >
                 {t(getScoreLabelKey(score))}
               </span>
-              {analysisMode === "general" ? (
-                <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300">
-                  <FileSearch className="w-3 h-3" />
-                  {t("general")}
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
-                  <Briefcase className="w-3 h-3" />
-                  {t("jobMatch")}
-                </span>
-              )}
-
-              {analysisMode === "job_match" && (
-                <ScoreHeroOfferStatusBadge
-                  offerStatus={offerStatus}
-                  onTabChange={onTabChange}
-                  tabValue="seguimiento"
-                />
-              )}
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300">
+                <FileSearch className="w-3 h-3" />
+                {t("general")}
+              </span>
             </div>
             <h3 className="text-xl font-bold text-zinc-100">
-              {title ||
-                (analysisMode === "general"
-                  ? t("qualityScore")
-                  : t("matchScore"))}
+              {title || t("qualityScore")}
             </h3>
           </div>
           <AnalysisMarkdown content={feedback} className="text-base" />
@@ -125,13 +89,6 @@ export default function ScoreHero({
               variant="dateTime"
               className="gap-1.5 bg-zinc-800/50 px-2 py-1 rounded-md"
             />
-            {jobDescription && (
-              <span className="inline-flex items-center gap-1.5 text-[11px] text-zinc-500 bg-zinc-800/50 px-2 py-1 rounded-md">
-                <Briefcase className="w-3 h-3" />
-                {t("withOffer")}
-              </span>
-            )}
-
             {hasCv && (
               <>
                 <span className="text-zinc-700 text-[10px]">|</span>
@@ -148,13 +105,6 @@ export default function ScoreHero({
               </>
             )}
 
-            {analysisMode === "job_match" && (
-              <ScoreHeroJobUrl
-                jobUrl={jobUrl}
-                onSaveUrl={onSaveUrl}
-                isSavingUrl={isSavingUrl}
-              />
-            )}
           </div>
         </div>
       </div>

@@ -1,4 +1,8 @@
-import { parseAIRequestConfig, type AIRequestConfig } from "@/app/api/_shared/ai-request";
+import {
+  parseAIRequestConfig,
+  type AIRequestConfig,
+} from "@/app/api/_shared/ai-request";
+import { CHAT_ACTIONS } from "@/app/api/_shared/job-analysis-chat/actions";
 
 type Result<TValue, TError> =
   | { ok: true; value: TValue }
@@ -10,11 +14,15 @@ export interface HttpValidationError {
 }
 
 export type OfferChatPostInput =
-  | { action: "create_conversation"; title: string }
-  | { action: "rename_conversation"; conversationId: string; title: string }
-  | { action: "delete_conversation"; conversationId: string }
+  | { action: typeof CHAT_ACTIONS.createConversation; title: string }
+  | {
+      action: typeof CHAT_ACTIONS.renameConversation;
+      conversationId: string;
+      title: string;
+    }
+  | { action: typeof CHAT_ACTIONS.deleteConversation; conversationId: string }
   | ({
-      action: "message";
+      action: typeof CHAT_ACTIONS.message;
       conversationId: string;
       message: string;
     } & AIRequestConfig);
@@ -32,27 +40,36 @@ function text(value: unknown) {
 }
 
 export function parseListOfferChatRequest(params: URLSearchParams) {
-  return { ok: true, value: { conversationId: params.get("conversationId") } } as const;
+  return {
+    ok: true,
+    value: { conversationId: params.get("conversationId") },
+  } as const;
 }
 
 export function parseOfferChatPostRequest(
-  body: unknown
+  body: unknown,
 ): Result<OfferChatPostInput, HttpValidationError> {
-  if (!isRecord(body)) return validationError("Request body must be a JSON object");
-  const action = typeof body.action === "string" ? body.action : "message";
+  if (!isRecord(body))
+    return validationError("Request body must be a JSON object");
+  const action =
+    typeof body.action === "string" ? body.action : CHAT_ACTIONS.message;
 
-  if (action === "create_conversation") {
-    return { ok: true, value: { action, title: text(body.title) ?? "Nueva conversación" } };
+  if (action === CHAT_ACTIONS.createConversation) {
+    return {
+      ok: true,
+      value: { action, title: text(body.title) ?? "Nueva conversación" },
+    };
   }
 
-  if (action === "rename_conversation") {
+  if (action === CHAT_ACTIONS.renameConversation) {
     const conversationId = text(body.conversationId);
     const title = text(body.title);
-    if (!conversationId || !title) return validationError("conversationId and title are required");
+    if (!conversationId || !title)
+      return validationError("conversationId and title are required");
     return { ok: true, value: { action, conversationId, title } };
   }
 
-  if (action === "delete_conversation") {
+  if (action === CHAT_ACTIONS.deleteConversation) {
     const conversationId = text(body.conversationId);
     if (!conversationId) return validationError("conversationId is required");
     return { ok: true, value: { action, conversationId } };
@@ -64,5 +81,13 @@ export function parseOfferChatPostRequest(
   if (!message) return validationError("Message is required");
   if (!ai.ok) return validationError(ai.message);
   if (!conversationId) return validationError("conversationId is required");
-  return { ok: true, value: { action: "message", conversationId, message, ...ai.value } };
+  return {
+    ok: true,
+    value: {
+      action: CHAT_ACTIONS.message,
+      conversationId,
+      message,
+      ...ai.value,
+    },
+  };
 }

@@ -7,7 +7,6 @@ import { FileText, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
 import type { AIContext, Analysis } from "@/lib/analysis-types";
-import type { InterviewQuestionSummary } from "../types";
 import type { ScoreCVAnalysisInput } from "../hooks/use-cv-analysis-mutations";
 import type {
   CVAnalysisRouteTab,
@@ -24,14 +23,8 @@ interface CVAnalysisDetailPanelProps {
   aiApiKey: string;
   aiModel: string;
   hasAIApiKey: boolean;
-  interviewQuestions: InterviewQuestionSummary[];
   onOpenSettings: () => void;
-  onOpenQuestions: (options?: {
-    cvId?: string | null;
-    analysisId?: string | null;
-  }) => void;
   onRefetchAnalysis: () => void;
-  onRefetchQuestions: () => void;
   onScoreAnalysis: (id: string, input: ScoreCVAnalysisInput) => Promise<void>;
 }
 
@@ -43,19 +36,7 @@ function toAIAnalysisProps(analysis: Analysis) {
     ai_improvements: analysis.ai_improvements ?? "[]",
     ai_model: analysis.ai_model ?? "",
     ai_analyzed_at: analysis.ai_analyzed_at ?? "",
-    analysis_mode: analysis.analysis_mode,
-    job_description: analysis.job_description,
-    job_url: analysis.job_url,
-    offer_status: analysis.offer_status,
-    offer_notes: analysis.offer_notes,
-    offer_next_action: analysis.offer_next_action,
-    offer_next_action_at: analysis.offer_next_action_at,
     ai_context: (analysis.ai_context as AIContext | null) ?? null,
-    job_key_data: analysis.job_key_data,
-    job_keywords: analysis.job_keywords,
-    cv_keywords: analysis.cv_keywords,
-    matching_keywords: analysis.matching_keywords,
-    missing_keywords: analysis.missing_keywords,
     id: analysis.id,
     cv_id: analysis.cv_id,
     cv: analysis.cv
@@ -92,11 +73,8 @@ export function CVAnalysisDetailPanel({
   aiApiKey,
   aiModel,
   hasAIApiKey,
-  interviewQuestions,
   onOpenSettings,
-  onOpenQuestions,
   onRefetchAnalysis,
-  onRefetchQuestions,
   onScoreAnalysis,
 }: CVAnalysisDetailPanelProps) {
   const t = useTranslations("analysisFlow.appShell");
@@ -155,10 +133,6 @@ export function CVAnalysisDetailPanel({
             <ExtractionView
               analysis={extractionAnalysis}
               onAIAnalysisComplete={handleAnalysisComplete}
-              aiProvider={aiProvider}
-              aiApiKey={aiApiKey}
-              aiModel={aiModel}
-              hasAIApiKey={hasAIApiKey}
               onOpenSettings={onOpenSettings}
               onScoreAnalysis={onScoreAnalysis}
               hideAnalysisSelector={hasAnalysis}
@@ -179,15 +153,6 @@ export function CVAnalysisDetailPanel({
               aiApiKey={aiApiKey}
               aiModel={aiModel}
               hasAIApiKey={hasAIApiKey}
-              onUpdate={onRefetchAnalysis}
-              interviewQuestions={interviewQuestions}
-              onInterviewQuestionCreated={onRefetchQuestions}
-              onOpenQuestions={() =>
-                onOpenQuestions({
-                  cvId: selectedAnalysis.cv_id,
-                  analysisId: selectedAnalysis.id,
-                })
-              }
             />
           </motion.div>
         )}

@@ -1,3 +1,4 @@
+import { CHAT_ACTIONS } from "@/app/api/_shared/job-analysis-chat/actions";
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
@@ -9,16 +10,21 @@ import {
 } from "@/modules/job-analysis-chat";
 import { jobAnalysisChatModule } from "@/lib/container";
 import { createRequestId } from "@/lib/observability";
-import { parseListOfferChatRequest, parseOfferChatPostRequest } from "./validation";
+import {
+  parseListOfferChatRequest,
+  parseOfferChatPostRequest,
+} from "./validation";
 import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
 
 export const maxDuration = 60;
 
 async function validateJobMatch(analysisId: string, userId: string) {
-  const context = await jobAnalysisChatModule.getJobAnalysisChatContext.execute({
-    analysisId,
-    userId,
-  });
+  const context = await jobAnalysisChatModule.getJobAnalysisChatContext.execute(
+    {
+      analysisId,
+      userId,
+    },
+  );
   if (!context) return { error: "Analysis not found", status: 404 as const };
   if (context.analysisMode !== "job_match") {
     return {
@@ -31,7 +37,7 @@ async function validateJobMatch(analysisId: string, userId: string) {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const authContext = await getAuthenticatedRequestContext();
@@ -57,10 +63,12 @@ export async function GET(
       return ok({ messages: presentMessages(messages) });
     }
 
-    const conversations = await jobAnalysisChatModule.listConversations.execute({
-      userId: user.id,
-      analysisId: id,
-    });
+    const conversations = await jobAnalysisChatModule.listConversations.execute(
+      {
+        userId: user.id,
+        analysisId: id,
+      },
+    );
     return ok({ conversations: presentConversations(conversations) });
   } catch (error: unknown) {
     return handleApiError(error);
@@ -69,7 +77,7 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const requestId = createRequestId("offer_chat");
   const startedAt = performance.now();
@@ -93,28 +101,30 @@ export async function POST(
       throw badRequest(validationError.error);
     }
 
-    if (parsed.value.action === "create_conversation") {
-      const conversation = await jobAnalysisChatModule.createConversation.execute({
-        userId: user.id,
-        analysisId: id,
-        title: parsed.value.title,
-        requestId,
-      });
+    if (parsed.value.action === CHAT_ACTIONS.createConversation) {
+      const conversation =
+        await jobAnalysisChatModule.createConversation.execute({
+          userId: user.id,
+          analysisId: id,
+          title: parsed.value.title,
+          requestId,
+        });
       return ok({ conversation: presentConversation(conversation) });
     }
 
-    if (parsed.value.action === "rename_conversation") {
-      const conversation = await jobAnalysisChatModule.renameConversation.execute({
-        userId: user.id,
-        analysisId: id,
-        conversationId: parsed.value.conversationId,
-        title: parsed.value.title,
-        requestId,
-      });
+    if (parsed.value.action === CHAT_ACTIONS.renameConversation) {
+      const conversation =
+        await jobAnalysisChatModule.renameConversation.execute({
+          userId: user.id,
+          analysisId: id,
+          conversationId: parsed.value.conversationId,
+          title: parsed.value.title,
+          requestId,
+        });
       return ok({ conversation: presentConversation(conversation) });
     }
 
-    if (parsed.value.action === "delete_conversation") {
+    if (parsed.value.action === CHAT_ACTIONS.deleteConversation) {
       await jobAnalysisChatModule.deleteConversation.execute({
         userId: user.id,
         analysisId: id,
@@ -130,9 +140,9 @@ export async function POST(
       conversationId: parsed.value.conversationId,
       message: parsed.value.message,
       provider: parsed.value.provider,
-        apiKey: parsed.value.apiKey,
+      apiKey: parsed.value.apiKey,
       baseUrl: parsed.value.baseUrl,
-        model: parsed.value.model,
+      model: parsed.value.model,
       requestId,
       startedAt,
     });

@@ -17,7 +17,6 @@ interface GeneralAnalysisFormProps {
   selectedModel: string;
   onModelChange: (model: string) => void;
   onSubmit: (context: AIContext) => void;
-  onBack: () => void;
   loading: boolean;
   error: string | null;
   hasAIApiKey: boolean;
@@ -31,7 +30,6 @@ export default function GeneralAnalysisForm({
   selectedModel,
   onModelChange,
   onSubmit,
-  onBack,
   loading,
   error,
   hasAIApiKey,
@@ -65,7 +63,7 @@ export default function GeneralAnalysisForm({
       transition={{ delay: 0.15 }}
     >
       <BasicPanel className="shrink-0 p-6">
-      <GeneralAnalysisFormHeader onBack={onBack} />
+      <GeneralAnalysisFormHeader />
 
       {/* Additional Context */}
       <div className="mb-6">
@@ -109,4 +107,3 @@ export default function GeneralAnalysisForm({
     </motion.div>
   );
 }
-

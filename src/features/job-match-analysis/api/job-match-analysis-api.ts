@@ -1,3 +1,4 @@
+import { CHAT_ACTIONS } from "@/app/api/_shared/job-analysis-chat/actions";
 import type {
   ListJobMatchAnalysesResponse,
   GetJobMatchAnalysisResponse,
@@ -88,7 +89,7 @@ export interface ApplyJobMatchOfferChatCopyPasteInput {
 
 async function readJsonResponse<T>(
   res: Response,
-  fallbackMessage: string
+  fallbackMessage: string,
 ): Promise<T> {
   const data = (await res.json().catch(() => ({}))) as { error?: string } & T;
   if (!res.ok) throw new Error(data.error || fallbackMessage);
@@ -99,26 +100,21 @@ export async function listJobMatchAnalyses() {
   const res = await fetch("/api/job-match-analyses");
   return readJsonResponse<ListJobMatchAnalysesResponse>(
     res,
-    "Could not load job match analyses."
+    "Could not load job match analyses.",
   );
 }
 
 export async function getJobMatchAnalysis(id: string) {
-  const res = await fetch(
-    `/api/job-match-analyses/${encodeURIComponent(id)}`
-  );
+  const res = await fetch(`/api/job-match-analyses/${encodeURIComponent(id)}`);
   return readJsonResponse<GetJobMatchAnalysisResponse>(
     res,
-    "Could not load job match analysis."
+    "Could not load job match analysis.",
   );
 }
 
 export async function listJobMatchCVOptions() {
   const res = await fetch("/api/cvs");
-  return readJsonResponse<ListCVDocumentsResponse>(
-    res,
-    "Could not load CVs."
-  );
+  return readJsonResponse<ListCVDocumentsResponse>(res, "Could not load CVs.");
 }
 
 export async function uploadCVForJobMatch(file: File, name: string) {
@@ -132,11 +128,13 @@ export async function uploadCVForJobMatch(file: File, name: string) {
   });
   return readJsonResponse<CreateCVDocumentResponse>(
     res,
-    "Could not upload CV."
+    "Could not upload CV.",
   );
 }
 
-export async function createJobMatchAnalysis(input: CreateJobMatchAnalysisInput) {
+export async function createJobMatchAnalysis(
+  input: CreateJobMatchAnalysisInput,
+) {
   const res = await fetch("/api/job-match-analyses", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -144,18 +142,17 @@ export async function createJobMatchAnalysis(input: CreateJobMatchAnalysisInput)
   });
   return readJsonResponse<GetJobMatchAnalysisResponse>(
     res,
-    "Could not create job match analysis."
+    "Could not create job match analysis.",
   );
 }
 
 export async function deleteJobMatchAnalysis(id: string) {
-  const res = await fetch(
-    `/api/job-match-analyses/${encodeURIComponent(id)}`,
-    { method: "DELETE" }
-  );
+  const res = await fetch(`/api/job-match-analyses/${encodeURIComponent(id)}`, {
+    method: "DELETE",
+  });
   return readJsonResponse<DeleteJobMatchAnalysisResponse>(
     res,
-    "Could not delete job match analysis."
+    "Could not delete job match analysis.",
   );
 }
 
@@ -172,11 +169,11 @@ export async function scoreJobMatchAnalysis({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(input),
-    }
+    },
   );
   return readJsonResponse<ScoreJobMatchAnalysisResponse>(
     res,
-    "Could not score job match analysis."
+    "Could not score job match analysis.",
   );
 }
 
@@ -189,27 +186,27 @@ export async function updateJobMatchAnalysis({
 }) {
   const body: Record<string, unknown> = {};
   if (updates.jobUrl !== undefined) body.job_url = updates.jobUrl;
-  if (updates.offerStatus !== undefined) body.offer_status = updates.offerStatus;
+  if (updates.offerStatus !== undefined)
+    body.offer_status = updates.offerStatus;
   if (updates.offerNotes !== undefined) body.offer_notes = updates.offerNotes;
-  if (updates.offerNextAction !== undefined) body.offer_next_action = updates.offerNextAction;
-  if (updates.offerNextActionAt !== undefined) body.offer_next_action_at = updates.offerNextActionAt;
+  if (updates.offerNextAction !== undefined)
+    body.offer_next_action = updates.offerNextAction;
+  if (updates.offerNextActionAt !== undefined)
+    body.offer_next_action_at = updates.offerNextActionAt;
 
-  const res = await fetch(
-    `/api/job-match-analyses/${encodeURIComponent(id)}`,
-    {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    }
-  );
+  const res = await fetch(`/api/job-match-analyses/${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
   return readJsonResponse<UpdateJobMatchAnalysisResponse>(
     res,
-    "Could not update job match analysis."
+    "Could not update job match analysis.",
   );
 }
 
 export async function createLinkedInterviewQuestion(
-  input: CreateLinkedInterviewQuestionInput
+  input: CreateLinkedInterviewQuestionInput,
 ) {
   const res = await fetch("/api/interview-questions", {
     method: "POST",
@@ -218,7 +215,7 @@ export async function createLinkedInterviewQuestion(
   });
   return readJsonResponse<SaveInterviewQuestionResponse>(
     res,
-    "Could not create linked interview question."
+    "Could not create linked interview question.",
   );
 }
 
@@ -235,21 +232,21 @@ export async function generateLinkedInterviewQuestionAnswer({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(input),
-    }
+    },
   );
   return readJsonResponse<GenerateInterviewQuestionResponse>(
     res,
-    "Could not generate linked interview answer."
+    "Could not generate linked interview answer.",
   );
 }
 
 export async function listJobMatchOfferChatConversations(analysisId: string) {
   const res = await fetch(
-    `/api/job-match-analyses/${encodeURIComponent(analysisId)}/chat`
+    `/api/job-match-analyses/${encodeURIComponent(analysisId)}/chat`,
   );
   return readJsonResponse<{ conversations: JobAnalysisChatConversation[] }>(
     res,
-    "Could not load chat conversations."
+    "Could not load chat conversations.",
   );
 }
 
@@ -262,11 +259,11 @@ export async function listJobMatchOfferChatMessages({
 }) {
   const params = new URLSearchParams({ conversationId });
   const res = await fetch(
-    `/api/job-match-analyses/${encodeURIComponent(analysisId)}/chat?${params.toString()}`
+    `/api/job-match-analyses/${encodeURIComponent(analysisId)}/chat?${params.toString()}`,
   );
   return readJsonResponse<{ messages: JobAnalysisChatMessage[] }>(
     res,
-    "Could not load chat messages."
+    "Could not load chat messages.",
   );
 }
 
@@ -276,12 +273,12 @@ export async function createJobMatchOfferChatConversation(analysisId: string) {
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "create_conversation" }),
-    }
+      body: JSON.stringify({ action: CHAT_ACTIONS.createConversation }),
+    },
   );
   return readJsonResponse<{ conversation: JobAnalysisChatConversation }>(
     res,
-    "Could not create chat conversation."
+    "Could not create chat conversation.",
   );
 }
 
@@ -300,15 +297,15 @@ export async function renameJobMatchOfferChatConversation({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        action: "rename_conversation",
+        action: CHAT_ACTIONS.renameConversation,
         conversationId,
         title,
       }),
-    }
+    },
   );
   return readJsonResponse<{ conversation: JobAnalysisChatConversation }>(
     res,
-    "Could not rename chat conversation."
+    "Could not rename chat conversation.",
   );
 }
 
@@ -325,14 +322,14 @@ export async function deleteJobMatchOfferChatConversation({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        action: "delete_conversation",
+        action: CHAT_ACTIONS.deleteConversation,
         conversationId,
       }),
-    }
+    },
   );
   return readJsonResponse<Record<string, never>>(
     res,
-    "Could not delete chat conversation."
+    "Could not delete chat conversation.",
   );
 }
 
@@ -349,7 +346,7 @@ export async function sendJobMatchOfferChatMessage({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(input),
-    }
+    },
   );
   return readJsonResponse<{
     userMessage: JobAnalysisChatMessage;
@@ -370,11 +367,11 @@ export async function prepareJobMatchOfferChatCopyPaste({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(input),
-    }
+    },
   );
   return readJsonResponse<{ prompt: string; privacyNotice?: string }>(
     res,
-    "Could not prepare copy paste chat."
+    "Could not prepare copy paste chat.",
   );
 }
 
@@ -391,7 +388,7 @@ export async function applyJobMatchOfferChatCopyPaste({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(input),
-    }
+    },
   );
   return readJsonResponse<{
     userMessage: JobAnalysisChatMessage;

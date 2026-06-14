@@ -6,10 +6,18 @@ import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/acti
 
 interface ChatEmptyStateProps {
   onNew: () => void;
+  labels?: {
+    title: string;
+    description: string;
+    newConversation: string;
+  };
 }
 
-export function ChatEmptyState({ onNew }: ChatEmptyStateProps) {
+export function ChatEmptyState({ onNew, labels }: ChatEmptyStateProps) {
   const t = useTranslations("analysisDetail.chat");
+  const title = labels?.title ?? t("startTitle");
+  const description = labels?.description ?? t("startDescription");
+  const newConversation = labels?.newConversation ?? t("newConversation");
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 py-20 text-center">
@@ -18,10 +26,10 @@ export function ChatEmptyState({ onNew }: ChatEmptyStateProps) {
       </div>
       <div>
         <p className="text-sm font-medium text-text-soft">
-          {t("startTitle")}
+          {title}
         </p>
         <p className="mt-1 text-xs text-text-faint">
-          {t("startDescription")}
+          {description}
         </p>
       </div>
       <IconTextButton
@@ -30,7 +38,7 @@ export function ChatEmptyState({ onNew }: ChatEmptyStateProps) {
         onClick={onNew}
         className="mt-1"
       >
-        {t("newConversation")}
+        {newConversation}
       </IconTextButton>
     </div>
   );

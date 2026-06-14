@@ -10,6 +10,9 @@ import { CVLibraryDetailSummary } from "./cv-library-detail-summary";
 import { CVLibraryDetailPreview } from "./cv-library-detail-preview";
 import { CVLibraryJsonPreview } from "./cv-library-json-preview";
 import { BasicPanel } from "@/components/shared/basic-panel";
+import { MessageCircle, PanelsTopLeft } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CVLibraryChat from "./cv-library-chat";
 
 interface CVLibraryDetailProps {
   selected: CVDocumentListItem | null;
@@ -88,27 +91,48 @@ export function CVLibraryDetail({
           pdfPath={pdfPath}
         />
 
-        <CVLibraryDetailSummary
-          selectedCvId={selected.id}
-          analyses={analyses}
-          questions={questions}
-          templateVersions={templateVersions}
-          displayScore={displayScore}
-          onOpenAnalysis={onOpenAnalysis}
-          onOpenQuestions={onOpenQuestions}
-          onOpenEditor={onOpenEditor}
-        />
+        <Tabs defaultValue="overview" className="min-w-0">
+          <div className="border-b border-white/[0.06] px-5 pt-4">
+            <TabsList className="w-fit">
+              <TabsTrigger value="overview" className="gap-2">
+                <PanelsTopLeft className="size-4" />
+                {t("overviewTab")}
+              </TabsTrigger>
+              <TabsTrigger value="chat" className="gap-2">
+                <MessageCircle className="size-4" />
+                {t("chatTab")}
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-        {selected.type === CV_TYPE.JSON_RESUME ? (
-          <CVLibraryJsonPreview
-            profile={selected.profile as StandardCVProfile | null}
-          />
-        ) : (
-          <CVLibraryDetailPreview
-            pdfPath={pdfPath}
-            title={t("previewTitle")}
-          />
-        )}
+          <TabsContent value="overview">
+            <CVLibraryDetailSummary
+              selectedCvId={selected.id}
+              analyses={analyses}
+              questions={questions}
+              templateVersions={templateVersions}
+              displayScore={displayScore}
+              onOpenAnalysis={onOpenAnalysis}
+              onOpenQuestions={onOpenQuestions}
+              onOpenEditor={onOpenEditor}
+            />
+
+            {selected.type === CV_TYPE.JSON_RESUME ? (
+              <CVLibraryJsonPreview
+                profile={selected.profile as StandardCVProfile | null}
+              />
+            ) : (
+              <CVLibraryDetailPreview
+                pdfPath={pdfPath}
+                title={t("previewTitle")}
+              />
+            )}
+          </TabsContent>
+
+          <TabsContent value="chat" className="p-4 sm:p-5">
+            <CVLibraryChat cvId={selected.id} />
+          </TabsContent>
+        </Tabs>
       </div>
     </BasicPanel>
   );

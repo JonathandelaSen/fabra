@@ -1,3 +1,4 @@
+import { CHAT_ACTIONS } from "@/app/api/_shared/job-analysis-chat/actions";
 import type {
   AnalysisChatConversation,
   AnalysisChatMessage,
@@ -85,7 +86,7 @@ export async function createAnalysisChatConversation(
   const response = await fetch(chatUrl(analysisId), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "create_conversation" }),
+    body: JSON.stringify({ action: CHAT_ACTIONS.createConversation }),
   });
   const data = await readChatResponse<ConversationResponse>(
     response,
@@ -106,7 +107,7 @@ export async function renameAnalysisChatConversation(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      action: "rename_conversation",
+      action: CHAT_ACTIONS.renameConversation,
       conversationId,
       title,
     }),
@@ -126,7 +127,7 @@ export async function deleteAnalysisChatConversation(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      action: "delete_conversation",
+      action: CHAT_ACTIONS.deleteConversation,
       conversationId,
     }),
   });

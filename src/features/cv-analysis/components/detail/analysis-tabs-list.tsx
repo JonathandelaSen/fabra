@@ -2,32 +2,16 @@
 
 import { useTranslations } from "next-intl";
 import {
-  Briefcase,
-  CalendarClock,
-  FileSearch,
   MessageCircle,
-  MessageSquareQuote,
   Sparkles,
 } from "lucide-react";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-interface AnalysisTabsListProps {
-  isJobMatch: boolean;
-  interviewQuestionCount: number;
-}
-
 const tabClassName =
   "px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-white/10 data-active:text-white data-active:shadow-[0_0_20px_rgba(255,255,255,0.05)]";
 
-export function AnalysisTabsList({
-  isJobMatch,
-  interviewQuestionCount,
-}: AnalysisTabsListProps) {
+export function AnalysisTabsList() {
   const t = useTranslations("analysisDetail");
-
-  if (!isJobMatch) {
-    return null;
-  }
 
   return (
     <div className="sticky top-[-16px] sm:top-[-24px] z-20 -mx-4 sm:-mx-6 px-4 sm:px-6 py-2 backdrop-blur-md mb-4">
@@ -36,31 +20,10 @@ export function AnalysisTabsList({
           <Sparkles className="size-4" />
           {t("tabs.summary")}
         </TabsTrigger>
-        {isJobMatch && (
-          <>
-            <TabsTrigger value="oferta" className={tabClassName}>
-              <Briefcase className="size-4" />
-              {t("tabs.offer")}
-            </TabsTrigger>
-            <TabsTrigger value="entrevista" className={tabClassName}>
-              <MessageSquareQuote className="size-4" />
-              {t("tabs.questions")}
-              {interviewQuestionCount > 0 && (
-                <span className="ml-1 rounded-full bg-primary/20 border border-primary/30 text-primary text-[10px] font-bold px-2 py-0.5">
-                  {interviewQuestionCount}
-                </span>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="chat" className={tabClassName}>
-              <MessageCircle className="size-4" />
-              {t("tabs.chat")}
-            </TabsTrigger>
-            <TabsTrigger value="seguimiento" className={tabClassName}>
-              <CalendarClock className="size-4" />
-              {t("tabs.tracking")}
-            </TabsTrigger>
-          </>
-        )}
+        <TabsTrigger value="chat" className={tabClassName}>
+          <MessageCircle className="size-4" />
+          {t("tabs.chat")}
+        </TabsTrigger>
       </TabsList>
     </div>
   );

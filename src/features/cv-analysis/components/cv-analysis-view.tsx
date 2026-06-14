@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import type { InterviewQuestionSummary } from "../types";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
@@ -21,7 +20,6 @@ import {
   useCVAnalysesList,
   useCVAnalysisCVOptions,
   useCVAnalysisDetail,
-  useCVAnalysisInterviewQuestions,
 } from "../hooks/use-cv-analysis-queries";
 import { useCVAnalysisRouteState } from "../hooks/use-cv-analysis-route-state";
 import CVAnalysesListView from "./list/cv-analyses-list-view";
@@ -42,10 +40,6 @@ interface CVAnalysisViewProps {
   aiModel: string;
   hasAIApiKey: boolean;
   onOpenSettings: () => void;
-  onOpenQuestions: (options?: {
-    cvId?: string | null;
-    analysisId?: string | null;
-  }) => void;
 }
 
 export default function CVAnalysisView({
@@ -54,7 +48,6 @@ export default function CVAnalysisView({
   aiModel,
   hasAIApiKey,
   onOpenSettings,
-  onOpenQuestions,
 }: CVAnalysisViewProps) {
   const t = useTranslations("analysisFlow.appShell");
   const listT = useTranslations("analysisFlow.lists");
@@ -66,9 +59,6 @@ export default function CVAnalysisView({
   const analysesQuery = useCVAnalysesList();
   const cvOptionsQuery = useCVAnalysisCVOptions();
   const detailQuery = useCVAnalysisDetail(selectedAnalysisId);
-  const interviewQuestionsQuery = useCVAnalysisInterviewQuestions(
-    selectedAnalysisId,
-  );
   const createAnalysis = useCreateCVAnalysis();
   const uploadCV = useUploadCVForAnalysis();
   const scoreAnalysis = useScoreCVAnalysis();
@@ -230,13 +220,8 @@ export default function CVAnalysisView({
             aiApiKey={aiApiKey}
             aiModel={aiModel}
             hasAIApiKey={hasAIApiKey}
-            interviewQuestions={
-              (interviewQuestionsQuery.data ?? []) as InterviewQuestionSummary[]
-            }
             onOpenSettings={onOpenSettings}
-            onOpenQuestions={onOpenQuestions}
             onRefetchAnalysis={() => void detailQuery.refetch()}
-            onRefetchQuestions={() => void interviewQuestionsQuery.refetch()}
             onScoreAnalysis={handleScoreAnalysis}
           />
         )}

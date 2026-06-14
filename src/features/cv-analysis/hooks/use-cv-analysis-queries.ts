@@ -5,7 +5,6 @@ import {
   getCVAnalysis,
   listCVAnalyses,
   listCVOptions,
-  listInterviewQuestionsForAnalysis,
 } from "../api/cv-analysis-api";
 import { cvAnalysisQueryKeys } from "../api/cv-analysis-query-keys";
 
@@ -28,13 +27,5 @@ export function useCVAnalysisCVOptions() {
   return useQuery({
     queryKey: cvAnalysisQueryKeys.cvOptions(),
     queryFn: listCVOptions,
-  });
-}
-
-export function useCVAnalysisInterviewQuestions(analysisId: string | null) {
-  return useQuery({
-    queryKey: cvAnalysisQueryKeys.interviewQuestions(analysisId),
-    queryFn: () => listInterviewQuestionsForAnalysis(analysisId as string),
-    enabled: Boolean(analysisId),
   });
 }
