@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FileText, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { AnalysisMode, AnalysisSummary } from "@/lib/analysis-types";
+import type { AnalysisSummary } from "@/lib/analysis-types";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
 import type { CVDocumentListItem } from "../../api/cv-library-api";
 import { CVLibraryListItem } from "./cv-library-list-item";
@@ -15,9 +15,7 @@ interface CVLibrarySidebarProps {
   selectedId: string | null;
   analysesByCv: Map<string, AnalysisSummary[]>;
   error: string | null;
-  blockingAnalyses: AnalysisSummary[];
   onSelect: (id: string) => void;
-  onOpenAnalysis: (id: string, mode?: AnalysisMode) => void;
 }
 
 export function CVLibrarySidebar({
@@ -25,9 +23,7 @@ export function CVLibrarySidebar({
   selectedId,
   analysesByCv,
   error,
-  blockingAnalyses,
   onSelect,
-  onOpenAnalysis,
 }: CVLibrarySidebarProps) {
   const t = useTranslations("analysisFlow.cvLibrary");
   const [searchQuery, setSearchQuery] = useState("");
@@ -41,13 +37,7 @@ export function CVLibrarySidebar({
 
   const sidebarHeader = (
     <div className="space-y-3">
-      {(error || blockingAnalyses.length > 0) && (
-        <CVLibrarySidebarError
-          error={error}
-          blockingAnalyses={blockingAnalyses}
-          onOpenAnalysis={onOpenAnalysis}
-        />
-      )}
+      {error && <CVLibrarySidebarError error={error} />}
 
       <div className="flex items-center gap-2">
         {cvs.length > 0 && (

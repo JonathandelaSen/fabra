@@ -36,7 +36,7 @@ test("core API guards return controlled errors without external AI calls", async
   expect(blockedCvDelete.status()).toBe(409);
   expect(await blockedCvDelete.json()).toEqual(
     expect.objectContaining({
-      error: "No puedes borrar un CV con análisis asociados.",
+      code: "CV_HAS_ASSOCIATED_ANALYSES",
     })
   );
 

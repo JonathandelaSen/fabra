@@ -3,11 +3,27 @@ import type { InterviewQuestionResponse } from "@/app/api/interview-questions/re
 import type { JobMatchAnalysisSummaryResponse } from "@/app/api/job-match-analyses/responses";
 import type {
   CreateCVDocumentResponse,
+  CVDocumentDeleteConflictResponse,
   DeleteCVDocumentResponse,
   GetCVDocumentResponse,
   ListCVDocumentsResponse,
   UpdateCVDocumentResponse,
 } from "@/app/api/cvs/responses";
+import { CV_DELETE_CONFLICT_CODE } from "@/app/api/cvs/responses";
+
+export type CVDeleteConflictAnalysis =
+  CVDocumentDeleteConflictResponse["analyses"][number];
+
+export class CVDeleteConflictError extends Error {
+  readonly code = CV_DELETE_CONFLICT_CODE;
+  readonly analyses: AnalysisSummary[];
+
+  constructor(analyses: AnalysisSummary[]) {
+    super(CV_DELETE_CONFLICT_CODE);
+    this.name = "CVDeleteConflictError";
+    this.analyses = analyses;
+  }
+}
 
 export type CVDocumentListItem = ListCVDocumentsResponse[number];
 export type CVDocumentDetail = GetCVDocumentResponse;
@@ -69,6 +85,14 @@ export async function deleteCVDocument(id: string) {
   const res = await fetch(`/api/cvs/${encodeURIComponent(id)}`, {
     method: "DELETE",
   });
+  if (res.status === 409) {
+    const data = (await res
+      .json()
+      .catch(() => ({}))) as Partial<CVDocumentDeleteConflictResponse>;
+    if (data.code === CV_DELETE_CONFLICT_CODE) {
+      throw new CVDeleteConflictError(data.analyses ?? []);
+    }
+  }
   return readJsonResponse<DeleteCVDocumentResponse>(
     res,
     "Could not delete CV document."

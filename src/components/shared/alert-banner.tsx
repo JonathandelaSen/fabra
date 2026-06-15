@@ -74,7 +74,7 @@ export function AlertBanner({
             )}
           />
         )}
-        <div>
+        <div className="min-w-0 flex-1">
           {title && (
             <h3
               className={cn(

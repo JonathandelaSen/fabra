@@ -17,6 +17,8 @@ import {
   type CVDocumentDetailResponse,
   toCVDocumentDetailResponse,
   type DeleteCVDocumentResponse,
+  type CVDocumentDeleteConflictResponse,
+  CV_DELETE_CONFLICT_CODE,
   type GetCVDocumentResponse,
   type UpdateCVDocumentResponse,
 } from "../responses";
@@ -177,9 +179,9 @@ export async function DELETE(
     if (result.status === "in_use") {
       return NextResponse.json(
         {
-          error: "No puedes borrar un CV con análisis asociados.",
+          code: CV_DELETE_CONFLICT_CODE,
           analyses: result.analyses,
-        },
+        } satisfies CVDocumentDeleteConflictResponse,
         { status: 409 }
       );
     }

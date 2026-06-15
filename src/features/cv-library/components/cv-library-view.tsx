@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
 import type { AnalysisMode, AnalysisSummary } from "@/lib/analysis-types";
-import type { CVDocumentListItem } from "../api/cv-library-api";
+import { CVDeleteConflictError, type CVDocumentListItem } from "../api/cv-library-api";
 import { useCVLibraryMutations } from "../hooks/use-cv-library-mutations";
 import {
   useAllAnalyses,
@@ -78,7 +78,6 @@ export default function CVLibraryView({
   const [draftName, setDraftName] = useState("");
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [blockingAnalyses, setBlockingAnalyses] = useState<AnalysisSummary[]>([]);
 
   const cvs = listQuery.data ?? [];
   const analysesByCv = useMemo(() => groupAnalysesByCv(analyses), [analyses]);
@@ -129,7 +128,6 @@ export default function CVLibraryView({
     if (!nextName) return;
     setLoadingId(id);
     setError(null);
-    setBlockingAnalyses([]);
     setEditingId(null);
     try {
       await mutations.renameCV.mutateAsync({ id, name: nextName });
@@ -147,7 +145,6 @@ export default function CVLibraryView({
     const nextSelection = selectedAfterDelete(cvs, id);
     setLoadingId(id);
     setError(null);
-    setBlockingAnalyses([]);
     setSelectedCvId(nextSelection);
     routeState.replaceCV(nextSelection);
     try {
@@ -155,7 +152,11 @@ export default function CVLibraryView({
     } catch (err: unknown) {
       setSelectedCvId(id);
       routeState.replaceCV(id);
-      setError(getErrorMessage(err) || t("deleteFailed"));
+      if (err instanceof CVDeleteConflictError) {
+        setError(t("deleteBlockedByAnalyses"));
+      } else {
+        setError(getErrorMessage(err) || t("deleteFailed"));
+      }
     } finally {
       setLoadingId(null);
     }
@@ -207,12 +208,10 @@ export default function CVLibraryView({
             selectedId={selectedCvId}
             analysesByCv={analysesByCv}
             error={error ?? queryError}
-            blockingAnalyses={blockingAnalyses}
             onSelect={(id) => {
               setSelectedCvId(id);
               routeState.selectCV(id);
             }}
-            onOpenAnalysis={onOpenAnalysis}
           />
         }
       >

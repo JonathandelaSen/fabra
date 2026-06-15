@@ -1,4 +1,5 @@
 import type { StandardCVProfile } from "@/modules/cv-library";
+import type { AnalysisSummary } from "@/lib/analysis-types";
 
 export type CVDocumentType = "uploaded" | "template" | "json_resume";
 
@@ -44,15 +45,11 @@ export interface DeleteCVDocumentResponse {
   success: true;
 }
 
+export const CV_DELETE_CONFLICT_CODE = "CV_HAS_ASSOCIATED_ANALYSES" as const;
+
 export interface CVDocumentDeleteConflictResponse {
-  error: string;
-  analyses: Array<{
-    id: string;
-    title: string;
-    filename: string;
-    created_at: string;
-    analysis_mode: string;
-  }>;
+  code: typeof CV_DELETE_CONFLICT_CODE;
+  analyses: AnalysisSummary[];
 }
 
 interface LegacyCVDocumentSummary {
