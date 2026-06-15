@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
+import { useConfirm } from "@/components/shared/confirm-provider";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
@@ -53,6 +54,7 @@ export default function InterviewQuestionsView({
   onOpenAnalysis,
 }: InterviewQuestionsViewProps) {
   const t = useTranslations("interviewQuestions");
+  const confirm = useConfirm();
   const routeState = useInterviewQuestionsRouteState();
   const {
     questionId,
@@ -126,7 +128,7 @@ export default function InterviewQuestionsView({
 
   const deleteQuestion = async () => {
     if (!selected) return;
-    if (!confirm(t("errors.confirmDelete"))) return;
+    if (!(await confirm({ title: t("errors.confirmDelete") }))) return;
     const selectedIndex = questions.findIndex((item) => item.id === selected.id);
     const nextSelection =
       questions[selectedIndex + 1]?.id ?? questions[selectedIndex - 1]?.id ?? null;

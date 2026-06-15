@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useConfirm } from "@/components/shared/confirm-provider";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { InterviewQuestionSummary } from "../types";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
@@ -46,6 +47,7 @@ export default function JobMatchAnalysisView({
   const kanbanT = useTranslations("analysisFlow.kanban");
   const alertsT = useTranslations("analysisFlow.alerts");
   const scoreT = useTranslations("analysisDetail.score");
+  const confirm = useConfirm();
   const routeState = useJobMatchAnalysisRouteState();
   const {
     analysisId,
@@ -141,7 +143,7 @@ export default function JobMatchAnalysisView({
   };
 
   const deleteFromKanban = async (id: string) => {
-    if (!confirm(alertsT("confirmDelete"))) return;
+    if (!(await confirm({ title: alertsT("confirmDelete") }))) return;
 
     try {
       await handleDelete(id);
@@ -157,7 +159,7 @@ export default function JobMatchAnalysisView({
 
   const deleteSelected = async () => {
     if (!analysisId) return;
-    if (!confirm(alertsT("confirmDelete"))) return;
+    if (!(await confirm({ title: alertsT("confirmDelete") }))) return;
 
     try {
       await handleDelete(analysisId);

@@ -9,6 +9,7 @@ import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
 import { SidebarListItem } from "@/components/shared/sidebar-list-item";
 import { BasicPanel } from "@/components/shared/basic-panel";
 import { DeleteButton } from "@/components/shared/action-buttons";
+import { useConfirm } from "@/components/shared/confirm-provider";
 import { SidebarEmptyState } from "@/components/shared/sidebar-empty-state";
 import { FeatureEmptyState } from "@/components/shared/feature-empty-state";
 import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
@@ -29,6 +30,7 @@ function getAvatarColor(name: string) {
 
 export function PublicCVMessagesView() {
   const t = useTranslations("publicCvMessages");
+  const confirm = useConfirm();
   const cvsQuery = useCVDocumentList();
   const publicCVs = (cvsQuery.data ?? []).filter((cv) => cv.publicEnabled);
   const { cvId, messageId, selectCV, selectMessage, clearSelection, replaceMessage } = usePublicCVMessagesRouteState();
@@ -55,7 +57,7 @@ export function PublicCVMessagesView() {
   const selected = useMemo(() => items.find((item) => item.id === activeId) ?? null, [activeId, items]);
 
   const handleDelete = async (id: string) => {
-    if (!confirm(t("confirmDelete"))) return;
+    if (!(await confirm({ title: t("confirmDelete") }))) return;
     try {
       await remove.mutateAsync(id);
       // Clear selection or select another item

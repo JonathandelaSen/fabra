@@ -13,7 +13,7 @@ import {
 interface ConfirmDialogProps {
   open: boolean;
   title: string;
-  description: string;
+  description?: string;
   confirmLabel?: string;
   cancelLabel?: string;
   headerTitle?: string;
@@ -68,7 +68,11 @@ export function ConfirmDialog({
           >
             {title}
           </h3>
-          <p className="text-sm text-text-muted leading-relaxed">{description}</p>
+          {description ? (
+            <p className="text-sm text-text-muted leading-relaxed">
+              {description}
+            </p>
+          ) : null}
         </div>
 
         <div className="flex justify-end gap-2.5 border-t border-line bg-panel-subtle px-5 py-3.5">

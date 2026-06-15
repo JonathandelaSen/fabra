@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
+import { useConfirm } from "@/components/shared/confirm-provider";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
@@ -44,6 +45,7 @@ export default function FeedbackNotesView({
   onOpenSettings,
 }: FeedbackNotesViewProps) {
   const t = useTranslations("feedbackNotes");
+  const confirm = useConfirm();
   const routeState = useFeedbackNotesRouteState();
   const {
     clearSelection,
@@ -205,7 +207,8 @@ export default function FeedbackNotesView({
             }
             onDeleteFeedback={() =>
               void runMutation(async () => {
-                if (!confirm(t("confirmDeleteFeedback"))) return;
+                if (!(await confirm({ title: t("confirmDeleteFeedback") })))
+                  return;
                 await mutations.deleteFeedback.mutateAsync(selectedFeedback.id);
                 setSelectedFeedbackId(null);
                 clearSelection();
@@ -230,7 +233,7 @@ export default function FeedbackNotesView({
             }
             onDeleteEntry={(entryId) =>
               void runMutation(async () => {
-                if (!confirm(t("confirmDeleteEntry"))) return;
+                if (!(await confirm({ title: t("confirmDeleteEntry") }))) return;
                 setDeletingEntryIds((prev) => new Set(prev).add(entryId));
                 try {
                   await mutations.deleteEntry.mutateAsync({
@@ -260,7 +263,10 @@ export default function FeedbackNotesView({
                 }
                 if (
                   selectedFeedback.finalFeedback?.trim() &&
-                  !confirm(t("confirmReplaceFinalFeedback"))
+                  !(await confirm({
+                    title: t("confirmReplaceFinalFeedback"),
+                    variant: "default",
+                  }))
                 ) {
                   return;
                 }

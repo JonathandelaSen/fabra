@@ -2,6 +2,7 @@
 
 import { FileDown, Loader2, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useConfirm } from "@/components/shared/confirm-provider";
 import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
 import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,7 @@ export function CVAnalysisHeaderActions({
   const listT = useTranslations("analysisFlow.lists");
   const detailT = useTranslations("analysisDetail");
   const commonT = useTranslations("common.actions");
+  const confirm = useConfirm();
   const { locale } = useInterfaceLanguage();
 
   const handleExport = () => {
@@ -59,7 +61,8 @@ export function CVAnalysisHeaderActions({
   };
 
   const handleDelete = async () => {
-    if (!selectedAnalysis || !confirm(detailT("alerts.confirmDelete"))) return;
+    if (!selectedAnalysis) return;
+    if (!(await confirm({ title: detailT("alerts.confirmDelete") }))) return;
     await onDeleteAnalysis(selectedAnalysis.id);
   };
 

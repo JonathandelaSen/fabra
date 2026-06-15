@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ConfirmProvider } from "@/components/shared/confirm-provider";
 import { I18nProvider } from "@/components/shared/i18n-provider";
 import { FrontendQueryClientProvider } from "@/frontend/query/query-client-provider";
 import { getMessages } from "@/i18n/messages";
@@ -53,7 +54,9 @@ try {
       </head>
       <body className="h-full font-sans">
         <I18nProvider initialLocale={locale}>
-          <FrontendQueryClientProvider>{children}</FrontendQueryClientProvider>
+          <FrontendQueryClientProvider>
+            <ConfirmProvider>{children}</ConfirmProvider>
+          </FrontendQueryClientProvider>
         </I18nProvider>
         <Analytics />
         <SpeedInsights />

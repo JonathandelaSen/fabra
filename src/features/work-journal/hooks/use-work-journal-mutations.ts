@@ -22,6 +22,7 @@ import {
   replaceWorkJournalEntryInCache,
 } from "../api/work-journal-entry-cache";
 import { getErrorMessage } from "@/lib/errors";
+import { useConfirm } from "@/components/shared/confirm-provider";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -65,6 +66,7 @@ export function useWorkJournalMutations({
   setShowForm,
 }: UseWorkJournalMutationsParams) {
   const t = useTranslations("workJournal");
+  const confirm = useConfirm();
   const queryClient = useQueryClient();
   const [draft, setDraft] = useState(emptyEntryDraft);
   const [aiLoading, setAiLoading] = useState(false);
@@ -238,7 +240,7 @@ export function useWorkJournalMutations({
   };
 
   const deleteEntry = async (entry: WorkJournalEntry) => {
-    if (!confirm(t("errors.confirmDelete"))) return;
+    if (!(await confirm({ title: t("errors.confirmDelete") }))) return;
     const previousEntries =
       queryClient.getQueryData<WorkJournalEntry[]>(workJournalQueryKeys.entries()) ?? [];
 
