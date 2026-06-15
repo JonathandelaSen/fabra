@@ -19,6 +19,12 @@ ruleTester.run("no-hardcoded-string-contracts", rule, {
     'expect(input.action).toBe("create_conversation");',
     "interface Response { role: ChatRole }",
     'type OptionalRole = "user" | null;',
+    'type Role = "user" | "assistant";',
+    'export type CommitmentStatus = "active" | "paused";',
+    'type Update = Omit<Entity, "id" | "createdAt">;',
+    'type Summary = Pick<Entity, "id" | "title">;',
+    'interface Input { context: Pick<Context, "type" | "name" | "roleOrLabel"> }',
+    'type Nested = Partial<Pick<Entity, "id" | "title">>;',
   ],
   invalid: [
     {
@@ -35,10 +41,6 @@ ruleTester.run("no-hardcoded-string-contracts", rule, {
     },
     {
       code: 'interface Response { role: "user" | "assistant" }',
-      errors: [{ messageId: "useConstantType" }],
-    },
-    {
-      code: 'type Role = "user" | "assistant";',
       errors: [{ messageId: "useConstantType" }],
     },
     {

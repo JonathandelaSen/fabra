@@ -16,6 +16,23 @@ function isStringLiteralType(node) {
   return node.type === "TSLiteralType" && isStringLiteral(node.literal);
 }
 
+function isNamedTypeAlias(node) {
+  return node.parent?.type === "TSTypeAliasDeclaration";
+}
+
+function isKeySelectionUtilityArgument(node) {
+  let ancestor = node.parent;
+
+  while (ancestor && ancestor.type !== "TSTypeReference") {
+    ancestor = ancestor.parent;
+  }
+
+  return (
+    ancestor?.typeName.type === "Identifier" &&
+    (ancestor.typeName.name === "Pick" || ancestor.typeName.name === "Omit")
+  );
+}
+
 const noHardcodedStringContracts = {
   meta: {
     type: "suggestion",
@@ -60,6 +77,7 @@ const noHardcodedStringContracts = {
         if (node.types.length < 2 || !node.types.every(isStringLiteralType)) {
           return;
         }
+        if (isNamedTypeAlias(node) || isKeySelectionUtilityArgument(node)) return;
 
         context.report({
           node,
