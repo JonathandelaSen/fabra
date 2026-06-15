@@ -14,6 +14,7 @@ import {
 import type { CVChatConversation, CVChatMessage } from "../components/detail/cv-chat-types";
 
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import { useErrorMessage } from "@/frontend/errors/use-error-message";
 interface UseCVChatParams {
   cvId: string;
   aiProvider: StoredAIProvider;
@@ -32,6 +33,7 @@ export function useCVChat({
   focusInput,
 }: UseCVChatParams) {
   const t = useTranslations("analysisFlow.cvLibrary.chat");
+  const getErrorMessage = useErrorMessage();
   const [conversations, setConversations] = useState<
     CVChatConversation[]
   >([]);
@@ -60,9 +62,7 @@ export function useCVChat({
       focusInput();
       return conversation;
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : t("createConversationFailed"),
-      );
+      setError(getErrorMessage(err));
       return null;
     }
   }, [cvId, focusInput, t]);
@@ -78,9 +78,7 @@ export function useCVChat({
       setConversations(nextConversations);
       setActiveConversationId((current) => current ?? nextConversations[0]?.id ?? null);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : t("loadConversationsFailed"),
-      );
+      setError(getErrorMessage(err));
     } finally {
       setIsLoadingConversations(false);
     }
@@ -98,7 +96,7 @@ export function useCVChat({
         );
         setMessages(nextMessages);
       } catch (err) {
-        setError(err instanceof Error ? err.message : t("loadMessagesFailed"));
+        setError(getErrorMessage(err));
       } finally {
         setIsLoadingMessages(false);
       }
@@ -202,7 +200,7 @@ export function useCVChat({
         ]);
         setDraft("");
       } catch (err) {
-        setError(err instanceof Error ? err.message : t("sendFailed"));
+        setError(getErrorMessage(err));
       } finally {
         setIsSending(false);
       }

@@ -35,6 +35,7 @@ export {
 export { BoundSupabaseRepository } from "./infrastructure/repositories/bound-supabase-repository";
 export { assertAIProviderAllowedForRuntime } from "./infrastructure/ai-provider-runtime-guard";
 export { DomainError } from "./domain/errors/domain-error";
+export { InvalidApiKeyError } from "./domain/errors/invalid-api-key.error";
 export {
   HttpError,
   notFound,
