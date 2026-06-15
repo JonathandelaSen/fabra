@@ -36,6 +36,8 @@ interface RenderHookWithProvidersOptions<Props>
   queryClient?: QueryClient;
 }
 
+import { ConfirmProvider } from "@/components/shared/confirm-provider";
+
 function createProviderWrapper(locale: InterfaceLanguage, queryClient: QueryClient) {
   function Wrapper({ children }: { children: ReactNode }) {
     return (
@@ -44,7 +46,9 @@ function createProviderWrapper(locale: InterfaceLanguage, queryClient: QueryClie
         messages={getMessages(locale)}
         timeZone="Europe/Madrid"
       >
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+        <QueryClientProvider client={queryClient}>
+          <ConfirmProvider>{children}</ConfirmProvider>
+        </QueryClientProvider>
       </NextIntlClientProvider>
     );
   }

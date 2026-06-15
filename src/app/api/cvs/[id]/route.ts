@@ -5,7 +5,11 @@ import {
   generatePublicCVId,
   normalizePublicCVSlug,
 } from "@/modules/cv-library";
-import { cvLibraryModule } from "@/lib/container";
+import {
+  cvAnalysisModule,
+  cvLibraryModule,
+  jobMatchAnalysisModule,
+} from "@/lib/container";
 import { presentCVDocument } from "@/modules/cv-library";
 import { parseUpdateCVDocumentRequest } from "../validation";
 import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
@@ -162,6 +166,8 @@ export async function DELETE(
     const { supabase, user } = authContext;
 
     const { id } = await params;
+    cvAnalysisModule.bindRequest(supabase);
+    jobMatchAnalysisModule.bindRequest(supabase);
     const result = await cvLibraryModule
       .bindRequest(supabase)
       .deleteCVDocument.execute({ id, userId: user.id });

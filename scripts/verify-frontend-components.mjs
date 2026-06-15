@@ -216,7 +216,7 @@ function listChangedFiles() {
     output
       .split("\n")
       .map((line) => line.trim())
-      .filter((file) => file.endsWith(".tsx"))
+      .filter((file) => file.endsWith(".tsx") && !file.endsWith(".test.tsx"))
       .filter(Boolean)
   );
 }
@@ -232,7 +232,8 @@ function listFiles() {
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean)
-    .filter((file) => !EXCLUDED_ROOTS.some((excluded) => file.startsWith(`${excluded}/`)));
+    .filter((file) => !EXCLUDED_ROOTS.some((excluded) => file.startsWith(`${excluded}/`)))
+    .filter((file) => !file.endsWith(".test.tsx"));
 }
 
 function featureName(filePath) {
