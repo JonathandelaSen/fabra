@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { createRequestId } from "@/lib/observability";
 import { cvAnalysisModule, cvLibraryModule } from "@/lib/container";
@@ -61,11 +62,11 @@ export async function POST(req: NextRequest) {
         source: ROUTE_SOURCE,
       });
     if (!prepared) {
-      throw notFound("CV not found");
+      throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
     }
 
     if (!prepared.analysisText) {
-      throw badRequest("No extracted text available for this CV");
+      throw badRequest("No extracted text available for this CV", ErrorCode.CV_NO_EXTRACTED_TEXT);
     }
 
     const analysis = toCVAnalysisDetailResponse(

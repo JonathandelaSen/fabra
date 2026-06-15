@@ -1,3 +1,4 @@
+import { ErrorCode } from "@/shared/error-codes";
 import { DomainError } from "../errors/domain-error";
 
 export const AI_PROVIDER = {
@@ -17,5 +18,5 @@ export function isAIProvider(value: unknown): value is AIProvider {
 
 export function parseAIProvider(value: unknown): AIProvider {
   if (isAIProvider(value)) return value;
-  throw new DomainError("Unsupported AI provider.");
+  throw new DomainError(ErrorCode.AI_PROVIDER_UNSUPPORTED, "Unsupported AI provider.");
 }

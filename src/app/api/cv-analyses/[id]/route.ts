@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvAnalysisModule } from "@/lib/container";
 import { presentCVAnalysis } from "@/modules/cv-analysis";
@@ -24,7 +25,7 @@ export async function GET(
       .bindRequest(supabase)
       .getCVAnalysisById.execute({ id, userId: user.id });
     if (!analysis) {
-      throw notFound("CV analysis not found");
+      throw notFound("CV analysis not found", ErrorCode.CV_ANALYSIS_NOT_FOUND);
     }
     return ok(
       toCVAnalysisDetailResponse(presentCVAnalysis(analysis)) satisfies GetCVAnalysisResponse,
@@ -48,7 +49,7 @@ export async function DELETE(
       .bindRequest(supabase)
       .deleteCVAnalysis.execute({ id, userId: user.id });
     if (!deleted) {
-      throw notFound("CV analysis not found");
+      throw notFound("CV analysis not found", ErrorCode.CV_ANALYSIS_NOT_FOUND);
     }
     return ok({ success: true } satisfies DeleteCVAnalysisResponse);
   } catch (error: unknown) {

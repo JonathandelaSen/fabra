@@ -16,21 +16,21 @@ export function parseAIRequestConfig(
   const baseUrl = typeof body.baseUrl === "string" ? body.baseUrl.trim() : "";
 
   if (!isAIProvider(provider)) {
-    return { ok: false, message: "Selecciona un proveedor de IA válido." };
+    return { ok: false, message: "Select a valid AI provider." };
   }
   if (provider === "ollama" && !baseUrl) {
-    return { ok: false, message: "Configura la URL local de Ollama antes de realizar esta acción." };
+    return { ok: false, message: "Configure the local Ollama URL before this action." };
   }
   if (!model) {
     return {
       ok: false,
       message: provider === "ollama"
-        ? "Configura el modelo local de Ollama antes de realizar esta acción."
-        : "Selecciona un modelo de IA."
+        ? "Configure the local Ollama model before this action."
+        : "Select an AI model."
     };
   }
   if (provider !== "mock" && provider !== "ollama" && !apiKey) {
-    return { ok: false, message: "Configura tu API key del proveedor de IA." };
+    return { ok: false, message: "Configure your AI provider API key." };
   }
 
   return {

@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { badRequest, AI_PROVIDER } from "@/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 import {
   CV_PROFILE_SCHEMA_VERSION,
   normalizeStandardCVProfile,
@@ -40,7 +41,7 @@ export class OpenAICVProfileStructuringAIServiceFactory {
   create(
     config: { apiKey?: string; model: string },
   ): CVProfileStructuringAIService {
-    if (!config.apiKey) throw badRequest("API key is required for OpenAI.");
+    if (!config.apiKey) throw badRequest("API key is required for OpenAI.", ErrorCode.AI_API_KEY_REQUIRED);
     return new OpenAICVProfileStructuringAIService({
       apiKey: config.apiKey,
       model: config.model,

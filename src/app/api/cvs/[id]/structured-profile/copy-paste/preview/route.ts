@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvLibraryModule } from "@/lib/container";
 import { errorResponse, notFound, ok } from "@/modules/shared";
@@ -26,7 +27,7 @@ export async function POST(
       userId: user.id,
       rawResponse: parsed.value.rawResponse,
     });
-    if (!result) throw notFound("CV not found");
+    if (!result) throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
 
     return ok(result satisfies PreviewCVProfileCopyPasteResponse);
   } catch (error: unknown) {

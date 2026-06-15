@@ -50,6 +50,7 @@ describe("CV API response contracts", () => {
       templateLocale: null,
       profile: null,
       publicEnabled: false,
+      publicFeedbackEnabled: false,
       publicId: null,
       publicSlug: null,
       publicPublishedAt: null,

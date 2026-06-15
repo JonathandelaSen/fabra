@@ -1,5 +1,6 @@
 import { Timestamp, UserId, badRequest, type EventBus } from "@/modules/shared";
 import { validateCopyPasteEnvelope } from "@/modules/shared/application/assisted-workflows/copy-paste-json-envelope";
+import { ErrorCode } from "@/shared/error-codes";
 import type { PerformanceReview } from "../../domain/entities/performance-review.entity";
 import { PerformanceReviewNotFoundError } from "../../domain/errors/performance-review-not-found.error";
 import type { PerformanceReviewRepository } from "../../domain/repositories/performance-review.repository";
@@ -41,7 +42,7 @@ export class ApplySelfAssessmentCopyPasteUseCase {
 
     const content = result.content;
     if (typeof content !== "string" || !content.trim()) {
-      throw badRequest("The pasted response must include a non-empty content.");
+      throw badRequest("The pasted response must include a non-empty content.", ErrorCode.COPY_PASTE_INVALID_RESULT);
     }
 
     const now = Timestamp.fromPrimitives(new Date().toISOString());

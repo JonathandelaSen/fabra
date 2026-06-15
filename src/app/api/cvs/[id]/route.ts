@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest, NextResponse } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import {
   generatePublicCVId,
@@ -44,7 +45,7 @@ export async function GET(
       .bindRequest(supabase)
       .getCVDocument.execute({ id, userId: user.id });
     if (!cv) {
-      throw notFound("CV not found");
+      throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
     }
 
     return ok(
@@ -83,7 +84,7 @@ export async function PATCH(
         .getCVDocument.execute({ id, userId: user.id });
       const existing = existingDocument ? presentCVDocument(existingDocument) : null;
       if (!existing || existing.type !== "template") {
-        throw notFound("Template CV not found");
+        throw notFound("Template CV not found", ErrorCode.TEMPLATE_CV_NOT_FOUND);
       }
 
       const nextEnabled = body.public_enabled ?? existing.public_enabled;
@@ -92,14 +93,14 @@ export async function PATCH(
         !existing.public_enabled &&
         body.confirmPublicExposure !== true
       ) {
-        throw badRequest("Debes confirmar que entiendes que el CV será público.");
+        throw badRequest("Public CV confirmation is required.", ErrorCode.CV_PUBLIC_CONFIRMATION_REQUIRED);
       }
 
       const normalizedSlug = normalizePublicCVSlug(
         body.public_slug ?? existing.public_slug ?? existing.name
       );
       if (!normalizedSlug) {
-        throw badRequest("Elige una URL pública válida.");
+        throw badRequest("Choose a valid public URL.", ErrorCode.CV_PUBLIC_INVALID_SLUG);
       }
 
       const updated = await cvLibraryModule
@@ -113,7 +114,7 @@ export async function PATCH(
           publicSlug: normalizedSlug,
         });
       if (!updated) {
-        throw notFound("Template CV not found");
+        throw notFound("Template CV not found", ErrorCode.TEMPLATE_CV_NOT_FOUND);
       }
       return ok(
         toCompatCVDocumentDetail(presentCVDocument(updated)) satisfies UpdateCVDocumentResponse
@@ -131,7 +132,7 @@ export async function PATCH(
           ...(body.template_locale ? { templateLocale: body.template_locale } : {}),
         });
       if (!updated) {
-        throw notFound("Template CV not found");
+        throw notFound("Template CV not found", ErrorCode.TEMPLATE_CV_NOT_FOUND);
       }
       return ok(
         toCompatCVDocumentDetail(presentCVDocument(updated)) satisfies UpdateCVDocumentResponse
@@ -140,14 +141,14 @@ export async function PATCH(
 
     const trimmedName = body.name?.trim();
     if (!trimmedName) {
-      throw badRequest("Name is required");
+      throw badRequest("Name is required", ErrorCode.CV_NAME_REQUIRED);
     }
 
     const cv = await cvLibraryModule
       .bindRequest(supabase)
       .updateCVDocumentName.execute({ id, userId: user.id, name: trimmedName });
     if (!cv) {
-      throw notFound("CV not found");
+      throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
     }
 
     return ok(
@@ -174,13 +175,14 @@ export async function DELETE(
       .bindRequest(supabase)
       .deleteCVDocument.execute({ id, userId: user.id });
     if (result.status === "not_found") {
-      throw notFound("CV not found");
+      throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
     }
     if (result.status === "in_use") {
       return NextResponse.json(
         {
+          error: "Cannot delete a CV with associated analyses.",
           code: CV_DELETE_CONFLICT_CODE,
-          analyses: result.analyses,
+          details: { analyses: result.analyses },
         } satisfies CVDocumentDeleteConflictResponse,
         { status: 409 }
       );

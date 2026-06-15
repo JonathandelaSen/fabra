@@ -1,5 +1,6 @@
 import { badRequest } from "@/modules/shared";
 import type { CVScoringAIResult } from "../../domain/repositories/cv-scoring-ai.service";
+import { ErrorCode } from "@/shared/error-codes";
 
 export const CV_SCORE_COPY_PASTE_WORKFLOW_ID = "cv_analysis.score" as const;
 export const CV_SCORE_COPY_PASTE_SCHEMA_VERSION = "1" as const;
@@ -11,7 +12,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function readStringArray(value: unknown, field: string): string[] {
   if (!Array.isArray(value) || !value.every((item) => typeof item === "string")) {
-    throw badRequest(`${field} must be an array of strings.`);
+    throw badRequest(`${field} must be an array of strings.`, ErrorCode.COPY_PASTE_INVALID_RESULT);
   }
   return value;
 }
@@ -20,13 +21,13 @@ export function validateCVScoreCopyPasteResult(
   input: unknown,
 ): CVScoringAIResult {
   if (!isRecord(input)) {
-    throw badRequest("The analysis result must be a JSON object.");
+    throw badRequest("The analysis result must be a JSON object.", ErrorCode.COPY_PASTE_INVALID_RESULT);
   }
   if (typeof input.score !== "number" || input.score < 0 || input.score > 100) {
-    throw badRequest("score must be a number from 0 to 100.");
+    throw badRequest("score must be a number from 0 to 100.", ErrorCode.COPY_PASTE_INVALID_RESULT);
   }
   if (typeof input.feedback !== "string" || !input.feedback.trim()) {
-    throw badRequest("feedback is required.");
+    throw badRequest("feedback is required.", ErrorCode.COPY_PASTE_INVALID_RESULT);
   }
 
   return {

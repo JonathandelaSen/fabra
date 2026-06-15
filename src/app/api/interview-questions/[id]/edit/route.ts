@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { getBestCVText } from "@/lib/cv-profile";
 import {
@@ -33,7 +34,7 @@ export async function POST(
       ? presentProcessQuestion(existingReadModel)
       : null;
     if (!existing) {
-      throw notFound("Question not found");
+      throw notFound("Question not found", ErrorCode.QUESTION_NOT_FOUND);
     }
 
     const body = await req.json();
@@ -43,7 +44,7 @@ export async function POST(
     }
     const { provider, apiKey, baseUrl, model, context, instruction } = parsed.value;
     if (!existing.answer?.trim()) {
-      throw badRequest("There is no answer to edit");
+      throw badRequest("There is no answer to edit", ErrorCode.NO_ANSWER_TO_EDIT);
     }
 
     const links = await validateQuestionLinks(supabase, user.id, {
@@ -54,7 +55,7 @@ export async function POST(
       return links.response;
     }
     if (links.analysis && links.analysis.analysis_mode !== "job_match") {
-      throw badRequest("Only job match analyses can be linked as offers");
+      throw badRequest("Only job match analyses can be linked as offers", ErrorCode.ONLY_JOB_MATCH_LINKABLE_AS_OFFER);
     }
 
     const cvText = links.cv ? getBestCVText(links.cv) : null;

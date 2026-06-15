@@ -1,4 +1,5 @@
 import type { OllamaJobMatchScoringAIServiceFactory } from "./ollama-job-match-scoring-ai.service";
+import { ErrorCode } from "@/shared/error-codes";
 import {
   AI_PROVIDER,
   assertAIProviderAllowedForRuntime,
@@ -35,7 +36,7 @@ export class ProviderJobMatchScoringAIServiceFactory
       [AI_PROVIDER.MOCK]: () => this.deps.mockFactory.create(),
     };
     const createService = factories[config.provider];
-    if (!createService) throw badRequest("Unsupported AI provider for job match analysis.");
+    if (!createService) throw badRequest("Unsupported AI provider for job match analysis.", ErrorCode.AI_PROVIDER_UNSUPPORTED);
     return createService();
   }
 }

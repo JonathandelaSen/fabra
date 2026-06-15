@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest, NextResponse } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvLibraryModule } from "@/lib/container";
 import { CV_PDFS_BUCKET, presentCVDocument } from "@/modules/cv-library";
@@ -31,7 +32,7 @@ export async function GET(
     }
 
     if (!cv?.pdf_storage_path) {
-      throw notFound("PDF no encontrado");
+      throw notFound("PDF not found", ErrorCode.PDF_NOT_FOUND);
     }
 
     const { data, error } = await supabase.storage
@@ -39,7 +40,7 @@ export async function GET(
       .download(cv.pdf_storage_path);
 
     if (error || !data) {
-      throw notFound("PDF no encontrado");
+      throw notFound("PDF not found", ErrorCode.PDF_NOT_FOUND);
     }
 
     const parsedPdfRequest = parseTemplatePdfRequest(req.nextUrl.searchParams);

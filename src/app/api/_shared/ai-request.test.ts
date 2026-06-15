@@ -10,7 +10,7 @@ describe("parseAIRequestConfig", () => {
 
     expect(parsed).toEqual({
       ok: false,
-      message: "Configura la URL local de Ollama antes de realizar esta acción.",
+      message: "Configure the local Ollama URL before this action.",
     });
   });
 
@@ -22,7 +22,7 @@ describe("parseAIRequestConfig", () => {
 
     expect(parsed).toEqual({
       ok: false,
-      message: "Configura el modelo local de Ollama antes de realizar esta acción.",
+      message: "Configure the local Ollama model before this action.",
     });
   });
 });

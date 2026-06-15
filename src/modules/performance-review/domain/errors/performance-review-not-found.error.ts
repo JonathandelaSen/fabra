@@ -1,8 +1,9 @@
 import { DomainError } from "@/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 
 export class PerformanceReviewNotFoundError extends DomainError {
   constructor() {
-    super("Performance review not found.");
+    super(ErrorCode.PERFORMANCE_REVIEW_NOT_FOUND, "Performance review not found.");
     this.name = "PerformanceReviewNotFoundError";
   }
 }

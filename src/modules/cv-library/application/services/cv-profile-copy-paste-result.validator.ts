@@ -1,4 +1,5 @@
 import { badRequest } from "@/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 import {
   CV_PROFILE_SCHEMA_VERSION,
   normalizeStandardCVProfile,
@@ -35,7 +36,7 @@ export function validateCVProfileCopyPasteResult(
 } {
   const profile = normalizeStandardCVProfile(result);
   if (!hasMeaningfulProfileData(profile)) {
-    throw badRequest("The pasted response does not include a usable CV profile.");
+    throw badRequest("The pasted response does not include a usable CV profile.", ErrorCode.COPY_PASTE_INVALID_RESULT);
   }
 
   return {

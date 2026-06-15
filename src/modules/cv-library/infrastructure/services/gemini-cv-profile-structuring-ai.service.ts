@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { badRequest } from "@/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 import {
   CV_PROFILE_SCHEMA_VERSION,
   normalizeStandardCVProfile,
@@ -41,7 +42,7 @@ export class GeminiCVProfileStructuringAIServiceFactory
   create(
     config: { apiKey?: string; model: string },
   ): CVProfileStructuringAIService {
-    if (!config.apiKey) throw badRequest("API key is required for Gemini.");
+    if (!config.apiKey) throw badRequest("API key is required for Gemini.", ErrorCode.AI_API_KEY_REQUIRED);
     return new GeminiCVProfileStructuringAIService({
       apiKey: config.apiKey,
       model: config.model,

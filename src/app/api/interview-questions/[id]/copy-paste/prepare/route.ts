@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { getBestCVText } from "@/lib/cv-profile";
 import { selectionProcessModule } from "@/lib/container";
@@ -32,7 +33,7 @@ export async function POST(
       userId: user.id,
     });
     const existing = readModel ? presentProcessQuestion(readModel) : null;
-    if (!existing) throw notFound("Question not found");
+    if (!existing) throw notFound("Question not found", ErrorCode.QUESTION_NOT_FOUND);
 
     const links = await validateQuestionLinks(supabase, user.id, {
       cv_id: existing.cv_id,
@@ -54,7 +55,7 @@ export async function POST(
         requestId: createRequestId("interview_question_copy_paste_prepare"),
       });
 
-    if (!result) throw notFound("Question not found");
+    if (!result) throw notFound("Question not found", ErrorCode.QUESTION_NOT_FOUND);
 
     return ok(result satisfies PrepareInterviewQuestionCopyPasteResponse);
   } catch (error: unknown) {

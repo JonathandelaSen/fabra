@@ -1,5 +1,6 @@
 import { createRequestId } from "@/lib/observability";
 import { ASSISTANCE_MODE } from "@/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
+import { ErrorCode } from "@/shared/error-codes";
 import { badRequest, UserId } from "@/modules/shared";
 import {
   getCVSourceTextHash,
@@ -63,7 +64,7 @@ export class ApplyCVProfileStructureCopyPasteUseCase {
     });
     const text = prepared?.analysisText ?? null;
     if (!text) {
-      throw badRequest("No extracted text available for this CV");
+      throw badRequest("No extracted text available for this CV", ErrorCode.CV_NO_EXTRACTED_TEXT);
     }
 
     const structured = validateCVProfileCopyPasteResult(input.parsedResult);
@@ -101,7 +102,7 @@ export class ApplyCVProfileStructureCopyPasteUseCase {
       ? getCVTemplate(input.input.templateId)
       : null;
     if (!template) {
-      throw badRequest("Template not found");
+      throw badRequest("Template not found", ErrorCode.TEMPLATE_NOT_FOUND);
     }
 
     const requestedLocale = (input.input.locale ?? "es") as CVTemplateLocale;

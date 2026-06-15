@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import type { CVRecord } from "@/lib/analysis-types";
+import { ErrorCode } from "@/shared/error-codes";
 import { badRequest } from "@/modules/shared";
 import { CV_CHAT_SYSTEM_PROMPT, buildCVChatPrompt, type CVChatHistoryMessage } from "./cv-chat-prompts";
 import type {
@@ -54,7 +55,7 @@ export class GeminiCVChatAIService implements CVChatAIService {
 
 export class GeminiCVChatAIServiceFactory {
   create(config: { apiKey?: string; model: string }): CVChatAIService {
-    if (!config.apiKey) throw badRequest("API key is required for Gemini.");
+    if (!config.apiKey) throw badRequest("API key is required for Gemini.", ErrorCode.AI_API_KEY_REQUIRED);
     return new GeminiCVChatAIService({
       apiKey: config.apiKey,
       model: config.model,

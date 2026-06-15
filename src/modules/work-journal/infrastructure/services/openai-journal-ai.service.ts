@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { badRequest } from "@/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 import type {
   DraftEntryInput,
   JournalAIService,
@@ -41,7 +42,7 @@ export class OpenAIJournalAIService implements JournalAIService {
 
 export class OpenAIJournalAIServiceFactory {
   create(config: { apiKey?: string; model: string }): JournalAIService {
-    if (!config.apiKey) throw badRequest("API key is required for OpenAI.");
+    if (!config.apiKey) throw badRequest("API key is required for OpenAI.", ErrorCode.AI_API_KEY_REQUIRED);
     return new OpenAIJournalAIService({
       apiKey: config.apiKey,
       model: config.model,

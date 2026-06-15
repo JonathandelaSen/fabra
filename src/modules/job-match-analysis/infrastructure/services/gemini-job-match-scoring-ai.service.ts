@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { badRequest } from "@/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 import type {
   JobMatchScoringAIInput,
   JobMatchScoringAIResult,
@@ -80,7 +81,7 @@ export class GeminiJobMatchScoringAIServiceFactory
     apiKey?: string;
     model: string;
   }): JobMatchScoringAIService {
-    if (!config.apiKey) throw badRequest("API key is required for Gemini.");
+    if (!config.apiKey) throw badRequest("API key is required for Gemini.", ErrorCode.AI_API_KEY_REQUIRED);
     return new GeminiJobMatchScoringAIService({
       apiKey: config.apiKey,
       model: config.model,

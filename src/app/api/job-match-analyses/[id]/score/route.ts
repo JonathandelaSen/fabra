@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { jobMatchAnalysisModule } from "@/lib/container";
 import { presentJobMatchAnalysis } from "@/modules/job-match-analysis";
@@ -41,7 +42,7 @@ export async function POST(
       });
 
     if (!updated) {
-      throw notFound("Analysis not found");
+      throw notFound("Analysis not found", ErrorCode.ANALYSIS_NOT_FOUND);
     }
 
     return ok(toJobMatchAnalysisDetailResponse(presentJobMatchAnalysis(updated)));

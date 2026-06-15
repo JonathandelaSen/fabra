@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { jobMatchAnalysisModule } from "@/lib/container";
 import { errorResponse, notFound, ok } from "@/modules/shared";
@@ -27,7 +28,7 @@ export async function POST(
         userId: user.id,
         rawResponse: parsed.value.rawResponse,
       });
-    if (!result) throw notFound("Analysis not found");
+    if (!result) throw notFound("Analysis not found", ErrorCode.ANALYSIS_NOT_FOUND);
 
     return ok(result satisfies PreviewJobMatchAnalysisCopyPasteResponse);
   } catch (error: unknown) {

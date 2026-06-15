@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvLibraryModule } from "@/lib/container";
 import { presentCVDocument } from "@/modules/cv-library";
@@ -27,7 +28,7 @@ export async function POST(
       .getCVDocument.execute({ id, userId: user.id });
     const templateCV = templateDocument ? presentCVDocument(templateDocument) : null;
     if (!templateCV || templateCV.type !== "template" || !templateCV.profile) {
-      throw notFound("Template CV not found");
+      throw notFound("Template CV not found", ErrorCode.TEMPLATE_CV_NOT_FOUND);
     }
 
     const summaryText = templateCV.profile.summary || "";

@@ -1,3 +1,4 @@
+import { ErrorCode } from "@/shared/error-codes";
 import { DomainError, ValueObject } from "@/modules/shared";
 
 export const REVIEW_TYPE = {
@@ -19,7 +20,7 @@ export class ReviewType extends ValueObject<ReviewTypeValue> {
 
   static fromPrimitives(value: string): ReviewType {
     if (!REVIEW_TYPES.includes(value as ReviewTypeValue)) {
-      throw new DomainError(`Invalid review type: ${value}`);
+      throw new DomainError(ErrorCode.VALIDATION_FAILED, `Invalid review type: ${value}`);
     }
     return new ReviewType(value as ReviewTypeValue);
   }

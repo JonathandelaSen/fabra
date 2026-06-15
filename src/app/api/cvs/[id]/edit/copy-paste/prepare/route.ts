@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { getLatestRecommendationAnalysisForCV } from "@/lib/analysis-queries";
 import { cvLibraryModule } from "@/lib/container";
@@ -38,7 +39,7 @@ export async function POST(
       id,
       userId: user.id,
     });
-    if (!document) throw notFound("Template CV not found");
+    if (!document) throw notFound("Template CV not found", ErrorCode.TEMPLATE_CV_NOT_FOUND);
 
     const primitives = document.toPrimitives();
     const sourceCvId = primitives.sourceCvId;
@@ -63,7 +64,7 @@ export async function POST(
       locale: parsed.value.locale,
       recommendations,
     });
-    if (!result) throw notFound("Template CV not found");
+    if (!result) throw notFound("Template CV not found", ErrorCode.TEMPLATE_CV_NOT_FOUND);
 
     return ok(result satisfies PrepareCVEditorCopyPasteResponse);
   } catch (error: unknown) {

@@ -1,0 +1,128 @@
+/**
+ * Framework-neutral error code registry shared by backend and frontend.
+ *
+ * This module must stay a dependency-free leaf: no `server-only`, Supabase,
+ * Next.js, React, or `@/modules` imports. Both domain errors (backend) and the
+ * i18n / error-resolution helpers (frontend) import from here, so it is the
+ * single source of truth that lets TypeScript guarantee every emitted code has
+ * a matching translation.
+ */
+
+export const ErrorCode = {
+  // Generic, derived from HTTP status when no semantic code is provided.
+  BAD_REQUEST: "BAD_REQUEST",
+  UNAUTHORIZED: "UNAUTHORIZED",
+  FORBIDDEN: "FORBIDDEN",
+  NOT_FOUND: "NOT_FOUND",
+  CONFLICT: "CONFLICT",
+  VALIDATION_FAILED: "VALIDATION_FAILED",
+  INTERNAL: "INTERNAL",
+
+  // CV library
+  CV_NOT_FOUND: "CV_NOT_FOUND",
+  CV_NAME_REQUIRED: "CV_NAME_REQUIRED",
+  CV_HAS_ASSOCIATED_ANALYSES: "CV_HAS_ASSOCIATED_ANALYSES",
+  CV_NO_EXTRACTED_TEXT: "CV_NO_EXTRACTED_TEXT",
+  CV_NO_PROFILE: "CV_NO_PROFILE",
+  CV_PUBLIC_CONFIRMATION_REQUIRED: "CV_PUBLIC_CONFIRMATION_REQUIRED",
+  CV_PUBLIC_INVALID_SLUG: "CV_PUBLIC_INVALID_SLUG",
+  CV_TEMPLATE_REQUIRED: "CV_TEMPLATE_REQUIRED",
+  ONLY_TEMPLATE_CVS_EDITABLE: "ONLY_TEMPLATE_CVS_EDITABLE",
+  JSON_RESUME_VALIDATION_FAILED: "JSON_RESUME_VALIDATION_FAILED",
+  TEMPLATE_NOT_FOUND: "TEMPLATE_NOT_FOUND",
+  TEMPLATE_CV_NOT_FOUND: "TEMPLATE_CV_NOT_FOUND",
+  STRUCTURED_PROFILE_NOT_FOUND: "STRUCTURED_PROFILE_NOT_FOUND",
+  PDF_NOT_FOUND: "PDF_NOT_FOUND",
+
+  // Analyses
+  CV_ANALYSIS_NOT_FOUND: "CV_ANALYSIS_NOT_FOUND",
+  JOB_MATCH_ANALYSIS_NOT_FOUND: "JOB_MATCH_ANALYSIS_NOT_FOUND",
+  ANALYSIS_NOT_FOUND: "ANALYSIS_NOT_FOUND",
+
+  // Chat (cv-chat + job-analysis-chat)
+  CONVERSATION_NOT_FOUND: "CONVERSATION_NOT_FOUND",
+
+  // Interview questions
+  QUESTION_NOT_FOUND: "QUESTION_NOT_FOUND",
+  NO_ANSWER_TO_EDIT: "NO_ANSWER_TO_EDIT",
+  ONLY_JOB_MATCH_LINKABLE_AS_OFFER: "ONLY_JOB_MATCH_LINKABLE_AS_OFFER",
+
+  // Feedback notes
+  FEEDBACK_NOT_FOUND: "FEEDBACK_NOT_FOUND",
+  FEEDBACK_CLOSED: "FEEDBACK_CLOSED",
+  FEEDBACK_ENTRIES_REQUIRED: "FEEDBACK_ENTRIES_REQUIRED",
+  FEEDBACK_ENTRY_NOT_FOUND: "FEEDBACK_ENTRY_NOT_FOUND",
+
+  // Received feedback
+  RECEIVED_FEEDBACK_NOT_FOUND: "RECEIVED_FEEDBACK_NOT_FOUND",
+
+  // Activity context
+  ACTIVITY_CONTEXT_NOT_FOUND: "ACTIVITY_CONTEXT_NOT_FOUND",
+  DEFAULT_ACTIVITY_CONTEXT_MISSING: "DEFAULT_ACTIVITY_CONTEXT_MISSING",
+  DEFAULT_ACTIVITY_CONTEXT_DELETE: "DEFAULT_ACTIVITY_CONTEXT_DELETE",
+
+  // Work journal
+  WORK_JOURNAL_CONTEXT_NOT_FOUND: "WORK_JOURNAL_CONTEXT_NOT_FOUND",
+  WORK_JOURNAL_ENTRY_NOT_FOUND: "WORK_JOURNAL_ENTRY_NOT_FOUND",
+  WORK_JOURNAL_CONTEXT_ARCHIVED: "WORK_JOURNAL_CONTEXT_ARCHIVED",
+
+  // Commitments / objectives
+  COMMITMENT_NOT_FOUND: "COMMITMENT_NOT_FOUND",
+  COMMITMENT_ITEM_NOT_FOUND: "COMMITMENT_ITEM_NOT_FOUND",
+  COMMITMENT_OUTCOME_NOT_FOUND: "COMMITMENT_OUTCOME_NOT_FOUND",
+
+  // Performance review
+  PERFORMANCE_REVIEW_NOT_FOUND: "PERFORMANCE_REVIEW_NOT_FOUND",
+  REVIEW_EVIDENCE_ITEM_NOT_FOUND: "REVIEW_EVIDENCE_ITEM_NOT_FOUND",
+
+  // Admin / impersonation
+  SELF_IMPERSONATION: "SELF_IMPERSONATION",
+  IMPERSONATION_TARGET_NOT_FOUND: "IMPERSONATION_TARGET_NOT_FOUND",
+
+  // AI providers / configuration
+  AI_PROVIDER_NOT_ALLOWED: "AI_PROVIDER_NOT_ALLOWED",
+  AI_PROVIDER_UNSUPPORTED: "AI_PROVIDER_UNSUPPORTED",
+  AI_PROVIDER_REQUIRED: "AI_PROVIDER_REQUIRED",
+  AI_API_KEY_REQUIRED: "AI_API_KEY_REQUIRED",
+
+  // Copy-paste assisted workflows
+  COPY_PASTE_INVALID_JSON: "COPY_PASTE_INVALID_JSON",
+  COPY_PASTE_INVALID_RESULT: "COPY_PASTE_INVALID_RESULT",
+} as const;
+
+export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode];
+
+/**
+ * Additive error envelope. `error` stays a developer-facing English string for
+ * logs/Sentry and backward compatibility; `code` is the machine-readable
+ * identifier the frontend maps to localized copy; `details` carries optional
+ * structured data for interpolation or UI (e.g. blocking analyses, counts).
+ */
+export interface ErrorResponseBody {
+  error: string;
+  code: ErrorCode;
+  details?: Record<string, unknown>;
+}
+
+const ERROR_CODE_VALUES = new Set<string>(Object.values(ErrorCode));
+
+export function isErrorCode(value: unknown): value is ErrorCode {
+  return typeof value === "string" && ERROR_CODE_VALUES.has(value);
+}
+
+export function defaultErrorCodeForStatus(status: number): ErrorCode {
+  switch (status) {
+    case 400:
+      return ErrorCode.BAD_REQUEST;
+    case 401:
+      return ErrorCode.UNAUTHORIZED;
+    case 403:
+      return ErrorCode.FORBIDDEN;
+    case 404:
+      return ErrorCode.NOT_FOUND;
+    case 409:
+      return ErrorCode.CONFLICT;
+    default:
+      return ErrorCode.INTERNAL;
+  }
+}

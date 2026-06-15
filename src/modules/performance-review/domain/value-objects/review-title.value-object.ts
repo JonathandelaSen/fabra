@@ -1,3 +1,4 @@
+import { ErrorCode } from "@/shared/error-codes";
 import { DomainError, ValueObject } from "@/modules/shared";
 
 export class ReviewTitle extends ValueObject<string> {
@@ -7,7 +8,7 @@ export class ReviewTitle extends ValueObject<string> {
 
   static fromPrimitives(value: string): ReviewTitle {
     const trimmed = value.trim();
-    if (!trimmed) throw new DomainError("Review title cannot be empty.");
+    if (!trimmed) throw new DomainError(ErrorCode.VALIDATION_FAILED, "Review title cannot be empty.");
     return new ReviewTitle(trimmed);
   }
 

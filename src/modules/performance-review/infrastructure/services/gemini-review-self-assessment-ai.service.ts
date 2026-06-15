@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { badRequest } from "@/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 import type {
   ReviewSelfAssessmentAIInput,
   ReviewSelfAssessmentAIService,
@@ -42,7 +43,7 @@ export class GeminiReviewSelfAssessmentAIServiceFactory {
     apiKey?: string;
     model: string;
   }): ReviewSelfAssessmentAIService {
-    if (!config.apiKey) throw badRequest("API key is required for Gemini.");
+    if (!config.apiKey) throw badRequest("API key is required for Gemini.", ErrorCode.AI_API_KEY_REQUIRED);
     return new GeminiReviewSelfAssessmentAIService({
       apiKey: config.apiKey,
       model: config.model,

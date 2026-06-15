@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { badRequest } from "@/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 import type {
   DraftEntryInput,
   JournalAIService,
@@ -46,7 +47,7 @@ export class GeminiJournalAIService implements JournalAIService {
 
 export class GeminiJournalAIServiceFactory {
   create(config: { apiKey?: string; model: string }): JournalAIService {
-    if (!config.apiKey) throw badRequest("API key is required for Gemini.");
+    if (!config.apiKey) throw badRequest("API key is required for Gemini.", ErrorCode.AI_API_KEY_REQUIRED);
     return new GeminiJournalAIService({
       apiKey: config.apiKey,
       model: config.model,

@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import type { Analysis, CVRecord } from "@/lib/analysis-types";
+import { ErrorCode } from "@/shared/error-codes";
 import { badRequest } from "@/modules/shared";
 import {
   OFFER_CHAT_SYSTEM_PROMPT,
@@ -59,7 +60,7 @@ export class GeminiJobAnalysisChatAIService implements JobAnalysisChatAIService 
 
 export class GeminiJobAnalysisChatAIServiceFactory {
   create(config: { apiKey?: string; model: string }): JobAnalysisChatAIService {
-    if (!config.apiKey) throw badRequest("API key is required for Gemini.");
+    if (!config.apiKey) throw badRequest("API key is required for Gemini.", ErrorCode.AI_API_KEY_REQUIRED);
     return new GeminiJobAnalysisChatAIService({
       apiKey: config.apiKey,
       model: config.model,

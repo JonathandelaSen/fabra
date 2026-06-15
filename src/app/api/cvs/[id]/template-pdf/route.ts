@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest, NextResponse } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { getCVTemplate, type CVTemplateId, type CVTemplateLocale } from "@/lib/cv-templates";
 import { renderTemplatePDF } from "@/lib/cv-template-pdf";
@@ -23,15 +24,15 @@ export async function GET(
       .getCVDocument.execute({ id, userId: user.id });
     const cv = document ? presentCVDocument(document) : null;
     if (!cv || cv.type !== "template") {
-      throw notFound("Template CV not found");
+      throw notFound("Template CV not found", ErrorCode.TEMPLATE_CV_NOT_FOUND);
     }
     if (!cv.profile || !cv.template_id) {
-      throw badRequest("CV has no profile or template");
+      throw badRequest("CV has no profile or template", ErrorCode.CV_NO_PROFILE);
     }
 
     const template = getCVTemplate(cv.template_id);
     if (!template) {
-      throw notFound("Template not found");
+      throw notFound("Template not found", ErrorCode.TEMPLATE_NOT_FOUND);
     }
 
     const pdf = await renderTemplatePDF({

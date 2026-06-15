@@ -77,7 +77,7 @@ describe("provider-aware AI service factories", () => {
     const factory = new Factory(createDeps() as never);
 
     expect(() => factory.create({ provider: "mock", model: "mock-model" })).toThrow(
-      "El proveedor mock de IA no está permitido en producción.",
+      "Mock AI provider is not allowed in production.",
     );
   });
 });

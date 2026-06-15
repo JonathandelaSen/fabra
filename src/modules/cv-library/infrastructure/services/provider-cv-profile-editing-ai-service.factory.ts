@@ -1,4 +1,5 @@
 import type { OllamaCVProfileEditingAIServiceFactory } from "./ollama-cv-profile-editing-ai.service";
+import { ErrorCode } from "@/shared/error-codes";
 import {
   AI_PROVIDER,
   assertAIProviderAllowedForRuntime,
@@ -35,7 +36,7 @@ export class ProviderCVProfileEditingAIServiceFactory
       [AI_PROVIDER.MOCK]: () => this.deps.mockFactory.create(),
     };
     const createService = factories[config.provider];
-    if (!createService) throw badRequest("Unsupported AI provider for editing CVs.");
+    if (!createService) throw badRequest("Unsupported AI provider for editing CVs.", ErrorCode.AI_PROVIDER_UNSUPPORTED);
     return createService();
   }
 }

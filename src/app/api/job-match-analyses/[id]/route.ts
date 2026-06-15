@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import {
   jobMatchAnalysisModule,
@@ -34,7 +35,7 @@ export async function GET(
       .bindRequest(supabase)
       .getJobMatchAnalysisById.execute({ id, userId: user.id });
     if (!analysis) {
-      throw notFound("Job match analysis not found");
+      throw notFound("Job match analysis not found", ErrorCode.JOB_MATCH_ANALYSIS_NOT_FOUND);
     }
 
     const response = toJobMatchAnalysisDetailResponse(
@@ -80,7 +81,7 @@ export async function DELETE(
       .bindRequest(supabase)
       .deleteJobMatchAnalysis.execute({ id, userId: user.id });
     if (!deleted) {
-      throw notFound("Job match analysis not found");
+      throw notFound("Job match analysis not found", ErrorCode.JOB_MATCH_ANALYSIS_NOT_FOUND);
     }
     return ok({ success: true });
   } catch (error: unknown) {
@@ -114,7 +115,7 @@ export async function PATCH(
           ...followUpUpdates,
         });
       if (!followUp) {
-        throw notFound("Analysis not found or update failed");
+        throw notFound("Analysis not found or update failed", ErrorCode.ANALYSIS_NOT_FOUND);
       }
     }
 
@@ -132,7 +133,7 @@ export async function PATCH(
             .getJobMatchAnalysisById.execute({ id, userId: user.id });
 
     if (!entity) {
-      throw notFound("Analysis not found or update failed");
+      throw notFound("Analysis not found or update failed", ErrorCode.ANALYSIS_NOT_FOUND);
     }
 
     const response = toJobMatchAnalysisDetailResponse(presentJobMatchAnalysis(entity));

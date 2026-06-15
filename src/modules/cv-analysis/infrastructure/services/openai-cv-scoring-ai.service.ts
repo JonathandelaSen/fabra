@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { badRequest } from "@/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 import type {
   CVScoringAIInput,
   CVScoringAIResult,
@@ -54,7 +55,7 @@ class OpenAICVScoringAIService implements CVScoringAIService {
 
 export class OpenAICVScoringAIServiceFactory {
   create(config: { apiKey?: string; model: string }): CVScoringAIService {
-    if (!config.apiKey) throw badRequest("API key is required for OpenAI.");
+    if (!config.apiKey) throw badRequest("API key is required for OpenAI.", ErrorCode.AI_API_KEY_REQUIRED);
     return new OpenAICVScoringAIService({
       apiKey: config.apiKey,
       model: config.model,

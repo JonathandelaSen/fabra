@@ -1,4 +1,5 @@
 import type { OllamaCVChatAIServiceFactory } from "./ollama-cv-chat-ai.service";
+import { ErrorCode } from "@/shared/error-codes";
 import {
   AI_PROVIDER,
   assertAIProviderAllowedForRuntime,
@@ -35,7 +36,7 @@ export class ProviderCVChatAIServiceFactory
       [AI_PROVIDER.MOCK]: () => this.deps.mockFactory.create(),
     };
     const createService = factories[config.provider];
-    if (!createService) throw badRequest("Unsupported AI provider for chat.");
+    if (!createService) throw badRequest("Unsupported AI provider for chat.", ErrorCode.AI_PROVIDER_UNSUPPORTED);
     return createService();
   }
 }

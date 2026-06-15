@@ -34,7 +34,7 @@ describe("assertAIProviderAllowedForRuntime", () => {
     vi.stubEnv("NODE_ENV", "production");
 
     expect(() => assertAIProviderAllowedForRuntime("mock")).toThrow(
-      "El proveedor mock de IA no está permitido en producción.",
+      "Mock AI provider is not allowed in production.",
     );
     expect(() => assertAIProviderAllowedForRuntime("gemini")).not.toThrow();
     expect(() => assertAIProviderAllowedForRuntime("openai")).not.toThrow();

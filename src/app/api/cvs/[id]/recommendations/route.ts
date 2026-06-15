@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { getLatestRecommendationAnalysisForCV } from "@/lib/analysis-queries";
 import { cvLibraryModule } from "@/lib/container";
@@ -19,7 +20,7 @@ export async function GET(
       .bindRequest(supabase)
       .getCVDocument.execute({ id, userId: user.id });
     if (!cv) {
-      throw notFound("CV not found");
+      throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
     }
 
     const analysis = await getLatestRecommendationAnalysisForCV(

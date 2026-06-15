@@ -1,3 +1,4 @@
+import { ErrorCode } from "@/shared/error-codes";
 import {
   AI_PROVIDER,
   type AIProvider,
@@ -12,6 +13,6 @@ export function assertAIProviderAllowedForRuntime(provider: AIProvider): void {
   }
 
   if (runtime === "production" && provider === AI_PROVIDER.MOCK) {
-    throw forbidden("El proveedor mock de IA no está permitido en producción.");
+    throw forbidden("Mock AI provider is not allowed in production.", ErrorCode.AI_PROVIDER_NOT_ALLOWED);
   }
 }

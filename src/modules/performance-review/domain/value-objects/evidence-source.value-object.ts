@@ -1,3 +1,4 @@
+import { ErrorCode } from "@/shared/error-codes";
 import { DomainError, ValueObject } from "@/modules/shared";
 
 export const EVIDENCE_SOURCE = {
@@ -23,7 +24,7 @@ export class EvidenceSource extends ValueObject<EvidenceSourceValue> {
 
   static fromPrimitives(value: string): EvidenceSource {
     if (!EVIDENCE_SOURCES.includes(value as EvidenceSourceValue)) {
-      throw new DomainError(`Invalid evidence source: ${value}`);
+      throw new DomainError(ErrorCode.VALIDATION_FAILED, `Invalid evidence source: ${value}`);
     }
     return new EvidenceSource(value as EvidenceSourceValue);
   }

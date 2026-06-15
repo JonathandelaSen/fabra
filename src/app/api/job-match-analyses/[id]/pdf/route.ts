@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
+import { ErrorCode } from "@/shared/error-codes";
 import { jobMatchAnalysisModule } from "@/lib/container";
 import { downloadAnalysisPdf } from "../../../_services/download-analysis-pdf.service";
 import { notFound } from "@/modules/shared";
@@ -17,7 +18,7 @@ export async function GET(
     .bindRequest(supabase)
     .getJobMatchAnalysisById.execute({ id, userId: user.id });
   if (!analysis) {
-    throw notFound("PDF no encontrado");
+    throw notFound("PDF not found", ErrorCode.PDF_NOT_FOUND);
   }
 
   const primitives = analysis.toPrimitives();

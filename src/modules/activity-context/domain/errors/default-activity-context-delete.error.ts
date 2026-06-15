@@ -1,8 +1,9 @@
 import { DomainError } from "@/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 
 export class DefaultActivityContextDeleteError extends DomainError {
   constructor() {
-    super("The General activity context cannot be deleted.");
+    super(ErrorCode.DEFAULT_ACTIVITY_CONTEXT_DELETE, "The General activity context cannot be deleted.");
     this.name = "DefaultActivityContextDeleteError";
   }
 }

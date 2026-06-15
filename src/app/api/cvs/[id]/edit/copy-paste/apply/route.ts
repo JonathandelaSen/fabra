@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvLibraryModule } from "@/lib/container";
 import { presentCVDocument } from "@/modules/cv-library";
@@ -27,7 +28,7 @@ export async function POST(
       userId: user.id,
       parsedResult: parsed.value.parsedResult,
     });
-    if (!result) throw notFound("CV not found");
+    if (!result) throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
 
     const response = {
       version: presentCVDocument(result),

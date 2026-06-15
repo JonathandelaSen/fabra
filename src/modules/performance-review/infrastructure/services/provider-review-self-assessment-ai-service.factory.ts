@@ -1,3 +1,4 @@
+import { ErrorCode } from "@/shared/error-codes";
 import {
   AI_PROVIDER,
   assertAIProviderAllowedForRuntime,
@@ -36,7 +37,7 @@ export class ProviderReviewSelfAssessmentAIServiceFactory
     };
     const createService = factories[config.provider];
     if (!createService) {
-      throw badRequest("Unsupported AI provider for self-assessment.");
+      throw badRequest("Unsupported AI provider for self-assessment.", ErrorCode.AI_PROVIDER_UNSUPPORTED);
     }
     return createService();
   }

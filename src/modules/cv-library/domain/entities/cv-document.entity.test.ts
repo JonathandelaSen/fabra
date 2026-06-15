@@ -77,6 +77,7 @@ describe("CVDocument", () => {
 
     expect(document.toPrimitives().publicSettings).toEqual({
       enabled: true,
+      feedbackEnabled: false,
       publicId: "pub-1",
       slug: "senior-cv",
       publishedAt: "2026-05-13T12:00:00.000Z",

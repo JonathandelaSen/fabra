@@ -1,4 +1,5 @@
 import type { OllamaCVScoringAIServiceFactory } from "./ollama-cv-scoring-ai.service";
+import { ErrorCode } from "@/shared/error-codes";
 import {
   AI_PROVIDER,
   assertAIProviderAllowedForRuntime,
@@ -35,7 +36,7 @@ export class ProviderCVScoringAIServiceFactory
       [AI_PROVIDER.MOCK]: () => this.deps.mockFactory.create(),
     };
     const createService = factories[config.provider];
-    if (!createService) throw badRequest("Unsupported AI provider for CV analysis.");
+    if (!createService) throw badRequest("Unsupported AI provider for CV analysis.", ErrorCode.AI_PROVIDER_UNSUPPORTED);
     return createService();
   }
 }

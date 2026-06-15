@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { badRequest } from "@/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 import type {
   CVScoringAIInput,
   CVScoringAIResult,
@@ -52,7 +53,7 @@ class GeminiCVScoringAIService implements CVScoringAIService {
 export class GeminiCVScoringAIServiceFactory
 {
   create(config: { apiKey?: string; model: string }): CVScoringAIService {
-    if (!config.apiKey) throw badRequest("API key is required for Gemini.");
+    if (!config.apiKey) throw badRequest("API key is required for Gemini.", ErrorCode.AI_API_KEY_REQUIRED);
     return new GeminiCVScoringAIService({
       apiKey: config.apiKey,
       model: config.model,

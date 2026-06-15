@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { getBestCVText, getCVSourceTextHash } from "@/lib/cv-profile";
 import { cvLibraryModule } from "@/lib/container";
@@ -21,7 +22,7 @@ export async function GET(
       .bindRequest(supabase)
       .getCVDocument.execute({ id, userId: user.id });
     if (!cv) {
-      throw notFound("CV not found");
+      throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
     }
 
     const profile = await cvLibraryModule
@@ -56,12 +57,12 @@ export async function POST(
       .getCVDocument.execute({ id, userId: user.id });
     const cv = cvDocument ? presentCVDocument(cvDocument) : null;
     if (!cv) {
-      throw notFound("CV not found");
+      throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
     }
 
     const text = getBestCVText(cv);
     if (!text) {
-      throw badRequest("No extracted text available for this CV");
+      throw badRequest("No extracted text available for this CV", ErrorCode.CV_NO_EXTRACTED_TEXT);
     }
 
     const sourceTextHash = getCVSourceTextHash(text);

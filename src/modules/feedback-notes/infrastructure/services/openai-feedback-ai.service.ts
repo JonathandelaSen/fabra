@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { badRequest } from "@/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 import type {
   FeedbackAIService,
   GenerateFinalFeedbackInput,
@@ -32,7 +33,7 @@ export class OpenAIFeedbackAIService implements FeedbackAIService {
 
 export class OpenAIFeedbackAIServiceFactory {
   create(config: { apiKey?: string; model: string }): FeedbackAIService {
-    if (!config.apiKey) throw badRequest("API key is required for OpenAI.");
+    if (!config.apiKey) throw badRequest("API key is required for OpenAI.", ErrorCode.AI_API_KEY_REQUIRED);
     return new OpenAIFeedbackAIService({
       apiKey: config.apiKey,
       model: config.model,

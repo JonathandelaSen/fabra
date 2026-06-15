@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { getBestCVText, getCVSourceTextHash } from "@/lib/cv-profile";
 import {
@@ -30,7 +31,7 @@ export async function POST(
 
     const template = templateId ? getCVTemplate(templateId) : null;
     if (!template) {
-      throw notFound("Template not found");
+      throw notFound("Template not found", ErrorCode.TEMPLATE_NOT_FOUND);
     }
 
     const selectedLocale = template.locales.includes(locale as CVTemplateLocale)
@@ -42,7 +43,7 @@ export async function POST(
       .getCVDocument.execute({ id, userId: user.id });
     const cv = document ? presentCVDocument(document) : null;
     if (!cv) {
-      throw notFound("CV not found");
+      throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
     }
 
     let profile = null;
@@ -71,13 +72,14 @@ export async function POST(
     if (!profile) {
       if (!ai) {
         throw badRequest(
-          "Configura tu proveedor de IA antes de preparar este CV para plantillas.",
+          "Configure your AI provider before preparing this CV for templates.",
+          ErrorCode.AI_PROVIDER_REQUIRED,
         );
       }
 
       const text = getBestCVText(cv);
       if (!text) {
-        throw badRequest("No extracted text available for this CV");
+        throw badRequest("No extracted text available for this CV", ErrorCode.CV_NO_EXTRACTED_TEXT);
       }
 
       const structured = await cvLibraryModule

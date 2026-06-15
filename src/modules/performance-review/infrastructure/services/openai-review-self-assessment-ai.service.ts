@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { badRequest } from "@/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 import type {
   ReviewSelfAssessmentAIInput,
   ReviewSelfAssessmentAIService,
@@ -37,7 +38,7 @@ export class OpenAIReviewSelfAssessmentAIServiceFactory {
     apiKey?: string;
     model: string;
   }): ReviewSelfAssessmentAIService {
-    if (!config.apiKey) throw badRequest("API key is required for OpenAI.");
+    if (!config.apiKey) throw badRequest("API key is required for OpenAI.", ErrorCode.AI_API_KEY_REQUIRED);
     return new OpenAIReviewSelfAssessmentAIService({
       apiKey: config.apiKey,
       model: config.model,

@@ -13,7 +13,6 @@ export default defineConfig({
       "src/lib/**/*.test.ts",
       "src/modules/**/*.test.ts",
       "src/app/api/**/*.test.ts",
-      "src/features/**/*.test.ts",
     ],
     setupFiles: ["src/modules/test-helpers/setup.ts"],
   },

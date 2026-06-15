@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvLibraryModule } from "@/lib/container";
 import {
@@ -33,7 +34,7 @@ export async function POST(
       locale: parsed.value.locale,
       createTemplateVersion: parsed.value.createTemplateVersion,
     });
-    if (!result) throw notFound("CV not found");
+    if (!result) throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
 
     const response = {
       profile: presentCVStructuredProfile(result.profile),

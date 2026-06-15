@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import type { CVRecord } from "@/lib/analysis-types";
+import { ErrorCode } from "@/shared/error-codes";
 import { badRequest } from "@/modules/shared";
 import { CV_CHAT_SYSTEM_PROMPT, buildCVChatPrompt, type CVChatHistoryMessage } from "./cv-chat-prompts";
 import type {
@@ -49,7 +50,7 @@ export class OpenAICVChatAIService implements CVChatAIService {
 
 export class OpenAICVChatAIServiceFactory {
   create(config: { apiKey?: string; model: string }): CVChatAIService {
-    if (!config.apiKey) throw badRequest("API key is required for OpenAI.");
+    if (!config.apiKey) throw badRequest("API key is required for OpenAI.", ErrorCode.AI_API_KEY_REQUIRED);
     return new OpenAICVChatAIService({
       apiKey: config.apiKey,
       model: config.model,

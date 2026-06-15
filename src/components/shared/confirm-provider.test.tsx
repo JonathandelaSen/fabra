@@ -1,5 +1,5 @@
-import { screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { renderWithProviders } from "@/frontend/testing/render";
 import { getMessages } from "@/i18n/messages";
 import { ConfirmProvider, useConfirm } from "./confirm-provider";
@@ -29,9 +29,12 @@ describe("ConfirmProvider", () => {
       useConfirm();
       return null;
     }
-    expect(() => renderWithProviders(<Orphan />)).toThrow(
+    // Disable console.error override to avoid test output noise when it throws
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    expect(() => render(<Orphan />)).toThrow(
       /must be used within a ConfirmProvider/,
     );
+    spy.mockRestore();
   });
 
   it("does not render a dialog until confirm is requested", () => {

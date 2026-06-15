@@ -1,5 +1,6 @@
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
+import { ErrorCode } from "@/shared/error-codes";
 import { createRequestId } from "@/lib/observability";
 import { cvChatModule } from "@/lib/container";
 import { presentConversation } from "@/modules/cv-chat";
@@ -17,7 +18,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
     cvChatModule.bindRequest(supabase);
     const context = await cvChatModule.getCVChatContext.execute({ cvId: id, userId: user.id });
-    if (!context) throw notFound("CV not found");
+    if (!context) throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
     const conversation = presentConversation(await cvChatModule.createConversation.execute({
       userId: user.id, cvId: id, title: parsed.value.title, requestId: createRequestId("cv_chat"),
     }));

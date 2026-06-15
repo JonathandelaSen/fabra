@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest, NextResponse } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import {
   getCVTemplate,
@@ -24,7 +25,7 @@ export async function GET(
     const { id, templateId } = await params;
     const template = getCVTemplate(templateId);
     if (!template) {
-      throw notFound("Template not found");
+      throw notFound("Template not found", ErrorCode.TEMPLATE_NOT_FOUND);
     }
 
     const document = await cvLibraryModule
@@ -32,7 +33,7 @@ export async function GET(
       .getCVDocument.execute({ id, userId: user.id });
     const cv = document ? presentCVDocument(document) : null;
     if (!cv) {
-      throw notFound("CV not found");
+      throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
     }
 
     const structuredDocument = await cvLibraryModule
@@ -42,7 +43,7 @@ export async function GET(
       ? presentCVStructuredProfile(structuredDocument)
       : null;
     if (!structured) {
-      throw notFound("Structured profile not found");
+      throw notFound("Structured profile not found", ErrorCode.STRUCTURED_PROFILE_NOT_FOUND);
     }
 
     const parsed = parseTemplatePdfRequest(req.nextUrl.searchParams);

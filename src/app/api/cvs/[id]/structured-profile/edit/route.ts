@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { getLatestRecommendationAnalysisForCV } from "@/lib/analysis-queries";
 import {
@@ -49,7 +50,7 @@ export async function POST(
       .getCVDocument.execute({ id, userId: user.id });
     const cv = cvDocument ? presentCVDocument(cvDocument) : null;
     if (!cv) {
-      throw notFound("CV not found");
+      throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
     }
 
     const structuredDocument = await cvLibraryModule
@@ -59,12 +60,12 @@ export async function POST(
       ? presentCVStructuredProfile(structuredDocument)
       : null;
     if (!structured) {
-      throw notFound("Structured profile not found");
+      throw notFound("Structured profile not found", ErrorCode.STRUCTURED_PROFILE_NOT_FOUND);
     }
 
     const template = getCVTemplate(parsed.value.templateId ?? cv.template_id ?? "");
     if (!template) {
-      throw badRequest("Selecciona una plantilla antes de editar el CV.");
+      throw badRequest("Select a template before editing the CV.", ErrorCode.CV_TEMPLATE_REQUIRED);
     }
     const requestedLocale = parsed.value.locale ?? cv.template_locale ?? "es";
     const selectedTemplateId = template.templateId satisfies CVTemplateId;

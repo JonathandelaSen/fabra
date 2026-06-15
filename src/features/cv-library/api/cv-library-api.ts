@@ -12,7 +12,7 @@ import type {
 import { CV_DELETE_CONFLICT_CODE } from "@/app/api/cvs/responses";
 
 export type CVDeleteConflictAnalysis =
-  CVDocumentDeleteConflictResponse["analyses"][number];
+  CVDocumentDeleteConflictResponse["details"]["analyses"][number];
 
 export class CVDeleteConflictError extends Error {
   readonly code = CV_DELETE_CONFLICT_CODE;
@@ -90,7 +90,7 @@ export async function deleteCVDocument(id: string) {
       .json()
       .catch(() => ({}))) as Partial<CVDocumentDeleteConflictResponse>;
     if (data.code === CV_DELETE_CONFLICT_CODE) {
-      throw new CVDeleteConflictError(data.analyses ?? []);
+      throw new CVDeleteConflictError(data.details?.analyses ?? []);
     }
   }
   return readJsonResponse<DeleteCVDocumentResponse>(

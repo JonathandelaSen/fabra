@@ -1,4 +1,5 @@
 import type { OllamaInterviewQuestionAIServiceFactory } from "./ollama-interview-question-ai.service";
+import { ErrorCode } from "@/shared/error-codes";
 import {
   AI_PROVIDER,
   assertAIProviderAllowedForRuntime,
@@ -35,7 +36,7 @@ export class ProviderInterviewQuestionAIServiceFactory
       [AI_PROVIDER.MOCK]: () => this.deps.mockFactory.create(),
     };
     const createService = factories[config.provider];
-    if (!createService) throw badRequest("Unsupported AI provider for interview questions.");
+    if (!createService) throw badRequest("Unsupported AI provider for interview questions.", ErrorCode.AI_PROVIDER_UNSUPPORTED);
     return createService();
   }
 }

@@ -1,3 +1,4 @@
+import { ErrorCode } from "@/shared/error-codes";
 import { DomainError, ValueObject } from "@/modules/shared";
 
 export class EvidenceContent extends ValueObject<string> {
@@ -7,7 +8,7 @@ export class EvidenceContent extends ValueObject<string> {
 
   static fromPrimitives(value: string): EvidenceContent {
     const trimmed = value.trim();
-    if (!trimmed) throw new DomainError("Evidence content cannot be empty.");
+    if (!trimmed) throw new DomainError(ErrorCode.VALIDATION_FAILED, "Evidence content cannot be empty.");
     return new EvidenceContent(trimmed);
   }
 

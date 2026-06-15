@@ -1,5 +1,6 @@
 import { createRequestId } from "@/lib/observability";
 import { badRequest } from "@/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import {
   CV_PROFILE_COPY_PASTE_SCHEMA_VERSION,
@@ -49,7 +50,7 @@ export class PrepareCVProfileStructureCopyPasteUseCase {
 
     const text = prepared.analysisText;
     if (!text) {
-      throw badRequest("No extracted text available for this CV");
+      throw badRequest("No extracted text available for this CV", ErrorCode.CV_NO_EXTRACTED_TEXT);
     }
 
     const prompt = this.deps.buildPrompt({

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Analysis } from "@/lib/analysis-types";
 import { parseAIRequestConfig, type AIRequestConfig } from "@/app/api/_shared/ai-request";
@@ -219,7 +220,10 @@ export async function validateQuestionLinks(
     if (!cv) {
       return {
         ok: false,
-        response: NextResponse.json({ error: "CV not found" }, { status: 404 }),
+        response: NextResponse.json(
+          { error: "CV not found", code: ErrorCode.CV_NOT_FOUND },
+          { status: 404 }
+        ),
       };
     }
   }
@@ -230,7 +234,7 @@ export async function validateQuestionLinks(
       return {
         ok: false,
         response: NextResponse.json(
-          { error: "Offer not found" },
+          { error: "Offer not found", code: ErrorCode.ANALYSIS_NOT_FOUND },
           { status: 404 }
         ),
       };
@@ -239,7 +243,10 @@ export async function validateQuestionLinks(
       return {
         ok: false,
         response: NextResponse.json(
-          { error: "Only job match analyses can be linked as offers" },
+          {
+            error: "Only job match analyses can be linked as offers",
+            code: ErrorCode.ONLY_JOB_MATCH_LINKABLE_AS_OFFER,
+          },
           { status: 400 }
         ),
       };

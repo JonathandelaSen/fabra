@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { ErrorCode } from "@/shared/error-codes";
 import type {
   Telemetry,
   TelemetryCaptureOptions,
@@ -36,17 +37,17 @@ class InvalidResourceError extends DomainError {
 
 describe("createApiErrorHandler", () => {
   it.each([
-    [new HttpError(409, "Conflict"), 409, "Conflict"],
-    [new ResourceNotFoundError("Missing"), 404, "Missing"],
-    [new InvalidResourceError("Invalid"), 400, "Invalid"],
-    [new Error("Unexpected"), 500, "Internal server error"],
-  ])("captures and maps errors", async (error, status, message) => {
+    [new HttpError(409, "Conflict"), 409, "Conflict", ErrorCode.CONFLICT],
+    [new ResourceNotFoundError(ErrorCode.NOT_FOUND, "Missing"), 404, "Missing", ErrorCode.NOT_FOUND],
+    [new InvalidResourceError(ErrorCode.BAD_REQUEST, "Invalid"), 400, "Invalid", ErrorCode.BAD_REQUEST],
+    [new Error("Unexpected"), 500, "Internal server error", ErrorCode.INTERNAL],
+  ])("captures and maps errors", async (error, status, message, code) => {
     const telemetry = new FakeTelemetry();
 
     const response = createApiErrorHandler(telemetry)(error);
 
     expect(response.status).toBe(status);
-    await expect(response.json()).resolves.toEqual({ error: message });
+    await expect(response.json()).resolves.toEqual({ error: message, code });
     expect(telemetry.captures).toEqual([
       {
         error,
@@ -71,6 +72,6 @@ describe("createApiErrorHandler", () => {
     );
 
     expect(response.status).toBe(403);
-    await expect(response.json()).resolves.toEqual({ error: "Forbidden" });
+    await expect(response.json()).resolves.toEqual({ error: "Forbidden", code: ErrorCode.FORBIDDEN });
   });
 });

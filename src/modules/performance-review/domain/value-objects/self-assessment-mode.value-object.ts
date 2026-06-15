@@ -1,3 +1,4 @@
+import { ErrorCode } from "@/shared/error-codes";
 import { DomainError, ValueObject } from "@/modules/shared";
 import {
   ASSISTANCE_MODE,
@@ -19,7 +20,7 @@ export class SelfAssessmentMode extends ValueObject<SelfAssessmentModeValue> {
 
   static fromPrimitives(value: string): SelfAssessmentMode {
     if (!SELF_ASSESSMENT_MODES.includes(value as SelfAssessmentModeValue)) {
-      throw new DomainError(`Invalid self-assessment mode: ${value}`);
+      throw new DomainError(ErrorCode.VALIDATION_FAILED, `Invalid self-assessment mode: ${value}`);
     }
     return new SelfAssessmentMode(value as SelfAssessmentModeValue);
   }

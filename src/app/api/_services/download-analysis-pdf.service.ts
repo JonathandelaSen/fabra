@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getErrorMessage } from "@/lib/errors";
 import { createClient } from "@/lib/supabase/server";
 import { CV_PDFS_BUCKET } from "@/modules/cv-library";
+import { ErrorCode } from "@/shared/error-codes";
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;
 
@@ -15,7 +16,10 @@ export async function downloadAnalysisPdf(
 ) {
   try {
     if (!input.pdfStoragePath) {
-      return NextResponse.json({ error: "PDF no encontrado" }, { status: 404 });
+      return NextResponse.json(
+        { error: "PDF not found", code: ErrorCode.PDF_NOT_FOUND },
+        { status: 404 },
+      );
     }
 
     const { data, error } = await input.supabase.storage
@@ -23,7 +27,10 @@ export async function downloadAnalysisPdf(
       .download(input.pdfStoragePath);
 
     if (error || !data) {
-      return NextResponse.json({ error: "PDF no encontrado" }, { status: 404 });
+      return NextResponse.json(
+        { error: "PDF not found", code: ErrorCode.PDF_NOT_FOUND },
+        { status: 404 },
+      );
     }
 
     const disposition = req.nextUrl.searchParams.get("download")
@@ -39,7 +46,11 @@ export async function downloadAnalysisPdf(
   } catch (error: unknown) {
     console.error("Download PDF error:", error);
     return NextResponse.json(
-      { error: "Error descargando el PDF", details: getErrorMessage(error) },
+      {
+        error: "Error downloading the PDF",
+        code: ErrorCode.INTERNAL,
+        details: { message: getErrorMessage(error) },
+      },
       { status: 500 },
     );
   }

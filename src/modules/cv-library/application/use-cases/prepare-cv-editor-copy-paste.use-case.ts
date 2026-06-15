@@ -1,5 +1,6 @@
 import { badRequest, UserId } from "@/modules/shared";
 import type { StandardCVProfile } from "../../domain/cv-profile";
+import { ErrorCode } from "@/shared/error-codes";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import {
   CV_EDITOR_COPY_PASTE_SCHEMA_VERSION,
@@ -49,10 +50,10 @@ export class PrepareCVEditorCopyPasteUseCase {
 
     const primitives = document.toPrimitives();
     if (primitives.type !== "template") {
-      throw badRequest("Only template CVs support editing");
+      throw badRequest("Only template CVs support editing", ErrorCode.ONLY_TEMPLATE_CVS_EDITABLE);
     }
     if (!primitives.profile) {
-      throw badRequest("CV has no profile to edit");
+      throw badRequest("CV has no profile to edit", ErrorCode.CV_NO_PROFILE);
     }
 
     const prompt = this.deps.buildPrompt({

@@ -1,5 +1,6 @@
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
+import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import {
   parseUpdateInterviewQuestionRequest,
@@ -29,7 +30,7 @@ export async function GET(
       .bindRequest(supabase)
       .getProcessQuestion.execute({ id, userId: user.id });
     if (!question) {
-      throw notFound("Question not found");
+      throw notFound("Question not found", ErrorCode.QUESTION_NOT_FOUND);
     }
 
     return ok(
@@ -68,7 +69,7 @@ export async function PATCH(
         .getProcessQuestion.execute({ id, userId: user.id });
       const existing = existingReadModel ? presentProcessQuestion(existingReadModel) : null;
       if (!existing) {
-        throw notFound("Question not found");
+        throw notFound("Question not found", ErrorCode.QUESTION_NOT_FOUND);
       }
       const links = await validateQuestionLinks(supabase, user.id, {
         cv_id: updates.legacyCvId === undefined ? existing.cv_id : updates.legacyCvId,
@@ -88,7 +89,7 @@ export async function PATCH(
       ...updates,
     });
     if (!updated) {
-      throw notFound("Question not found");
+      throw notFound("Question not found", ErrorCode.QUESTION_NOT_FOUND);
     }
 
     return ok(
@@ -115,7 +116,7 @@ export async function DELETE(
       .bindRequest(supabase)
       .deleteProcessQuestion.execute({ id, userId: user.id });
     if (!deleted) {
-      throw notFound("Question not found");
+      throw notFound("Question not found", ErrorCode.QUESTION_NOT_FOUND);
     }
 
     return ok({ ok: true } satisfies DeleteInterviewQuestionResponse);
