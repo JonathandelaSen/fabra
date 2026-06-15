@@ -1341,7 +1341,7 @@ export const messages = {
       target: "Target {date}",
       sourceLabel: "Source: {source}",
       filters: { open: "Open", all: "All", closed: "Closed" },
-      actions: { add: "Add", cancel: "Cancel", save: "Save", edit: "Edit", manageContexts: "Manage contexts" },
+      actions: { add: "Add", cancel: "Cancel", save: "Save", edit: "Edit", delete: "Delete", manageContexts: "Manage contexts" },
       sections: {
         narrative: "Narrative & Success Criteria",
         planning: "Planning & Attributes",
@@ -3006,7 +3006,7 @@ export const messages = {
       target: "Objetivo {date}",
       sourceLabel: "Origen: {source}",
       filters: { open: "Abiertos", all: "Todos", closed: "Cerrados" },
-      actions: { add: "Añadir", cancel: "Cancelar", save: "Guardar", edit: "Editar", manageContexts: "Gestionar contextos" },
+      actions: { add: "Añadir", cancel: "Cancelar", save: "Guardar", edit: "Editar", delete: "Eliminar", manageContexts: "Gestionar contextos" },
       sections: {
         narrative: "Narrativa y Criterios de Éxito",
         planning: "Planificación y Atributos",

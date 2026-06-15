@@ -20,6 +20,7 @@ import {
 } from "./received-feedback-loading-state";
 import { ReceivedFeedbackMain } from "./received-feedback-main";
 import { ReceivedFeedbackSidebar } from "./received-feedback-sidebar";
+import { useConfirm } from "@/components/shared/confirm-provider";
 
 function emptyForm(): FormState {
   return {
@@ -45,6 +46,7 @@ export default function ReceivedFeedbackView() {
   } = useReceivedFeedbackRouteState();
   const isOnReceivedFeedbackRoute = pathname.startsWith("/received-feedback");
   const t = useTranslations("receivedFeedback");
+  const confirm = useConfirm();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -209,7 +211,7 @@ export default function ReceivedFeedbackView() {
   };
 
   const deleteFeedback = async (item: ReceivedFeedbackItem) => {
-    if (!window.confirm(t("confirmDelete"))) return;
+    if (!(await confirm({ title: t("confirmDelete") }))) return;
 
     setError(null);
     try {

@@ -18,6 +18,7 @@ import { FeatureHeaderActionButton } from "@/components/shared/feature-header-ac
 import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
 import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import { CVLibraryDetail } from "./detail/cv-library-detail";
+import { useConfirm } from "@/components/shared/confirm-provider";
 import { CVLibraryEmptyState } from "./cv-library-empty-state";
 import {
   shouldAutoSelectCVLibraryItem,
@@ -56,6 +57,7 @@ export default function CVLibraryView({
   onStartAnalysis,
 }: CVLibraryViewProps) {
   const t = useTranslations("analysisFlow.cvLibrary");
+  const confirm = useConfirm();
   const navT = useTranslations("navigation");
   const routeState = useCVLibraryRouteState();
   const [selectedCvId, setSelectedCvId] = useState<string | null>(routeState.cvId);
@@ -140,7 +142,7 @@ export default function CVLibraryView({
   };
 
   const deleteCv = async (id: string) => {
-    if (!window.confirm(t("confirmDelete"))) return;
+    if (!(await confirm({ title: t("confirmDelete") }))) return;
 
     const nextSelection = selectedAfterDelete(cvs, id);
     setLoadingId(id);

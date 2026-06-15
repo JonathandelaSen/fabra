@@ -45,7 +45,7 @@ export default function JobMatchAnalysisView({
 }: JobMatchAnalysisViewProps) {
   const listT = useTranslations("analysisFlow.lists");
   const kanbanT = useTranslations("analysisFlow.kanban");
-  const alertsT = useTranslations("analysisFlow.alerts");
+  const alertsT = useTranslations("analysisDetail.alerts");
   const scoreT = useTranslations("analysisDetail.score");
   const confirm = useConfirm();
   const routeState = useJobMatchAnalysisRouteState();
