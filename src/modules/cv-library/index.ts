@@ -21,6 +21,7 @@ export {
   getCVSourceTextHash,
 } from "./domain/cv-profile";
 export type { CVPublicNotePrimitives, CVPublicNoteAnchorType } from "./domain/entities/cv-public-note.entity";
+export type { CVDocumentTypePrimitives } from "./domain/value-objects/cv-document-type.value-object";
 export {
   type CVTemplateId,
   type CVTemplateLocale,

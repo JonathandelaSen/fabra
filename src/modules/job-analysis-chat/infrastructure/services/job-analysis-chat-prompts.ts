@@ -1,8 +1,9 @@
 import type { Analysis, CVRecord } from "@/lib/analysis-types";
 import { OFFER_CHAT_COACHING_INSTRUCTIONS } from "../../domain/services/job-analysis-chat-coaching-instructions";
+import type { JobAnalysisChatRolePrimitives } from "../../domain/value-objects/job-analysis-chat-role.value-object";
 
 export interface OfferChatHistoryMessage {
-  role: "user" | "assistant";
+  role: JobAnalysisChatRolePrimitives;
   content: string;
 }
 

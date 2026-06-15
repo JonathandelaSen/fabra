@@ -2,12 +2,13 @@ import type { Analysis, CVRecord } from "@/lib/analysis-types";
 import { UserId } from "@/modules/shared";
 import type { ProcessQuestionRepository } from "../../domain/repositories/process-question.repository";
 import { ProcessQuestionId } from "../../domain/value-objects/process-question-id.value-object";
+import type { CopyPastePrepareMode } from "../selection-process-copy-paste.constants";
 import { buildInterviewQuestionCopyPastePrompt } from "../services/interview-question-copy-paste-prompts";
 
 export interface PrepareQuestionAnswerCopyPasteInput {
   id: string;
   userId: string;
-  mode: "generate" | "edit";
+  mode: CopyPastePrepareMode;
   instruction?: string | null;
   cv?: CVRecord | null;
   cvText?: string | null;

@@ -1,9 +1,34 @@
 import { AggregateRoot, EntityId, UserId } from "@/modules/shared";
 import { CommitmentDomainEvent } from "../events/commitment-domain.event";
 
-export type CommitmentSource = "manager" | "self" | "company" | "project" | "other";
-export type CommitmentStatus = "active" | "paused" | "achieved" | "missed" | "cancelled";
-export type CommitmentPriority = "low" | "medium" | "high";
+export const commitmentSources = {
+  manager: "manager",
+  self: "self",
+  company: "company",
+  project: "project",
+  other: "other",
+} as const;
+
+export const commitmentStatuses = {
+  active: "active",
+  paused: "paused",
+  achieved: "achieved",
+  missed: "missed",
+  cancelled: "cancelled",
+} as const;
+
+export const commitmentPriorities = {
+  low: "low",
+  medium: "medium",
+  high: "high",
+} as const;
+
+export type CommitmentSource =
+  (typeof commitmentSources)[keyof typeof commitmentSources];
+export type CommitmentStatus =
+  (typeof commitmentStatuses)[keyof typeof commitmentStatuses];
+export type CommitmentPriority =
+  (typeof commitmentPriorities)[keyof typeof commitmentPriorities];
 
 export interface CommitmentPrimitives {
   id: string;
@@ -54,8 +79,8 @@ export class Commitment extends AggregateRoot {
       description: normalizeText(params.description ?? null, 10000),
       successCriteria: normalizeText(params.successCriteria ?? null, 10000),
       resultNotes: normalizeText(params.resultNotes ?? null, 10000),
-      source: assertOneOf(params.source, ["manager", "self", "company", "project", "other"], "source"),
-      status: params.status ?? "active",
+      source: assertOneOf(params.source, Object.values(commitmentSources), "source"),
+      status: params.status ?? commitmentStatuses.active,
       priority: params.priority ?? null,
       startDate: params.startDate,
       targetDate: params.targetDate ?? null,

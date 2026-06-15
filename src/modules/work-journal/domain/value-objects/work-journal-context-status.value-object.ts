@@ -1,6 +1,12 @@
 import { ValueObject } from "@/modules/shared";
 
-export type ContextStatus = "active" | "archived";
+export const workJournalContextStatuses = {
+  active: "active",
+  archived: "archived",
+} as const;
+
+export type ContextStatus =
+  (typeof workJournalContextStatuses)[keyof typeof workJournalContextStatuses];
 
 export class WorkJournalContextStatus extends ValueObject<ContextStatus> {
   private constructor(private readonly value: ContextStatus) {
@@ -8,14 +14,17 @@ export class WorkJournalContextStatus extends ValueObject<ContextStatus> {
   }
 
   static fromPrimitives(value: ContextStatus): WorkJournalContextStatus {
-    if (value !== "active" && value !== "archived") {
+    if (
+      value !== workJournalContextStatuses.active &&
+      value !== workJournalContextStatuses.archived
+    ) {
       throw new Error(`Invalid work journal context status: ${value}`);
     }
     return new WorkJournalContextStatus(value);
   }
 
   isActive(): boolean {
-    return this.value === "active";
+    return this.value === workJournalContextStatuses.active;
   }
 
   toPrimitives(): ContextStatus {

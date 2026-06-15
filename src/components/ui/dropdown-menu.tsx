@@ -73,6 +73,8 @@ function DropdownMenuLabel({
   )
 }
 
+type DropdownMenuItemVariant = "default" | "destructive";
+
 function DropdownMenuItem({
   className,
   inset,
@@ -80,7 +82,7 @@ function DropdownMenuItem({
   ...props
 }: MenuPrimitive.Item.Props & {
   inset?: boolean
-  variant?: "default" | "destructive"
+  variant?: DropdownMenuItemVariant
 }) {
   return (
     <MenuPrimitive.Item

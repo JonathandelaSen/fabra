@@ -1,6 +1,12 @@
 import { ValueObject } from "@/modules/shared";
 
-export type AnalysisReferenceType = "job_match_analysis" | "cv_analysis";
+export const analysisReferenceTypes = {
+  jobMatchAnalysis: "job_match_analysis",
+  cvAnalysis: "cv_analysis",
+} as const;
+
+export type AnalysisReferenceType =
+  (typeof analysisReferenceTypes)[keyof typeof analysisReferenceTypes];
 
 export interface AnalysisReferencePrimitives {
   readonly type: AnalysisReferenceType;
@@ -8,8 +14,8 @@ export interface AnalysisReferencePrimitives {
 }
 
 const validTypes = new Set<AnalysisReferenceType>([
-  "job_match_analysis",
-  "cv_analysis",
+  analysisReferenceTypes.jobMatchAnalysis,
+  analysisReferenceTypes.cvAnalysis,
 ]);
 
 export class AnalysisReference extends ValueObject<AnalysisReferencePrimitives> {

@@ -385,6 +385,7 @@ export const messages = {
       account: {
         title: "Account",
         signOut: "Sign out",
+        signingOut: "Signing out…",
         changePassword: "Change password",
         currentPassword: "Current password",
         newPassword: "New password",
@@ -2108,6 +2109,7 @@ export const messages = {
       account: {
         title: "Cuenta",
         signOut: "Cerrar sesión",
+        signingOut: "Cerrando sesión…",
         changePassword: "Cambiar contraseña",
         currentPassword: "Contraseña actual",
         newPassword: "Nueva contraseña",

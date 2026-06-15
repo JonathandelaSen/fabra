@@ -3,7 +3,7 @@ export type ParserTab = "python" | "pdfjs" | "node";
 export const PARSERS: {
   key: ParserTab;
   labelKey: string;
-  descriptionKey: "python" | "pdfjs" | "node";
+  descriptionKey: ParserTab;
   color: string;
   badgeKey: string;
   badgeColor: string;

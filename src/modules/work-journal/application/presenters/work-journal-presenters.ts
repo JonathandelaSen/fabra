@@ -1,4 +1,4 @@
-import type { WorkJournalContext } from "../../domain/entities/journal-context.entity";
+import type { WorkJournalContext, ContextStatus, ContextType } from "../../domain/entities/journal-context.entity";
 import type { WorkJournalEntry } from "../../domain/entities/journal-entry.entity";
 import type { WorkJournalContextSuggestion } from "../../domain/value-objects/context-suggestion.value-object";
 
@@ -6,10 +6,10 @@ interface WorkJournalContextPresenterInput {
   toPrimitives(): {
     id: string;
     userId: string;
-    type: "employment" | "project" | "personal" | "other";
+    type: ContextType;
     name: string;
     roleOrLabel?: string | null;
-    status: "active" | "archived";
+    status: ContextStatus;
     isDefault: boolean;
     createdFromCv?: boolean;
     createdAt: string;

@@ -9,13 +9,14 @@ import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { BasicPanel } from "@/components/shared/basic-panel";
 import type { InterviewQuestion, UpdateInterviewQuestionInput } from "../api/interview-questions-api";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { InterviewQuestionAIMode } from "./interview-questions-types";
 
 interface InterviewQuestionAnswerPanelProps {
   question: InterviewQuestion;
   isEditing: boolean;
   copied: boolean;
   isSaving: boolean;
-  aiLoading: "generate" | "edit" | null;
+  aiLoading: InterviewQuestionAIMode | null;
   hasAIApiKey: boolean;
   provider: StoredAIProvider;
   model: string;
@@ -24,7 +25,7 @@ interface InterviewQuestionAnswerPanelProps {
   onUpdate: (updates: Partial<UpdateInterviewQuestionInput>) => void;
   onProviderChange: (provider: StoredAIProvider) => void;
   onModelChange: (model: string) => void;
-  onRunAI: (mode: "generate" | "edit", instruction: string) => void;
+  onRunAI: (mode: InterviewQuestionAIMode, instruction: string) => void;
   onOpenSettings: () => void;
   onOpenCopyPaste: () => void;
   onMarkSaveIntent: () => void;

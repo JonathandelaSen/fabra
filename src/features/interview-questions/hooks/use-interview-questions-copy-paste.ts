@@ -5,11 +5,12 @@ import { useTranslations } from "next-intl";
 import {
   prepareInterviewQuestionCopyPaste,
   type PrepareInterviewQuestionCopyPasteResult,
+  type PrepareInterviewQuestionCopyPasteMode,
 } from "../api/interview-questions-api";
 
 export function useInterviewQuestionsCopyPaste(questionId: string) {
   const t = useTranslations("interviewQuestions.copyPaste");
-  const [mode, setMode] = useState<"generate" | "edit">("generate");
+  const [mode, setMode] = useState<PrepareInterviewQuestionCopyPasteMode>("generate");
   const [instruction, setInstruction] = useState("");
   const [preparing, setPreparing] = useState(false);
   const [prepared, setPrepared] =

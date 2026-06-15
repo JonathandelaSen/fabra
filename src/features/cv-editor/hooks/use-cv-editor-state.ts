@@ -22,6 +22,7 @@ import { cvEditorKeys } from "../api/cv-editor-query-keys";
 import { fetchRecommendations, saveProfile as saveProfileApi } from "../api/cv-editor-api";
 import { getErrorMessage } from "@/lib/errors";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
+import type { CVSaveState } from "../types";
 
 function serializeProfile(profile: StandardCVProfile | null | undefined) {
   return JSON.stringify(profile ? normalizeStandardCVProfile(profile) : null);
@@ -41,7 +42,7 @@ export function useCVEditorState(activeVersionId: string | null) {
   const [editedVersion, setEditedVersion] = useState<CVDocumentListItem | null>(null);
   const [selectedProvider, setSelectedProvider] = useState<StoredAIProvider>("gemini");
   const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_GEMINI_MODEL);
-  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved">("idle");
+  const [saveState, setSaveState] = useState<CVSaveState>("idle");
   const [error, setError] = useState<string | null>(null);
   const [previewVersion, setPreviewVersion] = useState(0);
 

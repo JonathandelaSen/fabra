@@ -10,7 +10,15 @@ export interface TelemetryCaptureOptions {
   attributes?: Record<string, TelemetryAttribute>;
 }
 
-export type TelemetryLogLevel = "debug" | "info" | "warn" | "error";
+export const TELEMETRY_LOG_LEVELS = {
+  debug: "debug",
+  info: "info",
+  warn: "warn",
+  error: "error",
+} as const;
+
+export type TelemetryLogLevel =
+  (typeof TELEMETRY_LOG_LEVELS)[keyof typeof TELEMETRY_LOG_LEVELS];
 
 export interface TelemetryLogOptions {
   level: TelemetryLogLevel;

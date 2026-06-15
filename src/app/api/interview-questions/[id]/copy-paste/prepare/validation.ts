@@ -1,3 +1,5 @@
+import { SELECTION_PROCESS_COPY_PASTE_PREPARE_MODES } from "@/shared/selection-process/constants";
+
 type Result<TValue, TError> =
   | { ok: true; value: TValue }
   | { ok: false; error: TError };
@@ -7,8 +9,11 @@ export interface HttpValidationError {
   status: 400;
 }
 
+type CopyPastePrepareMode =
+  (typeof SELECTION_PROCESS_COPY_PASTE_PREPARE_MODES)[keyof typeof SELECTION_PROCESS_COPY_PASTE_PREPARE_MODES];
+
 export interface PrepareInterviewQuestionCopyPasteRequest {
-  mode: "generate" | "edit";
+  mode: CopyPastePrepareMode;
   instruction?: string;
 }
 
@@ -32,12 +37,16 @@ export function parsePrepareInterviewQuestionCopyPasteRequest(
   }
 
   const mode = text(body.mode);
-  if (mode !== "generate" && mode !== "edit") {
+  if (
+    !Object.values(SELECTION_PROCESS_COPY_PASTE_PREPARE_MODES).includes(
+      mode as CopyPastePrepareMode
+    )
+  ) {
     return validationError("mode must be 'generate' or 'edit'");
   }
 
   const instruction = text(body.instruction) ?? undefined;
-  if (mode === "edit" && !instruction) {
+  if (mode === SELECTION_PROCESS_COPY_PASTE_PREPARE_MODES.EDIT && !instruction) {
     return validationError("instruction is required for edit mode");
   }
 

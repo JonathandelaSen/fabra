@@ -1,4 +1,5 @@
 import type { ListAdminAIInteractionsResponse } from "@/app/api/admin/ai-interactions/responses";
+import { AI_INTERACTION_RATINGS } from "@/shared/ai-interactions/constants";
 
 export async function listAdminAIInteractions() {
   const response = await fetch("/api/admin/ai-interactions");
@@ -6,9 +7,12 @@ export async function listAdminAIInteractions() {
   return response.json() as Promise<ListAdminAIInteractionsResponse>;
 }
 
+type AIInteractionRating =
+  (typeof AI_INTERACTION_RATINGS)[keyof typeof AI_INTERACTION_RATINGS];
+
 export async function reviewAdminAIInteraction(input: {
   interactionId: string;
-  rating: "good" | "mixed" | "bad";
+  rating: AIInteractionRating;
   note: string | null;
 }) {
   const response = await fetch(`/api/admin/ai-interactions/${input.interactionId}/review`, {

@@ -15,11 +15,13 @@ import { CVTemplatePreviewExperienceItem } from "./cv-template-preview-experienc
 import { CVTemplatePreviewEducationItem } from "./cv-template-preview-education-item";
 import { CVTemplatePreviewNamedItem } from "./cv-template-preview-named-item";
 
+export type CVTemplatePreviewScale = "card" | "full";
+
 interface CVTemplatePreviewProps {
   profile: StandardCVProfile;
   templateId: CVTemplateId;
   locale: CVTemplateLocale;
-  scale?: "card" | "full";
+  scale?: CVTemplatePreviewScale;
 }
 
 export const hasItems = <T,>(items?: T[]) => Array.isArray(items) && items.length > 0;

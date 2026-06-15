@@ -1,9 +1,9 @@
+import { ACTIVITY_CONTEXT_STATUSES, ACTIVITY_CONTEXT_TYPES } from "@/shared/activity-context/constants";
+
 export type ActivityContextResponseType =
-  | "project"
-  | "employment"
-  | "personal"
-  | "other";
-export type ActivityContextResponseStatus = "active" | "archived";
+  (typeof ACTIVITY_CONTEXT_TYPES)[keyof typeof ACTIVITY_CONTEXT_TYPES];
+export type ActivityContextResponseStatus =
+  (typeof ACTIVITY_CONTEXT_STATUSES)[keyof typeof ACTIVITY_CONTEXT_STATUSES];
 
 export interface ActivityContextResponse {
   id: string;

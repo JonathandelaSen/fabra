@@ -14,8 +14,10 @@ import {
   ChevronUp,
 } from "lucide-react";
 
+type ExtractionTab = "python" | "pdfjs" | "node";
+
 interface ExtractionTextPanelProps {
-  activeTab: "python" | "pdfjs" | "node";
+  activeTab: ExtractionTab;
   currentText: string | null;
   currentError: string | null;
   copied: boolean;

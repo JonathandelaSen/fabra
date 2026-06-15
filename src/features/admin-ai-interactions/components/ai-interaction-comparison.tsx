@@ -49,7 +49,8 @@ export function AIInteractionComparison({ interactions }: { interactions: Intera
 function DetailedInteractionView({ interaction }: { interaction: Interaction }) {
   const t = useTranslations("admin.aiInteractions");
   const latestEventName = interaction.eventNames.at(-1);
-  const [activeTab, setActiveTab] = useState<"overview" | "parsedOutput" | "request" | "response">("parsedOutput");
+  type DetailedTab = "overview" | "parsedOutput" | "request" | "response";
+  const [activeTab, setActiveTab] = useState<DetailedTab>("parsedOutput");
 
   const statusColors = {
     applied: "bg-success-soft text-success-text border-success-border dark:bg-success-soft/20",

@@ -1,5 +1,6 @@
 import type { StandardCVProfile } from "../../domain/cv-profile";
 import type { ExtractedPdfText } from "@/lib/pdf-extraction";
+import type { CVDocumentTypePrimitives } from "../../domain/value-objects/cv-document-type.value-object";
 import type {
   CVDocument,
   CVDocumentPrimitives,
@@ -16,7 +17,7 @@ export interface CVDocumentResponse extends ExtractedPdfText {
   filename: string | null;
   file_size: number | null;
   pdf_storage_path: string | null;
-  type: "uploaded" | "template" | "json_resume";
+  type: CVDocumentTypePrimitives;
   source_cv_id: string | null;
   template_id: string | null;
   template_locale: string | null;
@@ -38,7 +39,7 @@ export interface CVDocumentSummaryResponse {
   name: string;
   filename: string | null;
   file_size: number | null;
-  type: "uploaded" | "template" | "json_resume";
+  type: CVDocumentTypePrimitives;
   source_cv_id: string | null;
   template_id: string | null;
   template_locale: string | null;

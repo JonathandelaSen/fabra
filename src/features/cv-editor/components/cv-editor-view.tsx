@@ -15,6 +15,7 @@ import { CVEditorSidePanel, type CVEditorSidePanelProps } from "./cv-editor-side
 import { useCVEditorMutations } from "../hooks/use-cv-editor-mutations";
 import { useCVEditorRouteState } from "../hooks/use-cv-editor-route-state";
 import { useCVEditorState } from "../hooks/use-cv-editor-state";
+import type { CVEditorTab } from "../types";
 const PDFPreview = dynamic(
   () => import("@/components/shared/pdf-preview").then((mod) => mod.PDFPreview),
   {
@@ -40,7 +41,7 @@ export default function CVEditorView({
   const [modalState, setModalState] = useState({ saving: false, public: false });
   const [saveName, setSaveName] = useState("");
   const [publicCopied, setPublicCopied] = useState(false);
-  const [editorTab, setEditorTab] = useState<"ai" | "manual">("ai");
+  const [editorTab, setEditorTab] = useState<CVEditorTab>("ai");
   const [copyPasteOpen, setCopyPasteOpen] = useState(false);
   const routeState = useCVEditorRouteState();
 

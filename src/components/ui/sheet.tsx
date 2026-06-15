@@ -36,6 +36,8 @@ function SheetOverlay({ className, ...props }: SheetPrimitive.Backdrop.Props) {
   )
 }
 
+type SheetSide = "top" | "right" | "bottom" | "left";
+
 function SheetContent({
   className,
   children,
@@ -45,7 +47,7 @@ function SheetContent({
   ...props
 }: SheetPrimitive.Popup.Props & {
   closeLabel: string
-  side?: "top" | "right" | "bottom" | "left"
+  side?: SheetSide
   showCloseButton?: boolean
 }) {
   return (

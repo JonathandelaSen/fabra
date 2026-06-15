@@ -4,6 +4,12 @@ import {
   type StandardCVProfile,
 } from "@/lib/cv-profile";
 import type { ExtractedPdfText } from "@/lib/pdf-extraction";
+import { cvDocumentTypes, type CVDocumentTypePrimitives } from "@/modules/cv-library/domain/value-objects/cv-document-type.value-object";
+
+export type TestCVType = Extract<
+  CVDocumentTypePrimitives,
+  typeof cvDocumentTypes.uploaded | typeof cvDocumentTypes.template
+>;
 
 export interface TestCVRecord extends ExtractedPdfText {
   id: string;
@@ -12,7 +18,7 @@ export interface TestCVRecord extends ExtractedPdfText {
   filename: string | null;
   file_size: number | null;
   pdf_storage_path: string | null;
-  type: "uploaded" | "template";
+  type: TestCVType;
   source_cv_id: string | null;
   template_id: string | null;
   template_locale: string | null;
@@ -35,7 +41,7 @@ export interface CreateTestCVInput extends Partial<ExtractedPdfText> {
   filename?: string | null;
   file_size?: number | null;
   pdf_storage_path?: string | null;
-  type?: "uploaded" | "template";
+  type?: TestCVType;
   source_cv_id?: string | null;
   template_id?: string | null;
   template_locale?: string | null;
@@ -58,7 +64,7 @@ export async function createTestCV(
       filename: input.filename ?? null,
       file_size: input.file_size ?? null,
       pdf_storage_path: input.pdf_storage_path ?? null,
-      type: input.type ?? "uploaded",
+      type: input.type ?? cvDocumentTypes.uploaded,
       source_cv_id: input.source_cv_id ?? null,
       template_id: input.template_id ?? null,
       template_locale: input.template_locale ?? null,

@@ -5,8 +5,22 @@ import { ActivityContextDeletedEvent } from "../events/activity-context-deleted.
 import { ActivityContextRestoredEvent } from "../events/activity-context-restored.event";
 import { ActivityContextUpdatedEvent } from "../events/activity-context-updated.event";
 
-export type ActivityContextType = "employment" | "project" | "personal" | "other";
-export type ActivityContextStatus = "active" | "archived";
+export const activityContextTypes = {
+  employment: "employment",
+  project: "project",
+  personal: "personal",
+  other: "other",
+} as const;
+
+export const activityContextStatuses = {
+  active: "active",
+  archived: "archived",
+} as const;
+
+export type ActivityContextType =
+  (typeof activityContextTypes)[keyof typeof activityContextTypes];
+export type ActivityContextStatus =
+  (typeof activityContextStatuses)[keyof typeof activityContextStatuses];
 
 export interface ActivityContextPrimitives {
   id: string;
@@ -41,7 +55,7 @@ export class ActivityContext extends AggregateRoot {
       userId: params.userId.toPrimitives(),
       type: assertType(params.type),
       name: assertName(params.name),
-      status: params.status ?? "active",
+      status: params.status ?? activityContextStatuses.active,
       isDefault: params.isDefault ?? false,
       createdAt: params.createdAt,
       updatedAt: params.updatedAt,
@@ -90,9 +104,15 @@ export class ActivityContext extends AggregateRoot {
     if (fields.length > 0) {
       this.recordDomainEvent(new ActivityContextUpdatedEvent(this.id, fields));
     }
-    if (previousStatus !== "archived" && this.state.status === "archived") {
+    if (
+      previousStatus !== activityContextStatuses.archived &&
+      this.state.status === activityContextStatuses.archived
+    ) {
       this.recordDomainEvent(new ActivityContextArchivedEvent(this.id));
-    } else if (previousStatus === "archived" && this.state.status === "active") {
+    } else if (
+      previousStatus === activityContextStatuses.archived &&
+      this.state.status === activityContextStatuses.active
+    ) {
       this.recordDomainEvent(new ActivityContextRestoredEvent(this.id));
     }
   }
@@ -107,14 +127,14 @@ export class ActivityContext extends AggregateRoot {
 }
 
 function assertType(value: ActivityContextType): ActivityContextType {
-  if (!["employment", "project", "personal", "other"].includes(value)) {
+  if (!Object.values(activityContextTypes).includes(value)) {
     throw new Error("Invalid activity context type.");
   }
   return value;
 }
 
 function assertStatus(value: ActivityContextStatus): ActivityContextStatus {
-  if (!["active", "archived"].includes(value)) {
+  if (!Object.values(activityContextStatuses).includes(value)) {
     throw new Error("Invalid activity context status.");
   }
   return value;

@@ -8,6 +8,7 @@ import type {
 } from "@/app/api/interview-questions/responses";
 import type { InterviewQuestionsFilters } from "../hooks/use-interview-questions-route-state";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
+import { SELECTION_PROCESS_COPY_PASTE_PREPARE_MODES } from "@/shared/selection-process/constants";
 
 export type InterviewQuestion = ListInterviewQuestionsResponse[number];
 
@@ -144,8 +145,11 @@ export async function editInterviewQuestionAnswer({
   );
 }
 
+export type PrepareInterviewQuestionCopyPasteMode =
+  (typeof SELECTION_PROCESS_COPY_PASTE_PREPARE_MODES)[keyof typeof SELECTION_PROCESS_COPY_PASTE_PREPARE_MODES];
+
 export interface PrepareInterviewQuestionCopyPasteInput {
-  mode: "generate" | "edit";
+  mode: PrepareInterviewQuestionCopyPasteMode;
   instruction?: string;
 }
 

@@ -7,7 +7,7 @@ import { FileText, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
 import type { OfferStatus } from "@/lib/analysis-types";
-import type { InterviewQuestionSummary, JobMatchAnalysisDetailResponse } from "../types";
+import type { InterviewQuestionSummary, JobMatchAnalysisDetailResponse, JobMatchViewMode } from "../types";
 import type { AnalysisTab } from "../hooks/use-job-match-analysis-route-state";
 import JobMatchAnalysisDetail from "./detail/job-match-analysis-detail";
 import JobMatchExtractionView from "./extraction/job-match-extraction-view";
@@ -32,7 +32,7 @@ interface JobMatchAnalysisMainPanelProps {
     model: string;
   }) => Promise<void>;
   onTabChange: (tab: AnalysisTab) => void;
-  onViewModeChange: (tab: "analysis" | "extraction") => void;
+  onViewModeChange: (tab: JobMatchViewMode) => void;
   onInterviewQuestionCreated?: () => void;
   onUpdateUrl: (url: string) => Promise<void>;
   onUpdateTracking: (updates: {
@@ -62,7 +62,7 @@ export function JobMatchAnalysisMainPanel({
   onUpdateTracking,
 }: JobMatchAnalysisMainPanelProps) {
   const t = useTranslations("analysisFlow.appShell");
-  const [activeView, setActiveView] = useState<"analysis" | "extraction">(
+  const [activeView, setActiveView] = useState<JobMatchViewMode>(
     isAnalysisView ? "analysis" : "extraction",
   );
 
@@ -70,7 +70,7 @@ export function JobMatchAnalysisMainPanel({
     setActiveView(isAnalysisView ? "analysis" : "extraction");
   }, [detail.id, isAnalysisView]);
 
-  const handleViewModeChange = (view: "analysis" | "extraction") => {
+  const handleViewModeChange = (view: JobMatchViewMode) => {
     setActiveView(view);
     onViewModeChange(view);
   };

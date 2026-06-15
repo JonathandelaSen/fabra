@@ -1,4 +1,9 @@
 import type { ActivityContextStatus, ActivityContextType } from "@/modules/activity-context";
+import {
+  ACTIVITY_CONTEXT_STATUSES,
+  ACTIVITY_CONTEXT_SUGGESTION_ACTIONS,
+  ACTIVITY_CONTEXT_TYPES,
+} from "@/shared/activity-context/constants";
 
 type Result<TValue, TError> =
   | { ok: true; value: TValue }
@@ -9,8 +14,14 @@ export interface HttpValidationError {
   status: 400;
 }
 
-const contextTypes = ["employment", "project", "personal", "other"] as const;
-const contextStatuses = ["active", "archived"] as const;
+const activityContextSuggestionActionValues = Object.values(
+  ACTIVITY_CONTEXT_SUGGESTION_ACTIONS
+);
+const contextTypes = Object.values(ACTIVITY_CONTEXT_TYPES);
+const contextStatuses = Object.values(ACTIVITY_CONTEXT_STATUSES);
+
+type ActivityContextSuggestionAction =
+  (typeof ACTIVITY_CONTEXT_SUGGESTION_ACTIONS)[keyof typeof ACTIVITY_CONTEXT_SUGGESTION_ACTIONS];
 
 export interface CreateActivityContextHttpInput {
   type: ActivityContextType;
@@ -24,7 +35,7 @@ export interface UpdateActivityContextHttpInput {
 }
 
 export interface ActivityContextSuggestionHttpInput {
-  action: "promote" | "hide";
+  action: ActivityContextSuggestionAction;
   type: ActivityContextType;
   name: string;
   roleOrLabel: string | null;
@@ -83,7 +94,7 @@ export function parseActivityContextSuggestionRequest(
   body: unknown,
 ): Result<ActivityContextSuggestionHttpInput, HttpValidationError> {
   if (!isRecord(body)) return validationError("Request body must be a JSON object");
-  const action = requiredEnum(body.action, ["promote", "hide"] as const);
+  const action = requiredEnum(body.action, activityContextSuggestionActionValues);
   const type = requiredEnum(body.type, contextTypes);
   const name = requiredText(body.name);
   const roleOrLabel =

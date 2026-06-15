@@ -49,6 +49,8 @@ export function NewJobMatchCVSourceSelector({
   );
 }
 
+export type CVSourceTone = "indigo" | "emerald" | "violet";
+
 function SourceButton({
   icon,
   selected,
@@ -61,7 +63,7 @@ function SourceButton({
   icon: ReactNode;
   selected: boolean;
   disabled?: boolean;
-  tone: "indigo" | "emerald" | "violet";
+  tone: CVSourceTone;
   title: string;
   description: string;
   onClick: () => void;

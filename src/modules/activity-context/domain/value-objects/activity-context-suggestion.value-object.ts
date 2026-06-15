@@ -1,7 +1,15 @@
 import { ValueObject } from "@/modules/shared";
-import type { ActivityContextType } from "../entities/activity-context.entity";
+import {
+  activityContextTypes,
+  type ActivityContextType,
+} from "../entities/activity-context.entity";
 
-export type ActivityContextSuggestionSource = "cv";
+export const activityContextSuggestionSources = {
+  cv: "cv",
+} as const;
+
+export type ActivityContextSuggestionSource =
+  (typeof activityContextSuggestionSources)[keyof typeof activityContextSuggestionSources];
 
 export interface ActivityContextSuggestionPrimitives {
   type: ActivityContextType;
@@ -21,10 +29,10 @@ export class ActivityContextSuggestion extends ValueObject<ActivityContextSugges
   ): ActivityContextSuggestion {
     const name = primitives.name.trim();
     if (!name) throw new Error("Activity context suggestion name cannot be empty.");
-    if (!["employment", "project", "personal", "other"].includes(primitives.type)) {
+    if (!Object.values(activityContextTypes).includes(primitives.type)) {
       throw new Error("Invalid activity context suggestion type.");
     }
-    if (primitives.source !== "cv") {
+    if (primitives.source !== activityContextSuggestionSources.cv) {
       throw new Error("Invalid activity context suggestion source.");
     }
     return new ActivityContextSuggestion({

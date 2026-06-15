@@ -10,13 +10,14 @@ import type {
   ChatMessageSearchCriteria,
 } from "../../domain/repositories/chat-message.repository";
 import { JobAnalysisChatMessageId } from "../../domain/value-objects/job-analysis-chat-message-id.value-object";
+import type { JobAnalysisChatRolePrimitives } from "../../domain/value-objects/job-analysis-chat-role.value-object";
 
 interface ChatMessageRow {
   id: string;
   user_id: string;
   analysis_id: string;
   conversation_id: string;
-  role: "user" | "assistant";
+  role: JobAnalysisChatRolePrimitives;
   content: string;
   model: string | null;
   metadata: Record<string, unknown> | null;

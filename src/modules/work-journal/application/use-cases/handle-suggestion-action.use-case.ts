@@ -9,17 +9,14 @@ import { WorkJournalContextType } from "../../domain/value-objects/work-journal-
 import { WorkJournalCreatedFromCv } from "../../domain/value-objects/work-journal-created-from-cv.value-object";
 import { WorkJournalIsDefault } from "../../domain/value-objects/work-journal-is-default.value-object";
 import { WorkJournalRoleOrLabel } from "../../domain/value-objects/work-journal-role-or-label.value-object";
-
-export const SUGGESTION_ACTION = {
-  PROMOTE: "promote",
-  HIDE: "hide",
-} as const;
-
-export type SuggestionAction = (typeof SUGGESTION_ACTION)[keyof typeof SUGGESTION_ACTION];
+import {
+  WORK_JOURNAL_SUGGESTION_ACTIONS,
+  type WorkJournalSuggestionAction,
+} from "../work-journal-suggestion.constants";
 
 interface HandleSuggestionInput {
   userId: string;
-  action: SuggestionAction;
+  action: WorkJournalSuggestionAction;
   type: ContextType;
   name: string;
   role_or_label: string | null;
@@ -37,7 +34,7 @@ export class HandleSuggestionActionUseCase {
   async execute(
     input: HandleSuggestionInput
   ): Promise<{ ok: true } | WorkJournalContext> {
-    if (input.action === SUGGESTION_ACTION.HIDE) {
+    if (input.action === WORK_JOURNAL_SUGGESTION_ACTIONS.HIDE) {
       await this.deps.contextRepo.hideSuggestion(
         UserId.fromPrimitives(input.userId),
         WorkJournalContextSuggestion.fromPrimitives({

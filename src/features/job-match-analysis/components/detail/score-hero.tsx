@@ -14,6 +14,7 @@ import {
   Pencil,
 } from "lucide-react";
 import type { OfferStatus } from "@/lib/analysis-types";
+import { type DetailTab } from "../../types";
 import AnalysisScoreCircle from "@/components/shared/analysis-score-circle";
 import { FormattedDate } from "@/components/shared/formatted-date";
 import { getScoreColor } from "@/lib/format";
@@ -33,7 +34,7 @@ interface ScoreHeroProps {
   onSaveUrl: (url: string) => Promise<void>;
   isSavingUrl: boolean;
   offerStatus?: OfferStatus | null;
-  onTabChange?: (tab: "summary" | "offer" | "questions" | "chat" | "tracking") => void;
+  onTabChange?: (tab: DetailTab) => void;
 }
 
 const URL_PLACEHOLDER = "https://...";

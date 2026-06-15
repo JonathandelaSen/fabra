@@ -10,6 +10,7 @@ import type {
 import type {
   InterviewQuestionAnalysisOption,
   InterviewQuestionCVOption,
+  InterviewQuestionAIMode,
 } from "./interview-questions-types";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import InterviewQuestionHeader from "./interview-question-header";
@@ -24,12 +25,12 @@ interface InterviewQuestionDetailProps {
   onProviderChange: (provider: StoredAIProvider) => void;
   model: string;
   isSaving: boolean;
-  aiLoading: "generate" | "edit" | null;
+  aiLoading: InterviewQuestionAIMode | null;
   hasAIApiKey: boolean;
   onModelChange: (model: string) => void;
   onUpdate: (updates: Partial<UpdateInterviewQuestionInput>) => void;
   onDelete: () => void;
-  onRunAI: (mode: "generate" | "edit", instruction: string) => void;
+  onRunAI: (mode: InterviewQuestionAIMode, instruction: string) => void;
   onOpenSettings: () => void;
   onOpenAnalysis: (id: string) => void;
   onOpenCopyPaste: () => void;

@@ -35,6 +35,7 @@ import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
 import { MessageSquareQuote } from "lucide-react";
 import { FeatureEmptyState } from "@/components/shared/feature-empty-state";
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import type { InterviewQuestionAIMode } from "./interview-questions-types";
 
 interface InterviewQuestionsViewProps {
   aiProvider: StoredAIProvider;
@@ -149,7 +150,7 @@ export default function InterviewQuestionsView({
     }
   };
 
-  const runAI = async (mode: "generate" | "edit", instruction: string) => {
+  const runAI = async (mode: InterviewQuestionAIMode, instruction: string) => {
     if (!selected) return;
     const resolvedProvider = provider || aiProvider;
     const aiConfig = getAIRequestConfigForProvider(resolvedProvider, aiApiKey, model || aiModel);

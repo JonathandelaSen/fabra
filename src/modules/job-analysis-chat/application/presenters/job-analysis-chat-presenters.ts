@@ -1,5 +1,6 @@
 import type { Conversation } from "../../domain/entities/conversation.entity";
 import type { ChatMessage } from "../../domain/entities/chat-message.entity";
+import type { JobAnalysisChatRolePrimitives } from "../../domain/value-objects/job-analysis-chat-role.value-object";
 
 export interface JobAnalysisChatConversation {
   id: string;
@@ -15,7 +16,7 @@ export interface JobAnalysisChatMessage {
   user_id: string;
   analysis_id: string;
   conversation_id: string;
-  role: "user" | "assistant";
+  role: JobAnalysisChatRolePrimitives;
   content: string;
   model: string | null;
   metadata: Record<string, unknown> | null;

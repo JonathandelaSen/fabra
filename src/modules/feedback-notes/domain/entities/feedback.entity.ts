@@ -5,7 +5,13 @@ import { FeedbackDeletedEvent } from "../events/feedback-deleted.event";
 import { FeedbackReopenedEvent } from "../events/feedback-reopened.event";
 import { FeedbackUpdatedEvent } from "../events/feedback-updated.event";
 
-export type FeedbackStatus = "active" | "closed";
+export const feedbackStatuses = {
+  active: "active",
+  closed: "closed",
+} as const;
+
+export type FeedbackStatus =
+  (typeof feedbackStatuses)[keyof typeof feedbackStatuses];
 
 export interface FeedbackPrimitives {
   id: string;
@@ -40,7 +46,7 @@ export class Feedback extends AggregateRoot {
       user_id: params.user_id,
       activity_context_id: params.activity_context_id,
       person_name: params.person_name.trim(),
-      status: "active",
+      status: feedbackStatuses.active,
       final_feedback: normalizeOptionalText(params.final_feedback),
       closed_at: null,
       created_at: params.now,
@@ -71,7 +77,7 @@ export class Feedback extends AggregateRoot {
   }
 
   isActive(): boolean {
-    return this.primitives.status === "active";
+    return this.primitives.status === feedbackStatuses.active;
   }
 
   updateActivityContext(activityContextId: string): void {

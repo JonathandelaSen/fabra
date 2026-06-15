@@ -5,6 +5,7 @@ import type {
   CreateActivityContextResponse,
   ListActivityContextsResponse,
 } from "@/app/api/activity-contexts/responses";
+import { ACTIVITY_CONTEXT_SUGGESTION_ACTIONS } from "@/shared/activity-context/constants";
 
 interface ErrorResponse {
   error?: string;
@@ -19,6 +20,8 @@ async function readJsonResponse<T>(res: Response, fallbackMessage: string): Prom
 export type ActivityContext = ActivityContextResponse;
 export type ActivityContextType = ActivityContextResponseType;
 export type ActivityContextSuggestion = ActivityContextSuggestionResponse;
+type ActivityContextSuggestionAction =
+  (typeof ACTIVITY_CONTEXT_SUGGESTION_ACTIONS)[keyof typeof ACTIVITY_CONTEXT_SUGGESTION_ACTIONS];
 
 export interface CreateActivityContextInput {
   type: ActivityContextType;
@@ -79,7 +82,7 @@ export async function deleteActivityContext(id: string) {
 }
 
 export async function handleActivityContextSuggestion(input: {
-  action: "promote" | "hide";
+  action: ActivityContextSuggestionAction;
   type: ActivityContextType;
   name: string;
   roleOrLabel: string | null;

@@ -10,9 +10,11 @@ import { ChatMessagesArea } from "@/components/shared/chat/chat-messages-area";
 import { ChatInput } from "../chat/chat-input";
 import { OfferChatCopyPasteModal } from "../../copy-paste/offer-chat-copy-paste-modal";
 
+import type { StoredAIProvider } from "@/lib/browser-preferences";
+
 interface TabOfferChatProps {
   analysisId: string;
-  aiProvider: "gemini" | "mock";
+  aiProvider: StoredAIProvider;
   aiApiKey: string;
   aiModel: string;
   hasAIApiKey: boolean;

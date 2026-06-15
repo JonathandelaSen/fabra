@@ -1,6 +1,12 @@
 import { ValueObject } from "@/modules/shared";
 
-export type JobAnalysisChatRolePrimitives = "user" | "assistant";
+export const jobAnalysisChatRoles = {
+  user: "user",
+  assistant: "assistant",
+} as const;
+
+export type JobAnalysisChatRolePrimitives =
+  (typeof jobAnalysisChatRoles)[keyof typeof jobAnalysisChatRoles];
 
 export class JobAnalysisChatRole extends ValueObject<JobAnalysisChatRolePrimitives> {
   private constructor(private readonly value: JobAnalysisChatRolePrimitives) {
@@ -8,7 +14,10 @@ export class JobAnalysisChatRole extends ValueObject<JobAnalysisChatRolePrimitiv
   }
 
   static fromPrimitives(value: string): JobAnalysisChatRole {
-    if (value !== "user" && value !== "assistant") {
+    if (
+      value !== jobAnalysisChatRoles.user &&
+      value !== jobAnalysisChatRoles.assistant
+    ) {
       throw new Error("Analysis chat role must be user or assistant.");
     }
 
@@ -16,11 +25,11 @@ export class JobAnalysisChatRole extends ValueObject<JobAnalysisChatRolePrimitiv
   }
 
   static user(): JobAnalysisChatRole {
-    return new JobAnalysisChatRole("user");
+    return new JobAnalysisChatRole(jobAnalysisChatRoles.user);
   }
 
   static assistant(): JobAnalysisChatRole {
-    return new JobAnalysisChatRole("assistant");
+    return new JobAnalysisChatRole(jobAnalysisChatRoles.assistant);
   }
 
   toPrimitives(): JobAnalysisChatRolePrimitives {

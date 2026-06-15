@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 
+export type AIInteractionsSortOrder = "newest" | "oldest";
+
 interface QueryControlsPanelProps {
   search: string;
   setSearch: (val: string) => void;
@@ -18,8 +20,8 @@ interface QueryControlsPanelProps {
   setModuleFilter: (val: string) => void;
   modelFilter: string;
   setModelFilter: (val: string) => void;
-  sortOrder: "newest" | "oldest";
-  setSortOrder: (val: "newest" | "oldest") => void;
+  sortOrder: AIInteractionsSortOrder;
+  setSortOrder: (val: AIInteractionsSortOrder) => void;
   activeFiltersCount: number;
   resetFilters: () => void;
   filterOptions: { providers: string[]; models: string[]; modules: string[] };

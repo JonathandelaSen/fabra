@@ -1,8 +1,10 @@
 import type { StandardCVProfile } from "@/modules/cv-library";
 import type { AnalysisSummary } from "@/lib/analysis-types";
 import { ErrorCode, type ErrorResponseBody } from "@/shared/error-codes";
+import { CV_DOCUMENT_TYPES } from "@/shared/cv-library/constants";
 
-export type CVDocumentType = "uploaded" | "template" | "json_resume";
+export type CVDocumentType =
+  (typeof CV_DOCUMENT_TYPES)[keyof typeof CV_DOCUMENT_TYPES];
 
 export interface CVDocumentSummaryResponse {
   id: string;

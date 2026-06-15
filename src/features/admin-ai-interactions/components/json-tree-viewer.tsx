@@ -39,6 +39,8 @@ function StaticHighlightedJson({ content }: { content: string }) {
   return tokens;
 }
 
+export type JSONViewerMode = "interactive" | "raw";
+
 export function JSONTreeViewer({
   data,
   title,
@@ -50,7 +52,7 @@ export function JSONTreeViewer({
 }) {
   const t = useTranslations("admin.aiInteractions");
   const [copied, setCopied] = useState(false);
-  const [mode, setMode] = useState<"interactive" | "raw">("raw");
+  const [mode, setMode] = useState<JSONViewerMode>("raw");
 
   const handleCopy = async () => {
     try {

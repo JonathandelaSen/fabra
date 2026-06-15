@@ -1,16 +1,28 @@
 import { AggregateRoot, EntityId, UserId } from "@/modules/shared";
 import { CommitmentDomainEvent } from "../events/commitment-domain.event";
 
+export const commitmentOutcomeTypes = {
+  promotion: "promotion",
+  roleChange: "role_change",
+  leadership: "leadership",
+  mentoring: "mentoring",
+  money: "money",
+  recognition: "recognition",
+  learning: "learning",
+  other: "other",
+} as const;
+
+export const commitmentOutcomeStatuses = {
+  expected: "expected",
+  achieved: "achieved",
+  missed: "missed",
+  changed: "changed",
+} as const;
+
 export type CommitmentOutcomeType =
-  | "promotion"
-  | "role_change"
-  | "leadership"
-  | "mentoring"
-  | "money"
-  | "recognition"
-  | "learning"
-  | "other";
-export type CommitmentOutcomeStatus = "expected" | "achieved" | "missed" | "changed";
+  (typeof commitmentOutcomeTypes)[keyof typeof commitmentOutcomeTypes];
+export type CommitmentOutcomeStatus =
+  (typeof commitmentOutcomeStatuses)[keyof typeof commitmentOutcomeStatuses];
 
 export interface CommitmentOutcomePrimitives {
   id: string;
@@ -53,7 +65,7 @@ export class CommitmentOutcome extends AggregateRoot {
       userId: params.userId.toPrimitives(),
       commitmentId: params.commitmentId.toPrimitives(),
       type: params.type,
-      status: params.status ?? "expected",
+      status: params.status ?? commitmentOutcomeStatuses.expected,
       title: assertText(params.title, "Outcome title", 160),
       description: normalizeText(params.description ?? null),
       amount: params.amount ?? null,

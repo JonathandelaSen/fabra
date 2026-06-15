@@ -24,7 +24,8 @@ import { ManualEditorPresentation } from "./manual-editor-presentation";
 import { ManualEditorSectionItem } from "./manual-editor-section-item";
 import { ManualEditorBasicsItem } from "./manual-editor-basics-item";
 import { ManualEditorHeader } from "./manual-editor-header";
-interface ManualEditorProps { profile: StandardCVProfile; templateId: CVTemplateId; locale: CVTemplateLocale; saveState: "idle" | "saving" | "saved"; onChange: (updater: (prev: StandardCVProfile) => StandardCVProfile) => void; onSave: () => void; }
+import type { CVSaveState } from "../../types";
+interface ManualEditorProps { profile: StandardCVProfile; templateId: CVTemplateId; locale: CVTemplateLocale; saveState: CVSaveState; onChange: (updater: (prev: StandardCVProfile) => StandardCVProfile) => void; onSave: () => void; }
 
 export function ManualEditor({
   profile,

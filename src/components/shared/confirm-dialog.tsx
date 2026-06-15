@@ -10,6 +10,8 @@ import {
   ICON_TEXT_BUTTON_TONES,
 } from "@/components/shared/action-buttons";
 
+export type ConfirmDialogVariant = "danger" | "default";
+
 interface ConfirmDialogProps {
   open: boolean;
   title: string;
@@ -17,7 +19,7 @@ interface ConfirmDialogProps {
   confirmLabel?: string;
   cancelLabel?: string;
   headerTitle?: string;
-  variant?: "danger" | "default";
+  variant?: ConfirmDialogVariant;
   onConfirm: () => void;
   onCancel: () => void;
 }

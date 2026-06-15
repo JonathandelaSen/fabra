@@ -4,10 +4,12 @@ import { useTranslations } from "next-intl";
 import { LayoutTemplate } from "lucide-react";
 import { IconTextButton } from "@/components/shared/action-buttons";
 
+import type { CVTemplateLocale } from "@/lib/cv-templates";
+
 interface CVEditorSettingsSectionProps {
   locale: string;
   savingLocale: boolean;
-  onUpdateLocale: (locale: "es" | "en") => void;
+  onUpdateLocale: (locale: CVTemplateLocale) => void;
   onOpenTemplates: () => void;
 }
 

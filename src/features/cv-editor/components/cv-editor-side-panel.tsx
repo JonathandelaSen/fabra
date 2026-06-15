@@ -14,15 +14,16 @@ import { CVEditorRecommendations, type RecommendationAnalysis } from "./cv-edito
 import { CVEditorPublicSection } from "./cv-editor-public-section";
 import { CVEditorSettingsSection } from "./cv-editor-settings-section";
 import { CVPublicNotesEditor } from "./cv-public-notes-editor";
+import type { CVEditorTab, CVSaveState, CVEditorDisplayMode } from "../types";
 
 export interface CVEditorSidePanelProps {
-  displayMode?: "desktop" | "mobile";
+  displayMode?: CVEditorDisplayMode;
   activeTemplateId: CVTemplateId;
   currentProfile: StandardCVProfile | null;
   currentVersion: { id: string; publicEnabled: boolean; publicFeedbackEnabled: boolean; publicId: string | null };
   editInstruction: string;
   editingProfile: boolean;
-  editorTab: "ai" | "manual";
+  editorTab: CVEditorTab;
   error: string | null;
   hasAIApiKey: boolean;
   hasPublicSlugChanges: boolean;
@@ -31,7 +32,7 @@ export interface CVEditorSidePanelProps {
   publicSlug: string;
   publicUrl: string | null;
   recommendationAnalysis: RecommendationAnalysis | null;
-  saveState: "idle" | "saving" | "saved";
+  saveState: CVSaveState;
   savingLocale: boolean;
   savingPublicSettings: boolean;
   selectedProvider: StoredAIProvider;
@@ -46,7 +47,7 @@ export interface CVEditorSidePanelProps {
   onSaveManual: () => void;
   onSaveUrl: () => void;
   onSetEditInstruction: (value: string) => void;
-  onSetEditorTab: (tab: "ai" | "manual") => void;
+  onSetEditorTab: (tab: CVEditorTab) => void;
   onSetPublicSlugDraft: (params: { cvId: string; value: string }) => void;
   onSetSelectedProvider: (value: StoredAIProvider) => void;
   onSetSelectedModel: (value: string) => void;

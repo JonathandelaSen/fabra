@@ -56,8 +56,9 @@ export function useObjectivesViewState() {
   const [itemForm, setItemForm] = useState<ItemEditForm | null>(null);
   const [editingOutcomeId, setEditingOutcomeId] = useState<string | null>(null);
   const [outcomeForm, setOutcomeForm] = useState<OutcomeEditForm | null>(null);
+  type ObjectiveDeleteType = "objective" | "item" | "outcome";
   const [confirmDelete, setConfirmDelete] = useState<{
-    type: "objective" | "item" | "outcome";
+    type: ObjectiveDeleteType;
     item?: ObjectiveItem;
     outcome?: ObjectiveOutcome;
   } | null>(null);

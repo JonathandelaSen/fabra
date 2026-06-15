@@ -1,19 +1,37 @@
 import type { StandardCVProfile } from "./cv-profile";
 
-export type CVTemplateId = "compact" | "classic" | "modern" | "filo";
-export type CVTemplateLocale = "es" | "en";
-export type CVRenderableSectionId =
-  | "summary"
-  | "experience"
-  | "education"
-  | "skills"
-  | "technicalSkills"
-  | "languages"
-  | "certifications"
-  | "projects"
-  | "awards"
-  | "publications"
-  | "volunteering";
+export const cvTemplateIds = {
+  compact: "compact",
+  classic: "classic",
+  modern: "modern",
+  filo: "filo",
+} as const;
+
+export const cvTemplateLocales = {
+  es: "es",
+  en: "en",
+} as const;
+
+export type CVTemplateId =
+  (typeof cvTemplateIds)[keyof typeof cvTemplateIds];
+export type CVTemplateLocale =
+  (typeof cvTemplateLocales)[keyof typeof cvTemplateLocales];
+
+export const cvRenderableSectionIds = [
+  "summary",
+  "experience",
+  "education",
+  "skills",
+  "technicalSkills",
+  "languages",
+  "certifications",
+  "projects",
+  "awards",
+  "publications",
+  "volunteering",
+] as const;
+
+export type CVRenderableSectionId = (typeof cvRenderableSectionIds)[number];
 
 export interface CVPresentationInput {
   presentation?: {
@@ -34,17 +52,7 @@ export interface CVTemplateDefinition {
 }
 
 export const CV_RENDERABLE_SECTIONS: CVRenderableSectionId[] = [
-  "summary",
-  "experience",
-  "education",
-  "skills",
-  "technicalSkills",
-  "languages",
-  "certifications",
-  "projects",
-  "awards",
-  "publications",
-  "volunteering",
+  ...cvRenderableSectionIds,
 ];
 
 export const DEFAULT_SECTION_ORDER: CVRenderableSectionId[] = [

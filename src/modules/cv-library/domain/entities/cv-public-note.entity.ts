@@ -1,7 +1,15 @@
 import { AggregateRoot, Timestamp, UserId } from "@/modules/shared";
 import { CVDocumentId } from "../value-objects/cv-document-id.value-object";
 
-export type CVPublicNoteAnchorType = "presentation" | "section" | "item" | "bullet";
+export const cvPublicNoteAnchorTypes = {
+  presentation: "presentation",
+  section: "section",
+  item: "item",
+  bullet: "bullet",
+} as const;
+
+export type CVPublicNoteAnchorType =
+  (typeof cvPublicNoteAnchorTypes)[keyof typeof cvPublicNoteAnchorTypes];
 export interface CVPublicNotePrimitives { id: string; cvId: string; userId: string; anchorType: CVPublicNoteAnchorType; sectionId: string | null; anchorId: string | null; body: string; createdAt: string; updatedAt: string }
 
 export class CVPublicNote extends AggregateRoot {

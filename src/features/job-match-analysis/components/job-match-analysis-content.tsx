@@ -5,9 +5,8 @@ import { JobMatchAnalysisDetailSkeleton } from "./detail/job-match-analysis-deta
 import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
 import { FileText, Sparkles, Briefcase, Plus } from "lucide-react";
 import type { OfferStatus } from "@/lib/analysis-types";
-import type { JobMatchAnalysisDetailResponse } from "../types";
+import type { JobMatchAnalysisDetailResponse, JobMatchViewMode, InterviewQuestionSummary } from "../types";
 import type { AnalysisTab } from "../hooks/use-job-match-analysis-route-state";
-import type { InterviewQuestionSummary } from "../types";
 import { JobMatchAnalysisMainPanel } from "./job-match-analysis-main-panel";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
@@ -33,7 +32,7 @@ interface JobMatchAnalysisContentProps {
     model: string;
   }) => Promise<void>;
   onTabChange: (tab: AnalysisTab) => void;
-  onViewModeChange: (tab: "analysis" | "extraction") => void;
+  onViewModeChange: (tab: JobMatchViewMode) => void;
   onInterviewQuestionCreated?: () => void;
   onUpdateUrl: (url: string) => Promise<void>;
   onUpdateTracking: (updates: {

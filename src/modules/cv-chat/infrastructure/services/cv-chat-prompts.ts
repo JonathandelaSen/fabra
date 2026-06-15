@@ -1,7 +1,8 @@
 import type { CVRecord } from "@/lib/analysis-types";
 import { CV_CHAT_COACHING_INSTRUCTIONS } from "../../domain/services/cv-chat-coaching-instructions";
+import type { CVChatRolePrimitives } from "../../domain/value-objects/cv-chat-role.value-object";
 export interface CVChatHistoryMessage {
-  role: "user" | "assistant";
+  role: CVChatRolePrimitives;
   content: string;
 }
 

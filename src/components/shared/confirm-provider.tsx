@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { ConfirmDialog, type ConfirmDialogVariant } from "@/components/shared/confirm-dialog";
 
 export interface ConfirmOptions {
   title: string;
@@ -15,7 +15,7 @@ export interface ConfirmOptions {
   confirmLabel?: string;
   cancelLabel?: string;
   headerTitle?: string;
-  variant?: "danger" | "default";
+  variant?: ConfirmDialogVariant;
 }
 
 type ConfirmFn = (options: ConfirmOptions) => Promise<boolean>;

@@ -2,6 +2,12 @@ import type {
   ContextType as WorkJournalContextType,
   EntryInputMode as WorkJournalEntryInputMode,
 } from "@/modules/work-journal";
+import {
+  WORK_JOURNAL_CONTEXT_STATUSES,
+  WORK_JOURNAL_CONTEXT_TYPES,
+  WORK_JOURNAL_ENTRY_INPUT_MODES,
+  WORK_JOURNAL_SUGGESTION_ACTIONS,
+} from "@/shared/work-journal/constants";
 
 type Result<TValue, TError> =
   | { ok: true; value: TValue }
@@ -20,15 +26,21 @@ export interface CreateWorkJournalContextHttpInput {
   created_from_cv: boolean;
 }
 
+type WorkJournalContextStatusInput =
+  (typeof WORK_JOURNAL_CONTEXT_STATUSES)[keyof typeof WORK_JOURNAL_CONTEXT_STATUSES];
+
 export interface UpdateWorkJournalContextHttpInput {
   name?: string;
   role_or_label?: string | null;
-  status?: "active" | "archived";
+  status?: WorkJournalContextStatusInput;
   is_default?: boolean;
 }
 
+type WorkJournalSuggestionActionInput =
+  (typeof WORK_JOURNAL_SUGGESTION_ACTIONS)[keyof typeof WORK_JOURNAL_SUGGESTION_ACTIONS];
+
 export interface WorkJournalSuggestionActionHttpInput {
-  action: "promote" | "hide";
+  action: WorkJournalSuggestionActionInput;
   type: WorkJournalContextType;
   name: string;
   role_or_label: string | null;
@@ -102,13 +114,15 @@ function normalizeRequiredDate(value: unknown) {
 }
 
 function normalizeContextType(value: unknown): WorkJournalContextType | null {
-  return value === "employment" || value === "project" || value === "personal" || value === "other"
+  return Object.values(WORK_JOURNAL_CONTEXT_TYPES).includes(value as WorkJournalContextType)
     ? value
     : null;
 }
 
 function normalizeInputMode(value: unknown): WorkJournalEntryInputMode | null {
-  return value === "manual" || value === "ai_assisted" ? value : null;
+  return Object.values(WORK_JOURNAL_ENTRY_INPUT_MODES).includes(value as WorkJournalEntryInputMode)
+    ? value
+    : null;
 }
 
 export function normalizeStringArray(value: unknown): string[] | undefined {
@@ -161,7 +175,11 @@ export function parseUpdateWorkJournalContextRequest(
     updates.role_or_label = role;
   }
   if (body.status !== undefined) {
-    if (body.status !== "active" && body.status !== "archived") {
+    if (
+      !Object.values(WORK_JOURNAL_CONTEXT_STATUSES).includes(
+        body.status as WorkJournalContextStatusInput
+      )
+    ) {
       return validationError("Invalid status");
     }
     updates.status = body.status;
@@ -183,7 +201,11 @@ export function parseWorkJournalSuggestionActionRequest(
   if (!type || !name || role_or_label === undefined) {
     return validationError("Invalid suggestion payload");
   }
-  if (action !== "promote" && action !== "hide") {
+  if (
+    !Object.values(WORK_JOURNAL_SUGGESTION_ACTIONS).includes(
+      action as WorkJournalSuggestionActionInput
+    )
+  ) {
     return validationError("Invalid suggestion action");
   }
 

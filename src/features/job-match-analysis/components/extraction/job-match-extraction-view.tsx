@@ -47,7 +47,7 @@ type ParserTab = "python" | "pdfjs" | "node";
 const PARSERS: {
   key: ParserTab;
   labelKey: string;
-  descriptionKey: "python" | "pdfjs" | "node";
+  descriptionKey: ParserTab;
   color: string;
   badgeKey: string;
   badgeColor: string;

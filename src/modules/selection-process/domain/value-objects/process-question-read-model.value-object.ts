@@ -1,11 +1,27 @@
 import { ValueObject } from "@/modules/shared";
 import type { ProcessQuestion } from "../entities/process-question.entity";
+import { type OfferStatus } from "@/lib/analysis-types";
+
+export const processQuestionCVTypes = {
+  uploaded: "uploaded",
+  template: "template",
+} as const;
+
+export const processQuestionAnalysisModes = {
+  general: "general",
+  jobMatch: "job_match",
+} as const;
+
+export type ProcessQuestionCVType =
+  (typeof processQuestionCVTypes)[keyof typeof processQuestionCVTypes];
+export type ProcessQuestionAnalysisMode =
+  (typeof processQuestionAnalysisModes)[keyof typeof processQuestionAnalysisModes];
 
 export interface ProcessQuestionRelatedCVPrimitives {
   id: string;
   name: string;
   filename: string | null;
-  type: "uploaded" | "template";
+  type: ProcessQuestionCVType;
 }
 
 export interface ProcessQuestionRelatedAnalysisPrimitives {
@@ -13,16 +29,9 @@ export interface ProcessQuestionRelatedAnalysisPrimitives {
   cv_id: string | null;
   title: string;
   filename: string;
-  analysis_mode: "general" | "job_match";
+  analysis_mode: ProcessQuestionAnalysisMode;
   job_url: string | null;
-  offer_status:
-    | "interesting"
-    | "applied"
-    | "interview"
-    | "offer"
-    | "rejected"
-    | "discarded"
-    | null;
+  offer_status: OfferStatus | null;
 }
 
 export interface ProcessQuestionReadModelPrimitives {

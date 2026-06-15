@@ -22,7 +22,8 @@ export function AdminAIInteractionsView() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [modelFilter, setModelFilter] = useState<string>("all");
   const [moduleFilter, setModuleFilter] = useState<string>("all");
-  const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
+  type SortOrder = "newest" | "oldest";
+  const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
 
   const filterOptions = useMemo(() => {
     const data = query.data ?? [];

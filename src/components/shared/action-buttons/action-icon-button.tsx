@@ -24,7 +24,9 @@ export const ACTION_ICON_BUTTON_SIZES = {
 export type ActionIconButtonSize =
   (typeof ACTION_ICON_BUTTON_SIZES)[keyof typeof ACTION_ICON_BUTTON_SIZES];
 
-export interface ActionIconButtonProps extends Omit<ComponentProps<typeof Button>, "variant" | "size"> {
+type ButtonOmittedProps = "variant" | "size";
+
+export interface ActionIconButtonProps extends Omit<ComponentProps<typeof Button>, ButtonOmittedProps> {
   buttonSize?: ActionIconButtonSize;
   icon: ElementType<{ className?: string }>;
   loading?: boolean;

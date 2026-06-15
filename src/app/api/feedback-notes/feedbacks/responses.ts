@@ -1,4 +1,7 @@
-export type FeedbackStatusResponse = "active" | "closed";
+import { FEEDBACK_STATUSES } from "@/shared/feedback-notes/constants";
+
+export type FeedbackStatusResponse =
+  (typeof FEEDBACK_STATUSES)[keyof typeof FEEDBACK_STATUSES];
 
 export interface FeedbackResponse {
   id: string;

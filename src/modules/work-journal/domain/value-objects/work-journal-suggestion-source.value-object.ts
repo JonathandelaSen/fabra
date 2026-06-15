@@ -1,6 +1,11 @@
 import { ValueObject } from "@/modules/shared";
 
-export type SuggestionSource = "cv";
+export const workJournalSuggestionSources = {
+  cv: "cv",
+} as const;
+
+export type SuggestionSource =
+  (typeof workJournalSuggestionSources)[keyof typeof workJournalSuggestionSources];
 
 export class WorkJournalSuggestionSource extends ValueObject<SuggestionSource> {
   private constructor(private readonly value: SuggestionSource) {
@@ -8,7 +13,9 @@ export class WorkJournalSuggestionSource extends ValueObject<SuggestionSource> {
   }
 
   static fromPrimitives(value: SuggestionSource): WorkJournalSuggestionSource {
-    if (value !== "cv") throw new Error(`Invalid suggestion source: ${value}`);
+    if (value !== workJournalSuggestionSources.cv) {
+      throw new Error(`Invalid suggestion source: ${value}`);
+    }
     return new WorkJournalSuggestionSource(value);
   }
 

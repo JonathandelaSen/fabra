@@ -1,5 +1,5 @@
 import { BoundSupabaseRepository, type UserId } from "@/modules/shared";
-import { AIInteractionReview } from "../domain/entities/ai-interaction-review.entity";
+import { AIInteractionReview, type AIInteractionRating } from "../domain/entities/ai-interaction-review.entity";
 import type { AIInteractionReviewRepository } from "../domain/repositories/ai-interaction-review.repository";
 
 export class SupabaseAIInteractionReviewRepository
@@ -38,7 +38,7 @@ function rowToEntity(row: Record<string, unknown>) {
   return AIInteractionReview.fromPrimitives({
     interactionId: row.interaction_id as string,
     reviewerUserId: row.reviewer_user_id as string,
-    rating: row.rating as "good" | "mixed" | "bad",
+    rating: row.rating as AIInteractionRating,
     note: row.note as string | null,
     createdAt: row.created_at as string,
     updatedAt: row.updated_at as string,

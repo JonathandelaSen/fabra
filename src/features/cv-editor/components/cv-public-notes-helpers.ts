@@ -1,4 +1,4 @@
-import type { StandardCVProfile } from "@/lib/cv-profile";
+import type { PublicCVNoteAnchorType } from "@/app/api/cvs/[id]/public-notes/responses";
 
 export const sections = ["summary", "experience", "education", "skills", "languages", "certifications", "projects", "awards", "publications", "volunteering"];
 
@@ -56,7 +56,7 @@ export function getSectionItems(sectionId: string, profile: any): SectionItem[] 
   });
 }
 
-export function getAvailableSections(anchorType: "presentation" | "section" | "item" | "bullet", profile: any) {
+export function getAvailableSections(anchorType: PublicCVNoteAnchorType, profile: any) {
   if (anchorType === "presentation") return [];
   if (anchorType === "section") {
     return sections.filter((s) => profile[s] !== undefined);

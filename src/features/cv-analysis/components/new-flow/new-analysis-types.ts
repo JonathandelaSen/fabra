@@ -1,7 +1,9 @@
+import type { CVDocumentType } from "@/app/api/cvs/responses";
+
 export interface CVSummary {
   id: string;
   name: string;
-  type: "uploaded" | "template" | "json_resume";
+  type: CVDocumentType;
   filename: string | null;
 }
 

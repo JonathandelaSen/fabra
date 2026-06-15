@@ -12,11 +12,12 @@ import { useTranslations } from "next-intl";
 import { Check, RotateCw } from "lucide-react";
 
 type Interaction = ListAdminAIInteractionsResponse[number];
+type AIInteractionRating = NonNullable<Interaction["review"]>["rating"];
 
 export function ComparisonColumn({ interaction }: { interaction: Interaction }) {
   const t = useTranslations("admin.aiInteractions");
   const review = useReviewAdminAIInteraction();
-  const [rating, setRating] = useState<"good" | "mixed" | "bad">(interaction.review?.rating ?? "mixed");
+  const [rating, setRating] = useState<AIInteractionRating>(interaction.review?.rating ?? "mixed");
   const [note, setNote] = useState(interaction.review?.note ?? "");
 
   const handleSaveReview = () => {

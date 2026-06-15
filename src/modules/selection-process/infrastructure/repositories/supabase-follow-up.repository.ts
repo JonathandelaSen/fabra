@@ -2,17 +2,13 @@ import { BoundSupabaseRepository, type UserId } from "@/modules/shared";
 import { FollowUp } from "../../domain/entities/follow-up.entity";
 import type { FollowUpRepository } from "../../domain/repositories/follow-up.repository";
 
+import { type OfferStatus } from "@/lib/analysis-types";
+
 interface FollowUpRow {
   id: string;
   user_id: string;
   job_opportunity_id: string;
-  status:
-    | "interesting"
-    | "applied"
-    | "interview"
-    | "offer"
-    | "rejected"
-    | "discarded";
+  status: OfferStatus;
   notes: string | null;
   next_action: string | null;
   next_action_at: string | null;

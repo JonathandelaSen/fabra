@@ -1,6 +1,13 @@
 import { AggregateRoot } from "@/modules/shared";
 
-export type AIInteractionRating = "good" | "mixed" | "bad";
+export const aiInteractionRatings = {
+  good: "good",
+  mixed: "mixed",
+  bad: "bad",
+} as const;
+
+export type AIInteractionRating =
+  (typeof aiInteractionRatings)[keyof typeof aiInteractionRatings];
 
 export interface AIInteractionReviewPrimitives {
   interactionId: string;

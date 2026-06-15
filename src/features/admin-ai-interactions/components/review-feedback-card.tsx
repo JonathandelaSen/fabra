@@ -10,11 +10,12 @@ import { UserCheck, ThumbsUp, ThumbsDown, AlertTriangle, RotateCw, Check } from 
 import type { ListAdminAIInteractionsResponse } from "@/app/api/admin/ai-interactions/responses";
 
 type Interaction = ListAdminAIInteractionsResponse[number];
+type AIInteractionRating = NonNullable<Interaction["review"]>["rating"];
 
 export function ReviewFeedbackCard({ interaction }: { interaction: Interaction }) {
   const t = useTranslations("admin.aiInteractions");
   const review = useReviewAdminAIInteraction();
-  const [rating, setRating] = useState<"good" | "mixed" | "bad">(interaction.review?.rating ?? "mixed");
+  const [rating, setRating] = useState<AIInteractionRating>(interaction.review?.rating ?? "mixed");
   const [note, setNote] = useState(interaction.review?.note ?? "");
 
   const handleSaveReview = () => {

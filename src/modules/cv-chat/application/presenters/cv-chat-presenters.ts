@@ -1,5 +1,6 @@
 import type { Conversation } from "../../domain/entities/conversation.entity";
 import type { ChatMessage } from "../../domain/entities/chat-message.entity";
+import type { CVChatRolePrimitives } from "../../domain/value-objects/cv-chat-role.value-object";
 
 export interface CVChatConversation {
   id: string;
@@ -15,7 +16,7 @@ export interface CVChatMessage {
   user_id: string;
   cv_id: string;
   conversation_id: string;
-  role: "user" | "assistant";
+  role: CVChatRolePrimitives;
   content: string;
   model: string | null;
   metadata: Record<string, unknown> | null;

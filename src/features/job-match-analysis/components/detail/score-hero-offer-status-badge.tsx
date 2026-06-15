@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { type OfferStatus } from "@/lib/analysis-types";
+import { type DetailTab } from "../../types";
 
 export const STATUS_CONFIG: Record<
   OfferStatus,
@@ -41,8 +42,8 @@ export const STATUS_CONFIG: Record<
 
 interface ScoreHeroOfferStatusBadgeProps {
   offerStatus?: OfferStatus | null;
-  onTabChange?: (tab: "summary" | "offer" | "questions" | "chat" | "tracking") => void;
-  tabValue: "summary" | "offer" | "questions" | "chat" | "tracking";
+  onTabChange?: (tab: DetailTab) => void;
+  tabValue: DetailTab;
 }
 
 export function ScoreHeroOfferStatusBadge({

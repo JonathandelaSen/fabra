@@ -1,6 +1,15 @@
-export type WorkJournalContextType = "employment" | "project" | "personal" | "other";
-export type WorkJournalContextStatus = "active" | "archived";
-export type WorkJournalEntryInputMode = "manual" | "ai_assisted";
+import {
+  WORK_JOURNAL_CONTEXT_STATUSES,
+  WORK_JOURNAL_CONTEXT_TYPES,
+  WORK_JOURNAL_ENTRY_INPUT_MODES,
+} from "@/shared/work-journal/constants";
+
+export type WorkJournalContextType =
+  (typeof WORK_JOURNAL_CONTEXT_TYPES)[keyof typeof WORK_JOURNAL_CONTEXT_TYPES];
+export type WorkJournalContextStatus =
+  (typeof WORK_JOURNAL_CONTEXT_STATUSES)[keyof typeof WORK_JOURNAL_CONTEXT_STATUSES];
+export type WorkJournalEntryInputMode =
+  (typeof WORK_JOURNAL_ENTRY_INPUT_MODES)[keyof typeof WORK_JOURNAL_ENTRY_INPUT_MODES];
 
 export interface WorkJournalContextResponse {
   id: string;

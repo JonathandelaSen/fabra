@@ -17,8 +17,18 @@ export const WORKFLOW_STATUS = {
 export type WorkflowStatus =
   (typeof WORKFLOW_STATUS)[keyof typeof WORKFLOW_STATUS];
 
+export const MANUAL_SUPPORT_KINDS = {
+  directEdit: "direct_edit",
+  formInput: "form_input",
+  existingScreen: "existing_screen",
+  other: "other",
+} as const;
+
+export type ManualSupportKind =
+  (typeof MANUAL_SUPPORT_KINDS)[keyof typeof MANUAL_SUPPORT_KINDS];
+
 export type ManualSupport =
-  | { supported: true; kind: "direct_edit" | "form_input" | "existing_screen" | "other" }
+  | { supported: true; kind: ManualSupportKind }
   | { supported: false; reason: string };
 
 export interface AssistedWorkflowSummary {

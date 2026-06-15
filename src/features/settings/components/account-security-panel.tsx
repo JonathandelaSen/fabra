@@ -2,12 +2,13 @@
 
 import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
-import { AlertCircle, Check, LockKeyhole, LogOut, Save, UserX } from "lucide-react";
+import { AlertCircle, Check, LockKeyhole, Save, UserX } from "lucide-react";
 import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
 } from "@/components/shared/action-buttons";
 import { SettingsSectionPanel } from "@/components/shared/settings-section-panel";
+import { SignOutButton } from "./sign-out-button";
 import {
   changePasswordWithCurrent,
   signOut,
@@ -47,14 +48,10 @@ export function AccountSecurityPanel() {
               {t("signOut")}
             </p>
           </div>
-          <IconTextButton
-            type="submit"
-            icon={LogOut}
-            strong
-            className="h-10"
-          >
-            {t("signOut")}
-          </IconTextButton>
+          <SignOutButton
+            label={t("signOut")}
+            pendingLabel={t("signingOut")}
+          />
         </form>
 
         <form

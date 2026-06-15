@@ -10,13 +10,14 @@ import type {
   ChatMessageSearchCriteria,
 } from "../../domain/repositories/chat-message.repository";
 import { CVChatMessageId } from "../../domain/value-objects/cv-chat-message-id.value-object";
+import type { CVChatRolePrimitives } from "../../domain/value-objects/cv-chat-role.value-object";
 
 interface ChatMessageRow {
   id: string;
   user_id: string;
   cv_id: string;
   conversation_id: string;
-  role: "user" | "assistant";
+  role: CVChatRolePrimitives;
   content: string;
   model: string | null;
   metadata: Record<string, unknown> | null;

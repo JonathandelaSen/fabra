@@ -12,9 +12,11 @@ import { sendPasswordRecoveryEmail } from "../api/auth-api";
 
 const INITIAL_STATE: AuthFormState = {};
 
+export type AuthFormMode = "login" | "signup" | "recover";
+
 export function useAuthFormState(initialError?: string, initialMessage?: string) {
   const t = useTranslations("auth");
-  const [mode, setMode] = useState<"login" | "signup" | "recover">("login");
+  const [mode, setMode] = useState<AuthFormMode>("login");
   const [loginState, loginAction, loginPending] = useActionState(
     signIn,
     INITIAL_STATE,

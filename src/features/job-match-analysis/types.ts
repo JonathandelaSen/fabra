@@ -21,12 +21,19 @@ export interface JobAnalysisChatConversation {
   updated_at: string;
 }
 
+export type JobAnalysisChatRole =
+  (typeof JOB_ANALYSIS_CHAT_ROLES)[keyof typeof JOB_ANALYSIS_CHAT_ROLES];
+
+export type DetailTab = "summary" | "offer" | "questions" | "chat" | "tracking";
+
+export type JobMatchViewMode = "analysis" | "extraction";
+
 export interface JobAnalysisChatMessage {
   id: string;
   user_id: string;
   analysis_id: string;
   conversation_id: string;
-  role: "user" | "assistant";
+  role: JobAnalysisChatRole;
   content: string;
   model: string | null;
   metadata: Record<string, unknown> | null;
@@ -38,3 +45,4 @@ export type {
   ListJobMatchAnalysesResponse,
 } from "@/app/api/job-match-analyses/responses";
 export type { JobMatchAnalysisDetail } from "./api/job-match-analysis-api";
+import { JOB_ANALYSIS_CHAT_ROLES } from "@/shared/job-analysis-chat/constants";

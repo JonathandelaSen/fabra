@@ -2,12 +2,14 @@
 
 import { Save } from "lucide-react";
 
+import type { CVSaveState } from "../../types";
+
 export function ManualEditorHeader({
   saveState,
   onSave,
   t,
 }: {
-  saveState: "idle" | "saving" | "saved";
+  saveState: CVSaveState;
   onSave: () => void;
   t: (key: string) => string;
 }) {

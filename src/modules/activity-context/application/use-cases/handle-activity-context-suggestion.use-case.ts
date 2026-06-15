@@ -1,10 +1,14 @@
 import { EntityId, Timestamp, UserId, type EventBus } from "@/modules/shared";
 import { ActivityContext, type ActivityContextType } from "../../domain/entities/activity-context.entity";
 import type { ActivityContextRepository } from "../../domain/repositories/activity-context.repository";
+import {
+  ACTIVITY_CONTEXT_SUGGESTION_ACTIONS,
+  type ActivityContextSuggestionAction,
+} from "../activity-context-suggestion.constants";
 
 export interface HandleActivityContextSuggestionInput {
   userId: string;
-  action: "promote" | "hide";
+  action: ActivityContextSuggestionAction;
   type: ActivityContextType;
   name: string;
   roleOrLabel: string | null;
@@ -22,7 +26,7 @@ export class HandleActivityContextSuggestionUseCase {
     input: HandleActivityContextSuggestionInput
   ): Promise<{ ok: true } | ActivityContext> {
     const userId = UserId.fromPrimitives(input.userId);
-    if (input.action === "hide") {
+    if (input.action === ACTIVITY_CONTEXT_SUGGESTION_ACTIONS.HIDE) {
       await this.deps.activityContextRepo.hideSuggestion(userId, input);
       return { ok: true };
     }

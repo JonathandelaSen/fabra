@@ -1,7 +1,15 @@
 import { AggregateRoot, EntityId, UserId } from "@/modules/shared";
 import { CommitmentDomainEvent } from "../events/commitment-domain.event";
 
-export type CommitmentItemStatus = "todo" | "in_progress" | "done" | "cancelled";
+export const commitmentItemStatuses = {
+  todo: "todo",
+  inProgress: "in_progress",
+  done: "done",
+  cancelled: "cancelled",
+} as const;
+
+export type CommitmentItemStatus =
+  (typeof commitmentItemStatuses)[keyof typeof commitmentItemStatuses];
 
 export interface CommitmentItemPrimitives {
   id: string;
@@ -46,7 +54,7 @@ export class CommitmentItem extends AggregateRoot {
       title: assertText(params.title, "Item title", 160),
       notes: normalizeText(params.notes ?? null),
       evidenceNotes: normalizeText(params.evidenceNotes ?? null),
-      status: params.status ?? "todo",
+      status: params.status ?? commitmentItemStatuses.todo,
       dueDate: params.dueDate ?? null,
       completedAt: params.completedAt ?? null,
       orderIndex: params.orderIndex,
