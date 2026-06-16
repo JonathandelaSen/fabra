@@ -77,10 +77,10 @@ export async function DELETE(
     const { supabase, user } = authContext;
 
     const { id } = await params;
-    const deleted = await jobMatchAnalysisModule
+    const result = await jobMatchAnalysisModule
       .bindRequest(supabase)
       .deleteJobMatchAnalysis.execute({ id, userId: user.id });
-    if (!deleted) {
+    if (!result.toPrimitives()) {
       throw notFound("Job match analysis not found", ErrorCode.JOB_MATCH_ANALYSIS_NOT_FOUND);
     }
     return ok({ success: true });

@@ -1,4 +1,4 @@
-import { UserId, type EventBus } from "@/modules/shared";
+import { ExecutionResult, UserId, type EventBus } from "@/modules/shared";
 import type { ProcessQuestionRepository } from "../../domain/repositories/process-question.repository";
 import { ProcessQuestionId } from "../../domain/value-objects/process-question-id.value-object";
 
@@ -15,11 +15,11 @@ export class DeleteProcessQuestionUseCase {
     }
   ) {}
 
-  async execute(input: DeleteProcessQuestionInput): Promise<boolean> {
+  async execute(input: DeleteProcessQuestionInput): Promise<ExecutionResult> {
     const questionId = ProcessQuestionId.fromPrimitives(input.id);
     const userId = UserId.fromPrimitives(input.userId);
     const existing = await this.deps.questionRepo.findById(questionId, userId);
-    if (!existing) return false;
+    if (!existing) return ExecutionResult.fail();
 
     existing.question.delete();
     const deleted = await this.deps.questionRepo.delete(questionId, userId);
@@ -28,6 +28,6 @@ export class DeleteProcessQuestionUseCase {
       const events = existing.question.pullDomainEvents();
       await this.deps.eventBus.publish(events);
     }
-    return deleted;
+    return ExecutionResult.fromPrimitives(deleted);
   }
 }

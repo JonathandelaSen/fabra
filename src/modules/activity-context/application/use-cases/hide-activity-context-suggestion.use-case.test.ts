@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { ExecutionResult } from "@/modules/shared";
 import { HideActivityContextSuggestionUseCase } from "./hide-activity-context-suggestion.use-case";
 
 describe("HideActivityContextSuggestionUseCase", () => {
@@ -15,7 +16,8 @@ describe("HideActivityContextSuggestionUseCase", () => {
       name: "Acme",
     });
 
-    expect(result).toEqual({ ok: true });
+    expect(result).toBeInstanceOf(ExecutionResult);
+    expect(result.toPrimitives()).toBe(true);
     expect(repo.hideSuggestion).toHaveBeenCalledOnce();
     expect(repo.hideSuggestion).toHaveBeenCalledWith(
       expect.objectContaining({ value: "user-1" }),

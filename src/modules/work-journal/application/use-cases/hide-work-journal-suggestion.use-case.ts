@@ -1,5 +1,5 @@
-import { UserId } from "@/modules/shared";
-import type { ContextType } from "../../domain/entities/journal-context.entity";
+import { ExecutionResult, UserId } from "@/modules/shared";
+import type { ContextType } from "../../domain/entities/journal-entry.entity";
 import type { WorkJournalContextRepository } from "../../domain/repositories/work-journal-context.repository";
 import { WorkJournalContextSuggestion } from "../../domain/value-objects/context-suggestion.value-object";
 
@@ -17,7 +17,7 @@ export class HideWorkJournalSuggestionUseCase {
     }
   ) {}
 
-  async execute(input: HideWorkJournalSuggestionInput): Promise<{ ok: true }> {
+  async execute(input: HideWorkJournalSuggestionInput): Promise<ExecutionResult> {
     await this.deps.contextRepo.hideSuggestion(
       UserId.fromPrimitives(input.userId),
       WorkJournalContextSuggestion.fromPrimitives({
@@ -28,6 +28,6 @@ export class HideWorkJournalSuggestionUseCase {
         source: "cv",
       })
     );
-    return { ok: true };
+    return ExecutionResult.ok();
   }
 }

@@ -112,10 +112,10 @@ export async function DELETE(
     const { supabase, user } = authContext;
 
     const { id } = await params;
-    const deleted = await selectionProcessModule
+    const result = await selectionProcessModule
       .bindRequest(supabase)
       .deleteProcessQuestion.execute({ id, userId: user.id });
-    if (!deleted) {
+    if (!result.toPrimitives()) {
       throw notFound("Question not found", ErrorCode.QUESTION_NOT_FOUND);
     }
 

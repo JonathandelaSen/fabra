@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       ...parsed.value,
     });
 
-    return ok(result satisfies DismissActivityContextSuggestionResponse);
+    return ok({ ok: result.toPrimitives() as true } satisfies DismissActivityContextSuggestionResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }

@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { ExecutionResult } from "@/modules/shared";
 import { DeleteCVAnalysisUseCase } from "./delete-cv-analysis.use-case";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 
@@ -11,12 +12,13 @@ describe("DeleteCVAnalysisUseCase", () => {
       delete: vi.fn(async () => true),
     } satisfies CVAnalysisRepository;
 
-    await expect(
-      new DeleteCVAnalysisUseCase({ repo }).execute({
-        id: "analysis-1",
-        userId: "user-1",
-      }),
-    ).resolves.toBe(true);
+    const result = await new DeleteCVAnalysisUseCase({ repo }).execute({
+      id: "analysis-1",
+      userId: "user-1",
+    });
+
+    expect(result).toBeInstanceOf(ExecutionResult);
+    expect(result.toPrimitives()).toBe(true);
     expect(repo.delete).toHaveBeenCalledOnce();
   });
 });

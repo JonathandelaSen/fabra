@@ -45,10 +45,10 @@ export async function DELETE(
     const { supabase, user } = authContext;
 
     const { id } = await params;
-    const deleted = await cvAnalysisModule
+    const result = await cvAnalysisModule
       .bindRequest(supabase)
       .deleteCVAnalysis.execute({ id, userId: user.id });
-    if (!deleted) {
+    if (!result.toPrimitives()) {
       throw notFound("CV analysis not found", ErrorCode.CV_ANALYSIS_NOT_FOUND);
     }
     return ok({ success: true } satisfies DeleteCVAnalysisResponse);

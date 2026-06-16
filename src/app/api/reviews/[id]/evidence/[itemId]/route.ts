@@ -49,11 +49,11 @@ export async function DELETE(
 
     const { itemId } = await params;
     performanceReviewModule.bindRequest(supabase);
-    const deleted = await performanceReviewModule.removeEvidenceItem.execute({
+    const result = await performanceReviewModule.removeEvidenceItem.execute({
       id: itemId,
       userId: user.id,
     });
-    if (!deleted) throw new ReviewEvidenceItemNotFoundError();
+    if (!result.toPrimitives()) throw new ReviewEvidenceItemNotFoundError();
     return ok({ ok: true });
   } catch (error: unknown) {
     return handleApiError(error);

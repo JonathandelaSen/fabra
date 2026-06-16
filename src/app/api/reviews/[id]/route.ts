@@ -72,11 +72,11 @@ export async function DELETE(
 
     const { id } = await params;
     performanceReviewModule.bindRequest(supabase);
-    const deleted = await performanceReviewModule.deleteReview.execute({
+    const result = await performanceReviewModule.deleteReview.execute({
       id,
       userId: user.id,
     });
-    if (!deleted) throw new PerformanceReviewNotFoundError();
+    if (!result.toPrimitives()) throw new PerformanceReviewNotFoundError();
     return ok({ ok: true });
   } catch (error: unknown) {
     return handleApiError(error);

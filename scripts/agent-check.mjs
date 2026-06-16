@@ -20,6 +20,12 @@ const checks = [
     successSummary: "Frontend component and hook tests passed.",
   },
   {
+    name: "backend tests",
+    command: "npm",
+    args: ["run", "test:backend", "--silent"],
+    successSummary: "Backend tests passed.",
+  },
+  {
     name: "build",
     command: "npm",
     args: ["run", "build", "--silent"],

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { ExecutionResult } from "@/modules/shared";
 import { createTestUser } from "@/modules/test-helpers/setup";
 import {
   makePerformanceReviewDeps,
@@ -21,11 +22,12 @@ describe("DeletePerformanceReviewUseCase", () => {
       eventBus: deps.eventBusPort,
     });
 
-    expect(await useCase.execute({ id: created.id, userId: user.id })).toBe(
-      true,
-    );
-    expect(
-      await useCase.execute({ id: crypto.randomUUID(), userId: user.id }),
-    ).toBe(false);
+    const deletedOk = await useCase.execute({ id: created.id, userId: user.id });
+    expect(deletedOk).toBeInstanceOf(ExecutionResult);
+    expect(deletedOk.toPrimitives()).toBe(true);
+
+    const deletedFail = await useCase.execute({ id: crypto.randomUUID(), userId: user.id });
+    expect(deletedFail).toBeInstanceOf(ExecutionResult);
+    expect(deletedFail.toPrimitives()).toBe(false);
   });
 });

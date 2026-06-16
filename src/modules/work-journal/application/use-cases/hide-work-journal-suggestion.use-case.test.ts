@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
+import { ExecutionResult } from "@/modules/shared";
 import {
   createTestUser,
   getSupabaseClient,
@@ -15,14 +16,15 @@ describe("HideWorkJournalSuggestionUseCase", () => {
     contextRepo.bindRequest(supabase);
     const useCase = new HideWorkJournalSuggestionUseCase({ contextRepo });
 
-    await expect(
-      useCase.execute({
-        userId: user.id,
-        type: "project",
-        name: "Internal Tools",
-        role_or_label: null,
-      })
-    ).resolves.toEqual({ ok: true });
+    const result = await useCase.execute({
+      userId: user.id,
+      type: "project",
+      name: "Internal Tools",
+      role_or_label: null,
+    });
+
+    expect(result).toBeInstanceOf(ExecutionResult);
+    expect(result.toPrimitives()).toBe(true);
 
     await expect(
       contextRepo

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { ExecutionResult } from "@/modules/shared";
 import { DeleteProcessQuestionUseCase } from "./delete-process-question.use-case";
 import { processQuestionRepo, eventBus } from "./selection-process-test-helpers.test";
 
@@ -11,7 +12,8 @@ describe("DeleteProcessQuestionUseCase", () => {
       eventBus: bus,
     }).execute({ id: "question-1", userId: "user-1" });
 
-    expect(deleted).toBe(true);
+    expect(deleted).toBeInstanceOf(ExecutionResult);
+    expect(deleted.toPrimitives()).toBe(true);
     expect(repo.delete).toHaveBeenCalledOnce();
 
     expect(bus.publish).toHaveBeenCalledTimes(1);

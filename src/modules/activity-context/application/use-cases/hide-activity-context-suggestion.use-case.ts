@@ -1,4 +1,4 @@
-import { UserId } from "@/modules/shared";
+import { ExecutionResult, UserId } from "@/modules/shared";
 import type { ActivityContextType } from "../../domain/entities/activity-context.entity";
 import type { ActivityContextRepository } from "../../domain/repositories/activity-context.repository";
 
@@ -15,12 +15,12 @@ export class HideActivityContextSuggestionUseCase {
     }
   ) {}
 
-  async execute(input: HideActivityContextSuggestionInput): Promise<{ ok: true }> {
+  async execute(input: HideActivityContextSuggestionInput): Promise<ExecutionResult> {
     const userId = UserId.fromPrimitives(input.userId);
     await this.deps.activityContextRepo.hideSuggestion(userId, {
       type: input.type,
       name: input.name,
     });
-    return { ok: true };
+    return ExecutionResult.ok();
   }
 }

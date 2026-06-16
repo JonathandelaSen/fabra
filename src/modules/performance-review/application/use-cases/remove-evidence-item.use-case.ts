@@ -1,4 +1,4 @@
-import { UserId, type EventBus } from "@/modules/shared";
+import { ExecutionResult, UserId, type EventBus } from "@/modules/shared";
 import type { ReviewEvidenceItemRepository } from "../../domain/repositories/review-evidence-item.repository";
 import { ReviewEvidenceItemId } from "../../domain/value-objects/review-evidence-item-id.value-object";
 
@@ -15,15 +15,15 @@ export class RemoveEvidenceItemUseCase {
     },
   ) {}
 
-  async execute(input: RemoveEvidenceItemInput): Promise<boolean> {
+  async execute(input: RemoveEvidenceItemInput): Promise<ExecutionResult> {
     const itemId = ReviewEvidenceItemId.fromPrimitives(input.id);
     const userId = UserId.fromPrimitives(input.userId);
     const existing = await this.deps.itemRepo.findById(itemId, userId);
-    if (!existing) return false;
+    if (!existing) return ExecutionResult.fail();
 
     existing.delete();
     const deleted = await this.deps.itemRepo.delete(itemId, userId);
     if (deleted) await this.deps.eventBus.publish(existing.pullDomainEvents());
-    return deleted;
+    return ExecutionResult.fromPrimitives(deleted);
   }
 }
