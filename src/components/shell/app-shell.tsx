@@ -38,6 +38,11 @@ function loadAdminStatus() {
   return adminStatusRequest;
 }
 
+function resetUserCaches() {
+  userEmailRequest = null;
+  adminStatusRequest = null;
+}
+
 interface AppShellProps {
   initialView?: AppView;
   initialUserEmail?: string | null;
@@ -84,6 +89,7 @@ export default function AppShell({
   const [aiProvider, setAIProvider] = useState<StoredAIProvider>("gemini");
   const [aiApiKey, setAIApiKey] = useState("");
   const [aiModel, setAIModel] = useState<string>(DEFAULT_GEMINI_MODEL);
+  const authedUserIdRef = useRef<string | null>(null);
   const lastFeedbackNotesHrefRef = useRef("/feedback-notes");
   const lastReceivedFeedbackHrefRef = useRef("/received-feedback");
   const lastWorkJournalHrefRef = useRef("/work-journal");
@@ -148,6 +154,36 @@ export default function AppShell({
       cancelled = true;
     };
   }, [initialIsAdmin]);
+
+  useEffect(() => {
+    const supabase = createClient();
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      const nextUserId = session?.user?.id ?? null;
+      if (nextUserId === authedUserIdRef.current) return;
+      authedUserIdRef.current = nextUserId;
+
+      resetUserCaches();
+
+      if (!nextUserId) {
+        setUserEmail(null);
+        setIsAdmin(false);
+        setHasLoadedAdminStatus(false);
+        return;
+      }
+
+      setUserEmail(session?.user?.email ?? null);
+      loadAdminStatus().then((admin) => {
+        setIsAdmin(admin);
+        setHasLoadedAdminStatus(true);
+      });
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     if (pathname.startsWith("/admin") && hasLoadedAdminStatus && !isAdmin) {
