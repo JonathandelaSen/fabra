@@ -12,6 +12,7 @@ export { OptionalIsoDate } from "./domain/value-objects/optional-iso-date.value-
 export { Timestamp } from "./domain/value-objects/timestamp.value-object";
 export { UserId } from "./domain/value-objects/user-id.value-object";
 export { ValueObject } from "./domain/value-objects/value-object";
+export { Counter } from "./domain/value-objects/counter.value-object";
 export type { AIProvider } from "./domain/value-objects/ai-provider.value-object";
 export { AI_PROVIDER, AI_PROVIDERS, isAIProvider, parseAIProvider } from "./domain/value-objects/ai-provider.value-object";
 export {
