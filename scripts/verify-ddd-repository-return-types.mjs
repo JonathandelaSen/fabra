@@ -124,7 +124,11 @@ export async function findRepositoryReturnTypesViolations({ rootDir = repoRoot }
   const allFiles = await walkFiles(modulesDir);
   const repositoryFiles = allFiles
     .map((filePath) => toPosixRelative(rootDir, filePath))
-    .filter((file) => file.includes("/domain/repositories/") && file.endsWith(".repository.ts"))
+    .filter(
+      (file) =>
+        (file.includes("/domain/repositories/") || file.includes("/infrastructure/repositories/")) &&
+        file.endsWith(".repository.ts")
+    )
     .sort();
 
   const violations = [];
@@ -133,6 +137,7 @@ export async function findRepositoryReturnTypesViolations({ rootDir = repoRoot }
     const content = await readFile(path.join(rootDir, file), "utf8");
     const sourceFile = parseSource(content, file);
     const expectedPascalCaseName = getExpectedPascalCaseName(file);
+    const isInfrastructure = file.includes("/infrastructure/repositories/");
 
     // Map named imports to their module specifiers
     const imports = new Map();
@@ -166,21 +171,36 @@ export async function findRepositoryReturnTypesViolations({ rootDir = repoRoot }
       }
 
       if (declaredName && targetNode) {
-        const hasAllowedSuffix = allowedSuffixes.some((suffix) => declaredName.endsWith(suffix));
-        const matchesPascalCasePrefix = declaredName === expectedPascalCaseName;
+        if (isInfrastructure) {
+          const allowedInfraSuffixes = ["Row", "Input", "Filters"];
+          const isAllowedInfraDecl =
+            declaredName === "Row" ||
+            allowedInfraSuffixes.some((suffix) => declaredName.endsWith(suffix));
+          if (!isAllowedInfraDecl) {
+            violations.push({
+              file,
+              rule: "repository-infrastructure-invalid-declaration",
+              reason: `Infrastructure repository files must only define Row mapping, Input, or Filters types or interfaces (e.g. ending with "Row", "Input", "Filters" or named "Row"). The type/interface "${declaredName}" is not allowed.`,
+              location: location(sourceFile, targetNode),
+            });
+          }
+        } else {
+          const hasAllowedSuffix = allowedSuffixes.some((suffix) => declaredName.endsWith(suffix));
+          const matchesPascalCasePrefix = declaredName === expectedPascalCaseName;
 
-        if (!hasAllowedSuffix && !matchesPascalCasePrefix) {
-          violations.push({
-            file,
-            rule: "repository-invalid-declaration-type",
-            reason: `Repository interface files must only define/export the repository/service interface itself, or input/criteria structures. The type/interface "${declaredName}" is not allowed. Return value objects or entities instead.`,
-            location: location(sourceFile, targetNode),
-          });
+          if (!hasAllowedSuffix && !matchesPascalCasePrefix) {
+            violations.push({
+              file,
+              rule: "repository-invalid-declaration-type",
+              reason: `Repository interface files must only define/export the repository/service interface itself, or input/criteria structures. The type/interface "${declaredName}" is not allowed. Return value objects or entities instead.`,
+              location: location(sourceFile, targetNode),
+            });
+          }
         }
       }
 
       // 2. Check method return types inside repository/service interfaces
-      if (ts.isInterfaceDeclaration(node)) {
+      if (!isInfrastructure && ts.isInterfaceDeclaration(node)) {
         const interfaceName = node.name.text;
         const isRepositoryOrService =
           interfaceName.endsWith("Repository") ||
