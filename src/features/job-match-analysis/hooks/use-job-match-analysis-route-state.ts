@@ -48,9 +48,9 @@ export function parseJobMatchAnalysisRoute(pathname: string): ParsedJobMatchAnal
     ? pathname.slice("/job-analyses/".length).split("/").map(decodeURIComponent)
     : [];
   const view: JobMatchAnalysisRouteView =
-    segments[0] === "kanban" ? "kanban" : "list";
+    segments[0] === JOB_MATCH_ROUTE_VIEWS.kanban ? JOB_MATCH_ROUTE_VIEWS.kanban : JOB_MATCH_ROUTE_VIEWS.list;
 
-  if (view === "list" && segments[0] === "new") {
+  if (view === JOB_MATCH_ROUTE_VIEWS.list && segments[0] === "new") {
     return {
       mode: "new",
       view,
@@ -60,9 +60,9 @@ export function parseJobMatchAnalysisRoute(pathname: string): ParsedJobMatchAnal
   }
 
   const analysisId =
-    view === "kanban" ? segments[1] || null : segments[0] || null;
+    view === JOB_MATCH_ROUTE_VIEWS.kanban ? segments[1] || null : segments[0] || null;
   const isAnalysisView =
-    view === "kanban" ? segments[2] === JOB_MATCH_VIEW_MODES.analysis : segments[1] === JOB_MATCH_VIEW_MODES.analysis;
+    view === JOB_MATCH_ROUTE_VIEWS.kanban ? segments[2] === JOB_MATCH_VIEW_MODES.analysis : segments[1] === JOB_MATCH_VIEW_MODES.analysis;
 
   return {
     mode: analysisId ? "detail" : "list",
@@ -77,7 +77,7 @@ export function getJobMatchAnalysisHref({
   analysis = false,
   extraction = false,
   tab = JOB_MATCH_DETAIL_TABS.summary,
-  view = "list",
+  view = JOB_MATCH_ROUTE_VIEWS.list,
   mode,
 }: {
   id?: string | null;
@@ -88,7 +88,7 @@ export function getJobMatchAnalysisHref({
   mode?: JobMatchAnalysisRouteMode;
 }) {
   if (mode === "new") return "/job-analyses/new";
-  const base = view === "kanban" ? "/job-analyses/kanban" : "/job-analyses";
+  const base = view === JOB_MATCH_ROUTE_VIEWS.kanban ? "/job-analyses/kanban" : "/job-analyses";
   if (!id) return base;
   const encodedId = encodeURIComponent(id);
   if (!analysis) {

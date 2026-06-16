@@ -3,6 +3,7 @@ import {
   shouldAutoSelectJobMatchAnalysis,
   shouldShowJobMatchAnalysisMainLoader,
 } from "./job-match-analysis-loading-state";
+import { JOB_MATCH_ROUTE_VIEWS } from "../constants";
 
 describe("job match analysis loading state", () => {
   it("does not auto-select while the initial offer list is still pending", () => {
@@ -13,7 +14,7 @@ describe("job match analysis loading state", () => {
         isListPending: true,
         mode: "list",
         pathname: "/job-analyses",
-        view: "list",
+        view: JOB_MATCH_ROUTE_VIEWS.list,
       })
     ).toBe(false);
   });
@@ -26,7 +27,7 @@ describe("job match analysis loading state", () => {
         isListPending: false,
         mode: "list",
         pathname: "/job-analyses",
-        view: "list",
+        view: JOB_MATCH_ROUTE_VIEWS.list,
       })
     ).toBe(true);
   });
@@ -39,7 +40,7 @@ describe("job match analysis loading state", () => {
         isListPending: false,
         mode: "list",
         pathname: "/job-analyses",
-        view: "kanban",
+        view: JOB_MATCH_ROUTE_VIEWS.kanban,
       })
     ).toBe(false);
   });
@@ -53,7 +54,7 @@ describe("job match analysis loading state", () => {
         isListPending: false,
         mode: "list",
         pathname: "/job-analyses",
-        view: "list",
+        view: JOB_MATCH_ROUTE_VIEWS.list,
       })
     ).toBe(true);
   });
@@ -67,7 +68,7 @@ describe("job match analysis loading state", () => {
         isListPending: false,
         mode: "detail",
         pathname: "/job-analyses/a",
-        view: "list",
+        view: JOB_MATCH_ROUTE_VIEWS.list,
       })
     ).toBe(false);
   });
@@ -81,7 +82,7 @@ describe("job match analysis loading state", () => {
         isListPending: false,
         mode: "detail",
         pathname: "/job-analyses/a",
-        view: "list",
+        view: JOB_MATCH_ROUTE_VIEWS.list,
       })
     ).toBe(true);
   });
@@ -95,7 +96,7 @@ describe("job match analysis loading state", () => {
         isListPending: false,
         mode: "list",
         pathname: "/job-analyses/pending-redirect",
-        view: "list",
+        view: JOB_MATCH_ROUTE_VIEWS.list,
       })
     ).toBe(true);
   });
@@ -109,7 +110,7 @@ describe("job match analysis loading state", () => {
         isListPending: true,
         mode: "new",
         pathname: "/job-analyses/new",
-        view: "list",
+        view: JOB_MATCH_ROUTE_VIEWS.list,
       })
     ).toBe(false);
   });

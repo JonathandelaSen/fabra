@@ -5,6 +5,7 @@ import { DeleteButton } from "@/components/shared/action-buttons";
 import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
 import { Button } from "@/components/ui/button";
 import type { JobMatchAnalysisRouteView } from "../hooks/use-job-match-analysis-route-state";
+import { JOB_MATCH_ROUTE_VIEWS } from "../constants";
 
 interface JobMatchAnalysisHeaderActionsProps {
   view: JobMatchAnalysisRouteView;
@@ -45,14 +46,14 @@ export function JobMatchAnalysisHeaderActions({
           variant="ghost"
           size="sm"
           onClick={onListView}
-          aria-pressed={view === "list"}
+          aria-pressed={view === JOB_MATCH_ROUTE_VIEWS.list}
           className={`transition-all duration-200 ${
-            view === "list"
+            view === JOB_MATCH_ROUTE_VIEWS.list
               ? "bg-panel-base text-text-main shadow-xs border border-line/40 font-semibold"
               : "text-text-soft hover:text-text-main hover:bg-panel-hover/50 border-transparent"
           }`}
         >
-          <List className={`h-4 w-4 transition-colors ${view === "list" ? "text-action" : "text-text-soft"}`} />
+          <List className={`h-4 w-4 transition-colors ${view === JOB_MATCH_ROUTE_VIEWS.list ? "text-action" : "text-text-soft"}`} />
           {listLabel}
         </Button>
         <Button
@@ -60,14 +61,14 @@ export function JobMatchAnalysisHeaderActions({
           variant="ghost"
           size="sm"
           onClick={onBoardView}
-          aria-pressed={view === "kanban"}
+          aria-pressed={view === JOB_MATCH_ROUTE_VIEWS.kanban}
           className={`transition-all duration-200 ${
-            view === "kanban"
+            view === JOB_MATCH_ROUTE_VIEWS.kanban
               ? "bg-panel-base text-text-main shadow-xs border border-line/40 font-semibold"
               : "text-text-soft hover:text-text-main hover:bg-panel-hover/50 border-transparent"
           }`}
         >
-          <Columns3 className={`h-4 w-4 transition-colors ${view === "kanban" ? "text-action" : "text-text-soft"}`} />
+          <Columns3 className={`h-4 w-4 transition-colors ${view === JOB_MATCH_ROUTE_VIEWS.kanban ? "text-action" : "text-text-soft"}`} />
           {boardLabel}
         </Button>
       </div>

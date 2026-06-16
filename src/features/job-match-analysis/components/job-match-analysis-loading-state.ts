@@ -7,6 +7,7 @@ import type {
   JobMatchAnalysisRouteMode,
   JobMatchAnalysisRouteView,
 } from "../hooks/use-job-match-analysis-route-state";
+import { JOB_MATCH_ROUTE_VIEWS } from "../constants";
 
 interface JobMatchAnalysisAutoSelectionState {
   analysisCount: number;
@@ -30,7 +31,7 @@ function toListDetailState(
     itemCount: state.analysisCount,
     selectedId: state.analysisId,
     isOnListRoute:
-      state.view === "list" &&
+      state.view === JOB_MATCH_ROUTE_VIEWS.list &&
       state.mode === "list" &&
       state.pathname === "/job-analyses",
   };

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { JobMatchAnalysisSummary } from "../api/job-match-analysis-api";
 import type { JobMatchAnalysisRouteMode, JobMatchAnalysisRouteView } from "../hooks/use-job-match-analysis-route-state";
+import { JOB_MATCH_ROUTE_VIEWS } from "../constants";
 import JobMatchAnalysisList from "./list/job-match-analysis-list";
 import { JobMatchKanbanBoard } from "./kanban/job-match-kanban-board";
 
@@ -51,7 +52,7 @@ export function JobMatchAnalysisBody({
 }: JobMatchAnalysisBodyProps) {
   if (mode === "new") return newFlow;
 
-  if (view === "kanban" && !analysisId) {
+  if (view === JOB_MATCH_ROUTE_VIEWS.kanban && !analysisId) {
     return (
       <div
         data-kanban-horizontal-scroll
@@ -88,7 +89,7 @@ export function JobMatchAnalysisBody({
     );
   }
 
-  if (view === "kanban") {
+  if (view === JOB_MATCH_ROUTE_VIEWS.kanban) {
     return (
       <div className="flex h-full min-h-0 flex-col overflow-hidden">
         <div className="shrink-0 border-b border-line pb-3">
