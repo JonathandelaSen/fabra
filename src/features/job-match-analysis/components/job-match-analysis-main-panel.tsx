@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import { FileText, Sparkles } from "lucide-react";
@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { InterviewQuestionSummary, JobMatchAnalysisDetailResponse, JobMatchViewMode } from "../types";
+import { JOB_MATCH_VIEW_MODES } from "../constants";
 import type { AnalysisTab } from "../hooks/use-job-match-analysis-route-state";
 import JobMatchAnalysisDetail from "./detail/job-match-analysis-detail";
 import JobMatchExtractionView from "./extraction/job-match-extraction-view";
@@ -62,13 +63,17 @@ export function JobMatchAnalysisMainPanel({
   onUpdateTracking,
 }: JobMatchAnalysisMainPanelProps) {
   const t = useTranslations("analysisFlow.appShell");
+  const [prevId, setPrevId] = useState(detail.id);
+  const [prevIsAnalysisView, setPrevIsAnalysisView] = useState(isAnalysisView);
   const [activeView, setActiveView] = useState<JobMatchViewMode>(
-    isAnalysisView ? "analysis" : "extraction",
+    isAnalysisView ? JOB_MATCH_VIEW_MODES.analysis : JOB_MATCH_VIEW_MODES.extraction,
   );
 
-  useEffect(() => {
-    setActiveView(isAnalysisView ? "analysis" : "extraction");
-  }, [detail.id, isAnalysisView]);
+  if (detail.id !== prevId || isAnalysisView !== prevIsAnalysisView) {
+    setPrevId(detail.id);
+    setPrevIsAnalysisView(isAnalysisView);
+    setActiveView(isAnalysisView ? JOB_MATCH_VIEW_MODES.analysis : JOB_MATCH_VIEW_MODES.extraction);
+  }
 
   const handleViewModeChange = (view: JobMatchViewMode) => {
     setActiveView(view);
@@ -82,15 +87,15 @@ export function JobMatchAnalysisMainPanel({
       <div className="flex flex-col">
       <FeatureDetailTabBar
         tabs={[
-          { id: "extraction" as const, label: t("extractionTab"), icon: <FileText /> },
-          { id: "analysis" as const, label: t("analysisTab"), icon: <Sparkles /> },
+          { id: JOB_MATCH_VIEW_MODES.extraction, label: t("extractionTab"), icon: <FileText /> },
+          { id: JOB_MATCH_VIEW_MODES.analysis, label: t("analysisTab"), icon: <Sparkles /> },
         ]}
         activeTab={activeView}
         onTabChange={handleViewModeChange}
       />
 
       <AnimatePresence mode="wait">
-        {activeView === "extraction" ? (
+        {activeView === JOB_MATCH_VIEW_MODES.extraction ? (
           <motion.div
             key="extraction-view"
             initial={{ opacity: 0, x: -10 }}

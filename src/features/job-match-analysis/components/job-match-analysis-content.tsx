@@ -7,6 +7,7 @@ import { FileText, Sparkles, Briefcase, Plus } from "lucide-react";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { JobMatchAnalysisDetailResponse, JobMatchViewMode, InterviewQuestionSummary } from "../types";
 import type { AnalysisTab } from "../hooks/use-job-match-analysis-route-state";
+import { JOB_MATCH_VIEW_MODES } from "../constants";
 import { JobMatchAnalysisMainPanel } from "./job-match-analysis-main-panel";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
@@ -75,10 +76,10 @@ export function JobMatchAnalysisContent({
       <div className="flex flex-col h-full">
         <FeatureDetailTabBar
           tabs={[
-            { id: "extraction" as const, label: t("extractionTab"), icon: <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
-            { id: "analysis" as const, label: t("analysisTab"), icon: <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
+            { id: JOB_MATCH_VIEW_MODES.extraction, label: t("extractionTab"), icon: <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
+            { id: JOB_MATCH_VIEW_MODES.analysis, label: t("analysisTab"), icon: <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
           ]}
-          activeTab="analysis"
+          activeTab={JOB_MATCH_VIEW_MODES.analysis}
           onTabChange={() => {}}
         />
         <div className="flex-1 py-4 sm:py-6">

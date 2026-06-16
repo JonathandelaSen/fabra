@@ -6,6 +6,7 @@ import {
   JOB_MATCH_DETAIL_TABS,
   JOB_MATCH_ROUTE_MODES,
   JOB_MATCH_ROUTE_VIEWS,
+  JOB_MATCH_VIEW_MODES,
 } from "../constants";
 
 export type AnalysisTab =
@@ -61,7 +62,7 @@ export function parseJobMatchAnalysisRoute(pathname: string): ParsedJobMatchAnal
   const analysisId =
     view === "kanban" ? segments[1] || null : segments[0] || null;
   const isAnalysisView =
-    view === "kanban" ? segments[2] === "analysis" : segments[1] === "analysis";
+    view === "kanban" ? segments[2] === JOB_MATCH_VIEW_MODES.analysis : segments[1] === JOB_MATCH_VIEW_MODES.analysis;
 
   return {
     mode: analysisId ? "detail" : "list",
@@ -105,7 +106,7 @@ export function useJobMatchAnalysisRouteState() {
   const { mode, view, analysisId, isAnalysisView } =
     parseJobMatchAnalysisRoute(pathname);
   const analysisTab = normalizeTab(searchParams.get("tab"));
-  const isExplicitExtractionView = searchParams.get("view") === "extraction";
+  const isExplicitExtractionView = searchParams.get("view") === JOB_MATCH_VIEW_MODES.extraction;
 
   const hrefFor = useCallback(
     (
