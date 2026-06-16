@@ -25,9 +25,6 @@ test("user can score and replace a CV analysis with Copy Paste", async ({
   const { analysis } = await createFixtureViaApi(page.request, "copy-paste");
 
   await page.goto(`/cv-analysis/${analysis.id}`);
-  await page
-    .getByRole("button", { name: messages.en.analysisFlow.modeSelector.generalTitle })
-    .click();
 
   await expect(
     page.getByRole("button", {

@@ -55,8 +55,11 @@ test("user can create, edit, and delete work journal entries", async ({ page }) 
     page.getByRole("article").getByText(updatedContent),
   ).toBeVisible();
 
-  page.once("dialog", (dialog) => dialog.accept());
   await page.getByTitle(t.deleteEntry).click({ force: true });
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: messages.en.common.actions.confirmAction })
+    .click();
 
   await expect(
     page.getByRole("article").getByText(updatedContent),

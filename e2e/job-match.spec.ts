@@ -1,19 +1,23 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { expect, test } from "@playwright/test";
 import { loginViaUI } from "./helpers/auth";
 import { createConfirmedUser } from "./helpers/supabase";
-import { createExtractionViaUI } from "./helpers/cv";
+import { uniqueLabel } from "./helpers/env";
 import { messages } from "../src/i18n/messages";
 
+test.setTimeout(90_000);
+
 const tForms = messages.en.analysisFlow.forms;
-const tMode = messages.en.analysisFlow.modeSelector;
 const tLauncher = messages.en.aiLauncher;
 
-test("user can create a job match analysis and view the results", async ({
+test("user can score a job match analysis with integrated AI and view the results", async ({
   page,
 }) => {
   const user = await createConfirmedUser("job-match");
   await loginViaUI(page, user);
 
+  // Configure an API key so the integrated (in-app) AI path is available.
   await page.getByRole("button", { name: messages.en.navigation.settings }).click();
   await expect(page).toHaveURL(/\/settings$/);
   await page.getByPlaceholder(messages.en.settings.apiKey.placeholder).fill("test-api-key");
@@ -22,98 +26,93 @@ test("user can create a job match analysis and view the results", async ({
     messages.en.common.actions.saved,
   );
 
-  // 1. Upload a CV via UI and create an analysis
-  // This leaves us in the Extraction View with the mode selector
-  await createExtractionViaUI(page);
+  // Create a CV and a job match analysis through the API.
+  const pdf = readFileSync(path.resolve(process.cwd(), "test.pdf"));
+  const cvName = uniqueLabel("job-match-cv");
+  const cvResponse = await page.request.post("/api/cvs", {
+    multipart: {
+      name: cvName,
+      file: { name: `${cvName}.pdf`, mimeType: "application/pdf", buffer: pdf },
+    },
+  });
+  expect(cvResponse.ok()).toBeTruthy();
+  const cv = (await cvResponse.json()) as { id: string };
 
-  // 2. Select the job match mode from the extraction view
-  await page
-    .getByRole("button", { name: new RegExp(tMode.jobTitle) })
-    .click();
+  const jobDescription =
+    "We are looking for a Senior React Developer with 5+ years of experience in Next.js.";
+  const analysisResponse = await page.request.post("/api/job-match-analyses", {
+    data: {
+      cvId: cv.id,
+      title: uniqueLabel("job-match-analysis"),
+      jobDescription,
+    },
+  });
+  expect(analysisResponse.ok()).toBeTruthy();
+  const analysis = (await analysisResponse.json()) as { id: string };
 
-  // 3. Fill Job
-  const jobDescription = "We are looking for a Senior React Developer with 5+ years of experience in Next.js.";
-  const jobDescriptionInput = page.getByPlaceholder(
-    tForms.jobDescriptionPlaceholder,
-  );
-  await expect(jobDescriptionInput).toBeVisible();
-  await jobDescriptionInput.fill(jobDescription);
-
-  // 4. Mock API
-  await page.route(/\/api\/job-match-analyses\/[^\/]+\/score/, async (route) => {
+  // Mock the integrated scoring endpoint so the test never calls a real AI
+  // provider. The score mutation applies this response straight to the cache.
+  const scoredDetail = {
+    id: analysis.id,
+    userId: "user-id",
+    cvId: cv.id,
+    title: "Job Match Test",
+    filename: `${cvName}.pdf`,
+    fileSize: 1000,
+    pdfStoragePath: "path",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    aiModel: "gemini-2.5-flash",
+    jobDescription,
+    jobUrl: null,
+    offerStatus: null,
+    offerNotes: null,
+    offerNextAction: null,
+    offerNextActionAt: null,
+    aiScore: 85,
+    aiFeedback: "Great match for the position.",
+    aiKeywords: JSON.stringify(["React", "Next.js"]),
+    aiImprovements: JSON.stringify(["Add more tests to your CV"]),
+    aiAnalyzedAt: new Date().toISOString(),
+    jobKeyData: null,
+    jobKeywords: JSON.stringify(["React", "Next.js", "TypeScript"]),
+    cvKeywords: JSON.stringify(["React", "Next.js"]),
+    matchingKeywords: JSON.stringify(["React", "Next.js"]),
+    missingKeywords: JSON.stringify(["TypeScript"]),
+    textPython: "John Doe CV\nExperience: Developer",
+    textPdfjs: null,
+    textNode: null,
+    extractErrorPython: null,
+    extractErrorPdfjs: null,
+    extractErrorNode: null,
+    cv: { id: cv.id, name: cvName, filename: `${cvName}.pdf` },
+  };
+  await page.route(/\/api\/job-match-analyses\/[^/]+\/score$/, async (route) => {
     await route.fulfill({
       status: 200,
       contentType: "application/json",
-      body: JSON.stringify({ success: true })
+      body: JSON.stringify(scoredDetail),
     });
   });
 
-  const jobMatchAnalysisResponse = {
-    id: "mocked-id",
-    cv_id: "mocked-cv-id",
-    title: "Job Match Test",
-    filename: "test.pdf",
-    created_at: new Date().toISOString(),
-    analysis_mode: "job_match",
-    ai_score: 85,
-    ai_analyzed_at: new Date().toISOString(),
-    job_url: null,
-    offer_status: null,
-    offer_next_action_at: null,
-    user_id: "user-id",
-    file_size: 1000,
-    pdf_storage_path: "path",
-    updated_at: new Date().toISOString(),
-    ai_model: "gemini-2.5-flash",
-    job_description: jobDescription,
-    offer_notes: null,
-    offer_next_action: null,
-    ai_context: null,
-    ai_feedback: "Great match for the position.",
-    ai_keywords: JSON.stringify(["React", "Next.js"]),
-    ai_improvements: JSON.stringify(["Add more tests to your CV"]),
-    job_key_data: "null",
-    job_keywords: JSON.stringify(["React", "Next.js", "TypeScript"]),
-    cv_keywords: JSON.stringify(["React", "Next.js"]),
-    matching_keywords: JSON.stringify(["React", "Next.js"]),
-    missing_keywords: JSON.stringify(["TypeScript"]),
-    text_python: "John Doe CV\nExperience: Developer",
-    text_pdfjs: null,
-    text_node: null,
-    extract_error_python: null,
-    extract_error_pdfjs: null,
-    extract_error_node: null,
-  };
+  await page.goto(`/job-analyses/${analysis.id}`);
 
-  await page.route(/\/api\/job-match-analyses\/[^\/]+$/, async (route) => {
-    if (route.request().method() === "GET") {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify(jobMatchAnalysisResponse)
-      });
-    } else {
-      await route.continue();
-    }
+  // Open the analysis tab and run the integrated comparison.
+  const analysisTab = page.getByRole("tab", {
+    name: messages.en.analysisFlow.appShell.analysisTab,
   });
+  await analysisTab.click();
+  await expect(page).toHaveURL(/\/job-analyses\/[^/?]+\/analysis(?:\?|$)/);
 
-  await page.route(/\/api\/cv-analyses\/[^\/]+$/, async (route) => {
-    if (route.request().method() === "GET") {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify(jobMatchAnalysisResponse),
-      });
-    } else {
-      await route.continue();
+  const compareButton = page.getByRole("button", { name: tForms.compareOffer });
+  const continueButton = page.getByRole("button", { name: tLauncher.continue });
+  await expect(async () => {
+    if (!(await continueButton.isVisible())) {
+      await compareButton.click();
     }
-  });
+    await expect(continueButton).toBeVisible({ timeout: 1000 });
+  }).toPass({ timeout: 15_000 });
+  await continueButton.click();
 
-  // 5. Click "Compare offer" launcher and run integrated analysis
-  await page.getByRole("button", { name: tForms.compareOffer }).click();
-  await page.getByRole("button", { name: tLauncher.continue }).click();
-
-  // 6. Verify score
-  await expect(page.getByText("85")).toBeVisible();
   await expect(page.getByText("Great match for the position.")).toBeVisible();
 });

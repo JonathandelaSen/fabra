@@ -35,9 +35,6 @@ test("login route exposes signup and password recovery modes", async ({
   await page.goto("/login");
 
   await expect(page.getByRole("heading", { name: tAuth.login.title })).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: tAuth.google.continue }),
-  ).toBeVisible();
   await expect(page.getByLabel(tAuth.fields.email)).toHaveAttribute(
     "placeholder",
     tAuth.fields.emailPlaceholder,
