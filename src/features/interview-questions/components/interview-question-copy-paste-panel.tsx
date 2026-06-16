@@ -8,7 +8,7 @@ import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
 } from "@/components/shared/action-buttons";
-import type { PrepareInterviewQuestionCopyPasteResult } from "../api/interview-questions-api";
+import type { PrepareInterviewQuestionCopyPasteResponse } from "../api/interview-questions-api";
 import { useInterviewQuestionsCopyPaste } from "../hooks/use-interview-questions-copy-paste";
 
 interface InterviewQuestionCopyPastePanelProps {

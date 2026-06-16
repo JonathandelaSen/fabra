@@ -6,7 +6,7 @@ import { getLatestRecommendationAnalysisForCV } from "@/lib/analysis-queries";
 import type { CVTemplateId, CVTemplateLocale } from "@/lib/cv-templates";
 import { cvLibraryModule } from "@/lib/container";
 import { presentCVDocument } from "@/modules/cv-library";
-import { parseEditCVProfileRequest } from "../../validation";
+import { parseEditCVProfileRequest } from "./validation";
 import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
 
 export const maxDuration = 60;

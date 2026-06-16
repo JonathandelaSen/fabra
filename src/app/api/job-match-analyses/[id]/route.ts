@@ -7,11 +7,11 @@ import {
   selectionProcessModule,
 } from "@/lib/container";
 import { presentJobMatchAnalysis } from "@/modules/job-match-analysis";
-import { parseUpdateJobMatchAnalysisRequest } from "../validation";
+import { parseUpdateJobMatchAnalysisRequest } from "./validation";
 import {
   toJobMatchAnalysisDetailResponse,
   type JobMatchAnalysisOfferStatus,
-} from "../responses";
+} from "./responses";
 import { ok, errorResponse, notFound } from "@/modules/shared";
 
 interface FollowUpTrackingRow {

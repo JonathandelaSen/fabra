@@ -8,7 +8,7 @@ import {
   presentCVStructuredProfile,
 } from "@/modules/cv-library";
 import { errorResponse, notFound, ok } from "@/modules/shared";
-import { parseApplyCVProfileCopyPasteRequest } from "../../../../validation";
+import { parseApplyCVProfileCopyPasteRequest } from "./validation";
 import type { ApplyCVProfileCopyPasteResponse } from "./responses";
 
 export async function POST(

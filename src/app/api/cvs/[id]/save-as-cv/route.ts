@@ -4,7 +4,7 @@ import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvLibraryModule } from "@/lib/container";
 import { presentCVDocument } from "@/modules/cv-library";
-import { parseSaveTemplateAsCVRequest } from "../../validation";
+import { parseSaveTemplateAsCVRequest } from "./validation";
 import { ok, errorResponse, notFound } from "@/modules/shared";
 
 export async function POST(

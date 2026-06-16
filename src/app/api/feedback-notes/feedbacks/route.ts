@@ -7,7 +7,7 @@ import { ok, created, errorResponse } from "@/modules/shared";
 import {
   parseCreateFeedbackRequest,
   parseListFeedbacksRequest,
-} from "../validation";
+} from "./validation";
 import {
   toFeedbackResponse,
   type CreateFeedbackResponse,

@@ -4,12 +4,12 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { commitmentsModule } from "@/lib/container";
 import { presentCommitmentItem } from "@/modules/commitments";
 import { ok, errorResponse } from "@/modules/shared";
-import { parseUpdateCommitmentItemRequest } from "../../validation";
+import { parseUpdateCommitmentItemRequest } from "./validation";
 import {
   toCommitmentItemResponse,
   type CommitmentItemResponse,
   type DeleteCommitmentResponse,
-} from "../../responses";
+} from "./responses";
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {

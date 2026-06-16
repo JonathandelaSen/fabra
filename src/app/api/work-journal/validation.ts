@@ -115,13 +115,13 @@ function normalizeRequiredDate(value: unknown) {
 
 function normalizeContextType(value: unknown): WorkJournalContextType | null {
   return Object.values(WORK_JOURNAL_CONTEXT_TYPES).includes(value as WorkJournalContextType)
-    ? value
+    ? (value as WorkJournalContextType)
     : null;
 }
 
 function normalizeInputMode(value: unknown): WorkJournalEntryInputMode | null {
   return Object.values(WORK_JOURNAL_ENTRY_INPUT_MODES).includes(value as WorkJournalEntryInputMode)
-    ? value
+    ? (value as WorkJournalEntryInputMode)
     : null;
 }
 
@@ -182,7 +182,7 @@ export function parseUpdateWorkJournalContextRequest(
     ) {
       return validationError("Invalid status");
     }
-    updates.status = body.status;
+    updates.status = body.status as WorkJournalContextStatusInput;
   }
   if (body.is_default !== undefined) updates.is_default = Boolean(body.is_default);
   return { ok: true, value: updates };
@@ -211,7 +211,13 @@ export function parseWorkJournalSuggestionActionRequest(
 
   return {
     ok: true,
-    value: { action, type, name, role_or_label, is_default: Boolean(body.is_default) },
+    value: {
+      action: action as WorkJournalSuggestionActionInput,
+      type,
+      name,
+      role_or_label,
+      is_default: Boolean(body.is_default),
+    },
   };
 }
 

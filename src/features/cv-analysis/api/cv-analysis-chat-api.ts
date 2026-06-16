@@ -1,31 +1,13 @@
 import { CHAT_ACTIONS } from "@/app/api/_shared/job-analysis-chat/actions";
 import type {
-  AnalysisChatConversation,
-  AnalysisChatMessage,
-} from "../components/detail/chat/chat-types";
+  DeleteOfferChatConversationResponse,
+  ListOfferChatConversationsResponse,
+  ListOfferChatMessagesResponse,
+  OfferChatConversationMutationResponse,
+  SendOfferChatMessageResponse,
+} from "@/app/api/job-match-analyses/[id]/chat/responses";
 
 import type { StoredAIProvider } from "@/lib/browser-preferences";
-
-interface ChatResponse {
-  error?: string;
-}
-
-interface ListConversationsResponse extends ChatResponse {
-  conversations?: AnalysisChatConversation[];
-}
-
-interface ListMessagesResponse extends ChatResponse {
-  messages?: AnalysisChatMessage[];
-}
-
-interface ConversationResponse extends ChatResponse {
-  conversation?: AnalysisChatConversation;
-}
-
-interface SendMessageResponse extends ChatResponse {
-  userMessage?: AnalysisChatMessage;
-  assistantMessage?: AnalysisChatMessage;
-}
 
 export interface SendAnalysisChatMessageInput {
   message: string;
@@ -36,11 +18,13 @@ export interface SendAnalysisChatMessageInput {
   conversationId: string;
 }
 
-async function readChatResponse<T extends ChatResponse>(
+async function readJsonResponse<T>(
   response: Response,
   fallbackMessage: string,
 ): Promise<T> {
-  const data = (await response.json().catch(() => ({}))) as T;
+  const data = (await response.json().catch(() => ({}))) as {
+    error?: string;
+  } & T;
   if (!response.ok) {
     throw new Error(data.error || fallbackMessage);
   }
@@ -59,11 +43,10 @@ export async function listAnalysisChatConversations(
   fallbackMessage: string,
 ) {
   const response = await fetch(chatUrl(analysisId));
-  const data = await readChatResponse<ListConversationsResponse>(
+  return readJsonResponse<ListOfferChatConversationsResponse>(
     response,
     fallbackMessage,
   );
-  return data.conversations ?? [];
 }
 
 export async function listAnalysisChatMessages(
@@ -72,11 +55,10 @@ export async function listAnalysisChatMessages(
   fallbackMessage: string,
 ) {
   const response = await fetch(chatUrl(analysisId, conversationId));
-  const data = await readChatResponse<ListMessagesResponse>(
+  return readJsonResponse<ListOfferChatMessagesResponse>(
     response,
     fallbackMessage,
   );
-  return data.messages ?? [];
 }
 
 export async function createAnalysisChatConversation(
@@ -88,14 +70,10 @@ export async function createAnalysisChatConversation(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ action: CHAT_ACTIONS.createConversation }),
   });
-  const data = await readChatResponse<ConversationResponse>(
+  return readJsonResponse<OfferChatConversationMutationResponse>(
     response,
     fallbackMessage,
   );
-  if (!data.conversation) {
-    throw new Error(fallbackMessage);
-  }
-  return data.conversation;
 }
 
 export async function renameAnalysisChatConversation(
@@ -112,18 +90,14 @@ export async function renameAnalysisChatConversation(
       title,
     }),
   });
-  const data = await readChatResponse<ConversationResponse>(response, "");
-  if (!data.conversation) {
-    throw new Error();
-  }
-  return data.conversation;
+  return readJsonResponse<OfferChatConversationMutationResponse>(response, "");
 }
 
 export async function deleteAnalysisChatConversation(
   analysisId: string,
   conversationId: string,
 ) {
-  await fetch(chatUrl(analysisId), {
+  const response = await fetch(chatUrl(analysisId), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -131,6 +105,7 @@ export async function deleteAnalysisChatConversation(
       conversationId,
     }),
   });
+  return readJsonResponse<DeleteOfferChatConversationResponse>(response, "");
 }
 
 export async function sendAnalysisChatMessage(
@@ -143,15 +118,8 @@ export async function sendAnalysisChatMessage(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  const data = await readChatResponse<SendMessageResponse>(
+  return readJsonResponse<SendOfferChatMessageResponse>(
     response,
     fallbackMessage,
   );
-  if (!data.userMessage || !data.assistantMessage) {
-    throw new Error(fallbackMessage);
-  }
-  return {
-    userMessage: data.userMessage,
-    assistantMessage: data.assistantMessage,
-  };
 }

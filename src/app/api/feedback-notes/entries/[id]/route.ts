@@ -6,7 +6,7 @@ import {
   presentFeedbackEntry,
 } from "@/modules/feedback-notes";
 import { ok, errorResponse } from "@/modules/shared";
-import { parseFeedbackEntryContentRequest } from "../../validation";
+import { parseFeedbackEntryContentRequest } from "./validation";
 import {
   toFeedbackEntryResponse,
   type DeleteFeedbackEntryResponse,

@@ -7,8 +7,8 @@ import {
   presentPerformanceReview,
 } from "@/modules/performance-review";
 import { errorResponse, ok } from "@/modules/shared";
-import { parseUpdatePerformanceReviewRequest } from "../validation";
-import type { PerformanceReviewDetailResponse } from "../responses";
+import { parseUpdatePerformanceReviewRequest } from "./validation";
+import type { PerformanceReviewDetailResponse } from "./responses";
 
 export async function GET(
   _req: NextRequest,

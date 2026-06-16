@@ -4,7 +4,7 @@ import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvLibraryModule } from "@/lib/container";
 import { CV_PDFS_BUCKET, presentCVDocument } from "@/modules/cv-library";
-import { parseTemplatePdfRequest } from "../../validation";
+import { parseTemplatePdfRequest } from "./validation";
 import { notFound } from "@/modules/shared";
 
 export async function GET(

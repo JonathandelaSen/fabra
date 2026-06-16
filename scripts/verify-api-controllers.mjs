@@ -1,9 +1,10 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { spawnSync } from "node:child_process";
 
 const root = process.cwd();
 const routePattern = "src/app/api/**/route.ts";
+const requiredRouteSiblings = ["validation.ts", "responses.ts"];
 const actionDispatchPattern =
   /\b(?:if|switch)\s*\(\s*[^)]*\.(action|command|operation)\b[^)]*\)/g;
 
@@ -36,6 +37,15 @@ const routeFiles = listRouteFiles();
 const violations = [];
 
 for (const file of routeFiles) {
+  const routeDir = dirname(file);
+  for (const sibling of requiredRouteSiblings) {
+    if (!existsSync(join(root, routeDir, sibling))) {
+      violations.push(
+        `${file}: API route must have sibling ${sibling}.`,
+      );
+    }
+  }
+
   if (temporaryAllowlist.has(file)) continue;
 
   const source = readFileSync(join(root, file), "utf8");

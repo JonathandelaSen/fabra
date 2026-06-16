@@ -4,8 +4,8 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { performanceReviewModule } from "@/lib/container";
 import { presentReviewEvidenceItems } from "@/modules/performance-review";
 import { errorResponse, ok } from "@/modules/shared";
-import { parseReorderEvidenceRequest } from "../../../validation";
-import type { ListEvidenceItemsResponse } from "../../../responses";
+import { parseReorderEvidenceRequest } from "./validation";
+import type { ListEvidenceItemsResponse } from "./responses";
 
 export async function PUT(
   req: NextRequest,

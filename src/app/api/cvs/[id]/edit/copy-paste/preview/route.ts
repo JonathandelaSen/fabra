@@ -4,7 +4,7 @@ import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvLibraryModule } from "@/lib/container";
 import { errorResponse, notFound, ok } from "@/modules/shared";
-import { parsePreviewCVEditorCopyPasteRequest } from "../../../../validation";
+import { parsePreviewCVEditorCopyPasteRequest } from "./validation";
 import type { PreviewCVEditorCopyPasteResponse } from "./responses";
 
 export async function POST(

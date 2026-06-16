@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   prepareInterviewQuestionCopyPaste,
-  type PrepareInterviewQuestionCopyPasteResult,
+  type PrepareInterviewQuestionCopyPasteResponse,
   type PrepareInterviewQuestionCopyPasteMode,
 } from "../api/interview-questions-api";
 
@@ -14,7 +14,7 @@ export function useInterviewQuestionsCopyPaste(questionId: string) {
   const [instruction, setInstruction] = useState("");
   const [preparing, setPreparing] = useState(false);
   const [prepared, setPrepared] =
-    useState<PrepareInterviewQuestionCopyPasteResult | null>(null);
+    useState<PrepareInterviewQuestionCopyPasteResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handlePrepare = async () => {

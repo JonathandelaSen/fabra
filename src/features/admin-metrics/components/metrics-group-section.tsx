@@ -43,9 +43,7 @@ const GROUP_META: Record<
 
 export function MetricsGroupSection({ group, days }: MetricsGroupSectionProps) {
   const t = useTranslations("admin.dashboard");
-  const { totalQuery, windowQuery } = useGroupMetrics<{
-    counts: Record<string, number>;
-  }>(group, days);
+  const { totalQuery, windowQuery } = useGroupMetrics(group, days);
 
   const meta = GROUP_META[group];
   const GroupIcon = meta.icon;

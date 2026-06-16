@@ -5,7 +5,8 @@ import { createRequestId, hasExtractedText } from "@/lib/observability";
 import { extractPdfText } from "@/lib/pdf-extraction";
 import { cvLibraryModule } from "@/lib/container";
 import { CV_PDFS_BUCKET, presentCVDocument } from "@/modules/cv-library";
-import { parseUploadCVFormData } from "@/app/api/cvs/validation";
+import { parseUploadCVFormData } from "./validation";
+import type { ParseCVUploadResponse } from "./responses";
 import { ok, errorResponse } from "@/modules/shared";
 
 export async function POST(req: NextRequest) {
@@ -108,7 +109,7 @@ export async function POST(req: NextRequest) {
         pdfjs: cv.extract_error_pdfjs,
         node: cv.extract_error_node,
       },
-    });
+    } satisfies ParseCVUploadResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }

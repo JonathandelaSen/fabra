@@ -4,8 +4,8 @@ import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { jobMatchAnalysisModule } from "@/lib/container";
 import { presentJobMatchAnalysis } from "@/modules/job-match-analysis";
-import { parseScoreJobMatchAnalysisRequest } from "../../validation";
-import { toJobMatchAnalysisDetailResponse } from "../../responses";
+import { parseScoreJobMatchAnalysisRequest } from "./validation";
+import { toJobMatchAnalysisDetailResponse } from "./responses";
 import { ok, errorResponse, notFound } from "@/modules/shared";
 
 export const maxDuration = 60;

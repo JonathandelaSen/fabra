@@ -6,8 +6,7 @@ import type {
 } from "@/app/api/cvs/[id]/chat/responses";
 
 import type { StoredAIProvider } from "@/lib/browser-preferences";
-import type { CVChatMessage } from "../components/detail/cv-chat-types";
-import { parseJsonResponse } from "@/frontend/api/api-error";
+import { parseJsonResponse as readJsonResponse } from "@/frontend/api/api-error";
 
 export interface SendCVChatMessageInput {
   message: string;
@@ -22,27 +21,15 @@ function chatUrl(cvId: string, conversationId?: string) {
   return `/api/cvs/${cvId}/chat${conversationId ? `/conversations/${encodeURIComponent(conversationId)}` : ""}`;
 }
 
-function toChatMessage(
-  message: SendCVChatMessageResponse["userMessage"],
-): CVChatMessage {
-  return {
-    id: message.id,
-    role: message.role,
-    content: message.content,
-    created_at: message.createdAt,
-  };
-}
-
 export async function listCVChatConversations(
   cvId: string,
   fallbackMessage: string,
 ) {
   const response = await fetch(chatUrl(cvId));
-  const data = await parseJsonResponse<ListCVChatConversationsResponse>(
+  return readJsonResponse<ListCVChatConversationsResponse>(
     response,
     fallbackMessage,
   );
-  return data.conversations ?? [];
 }
 
 export async function listCVChatMessages(
@@ -51,11 +38,10 @@ export async function listCVChatMessages(
   fallbackMessage: string,
 ) {
   const response = await fetch(`/api/cvs/${cvId}/chat/messages?conversationId=${encodeURIComponent(conversationId)}`);
-  const data = await parseJsonResponse<ListCVChatMessagesResponse>(
+  return readJsonResponse<ListCVChatMessagesResponse>(
     response,
     fallbackMessage,
   );
-  return (data.messages ?? []).map(toChatMessage);
 }
 
 export async function createCVChatConversation(
@@ -67,14 +53,10 @@ export async function createCVChatConversation(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({}),
   });
-  const data = await parseJsonResponse<CVChatConversationMutationResponse>(
+  return readJsonResponse<CVChatConversationMutationResponse>(
     response,
     fallbackMessage,
   );
-  if (!data.conversation) {
-    throw new Error(fallbackMessage);
-  }
-  return data.conversation;
 }
 
 export async function renameCVChatConversation(
@@ -89,21 +71,24 @@ export async function renameCVChatConversation(
       title,
     }),
   });
-  const data = await parseJsonResponse<CVChatConversationMutationResponse>(
+  return readJsonResponse<CVChatConversationMutationResponse>(
     response,
     "Could not rename conversation",
   );
-  if (!data.conversation) {
-    throw new Error();
-  }
-  return data.conversation;
+}
+
+async function requestDeleteCVChatConversation(
+  cvId: string,
+  conversationId: string,
+) {
+  await fetch(chatUrl(cvId, conversationId), { method: "DELETE" });
 }
 
 export async function deleteCVChatConversation(
   cvId: string,
   conversationId: string,
 ) {
-  await fetch(chatUrl(cvId, conversationId), { method: "DELETE" });
+  await requestDeleteCVChatConversation(cvId, conversationId);
 }
 
 export async function sendCVChatMessage(
@@ -116,16 +101,9 @@ export async function sendCVChatMessage(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  const data = await parseJsonResponse<SendCVChatMessageResponse>(
+  return readJsonResponse<SendCVChatMessageResponse>(
     response,
     fallbackMessage,
   );
-  if (!data.userMessage || !data.assistantMessage) {
-    throw new Error(fallbackMessage);
-  }
-  return {
-    userMessage: toChatMessage(data.userMessage),
-    assistantMessage: toChatMessage(data.assistantMessage),
-  };
 }
 

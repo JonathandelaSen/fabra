@@ -16,9 +16,14 @@ import type {
   SaveInterviewQuestionResponse,
 } from "@/app/api/interview-questions/responses";
 import type {
-  JobAnalysisChatConversation,
-  JobAnalysisChatMessage,
-} from "../types";
+  DeleteOfferChatConversationResponse,
+  ListOfferChatConversationsResponse,
+  ListOfferChatMessagesResponse,
+  OfferChatConversationMutationResponse,
+  SendOfferChatMessageResponse,
+} from "@/app/api/job-match-analyses/[id]/chat/responses";
+import type { PrepareOfferChatCopyPasteResponse } from "@/app/api/job-match-analyses/[id]/chat/copy-paste/prepare/responses";
+import type { ApplyOfferChatCopyPasteResponse } from "@/app/api/job-match-analyses/[id]/chat/copy-paste/apply/responses";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 export type JobMatchAnalysisSummary = ListJobMatchAnalysesResponse[number];
@@ -244,7 +249,7 @@ export async function listJobMatchOfferChatConversations(analysisId: string) {
   const res = await fetch(
     `/api/job-match-analyses/${encodeURIComponent(analysisId)}/chat`,
   );
-  return readJsonResponse<{ conversations: JobAnalysisChatConversation[] }>(
+  return readJsonResponse<ListOfferChatConversationsResponse>(
     res,
     "Could not load chat conversations.",
   );
@@ -261,7 +266,7 @@ export async function listJobMatchOfferChatMessages({
   const res = await fetch(
     `/api/job-match-analyses/${encodeURIComponent(analysisId)}/chat?${params.toString()}`,
   );
-  return readJsonResponse<{ messages: JobAnalysisChatMessage[] }>(
+  return readJsonResponse<ListOfferChatMessagesResponse>(
     res,
     "Could not load chat messages.",
   );
@@ -276,7 +281,7 @@ export async function createJobMatchOfferChatConversation(analysisId: string) {
       body: JSON.stringify({ action: CHAT_ACTIONS.createConversation }),
     },
   );
-  return readJsonResponse<{ conversation: JobAnalysisChatConversation }>(
+  return readJsonResponse<OfferChatConversationMutationResponse>(
     res,
     "Could not create chat conversation.",
   );
@@ -303,7 +308,7 @@ export async function renameJobMatchOfferChatConversation({
       }),
     },
   );
-  return readJsonResponse<{ conversation: JobAnalysisChatConversation }>(
+  return readJsonResponse<OfferChatConversationMutationResponse>(
     res,
     "Could not rename chat conversation.",
   );
@@ -327,7 +332,7 @@ export async function deleteJobMatchOfferChatConversation({
       }),
     },
   );
-  return readJsonResponse<Record<string, never>>(
+  return readJsonResponse<DeleteOfferChatConversationResponse>(
     res,
     "Could not delete chat conversation.",
   );
@@ -348,10 +353,10 @@ export async function sendJobMatchOfferChatMessage({
       body: JSON.stringify(input),
     },
   );
-  return readJsonResponse<{
-    userMessage: JobAnalysisChatMessage;
-    assistantMessage: JobAnalysisChatMessage;
-  }>(res, "Could not send chat message.");
+  return readJsonResponse<SendOfferChatMessageResponse>(
+    res,
+    "Could not send chat message.",
+  );
 }
 
 export async function prepareJobMatchOfferChatCopyPaste({
@@ -369,7 +374,7 @@ export async function prepareJobMatchOfferChatCopyPaste({
       body: JSON.stringify(input),
     },
   );
-  return readJsonResponse<{ prompt: string; privacyNotice?: string }>(
+  return readJsonResponse<PrepareOfferChatCopyPasteResponse>(
     res,
     "Could not prepare copy paste chat.",
   );
@@ -390,8 +395,8 @@ export async function applyJobMatchOfferChatCopyPaste({
       body: JSON.stringify(input),
     },
   );
-  return readJsonResponse<{
-    userMessage: JobAnalysisChatMessage;
-    assistantMessage: JobAnalysisChatMessage;
-  }>(res, "Could not apply copy paste chat.");
+  return readJsonResponse<ApplyOfferChatCopyPasteResponse>(
+    res,
+    "Could not apply copy paste chat.",
+  );
 }

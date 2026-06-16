@@ -4,7 +4,7 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { adminModule } from "@/lib/container";
 import { isAdminUser } from "@/lib/observability";
 import { ok, forbidden, errorResponse } from "@/modules/shared";
-import { parseMetricsWindowRequest } from "../_shared/validation";
+import { parseMetricsWindowRequest } from "./validation";
 import type { FeedbackMetricsResponse } from "./responses";
 
 export async function GET(req: NextRequest) {

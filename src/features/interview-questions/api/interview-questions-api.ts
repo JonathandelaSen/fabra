@@ -1,11 +1,14 @@
 import type {
   DeleteInterviewQuestionResponse,
+  EditInterviewQuestionResponse,
   GenerateInterviewQuestionResponse,
   GetInterviewQuestionResponse,
   InterviewQuestionOptionsResponse,
   ListInterviewQuestionsResponse,
   SaveInterviewQuestionResponse,
 } from "@/app/api/interview-questions/responses";
+import type { PrepareInterviewQuestionCopyPasteResponse } from "@/app/api/interview-questions/[id]/copy-paste/prepare/responses";
+export type { PrepareInterviewQuestionCopyPasteResponse } from "@/app/api/interview-questions/[id]/copy-paste/prepare/responses";
 import type { InterviewQuestionsFilters } from "../hooks/use-interview-questions-route-state";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import { SELECTION_PROCESS_COPY_PASTE_PREPARE_MODES } from "@/shared/selection-process/constants";
@@ -118,7 +121,7 @@ export async function generateInterviewQuestionAnswer({
       body: JSON.stringify(input),
     }
   );
-  return readJsonResponse<GenerateInterviewQuestionResponse>(
+  return readJsonResponse<EditInterviewQuestionResponse>(
     res,
     "Could not generate answer."
   );
@@ -153,14 +156,6 @@ export interface PrepareInterviewQuestionCopyPasteInput {
   instruction?: string;
 }
 
-export interface PrepareInterviewQuestionCopyPasteResult {
-  workflowId: "interview_question.answer";
-  schemaVersion: "1";
-  prompt: string;
-  expectedResponse: { kind: "plain_text" };
-  privacyNotice: string;
-}
-
 export async function prepareInterviewQuestionCopyPaste({
   id,
   input,
@@ -176,7 +171,7 @@ export async function prepareInterviewQuestionCopyPaste({
       body: JSON.stringify(input),
     },
   );
-  return readJsonResponse<PrepareInterviewQuestionCopyPasteResult>(
+  return readJsonResponse<PrepareInterviewQuestionCopyPasteResponse>(
     res,
     "Could not prepare copy-paste prompt.",
   );

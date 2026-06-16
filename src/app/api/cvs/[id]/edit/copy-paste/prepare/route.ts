@@ -5,7 +5,7 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { getLatestRecommendationAnalysisForCV } from "@/lib/analysis-queries";
 import { cvLibraryModule } from "@/lib/container";
 import { errorResponse, notFound, ok } from "@/modules/shared";
-import { parsePrepareCVEditorCopyPasteRequest } from "../../../../validation";
+import { parsePrepareCVEditorCopyPasteRequest } from "./validation";
 import type { PrepareCVEditorCopyPasteResponse } from "./responses";
 
 function parseStringArray(value: string | null): string[] {

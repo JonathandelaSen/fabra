@@ -6,7 +6,7 @@ import {
   presentFeedback,
 } from "@/modules/feedback-notes";
 import { ok, errorResponse } from "@/modules/shared";
-import { parseGenerateFeedbackRequest } from "../../../validation";
+import { parseGenerateFeedbackRequest } from "./validation";
 import {
   toFeedbackResponse,
   type GenerateFinalFeedbackResponse,

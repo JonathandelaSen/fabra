@@ -3,6 +3,22 @@ import { normalizeStandardCVProfile } from "@/lib/cv-profile";
 import type { CVRecommendationAnalysis } from "@/lib/analysis-types";
 import type { CVTemplateLocale } from "@/lib/cv-templates";
 import type { CVDocumentListItem } from "@/features/cv-library";
+import type { UpdateCVDocumentResponse } from "@/app/api/cvs/responses";
+import type { EditCVProfileResponse } from "@/app/api/cvs/[id]/edit/responses";
+import type { SaveTemplateAsCVResponse } from "@/app/api/cvs/[id]/save-as-cv/responses";
+import type { CVRecommendationsResponse } from "@/app/api/cvs/[id]/recommendations/responses";
+
+async function readJsonResponse<T>(
+  res: Response,
+  fallbackMessage: string,
+): Promise<T> {
+  const data = (await res.json().catch(() => ({}))) as {
+    error?: string;
+    details?: string;
+  } & T;
+  if (!res.ok) throw new Error(data.error || data.details || fallbackMessage);
+  return data;
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function normalizeCVResponse(data: any): CVDocumentListItem {
@@ -39,9 +55,10 @@ export async function saveProfile({ cvId, profile }: SaveProfileInput) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ profile: normalized }),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || "Could not save profile.");
-  return normalizeCVResponse(data);
+  return readJsonResponse<UpdateCVDocumentResponse>(
+    res,
+    "Could not save profile.",
+  );
 }
 
 export interface ApplyInstructionInput {
@@ -65,15 +82,7 @@ export async function applyInstruction({
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ provider, apiKey, model, instruction }),
   });
-  const text = await res.text();
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    throw new Error(`Unexpected server response (${res.status})`);
-  }
-  if (!res.ok) throw new Error(data.error || data.details || "Edit failed.");
-  return { version: normalizeCVResponse(data.version), profile: data.version?.profile ?? null };
+  return readJsonResponse<EditCVProfileResponse>(res, "Edit failed.");
 }
 
 export interface SaveAsCVInput {
@@ -87,8 +96,7 @@ export async function saveAsCV({ cvId, name }: SaveAsCVInput) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name }),
   });
-  if (!res.ok) throw new Error("Could not save as CV.");
-  return res.json();
+  return readJsonResponse<SaveTemplateAsCVResponse>(res, "Could not save as CV.");
 }
 
 export interface UpdateLocaleInput {
@@ -102,9 +110,10 @@ export async function updateLocale({ cvId, locale }: UpdateLocaleInput) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ template_locale: locale }),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || "Could not change language.");
-  return normalizeCVResponse(data);
+  return readJsonResponse<UpdateCVDocumentResponse>(
+    res,
+    "Could not change language.",
+  );
 }
 
 export interface UpdatePublicSettingsInput {
@@ -129,9 +138,10 @@ export async function updatePublicSettings({
       confirmPublicExposure,
     }),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || "Could not update public page.");
-  return normalizeCVResponse(data);
+  return readJsonResponse<UpdateCVDocumentResponse>(
+    res,
+    "Could not update public page.",
+  );
 }
 
 export async function updatePublicFeedbackEnabled(cvId: string, enabled: boolean) {
@@ -140,18 +150,27 @@ export async function updatePublicFeedbackEnabled(cvId: string, enabled: boolean
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ public_feedback_enabled: enabled }),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || "Could not update feedback setting.");
-  return normalizeCVResponse(data);
+  return readJsonResponse<UpdateCVDocumentResponse>(
+    res,
+    "Could not update feedback setting.",
+  );
+}
+
+async function requestRecommendations(
+  sourceCvId: string,
+): Promise<CVRecommendationsResponse> {
+  const res = await fetch(
+    `/api/cvs/${encodeURIComponent(sourceCvId)}/recommendations`,
+  );
+  return readJsonResponse<CVRecommendationsResponse>(
+    res,
+    "Could not load recommendations.",
+  );
 }
 
 export async function fetchRecommendations(
   sourceCvId: string
 ): Promise<CVRecommendationAnalysis | null> {
-  const res = await fetch(
-    `/api/cvs/${encodeURIComponent(sourceCvId)}/recommendations`
-  );
-  if (!res.ok) return null;
-  const data = await res.json();
+  const data = await requestRecommendations(sourceCvId);
   return data.analysis ?? null;
 }

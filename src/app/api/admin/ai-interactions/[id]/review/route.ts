@@ -3,8 +3,9 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { aiInteractionsModule } from "@/lib/container";
 import { isAdminUser } from "@/lib/observability";
-import type { AIInteractionRating } from "@/modules/ai-interactions";
-import { badRequest, forbidden, ok } from "@/modules/shared";
+import { errorResponse, forbidden, ok } from "@/modules/shared";
+import { parseReviewAdminAIInteractionRequest } from "./validation";
+import type { ReviewAdminAIInteractionResponse } from "./responses";
 
 export async function PUT(
   req: NextRequest,
@@ -15,18 +16,18 @@ export async function PUT(
     if (!authContext.ok) return authContext.response;
     const { user } = authContext;
     if (!(await isAdminUser(user.id))) throw forbidden("Forbidden");
-    const body = await req.json() as Record<string, unknown>;
-    if (!["good", "mixed", "bad"].includes(String(body.rating))) {
-      throw badRequest("Invalid rating");
-    }
+    const body = await req.json();
+    const parsed = parseReviewAdminAIInteractionRequest(body);
+    if (!parsed.ok) return errorResponse(parsed.error);
+
     const { id } = await params;
     const review = await aiInteractionsModule.reviewAIInteraction.execute({
       interactionId: id,
       reviewerUserId: user.id,
-      rating: body.rating as AIInteractionRating,
-      note: typeof body.note === "string" ? body.note.trim() || null : null,
+      rating: parsed.value.rating,
+      note: parsed.value.note,
     });
-    return ok(review.toPrimitives());
+    return ok(review.toPrimitives() satisfies ReviewAdminAIInteractionResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }

@@ -5,6 +5,11 @@ import type {
   CreateActivityContextResponse,
   ListActivityContextsResponse,
 } from "@/app/api/activity-contexts/responses";
+import type {
+  DeleteActivityContextResponse,
+  UpdateActivityContextResponse,
+} from "@/app/api/activity-contexts/[id]/responses";
+import type { HandleActivityContextSuggestionResponse } from "@/app/api/activity-contexts/suggestions/responses";
 import { ACTIVITY_CONTEXT_SUGGESTION_ACTIONS } from "@/shared/activity-context/constants";
 
 interface ErrorResponse {
@@ -36,14 +41,10 @@ export interface UpdateActivityContextInput {
 
 export async function listActivityContexts() {
   const res = await fetch("/api/activity-contexts");
-  const data = await readJsonResponse<ListActivityContextsResponse>(
+  return readJsonResponse<ListActivityContextsResponse>(
     res,
     "Could not load activity contexts."
   );
-  return {
-    contexts: data.contexts,
-    suggestions: data.suggestions ?? [],
-  };
 }
 
 export async function createActivityContext(input: CreateActivityContextInput) {
@@ -67,7 +68,7 @@ export async function updateActivityContext(input: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input.updates),
   });
-  return readJsonResponse<ActivityContextResponse>(
+  return readJsonResponse<UpdateActivityContextResponse>(
     res,
     "Could not update activity context."
   );
@@ -75,7 +76,7 @@ export async function updateActivityContext(input: {
 
 export async function deleteActivityContext(id: string) {
   const res = await fetch(`/api/activity-contexts/${id}`, { method: "DELETE" });
-  return readJsonResponse<{ reassignedRecords: number }>(
+  return readJsonResponse<DeleteActivityContextResponse>(
     res,
     "Could not delete activity context."
   );
@@ -92,7 +93,7 @@ export async function handleActivityContextSuggestion(input: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  return readJsonResponse<ActivityContextResponse | { ok: true }>(
+  return readJsonResponse<HandleActivityContextSuggestionResponse>(
     res,
     "Could not update activity context suggestion."
   );

@@ -4,8 +4,8 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { performanceReviewModule } from "@/lib/container";
 import { presentPerformanceReview } from "@/modules/performance-review";
 import { errorResponse, ok } from "@/modules/shared";
-import { parseEditSelfAssessmentRequest } from "../../validation";
-import type { PerformanceReviewDetailResponse } from "../../responses";
+import { parseEditSelfAssessmentRequest } from "./validation";
+import type { PerformanceReviewDetailResponse } from "./responses";
 
 export async function PUT(
   req: NextRequest,

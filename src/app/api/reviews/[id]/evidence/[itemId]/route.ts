@@ -7,8 +7,8 @@ import {
   ReviewEvidenceItemNotFoundError,
 } from "@/modules/performance-review";
 import { errorResponse, ok } from "@/modules/shared";
-import { parseUpdateEvidenceItemRequest } from "../../../validation";
-import type { ReviewEvidenceItemResponse } from "../../../responses";
+import { parseUpdateEvidenceItemRequest } from "./validation";
+import type { ReviewEvidenceItemResponse } from "./responses";
 
 export async function PATCH(
   req: NextRequest,

@@ -8,7 +8,7 @@ import {
   toCVAnalysisDetailResponse,
   type DeleteCVAnalysisResponse,
   type GetCVAnalysisResponse,
-} from "../responses";
+} from "./responses";
 import { ok, notFound } from "@/modules/shared";
 
 export async function GET(

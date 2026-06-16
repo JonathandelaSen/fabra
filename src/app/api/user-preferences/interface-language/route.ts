@@ -2,8 +2,8 @@ import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { errorResponse, ok } from "@/modules/shared";
-import { isInterfaceLanguage } from "@/i18n/config";
 import { toInterfaceLanguagePreferenceResponse } from "./responses";
+import { parseUpdateInterfaceLanguagePreferenceRequest } from "./validation";
 
 export async function PUT(req: NextRequest) {
   try {
@@ -12,24 +12,20 @@ export async function PUT(req: NextRequest) {
     const { supabase, user } = authContext;
 
     const body = await req.json();
-    if (!isInterfaceLanguage(body?.locale)) {
-      return errorResponse({
-        message: "Invalid interface language.",
-        status: 400,
-      });
-    }
+    const parsed = parseUpdateInterfaceLanguagePreferenceRequest(body);
+    if (!parsed.ok) return errorResponse(parsed.error);
 
     const { error } = await supabase.from("user_preferences").upsert(
       {
         user_id: user.id,
-        interface_language: body.locale,
+        interface_language: parsed.value.locale,
       },
       { onConflict: "user_id" },
     );
 
     if (error) throw error;
 
-    return ok(toInterfaceLanguagePreferenceResponse(body.locale));
+    return ok(toInterfaceLanguagePreferenceResponse(parsed.value.locale));
   } catch (error: unknown) {
     return handleApiError(error);
   }

@@ -1,0 +1,1 @@
+export { parseScoreJobMatchAnalysisRequest } from "../../validation";

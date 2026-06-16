@@ -6,7 +6,7 @@ import {
 } from "@/modules/cv-library";
 import { presentJobMatchAnalysisSummary } from "@/modules/job-match-analysis";
 import { ok } from "@/modules/shared";
-import type { InterviewQuestionOptionsResponse } from "../responses";
+import type { InterviewQuestionOptionsResponse } from "./responses";
 
 export async function GET() {
   try {

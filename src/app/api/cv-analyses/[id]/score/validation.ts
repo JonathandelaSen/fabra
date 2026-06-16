@@ -1,0 +1,1 @@
+export { parseScoreCVAnalysisRequest } from "../../validation";

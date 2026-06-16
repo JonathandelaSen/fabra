@@ -4,7 +4,12 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { activityContextsModule } from "@/lib/container";
 import { presentActivityContext } from "@/modules/activity-context";
 import { errorResponse, ok } from "@/modules/shared";
-import { parseUpdateActivityContextRequest } from "../validation";
+import { parseUpdateActivityContextRequest } from "./validation";
+import {
+  toActivityContextResponse,
+  type DeleteActivityContextResponse,
+  type UpdateActivityContextResponse,
+} from "./responses";
 
 export async function PATCH(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
@@ -23,7 +28,11 @@ export async function PATCH(req: NextRequest, context: { params: Promise<{ id: s
       userId: user.id,
       ...parsed.value,
     });
-    return ok(presentActivityContext(activityContext));
+    return ok(
+      toActivityContextResponse(
+        presentActivityContext(activityContext),
+      ) satisfies UpdateActivityContextResponse,
+    );
   } catch (error: unknown) {
     return handleApiError(error);
   }
@@ -41,7 +50,7 @@ export async function DELETE(_req: NextRequest, context: { params: Promise<{ id:
       id,
       userId: user.id,
     });
-    return ok(result);
+    return ok(result satisfies DeleteActivityContextResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }

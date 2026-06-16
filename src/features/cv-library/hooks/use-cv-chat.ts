@@ -12,9 +12,19 @@ import {
   sendCVChatMessage,
 } from "../api/cv-library-chat-api";
 import type { CVChatConversation, CVChatMessage } from "../components/detail/cv-chat-types";
+import type { CVChatMessageResponse } from "@/app/api/cvs/[id]/chat/responses";
 
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 import { useErrorMessage } from "@/frontend/errors/use-error-message";
+
+function toCVChatMessage(message: CVChatMessageResponse): CVChatMessage {
+  return {
+    id: message.id,
+    role: message.role,
+    content: message.content,
+    created_at: message.createdAt,
+  };
+}
 interface UseCVChatParams {
   cvId: string;
   aiProvider: StoredAIProvider;
@@ -52,7 +62,7 @@ export function useCVChat({
   const createConversation = useCallback(async () => {
     setError(null);
     try {
-      const conversation = await createCVChatConversation(
+      const { conversation } = await createCVChatConversation(
         cvId,
         t("createConversationFailed"),
       );
@@ -71,7 +81,7 @@ export function useCVChat({
     setIsLoadingConversations(true);
     setError(null);
     try {
-      const nextConversations = await listCVChatConversations(
+      const { conversations: nextConversations } = await listCVChatConversations(
         cvId,
         t("loadConversationsFailed"),
       );
@@ -89,12 +99,12 @@ export function useCVChat({
       setIsLoadingMessages(true);
       setError(null);
       try {
-        const nextMessages = await listCVChatMessages(
+        const { messages: nextMessages } = await listCVChatMessages(
           cvId,
           conversationId,
           t("loadMessagesFailed"),
         );
-        setMessages(nextMessages);
+        setMessages(nextMessages.map(toCVChatMessage));
       } catch (err) {
         setError(getErrorMessage(err));
       } finally {
@@ -127,7 +137,7 @@ export function useCVChat({
   const renameConversation = useCallback(
     async (id: string, title: string) => {
       try {
-        const updated = await renameCVChatConversation(
+        const { conversation: updated } = await renameCVChatConversation(
           cvId,
           id,
           title,
@@ -195,8 +205,8 @@ export function useCVChat({
         );
         setMessages((current) => [
           ...current,
-          response.userMessage,
-          response.assistantMessage,
+          toCVChatMessage(response.userMessage),
+          toCVChatMessage(response.assistantMessage),
         ]);
         setDraft("");
       } catch (err) {

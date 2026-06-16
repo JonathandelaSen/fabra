@@ -1,6 +1,15 @@
 import type { AnalysisSummary } from "@/lib/analysis-types";
-import type { InterviewQuestionResponse } from "@/app/api/interview-questions/responses";
-import type { JobMatchAnalysisSummaryResponse } from "@/app/api/job-match-analyses/responses";
+import type {
+  InterviewQuestionResponse,
+  ListInterviewQuestionsResponse,
+} from "@/app/api/interview-questions/responses";
+import type {
+  JobMatchAnalysisSummaryResponse,
+  ListJobMatchAnalysesResponse,
+} from "@/app/api/job-match-analyses/responses";
+import type { ListCVAnalysesResponse } from "@/app/api/cv-analyses/responses";
+import type { CreateJsonResumeCVDocumentResponse } from "@/app/api/cvs/json-resume/responses";
+import type { ParseCVUploadResponse } from "@/app/api/parse/responses";
 import type {
   CreateCVDocumentResponse,
   CVDocumentDeleteConflictResponse,
@@ -105,10 +114,7 @@ export interface ImportJsonResumeInput {
   filename?: string;
 }
 
-export interface ImportJsonResumeResponse {
-  document: CreateCVDocumentResponse;
-  warnings: string[];
-}
+export type ImportJsonResumeResponse = CreateJsonResumeCVDocumentResponse;
 
 export async function importJsonResume(input: ImportJsonResumeInput) {
   const res = await fetch("/api/cvs/json-resume", {
@@ -116,7 +122,7 @@ export async function importJsonResume(input: ImportJsonResumeInput) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ content: input.jsonContent, name: input.name }),
   });
-  return readJsonResponse<ImportJsonResumeResponse>(
+  return readJsonResponse<CreateJsonResumeCVDocumentResponse>(
     res,
     "Could not import JSON Resume."
   );
@@ -147,26 +153,51 @@ export async function parseCVDocument(file: File) {
     method: "POST",
     body: formData,
   });
-  return readJsonResponse<{ id: string }>(res, "Could not parse CV document.");
+  return readJsonResponse<ParseCVUploadResponse>(
+    res,
+    "Could not parse CV document."
+  );
+}
+
+async function fetchCVAnalysesSummaries(): Promise<ListCVAnalysesResponse> {
+  const res = await fetch("/api/cv-analyses");
+  return res.ok
+    ? readJsonResponse<ListCVAnalysesResponse>(res, "Could not load analyses.")
+    : [];
+}
+
+async function fetchJobMatchAnalysesSummaries(): Promise<ListJobMatchAnalysesResponse> {
+  const res = await fetch("/api/job-match-analyses");
+  return res.ok
+    ? readJsonResponse<ListJobMatchAnalysesResponse>(
+        res,
+        "Could not load job match analyses."
+      )
+    : [];
 }
 
 export async function listAllAnalyses(): Promise<AnalysisSummary[]> {
-  const [cvRes, jobRes] = await Promise.all([
-    fetch("/api/cv-analyses"),
-    fetch("/api/job-match-analyses"),
+  const [cvAnalyses, jobRaw] = await Promise.all([
+    fetchCVAnalysesSummaries(),
+    fetchJobMatchAnalysesSummaries(),
   ]);
-  const cvAnalyses: AnalysisSummary[] = cvRes.ok ? await cvRes.json() : [];
-  const jobRaw: JobMatchAnalysisSummaryResponse[] = jobRes.ok
-    ? await jobRes.json()
-    : [];
   return [...cvAnalyses, ...jobRaw.map(normalizeJobMatchSummary)].sort(
     (a, b) => b.created_at.localeCompare(a.created_at)
   );
 }
 
+async function fetchInterviewQuestions(): Promise<ListInterviewQuestionsResponse> {
+  const res = await fetch("/api/interview-questions");
+  return res.ok
+    ? readJsonResponse<ListInterviewQuestionsResponse>(
+        res,
+        "Could not load interview questions."
+      )
+    : [];
+}
+
 export async function listInterviewQuestionsForLibrary(): Promise<
   InterviewQuestionResponse[]
 > {
-  const res = await fetch("/api/interview-questions");
-  return res.ok ? ((await res.json()) as InterviewQuestionResponse[]) : [];
+  return fetchInterviewQuestions();
 }

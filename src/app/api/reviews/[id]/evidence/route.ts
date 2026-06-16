@@ -7,11 +7,11 @@ import {
   presentReviewEvidenceItems,
 } from "@/modules/performance-review";
 import { created, errorResponse, ok } from "@/modules/shared";
-import { parseAddEvidenceItemRequest } from "../../validation";
+import { parseAddEvidenceItemRequest } from "./validation";
 import type {
   ListEvidenceItemsResponse,
   ReviewEvidenceItemResponse,
-} from "../../responses";
+} from "./responses";
 
 export async function GET(
   _req: NextRequest,

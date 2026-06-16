@@ -1,0 +1,1 @@
+export { parseEditCVProfileRequest } from "../../validation";

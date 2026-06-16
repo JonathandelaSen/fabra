@@ -12,7 +12,7 @@ import {
   jobMatchAnalysisModule,
 } from "@/lib/container";
 import { presentCVDocument } from "@/modules/cv-library";
-import { parseUpdateCVDocumentRequest } from "../validation";
+import { parseUpdateCVDocumentRequest } from "./validation";
 import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
 import {
   type CVDocumentDetailResponse,
@@ -22,7 +22,7 @@ import {
   CV_DELETE_CONFLICT_CODE,
   type GetCVDocumentResponse,
   type UpdateCVDocumentResponse,
-} from "../responses";
+} from "./responses";
 
 type LegacyCVDocumentDetail = ReturnType<typeof presentCVDocument>;
 type CompatCVDocumentDetail = LegacyCVDocumentDetail & CVDocumentDetailResponse;

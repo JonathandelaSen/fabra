@@ -14,6 +14,7 @@ import {
   draftWorkJournalEntry,
   updateWorkJournalEntry,
 } from "../api/work-journal-api";
+import { toWorkJournalEntryLegacy } from "../api/work-journal-types";
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 import { workJournalQueryKeys } from "../api/work-journal-query-keys";
 import {
@@ -111,13 +112,15 @@ export function useWorkJournalMutations({
     onEntrySelectionChange?.(optimisticEntry.id);
 
     try {
-      const entry = await createWorkJournalEntry({
-        ...draft,
-        raw_notes: rawNotes,
-        final_text: finalText,
-        date_end: draft.date_end || null,
-        topic: draft.topic || null,
-      });
+      const entry = toWorkJournalEntryLegacy(
+        await createWorkJournalEntry({
+          ...draft,
+          raw_notes: rawNotes,
+          final_text: finalText,
+          date_end: draft.date_end || null,
+          topic: draft.topic || null,
+        })
+      );
       queryClient.setQueryData(
         workJournalQueryKeys.entries(),
         (current: WorkJournalEntry[] | undefined) =>
@@ -226,7 +229,9 @@ export function useWorkJournalMutations({
     );
     setIsEditing(false);
     try {
-      const updatedEntry = await updateWorkJournalEntry({ id: entry.id, updates });
+      const updatedEntry = toWorkJournalEntryLegacy(
+        await updateWorkJournalEntry({ id: entry.id, updates })
+      );
       queryClient.setQueryData(
         workJournalQueryKeys.entries(),
         (current: WorkJournalEntry[] | undefined) =>

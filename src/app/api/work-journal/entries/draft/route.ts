@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { activityContextsModule, workJournalModule } from "@/lib/container";
 import { ok, errorResponse } from "@/modules/shared";
-import { parseDraftWorkJournalEntryRequest } from "../../validation";
+import { parseDraftWorkJournalEntryRequest } from "./validation";
 import type { DraftWorkJournalEntryResponse } from "./responses";
 
 export const maxDuration = 60;
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       provider: parsed.value.provider,
       apiKey: parsed.value.apiKey,
       baseUrl: parsed.value.baseUrl,
-        model: parsed.value.model,
+      model: parsed.value.model,
       context: {
         type: context?.toPrimitives().type ?? "other",
         name: context?.toPrimitives().name ?? "Selected activity context",

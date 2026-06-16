@@ -1,5 +1,6 @@
 import type { ListActivityContextsResponse } from "@/app/api/activity-contexts/responses";
 import type {
+  DeleteReviewResponse,
   EvidenceCandidateResponse,
   ListEvidenceCandidatesResponse,
   ListEvidenceItemsResponse,
@@ -15,7 +16,7 @@ export type EvidenceCandidate = ListEvidenceCandidatesResponse[number];
 export type ActivityContext = ListActivityContextsResponse["contexts"][number];
 export type { SelfAssessmentCopyPasteResponse };
 
-async function readJson<T>(res: Response, fallback: string): Promise<T> {
+async function readJsonResponse<T>(res: Response, fallback: string): Promise<T> {
   const data = (await res.json().catch(() => ({}))) as { error?: string } & T;
   if (!res.ok) throw new Error(data.error || fallback);
   return data;
@@ -32,7 +33,7 @@ export interface SaveReviewInput {
 
 export async function listActivityContexts() {
   const res = await fetch("/api/activity-contexts");
-  return readJson<ListActivityContextsResponse>(
+  return readJsonResponse<ListActivityContextsResponse>(
     res,
     "Could not load contexts.",
   );
@@ -40,7 +41,7 @@ export async function listActivityContexts() {
 
 export async function listReviews() {
   const res = await fetch("/api/reviews");
-  return readJson<ListPerformanceReviewsResponse>(
+  return readJsonResponse<ListPerformanceReviewsResponse>(
     res,
     "Could not load reviews.",
   );
@@ -48,7 +49,7 @@ export async function listReviews() {
 
 export async function getReview(id: string) {
   const res = await fetch(`/api/reviews/${id}`);
-  return readJson<PerformanceReviewResponse>(res, "Could not load the review.");
+  return readJsonResponse<PerformanceReviewResponse>(res, "Could not load the review.");
 }
 
 export async function createReview(input: SaveReviewInput) {
@@ -57,7 +58,7 @@ export async function createReview(input: SaveReviewInput) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  return readJson<PerformanceReviewResponse>(res, "Could not create review.");
+  return readJsonResponse<PerformanceReviewResponse>(res, "Could not create review.");
 }
 
 export async function updateReview(id: string, input: Partial<SaveReviewInput>) {
@@ -66,17 +67,17 @@ export async function updateReview(id: string, input: Partial<SaveReviewInput>) 
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  return readJson<PerformanceReviewResponse>(res, "Could not update review.");
+  return readJsonResponse<PerformanceReviewResponse>(res, "Could not update review.");
 }
 
 export async function deleteReview(id: string) {
   const res = await fetch(`/api/reviews/${id}`, { method: "DELETE" });
-  return readJson<{ ok: boolean }>(res, "Could not delete review.");
+  return readJsonResponse<DeleteReviewResponse>(res, "Could not delete review.");
 }
 
 export async function listEvidenceCandidates(reviewId: string) {
   const res = await fetch(`/api/reviews/${reviewId}/evidence/candidates`);
-  return readJson<ListEvidenceCandidatesResponse>(
+  return readJsonResponse<ListEvidenceCandidatesResponse>(
     res,
     "Could not load evidence candidates.",
   );
@@ -84,7 +85,7 @@ export async function listEvidenceCandidates(reviewId: string) {
 
 export async function listEvidenceItems(reviewId: string) {
   const res = await fetch(`/api/reviews/${reviewId}/evidence`);
-  return readJson<ListEvidenceItemsResponse>(
+  return readJsonResponse<ListEvidenceItemsResponse>(
     res,
     "Could not load curated evidence.",
   );
@@ -104,7 +105,7 @@ export async function addEvidenceItem(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  return readJson<ReviewEvidenceItemResponse>(res, "Could not add evidence.");
+  return readJsonResponse<ReviewEvidenceItemResponse>(res, "Could not add evidence.");
 }
 
 export async function addCandidateAsEvidence(
@@ -128,14 +129,14 @@ export async function updateEvidenceItem(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  return readJson<ReviewEvidenceItemResponse>(res, "Could not update evidence.");
+  return readJsonResponse<ReviewEvidenceItemResponse>(res, "Could not update evidence.");
 }
 
 export async function removeEvidenceItem(reviewId: string, itemId: string) {
   const res = await fetch(`/api/reviews/${reviewId}/evidence/${itemId}`, {
     method: "DELETE",
   });
-  return readJson<{ ok: boolean }>(res, "Could not remove evidence.");
+  return readJsonResponse<DeleteReviewResponse>(res, "Could not remove evidence.");
 }
 
 export async function reorderEvidence(reviewId: string, orderedItemIds: string[]) {
@@ -144,7 +145,7 @@ export async function reorderEvidence(reviewId: string, orderedItemIds: string[]
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ orderedItemIds }),
   });
-  return readJson<ListEvidenceItemsResponse>(res, "Could not reorder evidence.");
+  return readJsonResponse<ListEvidenceItemsResponse>(res, "Could not reorder evidence.");
 }
 
 export async function saveManualSelfAssessment(reviewId: string, content: string) {
@@ -153,7 +154,7 @@ export async function saveManualSelfAssessment(reviewId: string, content: string
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ content }),
   });
-  return readJson<PerformanceReviewResponse>(
+  return readJsonResponse<PerformanceReviewResponse>(
     res,
     "Could not save the self-assessment.",
   );
@@ -168,7 +169,7 @@ export async function generateSelfAssessment(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  return readJson<PerformanceReviewResponse>(
+  return readJsonResponse<PerformanceReviewResponse>(
     res,
     "Could not generate the self-assessment.",
   );
@@ -178,7 +179,7 @@ export async function prepareSelfAssessmentCopyPaste(reviewId: string) {
   const res = await fetch(`/api/reviews/${reviewId}/self-assessment/prepare`, {
     method: "POST",
   });
-  return readJson<SelfAssessmentCopyPasteResponse>(
+  return readJsonResponse<SelfAssessmentCopyPasteResponse>(
     res,
     "Could not prepare the copy-paste prompt.",
   );
@@ -193,7 +194,7 @@ export async function applySelfAssessmentCopyPaste(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(envelope),
   });
-  return readJson<PerformanceReviewResponse>(
+  return readJsonResponse<PerformanceReviewResponse>(
     res,
     "Could not apply the pasted response.",
   );

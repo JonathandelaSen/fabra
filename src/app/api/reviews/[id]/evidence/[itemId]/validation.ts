@@ -1,0 +1,1 @@
+export { parseUpdateEvidenceItemRequest } from "../../../validation";

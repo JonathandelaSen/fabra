@@ -1,4 +1,4 @@
-import type { CVDocumentListItem } from "@/features/cv-library";
+import type { TemplateCVResponse } from "@/app/api/cvs/[id]/template/responses";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import type { CVTemplateLocale } from "@/lib/cv-templates";
 
@@ -12,10 +12,7 @@ interface CreateCVTemplateVersionInput {
   model: string;
 }
 
-export interface CreateCVTemplateVersionResponse {
-  version: CVDocumentListItem;
-  profile: unknown;
-}
+export type CreateCVTemplateVersionResponse = TemplateCVResponse;
 
 async function readJsonResponse<T>(
   res: Response,
@@ -38,7 +35,7 @@ export function createCVTemplateVersion({
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   }).then((res) =>
-    readJsonResponse<CreateCVTemplateVersionResponse>(
+    readJsonResponse<TemplateCVResponse>(
       res,
       "Could not create the template version."
     )

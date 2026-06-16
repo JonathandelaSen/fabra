@@ -6,14 +6,14 @@ import { getBestCVText } from "@/lib/cv-profile";
 import {
   parseGenerateInterviewQuestionRequest,
   validateQuestionLinks,
-} from "../../validation";
+} from "./validation";
 import { selectionProcessModule } from "@/lib/container";
 import { presentProcessQuestion } from "@/modules/selection-process";
 import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
 import {
   toInterviewQuestionResponse,
   type GenerateInterviewQuestionResponse,
-} from "../../responses";
+} from "./responses";
 
 export const maxDuration = 60;
 

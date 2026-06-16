@@ -4,7 +4,7 @@ import { createRequestId } from "@/lib/observability";
 import { cvChatModule } from "@/lib/container";
 import { presentConversation } from "@/modules/cv-chat";
 import { errorResponse, ok } from "@/modules/shared";
-import type { CVChatConversationMutationResponse } from "../../responses";
+import type { CVChatConversationMutationResponse } from "./responses";
 import { parseRenameCVChatConversationRequest } from "./validation";
 
 type Params = { params: Promise<{ id: string; conversationId: string }> };

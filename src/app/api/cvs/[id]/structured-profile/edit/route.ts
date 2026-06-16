@@ -13,7 +13,7 @@ import {
   presentCVDocument,
   presentCVStructuredProfile,
 } from "@/modules/cv-library";
-import { parseEditCVProfileRequest } from "../../../validation";
+import { parseEditCVProfileRequest } from "./validation";
 import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
 
 export const maxDuration = 60;

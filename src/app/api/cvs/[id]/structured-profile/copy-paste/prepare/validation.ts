@@ -1,0 +1,1 @@
+export { parsePrepareCVProfileCopyPasteRequest } from "../../../../validation";

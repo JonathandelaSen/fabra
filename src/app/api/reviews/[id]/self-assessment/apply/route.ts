@@ -4,7 +4,7 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { performanceReviewModule } from "@/lib/container";
 import { presentPerformanceReview } from "@/modules/performance-review";
 import { ok } from "@/modules/shared";
-import type { PerformanceReviewDetailResponse } from "../../../responses";
+import type { PerformanceReviewDetailResponse } from "./responses";
 
 export async function POST(
   req: NextRequest,

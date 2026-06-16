@@ -50,5 +50,8 @@ export function parsePrepareInterviewQuestionCopyPasteRequest(
     return validationError("instruction is required for edit mode");
   }
 
-  return { ok: true, value: { mode, instruction } };
+  return {
+    ok: true,
+    value: { mode: mode as CopyPastePrepareMode, instruction },
+  };
 }

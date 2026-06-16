@@ -7,7 +7,7 @@ import { ok, created, errorResponse } from "@/modules/shared";
 import {
   parseCreateWorkJournalEntryRequest,
   parseListWorkJournalEntriesRequest,
-} from "../validation";
+} from "./validation";
 import {
   toWorkJournalEntryResponse,
   type CreateWorkJournalEntryResponse,

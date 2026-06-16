@@ -9,7 +9,7 @@ import {
 } from "@/lib/cv-templates";
 import { cvLibraryModule } from "@/lib/container";
 import { presentCVDocument, presentCVStructuredProfile } from "@/modules/cv-library";
-import { parseTemplateCVRequest } from "../../validation";
+import { parseTemplateCVRequest } from "./validation";
 import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
 
 export async function POST(

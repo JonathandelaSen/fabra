@@ -9,7 +9,7 @@ import {
 } from "@/lib/container";
 import { presentEvidenceCandidates } from "@/modules/performance-review";
 import { ok } from "@/modules/shared";
-import type { ListEvidenceCandidatesResponse } from "../../../responses";
+import type { ListEvidenceCandidatesResponse } from "./responses";
 
 export async function GET(
   _req: NextRequest,

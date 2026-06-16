@@ -647,7 +647,7 @@ function printHumanReport({
   console.log("----------------");
   console.log("- report-only findings show cleanup candidates and do not fail check mode.");
   console.log("- strict findings fail only when they are in changed files during normal check mode.");
-  console.log("- run `npm run frontend-components:check -- --all` to test strict rules against the whole repo.");
+  console.log("- run `node scripts/verify-frontend-components.mjs --all` to test strict rules against the whole repo.");
 }
 
 function printAllowlist(violations) {
@@ -701,7 +701,7 @@ if (isReportMode) {
 if (activeErrors.length > 0) {
   printViolations("Frontend component violations", activeErrors);
   console.error(
-    `\n${activeErrors.length} new violation(s) found. Existing allowlisted debt: ${allowedErrors.length}. Run npm run frontend-components:report for the full report.`
+    `\n${activeErrors.length} new violation(s) found. Existing allowlisted debt: ${allowedErrors.length}. Run node scripts/verify-frontend-components.mjs --report for the full report.`
   );
   process.exit(1);
 }
@@ -711,6 +711,6 @@ console.log(
 );
 if (filesToCheck.length === 0) {
   console.log(
-    "Check mode only scans changed frontend component files. Run `npm run frontend-components:report` for the full audit or `npm run frontend-components:check -- --all` for a full blocking scan."
+    "Check mode only scans changed frontend component files. Run `node scripts/verify-frontend-components.mjs --report` for the full audit or `node scripts/verify-frontend-components.mjs --all` for a full blocking scan."
   );
 }

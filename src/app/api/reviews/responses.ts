@@ -45,3 +45,7 @@ export type ListPerformanceReviewsResponse = PerformanceReviewResponse[];
 export type PerformanceReviewDetailResponse = PerformanceReviewResponse;
 export type ListEvidenceItemsResponse = ReviewEvidenceItemResponse[];
 export type ListEvidenceCandidatesResponse = EvidenceCandidateResponse[];
+
+export interface DeleteReviewResponse {
+  ok: boolean;
+}

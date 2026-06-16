@@ -4,7 +4,7 @@ import { createRequestId } from "@/lib/observability";
 import { cvChatModule } from "@/lib/container";
 import { presentMessage, presentMessages } from "@/modules/cv-chat";
 import { errorResponse, ok } from "@/modules/shared";
-import type { CVChatMessageResponse, ListCVChatMessagesResponse, SendCVChatMessageResponse } from "../responses";
+import type { CVChatMessageResponse, ListCVChatMessagesResponse, SendCVChatMessageResponse } from "./responses";
 import { parseListCVChatMessagesRequest, parseSendCVChatMessageRequest } from "./validation";
 
 export const maxDuration = 60;

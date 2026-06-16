@@ -3,12 +3,17 @@ import type {
   ListActivityContextsResponse,
 } from "@/app/api/activity-contexts/responses";
 import type {
+  CreateWorkJournalEntryResponse,
+  DeleteWorkJournalEntryResponse,
+  ListWorkJournalEntriesResponse,
+  UpdateWorkJournalEntryResponse,
+} from "@/app/api/work-journal/entries/responses";
+import type { DraftWorkJournalEntryResponse } from "@/app/api/work-journal/entries/draft/responses";
+import type {
   WorkJournalContextLegacy,
   WorkJournalEntryInputMode,
   WorkJournalEntryLegacy,
-  WorkJournalEntryResponse,
 } from "./work-journal-types";
-import { toWorkJournalEntryLegacy } from "./work-journal-types";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface ErrorResponse {
@@ -36,23 +41,18 @@ export interface SaveWorkJournalEntryInput {
 
 export async function listWorkJournalContexts() {
   const res = await fetch("/api/activity-contexts");
-  const data = await readJsonResponse<ListActivityContextsResponse>(
+  return readJsonResponse<ListActivityContextsResponse>(
     res,
     "Could not load activity contexts."
   );
-  return {
-    contexts: data.contexts.map(toWorkJournalContextLegacyFromActivityContext),
-    suggestions: [],
-  };
 }
 
 export async function listWorkJournalEntries() {
   const res = await fetch("/api/work-journal/entries");
-  const data = await readJsonResponse<WorkJournalEntryResponse[]>(
+  return readJsonResponse<ListWorkJournalEntriesResponse>(
     res,
     "Could not load work journal entries."
   );
-  return data.map(toWorkJournalEntryLegacy);
 }
 
 export async function createWorkJournalEntry(input: SaveWorkJournalEntryInput) {
@@ -61,11 +61,10 @@ export async function createWorkJournalEntry(input: SaveWorkJournalEntryInput) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  const data = await readJsonResponse<WorkJournalEntryResponse>(
+  return readJsonResponse<CreateWorkJournalEntryResponse>(
     res,
     "Could not save work journal entry."
   );
-  return toWorkJournalEntryLegacy(data);
 }
 
 export async function draftWorkJournalEntry(input: {
@@ -84,7 +83,7 @@ export async function draftWorkJournalEntry(input: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  return readJsonResponse<{ finalText: string }>(
+  return readJsonResponse<DraftWorkJournalEntryResponse>(
     res,
     "Could not draft work journal entry."
   );
@@ -99,19 +98,21 @@ export async function updateWorkJournalEntry(input: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input.updates),
   });
-  const data = await readJsonResponse<WorkJournalEntryResponse>(
+  return readJsonResponse<UpdateWorkJournalEntryResponse>(
     res,
     "Could not update work journal entry."
   );
-  return toWorkJournalEntryLegacy(data);
 }
 
 export async function deleteWorkJournalEntry(id: string) {
   const res = await fetch(`/api/work-journal/entries/${id}`, { method: "DELETE" });
-  return readJsonResponse<{ ok: true }>(res, "Could not delete work journal entry.");
+  return readJsonResponse<DeleteWorkJournalEntryResponse>(
+    res,
+    "Could not delete work journal entry.",
+  );
 }
 
-function toWorkJournalContextLegacyFromActivityContext(
+export function toWorkJournalContextLegacyFromActivityContext(
   input: ActivityContextResponse
 ): WorkJournalContextLegacy {
   return {

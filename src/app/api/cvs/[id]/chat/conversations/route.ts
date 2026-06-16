@@ -5,7 +5,7 @@ import { createRequestId } from "@/lib/observability";
 import { cvChatModule } from "@/lib/container";
 import { presentConversation } from "@/modules/cv-chat";
 import { created, notFound } from "@/modules/shared";
-import type { CVChatConversationMutationResponse } from "../responses";
+import type { CVChatConversationMutationResponse } from "./responses";
 import { parseCreateCVChatConversationRequest } from "./validation";
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {

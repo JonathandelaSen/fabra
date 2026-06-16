@@ -1,0 +1,1 @@
+export { parseTemplatePdfRequest } from "../../validation";

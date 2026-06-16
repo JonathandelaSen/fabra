@@ -12,8 +12,23 @@ import {
   sendAnalysisChatMessage,
 } from "../api/cv-analysis-chat-api";
 import type { AnalysisChatConversation, AnalysisChatMessage } from "../components/detail/chat/chat-types";
+import type { ListOfferChatConversationsResponse } from "@/app/api/job-match-analyses/[id]/chat/responses";
 
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+
+type OfferChatConversation =
+  ListOfferChatConversationsResponse["conversations"][number];
+
+function toAnalysisChatConversation(
+  conversation: OfferChatConversation,
+): AnalysisChatConversation {
+  return {
+    id: conversation.id,
+    analysis_id: conversation.analysis_id,
+    title: conversation.title,
+    messages: [],
+  };
+}
 interface UseAnalysisChatParams {
   analysisId: string;
   aiProvider: StoredAIProvider;
@@ -50,15 +65,16 @@ export function useAnalysisChat({
   const createConversation = useCallback(async () => {
     setError(null);
     try {
-      const conversation = await createAnalysisChatConversation(
+      const { conversation } = await createAnalysisChatConversation(
         analysisId,
         t("createConversationFailed"),
       );
-      setConversations((current) => [conversation, ...current]);
-      setActiveConversationId(conversation.id);
+      const mapped = toAnalysisChatConversation(conversation);
+      setConversations((current) => [mapped, ...current]);
+      setActiveConversationId(mapped.id);
       setMessages([]);
       focusInput();
-      return conversation;
+      return mapped;
     } catch (err) {
       setError(
         err instanceof Error ? err.message : t("createConversationFailed"),
@@ -71,10 +87,11 @@ export function useAnalysisChat({
     setIsLoadingConversations(true);
     setError(null);
     try {
-      const nextConversations = await listAnalysisChatConversations(
+      const { conversations } = await listAnalysisChatConversations(
         analysisId,
         t("loadConversationsFailed"),
       );
+      const nextConversations = conversations.map(toAnalysisChatConversation);
       setConversations(nextConversations);
       setActiveConversationId((current) => current ?? nextConversations[0]?.id ?? null);
     } catch (err) {
@@ -91,7 +108,7 @@ export function useAnalysisChat({
       setIsLoadingMessages(true);
       setError(null);
       try {
-        const nextMessages = await listAnalysisChatMessages(
+        const { messages: nextMessages } = await listAnalysisChatMessages(
           analysisId,
           conversationId,
           t("loadMessagesFailed"),
@@ -129,14 +146,17 @@ export function useAnalysisChat({
   const renameConversation = useCallback(
     async (id: string, title: string) => {
       try {
-        const updated = await renameAnalysisChatConversation(
+        const { conversation: updated } = await renameAnalysisChatConversation(
           analysisId,
           id,
           title,
         );
+        const mapped = toAnalysisChatConversation(updated);
         setConversations((current) =>
           current.map((conversation) =>
-            conversation.id === id ? updated : conversation,
+            conversation.id === id
+              ? { ...mapped, messages: conversation.messages }
+              : conversation,
           ),
         );
       } catch {

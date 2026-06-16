@@ -18,7 +18,9 @@ describe("CVAnalysisDetailPanel", () => {
       <CVAnalysisDetailPanel
         selectedAnalysis={{
           id: "analysis-1",
+          user_id: "user-1",
           cv_id: null,
+          pdf_storage_path: null,
           cv: null,
           title: "CV analysis",
           filename: "cv.pdf",
@@ -66,11 +68,8 @@ describe("CVAnalysisDetailPanel", () => {
         aiApiKey=""
         aiModel="mock"
         hasAIApiKey={false}
-        interviewQuestions={[]}
         onOpenSettings={vi.fn()}
-        onOpenQuestions={vi.fn()}
         onRefetchAnalysis={vi.fn()}
-        onRefetchQuestions={vi.fn()}
         onScoreAnalysis={vi.fn()}
       />,
     );

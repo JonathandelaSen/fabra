@@ -72,7 +72,7 @@ async function readJsonResponse<T>(
 
 export async function getObjectivesWorkspace() {
   const res = await fetch("/api/commitments");
-  return readJsonResponse<ObjectivesWorkspace>(
+  return readJsonResponse<CommitmentsWorkspaceResponse>(
     res,
     "Could not load objectives."
   );
@@ -84,7 +84,7 @@ export async function createObjective(input: SaveObjectiveInput) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  return readJsonResponse<Objective>(res, "Could not save objective.");
+  return readJsonResponse<CommitmentResponse>(res, "Could not save objective.");
 }
 
 export async function updateObjective({
@@ -99,7 +99,7 @@ export async function updateObjective({
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updates),
   });
-  return readJsonResponse<Objective>(res, "Could not save objective.");
+  return readJsonResponse<CommitmentResponse>(res, "Could not save objective.");
 }
 
 export async function deleteObjective(id: string) {
@@ -123,7 +123,7 @@ export async function createObjectiveItem({
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  return readJsonResponse<ObjectiveItem>(res, "Could not save action item.");
+  return readJsonResponse<CommitmentItemResponse>(res, "Could not save action item.");
 }
 
 export async function updateObjectiveItem({
@@ -138,7 +138,7 @@ export async function updateObjectiveItem({
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updates),
   });
-  return readJsonResponse<ObjectiveItem>(res, "Could not save action item.");
+  return readJsonResponse<CommitmentItemResponse>(res, "Could not save action item.");
 }
 
 export async function deleteObjectiveItem(id: string) {
@@ -162,7 +162,7 @@ export async function createObjectiveOutcome({
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  return readJsonResponse<ObjectiveOutcome>(res, "Could not save outcome.");
+  return readJsonResponse<CommitmentOutcomeResponse>(res, "Could not save outcome.");
 }
 
 export async function updateObjectiveOutcome({
@@ -177,7 +177,7 @@ export async function updateObjectiveOutcome({
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updates),
   });
-  return readJsonResponse<ObjectiveOutcome>(res, "Could not save outcome.");
+  return readJsonResponse<CommitmentOutcomeResponse>(res, "Could not save outcome.");
 }
 
 export async function deleteObjectiveOutcome(id: string) {

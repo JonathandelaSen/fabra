@@ -2,18 +2,19 @@ import { CHAT_ACTIONS } from "@/app/api/_shared/job-analysis-chat/actions";
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
-import {
-  presentConversation,
-  presentConversations,
-  presentMessage,
-  presentMessages,
-} from "@/modules/job-analysis-chat";
 import { jobAnalysisChatModule } from "@/lib/container";
 import { createRequestId } from "@/lib/observability";
 import {
   parseListOfferChatRequest,
   parseOfferChatPostRequest,
 } from "./validation";
+import {
+  toDeleteOfferChatConversationResponse,
+  toListOfferChatConversationsResponse,
+  toListOfferChatMessagesResponse,
+  toOfferChatConversationMutationResponse,
+  toSendOfferChatMessageResponse,
+} from "./responses";
 import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
 
 export const maxDuration = 60;
@@ -60,7 +61,7 @@ export async function GET(
         userId: user.id,
         conversationId,
       });
-      return ok({ messages: presentMessages(messages) });
+      return ok(toListOfferChatMessagesResponse(messages));
     }
 
     const conversations = await jobAnalysisChatModule.listConversations.execute(
@@ -69,7 +70,7 @@ export async function GET(
         analysisId: id,
       },
     );
-    return ok({ conversations: presentConversations(conversations) });
+    return ok(toListOfferChatConversationsResponse(conversations));
   } catch (error: unknown) {
     return handleApiError(error);
   }
@@ -109,7 +110,7 @@ export async function POST(
           title: parsed.value.title,
           requestId,
         });
-      return ok({ conversation: presentConversation(conversation) });
+      return ok(toOfferChatConversationMutationResponse(conversation));
     }
 
     if (parsed.value.action === CHAT_ACTIONS.renameConversation) {
@@ -121,7 +122,7 @@ export async function POST(
           title: parsed.value.title,
           requestId,
         });
-      return ok({ conversation: presentConversation(conversation) });
+      return ok(toOfferChatConversationMutationResponse(conversation));
     }
 
     if (parsed.value.action === CHAT_ACTIONS.deleteConversation) {
@@ -131,7 +132,7 @@ export async function POST(
         conversationId: parsed.value.conversationId,
         requestId,
       });
-      return ok({ ok: true });
+      return ok(toDeleteOfferChatConversationResponse());
     }
 
     const result = await jobAnalysisChatModule.sendMessage.execute({
@@ -147,10 +148,7 @@ export async function POST(
       startedAt,
     });
 
-    return ok({
-      userMessage: presentMessage(result.userMessage),
-      assistantMessage: presentMessage(result.assistantMessage),
-    });
+    return ok(toSendOfferChatMessageResponse(result));
   } catch (error: unknown) {
     return handleApiError(error);
   }

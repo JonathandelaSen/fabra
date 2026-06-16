@@ -4,12 +4,12 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { activityContextsModule, workJournalModule } from "@/lib/container";
 import { presentWorkJournalEntry } from "@/modules/work-journal";
 import { ok, errorResponse } from "@/modules/shared";
-import { parseUpdateWorkJournalEntryRequest } from "../../validation";
+import { parseUpdateWorkJournalEntryRequest } from "./validation";
 import {
   toWorkJournalEntryResponse,
   type DeleteWorkJournalEntryResponse,
   type UpdateWorkJournalEntryResponse,
-} from "../responses";
+} from "./responses";
 
 export async function PATCH(
   req: NextRequest,

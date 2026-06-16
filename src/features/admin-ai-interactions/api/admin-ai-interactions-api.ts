@@ -1,10 +1,22 @@
 import type { ListAdminAIInteractionsResponse } from "@/app/api/admin/ai-interactions/responses";
+import type { ReviewAdminAIInteractionResponse } from "@/app/api/admin/ai-interactions/[id]/review/responses";
 import { AI_INTERACTION_RATINGS } from "@/shared/ai-interactions/constants";
+
+async function readJsonResponse<T>(
+  res: Response,
+  fallbackMessage: string,
+): Promise<T> {
+  const data = (await res.json().catch(() => ({}))) as { error?: string } & T;
+  if (!res.ok) throw new Error(data.error || fallbackMessage);
+  return data;
+}
 
 export async function listAdminAIInteractions() {
   const response = await fetch("/api/admin/ai-interactions");
-  if (!response.ok) throw new Error("Could not load AI interactions.");
-  return response.json() as Promise<ListAdminAIInteractionsResponse>;
+  return readJsonResponse<ListAdminAIInteractionsResponse>(
+    response,
+    "Could not load AI interactions.",
+  );
 }
 
 type AIInteractionRating =
@@ -20,6 +32,8 @@ export async function reviewAdminAIInteraction(input: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ rating: input.rating, note: input.note }),
   });
-  if (!response.ok) throw new Error("Could not save review.");
-  return response.json();
+  return readJsonResponse<ReviewAdminAIInteractionResponse>(
+    response,
+    "Could not save review.",
+  );
 }

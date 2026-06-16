@@ -7,12 +7,14 @@ import {
   presentActivityContextSuggestion,
 } from "@/modules/activity-context";
 import { created, errorResponse, ok } from "@/modules/shared";
-import { parseActivityContextSuggestionRequest } from "../validation";
+import { parseActivityContextSuggestionRequest } from "./validation";
 import {
   toActivityContextResponse,
-  type ActivityContextSuggestionResponse,
+  toActivityContextSuggestionResponse,
   type CreateActivityContextResponse,
-} from "../responses";
+  type DismissActivityContextSuggestionResponse,
+  type ListActivityContextSuggestionsResponse,
+} from "./responses";
 
 export async function GET() {
   try {
@@ -25,9 +27,11 @@ export async function GET() {
       await activityContextsModule.listActivityContextSuggestions.execute(user.id);
     return ok({
       suggestions: suggestions.map((suggestion) =>
-        presentActivityContextSuggestion(suggestion)
+        toActivityContextSuggestionResponse(
+          presentActivityContextSuggestion(suggestion),
+        )
       ),
-    } satisfies { suggestions: ActivityContextSuggestionResponse[] });
+    } satisfies ListActivityContextSuggestionsResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }
@@ -48,7 +52,9 @@ export async function POST(req: NextRequest) {
       userId: user.id,
       ...parsed.value,
     });
-    if ("ok" in result) return ok(result);
+    if ("ok" in result) {
+      return ok(result satisfies DismissActivityContextSuggestionResponse);
+    }
     return created(
       toActivityContextResponse(
         presentActivityContext(result)

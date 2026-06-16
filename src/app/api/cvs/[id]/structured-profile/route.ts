@@ -5,7 +5,7 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { getBestCVText, getCVSourceTextHash } from "@/lib/cv-profile";
 import { cvLibraryModule } from "@/lib/container";
 import { presentCVDocument, presentCVStructuredProfile } from "@/modules/cv-library";
-import { parseStructureCVProfileRequest } from "../../validation";
+import { parseStructureCVProfileRequest } from "./validation";
 import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
 
 export async function GET(

@@ -5,11 +5,9 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { jobMatchAnalysisModule } from "@/lib/container";
 import { presentJobMatchAnalysis } from "@/modules/job-match-analysis";
 import { errorResponse, notFound, ok } from "@/modules/shared";
-import {
-  toJobMatchAnalysisDetailResponse,
-  type ScoreJobMatchAnalysisResponse,
-} from "@/app/api/job-match-analyses/responses";
+import { toJobMatchAnalysisDetailResponse } from "@/app/api/job-match-analyses/responses";
 import { parseApplyJobMatchAnalysisCopyPasteRequest } from "./validation";
+import type { ApplyJobMatchAnalysisCopyPasteResponse } from "./responses";
 
 export async function POST(
   req: NextRequest,
@@ -39,7 +37,7 @@ export async function POST(
     return ok(
       toJobMatchAnalysisDetailResponse(
         presentJobMatchAnalysis(updated),
-      ) satisfies ScoreJobMatchAnalysisResponse,
+      ) satisfies ApplyJobMatchAnalysisCopyPasteResponse,
     );
   } catch (error: unknown) {
     return handleApiError(error);

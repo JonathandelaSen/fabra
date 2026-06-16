@@ -1,0 +1,1 @@
+export type DownloadCVAnalysisPdfResponse = Response;

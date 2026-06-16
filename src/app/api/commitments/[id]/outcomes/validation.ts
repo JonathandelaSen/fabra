@@ -1,0 +1,1 @@
+export { parseCreateCommitmentOutcomeRequest } from "../../validation";

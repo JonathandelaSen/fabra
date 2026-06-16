@@ -4,11 +4,11 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { commitmentsModule } from "@/lib/container";
 import { presentCommitmentItem } from "@/modules/commitments";
 import { created, errorResponse } from "@/modules/shared";
-import { parseCreateCommitmentItemRequest } from "../../validation";
+import { parseCreateCommitmentItemRequest } from "./validation";
 import {
   toCommitmentItemResponse,
   type CommitmentItemResponse,
-} from "../../responses";
+} from "./responses";
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {

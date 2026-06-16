@@ -10,7 +10,7 @@ import {
 import { renderTemplatePDF } from "@/lib/cv-template-pdf";
 import { cvLibraryModule } from "@/lib/container";
 import { presentCVDocument, presentCVStructuredProfile } from "@/modules/cv-library";
-import { parseTemplatePdfRequest } from "../../../../validation";
+import { parseTemplatePdfRequest } from "./validation";
 import { notFound } from "@/modules/shared";
 
 export async function GET(

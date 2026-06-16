@@ -1,0 +1,1 @@
+export { parseUpdateWorkJournalEntryRequest } from "../../validation";

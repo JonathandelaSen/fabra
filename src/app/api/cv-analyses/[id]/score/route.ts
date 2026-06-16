@@ -4,11 +4,11 @@ import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvAnalysisModule } from "@/lib/container";
 import { presentCVAnalysis } from "@/modules/cv-analysis";
-import { parseScoreCVAnalysisRequest } from "../../validation";
+import { parseScoreCVAnalysisRequest } from "./validation";
 import {
   toCVAnalysisDetailResponse,
   type ScoreCVAnalysisResponse,
-} from "../../responses";
+} from "./responses";
 import { ok, errorResponse, notFound } from "@/modules/shared";
 import { createRequestId } from "@/lib/observability";
 

@@ -1,0 +1,1 @@
+export { parseGenerateSelfAssessmentRequest } from "../../../validation";

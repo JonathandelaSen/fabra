@@ -5,7 +5,7 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import {
   parseUpdateInterviewQuestionRequest,
   validateQuestionLinks,
-} from "../validation";
+} from "./validation";
 import { selectionProcessModule } from "@/lib/container";
 import { presentProcessQuestion } from "@/modules/selection-process";
 import { ok, errorResponse, notFound } from "@/modules/shared";
@@ -14,7 +14,7 @@ import {
   type DeleteInterviewQuestionResponse,
   type GetInterviewQuestionResponse,
   type SaveInterviewQuestionResponse,
-} from "../responses";
+} from "./responses";
 
 export async function GET(
   _req: NextRequest,

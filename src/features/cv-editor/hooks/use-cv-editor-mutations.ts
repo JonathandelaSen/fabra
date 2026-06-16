@@ -87,7 +87,7 @@ export function useCVEditorMutations({
       try {
         if (currentProfile && !(await saveProfileToApi(currentProfile))) return;
 
-        const { version, profile } = await applyInstructionApi({
+        const result = await applyInstructionApi({
           cvId: currentVersionId,
           provider: aiConfig.provider,
           apiKey: aiConfig.apiKey,
@@ -96,11 +96,15 @@ export function useCVEditorMutations({
           instruction: text.trim(),
         });
 
+        const normalized = result.version
+          ? normalizeCVResponse(result.version)
+          : null;
+        const profile = normalized?.profile ?? null;
         if (profile) {
           savedProfileJsonRef.current = serializeProfile(profile);
           setProfile(profile, "instant");
         }
-        setEditedVersion(version);
+        if (normalized) setEditedVersion(normalized);
         setEditInstruction("");
         reloadPreview();
         void listQuery.refetch();

@@ -5,7 +5,7 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { cvLibraryModule } from "@/lib/container";
 import { presentCVDocument } from "@/modules/cv-library";
 import { errorResponse, notFound, ok } from "@/modules/shared";
-import { parseApplyCVEditorCopyPasteRequest } from "../../../../validation";
+import { parseApplyCVEditorCopyPasteRequest } from "./validation";
 import type { ApplyCVEditorCopyPasteResponse } from "./responses";
 
 export async function POST(

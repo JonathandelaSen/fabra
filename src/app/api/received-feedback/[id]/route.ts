@@ -4,7 +4,7 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { activityContextsModule, receivedFeedbackModule } from "@/lib/container";
 import { presentReceivedFeedback } from "@/modules/received-feedback";
 import { ok, errorResponse } from "@/modules/shared";
-import { parseUpdateReceivedFeedbackRequest } from "../validation";
+import { parseUpdateReceivedFeedbackRequest } from "./validation";
 import { toReceivedFeedbackResponse } from "../responses";
 import type {
   DeleteReceivedFeedbackResponse,
