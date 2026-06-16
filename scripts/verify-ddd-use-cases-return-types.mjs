@@ -95,11 +95,8 @@ function getBaseTypeName(typeNode, sourceFile) {
   return null;
 }
 
-export const migratedModules = [];
-
 export async function findUseCaseReturnTypesViolations({
   rootDir = repoRoot,
-  modules = migratedModules,
 } = {}) {
   const modulesDir = path.join(rootDir, "src/modules");
   const allFiles = await walkFiles(modulesDir);
@@ -109,7 +106,7 @@ export async function findUseCaseReturnTypesViolations({
       const parts = file.split("/");
       const moduleName = parts[2];
       return (
-        modules.includes(moduleName) &&
+        moduleName !== "shared" &&
         file.includes("/application/use-cases/") &&
         file.endsWith(".use-case.ts") &&
         !file.endsWith(".test.ts")
@@ -275,11 +272,6 @@ async function main() {
   if (violations.length > 0) {
     console.error(formatUseCaseReturnTypesViolations(violations));
     process.exitCode = 1;
-    return;
-  }
-
-  if (migratedModules.length === 0) {
-    console.log("DDD use case return types check passed. No migrated modules configured yet.");
     return;
   }
 
