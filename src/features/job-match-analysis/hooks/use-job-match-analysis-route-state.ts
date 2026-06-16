@@ -52,7 +52,7 @@ export function parseJobMatchAnalysisRoute(pathname: string): ParsedJobMatchAnal
 
   if (view === JOB_MATCH_ROUTE_VIEWS.list && segments[0] === "new") {
     return {
-      mode: "new",
+      mode: JOB_MATCH_ROUTE_MODES.new,
       view,
       analysisId: null,
       isAnalysisView: false,
@@ -65,7 +65,7 @@ export function parseJobMatchAnalysisRoute(pathname: string): ParsedJobMatchAnal
     view === JOB_MATCH_ROUTE_VIEWS.kanban ? segments[2] === JOB_MATCH_VIEW_MODES.analysis : segments[1] === JOB_MATCH_VIEW_MODES.analysis;
 
   return {
-    mode: analysisId ? "detail" : "list",
+    mode: analysisId ? JOB_MATCH_ROUTE_MODES.detail : JOB_MATCH_ROUTE_MODES.list,
     view,
     analysisId,
     isAnalysisView,
@@ -87,7 +87,7 @@ export function getJobMatchAnalysisHref({
   view?: JobMatchAnalysisRouteView;
   mode?: JobMatchAnalysisRouteMode;
 }) {
-  if (mode === "new") return "/job-analyses/new";
+  if (mode === JOB_MATCH_ROUTE_MODES.new) return "/job-analyses/new";
   const base = view === JOB_MATCH_ROUTE_VIEWS.kanban ? "/job-analyses/kanban" : "/job-analyses";
   if (!id) return base;
   const encodedId = encodeURIComponent(id);
@@ -148,7 +148,7 @@ export function useJobMatchAnalysisRouteState() {
   }, [router]);
 
   const goToNew = useCallback(() => {
-    router.push(getJobMatchAnalysisHref({ mode: "new" }));
+    router.push(getJobMatchAnalysisHref({ mode: JOB_MATCH_ROUTE_MODES.new }));
   }, [router]);
 
   const goToListView = useCallback(() => {

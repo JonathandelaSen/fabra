@@ -7,7 +7,7 @@ import type {
   JobMatchAnalysisRouteMode,
   JobMatchAnalysisRouteView,
 } from "../hooks/use-job-match-analysis-route-state";
-import { JOB_MATCH_ROUTE_VIEWS } from "../constants";
+import { JOB_MATCH_ROUTE_VIEWS, JOB_MATCH_ROUTE_MODES } from "../constants";
 
 interface JobMatchAnalysisAutoSelectionState {
   analysisCount: number;
@@ -32,7 +32,7 @@ function toListDetailState(
     selectedId: state.analysisId,
     isOnListRoute:
       state.view === JOB_MATCH_ROUTE_VIEWS.list &&
-      state.mode === "list" &&
+      state.mode === JOB_MATCH_ROUTE_MODES.list &&
       state.pathname === "/job-analyses",
   };
 }
@@ -46,6 +46,6 @@ export function shouldAutoSelectJobMatchAnalysis(
 export function shouldShowJobMatchAnalysisMainLoader(
   state: JobMatchAnalysisMainLoaderState,
 ) {
-  if (state.mode === "new") return false;
+  if (state.mode === JOB_MATCH_ROUTE_MODES.new) return false;
   return shouldShowMainLoader(toListDetailState(state));
 }

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { JobMatchAnalysisSummary } from "../api/job-match-analysis-api";
 import type { JobMatchAnalysisRouteMode, JobMatchAnalysisRouteView } from "../hooks/use-job-match-analysis-route-state";
-import { JOB_MATCH_ROUTE_VIEWS } from "../constants";
+import { JOB_MATCH_ROUTE_VIEWS, JOB_MATCH_ROUTE_MODES } from "../constants";
 import JobMatchAnalysisList from "./list/job-match-analysis-list";
 import { JobMatchKanbanBoard } from "./kanban/job-match-kanban-board";
 
@@ -50,7 +50,7 @@ export function JobMatchAnalysisBody({
   onMoveCard,
   onBackToBoard,
 }: JobMatchAnalysisBodyProps) {
-  if (mode === "new") return newFlow;
+  if (mode === JOB_MATCH_ROUTE_MODES.new) return newFlow;
 
   if (view === JOB_MATCH_ROUTE_VIEWS.kanban && !analysisId) {
     return (

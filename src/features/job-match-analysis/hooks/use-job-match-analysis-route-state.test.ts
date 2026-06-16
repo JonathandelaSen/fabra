@@ -4,7 +4,7 @@ import {
   parseJobMatchAnalysisRoute,
   shouldShowJobMatchAnalysisView,
 } from "./use-job-match-analysis-route-state";
-import { JOB_MATCH_DETAIL_TABS, JOB_MATCH_ROUTE_VIEWS } from "../constants";
+import { JOB_MATCH_DETAIL_TABS, JOB_MATCH_ROUTE_VIEWS, JOB_MATCH_ROUTE_MODES } from "../constants";
 
 describe("shouldShowJobMatchAnalysisView", () => {
   it("defaults to AI analysis when a score exists", () => {
@@ -31,7 +31,7 @@ describe("shouldShowJobMatchAnalysisView", () => {
 describe("parseJobMatchAnalysisRoute", () => {
   it("treats the list root as the list view with no selection", () => {
     expect(parseJobMatchAnalysisRoute("/job-analyses")).toMatchObject({
-      mode: "list",
+      mode: JOB_MATCH_ROUTE_MODES.list,
       view: JOB_MATCH_ROUTE_VIEWS.list,
       analysisId: null,
       isAnalysisView: false,
@@ -40,7 +40,7 @@ describe("parseJobMatchAnalysisRoute", () => {
 
   it("treats /job-analyses/new as the new offer flow, not a detail id", () => {
     expect(parseJobMatchAnalysisRoute("/job-analyses/new")).toMatchObject({
-      mode: "new",
+      mode: JOB_MATCH_ROUTE_MODES.new,
       view: JOB_MATCH_ROUTE_VIEWS.list,
       analysisId: null,
       isAnalysisView: false,
@@ -49,7 +49,7 @@ describe("parseJobMatchAnalysisRoute", () => {
 
   it("reads the offer id from the first segment in the list view", () => {
     expect(parseJobMatchAnalysisRoute("/job-analyses/offer-1")).toMatchObject({
-      mode: "detail",
+      mode: JOB_MATCH_ROUTE_MODES.detail,
       view: JOB_MATCH_ROUTE_VIEWS.list,
       analysisId: "offer-1",
       isAnalysisView: false,
@@ -60,7 +60,7 @@ describe("parseJobMatchAnalysisRoute", () => {
     expect(
       parseJobMatchAnalysisRoute("/job-analyses/offer-1/analysis"),
     ).toMatchObject({
-      mode: "detail",
+      mode: JOB_MATCH_ROUTE_MODES.detail,
       view: JOB_MATCH_ROUTE_VIEWS.list,
       analysisId: "offer-1",
       isAnalysisView: true,
@@ -69,7 +69,7 @@ describe("parseJobMatchAnalysisRoute", () => {
 
   it("keeps the kanban view with no selection on the board root", () => {
     expect(parseJobMatchAnalysisRoute("/job-analyses/kanban")).toMatchObject({
-      mode: "list",
+      mode: JOB_MATCH_ROUTE_MODES.list,
       view: JOB_MATCH_ROUTE_VIEWS.kanban,
       analysisId: null,
       isAnalysisView: false,
@@ -80,7 +80,7 @@ describe("parseJobMatchAnalysisRoute", () => {
     expect(
       parseJobMatchAnalysisRoute("/job-analyses/kanban/offer-2"),
     ).toMatchObject({
-      mode: "detail",
+      mode: JOB_MATCH_ROUTE_MODES.detail,
       view: JOB_MATCH_ROUTE_VIEWS.kanban,
       analysisId: "offer-2",
       isAnalysisView: false,
@@ -91,7 +91,7 @@ describe("parseJobMatchAnalysisRoute", () => {
     expect(
       parseJobMatchAnalysisRoute("/job-analyses/kanban/offer-2/analysis"),
     ).toMatchObject({
-      mode: "detail",
+      mode: JOB_MATCH_ROUTE_MODES.detail,
       view: JOB_MATCH_ROUTE_VIEWS.kanban,
       analysisId: "offer-2",
       isAnalysisView: true,
@@ -108,7 +108,7 @@ describe("parseJobMatchAnalysisRoute", () => {
 
   it("does not match unrelated paths that merely share a prefix", () => {
     expect(parseJobMatchAnalysisRoute("/job-analyses-archive")).toMatchObject({
-      mode: "list",
+      mode: JOB_MATCH_ROUTE_MODES.list,
       view: JOB_MATCH_ROUTE_VIEWS.list,
       analysisId: null,
       isAnalysisView: false,

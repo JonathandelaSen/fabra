@@ -3,7 +3,7 @@ import {
   shouldAutoSelectJobMatchAnalysis,
   shouldShowJobMatchAnalysisMainLoader,
 } from "./job-match-analysis-loading-state";
-import { JOB_MATCH_ROUTE_VIEWS } from "../constants";
+import { JOB_MATCH_ROUTE_VIEWS, JOB_MATCH_ROUTE_MODES } from "../constants";
 
 describe("job match analysis loading state", () => {
   it("does not auto-select while the initial offer list is still pending", () => {
@@ -12,7 +12,7 @@ describe("job match analysis loading state", () => {
         analysisCount: 0,
         analysisId: null,
         isListPending: true,
-        mode: "list",
+        mode: JOB_MATCH_ROUTE_MODES.list,
         pathname: "/job-analyses",
         view: JOB_MATCH_ROUTE_VIEWS.list,
       })
@@ -25,7 +25,7 @@ describe("job match analysis loading state", () => {
         analysisCount: 2,
         analysisId: null,
         isListPending: false,
-        mode: "list",
+        mode: JOB_MATCH_ROUTE_MODES.list,
         pathname: "/job-analyses",
         view: JOB_MATCH_ROUTE_VIEWS.list,
       })
@@ -38,7 +38,7 @@ describe("job match analysis loading state", () => {
         analysisCount: 2,
         analysisId: null,
         isListPending: false,
-        mode: "list",
+        mode: JOB_MATCH_ROUTE_MODES.list,
         pathname: "/job-analyses",
         view: JOB_MATCH_ROUTE_VIEWS.kanban,
       })
@@ -52,7 +52,7 @@ describe("job match analysis loading state", () => {
         analysisId: null,
         isDetailPending: false,
         isListPending: false,
-        mode: "list",
+        mode: JOB_MATCH_ROUTE_MODES.list,
         pathname: "/job-analyses",
         view: JOB_MATCH_ROUTE_VIEWS.list,
       })
@@ -66,7 +66,7 @@ describe("job match analysis loading state", () => {
         analysisId: "a",
         isDetailPending: false,
         isListPending: false,
-        mode: "detail",
+        mode: JOB_MATCH_ROUTE_MODES.detail,
         pathname: "/job-analyses/a",
         view: JOB_MATCH_ROUTE_VIEWS.list,
       })
@@ -80,7 +80,7 @@ describe("job match analysis loading state", () => {
         analysisId: "a",
         isDetailPending: true,
         isListPending: false,
-        mode: "detail",
+        mode: JOB_MATCH_ROUTE_MODES.detail,
         pathname: "/job-analyses/a",
         view: JOB_MATCH_ROUTE_VIEWS.list,
       })
@@ -94,7 +94,7 @@ describe("job match analysis loading state", () => {
         analysisId: null,
         isDetailPending: false,
         isListPending: false,
-        mode: "list",
+        mode: JOB_MATCH_ROUTE_MODES.list,
         pathname: "/job-analyses/pending-redirect",
         view: JOB_MATCH_ROUTE_VIEWS.list,
       })
@@ -108,7 +108,7 @@ describe("job match analysis loading state", () => {
         analysisId: null,
         isDetailPending: false,
         isListPending: true,
-        mode: "new",
+        mode: JOB_MATCH_ROUTE_MODES.new,
         pathname: "/job-analyses/new",
         view: JOB_MATCH_ROUTE_VIEWS.list,
       })
