@@ -50,4 +50,32 @@ export class SupabaseUserRepository implements UserRepository {
 
     return UserSearchResult.fromPrimitives({ users, total: filtered.length });
   }
+
+  async delete(userId: string): Promise<void> {
+    const admin = createAdminClient();
+    const bucketName = "cv-pdfs";
+
+    const { data: files, error: listError } = await admin.storage
+      .from(bucketName)
+      .list(userId);
+
+    if (listError) {
+      console.error(`Error listing storage files for user ${userId}:`, listError);
+    } else if (files && files.length > 0) {
+      const filesToDelete = files.map((file) => `${userId}/${file.name}`);
+      const { error: removeError } = await admin.storage
+        .from(bucketName)
+        .remove(filesToDelete);
+
+      if (removeError) {
+        console.error(`Error removing storage files for user ${userId}:`, removeError);
+      }
+    }
+
+    const { error: deleteUserError } = await admin.auth.admin.deleteUser(userId);
+    if (deleteUserError) {
+      throw deleteUserError;
+    }
+  }
 }
+

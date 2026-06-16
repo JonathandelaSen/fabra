@@ -1,48 +1,21 @@
-export interface InterviewQuestionSummary {
-  id: string;
-  userId: string;
-  question: string;
-  context: string | null;
-  answer: string | null;
-  cvId: string | null;
-  analysisId: string | null;
-  aiModel: string | null;
-  aiGeneratedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
+import type {
+  JOB_MATCH_DETAIL_TABS,
+  JOB_MATCH_VIEW_MODES,
+} from "./constants";
 
-export interface JobAnalysisChatConversation {
-  id: string;
-  user_id: string;
-  analysis_id: string;
-  title: string;
-  created_at: string;
-  updated_at: string;
-}
+export type DetailTab =
+  (typeof JOB_MATCH_DETAIL_TABS)[keyof typeof JOB_MATCH_DETAIL_TABS];
 
-export type JobAnalysisChatRole =
-  (typeof JOB_ANALYSIS_CHAT_ROLES)[keyof typeof JOB_ANALYSIS_CHAT_ROLES];
-
-export type DetailTab = "summary" | "offer" | "questions" | "chat" | "tracking";
-
-export type JobMatchViewMode = "analysis" | "extraction";
-
-export interface JobAnalysisChatMessage {
-  id: string;
-  user_id: string;
-  analysis_id: string;
-  conversation_id: string;
-  role: JobAnalysisChatRole;
-  content: string;
-  model: string | null;
-  metadata: Record<string, unknown> | null;
-  created_at: string;
-}
+export type JobMatchViewMode =
+  (typeof JOB_MATCH_VIEW_MODES)[keyof typeof JOB_MATCH_VIEW_MODES];
 
 export type {
   JobMatchAnalysisDetailResponse,
   ListJobMatchAnalysesResponse,
 } from "@/app/api/job-match-analyses/responses";
 export type { JobMatchAnalysisDetail } from "./api/job-match-analysis-api";
-import { JOB_ANALYSIS_CHAT_ROLES } from "@/shared/job-analysis-chat/constants";
+export type { InterviewQuestionResponse as InterviewQuestionSummary } from "@/app/api/interview-questions/responses";
+export type {
+  JobAnalysisChatConversation,
+  JobAnalysisChatMessage,
+} from "@/app/api/job-match-analyses/[id]/chat/responses";

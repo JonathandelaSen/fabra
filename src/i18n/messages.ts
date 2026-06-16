@@ -983,9 +983,18 @@ export const messages = {
         confirmDescription:
           "Your admin session will be replaced by this user's session in every tab. You will be able to read and modify their data. To return, exit impersonation and sign in again.",
         startingImpersonation: "Switching session...",
+        deleteUser: "Delete user",
+        deletingUser: "Deleting user...",
+        deleteUserConfirmHeader: "Cascade Delete User",
+        deleteUserConfirmTitle: "Cascade delete {email}?",
+        deleteUserConfirmDescription:
+          "This will permanently delete the user's account and all associated data, including uploaded CVs, AI analyses, chat history, objectives, and files. This action cannot be undone.",
+        deleteUserSuccess: "User deleted successfully.",
+        deleteUserFailed: "Could not delete user.",
         pageOf: "Page {page} of {totalPages} · {total} users",
         previous: "Previous",
         next: "Next",
+
       },
       impersonation: {
         banner: "You are impersonating {email}",
@@ -2708,6 +2717,14 @@ export const messages = {
         confirmDescription:
           "Tu sesión de admin será sustituida por la sesión de este usuario en todas las pestañas. Podrás leer y modificar sus datos. Para volver, sal de la impersonación e inicia sesión de nuevo.",
         startingImpersonation: "Cambiando de sesión...",
+        deleteUser: "Borrar usuario",
+        deletingUser: "Borrando usuario...",
+        deleteUserConfirmHeader: "Borrar usuario en cascada",
+        deleteUserConfirmTitle: "¿Borrar a {email} en cascada?",
+        deleteUserConfirmDescription:
+          "Esto eliminará permanentemente la cuenta del usuario y todos sus datos asociados, incluyendo CVs subidos, análisis de IA, historial de chat, objetivos y archivos. Esta acción no se puede deshacer.",
+        deleteUserSuccess: "Usuario eliminado con éxito.",
+        deleteUserFailed: "No se pudo eliminar al usuario.",
         pageOf: "Página {page} de {totalPages} · {total} usuarios",
         previous: "Anterior",
         next: "Siguiente",

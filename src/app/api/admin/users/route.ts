@@ -3,8 +3,8 @@ import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { adminModule } from "@/lib/container";
 import { isAdminUser } from "@/lib/observability";
-import { ok, forbidden } from "@/modules/shared";
-import { parseListAdminUsersRequest } from "./validation";
+import { ok, forbidden, badRequest, errorResponse } from "@/modules/shared";
+import { parseListAdminUsersRequest, parseDeleteUserRequest } from "./validation";
 import type { ListAdminUsersResponse } from "./responses";
 
 export async function GET(req: NextRequest) {
@@ -30,3 +30,29 @@ export async function GET(req: NextRequest) {
     return handleApiError(error);
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const authContext = await getAuthenticatedRequestContext();
+    if (!authContext.ok) return authContext.response;
+    const { user } = authContext;
+
+    if (!(await isAdminUser(user.id))) {
+      throw forbidden("Forbidden");
+    }
+
+    const parsed = parseDeleteUserRequest(req.nextUrl.searchParams);
+    if (!parsed.ok) return errorResponse(parsed.error);
+
+    if (parsed.value.userId === user.id) {
+      throw badRequest("You cannot delete your own account.");
+    }
+
+    await adminModule.deleteUser.execute(parsed.value);
+
+    return ok({ success: true });
+  } catch (error: unknown) {
+    return handleApiError(error);
+  }
+}
+

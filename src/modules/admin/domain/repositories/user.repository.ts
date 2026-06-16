@@ -9,4 +9,6 @@ export interface UserSearchCriteria {
 
 export interface UserRepository {
   search(criteria: UserSearchCriteria): Promise<UserSearchResult>;
+  delete(userId: string): Promise<void>;
 }
+

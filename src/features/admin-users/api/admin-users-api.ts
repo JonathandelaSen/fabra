@@ -1,4 +1,4 @@
-import type { ListAdminUsersResponse } from "@/app/api/admin/users/responses";
+import type { ListAdminUsersResponse, DeleteAdminUserResponse } from "@/app/api/admin/users/responses";
 import type { ImpersonateUserResponse } from "@/app/api/admin/impersonate/responses";
 import type { AdminUsersFilters } from "./admin-users-query-keys";
 
@@ -45,3 +45,16 @@ export async function impersonateUser(
     "Could not start impersonation.",
   );
 }
+
+export async function deleteAdminUser(
+  userId: string,
+): Promise<DeleteAdminUserResponse> {
+  const response = await fetch(`/api/admin/users?userId=${userId}`, {
+    method: "DELETE",
+  });
+  return readJsonResponse<DeleteAdminUserResponse>(
+    response,
+    "Could not delete user.",
+  );
+}
+

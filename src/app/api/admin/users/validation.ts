@@ -11,3 +11,18 @@ export function parseListAdminUsersRequest(params: URLSearchParams) {
     },
   } as const;
 }
+
+export function parseDeleteUserRequest(params: URLSearchParams) {
+  const userId = params.get("userId");
+  if (!userId) {
+    return {
+      ok: false,
+      error: { message: "userId is required", status: 400 },
+    } as const;
+  }
+  return {
+    ok: true,
+    value: { userId },
+  } as const;
+}
+

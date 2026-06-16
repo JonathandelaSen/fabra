@@ -40,4 +40,25 @@ describe("SupabaseUserRepository", () => {
     expect(emails).toContain(first.email);
     expect(emails).toContain(second.email);
   });
+
+  it("deletes a user and ensures they no longer appear in search results", async () => {
+    const user = await createTestUser("admin-delete-test");
+
+    const searchBefore = await repo.search({
+      search: user.email,
+      page: 1,
+      perPage: 20,
+    });
+    expect(searchBefore.total).toBe(1);
+
+    await repo.delete(user.id);
+
+    const searchAfter = await repo.search({
+      search: user.email,
+      page: 1,
+      perPage: 20,
+    });
+    expect(searchAfter.total).toBe(0);
+  });
 });
+

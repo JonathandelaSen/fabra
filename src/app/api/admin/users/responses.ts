@@ -10,3 +10,8 @@ export interface ListAdminUsersResponse {
   perPage: number;
   total: number;
 }
+
+export interface DeleteAdminUserResponse {
+  success: boolean;
+}
+

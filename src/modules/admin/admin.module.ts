@@ -1,5 +1,6 @@
 import { instrumentUseCases, type Telemetry } from "@/modules/shared";
 import { ListUsersUseCase } from "./application/use-cases/list-users.use-case";
+import { DeleteUserUseCase } from "./application/use-cases/delete-user.use-case";
 import { StartUserImpersonationUseCase } from "./application/use-cases/start-user-impersonation.use-case";
 import { SupabaseUserRepository } from "./infrastructure/repositories/supabase-user.repository";
 import { SupabaseImpersonationSessionService } from "./infrastructure/services/supabase-impersonation-session.service";
@@ -17,6 +18,7 @@ const contentMetricsRepo = new SupabaseContentMetricsRepository();
 function createUseCases() {
   return {
     listUsers: new ListUsersUseCase({ userRepo }),
+    deleteUser: new DeleteUserUseCase({ userRepo }),
     startUserImpersonation: new StartUserImpersonationUseCase({
       impersonationSessionService,
     }),

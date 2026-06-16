@@ -9,6 +9,11 @@ import {
   type ChatMessage,
 } from "@/modules/job-analysis-chat";
 
+export type {
+  JobAnalysisChatConversation,
+  JobAnalysisChatMessage,
+} from "@/modules/job-analysis-chat";
+
 export interface ListOfferChatConversationsResponse {
   conversations: JobAnalysisChatConversation[];
 }

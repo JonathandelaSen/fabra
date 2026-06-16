@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DeleteButton } from "@/components/shared/action-buttons";
 import { LabelBadge, LABEL_BADGE_SIZES } from "@/components/shared/label-badge";
 import type { AdminUserResponse } from "@/app/api/admin/users/responses";
 
@@ -12,6 +13,7 @@ interface AdminUsersTableProps {
   dateLocale: string;
   impersonating: boolean;
   onImpersonate: (user: AdminUserResponse) => void;
+  onDelete: (user: AdminUserResponse) => void;
 }
 
 export function AdminUsersTable({
@@ -20,6 +22,7 @@ export function AdminUsersTable({
   dateLocale,
   impersonating,
   onImpersonate,
+  onDelete,
 }: AdminUsersTableProps) {
   const t = useTranslations("admin.users");
 
@@ -63,17 +66,26 @@ export function AdminUsersTable({
                 })}
               </td>
               <td className="px-4 py-3 text-right">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  disabled={isSelf || impersonating}
-                  onClick={() => onImpersonate(user)}
-                >
-                  <UserRound className="h-4 w-4" />
-                  {t("becomeUser")}
-                </Button>
+                <div className="flex items-center justify-end gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={isSelf || impersonating}
+                    onClick={() => onImpersonate(user)}
+                  >
+                    <UserRound className="h-4.5 w-4.5" />
+                    {t("becomeUser")}
+                  </Button>
+                  <DeleteButton
+                    disabled={isSelf || impersonating}
+                    onClick={() => onDelete(user)}
+                    aria-label={t("deleteUser")}
+                    title={t("deleteUser")}
+                  />
+                </div>
               </td>
+
             </tr>
           );
         })}

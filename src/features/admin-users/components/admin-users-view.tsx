@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { ChevronLeft, ChevronRight, Search, UserRound, Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, Search, UserRound, Users } from "lucide-react";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import type { AdminUserResponse } from "@/app/api/admin/users/responses";
 import { useAdminUsersQuery } from "../hooks/use-admin-users-query";
 import { useImpersonateUser } from "../hooks/use-impersonate-user";
+import { useDeleteAdminUser } from "../hooks/use-delete-admin-user";
 import { AdminUsersTable } from "./admin-users-table";
 
 interface AdminUsersViewProps {
@@ -27,6 +28,7 @@ export function AdminUsersView({ userEmail }: AdminUsersViewProps) {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [pendingUser, setPendingUser] = useState<AdminUserResponse | null>(null);
+  const [deletingUser, setDeletingUser] = useState<AdminUserResponse | null>(null);
 
   useEffect(() => {
     const handle = setTimeout(() => {
@@ -38,6 +40,8 @@ export function AdminUsersView({ userEmail }: AdminUsersViewProps) {
 
   const usersQuery = useAdminUsersQuery({ search, page });
   const impersonation = useImpersonateUser();
+  const deleteMutation = useDeleteAdminUser();
+
 
   const users = usersQuery.data?.users ?? [];
   const total = usersQuery.data?.total ?? 0;
@@ -48,6 +52,8 @@ export function AdminUsersView({ userEmail }: AdminUsersViewProps) {
     usersQuery.error instanceof Error ? usersQuery.error.message : null;
   const impersonationError =
     impersonation.error instanceof Error ? impersonation.error.message : null;
+  const deleteError =
+    deleteMutation.error instanceof Error ? deleteMutation.error.message : null;
 
   return (
     <FeatureScreenShell
@@ -74,6 +80,17 @@ export function AdminUsersView({ userEmail }: AdminUsersViewProps) {
             {impersonationError}
           </AlertBanner>
         )}
+        {deleteError && (
+          <AlertBanner tone={ALERT_BANNER_TONES.DANGER}>
+            {deleteError}
+          </AlertBanner>
+        )}
+        {deleteMutation.isSuccess && (
+          <AlertBanner tone={ALERT_BANNER_TONES.SUCCESS}>
+            {t("deleteUserSuccess")}
+          </AlertBanner>
+        )}
+
 
         <div className="min-h-0 flex-1 overflow-y-auto rounded-lg border border-line bg-panel-subtle">
           {usersQuery.isLoading ? (
@@ -90,8 +107,9 @@ export function AdminUsersView({ userEmail }: AdminUsersViewProps) {
               users={users}
               currentUserEmail={userEmail}
               dateLocale={dateLocale}
-              impersonating={impersonation.isPending}
+              impersonating={impersonation.isPending || deleteMutation.isPending}
               onImpersonate={setPendingUser}
+              onDelete={setDeletingUser}
             />
           )}
         </div>
@@ -138,11 +156,37 @@ export function AdminUsersView({ userEmail }: AdminUsersViewProps) {
         }}
         onCancel={() => setPendingUser(null)}
       />
+
+      <ConfirmDialog
+        open={deletingUser !== null}
+        variant="danger"
+        headerTitle={t("deleteUserConfirmHeader")}
+        title={t("deleteUserConfirmTitle", { email: deletingUser?.email ?? "" })}
+        description={t("deleteUserConfirmDescription")}
+        confirmLabel={t("deleteUser")}
+        onConfirm={() => {
+          if (deletingUser) {
+            deleteMutation.mutate(deletingUser.id);
+          }
+          setDeletingUser(null);
+        }}
+        onCancel={() => setDeletingUser(null)}
+      />
+
       {impersonation.isPending && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs">
           <div className="flex items-center gap-3 rounded-lg border border-line bg-modal px-5 py-4 text-sm text-text-main">
             <UserRound className="h-4 w-4 animate-pulse" />
             {t("startingImpersonation")}
+          </div>
+        </div>
+      )}
+
+      {deleteMutation.isPending && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs">
+          <div className="flex items-center gap-3 rounded-lg border border-line bg-modal px-5 py-4 text-sm text-text-main">
+            <Loader2 className="h-4 w-4 animate-spin text-text-muted" />
+            {t("deletingUser")}
           </div>
         </div>
       )}
