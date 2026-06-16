@@ -27,7 +27,7 @@ import type { ApplyOfferChatCopyPasteResponse } from "@/app/api/job-match-analys
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 export type JobMatchAnalysisSummary = ListJobMatchAnalysesResponse[number];
-export type JobMatchAnalysisDetail = GetJobMatchAnalysisResponse;
+export type { JobMatchAnalysisDetail } from "../types";
 
 export interface CreateJobMatchAnalysisInput {
   cvId: string;

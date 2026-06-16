@@ -24,7 +24,7 @@ function toAnalysisChatConversation(
 ): AnalysisChatConversation {
   return {
     id: conversation.id,
-    analysis_id: conversation.analysis_id,
+    analysisId: conversation.analysis_id,
     title: conversation.title,
     messages: [],
   };

@@ -2,12 +2,20 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
+import {
+  JOB_MATCH_DETAIL_TABS,
+  JOB_MATCH_ROUTE_MODES,
+  JOB_MATCH_ROUTE_VIEWS,
+} from "../constants";
 
-export type AnalysisTab = "summary" | "offer" | "questions" | "chat" | "tracking";
-export type JobMatchAnalysisRouteView = "list" | "kanban";
-export type JobMatchAnalysisRouteMode = "list" | "detail" | "new";
+export type AnalysisTab =
+  (typeof JOB_MATCH_DETAIL_TABS)[keyof typeof JOB_MATCH_DETAIL_TABS];
+export type JobMatchAnalysisRouteView =
+  (typeof JOB_MATCH_ROUTE_VIEWS)[keyof typeof JOB_MATCH_ROUTE_VIEWS];
+export type JobMatchAnalysisRouteMode =
+  (typeof JOB_MATCH_ROUTE_MODES)[keyof typeof JOB_MATCH_ROUTE_MODES];
 
-const VALID_TABS: AnalysisTab[] = ["summary", "offer", "questions", "chat", "tracking"];
+const VALID_TABS: AnalysisTab[] = Object.values(JOB_MATCH_DETAIL_TABS);
 
 function normalizeTab(value: string | null): AnalysisTab {
   return VALID_TABS.includes(value as AnalysisTab)

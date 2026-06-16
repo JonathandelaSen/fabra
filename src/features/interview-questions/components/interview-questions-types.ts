@@ -1,15 +1,11 @@
+import type { InterviewQuestionOptionsResponse } from "@/app/api/interview-questions/options/responses";
 import { SELECTION_PROCESS_COPY_PASTE_PREPARE_MODES } from "@/shared/selection-process/constants";
 
-export interface InterviewQuestionCVOption {
-  id: string;
-  name: string;
-}
+export type InterviewQuestionCVOption =
+  InterviewQuestionOptionsResponse["cvs"][number];
 
-export interface InterviewQuestionAnalysisOption {
-  id: string;
-  title: string;
-  analysisMode: "job_match";
-}
+export type InterviewQuestionAnalysisOption =
+  InterviewQuestionOptionsResponse["analyses"][number];
 
 export type InterviewQuestionAIMode =
   (typeof SELECTION_PROCESS_COPY_PASTE_PREPARE_MODES)[keyof typeof SELECTION_PROCESS_COPY_PASTE_PREPARE_MODES];

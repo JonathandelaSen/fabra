@@ -3,15 +3,9 @@
 import { Briefcase, CalendarClock, MessageCircle, MessageSquareQuote, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { AnalysisTab } from "../../hooks/use-job-match-analysis-route-state";
+import { JOB_MATCH_DETAIL_TABS } from "../../constants";
 
-export const DETAIL_TABS = {
-  summary: "summary",
-  offer: "offer",
-  questions: "questions",
-  chat: "chat",
-  tracking: "tracking",
-} as const satisfies Record<AnalysisTab, AnalysisTab>;
+export const DETAIL_TABS = JOB_MATCH_DETAIL_TABS;
 
 export function JobMatchDetailTabsList({
   interviewQuestionCount,

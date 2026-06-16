@@ -4,7 +4,7 @@ export type AnalysisChatMessage = ChatMessage;
 
 export interface AnalysisChatConversation {
   id: string;
-  analysis_id: string;
+  analysisId: string;
   title: string | null;
   messages: AnalysisChatMessage[];
 }

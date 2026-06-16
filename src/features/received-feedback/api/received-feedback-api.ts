@@ -9,8 +9,7 @@ import type {
   UpdateReceivedFeedbackResponse,
 } from "@/app/api/received-feedback/[id]/responses";
 
-export type ReceivedFeedbackItem = ListReceivedFeedbackResponse[number];
-export type ActivityContext = ListActivityContextsResponse["contexts"][number];
+export type { ReceivedFeedbackItem, ActivityContext } from "../types";
 
 export interface SaveReceivedFeedbackInput {
   activityContextId: string;

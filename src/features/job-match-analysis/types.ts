@@ -9,11 +9,13 @@ export type DetailTab =
 export type JobMatchViewMode =
   (typeof JOB_MATCH_VIEW_MODES)[keyof typeof JOB_MATCH_VIEW_MODES];
 
+import type { GetJobMatchAnalysisResponse } from "@/app/api/job-match-analyses/responses";
+
 export type {
   JobMatchAnalysisDetailResponse,
   ListJobMatchAnalysesResponse,
 } from "@/app/api/job-match-analyses/responses";
-export type { JobMatchAnalysisDetail } from "./api/job-match-analysis-api";
+export type JobMatchAnalysisDetail = GetJobMatchAnalysisResponse;
 export type { InterviewQuestionResponse as InterviewQuestionSummary } from "@/app/api/interview-questions/responses";
 export type {
   JobAnalysisChatConversation,

@@ -1,1 +1,5 @@
-export type { ActivityContext, ReceivedFeedbackItem } from "./api/received-feedback-api";
+import type { ListActivityContextsResponse } from "@/app/api/activity-contexts/responses";
+import type { ListReceivedFeedbackResponse } from "@/app/api/received-feedback/responses";
+
+export type ReceivedFeedbackItem = ListReceivedFeedbackResponse[number];
+export type ActivityContext = ListActivityContextsResponse["contexts"][number];
