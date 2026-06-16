@@ -3,27 +3,23 @@ import type { WorkJournalEntryRepository } from "../../domain/repositories/work-
 import { ListJournalEntriesInRangeUseCase } from "./list-journal-entries-in-range.use-case";
 
 describe("ListJournalEntriesInRangeUseCase", () => {
-  it("maps entries to evidence candidates preferring final text", async () => {
+  it("queries repository with parsed primitives and filters by contextId", async () => {
+    const entry1 = { contextId: "c1" };
+    const entry2 = { contextId: "c2" };
     const entryRepo = {
-      search: vi.fn().mockResolvedValue([
-        {
-          toPrimitives: () => ({
-            id: "e1",
-            dateStart: "2026-02-01",
-            finalText: "Shipped feature",
-            rawNotes: "notes",
-            topic: "topic",
-          }),
-        },
-      ]),
+      search: vi.fn().mockResolvedValue([entry1, entry2]),
     } as unknown as WorkJournalEntryRepository;
 
-    const result = await new ListJournalEntriesInRangeUseCase({
-      entryRepo,
-    }).execute({ userId: "u1", dateFrom: "2026-01-01", dateTo: "2026-06-30" });
+    const useCase = new ListJournalEntriesInRangeUseCase({ entryRepo });
 
-    expect(result).toEqual([
-      { sourceId: "e1", date: "2026-02-01", content: "Shipped feature" },
-    ]);
+    const result = await useCase.execute({
+      userId: "u1",
+      dateFrom: "2026-01-01",
+      dateTo: "2026-06-30",
+      contextId: "c1",
+    });
+
+    expect(entryRepo.search).toHaveBeenCalled();
+    expect(result).toEqual([entry1]);
   });
 });

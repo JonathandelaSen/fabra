@@ -17,7 +17,7 @@ describe("ListEvidenceCandidatesUseCase", () => {
       execute: vi
         .fn()
         .mockResolvedValueOnce([
-          { sourceId: "j1", date: "2026-02-01", content: "journal" },
+          { id: "j1", dateStart: "2026-02-01", finalText: "journal" },
         ])
         .mockResolvedValueOnce([
           { sourceId: "f1", date: "2026-03-01", content: "feedback" },

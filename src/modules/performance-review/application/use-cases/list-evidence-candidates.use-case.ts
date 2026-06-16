@@ -1,6 +1,6 @@
 import { UserId, type QueryBus } from "@/modules/shared";
 import { ListCommitmentsInRangeQuery } from "@/modules/commitments";
-import { ListJournalEntriesInRangeQuery } from "@/modules/work-journal";
+import { ListJournalEntriesInRangeQuery, type WorkJournalEntryPrimitives } from "@/modules/work-journal";
 import { ListReceivedFeedbackInRangeQuery } from "@/modules/received-feedback";
 import { PerformanceReviewNotFoundError } from "../../domain/errors/performance-review-not-found.error";
 import type { PerformanceReviewRepository } from "../../domain/repositories/performance-review.repository";
@@ -50,7 +50,7 @@ export class ListEvidenceCandidatesUseCase {
 
     type RangeResult = { sourceId: string; date: string | null; content: string }[];
     const [journal, feedback, commitments] = await Promise.all([
-      this.deps.queryBus.execute<RangeResult>(
+      this.deps.queryBus.execute<WorkJournalEntryPrimitives[]>(
         new ListJournalEntriesInRangeQuery(range),
       ),
       this.deps.queryBus.execute<RangeResult>(
@@ -62,10 +62,15 @@ export class ListEvidenceCandidatesUseCase {
     ]);
 
     return [
-      ...journal.map((c) => ({
-        ...c,
-        source: EVIDENCE_SOURCE.journalEntry,
-      })),
+      ...journal.map((p) => {
+        const content = p.finalText?.trim() || p.rawNotes?.trim() || p.topic || "";
+        return {
+          sourceId: p.id,
+          date: p.dateStart,
+          content,
+          source: EVIDENCE_SOURCE.journalEntry,
+        };
+      }),
       ...feedback.map((c) => ({
         ...c,
         source: EVIDENCE_SOURCE.receivedFeedback,

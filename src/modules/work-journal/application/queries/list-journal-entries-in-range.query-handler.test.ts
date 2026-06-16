@@ -4,10 +4,19 @@ import { ListJournalEntriesInRangeQueryHandler } from "./list-journal-entries-in
 import type { ListJournalEntriesInRangeUseCase } from "../use-cases/list-journal-entries-in-range.use-case";
 
 describe("ListJournalEntriesInRangeQueryHandler", () => {
-  it("delegates to the use case with the query payload", async () => {
-    const result = [{ sourceId: "j1", date: "2026-02-01", content: "x" }];
+  it("delegates to the use case and maps returned entries to primitives", async () => {
+    const mockPrimitives = {
+      id: "e1",
+      dateStart: "2026-02-01",
+      finalText: "Shipped feature",
+      rawNotes: "notes",
+      topic: "topic",
+    };
+    const mockEntry = {
+      toPrimitives: () => mockPrimitives,
+    };
     const useCase = {
-      execute: vi.fn().mockResolvedValue(result),
+      execute: vi.fn().mockResolvedValue([mockEntry]),
     } as unknown as ListJournalEntriesInRangeUseCase;
 
     const handler = new ListJournalEntriesInRangeQueryHandler(useCase);
@@ -21,6 +30,6 @@ describe("ListJournalEntriesInRangeQueryHandler", () => {
     );
 
     expect(useCase.execute).toHaveBeenCalledWith(payload);
-    expect(output).toBe(result);
+    expect(output).toEqual([mockPrimitives]);
   });
 });

@@ -1,10 +1,5 @@
 import type { Query } from "@/modules/shared";
-
-export interface EvidenceCandidateResult {
-  sourceId: string;
-  date: string | null;
-  content: string;
-}
+import type { WorkJournalEntryPrimitives } from "../../domain/entities/journal-entry.entity";
 
 export interface ListJournalEntriesInRangeInput {
   userId: string;
@@ -14,7 +9,7 @@ export interface ListJournalEntriesInRangeInput {
 }
 
 export class ListJournalEntriesInRangeQuery
-  implements Query<ListJournalEntriesInRangeInput, EvidenceCandidateResult[]>
+  implements Query<ListJournalEntriesInRangeInput, WorkJournalEntryPrimitives[]>
 {
   static readonly queryName = "work-journal.list-journal-entries-in-range";
 
