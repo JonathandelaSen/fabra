@@ -57,4 +57,18 @@ describe("SidebarListItem", () => {
 
     expect(screen.getByText(TITLE)).toHaveClass("line-clamp-2");
   });
+
+  it("renders without a title", () => {
+    renderWithProviders(
+      <SidebarListItem
+        selected={false}
+        onClick={vi.fn()}
+        subtitle={<span>{SUBTITLE}</span>}
+        footer={<span>{FOOTER}</span>}
+      />,
+    );
+
+    expect(screen.getByText(SUBTITLE)).toBeInTheDocument();
+    expect(screen.getByText(FOOTER)).toBeInTheDocument();
+  });
 });

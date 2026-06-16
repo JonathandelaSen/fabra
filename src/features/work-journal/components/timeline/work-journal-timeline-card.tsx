@@ -18,7 +18,7 @@ export function WorkJournalTimelineCard({
   const t = useTranslations("workJournal");
   const { entry, rangeLabel, continuesAfter } = view;
 
-  const displayTopic = entry.topic || t("newEntry");
+  const displayTopic = entry.topic || undefined;
   const previewText = entry.finalText || entry.rawNotes || "";
 
   return (
@@ -39,9 +39,11 @@ export function WorkJournalTimelineCard({
         )}
       </div>
 
-      <p className="truncate text-[14px] font-semibold tracking-tight text-text-main transition-colors group-hover:text-action-text">
-        {displayTopic}
-      </p>
+      {displayTopic && (
+        <p className="truncate text-[14px] font-semibold tracking-tight text-text-main transition-colors group-hover:text-action-text">
+          {displayTopic}
+        </p>
+      )}
 
       {previewText && (
         <p className="line-clamp-2 text-xs font-light text-text-muted">

@@ -20,7 +20,7 @@ export function WorkJournalListItem({
   const t = useTranslations("workJournal");
 
   const previewText = entry.finalText || entry.rawNotes || "";
-  const displayTopic = entry.topic || t("newEntry");
+  const displayTopic = entry.topic || undefined;
 
   return (
     <SidebarListItem
