@@ -5,8 +5,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import type {
   WorkJournalEntryInputMode,
-  WorkJournalEntryLegacy as WorkJournalEntry,
-  WorkJournalContextLegacy as WorkJournalContext,
+  WorkJournalEntry,
+  WorkJournalContext,
 } from "../api/work-journal-types";
 import {
   createWorkJournalEntry,
@@ -14,7 +14,6 @@ import {
   draftWorkJournalEntry,
   updateWorkJournalEntry,
 } from "../api/work-journal-api";
-import { toWorkJournalEntryLegacy } from "../api/work-journal-types";
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 import { workJournalQueryKeys } from "../api/work-journal-query-keys";
 import {
@@ -86,17 +85,17 @@ export function useWorkJournalMutations({
     const now = new Date().toISOString();
     const optimisticEntry: WorkJournalEntry = {
       id: `optimistic-${now}`,
-      user_id: "optimistic",
-      context_id: draft.context_id,
-      date_start: draft.date_start,
-      date_end: draft.date_end || null,
+      userId: "optimistic",
+      contextId: draft.context_id,
+      dateStart: draft.date_start,
+      dateEnd: draft.date_end || null,
       topic: draft.topic || null,
-      input_mode: draft.input_mode,
-      raw_notes: rawNotes,
-      final_text: finalText,
+      inputMode: draft.input_mode,
+      rawNotes: rawNotes,
+      finalText: finalText,
       metadata: {},
-      created_at: now,
-      updated_at: now,
+      createdAt: now,
+      updatedAt: now,
       context: contexts.find((context) => context.id === draft.context_id) ?? null,
     };
     queryClient.setQueryData(workJournalQueryKeys.entries(), (current) =>
@@ -112,15 +111,13 @@ export function useWorkJournalMutations({
     onEntrySelectionChange?.(optimisticEntry.id);
 
     try {
-      const entry = toWorkJournalEntryLegacy(
-        await createWorkJournalEntry({
-          ...draft,
-          raw_notes: rawNotes,
-          final_text: finalText,
-          date_end: draft.date_end || null,
-          topic: draft.topic || null,
-        })
-      );
+      const entry = await createWorkJournalEntry({
+        ...draft,
+        raw_notes: rawNotes,
+        final_text: finalText,
+        date_end: draft.date_end || null,
+        topic: draft.topic || null,
+      });
       queryClient.setQueryData(
         workJournalQueryKeys.entries(),
         (current: WorkJournalEntry[] | undefined) =>
@@ -224,14 +221,12 @@ export function useWorkJournalMutations({
         replaceWorkJournalEntryInCache(current, {
           ...entry,
           ...updates,
-          updated_at: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         })
     );
     setIsEditing(false);
     try {
-      const updatedEntry = toWorkJournalEntryLegacy(
-        await updateWorkJournalEntry({ id: entry.id, updates })
-      );
+      const updatedEntry = await updateWorkJournalEntry({ id: entry.id, updates });
       queryClient.setQueryData(
         workJournalQueryKeys.entries(),
         (current: WorkJournalEntry[] | undefined) =>

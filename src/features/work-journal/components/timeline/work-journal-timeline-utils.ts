@@ -1,5 +1,5 @@
 import type { LabelBadgeTone } from "@/components/shared/label-badge";
-import type { WorkJournalEntryLegacy as WorkJournalEntry } from "../../api/work-journal-types";
+import type { WorkJournalEntry } from "../../api/work-journal-types";
 
 export type TimelineGranularity = "month" | "week";
 
@@ -95,16 +95,16 @@ export function groupEntriesByPeriod(
   const groups = new Map<string, TimelineGroup>();
 
   for (const entry of entries) {
-    const start = parseEntryDate(entry.date_start);
+    const start = parseEntryDate(entry.dateStart);
     const key = periodKey(start, granularity);
     const continuesAfter =
-      entry.date_end != null &&
-      entry.date_end !== entry.date_start &&
-      periodKey(parseEntryDate(entry.date_end), granularity) !== key;
+      entry.dateEnd != null &&
+      entry.dateEnd !== entry.dateStart &&
+      periodKey(parseEntryDate(entry.dateEnd), granularity) !== key;
 
     const entryView: TimelineEntryView = {
       entry,
-      rangeLabel: formatRangeBadge(entry.date_start, entry.date_end, locale),
+      rangeLabel: formatRangeBadge(entry.dateStart, entry.dateEnd, locale),
       continuesAfter,
     };
 
@@ -127,8 +127,8 @@ export function groupEntriesByPeriod(
   for (const group of ordered) {
     group.entries.sort(
       (a, b) =>
-        parseEntryDate(b.entry.date_start).getTime() -
-        parseEntryDate(a.entry.date_start).getTime(),
+        parseEntryDate(b.entry.dateStart).getTime() -
+        parseEntryDate(a.entry.dateStart).getTime(),
     );
   }
 

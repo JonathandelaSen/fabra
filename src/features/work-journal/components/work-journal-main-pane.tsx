@@ -6,8 +6,8 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import type {
-  WorkJournalContextLegacy as WorkJournalContext,
-  WorkJournalEntryLegacy as WorkJournalEntry,
+  WorkJournalContext,
+  WorkJournalEntry,
 } from "../api/work-journal-types";
 import type { WorkJournalDraft } from "../hooks/use-work-journal-mutations";
 import type { WorkJournalRouteView } from "../hooks/use-work-journal-route-state";

@@ -2,7 +2,6 @@ import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { activityContextsModule, workJournalModule } from "@/lib/container";
-import { presentWorkJournalEntry } from "@/modules/work-journal";
 import { ok, errorResponse } from "@/modules/shared";
 import { parseUpdateWorkJournalEntryRequest } from "./validation";
 import {
@@ -31,9 +30,7 @@ export async function PATCH(
     const contexts = await activityContextsModule.listActivityContexts.execute(user.id);
     const context = contexts.find((item) => item.id === entry.contextId);
     return ok(
-      toWorkJournalEntryResponse(
-        presentWorkJournalEntry(entry, context)
-      ) satisfies UpdateWorkJournalEntryResponse
+      toWorkJournalEntryResponse(entry, context) satisfies UpdateWorkJournalEntryResponse
     );
   } catch (error: unknown) {
     return handleApiError(error);

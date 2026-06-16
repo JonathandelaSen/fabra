@@ -2,7 +2,6 @@ import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { activityContextsModule, workJournalModule } from "@/lib/container";
-import { presentWorkJournalEntry } from "@/modules/work-journal";
 import { ok, created, errorResponse } from "@/modules/shared";
 import {
   parseCreateWorkJournalEntryRequest,
@@ -32,9 +31,7 @@ export async function GET(req: NextRequest) {
     const contextsById = new Map(contexts.map((context) => [context.id, context]));
     return ok(
       entries.map((entry) =>
-        toWorkJournalEntryResponse(
-          presentWorkJournalEntry(entry, contextsById.get(entry.contextId))
-        )
+        toWorkJournalEntryResponse(entry, contextsById.get(entry.contextId))
       ) satisfies ListWorkJournalEntriesResponse
     );
   } catch (error: unknown) {
@@ -63,9 +60,7 @@ export async function POST(req: NextRequest) {
     const contexts = await activityContextsModule.listActivityContexts.execute(user.id);
     const context = contexts.find((item) => item.id === entry.contextId);
     return created(
-      toWorkJournalEntryResponse(
-        presentWorkJournalEntry(entry, context)
-      ) satisfies CreateWorkJournalEntryResponse
+      toWorkJournalEntryResponse(entry, context) satisfies CreateWorkJournalEntryResponse
     );
   } catch (error: unknown) {
     return handleApiError(error);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { WorkJournalContextLegacy as WorkJournalContext } from "../../api/work-journal-types";
+import type { WorkJournalContext } from "../../api/work-journal-types";
 import { ActivityContextSelector } from "@/features/activity-context";
 
 const inputClass =

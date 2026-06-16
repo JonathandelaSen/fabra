@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { CalendarRange } from "lucide-react";
-import type { WorkJournalEntryLegacy as WorkJournalEntry } from "../../api/work-journal-types";
+import type { WorkJournalEntry } from "../../api/work-journal-types";
 import { WorkJournalEmptyState } from "../work-journal-empty-state";
 import { WorkJournalSidebarSkeleton } from "../work-journal-skeleton";
 import { WorkJournalTimelineGroup } from "./work-journal-timeline-group";

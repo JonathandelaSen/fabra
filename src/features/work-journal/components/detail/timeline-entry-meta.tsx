@@ -5,15 +5,15 @@ import {
   CalendarDays,
   FolderKanban,
 } from "lucide-react";
-import type { WorkJournalEntryLegacy as WorkJournalEntry } from "../../api/work-journal-types";
+import type { WorkJournalEntry } from "../../api/work-journal-types";
 
 export function TimelineEntryMeta({ entry }: { entry: WorkJournalEntry }) {
   return (
     <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-zinc-500 tracking-wide">
       <span className="flex items-center gap-1.5">
         <CalendarDays className="h-3.5 w-3.5" />
-        {entry.date_start}
-        {entry.date_end ? ` → ${entry.date_end}` : ""}
+        {entry.dateStart}
+        {entry.dateEnd ? ` → ${entry.dateEnd}` : ""}
       </span>
       {entry.topic && (
         <>

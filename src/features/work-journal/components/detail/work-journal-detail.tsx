@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { WorkJournalEntryLegacy as WorkJournalEntry, WorkJournalContextLegacy as WorkJournalContext } from "../../api/work-journal-types";
+import type { WorkJournalEntry, WorkJournalContext } from "../../api/work-journal-types";
 import { WorkJournalEntryDisplay } from "./work-journal-entry-display";
 import { WorkJournalEntryEditor } from "./work-journal-entry-editor";
 import { WorkJournalEmptyState } from "../work-journal-empty-state";

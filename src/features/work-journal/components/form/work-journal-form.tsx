@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import type {
-  WorkJournalContextLegacy as WorkJournalContext,
+  WorkJournalContext,
   WorkJournalEntryInputMode,
 } from "../../api/work-journal-types";
 import { WorkJournalFormMetadata } from "./work-journal-form-metadata";

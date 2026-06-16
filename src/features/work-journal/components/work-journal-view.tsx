@@ -72,7 +72,7 @@ export default function WorkJournalView({
   const [selectedModel, setSelectedModel] = useState<string>(aiModel || DEFAULT_GEMINI_MODEL);
 
   const contexts = contextsQuery.data?.contexts ?? [];
-  const entries: import("../api/work-journal-types").WorkJournalEntryLegacy[] = entriesQuery.data ?? [];
+  const entries = entriesQuery.data ?? [];
   const isListPending = entriesQuery.isPending;
   const isContextsPending = contextsQuery.isPending;
   const queryError = contextsQuery.error
@@ -85,12 +85,12 @@ export default function WorkJournalView({
   const filteredEntries = useMemo(() => {
     const needle = search.trim().toLowerCase();
     const sorted = [...entries].sort((a, b) =>
-      new Date(b.date_start).getTime() - new Date(a.date_start).getTime()
+      new Date(b.dateStart).getTime() - new Date(a.dateStart).getTime()
     );
     return sorted.filter((entry) => {
-      if (contextFilter && entry.context_id !== contextFilter) return false;
+      if (contextFilter && entry.contextId !== contextFilter) return false;
       if (!needle) return true;
-      return [entry.topic, entry.raw_notes, entry.final_text, entry.context?.name]
+      return [entry.topic, entry.rawNotes, entry.finalText, entry.context?.name]
         .filter(Boolean)
         .some((value) => value!.toLowerCase().includes(needle));
     });
@@ -187,7 +187,7 @@ export default function WorkJournalView({
     }
     const defaultContext =
       contexts.find(
-        (context) => context.is_default && context.status === "active"
+        (context) => context.isDefault && context.status === "active"
       ) ?? contexts.find((context) => context.status === "active") ?? null;
     if (defaultContext && !draft.context_id) {
       setDraft((current) => ({ ...current, context_id: defaultContext.id }));
@@ -209,7 +209,7 @@ export default function WorkJournalView({
   };
 
   const applyDefaultContext = () => {
-    const defaultContext = contexts.find((c) => c.is_default && c.status === "active")
+    const defaultContext = contexts.find((c) => c.isDefault && c.status === "active")
       ?? contexts.find((c) => c.status === "active");
     if (defaultContext && !draft.context_id) {
       setDraft((current) => ({ ...current, context_id: defaultContext.id }));

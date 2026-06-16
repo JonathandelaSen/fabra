@@ -10,9 +10,9 @@ import type {
 } from "@/app/api/work-journal/entries/responses";
 import type { DraftWorkJournalEntryResponse } from "@/app/api/work-journal/entries/draft/responses";
 import type {
-  WorkJournalContextLegacy,
+  WorkJournalContext,
+  WorkJournalEntry,
   WorkJournalEntryInputMode,
-  WorkJournalEntryLegacy,
 } from "./work-journal-types";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
@@ -91,17 +91,41 @@ export async function draftWorkJournalEntry(input: {
 
 export async function updateWorkJournalEntry(input: {
   id: string;
-  updates: Partial<WorkJournalEntryLegacy>;
+  updates: Partial<WorkJournalEntry>;
 }) {
   const res = await fetch(`/api/work-journal/entries/${input.id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(input.updates),
+    body: JSON.stringify(toUpdateWorkJournalEntryPayload(input.updates)),
   });
   return readJsonResponse<UpdateWorkJournalEntryResponse>(
     res,
     "Could not update work journal entry."
   );
+}
+
+interface UpdateWorkJournalEntryPayload {
+  context_id?: string;
+  date_start?: string;
+  date_end?: string | null;
+  topic?: string | null;
+  input_mode?: WorkJournalEntryInputMode;
+  raw_notes?: string;
+  final_text?: string;
+}
+
+function toUpdateWorkJournalEntryPayload(
+  updates: Partial<WorkJournalEntry>
+): UpdateWorkJournalEntryPayload {
+  const payload: UpdateWorkJournalEntryPayload = {};
+  if (updates.contextId !== undefined) payload.context_id = updates.contextId;
+  if (updates.dateStart !== undefined) payload.date_start = updates.dateStart;
+  if (updates.dateEnd !== undefined) payload.date_end = updates.dateEnd;
+  if (updates.topic !== undefined) payload.topic = updates.topic;
+  if (updates.inputMode !== undefined) payload.input_mode = updates.inputMode;
+  if (updates.rawNotes !== undefined) payload.raw_notes = updates.rawNotes;
+  if (updates.finalText !== undefined) payload.final_text = updates.finalText;
+  return payload;
 }
 
 export async function deleteWorkJournalEntry(id: string) {
@@ -112,19 +136,19 @@ export async function deleteWorkJournalEntry(id: string) {
   );
 }
 
-export function toWorkJournalContextLegacyFromActivityContext(
+export function toWorkJournalContextFromActivityContext(
   input: ActivityContextResponse
-): WorkJournalContextLegacy {
+): WorkJournalContext {
   return {
     id: input.id,
-    user_id: input.userId,
+    userId: input.userId,
     type: input.type,
     name: input.name,
-    role_or_label: null,
+    roleOrLabel: null,
     status: input.status,
-    is_default: input.isDefault,
-    created_from_cv: false,
-    created_at: input.createdAt,
-    updated_at: input.updatedAt,
+    isDefault: input.isDefault,
+    createdFromCv: false,
+    createdAt: input.createdAt,
+    updatedAt: input.updatedAt,
   };
 }

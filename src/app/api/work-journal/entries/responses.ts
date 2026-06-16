@@ -40,37 +40,6 @@ export interface WorkJournalEntryResponse {
   context?: WorkJournalContextResponse | null;
 }
 
-export interface WorkJournalContextLegacy {
-  id: string;
-  user_id: string;
-  type: WorkJournalContextType;
-  name: string;
-  role_or_label: string | null;
-  status: WorkJournalContextStatus;
-  is_default: boolean;
-  created_from_cv: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface WorkJournalEntryLegacy {
-  id: string;
-  user_id: string;
-  context_id: string;
-  date_start: string;
-  date_end: string | null;
-  topic: string | null;
-  input_mode: WorkJournalEntryInputMode;
-  raw_notes: string;
-  final_text: string;
-  metadata?: Record<string, unknown>;
-  created_at: string;
-  updated_at: string;
-  context?: WorkJournalContextLegacy | null;
-}
-
-export type WorkJournalEntryPresenterOutput = WorkJournalEntryLegacy;
-
 export type ListWorkJournalEntriesResponse = WorkJournalEntryResponse[];
 export type CreateWorkJournalEntryResponse = WorkJournalEntryResponse;
 export type UpdateWorkJournalEntryResponse = WorkJournalEntryResponse;
@@ -79,41 +48,72 @@ export interface DeleteWorkJournalEntryResponse {
   ok: true;
 }
 
+interface WorkJournalContextSource {
+  toPrimitives(): {
+    id: string;
+    userId: string;
+    type: WorkJournalContextType;
+    name: string;
+    roleOrLabel?: string | null;
+    status: WorkJournalContextStatus;
+    isDefault: boolean;
+    createdFromCv?: boolean;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+interface WorkJournalEntrySource {
+  toPrimitives(): {
+    id: string;
+    userId: string;
+    contextId: string;
+    dateStart: string;
+    dateEnd: string | null;
+    topic: string | null;
+    inputMode: WorkJournalEntryInputMode;
+    rawNotes: string;
+    finalText: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
 export function toWorkJournalContextResponse(
-  input: WorkJournalContextLegacy,
+  context: WorkJournalContextSource
 ): WorkJournalContextResponse {
+  const primitives = context.toPrimitives();
   return {
-    id: input.id,
-    userId: input.user_id,
-    type: input.type,
-    name: input.name,
-    roleOrLabel: input.role_or_label,
-    status: input.status,
-    isDefault: input.is_default,
-    createdFromCv: input.created_from_cv,
-    createdAt: input.created_at,
-    updatedAt: input.updated_at,
+    id: primitives.id,
+    userId: primitives.userId,
+    type: primitives.type,
+    name: primitives.name,
+    roleOrLabel: primitives.roleOrLabel ?? null,
+    status: primitives.status,
+    isDefault: primitives.isDefault,
+    createdFromCv: primitives.createdFromCv ?? false,
+    createdAt: primitives.createdAt,
+    updatedAt: primitives.updatedAt,
   };
 }
 
 export function toWorkJournalEntryResponse(
-  input: WorkJournalEntryLegacy,
+  entry: WorkJournalEntrySource,
+  context?: WorkJournalContextSource | null
 ): WorkJournalEntryResponse {
+  const primitives = entry.toPrimitives();
   return {
-    id: input.id,
-    userId: input.user_id,
-    contextId: input.context_id,
-    dateStart: input.date_start,
-    dateEnd: input.date_end,
-    topic: input.topic,
-    inputMode: input.input_mode,
-    rawNotes: input.raw_notes,
-    finalText: input.final_text,
-    metadata: input.metadata ?? {},
-    createdAt: input.created_at,
-    updatedAt: input.updated_at,
-    context: input.context
-      ? toWorkJournalContextResponse(input.context)
-      : (input.context ?? null),
+    id: primitives.id,
+    userId: primitives.userId,
+    contextId: primitives.contextId,
+    dateStart: primitives.dateStart,
+    dateEnd: primitives.dateEnd,
+    topic: primitives.topic,
+    inputMode: primitives.inputMode,
+    rawNotes: primitives.rawNotes,
+    finalText: primitives.finalText,
+    createdAt: primitives.createdAt,
+    updatedAt: primitives.updatedAt,
+    context: context ? toWorkJournalContextResponse(context) : undefined,
   };
 }

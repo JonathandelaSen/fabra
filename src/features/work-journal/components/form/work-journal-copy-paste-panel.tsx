@@ -6,7 +6,7 @@ import { CopyPasteTextPanel } from "@/components/shared/copy-paste-text-panel";
 import { CopyPasteDialog } from "@/components/shared/copy-paste-dialog";
 import { buildWorkJournalEntryDraftClipboardPrompt } from "../../api/work-journal-prompt";
 import type {
-  WorkJournalContextLegacy as WorkJournalContext,
+  WorkJournalContext,
 } from "../../api/work-journal-types";
 
 interface WorkJournalCopyPastePanelProps {
@@ -36,7 +36,7 @@ export function WorkJournalCopyPastePanel({
       context: {
         type: context.type,
         name: context.name,
-        roleOrLabel: context.role_or_label,
+        roleOrLabel: context.roleOrLabel,
       },
       dateStart,
       dateEnd,

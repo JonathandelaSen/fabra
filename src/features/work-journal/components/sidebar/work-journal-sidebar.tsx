@@ -4,8 +4,8 @@ import { useTranslations } from "next-intl";
 import { BookOpenText } from "lucide-react";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
 import type {
-  WorkJournalEntryLegacy as WorkJournalEntry,
-  WorkJournalContextLegacy as WorkJournalContext,
+  WorkJournalEntry,
+  WorkJournalContext,
 } from "../../api/work-journal-types";
 import { WorkJournalSidebarSkeleton } from "../work-journal-skeleton";
 import { WorkJournalListItem } from "./work-journal-list-item";

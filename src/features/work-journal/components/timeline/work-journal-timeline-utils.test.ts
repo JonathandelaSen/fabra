@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { WorkJournalEntryLegacy as WorkJournalEntry } from "../../api/work-journal-types";
+import type { WorkJournalEntry } from "../../api/work-journal-types";
 import {
   formatRangeBadge,
   getContextTone,
@@ -8,20 +8,20 @@ import {
 } from "./work-journal-timeline-utils";
 
 function entry(
-  overrides: Partial<WorkJournalEntry> & Pick<WorkJournalEntry, "id" | "date_start">,
+  overrides: Partial<WorkJournalEntry> & Pick<WorkJournalEntry, "id" | "dateStart">,
 ): WorkJournalEntry {
   return {
     id: overrides.id,
-    user_id: "user-1",
-    context_id: overrides.context_id ?? "context-1",
-    date_start: overrides.date_start,
-    date_end: overrides.date_end ?? null,
+    userId: "user-1",
+    contextId: overrides.contextId ?? "context-1",
+    dateStart: overrides.dateStart,
+    dateEnd: overrides.dateEnd ?? null,
     topic: overrides.topic ?? null,
-    input_mode: overrides.input_mode ?? "manual",
-    raw_notes: overrides.raw_notes ?? "",
-    final_text: overrides.final_text ?? "",
-    created_at: overrides.created_at ?? "2026-01-01T00:00:00.000Z",
-    updated_at: overrides.updated_at ?? "2026-01-01T00:00:00.000Z",
+    inputMode: overrides.inputMode ?? "manual",
+    rawNotes: overrides.rawNotes ?? "",
+    finalText: overrides.finalText ?? "",
+    createdAt: overrides.createdAt ?? "2026-01-01T00:00:00.000Z",
+    updatedAt: overrides.updatedAt ?? "2026-01-01T00:00:00.000Z",
     context: overrides.context ?? null,
   };
 }
@@ -39,9 +39,9 @@ describe("work-journal-timeline-utils", () => {
   it("groups entries by month in descending order", () => {
     const groups = groupEntriesByPeriod(
       [
-        entry({ id: "a", date_start: "2026-04-02" }),
-        entry({ id: "b", date_start: "2026-05-20" }),
-        entry({ id: "c", date_start: "2026-05-03" }),
+        entry({ id: "a", dateStart: "2026-04-02" }),
+        entry({ id: "b", dateStart: "2026-05-20" }),
+        entry({ id: "c", dateStart: "2026-05-03" }),
       ],
       "month",
       "en-US",
@@ -53,7 +53,7 @@ describe("work-journal-timeline-utils", () => {
 
   it("flags entries that continue past their period boundary", () => {
     const groups = groupEntriesByPeriod(
-      [entry({ id: "long", date_start: "2026-05-20", date_end: "2026-07-10" })],
+      [entry({ id: "long", dateStart: "2026-05-20", dateEnd: "2026-07-10" })],
       "month",
       "en-US",
     );
@@ -63,7 +63,7 @@ describe("work-journal-timeline-utils", () => {
 
   it("does not flag single-period ranges as continuing", () => {
     const groups = groupEntriesByPeriod(
-      [entry({ id: "short", date_start: "2026-05-04", date_end: "2026-05-08" })],
+      [entry({ id: "short", dateStart: "2026-05-04", dateEnd: "2026-05-08" })],
       "month",
       "en-US",
     );

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import type { WorkJournalContextLegacy as WorkJournalContext, WorkJournalEntryLegacy as WorkJournalEntry } from "../../api/work-journal-types";
+import type { WorkJournalContext, WorkJournalEntry } from "../../api/work-journal-types";
 import { ActivityContextSelector } from "@/features/activity-context";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { getErrorMessage } from "@/lib/errors";
@@ -55,10 +55,10 @@ export function WorkJournalEntryEditor({
   const [isCopyPasteOpen, setIsCopyPasteOpen] = useState(false);
 
   const currentContext =
-    activeContexts.find((context) => context.id === edit.context_id) ?? null;
+    activeContexts.find((context) => context.id === edit.contextId) ?? null;
 
   const handleGenerate = async () => {
-    if (!edit.context_id || !edit.raw_notes.trim()) {
+    if (!edit.contextId || !edit.rawNotes.trim()) {
       setError(t("errors.aiDraftRequired"));
       return;
     }
@@ -66,15 +66,15 @@ export function WorkJournalEntryEditor({
     setError(null);
     try {
       const newText = await onDraftEditWithAI(
-        edit.context_id,
-        edit.date_start,
-        edit.date_end,
+        edit.contextId,
+        edit.dateStart,
+        edit.dateEnd,
         edit.topic,
-        edit.raw_notes,
+        edit.rawNotes,
         selectedProvider,
         selectedModel
       );
-      setEdit((current) => ({ ...current, final_text: newText }));
+      setEdit((current) => ({ ...current, finalText: newText }));
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -90,8 +90,8 @@ export function WorkJournalEntryEditor({
             <ActivityContextSelector
               id="edit-entry-context"
               manageLabel={t("manageContexts")}
-              value={edit.context_id || ""}
-              onChange={(val) => setEdit({ ...edit, context_id: val })}
+              value={edit.contextId || ""}
+              onChange={(val) => setEdit({ ...edit, contextId: val })}
               contexts={activeContexts}
               onManageClick={onManageContexts}
             />
@@ -100,15 +100,15 @@ export function WorkJournalEntryEditor({
             <input
               type="date"
               className="bg-transparent border-b border-zinc-700 text-sm text-zinc-200 outline-none pb-1"
-              value={edit.date_start}
-              onChange={(e) => setEdit({ ...edit, date_start: e.target.value })}
+              value={edit.dateStart}
+              onChange={(e) => setEdit({ ...edit, dateStart: e.target.value })}
             />
             <input
               type="date"
               className="bg-transparent border-b border-zinc-700 text-sm text-zinc-200 outline-none pb-1"
-              value={edit.date_end || ""}
+              value={edit.dateEnd || ""}
               onChange={(e) =>
-                setEdit({ ...edit, date_end: e.target.value || null })
+                setEdit({ ...edit, dateEnd: e.target.value || null })
               }
             />
             <input
@@ -129,9 +129,9 @@ export function WorkJournalEntryEditor({
             </label>
             <textarea
               className="w-full bg-transparent text-[17px] md:text-lg font-light leading-relaxed text-zinc-200 placeholder:text-zinc-700 outline-none resize-y min-h-[240px] border border-white/10 rounded-xl p-4 focus:border-white/20 transition-colors"
-              value={edit.final_text}
+              value={edit.finalText}
               onChange={(event) =>
-                setEdit({ ...edit, final_text: event.target.value })
+                setEdit({ ...edit, finalText: event.target.value })
               }
             />
           </div>
@@ -142,9 +142,9 @@ export function WorkJournalEntryEditor({
             </label>
             <textarea
               className="w-full bg-transparent text-[15px] font-light leading-relaxed text-zinc-400 placeholder:text-zinc-700 outline-none resize-y min-h-[120px] border border-white/5 rounded-xl p-4 focus:border-white/20 transition-colors"
-              value={edit.raw_notes}
+              value={edit.rawNotes}
               onChange={(event) =>
-                setEdit({ ...edit, raw_notes: event.target.value })
+                setEdit({ ...edit, rawNotes: event.target.value })
               }
             />
           </div>
@@ -176,7 +176,7 @@ export function WorkJournalEntryEditor({
             <AIActionLauncher
               actionLabel={t("generateProfessionalDraft")}
               loading={aiLoading}
-              disabled={!edit.raw_notes.trim() || !edit.context_id}
+              disabled={!edit.rawNotes.trim() || !edit.contextId}
               integrated={{
                 available: hasAIApiKey,
                 selectedProvider,
@@ -197,12 +197,12 @@ export function WorkJournalEntryEditor({
         {isCopyPasteOpen && (
           <WorkJournalCopyPastePanel
             context={currentContext}
-            dateStart={edit.date_start}
-            dateEnd={edit.date_end}
+            dateStart={edit.dateStart}
+            dateEnd={edit.dateEnd}
             topic={edit.topic}
-            notes={edit.raw_notes}
+            notes={edit.rawNotes}
             onPasteText={(finalText) =>
-              setEdit((current) => ({ ...current, final_text: finalText }))
+              setEdit((current) => ({ ...current, finalText: finalText }))
             }
             onClose={() => setIsCopyPasteOpen(false)}
           />

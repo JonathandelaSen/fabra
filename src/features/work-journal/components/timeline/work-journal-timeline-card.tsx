@@ -19,7 +19,7 @@ export function WorkJournalTimelineCard({
   const { entry, rangeLabel, continuesAfter } = view;
 
   const displayTopic = entry.topic || t("newEntry");
-  const previewText = entry.final_text || entry.raw_notes || "";
+  const previewText = entry.finalText || entry.rawNotes || "";
 
   return (
     <button
@@ -50,7 +50,7 @@ export function WorkJournalTimelineCard({
       )}
 
       <div className="mt-1 flex min-w-0">
-        <LabelBadge size="xs" tone={getContextTone(entry.context_id)}>
+        <LabelBadge size="xs" tone={getContextTone(entry.contextId)}>
           {entry.context?.name || t("context")}
         </LabelBadge>
       </div>

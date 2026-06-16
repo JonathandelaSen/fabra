@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import type { WorkJournalContextLegacy as WorkJournalContext } from "../../api/work-journal-types";
+import type { WorkJournalContext } from "../../api/work-journal-types";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { WorkJournalCopyPastePanel } from "./work-journal-copy-paste-panel";

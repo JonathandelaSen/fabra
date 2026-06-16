@@ -4,9 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import {
   listWorkJournalContexts,
   listWorkJournalEntries,
-  toWorkJournalContextLegacyFromActivityContext,
+  toWorkJournalContextFromActivityContext,
 } from "../api/work-journal-api";
-import { toWorkJournalEntryLegacy } from "../api/work-journal-types";
 import { workJournalQueryKeys } from "../api/work-journal-query-keys";
 
 export function useWorkJournalContexts() {
@@ -15,7 +14,7 @@ export function useWorkJournalContexts() {
     queryFn: async () => {
       const data = await listWorkJournalContexts();
       return {
-        contexts: data.contexts.map(toWorkJournalContextLegacyFromActivityContext),
+        contexts: data.contexts.map(toWorkJournalContextFromActivityContext),
         suggestions: [],
       };
     },
@@ -25,9 +24,6 @@ export function useWorkJournalContexts() {
 export function useWorkJournalEntries() {
   return useQuery({
     queryKey: workJournalQueryKeys.entries(),
-    queryFn: async () => {
-      const data = await listWorkJournalEntries();
-      return data.map(toWorkJournalEntryLegacy);
-    },
+    queryFn: () => listWorkJournalEntries(),
   });
 }

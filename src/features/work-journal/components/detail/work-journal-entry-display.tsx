@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { WorkJournalEntryLegacy as WorkJournalEntry } from "../../api/work-journal-types";
+import type { WorkJournalEntry } from "../../api/work-journal-types";
 import { TimelineEntryMeta } from "./timeline-entry-meta";
 import { TimelineEntryActions } from "./timeline-entry-actions";
 import { BasicPanel } from "@/components/shared/basic-panel";
@@ -33,16 +33,16 @@ export function WorkJournalEntryDisplay({
 
       <BasicPanel className="p-6 md:p-8">
         <p className="text-zinc-200 leading-[1.7] whitespace-pre-wrap w-full">
-          {entry.final_text}
+          {entry.finalText}
         </p>
 
-        {entry.raw_notes !== entry.final_text && (
+        {entry.rawNotes !== entry.finalText && (
           <div className="mt-8 pt-6 border-t border-white/5">
             <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-4">
               {t("rawNotes")}
             </h4>
             <p className="text-[14px] leading-relaxed text-zinc-400 whitespace-pre-wrap w-full bg-black/20 p-4 rounded-xl border border-white/[0.02]">
-              {entry.raw_notes}
+              {entry.rawNotes}
             </p>
           </div>
         )}

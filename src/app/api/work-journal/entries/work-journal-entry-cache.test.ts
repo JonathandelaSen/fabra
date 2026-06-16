@@ -4,21 +4,21 @@ import {
   removeWorkJournalEntryFromCache,
   replaceWorkJournalEntryInCache,
 } from "@/features/work-journal/api/work-journal-entry-cache";
-import type { WorkJournalEntryLegacy } from "@/features/work-journal/api/work-journal-types";
+import type { WorkJournalEntry } from "@/features/work-journal/api/work-journal-types";
 
-function entry(id: string, dateStart = "2026-05-18"): WorkJournalEntryLegacy {
+function entry(id: string, dateStart = "2026-05-18"): WorkJournalEntry {
   return {
     id,
-    user_id: "user-1",
-    context_id: "context-1",
-    date_start: dateStart,
-    date_end: null,
+    userId: "user-1",
+    contextId: "context-1",
+    dateStart: dateStart,
+    dateEnd: null,
     topic: null,
-    input_mode: "manual",
-    raw_notes: `raw ${id}`,
-    final_text: `final ${id}`,
-    created_at: `${dateStart}T10:00:00.000Z`,
-    updated_at: `${dateStart}T10:00:00.000Z`,
+    inputMode: "manual",
+    rawNotes: `raw ${id}`,
+    finalText: `final ${id}`,
+    createdAt: `${dateStart}T10:00:00.000Z`,
+    updatedAt: `${dateStart}T10:00:00.000Z`,
     metadata: {},
     context: null,
   };
@@ -33,7 +33,7 @@ describe("work journal entry cache updates", () => {
   });
 
   it("replaces an edited entry in place", () => {
-    const edited = { ...entry("entry-1"), final_text: "edited" };
+    const edited = { ...entry("entry-1"), finalText: "edited" };
 
     expect(
       replaceWorkJournalEntryInCache([entry("entry-1"), entry("entry-2")], edited)
