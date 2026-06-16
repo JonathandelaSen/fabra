@@ -14,17 +14,15 @@ const tLauncher = messages.en.aiLauncher;
 test("user can score a job match analysis with integrated AI and view the results", async ({
   page,
 }) => {
+  // Seed AI preferences so the integrated (in-app) AI path is available on
+  // every page load (provider gemini + a stored key => hasAIApiKey === true).
+  await page.addInitScript(() => {
+    localStorage.setItem("fabra.aiProvider", "gemini");
+    localStorage.setItem("fabra.aiApiKey.gemini", "test-api-key");
+  });
+
   const user = await createConfirmedUser("job-match");
   await loginViaUI(page, user);
-
-  // Configure an API key so the integrated (in-app) AI path is available.
-  await page.getByRole("button", { name: messages.en.navigation.settings }).click();
-  await expect(page).toHaveURL(/\/settings$/);
-  await page.getByPlaceholder(messages.en.settings.apiKey.placeholder).fill("test-api-key");
-  await page.getByTestId("gemini-api-key-save").click();
-  await expect(page.getByTestId("gemini-api-key-save")).toHaveText(
-    messages.en.common.actions.saved,
-  );
 
   // Create a CV and a job match analysis through the API.
   const pdf = readFileSync(path.resolve(process.cwd(), "test.pdf"));
@@ -98,11 +96,23 @@ test("user can score a job match analysis with integrated AI and view the result
   await page.goto(`/job-analyses/${analysis.id}`);
 
   // Open the analysis tab and run the integrated comparison.
+  const extractionTab = page.getByRole("tab", {
+    name: messages.en.analysisFlow.appShell.extractionTab,
+  });
   const analysisTab = page.getByRole("tab", {
     name: messages.en.analysisFlow.appShell.analysisTab,
   });
+  await expect(extractionTab).toHaveAttribute("aria-selected", "true");
   await analysisTab.click();
   await expect(page).toHaveURL(/\/job-analyses\/[^/?]+\/analysis(?:\?|$)/);
+  await expect(analysisTab).toHaveAttribute("aria-selected", "true");
+
+  // The comparison launcher stays disabled until a job description is entered.
+  const jobDescriptionInput = page.getByPlaceholder(
+    tForms.jobDescriptionPlaceholder,
+  );
+  await expect(jobDescriptionInput).toBeVisible();
+  await jobDescriptionInput.fill(jobDescription);
 
   const compareButton = page.getByRole("button", { name: tForms.compareOffer });
   const continueButton = page.getByRole("button", { name: tLauncher.continue });

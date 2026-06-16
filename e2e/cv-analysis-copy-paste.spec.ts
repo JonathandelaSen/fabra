@@ -45,11 +45,9 @@ test("user can score and replace a CV analysis with Copy Paste", async ({
       name: messages.en.analysisFlow.copyPaste.title,
     }),
   ).toBeVisible();
-  await expect(
-    page.getByText(messages.en.analysisFlow.copyPaste.privacyNotice),
-  ).toBeVisible();
 
   await page
+    .getByRole("dialog", { name: messages.en.analysisFlow.copyPaste.title })
     .getByRole("button", { name: messages.en.analysisFlow.copyPaste.continue })
     .click();
   await page

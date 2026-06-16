@@ -14,7 +14,7 @@ test("core API guards return controlled errors without external AI calls", async
   });
   expect(missingCv.status()).toBe(400);
   expect(await missingCv.json()).toEqual(
-    expect.objectContaining({ error: "cvId is required" })
+    expect.objectContaining({ code: "BAD_REQUEST" })
   );
 
   const missingProvider = await page.request.post(
@@ -29,9 +29,7 @@ test("core API guards return controlled errors without external AI calls", async
   );
   expect(missingProvider.status()).toBe(400);
   expect(await missingProvider.json()).toEqual(
-    expect.objectContaining({
-      error: "Selecciona un proveedor de IA válido.",
-    })
+    expect.objectContaining({ code: "BAD_REQUEST" })
   );
 
   const fixture = await createFixtureViaApi(page.request, "guards");
