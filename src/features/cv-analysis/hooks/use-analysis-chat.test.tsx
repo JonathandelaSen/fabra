@@ -22,6 +22,15 @@ function conversation(id = CONVERSATION_ID, title = "Platform positioning") {
   };
 }
 
+function conversationView(id = CONVERSATION_ID, title = "Platform positioning") {
+  return {
+    id,
+    analysisId: ANALYSIS_ID,
+    title,
+    messages: [],
+  };
+}
+
 function message(
   id: string,
   role: "user" | "assistant",
@@ -111,8 +120,8 @@ describe("useAnalysisChat", () => {
       created = await result.current.createConversation();
     });
 
-    expect(created).toEqual(conversation());
-    expect(result.current.conversations).toEqual([conversation()]);
+    expect(created).toEqual(conversationView());
+    expect(result.current.conversations).toEqual([conversationView()]);
     expect(result.current.activeConversationId).toBe(CONVERSATION_ID);
     expect(result.current.messages).toEqual([]);
     expect(focusInput).toHaveBeenCalledOnce();
@@ -248,7 +257,7 @@ describe("useAnalysisChat", () => {
     });
 
     expect(result.current.conversations).toEqual([
-      conversation(SECOND_CONVERSATION_ID),
+      conversationView(SECOND_CONVERSATION_ID),
     ]);
     expect(result.current.activeConversationId).toBe(SECOND_CONVERSATION_ID);
   });

@@ -1,0 +1,1 @@
+export { parsePromoteActivityContextSuggestionRequest } from "../../validation";

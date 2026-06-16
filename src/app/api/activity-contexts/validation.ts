@@ -1,7 +1,6 @@
 import type { ActivityContextStatus, ActivityContextType } from "@/modules/activity-context";
 import {
   ACTIVITY_CONTEXT_STATUSES,
-  ACTIVITY_CONTEXT_SUGGESTION_ACTIONS,
   ACTIVITY_CONTEXT_TYPES,
 } from "@/shared/activity-context/constants";
 
@@ -14,14 +13,8 @@ export interface HttpValidationError {
   status: 400;
 }
 
-const activityContextSuggestionActionValues = Object.values(
-  ACTIVITY_CONTEXT_SUGGESTION_ACTIONS
-);
 const contextTypes = Object.values(ACTIVITY_CONTEXT_TYPES);
 const contextStatuses = Object.values(ACTIVITY_CONTEXT_STATUSES);
-
-type ActivityContextSuggestionAction =
-  (typeof ACTIVITY_CONTEXT_SUGGESTION_ACTIONS)[keyof typeof ACTIVITY_CONTEXT_SUGGESTION_ACTIONS];
 
 export interface CreateActivityContextHttpInput {
   type: ActivityContextType;
@@ -34,11 +27,14 @@ export interface UpdateActivityContextHttpInput {
   status?: ActivityContextStatus;
 }
 
-export interface ActivityContextSuggestionHttpInput {
-  action: ActivityContextSuggestionAction;
+export interface PromoteActivityContextSuggestionHttpInput {
   type: ActivityContextType;
   name: string;
-  roleOrLabel: string | null;
+}
+
+export interface HideActivityContextSuggestionHttpInput {
+  type: ActivityContextType;
+  name: string;
 }
 
 function validationError(message: string): Result<never, HttpValidationError> {
@@ -90,23 +86,26 @@ export function parseUpdateActivityContextRequest(
   return { ok: true, value: { type, name: name ?? undefined, status } };
 }
 
-export function parseActivityContextSuggestionRequest(
+export function parsePromoteActivityContextSuggestionRequest(
   body: unknown,
-): Result<ActivityContextSuggestionHttpInput, HttpValidationError> {
+): Result<PromoteActivityContextSuggestionHttpInput, HttpValidationError> {
   if (!isRecord(body)) return validationError("Request body must be a JSON object");
-  const action = requiredEnum(body.action, activityContextSuggestionActionValues);
   const type = requiredEnum(body.type, contextTypes);
   const name = requiredText(body.name);
-  const roleOrLabel =
-    body.roleOrLabel === null || body.role_or_label === null
-      ? null
-      : typeof body.roleOrLabel === "string"
-        ? body.roleOrLabel.trim() || null
-        : typeof body.role_or_label === "string"
-          ? body.role_or_label.trim() || null
-          : null;
-  if (!action || !type || !name) {
+  if (!type || !name) {
     return validationError("Invalid activity context suggestion payload");
   }
-  return { ok: true, value: { action, type, name, roleOrLabel } };
+  return { ok: true, value: { type, name } };
+}
+
+export function parseHideActivityContextSuggestionRequest(
+  body: unknown,
+): Result<HideActivityContextSuggestionHttpInput, HttpValidationError> {
+  if (!isRecord(body)) return validationError("Request body must be a JSON object");
+  const type = requiredEnum(body.type, contextTypes);
+  const name = requiredText(body.name);
+  if (!type || !name) {
+    return validationError("Invalid activity context suggestion payload");
+  }
+  return { ok: true, value: { type, name } };
 }

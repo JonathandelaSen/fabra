@@ -1,1 +1,2 @@
-export { parseActivityContextSuggestionRequest } from "../validation";
+// GET suggestions does not require validation
+export {};

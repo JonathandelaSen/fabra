@@ -1,0 +1,25 @@
+import { describe, expect, it, vi } from "vitest";
+import { HideActivityContextSuggestionUseCase } from "./hide-activity-context-suggestion.use-case";
+
+describe("HideActivityContextSuggestionUseCase", () => {
+  it("hides a suggestion without creating a context", async () => {
+    const repo = {
+      hideSuggestion: vi.fn().mockResolvedValue(undefined),
+    };
+
+    const result = await new HideActivityContextSuggestionUseCase({
+      activityContextRepo: repo as never,
+    }).execute({
+      userId: "user-1",
+      type: "employment",
+      name: "Acme",
+    });
+
+    expect(result).toEqual({ ok: true });
+    expect(repo.hideSuggestion).toHaveBeenCalledOnce();
+    expect(repo.hideSuggestion).toHaveBeenCalledWith(
+      expect.objectContaining({ value: "user-1" }),
+      { type: "employment", name: "Acme" }
+    );
+  });
+});

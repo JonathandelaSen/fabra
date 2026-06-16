@@ -4,28 +4,24 @@ import {
   getSupabaseClient,
 } from "@/modules/test-helpers/setup";
 import { SupabaseWorkJournalContextRepository } from "../../infrastructure/repositories/supabase-work-journal-context.repository";
-import { HandleSuggestionActionUseCase } from "./handle-suggestion-action.use-case";
+import { PromoteWorkJournalSuggestionUseCase } from "./promote-work-journal-suggestion.use-case";
 
 const supabase = getSupabaseClient();
 
-describe("HandleSuggestionActionUseCase", () => {
+describe("PromoteWorkJournalSuggestionUseCase", () => {
   it("promotes a suggestion into a CV-created context and publishes domain events", async () => {
     const user = await createTestUser("wj-suggestion-promote");
     const contextRepo = new SupabaseWorkJournalContextRepository();
     contextRepo.bindRequest(supabase);
     const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
-    const useCase = new HandleSuggestionActionUseCase({ contextRepo, eventBus: eventBus as never });
+    const useCase = new PromoteWorkJournalSuggestionUseCase({ contextRepo, eventBus: eventBus as never });
 
     const context = await useCase.execute({
       userId: user.id,
-      action: "promote",
       type: "employment",
       name: "Acme",
       role_or_label: "Engineer",
-      is_default: true,
     });
-
-    if ("ok" in context) throw new Error("Expected promoted suggestion to return a context.");
 
     expect(context.toPrimitives()).toMatchObject({
       userId: user.id,
@@ -42,30 +38,5 @@ describe("HandleSuggestionActionUseCase", () => {
     expect(publishedEvents[0].toPrimitives()).toEqual({
       contextId: context.id,
     });
-  });
-
-  it("hides a suggestion and publishes no events", async () => {
-    const user = await createTestUser("wj-suggestion-hide");
-    const contextRepo = new SupabaseWorkJournalContextRepository();
-    contextRepo.bindRequest(supabase);
-    const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
-    const useCase = new HandleSuggestionActionUseCase({ contextRepo, eventBus: eventBus as never });
-
-    await expect(
-      useCase.execute({
-        userId: user.id,
-        action: "hide",
-        type: "project",
-        name: "Internal Tools",
-        role_or_label: null,
-      })
-    ).resolves.toEqual({ ok: true });
-
-    await expect(
-      contextRepo
-        .listHiddenSuggestionKeys(user.id)
-        .then((keys) => new Set(Array.from(keys).map((key) => key.toPrimitives())))
-    ).resolves.toEqual(new Set(["project:internal tools"]));
-    expect(eventBus.publish).not.toHaveBeenCalled();
   });
 });

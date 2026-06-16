@@ -2,7 +2,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { CountActivityContextRecordsUseCase } from "./application/use-cases/count-activity-context-records.use-case";
 import { CreateActivityContextUseCase } from "./application/use-cases/create-activity-context.use-case";
 import { DeleteActivityContextUseCase } from "./application/use-cases/delete-activity-context.use-case";
-import { HandleActivityContextSuggestionUseCase } from "./application/use-cases/handle-activity-context-suggestion.use-case";
+import { PromoteActivityContextSuggestionUseCase } from "./application/use-cases/promote-activity-context-suggestion.use-case";
+import { HideActivityContextSuggestionUseCase } from "./application/use-cases/hide-activity-context-suggestion.use-case";
 import { ListActivityContextSuggestionsUseCase } from "./application/use-cases/list-activity-context-suggestions.use-case";
 import { ListActivityContextsUseCase } from "./application/use-cases/list-activity-contexts.use-case";
 import { UpdateActivityContextUseCase } from "./application/use-cases/update-activity-context.use-case";
@@ -24,9 +25,12 @@ function createUseCases(eventBus: EventBus) {
     updateActivityContext: new UpdateActivityContextUseCase({ activityContextRepo, eventBus }),
     deleteActivityContext: new DeleteActivityContextUseCase({ activityContextRepo, eventBus }),
     countActivityContextRecords: new CountActivityContextRecordsUseCase({ activityContextRepo }),
-    handleActivityContextSuggestion: new HandleActivityContextSuggestionUseCase({
+    promoteActivityContextSuggestion: new PromoteActivityContextSuggestionUseCase({
       activityContextRepo,
       eventBus,
+    }),
+    hideActivityContextSuggestion: new HideActivityContextSuggestionUseCase({
+      activityContextRepo,
     }),
   };
 }

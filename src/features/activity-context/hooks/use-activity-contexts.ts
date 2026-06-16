@@ -5,7 +5,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createActivityContext,
   deleteActivityContext,
-  handleActivityContextSuggestion,
+  promoteActivityContextSuggestion,
+  hideActivityContextSuggestion,
   listActivityContexts,
   updateActivityContext,
 } from "../api/activity-context-api";
@@ -119,8 +120,13 @@ export function useHandleActivityContextSuggestion() {
   const queryClient = useQueryClient();
   const [error, setError] = useState<string | null>(null);
 
-  const mutation = useMutation({
-    mutationFn: handleActivityContextSuggestion,
+  const promoteMutation = useMutation({
+    mutationFn: promoteActivityContextSuggestion,
+    onSuccess: () => invalidateActivityContextConsumers(queryClient),
+  });
+
+  const hideMutation = useMutation({
+    mutationFn: hideActivityContextSuggestion,
     onSuccess: () => invalidateActivityContextConsumers(queryClient),
   });
 
@@ -128,28 +134,28 @@ export function useHandleActivityContextSuggestion() {
     async (suggestion: ActivityContextSuggestion) => {
       setError(null);
       try {
-        return await mutation.mutateAsync({ ...suggestion, action: "promote" });
+        return await promoteMutation.mutateAsync(suggestion);
       } catch (err: unknown) {
         setError(getErrorMessage(err));
         return null;
       }
     },
-    [mutation]
+    [promoteMutation]
   );
 
   const hide = useCallback(
     async (suggestion: ActivityContextSuggestion) => {
       setError(null);
       try {
-        await mutation.mutateAsync({ ...suggestion, action: "hide" });
+        await hideMutation.mutateAsync(suggestion);
       } catch (err: unknown) {
         setError(getErrorMessage(err));
       }
     },
-    [mutation]
+    [hideMutation]
   );
 
-  return { promote, hide, isPending: mutation.isPending, error, clearError: () => setError(null) };
+  return { promote, hide, isPending: promoteMutation.isPending || hideMutation.isPending, error, clearError: () => setError(null) };
 }
 
 export function useInvalidateActivityContextConsumers() {

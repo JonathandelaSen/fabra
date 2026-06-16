@@ -1,4 +1,3 @@
-export { WORK_JOURNAL_SUGGESTION_ACTIONS } from "@/modules/work-journal/application/work-journal-suggestion.constants";
 export {
   workJournalContextStatuses as WORK_JOURNAL_CONTEXT_STATUSES,
 } from "@/modules/work-journal/domain/value-objects/work-journal-context-status.value-object";

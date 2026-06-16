@@ -9,8 +9,7 @@ import type {
   DeleteActivityContextResponse,
   UpdateActivityContextResponse,
 } from "@/app/api/activity-contexts/[id]/responses";
-import type { HandleActivityContextSuggestionResponse } from "@/app/api/activity-contexts/suggestions/responses";
-import { ACTIVITY_CONTEXT_SUGGESTION_ACTIONS } from "@/shared/activity-context/constants";
+import type { DismissActivityContextSuggestionResponse } from "@/app/api/activity-contexts/suggestions/responses";
 
 interface ErrorResponse {
   error?: string;
@@ -25,8 +24,6 @@ async function readJsonResponse<T>(res: Response, fallbackMessage: string): Prom
 export type ActivityContext = ActivityContextResponse;
 export type ActivityContextType = ActivityContextResponseType;
 export type ActivityContextSuggestion = ActivityContextSuggestionResponse;
-type ActivityContextSuggestionAction =
-  (typeof ACTIVITY_CONTEXT_SUGGESTION_ACTIONS)[keyof typeof ACTIVITY_CONTEXT_SUGGESTION_ACTIONS];
 
 export interface CreateActivityContextInput {
   type: ActivityContextType;
@@ -82,19 +79,34 @@ export async function deleteActivityContext(id: string) {
   );
 }
 
-export async function handleActivityContextSuggestion(input: {
-  action: ActivityContextSuggestionAction;
+export async function promoteActivityContextSuggestion(input: {
   type: ActivityContextType;
   name: string;
   roleOrLabel: string | null;
 }) {
-  const res = await fetch("/api/activity-contexts/suggestions", {
+  const res = await fetch("/api/activity-contexts/suggestions/promote", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  return readJsonResponse<HandleActivityContextSuggestionResponse>(
+  return readJsonResponse<CreateActivityContextResponse>(
     res,
-    "Could not update activity context suggestion."
+    "Could not promote activity context suggestion."
+  );
+}
+
+export async function hideActivityContextSuggestion(input: {
+  type: ActivityContextType;
+  name: string;
+  roleOrLabel: string | null;
+}) {
+  const res = await fetch("/api/activity-contexts/suggestions/hide", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+  return readJsonResponse<DismissActivityContextSuggestionResponse>(
+    res,
+    "Could not hide activity context suggestion."
   );
 }

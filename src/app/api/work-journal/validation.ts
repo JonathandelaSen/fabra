@@ -6,7 +6,6 @@ import {
   WORK_JOURNAL_CONTEXT_STATUSES,
   WORK_JOURNAL_CONTEXT_TYPES,
   WORK_JOURNAL_ENTRY_INPUT_MODES,
-  WORK_JOURNAL_SUGGESTION_ACTIONS,
 } from "@/shared/work-journal/constants";
 
 type Result<TValue, TError> =
@@ -34,17 +33,6 @@ export interface UpdateWorkJournalContextHttpInput {
   role_or_label?: string | null;
   status?: WorkJournalContextStatusInput;
   is_default?: boolean;
-}
-
-type WorkJournalSuggestionActionInput =
-  (typeof WORK_JOURNAL_SUGGESTION_ACTIONS)[keyof typeof WORK_JOURNAL_SUGGESTION_ACTIONS];
-
-export interface WorkJournalSuggestionActionHttpInput {
-  action: WorkJournalSuggestionActionInput;
-  type: WorkJournalContextType;
-  name: string;
-  role_or_label: string | null;
-  is_default: boolean;
 }
 
 export interface ListWorkJournalEntriesHttpInput {
@@ -188,38 +176,7 @@ export function parseUpdateWorkJournalContextRequest(
   return { ok: true, value: updates };
 }
 
-export function parseWorkJournalSuggestionActionRequest(
-  body: unknown
-): Result<WorkJournalSuggestionActionHttpInput, HttpValidationError> {
-  if (!isRecord(body)) return validationError("Request body must be a JSON object");
 
-  const action = body.action;
-  const type = normalizeContextType(body.type);
-  const name = normalizeRequiredText(body.name);
-  const role_or_label =
-    body.role_or_label === undefined ? null : normalizeOptionalText(body.role_or_label);
-  if (!type || !name || role_or_label === undefined) {
-    return validationError("Invalid suggestion payload");
-  }
-  if (
-    !Object.values(WORK_JOURNAL_SUGGESTION_ACTIONS).includes(
-      action as WorkJournalSuggestionActionInput
-    )
-  ) {
-    return validationError("Invalid suggestion action");
-  }
-
-  return {
-    ok: true,
-    value: {
-      action: action as WorkJournalSuggestionActionInput,
-      type,
-      name,
-      role_or_label,
-      is_default: Boolean(body.is_default),
-    },
-  };
-}
 
 export function parseListWorkJournalEntriesRequest(
   params: URLSearchParams

@@ -1,4 +1,3 @@
-export { ACTIVITY_CONTEXT_SUGGESTION_ACTIONS } from "@/modules/activity-context/application/activity-context-suggestion.constants";
 export {
   activityContextStatuses as ACTIVITY_CONTEXT_STATUSES,
   activityContextTypes as ACTIVITY_CONTEXT_TYPES,
