@@ -4,6 +4,7 @@ import {
   parseJobMatchAnalysisRoute,
   shouldShowJobMatchAnalysisView,
 } from "./use-job-match-analysis-route-state";
+import { JOB_MATCH_DETAIL_TABS } from "../constants";
 
 describe("shouldShowJobMatchAnalysisView", () => {
   it("defaults to AI analysis when a score exists", () => {
@@ -152,8 +153,8 @@ describe("getJobMatchAnalysisHref", () => {
 
   it("adds the tab query string for non-summary tabs", () => {
     expect(
-      getJobMatchAnalysisHref({ id: "offer-1", analysis: true, tab: "chat" }),
-    ).toBe("/job-analyses/offer-1/analysis?tab=chat");
+      getJobMatchAnalysisHref({ id: "offer-1", analysis: true, tab: JOB_MATCH_DETAIL_TABS.chat }),
+    ).toBe(`/job-analyses/offer-1/analysis?tab=${JOB_MATCH_DETAIL_TABS.chat}`);
   });
 
   it("encodes ids so a slash in the id does not create extra path segments", () => {

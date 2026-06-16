@@ -10,6 +10,7 @@ import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
 import { useJobMatchAnalysisList, useJobMatchAnalysisDetail, useJobMatchAnalysisCVOptions } from "../hooks/use-job-match-analysis-queries";
 import { useJobMatchAnalysisMutations } from "../hooks/use-job-match-analysis-mutations";
 import { shouldShowJobMatchAnalysisView, useJobMatchAnalysisRouteState } from "../hooks/use-job-match-analysis-route-state";
+import { JOB_MATCH_DETAIL_TABS } from "../constants";
 import { useJobMatchCopyPasteApplied } from "../hooks/use-job-match-copy-paste-applied";
 import { useJobMatchAnalysisExport } from "../hooks/use-job-match-analysis-export";
 import { useNewJobMatchFlowActions } from "../hooks/use-new-job-match-flow-actions";
@@ -209,9 +210,9 @@ export default function JobMatchAnalysisView({
         jobUrl: input.jobUrl || null,
       },
     });
-    goToAnalysis("summary");
+    goToAnalysis(JOB_MATCH_DETAIL_TABS.summary);
   };
-  const applyCopyPasteResult = useJobMatchCopyPasteApplied(() => goToAnalysis("summary"));
+  const applyCopyPasteResult = useJobMatchCopyPasteApplied(() => goToAnalysis(JOB_MATCH_DETAIL_TABS.summary));
 
   const openQuestions = () => {
     onOpenQuestions?.({

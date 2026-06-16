@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import type { OfferStatus } from "@/lib/analysis-types";
 import { type DetailTab } from "../../types";
+import { JOB_MATCH_DETAIL_TABS } from "../../constants";
 import AnalysisScoreCircle from "@/components/shared/analysis-score-circle";
 import { FormattedDate } from "@/components/shared/formatted-date";
 import { getScoreColor } from "@/lib/format";
@@ -117,7 +118,7 @@ export default function ScoreHero({
               <ScoreHeroOfferStatusBadge
                 offerStatus={offerStatus}
                 onTabChange={onTabChange}
-                tabValue="tracking"
+                tabValue={JOB_MATCH_DETAIL_TABS.tracking}
               />
             </div>
             <h3 className="text-xl font-bold text-zinc-100">

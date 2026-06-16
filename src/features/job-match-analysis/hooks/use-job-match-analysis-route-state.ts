@@ -20,7 +20,7 @@ const VALID_TABS: AnalysisTab[] = Object.values(JOB_MATCH_DETAIL_TABS);
 function normalizeTab(value: string | null): AnalysisTab {
   return VALID_TABS.includes(value as AnalysisTab)
     ? (value as AnalysisTab)
-    : "summary";
+    : JOB_MATCH_DETAIL_TABS.summary;
 }
 
 export interface ParsedJobMatchAnalysisRoute {
@@ -75,7 +75,7 @@ export function getJobMatchAnalysisHref({
   id,
   analysis = false,
   extraction = false,
-  tab = "summary",
+  tab = JOB_MATCH_DETAIL_TABS.summary,
   view = "list",
   mode,
 }: {
@@ -93,7 +93,7 @@ export function getJobMatchAnalysisHref({
   if (!analysis) {
     return `${base}/${encodedId}${extraction ? "?view=extraction" : ""}`;
   }
-  if (tab === "summary") return `${base}/${encodedId}/analysis`;
+  if (tab === JOB_MATCH_DETAIL_TABS.summary) return `${base}/${encodedId}/analysis`;
   return `${base}/${encodedId}/analysis?tab=${tab}`;
 }
 
@@ -111,7 +111,7 @@ export function useJobMatchAnalysisRouteState() {
     (
       nextId: string | null,
       analysis = false,
-      tab: AnalysisTab = "summary",
+      tab: AnalysisTab = JOB_MATCH_DETAIL_TABS.summary,
       nextView: JobMatchAnalysisRouteView = view,
     ) => {
       return getJobMatchAnalysisHref({
@@ -159,7 +159,7 @@ export function useJobMatchAnalysisRouteState() {
   }, [analysisId, analysisTab, hrefFor, isAnalysisView, router]);
 
   const goToAnalysis = useCallback(
-    (tab: AnalysisTab = "summary") => {
+    (tab: AnalysisTab = JOB_MATCH_DETAIL_TABS.summary) => {
       if (!analysisId) return;
       router.push(hrefFor(analysisId, true, tab));
     },
@@ -167,7 +167,7 @@ export function useJobMatchAnalysisRouteState() {
   );
 
   const goToAnalysisById = useCallback(
-    (id: string, tab: AnalysisTab = "summary") => {
+    (id: string, tab: AnalysisTab = JOB_MATCH_DETAIL_TABS.summary) => {
       router.push(hrefFor(id, true, tab));
     },
     [hrefFor, router],
