@@ -5,6 +5,7 @@ import {
 } from "@/modules/test-helpers/setup";
 import type { JournalAIService } from "../../domain/repositories/journal-ai-service.repository";
 import { DraftEntryUseCase } from "./draft-entry.use-case";
+import { WorkJournalDraft } from "../../domain/value-objects/work-journal-draft.value-object";
 
 describe("DraftEntryUseCase", () => {
   it("passes provided context and draft data to the AI service", async () => {
@@ -31,7 +32,8 @@ describe("DraftEntryUseCase", () => {
       notes: "Coordinated release",
     });
 
-    expect(result).toBe("Drafted final text");
+    expect(result).toBeInstanceOf(WorkJournalDraft);
+    expect(result.toPrimitives()).toBe("Drafted final text");
     expect(aiService.draftEntry).toHaveBeenCalledWith({
       context: expect.objectContaining({
         type: "employment",

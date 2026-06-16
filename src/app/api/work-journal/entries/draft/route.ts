@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     activityContextsModule.bindRequest(supabase);
     const contexts = await activityContextsModule.listActivityContexts.execute(user.id);
     const context = contexts.find((item) => item.id === parsed.value.contextId);
-    const finalText = await workJournalModule.draftEntry.execute(user.id, parsed.value.contextId, {
+    const draft = await workJournalModule.draftEntry.execute(user.id, parsed.value.contextId, {
       provider: parsed.value.provider,
       apiKey: parsed.value.apiKey,
       baseUrl: parsed.value.baseUrl,
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
       notes: parsed.value.notes,
     });
 
-    return ok({ finalText } satisfies DraftWorkJournalEntryResponse);
+    return ok({ finalText: draft.toPrimitives() } satisfies DraftWorkJournalEntryResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }

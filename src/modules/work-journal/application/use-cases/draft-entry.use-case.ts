@@ -3,6 +3,7 @@ import type {
   DraftEntryInput,
   JournalAIServiceFactory,
 } from "../../domain/repositories/journal-ai-service.repository";
+import { WorkJournalDraft } from "../../domain/value-objects/work-journal-draft.value-object";
 
 export class DraftEntryUseCase {
   constructor(
@@ -21,7 +22,7 @@ export class DraftEntryUseCase {
       baseUrl?: string;
       model: string;
     }
-  ): Promise<string> {
+  ): Promise<WorkJournalDraft> {
     const { provider, apiKey, baseUrl, model, ...draftInput } = input;
     const aiService = this.deps.aiFactory.create({
       provider,
@@ -40,6 +41,6 @@ export class DraftEntryUseCase {
     });
     await publishAIInteractionApplied(this.deps.eventBus, context);
 
-    return finalText;
+    return WorkJournalDraft.fromPrimitives(finalText);
   }
 }
