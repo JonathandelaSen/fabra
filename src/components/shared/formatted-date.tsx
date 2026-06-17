@@ -41,7 +41,7 @@ export function FormattedDate({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 text-[11px] text-zinc-500",
+        "inline-flex items-center gap-1 text-[11px] text-text-muted",
         className,
       )}
     >

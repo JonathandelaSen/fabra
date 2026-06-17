@@ -66,13 +66,13 @@ export function JobMatchAnalysisBody({
           }`}
         >
           <label className="relative block w-full max-w-sm">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-600" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-faint" />
             <input
               type="search"
               placeholder={searchPlaceholder}
               value={searchQuery}
               onChange={(event) => onSearchChange(event.target.value)}
-              className="h-9 w-full rounded-lg border border-white/10 bg-white/[0.03] py-1.5 pl-9 pr-3 text-xs text-zinc-200 outline-none placeholder:text-zinc-600 focus:border-indigo-500/40"
+              className="h-9 w-full rounded-lg border border-line bg-field py-1.5 pl-9 pr-3 text-xs text-text-main outline-none placeholder:text-text-faint focus:border-action-border"
             />
           </label>
           <JobMatchKanbanBoard

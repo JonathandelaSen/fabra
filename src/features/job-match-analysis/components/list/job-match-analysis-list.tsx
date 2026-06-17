@@ -31,18 +31,18 @@ export default function JobMatchAnalysisList({
       header={
         <div className="flex flex-col gap-3">
           <div>
-            <p className="text-xs font-medium uppercase tracking-[0.08em] text-zinc-500">
+            <p className="text-xs font-medium uppercase tracking-[0.08em] text-text-muted">
               {t("jobCount", { count: analyses.length })}
             </p>
           </div>
           <label className="relative block">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-600" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-faint" />
             <input
               type="search"
               placeholder={t("searchOffers")}
               value={searchQuery}
               onChange={(event) => onSearchChange(event.target.value)}
-              className="h-9 w-full rounded-lg border border-white/10 bg-white/[0.03] pl-9 pr-3 py-1.5 text-xs text-zinc-200 outline-none placeholder:text-zinc-600 focus:border-indigo-500/40"
+              className="h-9 w-full rounded-lg border border-line bg-field pl-9 pr-3 py-1.5 text-xs text-text-main outline-none placeholder:text-text-faint focus:border-action-border"
             />
           </label>
         </div>
@@ -52,10 +52,10 @@ export default function JobMatchAnalysisList({
         <JobAnalysesListSkeleton />
       ) : analyses.length === 0 ? (
         <div className="px-4 py-12 text-center">
-          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-500/10">
-            <Briefcase className="h-5 w-5 text-indigo-400" />
+          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-action-soft">
+            <Briefcase className="h-5 w-5 text-action-text" />
           </div>
-          <p className="text-sm font-medium text-zinc-400">
+          <p className="text-sm font-medium text-text-soft">
             {searchQuery ? t("noMatches") : t("jobEmptyTitle")}
           </p>
         </div>

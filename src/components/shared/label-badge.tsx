@@ -27,13 +27,13 @@ export type LabelBadgeSize =
 
 const TONE_CLASS_NAMES = {
   [LABEL_BADGE_TONES.NEUTRAL]: "border-line-default bg-panel-subtle text-text-soft",
-  [LABEL_BADGE_TONES.SUCCESS]: "border-emerald-500/20 bg-emerald-500/10 text-emerald-400",
-  [LABEL_BADGE_TONES.WARNING]: "border-amber-500/20 bg-amber-500/10 text-amber-400",
-  [LABEL_BADGE_TONES.DANGER]: "border-rose-500/20 bg-rose-500/10 text-rose-400",
-  [LABEL_BADGE_TONES.INFO]: "border-sky-500/20 bg-sky-500/10 text-sky-400",
-  [LABEL_BADGE_TONES.TEAL]: "border-teal-500/25 bg-teal-500/10 text-teal-400",
+  [LABEL_BADGE_TONES.SUCCESS]: "border-success-border bg-success-soft text-success-text",
+  [LABEL_BADGE_TONES.WARNING]: "border-warning-border bg-warning-soft text-warning-text",
+  [LABEL_BADGE_TONES.DANGER]: "border-danger-border bg-danger-soft text-danger-text",
+  [LABEL_BADGE_TONES.INFO]: "border-info-border bg-info-soft text-info-text",
+  [LABEL_BADGE_TONES.TEAL]: "border-accent-teal-border bg-accent-teal-soft text-accent-teal-text",
   [LABEL_BADGE_TONES.INDIGO]:
-    "border-transparent bg-indigo-500/10 text-indigo-300 ring-1 ring-inset ring-indigo-500/20",
+    "border-transparent bg-action-soft text-action-text ring-1 ring-inset ring-action-border",
 } satisfies Record<LabelBadgeTone, string>;
 
 export const LABEL_BADGE_SIZE_CLASS_NAMES = {

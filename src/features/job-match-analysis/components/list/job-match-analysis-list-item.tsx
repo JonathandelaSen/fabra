@@ -33,7 +33,7 @@ export function JobMatchAnalysisListItem({
     >
       <div className="min-w-0 flex-1">
         <div className="flex min-w-0 items-start gap-2">
-          <p className="min-w-0 flex-1 truncate text-sm font-semibold text-zinc-100 transition-colors group-hover:text-action-text">
+          <p className="min-w-0 flex-1 truncate text-sm font-semibold text-text-main transition-colors group-hover:text-action-text">
             {analysis.title || analysis.filename.replace(/\.pdf$/i, "")}
           </p>
           <JobMatchAnalysisScoreBadge score={analysis.aiScore} />
