@@ -43,7 +43,7 @@ describe("DeleteCVDocumentUseCase", () => {
       eventBus: eventBus as never,
     }).execute({ id: "cv-1", userId: "user-1" });
 
-    expect(result.status).toBe("in_use");
+    expect(result.status.isInUse()).toBe(true);
     expect(repo.delete).not.toHaveBeenCalled();
     expect(eventBus.publish).not.toHaveBeenCalled();
   });
@@ -57,7 +57,7 @@ describe("DeleteCVDocumentUseCase", () => {
       eventBus: eventBus as never,
     }).execute({ id: "cv-1", userId: "user-1" });
 
-    expect(result.status).toBe("deleted");
+    expect(result.status.isDeleted()).toBe(true);
     expect(repo.deleteStoredPdf).toHaveBeenCalledWith("user-1/cv-1.pdf");
     expect(repo.delete).toHaveBeenCalledOnce();
     expect(eventBus.publish).toHaveBeenCalledOnce();

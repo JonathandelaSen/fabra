@@ -71,7 +71,15 @@ export type {
   PrepareCVAnalysisInputInput,
   PrepareCVAnalysisInputResult,
 } from "./application/use-cases/prepare-cv-analysis-input.use-case";
-export type { DeleteCVDocumentResult } from "./application/use-cases/delete-cv-document.use-case";
+export {
+  DeleteCVDocumentResult,
+  type DeleteCVDocumentResultPrimitives,
+} from "./domain/value-objects/delete-cv-document-result.value-object";
+export {
+  DeleteCVDocumentStatus,
+  deleteCVDocumentStatuses,
+  type DeleteCVDocumentStatusPrimitives,
+} from "./domain/value-objects/delete-cv-document-status.value-object";
 export {
   PUBLIC_CV_SLUG_MAX_LENGTH,
   PUBLIC_CV_ID_LENGTH,

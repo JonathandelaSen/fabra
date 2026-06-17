@@ -174,10 +174,10 @@ export async function DELETE(
     const result = await cvLibraryModule
       .bindRequest(supabase)
       .deleteCVDocument.execute({ id, userId: user.id });
-    if (result.status === "not_found") {
+    if (result.status.isNotFound()) {
       throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
     }
-    if (result.status === "in_use") {
+    if (result.status.isInUse()) {
       return NextResponse.json(
         {
           error: "Cannot delete a CV with associated analyses.",
