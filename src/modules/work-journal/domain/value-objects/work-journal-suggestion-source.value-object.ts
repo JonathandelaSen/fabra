@@ -12,7 +12,7 @@ export class WorkJournalSuggestionSource extends ValueObject<SuggestionSource> {
     super();
   }
 
-  static fromPrimitives(value: SuggestionSource): WorkJournalSuggestionSource {
+  static fromPrimitives(value: string): WorkJournalSuggestionSource {
     if (value !== workJournalSuggestionSources.cv) {
       throw new Error(`Invalid suggestion source: ${value}`);
     }

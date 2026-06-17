@@ -4,18 +4,9 @@ import { ListJournalEntriesInRangeQuery, type WorkJournalEntryPrimitives } from 
 import { ListReceivedFeedbackInRangeQuery, type ReceivedFeedbackPrimitives } from "@/modules/received-feedback";
 import { PerformanceReviewNotFoundError } from "../../domain/errors/performance-review-not-found.error";
 import type { PerformanceReviewRepository } from "../../domain/repositories/performance-review.repository";
-import {
-  EVIDENCE_SOURCE,
-  type EvidenceSourceValue,
-} from "../../domain/value-objects/evidence-source.value-object";
+import { EVIDENCE_SOURCE } from "../../domain/value-objects/evidence-source.value-object";
+import { EvidenceCandidate } from "../../domain/value-objects/evidence-candidate.value-object";
 import { PerformanceReviewId } from "../../domain/value-objects/performance-review-id.value-object";
-
-export interface EvidenceCandidate {
-  source: EvidenceSourceValue;
-  sourceId: string;
-  date: string | null;
-  content: string;
-}
 
 export interface ListEvidenceCandidatesInput {
   reviewId: string;
@@ -48,7 +39,6 @@ export class ListEvidenceCandidatesUseCase {
       contextId: activityContextId,
     };
 
-    type RangeResult = { sourceId: string; date: string | null; content: string }[];
     const [journal, feedback, commitments] = await Promise.all([
       this.deps.queryBus.execute<WorkJournalEntryPrimitives[]>(
         new ListJournalEntriesInRangeQuery(range),
@@ -64,31 +54,31 @@ export class ListEvidenceCandidatesUseCase {
     return [
       ...journal.map((p) => {
         const content = p.finalText?.trim() || p.rawNotes?.trim() || p.topic || "";
-        return {
+        return EvidenceCandidate.fromPrimitives({
           sourceId: p.id,
           date: p.dateStart,
           content,
           source: EVIDENCE_SOURCE.journalEntry,
-        };
+        });
       }),
-      ...feedback.map((p) => {
-        return {
+      ...feedback.map((p) =>
+        EvidenceCandidate.fromPrimitives({
           sourceId: p.id,
           date: p.receivedDate,
           content: `${p.giverName}: ${p.feedbackText}`,
           source: EVIDENCE_SOURCE.receivedFeedback,
-        };
-      }),
+        }),
+      ),
       ...commitments.map((c) => {
         const parts = [c.title];
         if (c.resultNotes) parts.push(c.resultNotes);
         else if (c.description) parts.push(c.description);
-        return {
+        return EvidenceCandidate.fromPrimitives({
           sourceId: c.id,
           date: c.targetDate ?? c.startDate,
           content: parts.join(" — "),
           source: EVIDENCE_SOURCE.commitment,
-        };
+        });
       }),
     ];
   }

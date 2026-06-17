@@ -1,6 +1,6 @@
 import type { PerformanceReview } from "../../domain/entities/performance-review.entity";
 import type { ReviewEvidenceItem } from "../../domain/entities/review-evidence-item.entity";
-import type { EvidenceCandidate } from "../use-cases/list-evidence-candidates.use-case";
+import type { EvidenceCandidate } from "../../domain/value-objects/evidence-candidate.value-object";
 
 export function presentPerformanceReview(review: PerformanceReview) {
   const p = review.toPrimitives();

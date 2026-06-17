@@ -15,11 +15,11 @@ export class WorkJournalContextType extends ValueObject<ContextType> {
     super();
   }
 
-  static fromPrimitives(value: ContextType): WorkJournalContextType {
-    if (!Object.values(workJournalContextTypes).includes(value)) {
+  static fromPrimitives(value: string): WorkJournalContextType {
+    if (!Object.values(workJournalContextTypes).includes(value as ContextType)) {
       throw new Error(`Invalid work journal context type: ${value}`);
     }
-    return new WorkJournalContextType(value);
+    return new WorkJournalContextType(value as ContextType);
   }
 
   toPrimitives(): ContextType {

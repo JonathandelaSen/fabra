@@ -6,11 +6,11 @@ import { WorkJournalRoleOrLabel } from "./work-journal-role-or-label.value-objec
 import { type SuggestionSource, WorkJournalSuggestionSource } from "./work-journal-suggestion-source.value-object";
 
 export interface WorkJournalContextSuggestionPrimitives {
-  type: ContextType;
+  type: string;
   name: string;
   roleOrLabel: string | null;
   isCurrent: boolean;
-  source: SuggestionSource;
+  source: string;
 }
 
 export class WorkJournalContextSuggestion extends ValueObject<WorkJournalContextSuggestionPrimitives> {
@@ -54,10 +54,10 @@ export class WorkJournalContextSuggestion extends ValueObject<WorkJournalContext
 
   toPrimitives(): WorkJournalContextSuggestionPrimitives {
     return {
-      type: this.type,
-      name: this.name,
-      roleOrLabel: this.roleOrLabel,
-      isCurrent: this.isCurrent,
+      type: this.contextType.toPrimitives(),
+      name: this.contextName.toPrimitives(),
+      roleOrLabel: this.contextRoleOrLabel.toPrimitives(),
+      isCurrent: this.contextIsCurrent.toPrimitives(),
       source: this.contextSource.toPrimitives(),
     };
   }
