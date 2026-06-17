@@ -10,14 +10,25 @@ import { useReviewAdminAIInteraction } from "../hooks/use-admin-ai-interactions"
 import { AIInteractionContentBlock } from "./ai-interaction-content-block";
 import { useTranslations } from "next-intl";
 import { Check, RotateCw } from "lucide-react";
+import { AI_INTERACTION_RATINGS } from "@/shared/ai-interactions/constants";
 
 type Interaction = ListAdminAIInteractionsResponse[number];
-type AIInteractionRating = NonNullable<Interaction["review"]>["rating"];
+type AIInteractionRating =
+  (typeof AI_INTERACTION_RATINGS)[keyof typeof AI_INTERACTION_RATINGS];
+
+function toAIInteractionRating(value: string | undefined): AIInteractionRating {
+  return value !== undefined &&
+    Object.values(AI_INTERACTION_RATINGS).includes(value as AIInteractionRating)
+    ? (value as AIInteractionRating)
+    : "mixed";
+}
 
 export function ComparisonColumn({ interaction }: { interaction: Interaction }) {
   const t = useTranslations("admin.aiInteractions");
   const review = useReviewAdminAIInteraction();
-  const [rating, setRating] = useState<AIInteractionRating>(interaction.review?.rating ?? "mixed");
+  const [rating, setRating] = useState<AIInteractionRating>(
+    toAIInteractionRating(interaction.review?.rating)
+  );
   const [note, setNote] = useState(interaction.review?.note ?? "");
 
   const handleSaveReview = () => {
@@ -29,11 +40,11 @@ export function ComparisonColumn({ interaction }: { interaction: Interaction }) 
   };
 
   const hasUnsavedChanges =
-    rating !== (interaction.review?.rating ?? "mixed") ||
+    rating !== toAIInteractionRating(interaction.review?.rating) ||
     note.trim() !== (interaction.review?.note ?? "");
 
   const handleReset = () => {
-    setRating(interaction.review?.rating ?? "mixed");
+    setRating(toAIInteractionRating(interaction.review?.rating));
     setNote(interaction.review?.note ?? "");
   };
 
@@ -74,7 +85,7 @@ export function ComparisonColumn({ interaction }: { interaction: Interaction }) 
         )}
         
         <div className="grid grid-cols-3 gap-2">
-          {[
+          {([
             {
               id: "good",
               label: t("good"),
@@ -93,7 +104,7 @@ export function ComparisonColumn({ interaction }: { interaction: Interaction }) 
               activeClass: "border-danger-border/60 bg-danger-soft/20 text-danger-text shadow-sm shadow-danger-border/5",
               inactiveClass: "border-border/60 text-text-soft hover:border-danger-border/30 hover:bg-danger-soft/5 hover:text-danger-text"
             },
-          ].map((btn) => {
+          ] satisfies ReadonlyArray<{ id: AIInteractionRating; label: string; activeClass: string; inactiveClass: string }>).map((btn) => {
             const isSelected = rating === btn.id;
             return (
               <button

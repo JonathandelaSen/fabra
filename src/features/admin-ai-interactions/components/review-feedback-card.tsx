@@ -8,14 +8,25 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { UserCheck, ThumbsUp, ThumbsDown, AlertTriangle, RotateCw, Check } from "lucide-react";
 import type { ListAdminAIInteractionsResponse } from "@/app/api/admin/ai-interactions/responses";
+import { AI_INTERACTION_RATINGS } from "@/shared/ai-interactions/constants";
 
 type Interaction = ListAdminAIInteractionsResponse[number];
-type AIInteractionRating = NonNullable<Interaction["review"]>["rating"];
+type AIInteractionRating =
+  (typeof AI_INTERACTION_RATINGS)[keyof typeof AI_INTERACTION_RATINGS];
+
+function toAIInteractionRating(value: string | undefined): AIInteractionRating {
+  return value !== undefined &&
+    Object.values(AI_INTERACTION_RATINGS).includes(value as AIInteractionRating)
+    ? (value as AIInteractionRating)
+    : "mixed";
+}
 
 export function ReviewFeedbackCard({ interaction }: { interaction: Interaction }) {
   const t = useTranslations("admin.aiInteractions");
   const review = useReviewAdminAIInteraction();
-  const [rating, setRating] = useState<AIInteractionRating>(interaction.review?.rating ?? "mixed");
+  const [rating, setRating] = useState<AIInteractionRating>(
+    toAIInteractionRating(interaction.review?.rating)
+  );
   const [note, setNote] = useState(interaction.review?.note ?? "");
 
   const handleSaveReview = () => {
@@ -27,11 +38,11 @@ export function ReviewFeedbackCard({ interaction }: { interaction: Interaction }
   };
 
   const hasUnsavedChanges =
-    rating !== (interaction.review?.rating ?? "mixed") ||
+    rating !== toAIInteractionRating(interaction.review?.rating) ||
     note.trim() !== (interaction.review?.note ?? "");
 
   const handleReset = () => {
-    setRating(interaction.review?.rating ?? "mixed");
+    setRating(toAIInteractionRating(interaction.review?.rating));
     setNote(interaction.review?.note ?? "");
   };
 
