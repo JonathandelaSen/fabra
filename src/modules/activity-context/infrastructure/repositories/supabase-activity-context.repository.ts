@@ -1,4 +1,4 @@
-import { BoundSupabaseRepository, EntityId, UserId } from "@/modules/shared";
+import { BoundSupabaseRepository, Counter, EntityId, UserId } from "@/modules/shared";
 import { ActivityContext, type ActivityContextPrimitives, type ActivityContextStatus, type ActivityContextType } from "../../domain/entities/activity-context.entity";
 import type { ActivityContextRepository } from "../../domain/repositories/activity-context.repository";
 import { activityContextSuggestionKey } from "../../domain/services/suggest-activity-contexts.service";
@@ -89,14 +89,14 @@ export class SupabaseActivityContextRepository extends BoundSupabaseRepository i
     userId: UserId;
     sourceContextId: EntityId;
     defaultContextId: EntityId;
-  }): Promise<number> {
+  }): Promise<Counter> {
     const { data, error } = await this.client.rpc("reassign_activity_context_records", {
       p_user_id: input.userId.toPrimitives(),
       p_source_context_id: input.sourceContextId.toPrimitives(),
       p_default_context_id: input.defaultContextId.toPrimitives(),
     });
     if (error) throw error;
-    return Number(data ?? 0);
+    return Counter.fromPrimitives(Number(data ?? 0));
   }
 
   async countAssignedRecords(id: EntityId, userId: UserId): Promise<number> {

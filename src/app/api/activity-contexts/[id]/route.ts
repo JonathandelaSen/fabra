@@ -46,11 +46,13 @@ export async function DELETE(_req: NextRequest, context: { params: Promise<{ id:
     const { id } = await context.params;
 
     activityContextsModule.bindRequest(supabase);
-    const result = await activityContextsModule.deleteActivityContext.execute({
+    const reassignedRecords = await activityContextsModule.deleteActivityContext.execute({
       id,
       userId: user.id,
     });
-    return ok(result satisfies DeleteActivityContextResponse);
+    return ok({
+      reassignedRecords: reassignedRecords.toPrimitives(),
+    } satisfies DeleteActivityContextResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }

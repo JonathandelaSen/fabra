@@ -1,4 +1,4 @@
-import type { EntityId, UserId } from "@/modules/shared";
+import type { Counter, EntityId, UserId } from "@/modules/shared";
 import type { ActivityContext } from "../entities/activity-context.entity";
 
 export interface ActivityContextRepository {
@@ -13,6 +13,6 @@ export interface ActivityContextRepository {
     userId: UserId;
     sourceContextId: EntityId;
     defaultContextId: EntityId;
-  }): Promise<number>;
+  }): Promise<Counter>;
   countAssignedRecords(id: EntityId, userId: UserId): Promise<number>;
 }

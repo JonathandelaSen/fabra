@@ -1,4 +1,4 @@
-import { EntityId, UserId } from "@/modules/shared";
+import { Counter, EntityId, UserId } from "@/modules/shared";
 import { describe, expect, it, vi } from "vitest";
 import { ActivityContext } from "../../domain/entities/activity-context.entity";
 import { DeleteActivityContextUseCase } from "./delete-activity-context.use-case";
@@ -28,7 +28,7 @@ describe("DeleteActivityContextUseCase", () => {
     const repo = {
       findById: vi.fn(async () => context),
       findDefault: vi.fn(async () => general),
-      reassignRecordsToDefault: vi.fn(async () => 2),
+      reassignRecordsToDefault: vi.fn(async () => Counter.fromPrimitives(2)),
       delete: vi.fn(async () => undefined),
     };
     const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
@@ -41,7 +41,7 @@ describe("DeleteActivityContextUseCase", () => {
         id: "ctx-1",
         userId: "user-1",
       }),
-    ).resolves.toEqual({ reassignedRecords: 2 });
+    ).resolves.toEqual(Counter.fromPrimitives(2));
 
     expect(eventBus.publish).toHaveBeenCalledOnce();
     const publishedEvents = eventBus.publish.mock.calls[0][0];

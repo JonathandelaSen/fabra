@@ -1,12 +1,8 @@
-import { EntityId, UserId, type EventBus } from "@/modules/shared";
+import { Counter, EntityId, UserId, type EventBus } from "@/modules/shared";
 import { ActivityContextNotFoundError } from "../../domain/errors/activity-context-not-found.error";
 import { DefaultActivityContextDeleteError } from "../../domain/errors/default-activity-context-delete.error";
 import { DefaultActivityContextMissingError } from "../../domain/errors/default-activity-context-missing.error";
 import type { ActivityContextRepository } from "../../domain/repositories/activity-context.repository";
-
-export interface DeleteActivityContextResult {
-  reassignedRecords: number;
-}
 
 export class DeleteActivityContextUseCase {
   constructor(
@@ -16,7 +12,7 @@ export class DeleteActivityContextUseCase {
     },
   ) {}
 
-  async execute(input: { id: string; userId: string }): Promise<DeleteActivityContextResult> {
+  async execute(input: { id: string; userId: string }): Promise<Counter> {
     const id = EntityId.fromPrimitives(input.id);
     const userId = UserId.fromPrimitives(input.userId);
     const context = await this.deps.activityContextRepo.findById(id, userId);
@@ -36,6 +32,6 @@ export class DeleteActivityContextUseCase {
     const events = context.pullDomainEvents();
     await this.deps.eventBus.publish(events);
 
-    return { reassignedRecords };
+    return reassignedRecords;
   }
 }
