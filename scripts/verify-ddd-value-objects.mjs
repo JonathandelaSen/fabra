@@ -215,7 +215,6 @@ function checkValueObjectClass(sourceFile, file, valueObject, violations) {
       violations,
       file,
       "value-object-constructor-public",
-      className,
       `Value object ${className} constructor must be private or protected.`,
       sourceFile,
       constructor
