@@ -83,8 +83,94 @@ function findViolations(files) {
   return errors;
 }
 
+const GLOBALS_CSS = "src/app/globals.css";
+
+const CSS_WHITELIST = [".cvp", "::selection"];
+
+const LITERAL_COLOR = /oklch\(|rgba?\(|hsla?\(|#[0-9a-fA-F]{3,8}\b/;
+
+function scanCssBlocks(source) {
+  const blocks = [];
+  const stack = [];
+  let buf = "";
+  let bufStarted = false;
+  let bufLine = 1;
+  let line = 1;
+
+  for (let i = 0; i < source.length; i++) {
+    const ch = source[i];
+    if (ch === "\n") line++;
+
+    if (ch === "{") {
+      stack.push({ selector: buf.trim(), selLine: bufLine, innerStart: i + 1 });
+      buf = "";
+      bufStarted = false;
+    } else if (ch === "}") {
+      const blk = stack.pop();
+      if (blk) {
+        blk.inner = source.slice(blk.innerStart, i);
+        blocks.push(blk);
+      }
+      buf = "";
+      bufStarted = false;
+    } else {
+      if (!bufStarted && !/\s/.test(ch)) {
+        bufStarted = true;
+        bufLine = line;
+      }
+      buf += ch;
+    }
+  }
+
+  return blocks;
+}
+
+function directDeclarations(inner) {
+  let body = inner;
+  let prev;
+  do {
+    prev = body;
+    body = body.replace(/\{[^{}]*\}/g, "");
+  } while (body !== prev);
+  return body.split(";");
+}
+
+function findCssViolations() {
+  const errors = [];
+  const raw = readFileSync(GLOBALS_CSS, "utf8");
+  const source = raw.replace(/\/\*[\s\S]*?\*\//g, (m) =>
+    m.replace(/[^\n]/g, " ")
+  );
+  const blocks = scanCssBlocks(source);
+
+  for (const blk of blocks) {
+    const { selector, selLine } = blk;
+    if (!selector || selector.startsWith("@")) continue;
+    if (/\.light\b|\.dark\b|:root\b/.test(selector)) continue;
+    if (CSS_WHITELIST.some((entry) => selector.includes(entry))) continue;
+
+    const hits = new Set();
+    for (const decl of directDeclarations(blk.inner)) {
+      const idx = decl.indexOf(":");
+      if (idx < 0) continue;
+      const prop = decl.slice(0, idx).trim();
+      if (prop.startsWith("--")) continue;
+      const value = decl.slice(idx + 1);
+      if (LITERAL_COLOR.test(value)) hits.add(prop);
+    }
+
+    if (hits.size > 0) {
+      errors.push(
+        `${GLOBALS_CSS}:${selLine}: \`${selector}\` sets literal color(s) on [${[...hits].join(", ")}] outside .light/.dark → make theme-aware (split per theme or use semantic tokens)`
+      );
+    }
+  }
+
+  return errors;
+}
+
 const files = listTsxFiles();
-const errors = findViolations(files);
+const errors = [...findViolations(files), ...findCssViolations()];
 
 if (errors.length > 0) {
   console.error("verify-light-theme-colors FAILED:\n");

@@ -22,7 +22,7 @@ export default function SidebarNavItem({
       onClick={onClick}
       className={`
         w-full flex items-center gap-2 rounded-lg font-medium cursor-pointer transition-all duration-150
-        ${active ? "sidebar-nav-active text-sidebar-accent-foreground" : "text-text-muted hover:bg-panel-hover hover:text-text-soft"}
+        ${active ? "bg-linear-to-t from-sidebar-active-from to-sidebar-active-to text-sidebar-accent-foreground" : "text-text-muted hover:bg-panel-hover hover:text-text-soft"}
         ${collapsed ? "justify-center p-2" : "px-3 py-2 text-sm"}
       `}
       title={collapsed ? label : undefined}

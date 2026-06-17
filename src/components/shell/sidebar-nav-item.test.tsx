@@ -64,7 +64,12 @@ describe("SidebarNavItem", () => {
     );
 
     const button = screen.getByRole("button");
-    expect(button).toHaveClass("sidebar-nav-active", "text-sidebar-accent-foreground");
+    expect(button).toHaveClass(
+      "bg-linear-to-t",
+      "from-sidebar-active-from",
+      "to-sidebar-active-to",
+      "text-sidebar-accent-foreground"
+    );
     expect(screen.getByTestId("nav-icon")).toHaveClass("text-action");
   });
 
