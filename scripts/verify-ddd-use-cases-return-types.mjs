@@ -177,7 +177,11 @@ export async function findUseCaseReturnTypesViolations({
           return;
         }
 
-        const isPrimitive = ["void", "boolean", "string", "number", "null", "undefined"].includes(
+        if (baseType === "void") {
+          return;
+        }
+
+        const isPrimitive = ["boolean", "string", "number", "null", "undefined"].includes(
           baseType
         );
 
