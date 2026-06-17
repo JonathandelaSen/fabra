@@ -48,7 +48,7 @@ export class SupabaseUserRepository implements UserRepository {
         })
       );
 
-    return UserSearchResult.fromPrimitives({ users, total: filtered.length });
+    return UserSearchResult.create(users, filtered.length);
   }
 
   async delete(userId: string): Promise<void> {

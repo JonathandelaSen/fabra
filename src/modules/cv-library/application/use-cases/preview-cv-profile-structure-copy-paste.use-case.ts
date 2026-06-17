@@ -9,24 +9,12 @@ import {
   validateCVProfileCopyPasteResult,
 } from "../services/cv-profile-copy-paste-result.validator";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
+import { CVProfileStructurePreview } from "../../domain/value-objects/cv-profile-structure-preview.value-object";
 
 export interface PreviewCVProfileStructureCopyPasteInput {
   cvDocumentId: string;
   userId: string;
   rawResponse: string;
-}
-
-export interface PreviewCVProfileStructureCopyPasteResult {
-  parsedResult: StandardCVProfile;
-  preview: {
-    basicsName: string | null;
-    sectionsCount: number;
-    missingImportantFields: string[];
-    templateLocale: string | null;
-    completeness: number;
-    originLabel: "external_chat";
-  };
-  warnings: string[];
 }
 
 const IMPORTANT_FIELDS = [
@@ -46,7 +34,7 @@ export class PreviewCVProfileStructureCopyPasteUseCase {
 
   async execute(
     input: PreviewCVProfileStructureCopyPasteInput,
-  ): Promise<PreviewCVProfileStructureCopyPasteResult | null> {
+  ): Promise<CVProfileStructurePreview | null> {
     const document = await this.deps.documentRepo.findById(
       CVDocumentId.fromPrimitives(input.cvDocumentId),
       UserId.fromPrimitives(input.userId),
@@ -64,7 +52,7 @@ export class PreviewCVProfileStructureCopyPasteUseCase {
     const missingImportantFields = getMissingImportantFields(profile);
     const sectionsCount = countDetectedSections(profile);
 
-    return {
+    return CVProfileStructurePreview.fromPrimitives({
       parsedResult: profile,
       preview: {
         basicsName: profile.basics?.name ?? null,
@@ -82,7 +70,7 @@ export class PreviewCVProfileStructureCopyPasteUseCase {
         missingImportantFields.length > 0
           ? ["Some important profile fields are missing."]
           : [],
-    };
+    });
   }
 }
 

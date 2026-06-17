@@ -29,7 +29,7 @@ export async function POST(
     });
     if (!result) throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
 
-    return ok(result satisfies PreviewCVProfileCopyPasteResponse);
+    return ok(result.toPrimitives() satisfies PreviewCVProfileCopyPasteResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }

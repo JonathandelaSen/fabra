@@ -2,29 +2,7 @@ import { createHash } from "node:crypto";
 import { UserId } from "@/modules/shared";
 import type { AIInteractionEventRepository } from "../../domain/repositories/ai-interaction-event.repository";
 import type { AIInteractionReviewRepository } from "../../domain/repositories/ai-interaction-review.repository";
-import type { AIInteractionRating } from "../../domain/entities/ai-interaction-review.entity";
-
-export interface AIInteractionReadModel {
-  interactionId: string;
-  module: string;
-  operation: string;
-  entityType: string;
-  entityId: string;
-  assistanceMode: string;
-  provider: string;
-  model: string | null;
-  status: string;
-  eventNames: string[];
-  occurredAt: string;
-  prompt: string | null;
-  promptHash: string | null;
-  promptVersion: string | null;
-  rawResponse: string | null;
-  parsedResult: unknown | null;
-  error: string | null;
-  durationMs: number | null;
-  review: { rating: AIInteractionRating; note: string | null } | null;
-}
+import { AIInteractionReadModel } from "../../domain/value-objects/ai-interaction-read-model.value-object";
 
 export class ListAIInteractionsUseCase {
   constructor(private readonly deps: {
@@ -56,7 +34,7 @@ export class ListAIInteractionsUseCase {
       const failed = ordered.findLast((event) => event.eventName === "ai_runtime.failed");
       const applied = ordered.findLast((event) => event.eventName === "ai_runtime.result_applied");
       const prompt = typeof prepared?.payload.prompt === "string" ? prepared.payload.prompt : null;
-      return {
+      return AIInteractionReadModel.fromPrimitives({
         interactionId,
         module: first.module,
         operation: first.operation,
@@ -76,7 +54,7 @@ export class ListAIInteractionsUseCase {
         error: typeof failed?.payload.errorMessage === "string" ? failed.payload.errorMessage : null,
         durationMs: typeof received?.payload.durationMs === "number" ? received.payload.durationMs : null,
         review: reviewMap.get(interactionId) ?? null,
-      };
+      });
     });
   }
 }

@@ -116,6 +116,20 @@ export interface AnalysisSummary {
   offer_next_action_at: string | null;
 }
 
+export interface AnalysisSummaryPrimitives {
+  id: string;
+  cv_id: string | null;
+  title: string;
+  filename: string;
+  created_at: string;
+  analysis_mode: string;
+  ai_score: number | null;
+  ai_analyzed_at: string | null;
+  job_url: string | null;
+  offer_status: string | null;
+  offer_next_action_at: string | null;
+}
+
 export interface CVRecommendationAnalysis extends AnalysisSummary {
   ai_improvements: string | null;
   missing_keywords: string | null;

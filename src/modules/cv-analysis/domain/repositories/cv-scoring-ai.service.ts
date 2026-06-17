@@ -1,11 +1,13 @@
 import type { AIProvider } from "@/modules/shared";
 
-export interface CVScoringAIResult {
+export interface CVScoringAIResultPrimitives {
   score: number;
   feedback: string;
   keywords: string[];
   improvements: string[];
 }
+
+export interface CVScoringAIResult extends CVScoringAIResultPrimitives {}
 
 export interface CVScoringAIInput {
   text: string;

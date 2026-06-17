@@ -1,14 +1,9 @@
 import type { ContentMetricsRepository } from "../../domain/repositories/content-metrics.repository";
 import { ContentMetricsWindow } from "../../domain/value-objects/content-metrics-window.value-object";
-import type { CVContentMetrics } from "../../domain/value-objects/cv-content-metrics.value-object";
+import { CVContentMetricsResult } from "../../domain/value-objects/cv-content-metrics-result.value-object";
 
 export interface GetCVContentMetricsInput {
   days: number | null;
-}
-
-export interface GetCVContentMetricsResult {
-  counts: CVContentMetrics;
-  windowDays: number | null;
 }
 
 export class GetCVContentMetricsUseCase {
@@ -18,7 +13,7 @@ export class GetCVContentMetricsUseCase {
     }
   ) {}
 
-  async execute(input: GetCVContentMetricsInput): Promise<GetCVContentMetricsResult> {
+  async execute(input: GetCVContentMetricsInput): Promise<CVContentMetricsResult> {
     const since =
       input.days === null
         ? null
@@ -28,6 +23,9 @@ export class GetCVContentMetricsUseCase {
       since: since ? since.toISOString() : null,
     });
     const counts = await this.deps.contentMetricsRepo.countCVContent(window);
-    return { counts, windowDays: input.days };
+    return CVContentMetricsResult.fromPrimitives({
+      counts: counts.toPrimitives(),
+      windowDays: input.days,
+    });
   }
 }

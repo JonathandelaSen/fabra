@@ -2,8 +2,11 @@ export { createAdminModule, type AdminModule } from "./admin.module";
 export {
   USERS_PER_PAGE,
   type ListUsersInput,
-  type ListUsersResult,
 } from "./application/use-cases/list-users.use-case";
+export {
+  UsersPage,
+  type UsersPagePrimitives,
+} from "./domain/value-objects/users-page.value-object";
 export type { StartUserImpersonationInput } from "./application/use-cases/start-user-impersonation.use-case";
 export type { UserPrimitives } from "./domain/entities/user.entity";
 export {

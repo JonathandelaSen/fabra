@@ -32,10 +32,7 @@ export interface SendMessageInput {
   startedAt?: number;
 }
 
-export interface SendMessageResult {
-  userMessage: ChatMessage;
-  assistantMessage: ChatMessage;
-}
+import { CVChatMessagePair } from "../../domain/value-objects/cv-chat-message-pair.value-object";
 
 export class SendMessageUseCase {
   constructor(
@@ -48,7 +45,7 @@ export class SendMessageUseCase {
     },
   ) {}
 
-  async execute(input: SendMessageInput): Promise<SendMessageResult> {
+  async execute(input: SendMessageInput): Promise<CVChatMessagePair> {
     const ownerId = UserId.fromPrimitives(input.userId);
     const conversationId = CVChatConversationId.fromPrimitives(
       input.conversationId,
@@ -135,6 +132,6 @@ export class SendMessageUseCase {
     await this.deps.eventBus.publish(assistantEvents);
     await publishAIInteractionApplied(this.deps.eventBus, interactionContext);
 
-    return { userMessage, assistantMessage };
+    return CVChatMessagePair.create(userMessage, assistantMessage);
   }
 }

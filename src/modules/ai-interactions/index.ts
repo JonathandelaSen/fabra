@@ -1,3 +1,6 @@
 export { createAIInteractionsModule } from "./ai-interactions.module";
-export type { AIInteractionReadModel } from "./application/use-cases/list-ai-interactions.use-case";
+export {
+  AIInteractionReadModel,
+  type AIInteractionReadModelPrimitives,
+} from "./domain/value-objects/ai-interaction-read-model.value-object";
 export type { AIInteractionRating } from "./domain/entities/ai-interaction-review.entity";

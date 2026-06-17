@@ -31,7 +31,7 @@ export async function POST(
     });
     if (!result) throw notFound("Analysis not found", ErrorCode.ANALYSIS_NOT_FOUND);
 
-    return ok(result satisfies PreviewCVAnalysisCopyPasteResponse);
+    return ok(result.toPrimitives() satisfies PreviewCVAnalysisCopyPasteResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }

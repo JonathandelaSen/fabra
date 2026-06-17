@@ -20,6 +20,7 @@ import { CreateTemplateCVDocumentUseCase } from "./create-template-cv-document.u
 import { PrepareCVAnalysisInputUseCase } from "./prepare-cv-analysis-input.use-case";
 import { UpsertCVStructuredProfileUseCase } from "./upsert-cv-structured-profile.use-case";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
+import { StructuredCVProfileAndVersion } from "../../domain/value-objects/structured-cv-profile-and-version.value-object";
 
 export interface ApplyCVProfileStructureCopyPasteInput {
   cvDocumentId: string;
@@ -28,11 +29,6 @@ export interface ApplyCVProfileStructureCopyPasteInput {
   templateId?: string | null;
   locale?: string | null;
   createTemplateVersion?: boolean;
-}
-
-export interface ApplyCVProfileStructureCopyPasteResult {
-  profile: CVStructuredProfile;
-  version: CVDocument | null;
 }
 
 export class ApplyCVProfileStructureCopyPasteUseCase {
@@ -47,7 +43,7 @@ export class ApplyCVProfileStructureCopyPasteUseCase {
 
   async execute(
     input: ApplyCVProfileStructureCopyPasteInput,
-  ): Promise<ApplyCVProfileStructureCopyPasteResult | null> {
+  ): Promise<StructuredCVProfileAndVersion | null> {
     const document = await this.deps.documentRepo.findById(
       CVDocumentId.fromPrimitives(input.cvDocumentId),
       UserId.fromPrimitives(input.userId),
@@ -88,7 +84,7 @@ export class ApplyCVProfileStructureCopyPasteUseCase {
         })
       : null;
 
-    return { profile, version };
+    return StructuredCVProfileAndVersion.create(profile, version);
   }
 
   private async createTemplateVersion(input: {

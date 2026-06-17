@@ -9,22 +9,12 @@ import {
 } from "../../domain/services/cv-editor-copy-paste-workflow";
 import { validateCVProfileCopyPasteResult } from "../services/cv-profile-copy-paste-result.validator";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
+import { CVProfileEditPreview } from "../../domain/value-objects/cv-profile-edit-preview.value-object";
 
 export interface PreviewCVEditorCopyPasteInput {
   cvDocumentId: string;
   userId: string;
   rawResponse: string;
-}
-
-export interface PreviewCVEditorCopyPasteResult {
-  parsedResult: StandardCVProfile;
-  preview: {
-    basicsName: string | null;
-    sectionsCount: number;
-    changedSections: string[];
-    originLabel: "external_chat";
-  };
-  warnings: string[];
 }
 
 export class PreviewCVEditorCopyPasteUseCase {
@@ -36,7 +26,7 @@ export class PreviewCVEditorCopyPasteUseCase {
 
   async execute(
     input: PreviewCVEditorCopyPasteInput,
-  ): Promise<PreviewCVEditorCopyPasteResult | null> {
+  ): Promise<CVProfileEditPreview | null> {
     const document = await this.deps.documentRepo.findById(
       CVDocumentId.fromPrimitives(input.cvDocumentId),
       UserId.fromPrimitives(input.userId),
@@ -59,7 +49,7 @@ export class PreviewCVEditorCopyPasteUseCase {
       warnings.push("Large rewrite detected — many sections were changed.");
     }
 
-    return {
+    return CVProfileEditPreview.fromPrimitives({
       parsedResult: editedProfile,
       preview: {
         basicsName: editedProfile.basics?.name ?? null,
@@ -68,7 +58,7 @@ export class PreviewCVEditorCopyPasteUseCase {
         originLabel: "external_chat",
       },
       warnings,
-    };
+    });
   }
 }
 

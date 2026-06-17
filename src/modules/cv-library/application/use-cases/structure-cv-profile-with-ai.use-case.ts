@@ -12,10 +12,7 @@ export interface StructureCVProfileWithAIInput {
   documentId: string;
 }
 
-export interface StructureCVProfileWithAIResult {
-  schemaVersion: string;
-  profile: StandardCVProfile;
-}
+import { StructuredCVProfileData } from "../../domain/value-objects/structured-cv-profile-data.value-object";
 
 export class StructureCVProfileWithAIUseCase {
   constructor(
@@ -27,7 +24,7 @@ export class StructureCVProfileWithAIUseCase {
 
   async execute(
     input: StructureCVProfileWithAIInput,
-  ): Promise<StructureCVProfileWithAIResult> {
+  ): Promise<StructuredCVProfileData> {
     const service = this.deps.aiFactory.create({
       provider: input.provider,
       apiKey: input.apiKey,
@@ -46,6 +43,6 @@ export class StructureCVProfileWithAIUseCase {
       execute: () => service.structure({ text: input.text }),
     });
     await publishAIInteractionApplied(this.deps.eventBus, context);
-    return result;
+    return StructuredCVProfileData.fromPrimitives(result);
   }
 }

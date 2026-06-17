@@ -99,6 +99,8 @@ export interface StandardCVProfile {
   [key: string]: unknown;
 }
 
+export type StandardCVProfilePrimitives = StandardCVProfile;
+
 const asRecord = (value: unknown): Record<string, unknown> =>
   value && typeof value === "object" && !Array.isArray(value)
     ? (value as Record<string, unknown>)

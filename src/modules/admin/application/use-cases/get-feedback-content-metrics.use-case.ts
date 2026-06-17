@@ -1,14 +1,9 @@
 import type { ContentMetricsRepository } from "../../domain/repositories/content-metrics.repository";
 import { ContentMetricsWindow } from "../../domain/value-objects/content-metrics-window.value-object";
-import type { FeedbackContentMetrics } from "../../domain/value-objects/feedback-content-metrics.value-object";
+import { FeedbackContentMetricsResult } from "../../domain/value-objects/feedback-content-metrics-result.value-object";
 
 export interface GetFeedbackContentMetricsInput {
   days: number | null;
-}
-
-export interface GetFeedbackContentMetricsResult {
-  counts: FeedbackContentMetrics;
-  windowDays: number | null;
 }
 
 export class GetFeedbackContentMetricsUseCase {
@@ -18,7 +13,7 @@ export class GetFeedbackContentMetricsUseCase {
     }
   ) {}
 
-  async execute(input: GetFeedbackContentMetricsInput): Promise<GetFeedbackContentMetricsResult> {
+  async execute(input: GetFeedbackContentMetricsInput): Promise<FeedbackContentMetricsResult> {
     const since =
       input.days === null
         ? null
@@ -28,6 +23,9 @@ export class GetFeedbackContentMetricsUseCase {
       since: since ? since.toISOString() : null,
     });
     const counts = await this.deps.contentMetricsRepo.countFeedbackContent(window);
-    return { counts, windowDays: input.days };
+    return FeedbackContentMetricsResult.fromPrimitives({
+      counts: counts.toPrimitives(),
+      windowDays: input.days,
+    });
   }
 }

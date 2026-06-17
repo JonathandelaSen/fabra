@@ -14,6 +14,7 @@ export {
   type StandardCVNamedItem,
   type StandardCVPresentation,
   type StandardCVProfile,
+  type StandardCVProfilePrimitives,
   normalizeStandardCVProfile,
   getBestCVText,
   getBestCVPrimitiveText,
@@ -65,24 +66,31 @@ export {
 } from "./application/presenters/cv-library-presenters";
 export type {
   CreateJsonResumeCVDocumentInput,
-  CreateJsonResumeCVDocumentResult,
 } from "./application/use-cases/create-json-resume-cv-document.use-case";
+export {
+  ImportedCVDocument,
+  type ImportedCVDocumentPrimitives,
+} from "./domain/value-objects/imported-cv-document.value-object";
 export type {
   PrepareCVAnalysisInputInput,
 } from "./application/use-cases/prepare-cv-analysis-input.use-case";
 export {
-  PrepareCVAnalysisInputResult,
-  type PrepareCVAnalysisInputResultPrimitives,
-} from "./domain/value-objects/prepare-cv-analysis-input-result.value-object";
+  CVAnalysisInput,
+  type CVAnalysisInputPrimitives,
+} from "./domain/value-objects/cv-analysis-input.value-object";
 export {
-  DeleteCVDocumentResult,
-  type DeleteCVDocumentResultPrimitives,
-} from "./domain/value-objects/delete-cv-document-result.value-object";
+  CVDeletionOutcome,
+  type CVDeletionOutcomePrimitives,
+} from "./domain/value-objects/cv-deletion-outcome.value-object";
 export {
-  DeleteCVDocumentStatus,
-  deleteCVDocumentStatuses,
-  type DeleteCVDocumentStatusPrimitives,
-} from "./domain/value-objects/delete-cv-document-status.value-object";
+  StructuredCVProfileData,
+  type StructuredCVProfileDataPrimitives,
+} from "./domain/value-objects/structured-cv-profile-data.value-object";
+export {
+  CVDeletionStatus,
+  cvDeletionStatuses,
+  type CVDeletionStatusPrimitives,
+} from "./domain/value-objects/cv-deletion-status.value-object";
 export {
   PUBLIC_CV_SLUG_MAX_LENGTH,
   PUBLIC_CV_ID_LENGTH,

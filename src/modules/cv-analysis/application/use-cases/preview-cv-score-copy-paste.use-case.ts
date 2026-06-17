@@ -25,6 +25,7 @@ import {
   CV_SCORE_COPY_PASTE_WORKFLOW_ID,
   validateCVScoreCopyPasteResult,
 } from "../services/cv-score-copy-paste-result.validator";
+import { CVScorePreview } from "../../domain/value-objects/cv-score-preview.value-object";
 
 export interface PreviewCVScoreCopyPasteInput {
   id: string;
@@ -32,20 +33,6 @@ export interface PreviewCVScoreCopyPasteInput {
   rawResponse: string;
   interactionId?: string;
   attemptId?: string;
-}
-
-export interface PreviewCVScoreCopyPasteResult {
-  parsedResult: CVScoringAIResult;
-  preview: {
-    score: number;
-    summary: string;
-    strengthsCount: number;
-    improvementAreasCount: number;
-    recommendationsCount: number;
-    originLabel: "external_chat";
-    willReplaceExistingResult: boolean;
-  };
-  warnings: string[];
 }
 
 export class PreviewCVScoreCopyPasteUseCase {
@@ -58,7 +45,7 @@ export class PreviewCVScoreCopyPasteUseCase {
 
   async execute(
     input: PreviewCVScoreCopyPasteInput,
-  ): Promise<PreviewCVScoreCopyPasteResult | null> {
+  ): Promise<CVScorePreview | null> {
     const id = CVAnalysisId.fromPrimitives(input.id);
     const userId = UserId.fromPrimitives(input.userId);
     const analysis = await this.deps.repo.findById(id, userId);
@@ -109,7 +96,7 @@ export class PreviewCVScoreCopyPasteUseCase {
     const primitives = analysis.toPrimitives();
     const willReplaceExistingResult = primitives.score !== null;
 
-    return {
+    return CVScorePreview.fromPrimitives({
       parsedResult,
       preview: {
         score: parsedResult.score,
@@ -123,6 +110,6 @@ export class PreviewCVScoreCopyPasteUseCase {
       warnings: willReplaceExistingResult
         ? ["This will replace the current analysis result."]
         : [],
-    };
+    });
   }
 }

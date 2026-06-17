@@ -1,6 +1,6 @@
 import type { AnalysisSummary } from "@/lib/analysis-types";
 import { describe, expect, it } from "vitest";
-import { DeleteCVDocumentResult } from "./delete-cv-document-result.value-object";
+import { CVDeletionOutcome } from "./cv-deletion-outcome.value-object";
 
 const analysis: AnalysisSummary = {
   id: "analysis-1",
@@ -16,9 +16,9 @@ const analysis: AnalysisSummary = {
   offer_next_action_at: null,
 };
 
-describe("DeleteCVDocumentResult", () => {
+describe("CVDeletionOutcome", () => {
   it("builds a deleted result with no analyses", () => {
-    const result = DeleteCVDocumentResult.deleted();
+    const result = CVDeletionOutcome.deleted();
 
     expect(result.status.isDeleted()).toBe(true);
     expect(result.analyses).toEqual([]);
@@ -26,14 +26,14 @@ describe("DeleteCVDocumentResult", () => {
   });
 
   it("builds a not_found result with no analyses", () => {
-    const result = DeleteCVDocumentResult.notFound();
+    const result = CVDeletionOutcome.notFound();
 
     expect(result.status.isNotFound()).toBe(true);
     expect(result.analyses).toEqual([]);
   });
 
   it("builds an in_use result carrying the blocking analyses", () => {
-    const result = DeleteCVDocumentResult.inUse([analysis]);
+    const result = CVDeletionOutcome.inUse([analysis]);
 
     expect(result.status.isInUse()).toBe(true);
     expect(result.analyses).toEqual([analysis]);
@@ -43,7 +43,7 @@ describe("DeleteCVDocumentResult", () => {
     const primitives = { status: "in_use" as const, analyses: [analysis] };
 
     expect(
-      DeleteCVDocumentResult.fromPrimitives(primitives).toPrimitives()
+      CVDeletionOutcome.fromPrimitives(primitives).toPrimitives()
     ).toEqual(primitives);
   });
 });

@@ -19,10 +19,7 @@ export interface CreateJsonResumeCVDocumentInput {
   filename?: string | null;
 }
 
-export interface CreateJsonResumeCVDocumentResult {
-  document: CVDocument;
-  warnings: string[];
-}
+import { ImportedCVDocument } from "../../domain/value-objects/imported-cv-document.value-object";
 
 export class CreateJsonResumeCVDocumentUseCase {
   constructor(
@@ -35,7 +32,7 @@ export class CreateJsonResumeCVDocumentUseCase {
 
   async execute(
     input: CreateJsonResumeCVDocumentInput
-  ): Promise<CreateJsonResumeCVDocumentResult> {
+  ): Promise<ImportedCVDocument> {
     let parsed: unknown;
     try {
       parsed = JSON.parse(input.jsonContent);
@@ -98,6 +95,6 @@ export class CreateJsonResumeCVDocumentUseCase {
     const events = document.pullDomainEvents();
     await this.deps.eventBus.publish(events);
 
-    return { document: saved, warnings };
+    return ImportedCVDocument.create(saved, warnings);
   }
 }

@@ -13,7 +13,7 @@ export async function GET() {
     if (!(await isAdminUser(user.id))) throw forbidden("Forbidden");
     const interactions =
       await aiInteractionsModule.listAIInteractions.execute(user.id);
-    return ok(interactions satisfies ListAdminAIInteractionsResponse);
+    return ok(interactions.map((i) => i.toPrimitives()) satisfies ListAdminAIInteractionsResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }

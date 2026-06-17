@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PrepareCVAnalysisInputResult } from "./prepare-cv-analysis-input-result.value-object";
+import { CVAnalysisInput } from "./cv-analysis-input.value-object";
 
 const mockCvPrimitives = {
   id: "cv-1",
@@ -54,9 +54,9 @@ const mockResultPrimitives = {
   },
 };
 
-describe("PrepareCVAnalysisInputResult", () => {
+describe("CVAnalysisInput", () => {
   it("creates from primitives and exposes accessors", () => {
-    const result = PrepareCVAnalysisInputResult.fromPrimitives(mockResultPrimitives);
+    const result = CVAnalysisInput.fromPrimitives(mockResultPrimitives);
 
     expect(result.cv).toEqual(mockCvPrimitives);
     expect(result.analysisText).toBe("python text");
@@ -68,7 +68,7 @@ describe("PrepareCVAnalysisInputResult", () => {
   });
 
   it("round-trips through toPrimitives", () => {
-    const result = PrepareCVAnalysisInputResult.fromPrimitives(mockResultPrimitives);
+    const result = CVAnalysisInput.fromPrimitives(mockResultPrimitives);
     expect(result.toPrimitives()).toEqual(mockResultPrimitives);
   });
 });

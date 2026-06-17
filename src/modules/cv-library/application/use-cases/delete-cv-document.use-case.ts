@@ -6,7 +6,7 @@ import { ListJobMatchAnalysisUsageByDocumentQuery } from "@/modules/job-match-an
 import { UserId, type EventBus, type QueryBus } from "@/modules/shared";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
-import { DeleteCVDocumentResult } from "../../domain/value-objects/delete-cv-document-result.value-object";
+import { CVDeletionOutcome } from "../../domain/value-objects/cv-deletion-outcome.value-object";
 
 export interface DeleteCVDocumentInput {
   id: string;
@@ -22,11 +22,11 @@ export class DeleteCVDocumentUseCase {
     }
   ) {}
 
-  async execute(input: DeleteCVDocumentInput): Promise<DeleteCVDocumentResult> {
+  async execute(input: DeleteCVDocumentInput): Promise<CVDeletionOutcome> {
     const id = CVDocumentId.fromPrimitives(input.id);
     const userId = UserId.fromPrimitives(input.userId);
     const document = await this.deps.documentRepo.findById(id, userId);
-    if (!document) return DeleteCVDocumentResult.notFound();
+    if (!document) return CVDeletionOutcome.notFound();
 
     if (document.type === "uploaded") {
       const [cvAnalyses, jobMatchAnalyses] = await Promise.all([
@@ -46,7 +46,7 @@ export class DeleteCVDocumentUseCase {
       const analyses = [...cvAnalyses, ...jobMatchAnalyses].sort((a, b) =>
         b.created_at.localeCompare(a.created_at),
       );
-      if (analyses.length > 0) return DeleteCVDocumentResult.inUse(analyses);
+      if (analyses.length > 0) return CVDeletionOutcome.inUse(analyses);
     }
 
     if (document.pdfStoragePath) {
@@ -58,6 +58,6 @@ export class DeleteCVDocumentUseCase {
     const events = document.pullDomainEvents();
     await this.deps.eventBus.publish(events);
 
-    return DeleteCVDocumentResult.deleted();
+    return CVDeletionOutcome.deleted();
   }
 }

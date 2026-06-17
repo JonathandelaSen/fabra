@@ -12,6 +12,8 @@ export interface JobMatchScoringAIResult {
   missingKeywords: string[];
 }
 
+export type JobMatchScoringAIResultPrimitives = JobMatchScoringAIResult;
+
 export interface JobMatchScoringAIInput {
   text: string;
   jobDescription: string;

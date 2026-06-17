@@ -174,6 +174,102 @@ function findNonPrimitiveBoundaryType(typeNode) {
   return typeNode.getText();
 }
 
+function getValueObjectTypeArgument(node) {
+  for (const clause of node.heritageClauses ?? []) {
+    for (const type of clause.types) {
+      if (type.expression.getText() === "ValueObject") {
+        return type.typeArguments?.[0] ?? null;
+      }
+    }
+  }
+  return null;
+}
+
+// A simple VO wraps a single primitive (or array/union of primitives) and may
+// legitimately store a raw field, so the composite rule must skip it.
+function isPrimitiveLikeTypeNode(typeNode) {
+  if (!typeNode) return true;
+  if (primitiveKeywordKinds.has(typeNode.kind)) return true;
+  if (ts.isLiteralTypeNode(typeNode)) return true;
+  if (ts.isParenthesizedTypeNode(typeNode)) return isPrimitiveLikeTypeNode(typeNode.type);
+  if (ts.isArrayTypeNode(typeNode)) return isPrimitiveLikeTypeNode(typeNode.elementType);
+  if (ts.isTupleTypeNode(typeNode)) return typeNode.elements.every(isPrimitiveLikeTypeNode);
+  if (ts.isUnionTypeNode(typeNode) || ts.isIntersectionTypeNode(typeNode)) {
+    return typeNode.types.every(isPrimitiveLikeTypeNode);
+  }
+  return false;
+}
+
+function isNullishTypeNode(typeNode) {
+  if (typeNode.kind === ts.SyntaxKind.NullKeyword) return true;
+  if (typeNode.kind === ts.SyntaxKind.UndefinedKeyword) return true;
+  return (
+    ts.isLiteralTypeNode(typeNode) &&
+    typeNode.literal.kind === ts.SyntaxKind.NullKeyword
+  );
+}
+
+// A stored field is an acceptable VO reference when it is a named type (not a
+// `*Primitives` boundary shape), optionally made nullable.
+function isValueObjectFieldType(typeNode) {
+  if (!typeNode) return false;
+  if (ts.isParenthesizedTypeNode(typeNode)) return isValueObjectFieldType(typeNode.type);
+  if (ts.isUnionTypeNode(typeNode)) {
+    const meaningful = typeNode.types.filter((member) => !isNullishTypeNode(member));
+    return meaningful.length > 0 && meaningful.every(isValueObjectFieldType);
+  }
+  if (ts.isTypeReferenceNode(typeNode)) {
+    return !typeNode.typeName.getText().endsWith("Primitives");
+  }
+  return false;
+}
+
+function getStoredFields(valueObject) {
+  const fields = [];
+  const constructor = getConstructor(valueObject);
+  if (constructor) {
+    for (const param of constructor.parameters) {
+      const isParameterProperty = param.modifiers?.some(
+        (modifier) =>
+          modifier.kind === ts.SyntaxKind.PrivateKeyword ||
+          modifier.kind === ts.SyntaxKind.ProtectedKeyword ||
+          modifier.kind === ts.SyntaxKind.PublicKeyword ||
+          modifier.kind === ts.SyntaxKind.ReadonlyKeyword
+      );
+      if (isParameterProperty) {
+        fields.push({ name: param.name.getText(), type: param.type, node: param });
+      }
+    }
+  }
+  for (const member of valueObject.members) {
+    if (ts.isPropertyDeclaration(member) && !hasModifier(member, ts.SyntaxKind.StaticKeyword)) {
+      fields.push({ name: member.name?.getText() ?? "", type: member.type, node: member });
+    }
+  }
+  return fields;
+}
+
+// A composite VO must compose inner value objects, never store raw primitives or
+// the whole `*Primitives` blob. See docs/architecture/value-objects.md.
+function checkCompositeStoresValueObjects(sourceFile, file, valueObject, violations) {
+  const typeArgument = getValueObjectTypeArgument(valueObject);
+  if (!typeArgument) return;
+  if (isPrimitiveLikeTypeNode(typeArgument)) return;
+
+  for (const field of getStoredFields(valueObject)) {
+    if (!isValueObjectFieldType(field.type)) {
+      addViolation(
+        violations,
+        file,
+        "value-object-composite-stores-primitive",
+        `Composite value object ${valueObject.name.text} stores attribute "${field.name}" as a raw primitive or *Primitives blob. Each attribute of a composite VO must itself be a value object (see docs/architecture/value-objects.md).`,
+        sourceFile,
+        field.node
+      );
+    }
+  }
+}
+
 function checkPrimitivesInterface(sourceFile, file, statement, violations) {
   for (const member of statement.members) {
     if (!ts.isPropertySignature(member)) continue;
@@ -274,6 +370,8 @@ function checkValueObjectClass(sourceFile, file, valueObject, violations) {
       }
     }
   }
+
+  checkCompositeStoresValueObjects(sourceFile, file, valueObject, violations);
 }
 
 function checkValueObjectFile(sourceFile, file, violations) {

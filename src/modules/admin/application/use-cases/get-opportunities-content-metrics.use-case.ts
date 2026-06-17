@@ -1,14 +1,9 @@
 import type { ContentMetricsRepository } from "../../domain/repositories/content-metrics.repository";
 import { ContentMetricsWindow } from "../../domain/value-objects/content-metrics-window.value-object";
-import type { OpportunitiesContentMetrics } from "../../domain/value-objects/opportunities-content-metrics.value-object";
+import { OpportunitiesContentMetricsResult } from "../../domain/value-objects/opportunities-content-metrics-result.value-object";
 
 export interface GetOpportunitiesContentMetricsInput {
   days: number | null;
-}
-
-export interface GetOpportunitiesContentMetricsResult {
-  counts: OpportunitiesContentMetrics;
-  windowDays: number | null;
 }
 
 export class GetOpportunitiesContentMetricsUseCase {
@@ -18,7 +13,7 @@ export class GetOpportunitiesContentMetricsUseCase {
     }
   ) {}
 
-  async execute(input: GetOpportunitiesContentMetricsInput): Promise<GetOpportunitiesContentMetricsResult> {
+  async execute(input: GetOpportunitiesContentMetricsInput): Promise<OpportunitiesContentMetricsResult> {
     const since =
       input.days === null
         ? null
@@ -28,6 +23,9 @@ export class GetOpportunitiesContentMetricsUseCase {
       since: since ? since.toISOString() : null,
     });
     const counts = await this.deps.contentMetricsRepo.countOpportunitiesContent(window);
-    return { counts, windowDays: input.days };
+    return OpportunitiesContentMetricsResult.fromPrimitives({
+      counts: counts.toPrimitives(),
+      windowDays: input.days,
+    });
   }
 }

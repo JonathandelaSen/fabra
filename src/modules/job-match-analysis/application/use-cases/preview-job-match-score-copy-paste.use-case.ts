@@ -9,26 +9,12 @@ import {
   JOB_MATCH_SCORE_COPY_PASTE_WORKFLOW_ID,
   validateJobMatchScoreCopyPasteResult,
 } from "../services/job-match-score-copy-paste-result.validator";
+import { JobMatchScorePreview } from "../../domain/value-objects/job-match-score-preview.value-object";
 
 export interface PreviewJobMatchScoreCopyPasteInput {
   id: string;
   userId: string;
   rawResponse: string;
-}
-
-export interface PreviewJobMatchScoreCopyPasteResult {
-  parsedResult: JobMatchScoringAIResult;
-  preview: {
-    score: number;
-    summary: string;
-    matchingKeywordsCount: number;
-    missingKeywordsCount: number;
-    jobKeywordsCount: number;
-    recommendationsCount: number;
-    originLabel: "external_chat";
-    willReplaceExistingResult: boolean;
-  };
-  warnings: string[];
 }
 
 export class PreviewJobMatchScoreCopyPasteUseCase {
@@ -40,7 +26,7 @@ export class PreviewJobMatchScoreCopyPasteUseCase {
 
   async execute(
     input: PreviewJobMatchScoreCopyPasteInput,
-  ): Promise<PreviewJobMatchScoreCopyPasteResult | null> {
+  ): Promise<JobMatchScorePreview | null> {
     const id = JobMatchAnalysisId.fromPrimitives(input.id);
     const userId = UserId.fromPrimitives(input.userId);
     const analysis = await this.deps.repo.findById(id, userId);
@@ -55,7 +41,7 @@ export class PreviewJobMatchScoreCopyPasteUseCase {
     const primitives = analysis.toPrimitives();
     const willReplaceExistingResult = primitives.score !== null;
 
-    return {
+    return JobMatchScorePreview.fromPrimitives({
       parsedResult,
       preview: {
         score: parsedResult.score,
@@ -70,6 +56,6 @@ export class PreviewJobMatchScoreCopyPasteUseCase {
       warnings: willReplaceExistingResult
         ? ["This will replace the current analysis result."]
         : [],
-    };
+    });
   }
 }

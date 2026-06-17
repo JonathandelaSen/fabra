@@ -1,18 +1,11 @@
-import type { User } from "../../domain/entities/user.entity";
 import type { UserRepository } from "../../domain/repositories/user.repository";
+import { UsersPage } from "../../domain/value-objects/users-page.value-object";
 
 export const USERS_PER_PAGE = 20;
 
 export interface ListUsersInput {
   search: string;
   page: number;
-}
-
-export interface ListUsersResult {
-  users: User[];
-  page: number;
-  perPage: number;
-  total: number;
 }
 
 export class ListUsersUseCase {
@@ -22,7 +15,7 @@ export class ListUsersUseCase {
     }
   ) {}
 
-  async execute(input: ListUsersInput): Promise<ListUsersResult> {
+  async execute(input: ListUsersInput): Promise<UsersPage> {
     const page = Math.max(1, input.page);
     const { users, total } = await this.deps.userRepo.search({
       search: input.search,
@@ -30,6 +23,11 @@ export class ListUsersUseCase {
       perPage: USERS_PER_PAGE,
     });
 
-    return { users, page, perPage: USERS_PER_PAGE, total };
+    return UsersPage.fromPrimitives({
+      users: users.map((u) => u.toPrimitives()),
+      page,
+      perPage: USERS_PER_PAGE,
+      total,
+    });
   }
 }

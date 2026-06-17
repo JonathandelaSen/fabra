@@ -30,7 +30,7 @@ export async function POST(
       });
     if (!result) throw notFound("Analysis not found", ErrorCode.ANALYSIS_NOT_FOUND);
 
-    return ok(result satisfies PreviewJobMatchAnalysisCopyPasteResponse);
+    return ok(result.toPrimitives() satisfies PreviewJobMatchAnalysisCopyPasteResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }

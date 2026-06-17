@@ -8,6 +8,7 @@ import { JobAnalysisChatContent } from "../../domain/value-objects/job-analysis-
 import { JobAnalysisChatConversationId } from "../../domain/value-objects/job-analysis-chat-conversation-id.value-object";
 import { JobAnalysisChatMessageId } from "../../domain/value-objects/job-analysis-chat-message-id.value-object";
 import { AnalysisReference } from "../../domain/value-objects/analysis-reference.value-object";
+import { OfferChatMessagePair } from "../../domain/value-objects/offer-chat-message-pair.value-object";
 
 export interface ApplyOfferChatCopyPasteInput {
   userId: string;
@@ -17,11 +18,6 @@ export interface ApplyOfferChatCopyPasteInput {
   assistantResponse: string;
   requestId: string;
   startedAt?: number;
-}
-
-export interface ApplyOfferChatCopyPasteResult {
-  userMessage: ChatMessage;
-  assistantMessage: ChatMessage;
 }
 
 export class ApplyOfferChatCopyPasteUseCase {
@@ -35,7 +31,7 @@ export class ApplyOfferChatCopyPasteUseCase {
 
   async execute(
     input: ApplyOfferChatCopyPasteInput,
-  ): Promise<ApplyOfferChatCopyPasteResult> {
+  ): Promise<OfferChatMessagePair> {
     const ownerId = UserId.fromPrimitives(input.userId);
     const conversationId = JobAnalysisChatConversationId.fromPrimitives(
       input.conversationId,
@@ -85,6 +81,6 @@ export class ApplyOfferChatCopyPasteUseCase {
     const assistantEvents = assistantMessage.pullDomainEvents();
     await this.deps.eventBus.publish(assistantEvents);
 
-    return { userMessage, assistantMessage };
+    return OfferChatMessagePair.create(userMessage, assistantMessage);
   }
 }

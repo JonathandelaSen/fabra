@@ -18,6 +18,8 @@ export { Timestamp } from "./domain/value-objects/timestamp.value-object";
 export { UserId } from "./domain/value-objects/user-id.value-object";
 export { ValueObject } from "./domain/value-objects/value-object";
 export { Counter } from "./domain/value-objects/counter.value-object";
+export { LongText } from "./domain/value-objects/long-text.value-object";
+export { StringList } from "./domain/value-objects/string-list.value-object";
 export { ExecutionResult } from "./domain/value-objects/execution-result.value-object";
 export type { AIProvider } from "./domain/value-objects/ai-provider.value-object";
 export { AI_PROVIDER, AI_PROVIDERS, isAIProvider, parseAIProvider } from "./domain/value-objects/ai-provider.value-object";

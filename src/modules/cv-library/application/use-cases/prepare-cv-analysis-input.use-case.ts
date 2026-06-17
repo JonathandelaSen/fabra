@@ -22,7 +22,7 @@ import type {
   CVTemplatePdfRenderer,
 } from "../../domain/repositories/cv-analysis-preparation-services";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
-import { PrepareCVAnalysisInputResult } from "../../domain/value-objects/prepare-cv-analysis-input-result.value-object";
+import { CVAnalysisInput } from "../../domain/value-objects/cv-analysis-input.value-object";
 import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 
 export interface PrepareCVAnalysisInputInput {
@@ -51,7 +51,7 @@ export class PrepareCVAnalysisInputUseCase {
 
   async execute(
     input: PrepareCVAnalysisInputInput,
-  ): Promise<PrepareCVAnalysisInputResult | null> {
+  ): Promise<CVAnalysisInput | null> {
     let cv = await this.deps.documentRepo.findById(
       CVDocumentId.fromPrimitives(input.cvId),
       UserId.fromPrimitives(input.userId),
@@ -84,7 +84,7 @@ export class PrepareCVAnalysisInputUseCase {
 
 
 
-    return PrepareCVAnalysisInputResult.fromPrimitives({
+    return CVAnalysisInput.fromPrimitives({
       cv: cvPrimitives,
       analysisText,
       filename: templatePdfExtraction?.filename ?? cvPrimitives.filename ?? "",
@@ -118,7 +118,7 @@ export class PrepareCVAnalysisInputUseCase {
   private async prepareJsonResumeResult(
     cv: CVDocument,
     input: PrepareCVAnalysisInputInput,
-  ): Promise<PrepareCVAnalysisInputResult> {
+  ): Promise<CVAnalysisInput> {
     const primitives = cv.toPrimitives();
     const analysisText = profileToPlainText(
       primitives.profile as StandardCVProfile | null,
@@ -134,7 +134,7 @@ export class PrepareCVAnalysisInputUseCase {
 
 
 
-    return PrepareCVAnalysisInputResult.fromPrimitives({
+    return CVAnalysisInput.fromPrimitives({
       cv: primitives,
       analysisText,
       filename: primitives.filename ?? "resume.json",

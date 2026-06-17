@@ -4,7 +4,7 @@ import type {
   CVDocumentExtractedTextPrimitives,
 } from "../entities/cv-document.entity";
 
-export interface PrepareCVAnalysisInputResultPrimitives {
+export interface CVAnalysisInputPrimitives {
   cv: CVDocumentPrimitives;
   analysisText: string | null;
   filename: string;
@@ -23,18 +23,18 @@ export interface PrepareCVAnalysisInputResultPrimitives {
   };
 }
 
-export class PrepareCVAnalysisInputResult extends ValueObject<PrepareCVAnalysisInputResultPrimitives> {
-  private constructor(private readonly value: PrepareCVAnalysisInputResultPrimitives) {
+export class CVAnalysisInput extends ValueObject<CVAnalysisInputPrimitives> {
+  private constructor(private readonly value: CVAnalysisInputPrimitives) {
     super();
   }
 
   static fromPrimitives(
-    primitives: PrepareCVAnalysisInputResultPrimitives,
-  ): PrepareCVAnalysisInputResult {
-    return new PrepareCVAnalysisInputResult(primitives);
+    primitives: CVAnalysisInputPrimitives
+  ): CVAnalysisInput {
+    return new CVAnalysisInput(primitives);
   }
 
-  toPrimitives(): PrepareCVAnalysisInputResultPrimitives {
+  toPrimitives(): CVAnalysisInputPrimitives {
     return this.value;
   }
 

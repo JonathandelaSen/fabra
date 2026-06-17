@@ -1,14 +1,9 @@
 import type { ContentMetricsRepository } from "../../domain/repositories/content-metrics.repository";
 import { ContentMetricsWindow } from "../../domain/value-objects/content-metrics-window.value-object";
-import type { WorkspaceContentMetrics } from "../../domain/value-objects/workspace-content-metrics.value-object";
+import { WorkspaceContentMetricsResult } from "../../domain/value-objects/workspace-content-metrics-result.value-object";
 
 export interface GetWorkspaceContentMetricsInput {
   days: number | null;
-}
-
-export interface GetWorkspaceContentMetricsResult {
-  counts: WorkspaceContentMetrics;
-  windowDays: number | null;
 }
 
 export class GetWorkspaceContentMetricsUseCase {
@@ -18,7 +13,7 @@ export class GetWorkspaceContentMetricsUseCase {
     }
   ) {}
 
-  async execute(input: GetWorkspaceContentMetricsInput): Promise<GetWorkspaceContentMetricsResult> {
+  async execute(input: GetWorkspaceContentMetricsInput): Promise<WorkspaceContentMetricsResult> {
     const since =
       input.days === null
         ? null
@@ -28,6 +23,9 @@ export class GetWorkspaceContentMetricsUseCase {
       since: since ? since.toISOString() : null,
     });
     const counts = await this.deps.contentMetricsRepo.countWorkspaceContent(window);
-    return { counts, windowDays: input.days };
+    return WorkspaceContentMetricsResult.fromPrimitives({
+      counts: counts.toPrimitives(),
+      windowDays: input.days,
+    });
   }
 }

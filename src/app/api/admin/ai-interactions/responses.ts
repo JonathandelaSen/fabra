@@ -1,3 +1,3 @@
-import type { AIInteractionReadModel } from "@/modules/ai-interactions";
+import type { AIInteractionReadModelPrimitives } from "@/modules/ai-interactions";
 
-export type ListAdminAIInteractionsResponse = AIInteractionReadModel[];
+export type ListAdminAIInteractionsResponse = AIInteractionReadModelPrimitives[];

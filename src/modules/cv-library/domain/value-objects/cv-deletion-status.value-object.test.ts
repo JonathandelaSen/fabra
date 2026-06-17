@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { DeleteCVDocumentStatus } from "./delete-cv-document-status.value-object";
+import { CVDeletionStatus } from "./cv-deletion-status.value-object";
 
-describe("DeleteCVDocumentStatus", () => {
+describe("CVDeletionStatus", () => {
   it("builds a deleted status", () => {
-    const status = DeleteCVDocumentStatus.deleted();
+    const status = CVDeletionStatus.deleted();
 
     expect(status.isDeleted()).toBe(true);
     expect(status.isInUse()).toBe(false);
@@ -12,14 +12,14 @@ describe("DeleteCVDocumentStatus", () => {
   });
 
   it("builds an in_use status", () => {
-    const status = DeleteCVDocumentStatus.inUse();
+    const status = CVDeletionStatus.inUse();
 
     expect(status.isInUse()).toBe(true);
     expect(status.toPrimitives()).toBe("in_use");
   });
 
   it("builds a not_found status", () => {
-    const status = DeleteCVDocumentStatus.notFound();
+    const status = CVDeletionStatus.notFound();
 
     expect(status.isNotFound()).toBe(true);
     expect(status.toPrimitives()).toBe("not_found");
@@ -27,12 +27,12 @@ describe("DeleteCVDocumentStatus", () => {
 
   it("round-trips through primitives", () => {
     expect(
-      DeleteCVDocumentStatus.fromPrimitives("in_use").toPrimitives()
+      CVDeletionStatus.fromPrimitives("in_use").toPrimitives()
     ).toBe("in_use");
   });
 
   it("rejects an invalid status", () => {
-    expect(() => DeleteCVDocumentStatus.fromPrimitives("nope")).toThrow(
+    expect(() => CVDeletionStatus.fromPrimitives("nope")).toThrow(
       "Invalid delete CV document status"
     );
   });
