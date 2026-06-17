@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { StringList, ValueObject } from "@/modules/shared";
 import { CVDocument, type CVDocumentPrimitives } from "../entities/cv-document.entity";
 
 export interface ImportedCVDocumentPrimitives {
@@ -9,13 +9,13 @@ export interface ImportedCVDocumentPrimitives {
 export class ImportedCVDocument extends ValueObject<ImportedCVDocumentPrimitives> {
   private constructor(
     private readonly docEntity: CVDocument,
-    private readonly warningsList: string[]
+    private readonly warningsList: StringList
   ) {
     super();
   }
 
   static create(document: CVDocument, warnings: string[]): ImportedCVDocument {
-    return new ImportedCVDocument(document, warnings);
+    return new ImportedCVDocument(document, StringList.fromPrimitives(warnings));
   }
 
   static fromPrimitives(
@@ -23,14 +23,14 @@ export class ImportedCVDocument extends ValueObject<ImportedCVDocumentPrimitives
   ): ImportedCVDocument {
     return new ImportedCVDocument(
       CVDocument.fromPrimitives(primitives.document),
-      primitives.warnings
+      StringList.fromPrimitives(primitives.warnings)
     );
   }
 
   toPrimitives(): ImportedCVDocumentPrimitives {
     return {
       document: this.docEntity.toPrimitives(),
-      warnings: this.warningsList,
+      warnings: this.warningsList.toPrimitives(),
     };
   }
 
@@ -39,6 +39,6 @@ export class ImportedCVDocument extends ValueObject<ImportedCVDocumentPrimitives
   }
 
   get warnings(): string[] {
-    return this.warningsList;
+    return this.warningsList.toPrimitives();
   }
 }

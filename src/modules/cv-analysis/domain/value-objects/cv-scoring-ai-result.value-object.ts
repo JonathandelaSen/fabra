@@ -1,16 +1,31 @@
-import { ValueObject } from "@/modules/shared";
+import { Counter, LongText, StringList, ValueObject } from "@/modules/shared";
 import type { CVScoringAIResultPrimitives } from "../repositories/cv-scoring-ai.service";
 
 export class CVScoringAIResultVO extends ValueObject<CVScoringAIResultPrimitives> {
-  private constructor(private readonly value: CVScoringAIResultPrimitives) {
+  private constructor(
+    private readonly scoreValue: Counter,
+    private readonly feedbackValue: LongText,
+    private readonly keywordsValue: StringList,
+    private readonly improvementsValue: StringList
+  ) {
     super();
   }
 
   static fromPrimitives(primitives: CVScoringAIResultPrimitives): CVScoringAIResultVO {
-    return new CVScoringAIResultVO(primitives);
+    return new CVScoringAIResultVO(
+      Counter.fromPrimitives(primitives.score),
+      LongText.fromPrimitives(primitives.feedback),
+      StringList.fromPrimitives(primitives.keywords),
+      StringList.fromPrimitives(primitives.improvements)
+    );
   }
 
   toPrimitives(): CVScoringAIResultPrimitives {
-    return this.value;
+    return {
+      score: this.scoreValue.toPrimitives(),
+      feedback: this.feedbackValue.toPrimitives(),
+      keywords: this.keywordsValue.toPrimitives(),
+      improvements: this.improvementsValue.toPrimitives(),
+    };
   }
 }

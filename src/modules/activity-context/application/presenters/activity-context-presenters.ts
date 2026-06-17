@@ -6,10 +6,9 @@ export function presentActivityContext(context: ActivityContext) {
 }
 
 export function presentActivityContextSuggestion(suggestion: ActivityContextSuggestion) {
-  const primitives = suggestion.toPrimitives();
   return {
-    type: primitives.type,
-    name: primitives.name,
-    roleOrLabel: primitives.roleOrLabel,
+    type: suggestion.type,
+    name: suggestion.name,
+    roleOrLabel: suggestion.roleOrLabel,
   };
 }

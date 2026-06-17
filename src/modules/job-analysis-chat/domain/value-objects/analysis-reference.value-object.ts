@@ -1,41 +1,45 @@
-import { ValueObject } from "@/modules/shared";
+import { EntityId, ValueObject } from "@/modules/shared";
+import {
+  AnalysisReferenceKind,
+  analysisReferenceTypes,
+  type AnalysisReferenceType,
+} from "./analysis-reference-kind.value-object";
 
-export const analysisReferenceTypes = {
-  jobMatchAnalysis: "job_match_analysis",
-  cvAnalysis: "cv_analysis",
-} as const;
-
-export type AnalysisReferenceType =
-  (typeof analysisReferenceTypes)[keyof typeof analysisReferenceTypes];
+export { analysisReferenceTypes };
+export type { AnalysisReferenceType };
 
 export interface AnalysisReferencePrimitives {
-  readonly type: AnalysisReferenceType;
+  readonly type: string;
   readonly id: string;
 }
 
-const validTypes = new Set<AnalysisReferenceType>([
-  analysisReferenceTypes.jobMatchAnalysis,
-  analysisReferenceTypes.cvAnalysis,
-]);
-
 export class AnalysisReference extends ValueObject<AnalysisReferencePrimitives> {
-  private constructor(private readonly value: AnalysisReferencePrimitives) {
+  private constructor(
+    private readonly kind: AnalysisReferenceKind,
+    private readonly idValue: EntityId
+  ) {
     super();
-    if (!validTypes.has(value.type)) {
-      throw new Error("Analysis reference type is not supported.");
-    }
-    if (!value.id.trim())
-      throw new Error("Analysis reference id cannot be empty.");
   }
 
   static fromPrimitives(value: AnalysisReferencePrimitives): AnalysisReference {
-    return new AnalysisReference({
-      type: value.type,
-      id: value.id.trim(),
-    });
+    return new AnalysisReference(
+      AnalysisReferenceKind.fromPrimitives(value.type),
+      EntityId.fromPrimitives(value.id)
+    );
+  }
+
+  get type(): AnalysisReferenceType {
+    return this.kind.toPrimitives();
+  }
+
+  get id(): string {
+    return this.idValue.toPrimitives();
   }
 
   toPrimitives(): AnalysisReferencePrimitives {
-    return { ...this.value };
+    return {
+      type: this.kind.toPrimitives(),
+      id: this.idValue.toPrimitives(),
+    };
   }
 }

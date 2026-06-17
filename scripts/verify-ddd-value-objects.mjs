@@ -18,8 +18,6 @@ const primitiveKeywordKinds = new Set([
   ts.SyntaxKind.AnyKeyword,
 ]);
 
-// Shared base value objects a concrete VO may extend instead of `ValueObject`.
-// They already provide fromPrimitives/toPrimitives, so subclasses inherit them.
 const baseValueObjects = ["ValueObject", "EntityId", "IsoDate", "OptionalIsoDate", "Timestamp", "UserId"];
 
 async function walkFiles(dir) {
@@ -74,8 +72,6 @@ function extendsAnyValueObject(node) {
   return baseValueObjects.some((base) => hasHeritage(node, base));
 }
 
-// A concrete VO that extends a shared base other than ValueObject inherits its
-// constructor and toPrimitives, so those members are not required locally.
 function extendsSharedBaseVo(node) {
   return baseValueObjects
     .filter((base) => base !== "ValueObject")
@@ -111,12 +107,7 @@ function addViolation(violations, file, rule, reason, sourceFile, node) {
   });
 }
 
-// A *Primitives boundary shape may only use primitive types, literals, arrays,
-// unions/intersections of those, inline object literals of those, and references
-// to other *Primitives shapes. A reference to a named type (e.g. a VO union alias
-// like `EvidenceSourceValue` or `ContextType`, or `Date`) means the boundary is
-// leaking a non-primitive type and must be widened to its primitive (e.g.
-// `string`). Returns the offending type text, or null when the type is allowed.
+
 function findNonPrimitiveBoundaryType(typeNode) {
   if (!typeNode) return null;
 
@@ -195,10 +186,7 @@ function collectTypeDeclarations(sourceFile) {
   return { aliases, interfaces };
 }
 
-// A simple VO wraps a single primitive value, so the composite rule must skip it.
-// The ValueObject<T> argument is "primitive-like" when T resolves (through local
-// type aliases) to a primitive, a literal, a string-enum union, or arrays/unions
-// of those. A reference to an interface or object type is treated as composite.
+
 function isPrimitiveLikeTypeNode(typeNode, decls, visited = new Set()) {
   if (!typeNode) return true;
   if (primitiveKeywordKinds.has(typeNode.kind)) return true;
@@ -235,23 +223,25 @@ function isNullishTypeNode(typeNode) {
   );
 }
 
-// A stored field is an acceptable VO reference when it is a named type (not a
-// `*Primitives` boundary shape), optionally made nullable.
-function isValueObjectFieldType(typeNode) {
+
+function isValueObjectFieldType(typeNode, decls) {
   if (!typeNode) return false;
-  if (ts.isParenthesizedTypeNode(typeNode)) return isValueObjectFieldType(typeNode.type);
-  if (ts.isTypeOperatorNode(typeNode)) return isValueObjectFieldType(typeNode.type);
-  if (ts.isArrayTypeNode(typeNode)) return isValueObjectFieldType(typeNode.elementType);
+  if (ts.isParenthesizedTypeNode(typeNode)) return isValueObjectFieldType(typeNode.type, decls);
+  if (ts.isTypeOperatorNode(typeNode)) return isValueObjectFieldType(typeNode.type, decls);
+  if (ts.isArrayTypeNode(typeNode)) return isValueObjectFieldType(typeNode.elementType, decls);
   if (ts.isUnionTypeNode(typeNode)) {
     const meaningful = typeNode.types.filter((member) => !isNullishTypeNode(member));
-    return meaningful.length > 0 && meaningful.every(isValueObjectFieldType);
+    return meaningful.length > 0 && meaningful.every((member) => isValueObjectFieldType(member, decls));
   }
   if (ts.isTypeReferenceNode(typeNode)) {
     const name = typeNode.typeName.getText();
     if (name === "Array" || name === "ReadonlyArray") {
-      return (typeNode.typeArguments ?? []).every(isValueObjectFieldType);
+      return (typeNode.typeArguments ?? []).every((arg) => isValueObjectFieldType(arg, decls));
     }
-    return !name.endsWith("Primitives");
+    if (name.endsWith("Primitives")) {
+      return !decls.interfaces.has(name) && !decls.aliases.has(name);
+    }
+    return true;
   }
   return false;
 }
@@ -281,8 +271,7 @@ function getStoredFields(valueObject) {
   return fields;
 }
 
-// A composite VO must compose inner value objects, never store raw primitives or
-// the whole `*Primitives` blob. See docs/architecture/value-objects.md.
+
 function checkCompositeStoresValueObjects(sourceFile, file, valueObject, violations) {
   const typeArgument = getValueObjectTypeArgument(valueObject);
   if (!typeArgument) return;
@@ -290,7 +279,7 @@ function checkCompositeStoresValueObjects(sourceFile, file, valueObject, violati
   if (isPrimitiveLikeTypeNode(typeArgument, decls)) return;
 
   for (const field of getStoredFields(valueObject)) {
-    if (!isValueObjectFieldType(field.type)) {
+    if (!isValueObjectFieldType(field.type, decls)) {
       addViolation(
         violations,
         file,

@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { LongText, ValueObject } from "@/modules/shared";
 import type { StandardCVProfile } from "@/lib/cv-profile";
 
 export interface CVSummaryForActivityContextSuggestionsPrimitives {
@@ -7,17 +7,27 @@ export interface CVSummaryForActivityContextSuggestionsPrimitives {
 }
 
 export class CVSummaryForActivityContextSuggestions extends ValueObject<CVSummaryForActivityContextSuggestionsPrimitives> {
-  private constructor(public readonly type: string, public readonly profile: StandardCVProfile | null) {
+  private constructor(
+    private readonly typeText: LongText,
+    public readonly profile: StandardCVProfile | null
+  ) {
     super();
   }
 
   static fromPrimitives(primitives: CVSummaryForActivityContextSuggestionsPrimitives): CVSummaryForActivityContextSuggestions {
-    return new CVSummaryForActivityContextSuggestions(primitives.type, primitives.profile);
+    return new CVSummaryForActivityContextSuggestions(
+      LongText.fromPrimitives(primitives.type),
+      primitives.profile
+    );
+  }
+
+  get type(): string {
+    return this.typeText.toPrimitives();
   }
 
   toPrimitives(): CVSummaryForActivityContextSuggestionsPrimitives {
     return {
-      type: this.type,
+      type: this.typeText.toPrimitives(),
       profile: this.profile,
     };
   }

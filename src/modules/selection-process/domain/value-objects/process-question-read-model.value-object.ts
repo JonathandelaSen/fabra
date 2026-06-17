@@ -1,38 +1,24 @@
 import { ValueObject } from "@/modules/shared";
 import type { ProcessQuestion } from "../entities/process-question.entity";
-import { type OfferStatus } from "@/lib/analysis-types";
+import {
+  ProcessQuestionRelatedCV,
+  type ProcessQuestionRelatedCVPrimitives,
+} from "./process-question-related-cv.value-object";
+import {
+  ProcessQuestionRelatedAnalysis,
+  type ProcessQuestionRelatedAnalysisPrimitives,
+} from "./process-question-related-analysis.value-object";
 
-export const processQuestionCVTypes = {
-  uploaded: "uploaded",
-  template: "template",
-} as const;
-
-export const processQuestionAnalysisModes = {
-  general: "general",
-  jobMatch: "job_match",
-} as const;
-
-export type ProcessQuestionCVType =
-  (typeof processQuestionCVTypes)[keyof typeof processQuestionCVTypes];
-export type ProcessQuestionAnalysisMode =
-  (typeof processQuestionAnalysisModes)[keyof typeof processQuestionAnalysisModes];
-
-export interface ProcessQuestionRelatedCVPrimitives {
-  id: string;
-  name: string;
-  filename: string | null;
-  type: ProcessQuestionCVType;
-}
-
-export interface ProcessQuestionRelatedAnalysisPrimitives {
-  id: string;
-  cv_id: string | null;
-  title: string;
-  filename: string;
-  analysis_mode: ProcessQuestionAnalysisMode;
-  job_url: string | null;
-  offer_status: OfferStatus | null;
-}
+export {
+  processQuestionCVTypes,
+  type ProcessQuestionCVType,
+} from "./process-question-cv-kind.value-object";
+export {
+  processQuestionAnalysisModes,
+  type ProcessQuestionAnalysisMode,
+} from "./process-question-analysis-mode.value-object";
+export type { ProcessQuestionRelatedCVPrimitives } from "./process-question-related-cv.value-object";
+export type { ProcessQuestionRelatedAnalysisPrimitives } from "./process-question-related-analysis.value-object";
 
 export interface ProcessQuestionReadModelPrimitives {
   question: ProcessQuestion;
@@ -43,21 +29,35 @@ export interface ProcessQuestionReadModelPrimitives {
 export class ProcessQuestionReadModel extends ValueObject<ProcessQuestionReadModelPrimitives> {
   private constructor(
     public readonly question: ProcessQuestion,
-    public readonly cv: ProcessQuestionRelatedCVPrimitives | null,
-    public readonly analysis: ProcessQuestionRelatedAnalysisPrimitives | null
+    private readonly cvValue: ProcessQuestionRelatedCV | null,
+    private readonly analysisValue: ProcessQuestionRelatedAnalysis | null
   ) {
     super();
   }
 
   static fromPrimitives(primitives: ProcessQuestionReadModelPrimitives): ProcessQuestionReadModel {
-    return new ProcessQuestionReadModel(primitives.question, primitives.cv, primitives.analysis);
+    return new ProcessQuestionReadModel(
+      primitives.question,
+      primitives.cv === null ? null : ProcessQuestionRelatedCV.fromPrimitives(primitives.cv),
+      primitives.analysis === null
+        ? null
+        : ProcessQuestionRelatedAnalysis.fromPrimitives(primitives.analysis)
+    );
+  }
+
+  get cv(): ProcessQuestionRelatedCVPrimitives | null {
+    return this.cvValue?.toPrimitives() ?? null;
+  }
+
+  get analysis(): ProcessQuestionRelatedAnalysisPrimitives | null {
+    return this.analysisValue?.toPrimitives() ?? null;
   }
 
   toPrimitives(): ProcessQuestionReadModelPrimitives {
     return {
       question: this.question,
-      cv: this.cv,
-      analysis: this.analysis,
+      cv: this.cvValue?.toPrimitives() ?? null,
+      analysis: this.analysisValue?.toPrimitives() ?? null,
     };
   }
 }

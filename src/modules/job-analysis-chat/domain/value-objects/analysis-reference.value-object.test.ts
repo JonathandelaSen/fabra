@@ -14,6 +14,6 @@ describe("AnalysisReference", () => {
   it("rejects an empty analysis id", () => {
     expect(() =>
       AnalysisReference.fromPrimitives({ type: "job_match_analysis", id: " " }),
-    ).toThrow("Analysis reference id cannot be empty");
+    ).toThrow("cannot be empty");
   });
 });

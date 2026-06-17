@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { StringList, ValueObject } from "@/modules/shared";
 import type { JobMatchScoringAIResultPrimitives } from "../repositories/job-match-scoring-ai.service";
 import { JobMatchScoringAIResultVO } from "./job-match-scoring-ai-result.value-object";
 import type { JobMatchScorePreviewStatsPrimitives } from "./job-match-score-preview-stats.value-object";
@@ -14,7 +14,7 @@ export class JobMatchScorePreview extends ValueObject<JobMatchScorePreviewPrimit
   private constructor(
     private readonly parsedResultVo: JobMatchScoringAIResultVO,
     private readonly previewVo: JobMatchScorePreviewStats,
-    private readonly warningsList: readonly string[]
+    private readonly warningsList: StringList
   ) {
     super();
   }
@@ -23,7 +23,7 @@ export class JobMatchScorePreview extends ValueObject<JobMatchScorePreviewPrimit
     return new JobMatchScorePreview(
       JobMatchScoringAIResultVO.fromPrimitives(primitives.parsedResult),
       JobMatchScorePreviewStats.fromPrimitives(primitives.preview),
-      primitives.warnings
+      StringList.fromPrimitives(primitives.warnings)
     );
   }
 
@@ -31,7 +31,7 @@ export class JobMatchScorePreview extends ValueObject<JobMatchScorePreviewPrimit
     return {
       parsedResult: this.parsedResultVo.toPrimitives(),
       preview: this.previewVo.toPrimitives(),
-      warnings: [...this.warningsList],
+      warnings: this.warningsList.toPrimitives(),
     };
   }
 
@@ -44,6 +44,6 @@ export class JobMatchScorePreview extends ValueObject<JobMatchScorePreviewPrimit
   }
 
   get warnings(): readonly string[] {
-    return this.warningsList;
+    return this.warningsList.toPrimitives();
   }
 }

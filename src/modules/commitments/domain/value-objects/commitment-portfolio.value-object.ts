@@ -20,11 +20,9 @@ export interface CommitmentPortfolioPrimitives {
 
 export class CommitmentPortfolio extends ValueObject<CommitmentPortfolioPrimitives> {
   private constructor(
-    private readonly state: {
-      commitments: Commitment[];
-      items: CommitmentItem[];
-      outcomes: CommitmentOutcome[];
-    }
+    private readonly commitmentList: readonly Commitment[],
+    private readonly itemList: readonly CommitmentItem[],
+    private readonly outcomeList: readonly CommitmentOutcome[]
   ) {
     super();
   }
@@ -34,32 +32,30 @@ export class CommitmentPortfolio extends ValueObject<CommitmentPortfolioPrimitiv
     items: CommitmentItem[];
     outcomes: CommitmentOutcome[];
   }): CommitmentPortfolio {
-    return new CommitmentPortfolio({
-      commitments: [...collections.commitments],
-      items: [...collections.items],
-      outcomes: [...collections.outcomes],
-    });
+    return new CommitmentPortfolio(
+      [...collections.commitments],
+      [...collections.items],
+      [...collections.outcomes]
+    );
   }
 
   get commitments(): readonly Commitment[] {
-    return this.state.commitments;
+    return this.commitmentList;
   }
 
   get items(): readonly CommitmentItem[] {
-    return this.state.items;
+    return this.itemList;
   }
 
   get outcomes(): readonly CommitmentOutcome[] {
-    return this.state.outcomes;
+    return this.outcomeList;
   }
 
   toPrimitives(): CommitmentPortfolioPrimitives {
     return {
-      commitments: this.state.commitments.map((commitment) =>
-        commitment.toPrimitives()
-      ),
-      items: this.state.items.map((item) => item.toPrimitives()),
-      outcomes: this.state.outcomes.map((outcome) => outcome.toPrimitives()),
+      commitments: this.commitmentList.map((commitment) => commitment.toPrimitives()),
+      items: this.itemList.map((item) => item.toPrimitives()),
+      outcomes: this.outcomeList.map((outcome) => outcome.toPrimitives()),
     };
   }
 }

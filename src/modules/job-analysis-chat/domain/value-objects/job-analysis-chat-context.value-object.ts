@@ -1,4 +1,5 @@
-import { ValueObject } from "@/modules/shared";
+import { EntityId, LongText, ValueObject } from "@/modules/shared";
+import { JobAnalysisChatSnapshot } from "./job-analysis-chat-snapshot.value-object";
 
 export interface JobAnalysisChatContextPrimitives {
   analysisId: string;
@@ -11,35 +12,59 @@ export interface JobAnalysisChatContextPrimitives {
 
 export class JobAnalysisChatContext extends ValueObject<JobAnalysisChatContextPrimitives> {
   private constructor(
-    public readonly analysisId: string,
-    public readonly cvId: string | null,
-    public readonly analysisMode: string,
-    public readonly analysis: unknown,
-    public readonly cv: unknown,
-    public readonly cvText: string | null
+    private readonly analysisIdValue: EntityId,
+    private readonly cvIdValue: EntityId | null,
+    private readonly analysisModeValue: LongText,
+    private readonly analysisSnapshot: JobAnalysisChatSnapshot,
+    private readonly cvSnapshot: JobAnalysisChatSnapshot,
+    private readonly cvTextValue: LongText | null
   ) {
     super();
   }
 
   static fromPrimitives(primitives: JobAnalysisChatContextPrimitives): JobAnalysisChatContext {
     return new JobAnalysisChatContext(
-      primitives.analysisId,
-      primitives.cvId,
-      primitives.analysisMode,
-      primitives.analysis,
-      primitives.cv,
-      primitives.cvText
+      EntityId.fromPrimitives(primitives.analysisId),
+      primitives.cvId === null ? null : EntityId.fromPrimitives(primitives.cvId),
+      LongText.fromPrimitives(primitives.analysisMode),
+      JobAnalysisChatSnapshot.fromPrimitives(primitives.analysis),
+      JobAnalysisChatSnapshot.fromPrimitives(primitives.cv),
+      primitives.cvText === null ? null : LongText.fromPrimitives(primitives.cvText)
     );
+  }
+
+  get analysisId(): string {
+    return this.analysisIdValue.toPrimitives();
+  }
+
+  get cvId(): string | null {
+    return this.cvIdValue?.toPrimitives() ?? null;
+  }
+
+  get analysisMode(): string {
+    return this.analysisModeValue.toPrimitives();
+  }
+
+  get analysis(): unknown {
+    return this.analysisSnapshot.toPrimitives();
+  }
+
+  get cv(): unknown {
+    return this.cvSnapshot.toPrimitives();
+  }
+
+  get cvText(): string | null {
+    return this.cvTextValue?.toPrimitives() ?? null;
   }
 
   toPrimitives(): JobAnalysisChatContextPrimitives {
     return {
-      analysisId: this.analysisId,
-      cvId: this.cvId,
-      analysisMode: this.analysisMode,
-      analysis: this.analysis,
-      cv: this.cv,
-      cvText: this.cvText,
+      analysisId: this.analysisIdValue.toPrimitives(),
+      cvId: this.cvIdValue?.toPrimitives() ?? null,
+      analysisMode: this.analysisModeValue.toPrimitives(),
+      analysis: this.analysisSnapshot.toPrimitives(),
+      cv: this.cvSnapshot.toPrimitives(),
+      cvText: this.cvTextValue?.toPrimitives() ?? null,
     };
   }
 }

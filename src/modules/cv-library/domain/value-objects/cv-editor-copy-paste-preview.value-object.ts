@@ -1,4 +1,10 @@
-import { ValueObject } from "@/modules/shared";
+import {
+  Counter,
+  CopyPasteOriginLabel,
+  LongText,
+  StringList,
+  ValueObject,
+} from "@/modules/shared";
 
 export interface CVEditorCopyPastePreviewPrimitives {
   basicsName: string | null;
@@ -8,15 +14,30 @@ export interface CVEditorCopyPastePreviewPrimitives {
 }
 
 export class CVEditorCopyPastePreview extends ValueObject<CVEditorCopyPastePreviewPrimitives> {
-  private constructor(private readonly value: CVEditorCopyPastePreviewPrimitives) {
+  private constructor(
+    private readonly basicsNameValue: LongText | null,
+    private readonly sectionsCountValue: Counter,
+    private readonly changedSectionsValue: StringList,
+    private readonly originLabelValue: CopyPasteOriginLabel
+  ) {
     super();
   }
 
   static fromPrimitives(primitives: CVEditorCopyPastePreviewPrimitives): CVEditorCopyPastePreview {
-    return new CVEditorCopyPastePreview(primitives);
+    return new CVEditorCopyPastePreview(
+      primitives.basicsName === null ? null : LongText.fromPrimitives(primitives.basicsName),
+      Counter.fromPrimitives(primitives.sectionsCount),
+      StringList.fromPrimitives(primitives.changedSections),
+      CopyPasteOriginLabel.fromPrimitives(primitives.originLabel)
+    );
   }
 
   toPrimitives(): CVEditorCopyPastePreviewPrimitives {
-    return this.value;
+    return {
+      basicsName: this.basicsNameValue?.toPrimitives() ?? null,
+      sectionsCount: this.sectionsCountValue.toPrimitives(),
+      changedSections: this.changedSectionsValue.toPrimitives(),
+      originLabel: this.originLabelValue.toPrimitives(),
+    };
   }
 }

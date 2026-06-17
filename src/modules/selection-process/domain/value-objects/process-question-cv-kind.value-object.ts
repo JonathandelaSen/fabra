@@ -1,0 +1,26 @@
+import { ValueObject } from "@/modules/shared";
+
+export const processQuestionCVTypes = {
+  uploaded: "uploaded",
+  template: "template",
+} as const;
+
+export type ProcessQuestionCVType =
+  (typeof processQuestionCVTypes)[keyof typeof processQuestionCVTypes];
+
+export class ProcessQuestionCVKind extends ValueObject<ProcessQuestionCVType> {
+  private constructor(private readonly value: ProcessQuestionCVType) {
+    super();
+  }
+
+  static fromPrimitives(value: string): ProcessQuestionCVKind {
+    if (!Object.values(processQuestionCVTypes).includes(value as ProcessQuestionCVType)) {
+      throw new Error(`Invalid process question CV type: ${value}`);
+    }
+    return new ProcessQuestionCVKind(value as ProcessQuestionCVType);
+  }
+
+  toPrimitives(): ProcessQuestionCVType {
+    return this.value;
+  }
+}

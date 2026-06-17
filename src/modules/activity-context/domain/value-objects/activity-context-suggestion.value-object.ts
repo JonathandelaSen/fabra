@@ -1,64 +1,72 @@
 import { ValueObject } from "@/modules/shared";
+import type { ActivityContextType } from "../entities/activity-context.entity";
+import { ActivityContextIsCurrent } from "./activity-context-is-current.value-object";
+import { ActivityContextRoleOrLabel } from "./activity-context-role-or-label.value-object";
+import { ActivityContextSuggestionName } from "./activity-context-suggestion-name.value-object";
 import {
-  activityContextTypes,
-  type ActivityContextType,
-} from "../entities/activity-context.entity";
-
-export const activityContextSuggestionSources = {
-  cv: "cv",
-} as const;
-
-export type ActivityContextSuggestionSource =
-  (typeof activityContextSuggestionSources)[keyof typeof activityContextSuggestionSources];
+  ActivityContextSuggestionSource,
+  type ActivityContextSuggestionSourceValue,
+} from "./activity-context-suggestion-source.value-object";
+import { ActivityContextSuggestionType } from "./activity-context-suggestion-type.value-object";
 
 export interface ActivityContextSuggestionPrimitives {
-  type: ActivityContextType;
+  type: string;
   name: string;
   roleOrLabel: string | null;
   isCurrent: boolean;
-  source: ActivityContextSuggestionSource;
+  source: string;
 }
 
 export class ActivityContextSuggestion extends ValueObject<ActivityContextSuggestionPrimitives> {
-  private constructor(private readonly state: ActivityContextSuggestionPrimitives) {
+  private constructor(
+    private readonly suggestionType: ActivityContextSuggestionType,
+    private readonly suggestionName: ActivityContextSuggestionName,
+    private readonly suggestionRoleOrLabel: ActivityContextRoleOrLabel,
+    private readonly suggestionIsCurrent: ActivityContextIsCurrent,
+    private readonly suggestionSource: ActivityContextSuggestionSource
+  ) {
     super();
   }
 
   static fromPrimitives(
     primitives: ActivityContextSuggestionPrimitives
   ): ActivityContextSuggestion {
-    const name = primitives.name.trim();
-    if (!name) throw new Error("Activity context suggestion name cannot be empty.");
-    if (!Object.values(activityContextTypes).includes(primitives.type)) {
-      throw new Error("Invalid activity context suggestion type.");
-    }
-    if (primitives.source !== activityContextSuggestionSources.cv) {
-      throw new Error("Invalid activity context suggestion source.");
-    }
-    return new ActivityContextSuggestion({
-      ...primitives,
-      name,
-      roleOrLabel: primitives.roleOrLabel?.trim() || null,
-    });
+    return new ActivityContextSuggestion(
+      ActivityContextSuggestionType.fromPrimitives(primitives.type),
+      ActivityContextSuggestionName.fromPrimitives(primitives.name),
+      ActivityContextRoleOrLabel.fromPrimitives(primitives.roleOrLabel),
+      ActivityContextIsCurrent.fromPrimitives(primitives.isCurrent),
+      ActivityContextSuggestionSource.fromPrimitives(primitives.source)
+    );
   }
 
   get type(): ActivityContextType {
-    return this.state.type;
+    return this.suggestionType.toPrimitives();
   }
 
   get name(): string {
-    return this.state.name;
+    return this.suggestionName.toPrimitives();
   }
 
   get roleOrLabel(): string | null {
-    return this.state.roleOrLabel;
+    return this.suggestionRoleOrLabel.toPrimitives();
   }
 
   get isCurrent(): boolean {
-    return this.state.isCurrent;
+    return this.suggestionIsCurrent.toPrimitives();
+  }
+
+  get source(): ActivityContextSuggestionSourceValue {
+    return this.suggestionSource.toPrimitives();
   }
 
   toPrimitives(): ActivityContextSuggestionPrimitives {
-    return { ...this.state };
+    return {
+      type: this.suggestionType.toPrimitives(),
+      name: this.suggestionName.toPrimitives(),
+      roleOrLabel: this.suggestionRoleOrLabel.toPrimitives(),
+      isCurrent: this.suggestionIsCurrent.toPrimitives(),
+      source: this.suggestionSource.toPrimitives(),
+    };
   }
 }
