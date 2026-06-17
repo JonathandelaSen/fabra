@@ -1,14 +1,9 @@
 import type { ContentMetricsRepository } from "../../domain/repositories/content-metrics.repository";
 import { ContentMetricsWindow } from "../../domain/value-objects/content-metrics-window.value-object";
-import type { AnalysisContentMetrics } from "../../domain/value-objects/analysis-content-metrics.value-object";
+import { AnalysisContentMetricsReport } from "../../domain/value-objects/analysis-content-metrics-report.value-object";
 
 export interface GetAnalysisContentMetricsInput {
   days: number | null;
-}
-
-export interface GetAnalysisContentMetricsResult {
-  counts: AnalysisContentMetrics;
-  windowDays: number | null;
 }
 
 export class GetAnalysisContentMetricsUseCase {
@@ -18,7 +13,7 @@ export class GetAnalysisContentMetricsUseCase {
     }
   ) {}
 
-  async execute(input: GetAnalysisContentMetricsInput): Promise<GetAnalysisContentMetricsResult> {
+  async execute(input: GetAnalysisContentMetricsInput): Promise<AnalysisContentMetricsReport> {
     const since =
       input.days === null
         ? null
@@ -28,6 +23,6 @@ export class GetAnalysisContentMetricsUseCase {
       since: since ? since.toISOString() : null,
     });
     const counts = await this.deps.contentMetricsRepo.countAnalysisContent(window);
-    return { counts, windowDays: input.days };
+    return AnalysisContentMetricsReport.create(counts, input.days);
   }
 }
