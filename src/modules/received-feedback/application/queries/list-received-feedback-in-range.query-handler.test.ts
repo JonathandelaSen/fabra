@@ -2,10 +2,11 @@ import { describe, expect, it, vi } from "vitest";
 import { ListReceivedFeedbackInRangeQuery } from "./list-received-feedback-in-range.query";
 import { ListReceivedFeedbackInRangeQueryHandler } from "./list-received-feedback-in-range.query-handler";
 import type { ListReceivedFeedbackInRangeUseCase } from "../use-cases/list-received-feedback-in-range.use-case";
+import { ReceivedFeedback } from "../../domain/entities/received-feedback.entity";
 
 describe("ListReceivedFeedbackInRangeQueryHandler", () => {
   it("delegates to the use case with the query payload", async () => {
-    const result = [{ sourceId: "f1", date: "2026-03-01", content: "x" }];
+    const result: ReceivedFeedback[] = [];
     const useCase = {
       execute: vi.fn().mockResolvedValue(result),
     } as unknown as ListReceivedFeedbackInRangeUseCase;
@@ -21,6 +22,7 @@ describe("ListReceivedFeedbackInRangeQueryHandler", () => {
     );
 
     expect(useCase.execute).toHaveBeenCalledWith(payload);
-    expect(output).toBe(result);
+    expect(output).toEqual([]);
   });
 });
+

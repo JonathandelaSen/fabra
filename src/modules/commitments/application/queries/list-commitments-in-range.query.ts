@@ -1,10 +1,5 @@
 import type { Query } from "@/modules/shared";
-
-export interface EvidenceCandidateResult {
-  sourceId: string;
-  date: string | null;
-  content: string;
-}
+import type { CommitmentPrimitives } from "../../domain/entities/commitment.entity";
 
 export interface ListCommitmentsInRangeInput {
   userId: string;
@@ -14,7 +9,7 @@ export interface ListCommitmentsInRangeInput {
 }
 
 export class ListCommitmentsInRangeQuery
-  implements Query<ListCommitmentsInRangeInput, EvidenceCandidateResult[]>
+  implements Query<ListCommitmentsInRangeInput, CommitmentPrimitives[]>
 {
   static readonly queryName = "commitments.list-commitments-in-range";
 
@@ -22,3 +17,4 @@ export class ListCommitmentsInRangeQuery
 
   constructor(public readonly payload: ListCommitmentsInRangeInput) {}
 }
+

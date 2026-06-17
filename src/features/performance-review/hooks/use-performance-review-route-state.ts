@@ -8,7 +8,11 @@ const basePath = "/reviews";
 export function usePerformanceReviewRouteState() {
   const router = useRouter();
   const pathname = usePathname();
-  const segments = pathname.slice(basePath.length).split("/").filter(Boolean);
+  const isReviewsRoute =
+    pathname === basePath || pathname.startsWith(`${basePath}/`);
+  const segments = isReviewsRoute
+    ? pathname.slice(basePath.length).split("/").filter(Boolean)
+    : [];
   const isCreating = segments[0] === "new";
   const reviewId = !isCreating && segments[0] ? decodeURIComponent(segments[0]) : null;
   const isEditing = Boolean(reviewId && segments[1] === "edit");

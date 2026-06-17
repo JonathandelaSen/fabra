@@ -1,10 +1,5 @@
 import type { Query } from "@/modules/shared";
-
-export interface EvidenceCandidateResult {
-  sourceId: string;
-  date: string | null;
-  content: string;
-}
+import type { ReceivedFeedbackPrimitives } from "../../domain/entities/received-feedback.entity";
 
 export interface ListReceivedFeedbackInRangeInput {
   userId: string;
@@ -14,7 +9,7 @@ export interface ListReceivedFeedbackInRangeInput {
 }
 
 export class ListReceivedFeedbackInRangeQuery
-  implements Query<ListReceivedFeedbackInRangeInput, EvidenceCandidateResult[]>
+  implements Query<ListReceivedFeedbackInRangeInput, ReceivedFeedbackPrimitives[]>
 {
   static readonly queryName = "received-feedback.list-received-feedback-in-range";
 
@@ -22,3 +17,4 @@ export class ListReceivedFeedbackInRangeQuery
 
   constructor(public readonly payload: ListReceivedFeedbackInRangeInput) {}
 }
+

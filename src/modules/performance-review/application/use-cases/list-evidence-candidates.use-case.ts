@@ -1,7 +1,7 @@
 import { UserId, type QueryBus } from "@/modules/shared";
-import { ListCommitmentsInRangeQuery } from "@/modules/commitments";
+import { ListCommitmentsInRangeQuery, type CommitmentPrimitives } from "@/modules/commitments";
 import { ListJournalEntriesInRangeQuery, type WorkJournalEntryPrimitives } from "@/modules/work-journal";
-import { ListReceivedFeedbackInRangeQuery } from "@/modules/received-feedback";
+import { ListReceivedFeedbackInRangeQuery, type ReceivedFeedbackPrimitives } from "@/modules/received-feedback";
 import { PerformanceReviewNotFoundError } from "../../domain/errors/performance-review-not-found.error";
 import type { PerformanceReviewRepository } from "../../domain/repositories/performance-review.repository";
 import {
@@ -53,10 +53,10 @@ export class ListEvidenceCandidatesUseCase {
       this.deps.queryBus.execute<WorkJournalEntryPrimitives[]>(
         new ListJournalEntriesInRangeQuery(range),
       ),
-      this.deps.queryBus.execute<RangeResult>(
+      this.deps.queryBus.execute<ReceivedFeedbackPrimitives[]>(
         new ListReceivedFeedbackInRangeQuery(range),
       ),
-      this.deps.queryBus.execute<RangeResult>(
+      this.deps.queryBus.execute<CommitmentPrimitives[]>(
         new ListCommitmentsInRangeQuery(range),
       ),
     ]);
@@ -71,14 +71,25 @@ export class ListEvidenceCandidatesUseCase {
           source: EVIDENCE_SOURCE.journalEntry,
         };
       }),
-      ...feedback.map((c) => ({
-        ...c,
-        source: EVIDENCE_SOURCE.receivedFeedback,
-      })),
-      ...commitments.map((c) => ({
-        ...c,
-        source: EVIDENCE_SOURCE.commitment,
-      })),
+      ...feedback.map((p) => {
+        return {
+          sourceId: p.id,
+          date: p.receivedDate,
+          content: `${p.giverName}: ${p.feedbackText}`,
+          source: EVIDENCE_SOURCE.receivedFeedback,
+        };
+      }),
+      ...commitments.map((c) => {
+        const parts = [c.title];
+        if (c.resultNotes) parts.push(c.resultNotes);
+        else if (c.description) parts.push(c.description);
+        return {
+          sourceId: c.id,
+          date: c.targetDate ?? c.startDate,
+          content: parts.join(" — "),
+          source: EVIDENCE_SOURCE.commitment,
+        };
+      }),
     ];
   }
 }

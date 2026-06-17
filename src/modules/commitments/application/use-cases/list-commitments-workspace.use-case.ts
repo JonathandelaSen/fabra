@@ -1,16 +1,8 @@
 import { UserId } from "@/modules/shared";
-import type { CommitmentItem } from "../../domain/entities/commitment-item.entity";
-import type { CommitmentOutcome } from "../../domain/entities/commitment-outcome.entity";
-import type { Commitment } from "../../domain/entities/commitment.entity";
+import { CommitmentPortfolio } from "../../domain/value-objects/commitment-portfolio.value-object";
 import type { CommitmentItemRepository } from "../../domain/repositories/commitment-item.repository";
 import type { CommitmentOutcomeRepository } from "../../domain/repositories/commitment-outcome.repository";
 import type { CommitmentRepository } from "../../domain/repositories/commitment.repository";
-
-export interface CommitmentsWorkspace {
-  commitments: Commitment[];
-  items: CommitmentItem[];
-  outcomes: CommitmentOutcome[];
-}
 
 export class ListCommitmentsWorkspaceUseCase {
   constructor(
@@ -21,13 +13,13 @@ export class ListCommitmentsWorkspaceUseCase {
     }
   ) {}
 
-  async execute(userId: string): Promise<CommitmentsWorkspace> {
+  async execute(userId: string): Promise<CommitmentPortfolio> {
     const userIdValue = UserId.fromPrimitives(userId);
     const [commitments, items, outcomes] = await Promise.all([
       this.deps.commitmentRepo.search(userIdValue),
       this.deps.itemRepo.searchByUser(userIdValue),
       this.deps.outcomeRepo.searchByUser(userIdValue),
     ]);
-    return { commitments, items, outcomes };
+    return CommitmentPortfolio.fromCollections({ commitments, items, outcomes });
   }
 }

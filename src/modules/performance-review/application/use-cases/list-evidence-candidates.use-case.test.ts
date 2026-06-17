@@ -20,10 +20,22 @@ describe("ListEvidenceCandidatesUseCase", () => {
           { id: "j1", dateStart: "2026-02-01", finalText: "journal" },
         ])
         .mockResolvedValueOnce([
-          { sourceId: "f1", date: "2026-03-01", content: "feedback" },
+          {
+            id: "f1",
+            receivedDate: "2026-03-01",
+            giverName: "Manager",
+            feedbackText: "feedback",
+          },
         ])
         .mockResolvedValueOnce([
-          { sourceId: "c1", date: "2026-04-01", content: "commitment" },
+          {
+            id: "c1",
+            startDate: "2026-04-01",
+            targetDate: "2026-04-01",
+            title: "commitment",
+            description: null,
+            resultNotes: null,
+          },
         ]),
     };
 

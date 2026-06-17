@@ -28,7 +28,6 @@ function createUseCases(eventBus: EventBus) {
     }),
     listCommitmentsInRange: new ListCommitmentsInRangeUseCase({
       commitmentRepo,
-      outcomeRepo,
     }),
     createCommitment: new CreateCommitmentUseCase({ commitmentRepo, eventBus }),
     updateCommitment: new UpdateCommitmentUseCase({ commitmentRepo, eventBus }),

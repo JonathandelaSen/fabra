@@ -5,9 +5,14 @@ import type { ListCommitmentsInRangeUseCase } from "../use-cases/list-commitment
 
 describe("ListCommitmentsInRangeQueryHandler", () => {
   it("delegates to the use case with the query payload", async () => {
-    const result = [{ sourceId: "c1", date: "2026-04-01", content: "x" }];
+    const mockCommitment = {
+      toPrimitives: () => ({
+        id: "c1",
+        title: "commitment",
+      }),
+    };
     const useCase = {
-      execute: vi.fn().mockResolvedValue(result),
+      execute: vi.fn().mockResolvedValue([mockCommitment]),
     } as unknown as ListCommitmentsInRangeUseCase;
 
     const handler = new ListCommitmentsInRangeQueryHandler(useCase);
@@ -21,6 +26,6 @@ describe("ListCommitmentsInRangeQueryHandler", () => {
     );
 
     expect(useCase.execute).toHaveBeenCalledWith(payload);
-    expect(output).toBe(result);
+    expect(output).toEqual([{ id: "c1", title: "commitment" }]);
   });
 });
