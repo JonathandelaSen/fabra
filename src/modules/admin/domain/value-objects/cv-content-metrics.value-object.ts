@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { Counter, ValueObject } from "@/modules/shared";
 
 export interface CVContentMetricsPrimitives {
   cvs: number;
@@ -7,28 +7,31 @@ export interface CVContentMetricsPrimitives {
 
 export class CVContentMetrics extends ValueObject<CVContentMetricsPrimitives> {
   private constructor(
-    private readonly cvsCount: number,
-    private readonly cvStructuredProfilesCount: number
+    private readonly cvsCount: Counter,
+    private readonly cvStructuredProfilesCount: Counter
   ) {
     super();
   }
 
   static fromPrimitives(primitives: CVContentMetricsPrimitives): CVContentMetrics {
-    return new CVContentMetrics(primitives.cvs, primitives.cvStructuredProfiles);
+    return new CVContentMetrics(
+      Counter.fromPrimitives(primitives.cvs),
+      Counter.fromPrimitives(primitives.cvStructuredProfiles)
+    );
   }
 
   toPrimitives(): CVContentMetricsPrimitives {
     return {
-      cvs: this.cvsCount,
-      cvStructuredProfiles: this.cvStructuredProfilesCount,
+      cvs: this.cvsCount.toPrimitives(),
+      cvStructuredProfiles: this.cvStructuredProfilesCount.toPrimitives(),
     };
   }
 
   get cvs(): number {
-    return this.cvsCount;
+    return this.cvsCount.toPrimitives();
   }
 
   get cvStructuredProfiles(): number {
-    return this.cvStructuredProfilesCount;
+    return this.cvStructuredProfilesCount.toPrimitives();
   }
 }

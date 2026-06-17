@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { Counter, ValueObject } from "@/modules/shared";
 
 export interface AnalysisContentMetricsPrimitives {
   jobMatchAnalyses: number;
@@ -9,45 +9,45 @@ export interface AnalysisContentMetricsPrimitives {
 
 export class AnalysisContentMetrics extends ValueObject<AnalysisContentMetricsPrimitives> {
   private constructor(
-    private readonly jobMatchAnalysesCount: number,
-    private readonly analysisChatConversationsCount: number,
-    private readonly analysisChatMessagesCount: number,
-    private readonly interviewQuestionsCount: number
+    private readonly jobMatchAnalysesCount: Counter,
+    private readonly analysisChatConversationsCount: Counter,
+    private readonly analysisChatMessagesCount: Counter,
+    private readonly interviewQuestionsCount: Counter
   ) {
     super();
   }
 
   static fromPrimitives(primitives: AnalysisContentMetricsPrimitives): AnalysisContentMetrics {
     return new AnalysisContentMetrics(
-      primitives.jobMatchAnalyses,
-      primitives.analysisChatConversations,
-      primitives.analysisChatMessages,
-      primitives.interviewQuestions
+      Counter.fromPrimitives(primitives.jobMatchAnalyses),
+      Counter.fromPrimitives(primitives.analysisChatConversations),
+      Counter.fromPrimitives(primitives.analysisChatMessages),
+      Counter.fromPrimitives(primitives.interviewQuestions)
     );
   }
 
   toPrimitives(): AnalysisContentMetricsPrimitives {
     return {
-      jobMatchAnalyses: this.jobMatchAnalysesCount,
-      analysisChatConversations: this.analysisChatConversationsCount,
-      analysisChatMessages: this.analysisChatMessagesCount,
-      interviewQuestions: this.interviewQuestionsCount,
+      jobMatchAnalyses: this.jobMatchAnalysesCount.toPrimitives(),
+      analysisChatConversations: this.analysisChatConversationsCount.toPrimitives(),
+      analysisChatMessages: this.analysisChatMessagesCount.toPrimitives(),
+      interviewQuestions: this.interviewQuestionsCount.toPrimitives(),
     };
   }
 
   get jobMatchAnalyses(): number {
-    return this.jobMatchAnalysesCount;
+    return this.jobMatchAnalysesCount.toPrimitives();
   }
 
   get analysisChatConversations(): number {
-    return this.analysisChatConversationsCount;
+    return this.analysisChatConversationsCount.toPrimitives();
   }
 
   get analysisChatMessages(): number {
-    return this.analysisChatMessagesCount;
+    return this.analysisChatMessagesCount.toPrimitives();
   }
 
   get interviewQuestions(): number {
-    return this.interviewQuestionsCount;
+    return this.interviewQuestionsCount.toPrimitives();
   }
 }

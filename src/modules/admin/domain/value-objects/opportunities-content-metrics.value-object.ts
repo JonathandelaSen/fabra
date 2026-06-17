@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { Counter, ValueObject } from "@/modules/shared";
 
 export interface OpportunitiesContentMetricsPrimitives {
   jobOpportunities: number;
@@ -7,31 +7,31 @@ export interface OpportunitiesContentMetricsPrimitives {
 
 export class OpportunitiesContentMetrics extends ValueObject<OpportunitiesContentMetricsPrimitives> {
   private constructor(
-    private readonly jobOpportunitiesCount: number,
-    private readonly processQuestionsCount: number
+    private readonly jobOpportunitiesCount: Counter,
+    private readonly processQuestionsCount: Counter
   ) {
     super();
   }
 
   static fromPrimitives(primitives: OpportunitiesContentMetricsPrimitives): OpportunitiesContentMetrics {
     return new OpportunitiesContentMetrics(
-      primitives.jobOpportunities,
-      primitives.processQuestions
+      Counter.fromPrimitives(primitives.jobOpportunities),
+      Counter.fromPrimitives(primitives.processQuestions)
     );
   }
 
   toPrimitives(): OpportunitiesContentMetricsPrimitives {
     return {
-      jobOpportunities: this.jobOpportunitiesCount,
-      processQuestions: this.processQuestionsCount,
+      jobOpportunities: this.jobOpportunitiesCount.toPrimitives(),
+      processQuestions: this.processQuestionsCount.toPrimitives(),
     };
   }
 
   get jobOpportunities(): number {
-    return this.jobOpportunitiesCount;
+    return this.jobOpportunitiesCount.toPrimitives();
   }
 
   get processQuestions(): number {
-    return this.processQuestionsCount;
+    return this.processQuestionsCount.toPrimitives();
   }
 }

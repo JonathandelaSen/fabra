@@ -3,6 +3,7 @@ import {
   AnalysisContentMetrics,
   type AnalysisContentMetricsPrimitives,
 } from "./analysis-content-metrics.value-object";
+import { ContentMetricsWindowDays } from "./content-metrics-window-days.value-object";
 
 export interface AnalysisContentMetricsReportPrimitives {
   counts: AnalysisContentMetricsPrimitives;
@@ -12,7 +13,7 @@ export interface AnalysisContentMetricsReportPrimitives {
 export class AnalysisContentMetricsReport extends ValueObject<AnalysisContentMetricsReportPrimitives> {
   private constructor(
     private readonly contentCounts: AnalysisContentMetrics,
-    private readonly windowDaysValue: number | null
+    private readonly windowDaysValue: ContentMetricsWindowDays
   ) {
     super();
   }
@@ -22,7 +23,7 @@ export class AnalysisContentMetricsReport extends ValueObject<AnalysisContentMet
   ): AnalysisContentMetricsReport {
     return new AnalysisContentMetricsReport(
       AnalysisContentMetrics.fromPrimitives(primitives.counts),
-      primitives.windowDays
+      ContentMetricsWindowDays.fromPrimitives(primitives.windowDays)
     );
   }
 
@@ -30,13 +31,16 @@ export class AnalysisContentMetricsReport extends ValueObject<AnalysisContentMet
     counts: AnalysisContentMetrics,
     windowDays: number | null
   ): AnalysisContentMetricsReport {
-    return new AnalysisContentMetricsReport(counts, windowDays);
+    return new AnalysisContentMetricsReport(
+      counts,
+      ContentMetricsWindowDays.fromPrimitives(windowDays)
+    );
   }
 
   toPrimitives(): AnalysisContentMetricsReportPrimitives {
     return {
       counts: this.contentCounts.toPrimitives(),
-      windowDays: this.windowDaysValue,
+      windowDays: this.windowDaysValue.toPrimitives(),
     };
   }
 
@@ -45,6 +49,6 @@ export class AnalysisContentMetricsReport extends ValueObject<AnalysisContentMet
   }
 
   get windowDays(): number | null {
-    return this.windowDaysValue;
+    return this.windowDaysValue.toPrimitives();
   }
 }

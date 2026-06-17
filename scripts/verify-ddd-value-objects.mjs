@@ -185,17 +185,43 @@ function getValueObjectTypeArgument(node) {
   return null;
 }
 
-// A simple VO wraps a single primitive (or array/union of primitives) and may
-// legitimately store a raw field, so the composite rule must skip it.
-function isPrimitiveLikeTypeNode(typeNode) {
+function collectTypeDeclarations(sourceFile) {
+  const aliases = new Map();
+  const interfaces = new Set();
+  for (const statement of sourceFile.statements) {
+    if (ts.isTypeAliasDeclaration(statement)) aliases.set(statement.name.text, statement.type);
+    else if (ts.isInterfaceDeclaration(statement)) interfaces.add(statement.name.text);
+  }
+  return { aliases, interfaces };
+}
+
+// A simple VO wraps a single primitive value, so the composite rule must skip it.
+// The ValueObject<T> argument is "primitive-like" when T resolves (through local
+// type aliases) to a primitive, a literal, a string-enum union, or arrays/unions
+// of those. A reference to an interface or object type is treated as composite.
+function isPrimitiveLikeTypeNode(typeNode, decls, visited = new Set()) {
   if (!typeNode) return true;
   if (primitiveKeywordKinds.has(typeNode.kind)) return true;
   if (ts.isLiteralTypeNode(typeNode)) return true;
-  if (ts.isParenthesizedTypeNode(typeNode)) return isPrimitiveLikeTypeNode(typeNode.type);
-  if (ts.isArrayTypeNode(typeNode)) return isPrimitiveLikeTypeNode(typeNode.elementType);
-  if (ts.isTupleTypeNode(typeNode)) return typeNode.elements.every(isPrimitiveLikeTypeNode);
+  if (ts.isIndexedAccessTypeNode(typeNode) || ts.isTypeQueryNode(typeNode)) return true;
+  if (ts.isParenthesizedTypeNode(typeNode)) return isPrimitiveLikeTypeNode(typeNode.type, decls, visited);
+  if (ts.isArrayTypeNode(typeNode)) return isPrimitiveLikeTypeNode(typeNode.elementType, decls, visited);
+  if (ts.isTupleTypeNode(typeNode)) return typeNode.elements.every((element) => isPrimitiveLikeTypeNode(element, decls, visited));
   if (ts.isUnionTypeNode(typeNode) || ts.isIntersectionTypeNode(typeNode)) {
-    return typeNode.types.every(isPrimitiveLikeTypeNode);
+    return typeNode.types.every((member) => isPrimitiveLikeTypeNode(member, decls, visited));
+  }
+  if (ts.isTypeReferenceNode(typeNode)) {
+    const name = typeNode.typeName.getText();
+    if (name === "Array" || name === "ReadonlyArray") {
+      return (typeNode.typeArguments ?? []).every((arg) => isPrimitiveLikeTypeNode(arg, decls, visited));
+    }
+    if (decls.interfaces.has(name)) return false;
+    if (decls.aliases.has(name)) {
+      if (visited.has(name)) return false;
+      visited.add(name);
+      return isPrimitiveLikeTypeNode(decls.aliases.get(name), decls, visited);
+    }
+    return false;
   }
   return false;
 }
@@ -214,12 +240,18 @@ function isNullishTypeNode(typeNode) {
 function isValueObjectFieldType(typeNode) {
   if (!typeNode) return false;
   if (ts.isParenthesizedTypeNode(typeNode)) return isValueObjectFieldType(typeNode.type);
+  if (ts.isTypeOperatorNode(typeNode)) return isValueObjectFieldType(typeNode.type);
+  if (ts.isArrayTypeNode(typeNode)) return isValueObjectFieldType(typeNode.elementType);
   if (ts.isUnionTypeNode(typeNode)) {
     const meaningful = typeNode.types.filter((member) => !isNullishTypeNode(member));
     return meaningful.length > 0 && meaningful.every(isValueObjectFieldType);
   }
   if (ts.isTypeReferenceNode(typeNode)) {
-    return !typeNode.typeName.getText().endsWith("Primitives");
+    const name = typeNode.typeName.getText();
+    if (name === "Array" || name === "ReadonlyArray") {
+      return (typeNode.typeArguments ?? []).every(isValueObjectFieldType);
+    }
+    return !name.endsWith("Primitives");
   }
   return false;
 }
@@ -254,7 +286,8 @@ function getStoredFields(valueObject) {
 function checkCompositeStoresValueObjects(sourceFile, file, valueObject, violations) {
   const typeArgument = getValueObjectTypeArgument(valueObject);
   if (!typeArgument) return;
-  if (isPrimitiveLikeTypeNode(typeArgument)) return;
+  const decls = collectTypeDeclarations(sourceFile);
+  if (isPrimitiveLikeTypeNode(typeArgument, decls)) return;
 
   for (const field of getStoredFields(valueObject)) {
     if (!isValueObjectFieldType(field.type)) {

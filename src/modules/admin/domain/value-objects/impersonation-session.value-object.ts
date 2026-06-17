@@ -4,6 +4,7 @@ import {
   type UserId as UserIdType,
 } from "@/modules/shared";
 import { UserEmail } from "./user-email.value-object";
+import { ImpersonationTokenHash } from "./impersonation-token-hash.value-object";
 
 export interface ImpersonationSessionPrimitives {
   tokenHash: string;
@@ -13,21 +14,18 @@ export interface ImpersonationSessionPrimitives {
 
 export class ImpersonationSession extends ValueObject<ImpersonationSessionPrimitives> {
   private constructor(
-    private readonly sessionTokenHash: string,
+    private readonly sessionTokenHash: ImpersonationTokenHash,
     private readonly sessionTargetUserId: UserIdType,
     private readonly sessionTargetEmail: UserEmail
   ) {
     super();
-    if (!sessionTokenHash.trim()) {
-      throw new Error("Impersonation token hash cannot be empty.");
-    }
   }
 
   static fromPrimitives(
     primitives: ImpersonationSessionPrimitives
   ): ImpersonationSession {
     return new ImpersonationSession(
-      primitives.tokenHash,
+      ImpersonationTokenHash.fromPrimitives(primitives.tokenHash),
       UserId.fromPrimitives(primitives.targetUserId),
       UserEmail.fromPrimitives(primitives.targetEmail)
     );
@@ -35,7 +33,7 @@ export class ImpersonationSession extends ValueObject<ImpersonationSessionPrimit
 
   toPrimitives(): ImpersonationSessionPrimitives {
     return {
-      tokenHash: this.sessionTokenHash,
+      tokenHash: this.sessionTokenHash.toPrimitives(),
       targetUserId: this.sessionTargetUserId.toPrimitives(),
       targetEmail: this.sessionTargetEmail.toPrimitives(),
     };
