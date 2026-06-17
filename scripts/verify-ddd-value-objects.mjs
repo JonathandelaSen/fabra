@@ -226,7 +226,6 @@ function checkValueObjectClass(sourceFile, file, valueObject, violations) {
       violations,
       file,
       "value-object-from-primitives-missing",
-      className,
       `Value object ${className} must define static fromPrimitives(...).`,
       sourceFile,
       valueObject.name
@@ -238,7 +237,6 @@ function checkValueObjectClass(sourceFile, file, valueObject, violations) {
       violations,
       file,
       "value-object-to-primitives-missing",
-      className,
       `Value object ${className} must define toPrimitives().`,
       sourceFile,
       valueObject.name
@@ -253,7 +251,6 @@ function checkValueObjectClass(sourceFile, file, valueObject, violations) {
           violations,
           file,
           "value-object-mutator-method",
-          methodName,
           `Value object ${className} must be immutable; mutator-like method "${methodName}" is not allowed.`,
           sourceFile,
           member.name
@@ -270,7 +267,6 @@ function checkValueObjectClass(sourceFile, file, valueObject, violations) {
           violations,
           file,
           "value-object-public-mutable-property",
-          `${className}.${member.name.getText()}`,
           `Value object ${className} cannot expose public mutable properties.`,
           sourceFile,
           member.name
@@ -294,7 +290,6 @@ function checkValueObjectFile(sourceFile, file, violations) {
       violations,
       file,
       "value-object-must-extend-value-object",
-      "FILE",
       "Every *.value-object.ts file must export a class extending ValueObject.",
       sourceFile,
       sourceFile

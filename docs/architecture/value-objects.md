@@ -201,8 +201,3 @@ modules:
 - `*Primitives` interfaces use plain primitives only — a field typed as a VO
   union alias or a domain/`Date` type is rejected and must be widened to its
   primitive.
-
-Pre-existing violations are listed in the script's `allowlist` so the check is
-blocking for new code while they are fixed incrementally. When you fix a VO,
-delete its allowlist entry; the check fails on a stale entry that no longer
-matches a real violation, so the list cannot rot.
