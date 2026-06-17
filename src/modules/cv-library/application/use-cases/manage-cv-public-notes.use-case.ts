@@ -3,11 +3,15 @@ import type { CVPublicNoteRepository } from "../../domain/repositories/cv-public
 
 export class ListCVPublicNotesUseCase {
   constructor(private readonly repo: CVPublicNoteRepository) {}
-  execute(input: { cvId: string; userId: string }) { return this.repo.listForOwner(input.cvId, input.userId); }
+  execute(input: { cvId: string; userId: string }): Promise<CVPublicNote[]> { 
+    return this.repo.listForOwner(input.cvId, input.userId); 
+  }
 }
 export class ListPublishedCVPublicNotesUseCase {
   constructor(private readonly repo: CVPublicNoteRepository) {}
-  execute(cvId: string) { return this.repo.listForPublishedCV(cvId); }
+  execute(cvId: string): Promise<CVPublicNote[]> { 
+    return this.repo.listForPublishedCV(cvId); 
+  }
 }
 export class ReplaceCVPublicNotesUseCase {
   constructor(private readonly repo: CVPublicNoteRepository) {}

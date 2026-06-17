@@ -2,6 +2,7 @@ import { type EventBus } from "@/modules/shared";
 import { FeedbackClosedError } from "../../domain/errors/feedback-closed.error";
 import { FeedbackNotFoundError } from "../../domain/errors/feedback-not-found.error";
 import type { FeedbackRepository } from "../../domain/repositories/feedback.repository";
+import { Feedback } from "../../domain/entities/feedback.entity";
 
 export interface UpdateFeedbackInput {
   person_name?: string;
@@ -21,7 +22,7 @@ export class UpdateFeedbackUseCase {
     userId: string,
     feedbackId: string,
     input: UpdateFeedbackInput
-  ) {
+  ): Promise<Feedback> {
     const feedback = await this.deps.feedbackRepo.findById(feedbackId, userId);
     if (!feedback) throw new FeedbackNotFoundError(feedbackId);
     if (!feedback.isActive()) throw new FeedbackClosedError(feedbackId);

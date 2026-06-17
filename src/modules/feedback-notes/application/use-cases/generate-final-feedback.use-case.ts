@@ -6,6 +6,7 @@ import { FeedbackNotFoundError } from "../../domain/errors/feedback-not-found.er
 import type { FeedbackAIServiceFactory } from "../../domain/repositories/feedback-ai-service.repository";
 import type { FeedbackEntryRepository } from "../../domain/repositories/feedback-entry.repository";
 import type { FeedbackRepository } from "../../domain/repositories/feedback.repository";
+import { Feedback } from "../../domain/entities/feedback.entity";
 
 export class GenerateFinalFeedbackUseCase {
   constructor(
@@ -21,7 +22,7 @@ export class GenerateFinalFeedbackUseCase {
     userId: string,
     feedbackId: string,
     aiConfig: { provider: AIProvider; apiKey?: string; baseUrl?: string; model: string },
-  ) {
+  ): Promise<Feedback> {
     const feedback = await this.deps.feedbackRepo.findById(feedbackId, userId);
     if (!feedback) throw new FeedbackNotFoundError(feedbackId);
     if (!feedback.isActive()) throw new FeedbackClosedError(feedbackId);

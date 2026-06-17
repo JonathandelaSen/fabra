@@ -1,5 +1,6 @@
 import { EntityId, UserId, type EventBus } from "@/modules/shared";
 import { ReceivedFeedbackNotFoundError } from "../../domain/errors/received-feedback-not-found.error";
+import { ReceivedFeedback } from "../../domain/entities/received-feedback.entity";
 import type { ReceivedFeedbackRepository } from "../../domain/repositories/received-feedback.repository";
 import { ReceivedFeedbackDate } from "../../domain/value-objects/received-feedback-date.value-object";
 import { ReceivedFeedbackGiverName } from "../../domain/value-objects/received-feedback-giver-name.value-object";
@@ -28,7 +29,7 @@ export class UpdateReceivedFeedbackUseCase {
     userId: string,
     id: string,
     input: UpdateReceivedFeedbackInput
-  ) {
+  ): Promise<ReceivedFeedback> {
     const userIdVo = UserId.fromPrimitives(userId);
     const idVo = ReceivedFeedbackId.fromPrimitives(id);
     const feedback = await this.deps.receivedFeedbackRepo.findById(idVo, userIdVo);

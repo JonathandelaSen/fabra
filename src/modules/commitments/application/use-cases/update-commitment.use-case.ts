@@ -1,6 +1,6 @@
 import { EntityId, UserId, type EventBus } from "@/modules/shared";
 import { CommitmentNotFoundError } from "../../domain/errors/commitment-not-found.error";
-import type { CommitmentPriority, CommitmentSource, CommitmentStatus } from "../../domain/entities/commitment.entity";
+import { Commitment, type CommitmentPriority, type CommitmentSource, type CommitmentStatus } from "../../domain/entities/commitment.entity";
 import type { CommitmentRepository } from "../../domain/repositories/commitment.repository";
 
 export interface UpdateCommitmentInput {
@@ -21,7 +21,7 @@ export interface UpdateCommitmentInput {
 export class UpdateCommitmentUseCase {
   constructor(private readonly deps: { commitmentRepo: CommitmentRepository; eventBus: EventBus }) {}
 
-  async execute(input: UpdateCommitmentInput) {
+  async execute(input: UpdateCommitmentInput): Promise<Commitment> {
     const userId = UserId.fromPrimitives(input.userId);
     const id = EntityId.fromPrimitives(input.id);
     const commitment = await this.deps.commitmentRepo.findById(id, userId);

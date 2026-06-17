@@ -1,6 +1,6 @@
 import { EntityId, UserId, type EventBus } from "@/modules/shared";
 import { CommitmentOutcomeNotFoundError } from "../../domain/errors/commitment-outcome-not-found.error";
-import type { CommitmentOutcomeStatus, CommitmentOutcomeType } from "../../domain/entities/commitment-outcome.entity";
+import { CommitmentOutcome, type CommitmentOutcomeStatus, type CommitmentOutcomeType } from "../../domain/entities/commitment-outcome.entity";
 import type { CommitmentOutcomeRepository } from "../../domain/repositories/commitment-outcome.repository";
 
 export interface UpdateCommitmentOutcomeInput {
@@ -18,7 +18,7 @@ export interface UpdateCommitmentOutcomeInput {
 export class UpdateCommitmentOutcomeUseCase {
   constructor(private readonly deps: { outcomeRepo: CommitmentOutcomeRepository; eventBus: EventBus }) {}
 
-  async execute(input: UpdateCommitmentOutcomeInput) {
+  async execute(input: UpdateCommitmentOutcomeInput): Promise<CommitmentOutcome> {
     const userId = UserId.fromPrimitives(input.userId);
     const id = EntityId.fromPrimitives(input.id);
     const outcome = await this.deps.outcomeRepo.findById(id, userId);

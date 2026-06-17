@@ -9,7 +9,7 @@ export class ReviewAIInteractionUseCase {
     reviewerUserId: string;
     rating: AIInteractionRating;
     note: string | null;
-  }) {
+  }): Promise<AIInteractionReview> {
     const now = new Date().toISOString();
     return this.deps.repository.save(AIInteractionReview.create({
       ...input,
