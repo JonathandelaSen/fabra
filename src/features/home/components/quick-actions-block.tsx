@@ -21,7 +21,7 @@ export default function QuickActionsBlock({
 }: QuickActionsBlockProps) {
   return (
     <div className="space-y-3">
-      <h2 className="text-sm font-medium text-zinc-300 uppercase tracking-wider">
+      <h2 className="text-sm font-medium text-text-soft uppercase tracking-wider">
         {title}
       </h2>
       <div className="space-y-2">

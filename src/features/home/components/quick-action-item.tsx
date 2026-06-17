@@ -20,8 +20,8 @@ export default function QuickActionItem({
       onClick={onClick}
       className="w-full flex items-start gap-3 rounded-lg border border-line bg-panel-subtle p-4 text-left transition-colors hover:bg-panel-hover hover:border-line-default"
     >
-      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-indigo-500/10">
-        <Icon className="h-4 w-4 text-indigo-400" />
+      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-action-soft">
+        <Icon className="h-4 w-4 text-action-text" />
       </div>
       <div className="min-w-0">
         <span className="text-sm font-medium text-text-main">{label}</span>

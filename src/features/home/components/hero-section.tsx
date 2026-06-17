@@ -14,11 +14,11 @@ export default function HeroSection({ userEmail }: HeroSectionProps) {
   return (
     <div className="space-y-2">
       {displayName && (
-        <h1 className="text-2xl font-semibold text-zinc-100">
+        <h1 className="text-2xl font-semibold text-text-main">
           {t("greeting", { name: displayName })}
         </h1>
       )}
-      <p className="text-sm text-zinc-400 max-w-xl leading-relaxed">
+      <p className="text-sm text-text-soft max-w-xl leading-relaxed">
         {t("tagline")}
       </p>
     </div>
