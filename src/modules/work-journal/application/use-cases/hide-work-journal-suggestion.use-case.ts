@@ -1,5 +1,5 @@
 import { ExecutionResult, UserId } from "@/modules/shared";
-import type { ContextType } from "../../domain/entities/journal-entry.entity";
+import type { ContextType } from "../../domain/entities/journal-context.entity";
 import type { WorkJournalContextRepository } from "../../domain/repositories/work-journal-context.repository";
 import { WorkJournalContextSuggestion } from "../../domain/value-objects/context-suggestion.value-object";
 
