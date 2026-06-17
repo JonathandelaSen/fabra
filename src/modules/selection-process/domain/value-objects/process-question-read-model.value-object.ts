@@ -1,5 +1,5 @@
 import { ValueObject } from "@/modules/shared";
-import type { ProcessQuestion } from "../entities/process-question.entity";
+import { ProcessQuestion, type ProcessQuestionPrimitives } from "../entities/process-question.entity";
 import {
   ProcessQuestionRelatedCV,
   type ProcessQuestionRelatedCVPrimitives,
@@ -21,7 +21,7 @@ export type { ProcessQuestionRelatedCVPrimitives } from "./process-question-rela
 export type { ProcessQuestionRelatedAnalysisPrimitives } from "./process-question-related-analysis.value-object";
 
 export interface ProcessQuestionReadModelPrimitives {
-  question: ProcessQuestion;
+  question: ProcessQuestionPrimitives;
   cv: ProcessQuestionRelatedCVPrimitives | null;
   analysis: ProcessQuestionRelatedAnalysisPrimitives | null;
 }
@@ -37,7 +37,7 @@ export class ProcessQuestionReadModel extends ValueObject<ProcessQuestionReadMod
 
   static fromPrimitives(primitives: ProcessQuestionReadModelPrimitives): ProcessQuestionReadModel {
     return new ProcessQuestionReadModel(
-      primitives.question,
+      ProcessQuestion.fromPrimitives(primitives.question),
       primitives.cv === null ? null : ProcessQuestionRelatedCV.fromPrimitives(primitives.cv),
       primitives.analysis === null
         ? null
@@ -55,7 +55,7 @@ export class ProcessQuestionReadModel extends ValueObject<ProcessQuestionReadMod
 
   toPrimitives(): ProcessQuestionReadModelPrimitives {
     return {
-      question: this.question,
+      question: this.question.toPrimitives(),
       cv: this.cvValue?.toPrimitives() ?? null,
       analysis: this.analysisValue?.toPrimitives() ?? null,
     };

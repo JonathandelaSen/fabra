@@ -35,7 +35,7 @@ export function readModel(
   overrides: Partial<ProcessQuestionReadModelPrimitives> = {}
 ): ProcessQuestionReadModel {
   return ProcessQuestionReadModel.fromPrimitives({
-    question: processQuestion(),
+    question: processQuestion().toPrimitives(),
     cv: { id: "cv-1", name: "CV", filename: "cv.pdf", type: "uploaded" },
     analysis: {
       id: "analysis-1",
@@ -56,7 +56,7 @@ export function processQuestionRepo(
   return {
     search: vi.fn(async () => [readModel()]),
     findById: vi.fn(async () => readModel()),
-    save: vi.fn(async (question: ProcessQuestion) => readModel({ question })),
+    save: vi.fn(async (question: ProcessQuestion) => readModel({ question: question.toPrimitives() })),
     delete: vi.fn(async () => true),
     ...overrides,
   } satisfies ProcessQuestionRepository;

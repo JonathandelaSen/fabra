@@ -28,7 +28,7 @@ export {
 } from "./domain/value-objects/copy-paste-origin-label.value-object";
 export { ExecutionResult } from "./domain/value-objects/execution-result.value-object";
 export type { AIProvider } from "./domain/value-objects/ai-provider.value-object";
-export { AI_PROVIDER, AI_PROVIDERS, isAIProvider, parseAIProvider } from "./domain/value-objects/ai-provider.value-object";
+export { AI_PROVIDER, AI_PROVIDERS, isAIProvider, parseAIProvider, AIProviderValue } from "./domain/value-objects/ai-provider.value-object";
 export {
   AIAssistanceMode,
   AIEntityType,

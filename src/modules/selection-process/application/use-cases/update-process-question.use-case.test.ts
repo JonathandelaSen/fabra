@@ -51,7 +51,7 @@ describe("UpdateProcessQuestionUseCase", () => {
   });
 
   it("keeps unspecified fields", async () => {
-    const existing = readModel({ question: processQuestion({ context: "old" }) });
+    const existing = readModel({ question: processQuestion({ context: "old" }).toPrimitives() });
     const repo = processQuestionRepo({ findById: async () => existing });
     const bus = eventBus();
     const result = await new UpdateProcessQuestionUseCase({

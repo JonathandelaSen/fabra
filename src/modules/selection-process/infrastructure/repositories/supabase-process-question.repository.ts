@@ -84,7 +84,7 @@ function rowToReadModel(row: ProcessQuestionRow): ProcessQuestionReadModel {
       ? (row.analysis.job_snapshot as Record<string, unknown>)
       : {};
   return ProcessQuestionReadModel.fromPrimitives({
-    question: rowToQuestion(row),
+    question: rowToQuestion(row).toPrimitives(),
     cv: row.cv ?? null,
     analysis: row.analysis
       ? {

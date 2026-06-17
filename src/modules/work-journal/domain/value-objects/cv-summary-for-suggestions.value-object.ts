@@ -5,7 +5,7 @@ export interface CVSummaryForSuggestionsPrimitives {
   name?: string;
   filename?: string | null;
   type: string;
-  profile: StandardCVProfile | null;
+  profile: unknown;
 }
 
 export class CVSummaryForSuggestions extends ValueObject<CVSummaryForSuggestionsPrimitives> {
@@ -21,7 +21,7 @@ export class CVSummaryForSuggestions extends ValueObject<CVSummaryForSuggestions
   static fromPrimitives(primitives: CVSummaryForSuggestionsPrimitives): CVSummaryForSuggestions {
     return new CVSummaryForSuggestions(
       LongText.fromPrimitives(primitives.type),
-      primitives.profile,
+      (primitives.profile as StandardCVProfile | null) ?? null,
       primitives.name === undefined ? undefined : LongText.fromPrimitives(primitives.name),
       primitives.filename === undefined || primitives.filename === null
         ? primitives.filename

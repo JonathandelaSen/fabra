@@ -1,16 +1,7 @@
 import { ValueObject } from "@/modules/shared";
-import type {
-  Commitment,
-  CommitmentPrimitives,
-} from "../entities/commitment.entity";
-import type {
-  CommitmentItem,
-  CommitmentItemPrimitives,
-} from "../entities/commitment-item.entity";
-import type {
-  CommitmentOutcome,
-  CommitmentOutcomePrimitives,
-} from "../entities/commitment-outcome.entity";
+import { Commitment, type CommitmentPrimitives } from "../entities/commitment.entity";
+import { CommitmentItem, type CommitmentItemPrimitives } from "../entities/commitment-item.entity";
+import { CommitmentOutcome, type CommitmentOutcomePrimitives } from "../entities/commitment-outcome.entity";
 
 export interface CommitmentPortfolioPrimitives {
   commitments: CommitmentPrimitives[];
@@ -25,6 +16,14 @@ export class CommitmentPortfolio extends ValueObject<CommitmentPortfolioPrimitiv
     private readonly outcomeList: readonly CommitmentOutcome[]
   ) {
     super();
+  }
+
+  static fromPrimitives(primitives: CommitmentPortfolioPrimitives): CommitmentPortfolio {
+    return new CommitmentPortfolio(
+      primitives.commitments.map((commitment) => Commitment.fromPrimitives(commitment)),
+      primitives.items.map((item) => CommitmentItem.fromPrimitives(item)),
+      primitives.outcomes.map((outcome) => CommitmentOutcome.fromPrimitives(outcome))
+    );
   }
 
   static fromCollections(collections: {

@@ -28,7 +28,7 @@ import { ProcessQuestionReadModel } from "../../domain/value-objects/process-que
 
 function readModel(overrides?: { answer?: string | null }) {
   return ProcessQuestionReadModel.fromPrimitives({
-    question: createQuestion(overrides?.answer ? { answer: overrides.answer } : {}),
+    question: createQuestion(overrides?.answer ? { answer: overrides.answer } : {}).toPrimitives(),
     cv: { id: "cv-1", name: "CV principal", filename: "cv.pdf", type: "uploaded" as const },
     analysis: {
       id: "analysis-1",

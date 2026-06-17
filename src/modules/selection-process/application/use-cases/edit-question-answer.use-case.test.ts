@@ -21,7 +21,7 @@ function aiService(
 describe("EditQuestionAnswerUseCase", () => {
   it("edits an answer via AI and saves it", async () => {
     const existing = readModel({
-      question: processQuestion({ answer: "Old answer" }),
+      question: processQuestion({ answer: "Old answer" }).toPrimitives(),
     });
     const ai = aiService();
     const repo = processQuestionRepo({ findById: async () => existing });

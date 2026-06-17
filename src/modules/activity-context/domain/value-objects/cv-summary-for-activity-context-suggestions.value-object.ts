@@ -3,7 +3,7 @@ import type { StandardCVProfile } from "@/lib/cv-profile";
 
 export interface CVSummaryForActivityContextSuggestionsPrimitives {
   type: string;
-  profile: StandardCVProfile | null;
+  profile: unknown;
 }
 
 export class CVSummaryForActivityContextSuggestions extends ValueObject<CVSummaryForActivityContextSuggestionsPrimitives> {
@@ -17,7 +17,7 @@ export class CVSummaryForActivityContextSuggestions extends ValueObject<CVSummar
   static fromPrimitives(primitives: CVSummaryForActivityContextSuggestionsPrimitives): CVSummaryForActivityContextSuggestions {
     return new CVSummaryForActivityContextSuggestions(
       LongText.fromPrimitives(primitives.type),
-      primitives.profile
+      (primitives.profile as StandardCVProfile | null) ?? null
     );
   }
 
