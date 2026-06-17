@@ -1,4 +1,4 @@
-import { UserId } from "@/modules/shared";
+import { CopyPastePreparation, UserId } from "@/modules/shared";
 import { PerformanceReviewNotFoundError } from "../../domain/errors/performance-review-not-found.error";
 import type { PerformanceReviewRepository } from "../../domain/repositories/performance-review.repository";
 import type { ReviewEvidenceItemRepository } from "../../domain/repositories/review-evidence-item.repository";
@@ -14,14 +14,6 @@ export interface PrepareSelfAssessmentCopyPasteInput {
   userId: string;
 }
 
-export interface PrepareSelfAssessmentCopyPasteResult {
-  workflowId: typeof SELF_ASSESSMENT_WORKFLOW_ID;
-  schemaVersion: typeof SELF_ASSESSMENT_SCHEMA_VERSION;
-  prompt: string;
-  expectedResponse: { kind: "json"; envelope: true };
-  privacyNotice: string;
-}
-
 export class PrepareSelfAssessmentCopyPasteUseCase {
   constructor(
     private readonly deps: {
@@ -32,7 +24,7 @@ export class PrepareSelfAssessmentCopyPasteUseCase {
 
   async execute(
     input: PrepareSelfAssessmentCopyPasteInput,
-  ): Promise<PrepareSelfAssessmentCopyPasteResult> {
+  ): Promise<CopyPastePreparation> {
     const userId = UserId.fromPrimitives(input.userId);
     const reviewId = PerformanceReviewId.fromPrimitives(input.reviewId);
     const review = await this.deps.reviewRepo.findById(reviewId, userId);
@@ -46,13 +38,15 @@ export class PrepareSelfAssessmentCopyPasteUseCase {
       schemaVersion: SELF_ASSESSMENT_SCHEMA_VERSION,
     });
 
-    return {
+    return CopyPastePreparation.fromPrimitives({
       workflowId: SELF_ASSESSMENT_WORKFLOW_ID,
       schemaVersion: SELF_ASSESSMENT_SCHEMA_VERSION,
       prompt,
       expectedResponse: { kind: "json", envelope: true },
       privacyNotice:
         "This prompt embeds your curated review evidence. Paste it only into external AI tools you trust.",
-    };
+      interactionId: null,
+      attemptId: null,
+    });
   }
 }

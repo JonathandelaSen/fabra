@@ -66,7 +66,7 @@ export async function POST(
     });
     if (!result) throw notFound("Template CV not found", ErrorCode.TEMPLATE_CV_NOT_FOUND);
 
-    return ok(result satisfies PrepareCVEditorCopyPasteResponse);
+    return ok(result.toPrimitives() satisfies PrepareCVEditorCopyPasteResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }

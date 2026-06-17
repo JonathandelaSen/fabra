@@ -108,7 +108,7 @@ export function InterviewQuestionCopyPastePanel({
       ) : (
         <CopyPasteTextPanel
           title={t("panelTitle")}
-          privacyNotice={prepared.privacyNotice}
+          privacyNotice={prepared.privacyNotice ?? ""}
           prompt={prepared.prompt}
           copyLabel={t("copyPrompt")}
           copiedLabel={t("promptCopied")}

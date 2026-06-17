@@ -1,3 +1,5 @@
+import type { CopyPastePreparationPrimitives } from "@/modules/shared";
+
 export interface PerformanceReviewResponse {
   id: string;
   activityContextId: string | null;
@@ -33,13 +35,7 @@ export interface EvidenceCandidateResponse {
   content: string;
 }
 
-export interface SelfAssessmentCopyPasteResponse {
-  workflowId: string;
-  schemaVersion: string;
-  prompt: string;
-  expectedResponse: { kind: "json"; envelope: true };
-  privacyNotice: string;
-}
+export type SelfAssessmentCopyPasteResponse = CopyPastePreparationPrimitives;
 
 export type ListPerformanceReviewsResponse = PerformanceReviewResponse[];
 export type PerformanceReviewDetailResponse = PerformanceReviewResponse;

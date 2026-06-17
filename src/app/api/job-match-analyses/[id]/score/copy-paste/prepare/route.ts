@@ -32,7 +32,7 @@ export async function POST(
       });
     if (!result) throw notFound("Analysis not found", ErrorCode.ANALYSIS_NOT_FOUND);
 
-    return ok(result satisfies PrepareJobMatchAnalysisCopyPasteResponse);
+    return ok(result.toPrimitives() satisfies PrepareJobMatchAnalysisCopyPasteResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }

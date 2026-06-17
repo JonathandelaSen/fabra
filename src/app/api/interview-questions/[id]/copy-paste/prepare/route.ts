@@ -57,7 +57,7 @@ export async function POST(
 
     if (!result) throw notFound("Question not found", ErrorCode.QUESTION_NOT_FOUND);
 
-    return ok(result satisfies PrepareInterviewQuestionCopyPasteResponse);
+    return ok(result.toPrimitives() satisfies PrepareInterviewQuestionCopyPasteResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }

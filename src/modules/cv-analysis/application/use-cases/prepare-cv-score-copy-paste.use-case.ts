@@ -5,6 +5,7 @@ import {
   AIInteractionProvider,
   AIModule,
   AIOperation,
+  CopyPastePreparation,
   UserId,
   type EventBus,
 } from "@/modules/shared";
@@ -24,15 +25,6 @@ export interface PrepareCVScoreCopyPasteInput {
   requestId?: string;
 }
 
-export interface PrepareCVScoreCopyPasteResult {
-  workflowId: typeof CV_SCORE_COPY_PASTE_WORKFLOW_ID;
-  schemaVersion: typeof CV_SCORE_COPY_PASTE_SCHEMA_VERSION;
-  interactionId: string;
-  attemptId: string;
-  prompt: string;
-  expectedResponse: { kind: "json"; envelope: true };
-}
-
 export class PrepareCVScoreCopyPasteUseCase {
   constructor(
     private readonly deps: {
@@ -48,7 +40,7 @@ export class PrepareCVScoreCopyPasteUseCase {
 
   async execute(
     input: PrepareCVScoreCopyPasteInput,
-  ): Promise<PrepareCVScoreCopyPasteResult | null> {
+  ): Promise<CopyPastePreparation | null> {
     const id = CVAnalysisId.fromPrimitives(input.id);
     const userId = UserId.fromPrimitives(input.userId);
     const analysis = await this.deps.repo.findById(id, userId);
@@ -80,13 +72,14 @@ export class PrepareCVScoreCopyPasteUseCase {
       new AIInteractionPreparedEvent({ context, prompt, promptVersion: "1" }),
     ]);
 
-    return {
+    return CopyPastePreparation.fromPrimitives({
       workflowId: CV_SCORE_COPY_PASTE_WORKFLOW_ID,
       schemaVersion: CV_SCORE_COPY_PASTE_SCHEMA_VERSION,
       interactionId,
       attemptId,
       prompt,
       expectedResponse: { kind: "json", envelope: true },
-    };
+      privacyNotice: null,
+    });
   }
 }

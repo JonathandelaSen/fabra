@@ -51,7 +51,7 @@ export async function POST(
       requestId: createRequestId("offer_chat_copy_paste_prepare"),
     });
 
-    return ok(result satisfies PrepareOfferChatCopyPasteResponse);
+    return ok(result.toPrimitives() satisfies PrepareOfferChatCopyPasteResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }

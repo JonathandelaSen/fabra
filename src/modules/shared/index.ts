@@ -7,6 +7,11 @@ export { AggregateRoot } from "./domain/entities/aggregate-root";
 export type { DomainEvent } from "./domain/bus/event-bus/domain-event";
 export type { InfrastructureEvent } from "./domain/bus/event-bus/infrastructure-event";
 export { EntityId } from "./domain/value-objects/entity-id.value-object";
+export {
+  CopyPastePreparation,
+  type CopyPastePreparationPrimitives,
+} from "./domain/value-objects/copy-paste-preparation.value-object";
+export { type CopyPasteExpectedResponsePrimitives } from "./domain/value-objects/copy-paste-expected-response.value-object";
 export { IsoDate } from "./domain/value-objects/iso-date.value-object";
 export { OptionalIsoDate } from "./domain/value-objects/optional-iso-date.value-object";
 export { Timestamp } from "./domain/value-objects/timestamp.value-object";

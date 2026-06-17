@@ -22,6 +22,7 @@ import type {
   CVTemplatePdfRenderer,
 } from "../../domain/repositories/cv-analysis-preparation-services";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
+import { PrepareCVAnalysisInputResult } from "../../domain/value-objects/prepare-cv-analysis-input-result.value-object";
 import { Timestamp, UserId, type EventBus } from "@/modules/shared";
 
 export interface PrepareCVAnalysisInputInput {
@@ -29,25 +30,6 @@ export interface PrepareCVAnalysisInputInput {
   userId: string;
   requestId: string;
   source: string;
-}
-
-export interface PrepareCVAnalysisInputResult {
-  cv: CVDocumentPrimitives;
-  analysisText: string | null;
-  filename: string;
-  fileSize: number | null;
-  pdfStoragePath: string | null;
-  extractedText: CVDocumentExtractedTextPrimitives;
-  extractionDiagnostics: {
-    filename: string | null;
-    fileSize: number | null;
-    pythonLength: number;
-    pdfjsLength: number;
-    nodeLength: number;
-    pythonError: boolean;
-    pdfjsError: boolean;
-    nodeError: boolean;
-  };
 }
 
 type TemplateExtraction = {
@@ -102,7 +84,7 @@ export class PrepareCVAnalysisInputUseCase {
 
 
 
-    return {
+    return PrepareCVAnalysisInputResult.fromPrimitives({
       cv: cvPrimitives,
       analysisText,
       filename: templatePdfExtraction?.filename ?? cvPrimitives.filename ?? "",
@@ -119,7 +101,7 @@ export class PrepareCVAnalysisInputUseCase {
         pdfjsError: Boolean(responseExtraction.extractErrorPdfjs),
         nodeError: Boolean(responseExtraction.extractErrorNode),
       },
-    };
+    });
   }
 
   private clearParserErrors(
@@ -152,7 +134,7 @@ export class PrepareCVAnalysisInputUseCase {
 
 
 
-    return {
+    return PrepareCVAnalysisInputResult.fromPrimitives({
       cv: primitives,
       analysisText,
       filename: primitives.filename ?? "resume.json",
@@ -169,7 +151,7 @@ export class PrepareCVAnalysisInputUseCase {
         pdfjsError: false,
         nodeError: false,
       },
-    };
+    });
   }
 
   private async ensureUploadedCVExtraction(input: {

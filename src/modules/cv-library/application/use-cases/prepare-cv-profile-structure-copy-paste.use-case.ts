@@ -1,5 +1,5 @@
 import { createRequestId } from "@/lib/observability";
-import { badRequest } from "@/modules/shared";
+import { badRequest, CopyPastePreparation } from "@/modules/shared";
 import { ErrorCode } from "@/shared/error-codes";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import {
@@ -13,14 +13,6 @@ export interface PrepareCVProfileStructureCopyPasteInput {
   userId: string;
   templateId?: string | null;
   locale?: string | null;
-}
-
-export interface PrepareCVProfileStructureCopyPasteResult {
-  workflowId: typeof CV_PROFILE_COPY_PASTE_WORKFLOW_ID;
-  schemaVersion: typeof CV_PROFILE_COPY_PASTE_SCHEMA_VERSION;
-  prompt: string;
-  expectedResponse: { kind: "json"; envelope: true };
-  privacyNotice: string;
 }
 
 export class PrepareCVProfileStructureCopyPasteUseCase {
@@ -38,7 +30,7 @@ export class PrepareCVProfileStructureCopyPasteUseCase {
 
   async execute(
     input: PrepareCVProfileStructureCopyPasteInput,
-  ): Promise<PrepareCVProfileStructureCopyPasteResult | null> {
+  ): Promise<CopyPastePreparation | null> {
     const requestId = createRequestId("cv_profile_copy_paste_prepare");
     const prepared = await this.deps.prepareAnalysisInput.execute({
       cvId: input.cvDocumentId,
@@ -59,13 +51,15 @@ export class PrepareCVProfileStructureCopyPasteUseCase {
       locale: input.locale,
     });
 
-    return {
+    return CopyPastePreparation.fromPrimitives({
       workflowId: CV_PROFILE_COPY_PASTE_WORKFLOW_ID,
       schemaVersion: CV_PROFILE_COPY_PASTE_SCHEMA_VERSION,
       prompt,
       expectedResponse: { kind: "json", envelope: true },
       privacyNotice:
         "This prompt includes extracted CV data. Paste it only into external tools you trust.",
-    };
+      interactionId: null,
+      attemptId: null,
+    });
   }
 }

@@ -1,5 +1,5 @@
 import type { Analysis, CVRecord } from "@/lib/analysis-types";
-import { UserId } from "@/modules/shared";
+import { CopyPastePreparation, UserId } from "@/modules/shared";
 import type { ProcessQuestionRepository } from "../../domain/repositories/process-question.repository";
 import { ProcessQuestionId } from "../../domain/value-objects/process-question-id.value-object";
 import type { CopyPastePrepareMode } from "../selection-process-copy-paste.constants";
@@ -16,14 +16,6 @@ export interface PrepareQuestionAnswerCopyPasteInput {
   requestId: string;
 }
 
-export interface PrepareQuestionAnswerCopyPasteResult {
-  workflowId: "interview_question.answer";
-  schemaVersion: "1";
-  prompt: string;
-  expectedResponse: { kind: "plain_text" };
-  privacyNotice: string;
-}
-
 export class PrepareQuestionAnswerCopyPasteUseCase {
   constructor(
     private readonly deps: {
@@ -33,7 +25,7 @@ export class PrepareQuestionAnswerCopyPasteUseCase {
 
   async execute(
     input: PrepareQuestionAnswerCopyPasteInput,
-  ): Promise<PrepareQuestionAnswerCopyPasteResult | null> {
+  ): Promise<CopyPastePreparation | null> {
     const id = ProcessQuestionId.fromPrimitives(input.id);
     const userId = UserId.fromPrimitives(input.userId);
     const readModel = await this.deps.questionRepo.findById(id, userId);
@@ -51,13 +43,15 @@ export class PrepareQuestionAnswerCopyPasteUseCase {
       analysis: input.analysis,
     });
 
-    return {
+    return CopyPastePreparation.fromPrimitives({
       workflowId: "interview_question.answer",
       schemaVersion: "1",
       prompt,
-      expectedResponse: { kind: "plain_text" },
+      expectedResponse: { kind: "plain_text", envelope: null },
       privacyNotice:
         "This prompt may include CV, offer, and interview data. Paste it only into external AI tools you trust.",
-    };
+      interactionId: null,
+      attemptId: null,
+    });
   }
 }

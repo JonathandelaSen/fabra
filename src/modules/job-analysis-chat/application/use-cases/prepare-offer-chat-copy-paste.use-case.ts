@@ -1,4 +1,5 @@
 import {
+  CopyPastePreparation,
   UserId,
   type QueryBus,
 } from "@/modules/shared";
@@ -19,14 +20,6 @@ export interface PrepareOfferChatCopyPasteInput {
   requestId: string;
 }
 
-export interface PrepareOfferChatCopyPasteResult {
-  workflowId: "offer_chat.assistant_response";
-  schemaVersion: "1";
-  prompt: string;
-  expectedResponse: { kind: "plain_text" };
-  privacyNotice: string;
-}
-
 export class PrepareOfferChatCopyPasteUseCase {
   constructor(
     private readonly deps: {
@@ -38,7 +31,7 @@ export class PrepareOfferChatCopyPasteUseCase {
 
   async execute(
     input: PrepareOfferChatCopyPasteInput,
-  ): Promise<PrepareOfferChatCopyPasteResult> {
+  ): Promise<CopyPastePreparation> {
     const ownerId = UserId.fromPrimitives(input.userId);
     const conversationId = JobAnalysisChatConversationId.fromPrimitives(
       input.conversationId,
@@ -68,13 +61,15 @@ export class PrepareOfferChatCopyPasteUseCase {
       history: history.map((message) => message.toPrimitives()),
     });
 
-    return {
+    return CopyPastePreparation.fromPrimitives({
       workflowId: "offer_chat.assistant_response",
       schemaVersion: "1",
       prompt,
-      expectedResponse: { kind: "plain_text" },
+      expectedResponse: { kind: "plain_text", envelope: null },
       privacyNotice:
         "This prompt may include CV, offer, and analysis data. Paste it only into external AI tools you trust.",
-    };
+      interactionId: null,
+      attemptId: null,
+    });
   }
 }

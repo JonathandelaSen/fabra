@@ -69,8 +69,11 @@ export type {
 } from "./application/use-cases/create-json-resume-cv-document.use-case";
 export type {
   PrepareCVAnalysisInputInput,
-  PrepareCVAnalysisInputResult,
 } from "./application/use-cases/prepare-cv-analysis-input.use-case";
+export {
+  PrepareCVAnalysisInputResult,
+  type PrepareCVAnalysisInputResultPrimitives,
+} from "./domain/value-objects/prepare-cv-analysis-input-result.value-object";
 export {
   DeleteCVDocumentResult,
   type DeleteCVDocumentResultPrimitives,

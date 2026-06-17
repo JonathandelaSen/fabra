@@ -9,5 +9,4 @@ export {
 } from "./application/presenters/process-question-presenters";
 export type { GenerateQuestionAnswerInput } from "./application/use-cases/generate-question-answer.use-case";
 export type { EditQuestionAnswerInput } from "./application/use-cases/edit-question-answer.use-case";
-export type { PrepareQuestionAnswerCopyPasteResult } from "./application/use-cases/prepare-question-answer-copy-paste.use-case";
 export type { CopyPastePrepareMode } from "./application/selection-process-copy-paste.constants";

@@ -8,7 +8,7 @@ type Step = "copy" | "paste" | "review";
 
 interface PrepareResult {
   prompt: string;
-  privacyNotice?: string;
+  privacyNotice?: string | null;
 }
 
 interface UseCopyPasteWorkflowStateOptions<TPrepare extends PrepareResult, TPreview> {

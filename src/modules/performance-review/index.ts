@@ -15,8 +15,6 @@ export type {
   ReviewEvidenceItemView,
 } from "./application/presenters/performance-review-presenters";
 
-export type { PrepareSelfAssessmentCopyPasteResult } from "./application/use-cases/prepare-self-assessment-copy-paste.use-case";
-
 export { PerformanceReviewNotFoundError } from "./domain/errors/performance-review-not-found.error";
 export { ReviewEvidenceItemNotFoundError } from "./domain/errors/review-evidence-item-not-found.error";
 

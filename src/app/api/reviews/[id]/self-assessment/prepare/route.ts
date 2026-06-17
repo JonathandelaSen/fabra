@@ -21,7 +21,7 @@ export async function POST(
         reviewId: id,
         userId: user.id,
       });
-    return ok(result satisfies SelfAssessmentCopyPasteResponse);
+    return ok(result.toPrimitives() satisfies SelfAssessmentCopyPasteResponse);
   } catch (error: unknown) {
     return handleApiError(error);
   }
