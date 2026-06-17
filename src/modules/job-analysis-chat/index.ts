@@ -37,3 +37,6 @@ export type {
   AnalysisReferencePrimitives,
   AnalysisReferenceType,
 } from "./domain/value-objects/analysis-reference.value-object";
+export { JobAnalysisChatExchange } from "./domain/value-objects/job-analysis-chat-exchange.value-object";
+export type { JobAnalysisChatExchangePrimitives } from "./domain/value-objects/job-analysis-chat-exchange.value-object";
+

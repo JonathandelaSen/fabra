@@ -7,6 +7,7 @@ import {
   type JobAnalysisChatMessage,
   type Conversation,
   type ChatMessage,
+  JobAnalysisChatExchange,
 } from "@/modules/job-analysis-chat";
 
 export type {
@@ -57,12 +58,11 @@ export function toDeleteOfferChatConversationResponse(): DeleteOfferChatConversa
   return { ok: true };
 }
 
-export function toSendOfferChatMessageResponse(result: {
-  userMessage: ChatMessage;
-  assistantMessage: ChatMessage;
-}): SendOfferChatMessageResponse {
+export function toSendOfferChatMessageResponse(
+  exchange: JobAnalysisChatExchange,
+): SendOfferChatMessageResponse {
   return {
-    userMessage: presentMessage(result.userMessage),
-    assistantMessage: presentMessage(result.assistantMessage),
+    userMessage: presentMessage(exchange.userMessage),
+    assistantMessage: presentMessage(exchange.assistantMessage),
   };
 }

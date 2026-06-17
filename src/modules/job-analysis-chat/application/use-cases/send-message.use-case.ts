@@ -19,6 +19,7 @@ import { JobAnalysisChatConversationId } from "../../domain/value-objects/job-an
 import { JobAnalysisChatMessageId } from "../../domain/value-objects/job-analysis-chat-message-id.value-object";
 import { AnalysisReference } from "../../domain/value-objects/analysis-reference.value-object";
 import { GetJobAnalysisChatContextQuery } from "../queries/get-job-analysis-chat-context.query";
+import { JobAnalysisChatExchange } from "../../domain/value-objects/job-analysis-chat-exchange.value-object";
 
 export interface SendMessageInput {
   userId: string;
@@ -33,11 +34,6 @@ export interface SendMessageInput {
   startedAt?: number;
 }
 
-export interface SendMessageResult {
-  userMessage: ChatMessage;
-  assistantMessage: ChatMessage;
-}
-
 export class SendMessageUseCase {
   constructor(
     private readonly deps: {
@@ -49,7 +45,7 @@ export class SendMessageUseCase {
     },
   ) {}
 
-  async execute(input: SendMessageInput): Promise<SendMessageResult> {
+  async execute(input: SendMessageInput): Promise<JobAnalysisChatExchange> {
     const ownerId = UserId.fromPrimitives(input.userId);
     const conversationId = JobAnalysisChatConversationId.fromPrimitives(
       input.conversationId,
@@ -136,6 +132,6 @@ export class SendMessageUseCase {
     await this.deps.eventBus.publish(assistantEvents);
     await publishAIInteractionApplied(this.deps.eventBus, interactionContext);
 
-    return { userMessage, assistantMessage };
+    return JobAnalysisChatExchange.create(userMessage, assistantMessage);
   }
 }
