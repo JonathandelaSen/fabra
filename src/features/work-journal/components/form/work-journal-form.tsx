@@ -82,7 +82,7 @@ export function WorkJournalForm({
                 {t("finalText")}
               </label>
               <textarea
-                className="w-full bg-transparent text-[17px] md:text-lg font-light leading-relaxed text-text-soft placeholder:text-text-faint outline-none resize-y min-h-[240px] border border-line/10 rounded-xl p-4 focus:border-line/20 transition-colors"
+                className="w-full bg-transparent text-[17px] md:text-lg font-light leading-relaxed text-text-soft placeholder:text-text-faint outline-none resize-y min-h-[240px] border border-line rounded-xl p-4 focus:border-line-default transition-colors"
                 placeholder={t("notesPlaceholder")}
                 value={draft.final_text}
                 onChange={(event) =>
@@ -99,7 +99,7 @@ export function WorkJournalForm({
                 {t("rawNotes")}
               </label>
               <textarea
-                className="w-full bg-transparent text-[15px] font-light leading-relaxed text-text-muted placeholder:text-text-faint outline-none resize-y min-h-[120px] border border-line/5 rounded-xl p-4 focus:border-line/20 transition-colors"
+                className="w-full bg-transparent text-[15px] font-light leading-relaxed text-text-muted placeholder:text-text-faint outline-none resize-y min-h-[120px] border border-line rounded-xl p-4 focus:border-line-default transition-colors"
                 placeholder={t("aiNotesPlaceholder")}
                 value={draft.raw_notes}
                 onChange={(event) =>
@@ -126,7 +126,7 @@ export function WorkJournalForm({
             </div>
           )}
 
-          <div className="flex flex-wrap items-center gap-3 pt-6 border-t border-line/5">
+          <div className="flex flex-wrap items-center gap-3 pt-6 border-t border-line">
             <button
               onClick={saveEntry}
               disabled={aiLoading}

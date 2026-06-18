@@ -59,7 +59,7 @@ export function WorkJournalAISection({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="space-y-4 pt-4 border-t border-line/5"
+      className="space-y-4 pt-4 border-t border-line"
     >
       <div className="flex justify-end">
         <AIActionLauncher

@@ -99,13 +99,13 @@ export function WorkJournalEntryEditor({
           <div className="flex flex-wrap gap-4 flex-1 items-end">
             <input
               type="date"
-              className="bg-transparent border-b border-line-strong text-sm text-text-soft outline-none pb-1"
+              className="bg-transparent border-b border-line-strong text-sm text-text-soft outline-none pb-1 transition-colors focus:border-action-border/50"
               value={edit.dateStart}
               onChange={(e) => setEdit({ ...edit, dateStart: e.target.value })}
             />
             <input
               type="date"
-              className="bg-transparent border-b border-line-strong text-sm text-text-soft outline-none pb-1"
+              className="bg-transparent border-b border-line-strong text-sm text-text-soft outline-none pb-1 transition-colors focus:border-action-border/50"
               value={edit.dateEnd || ""}
               onChange={(e) =>
                 setEdit({ ...edit, dateEnd: e.target.value || null })
@@ -113,7 +113,7 @@ export function WorkJournalEntryEditor({
             />
             <input
               placeholder={t("editTopicPlaceholder")}
-              className="bg-transparent border-b border-line-strong text-sm text-text-soft outline-none pb-1 flex-1 min-w-[200px]"
+              className="bg-transparent border-b border-line-strong text-sm text-text-soft outline-none pb-1 flex-1 min-w-[200px] transition-colors focus:border-action-border/50"
               value={edit.topic || ""}
               onChange={(e) =>
                 setEdit({ ...edit, topic: e.target.value || null })
@@ -128,7 +128,7 @@ export function WorkJournalEntryEditor({
               {t("finalText")}
             </label>
             <textarea
-              className="w-full bg-transparent text-[17px] md:text-lg font-light leading-relaxed text-text-soft placeholder:text-text-faint outline-none resize-y min-h-[240px] border border-line/10 rounded-xl p-4 focus:border-line/20 transition-colors"
+              className="w-full bg-transparent text-[17px] md:text-lg font-light leading-relaxed text-text-soft placeholder:text-text-faint outline-none resize-y min-h-[240px] border border-line rounded-xl p-4 focus:border-line-default transition-colors"
               value={edit.finalText}
               onChange={(event) =>
                 setEdit({ ...edit, finalText: event.target.value })
@@ -141,7 +141,7 @@ export function WorkJournalEntryEditor({
               {t("rawNotes")}
             </label>
             <textarea
-              className="w-full bg-transparent text-[15px] font-light leading-relaxed text-text-muted placeholder:text-text-faint outline-none resize-y min-h-[120px] border border-line/5 rounded-xl p-4 focus:border-line/20 transition-colors"
+              className="w-full bg-transparent text-[15px] font-light leading-relaxed text-text-muted placeholder:text-text-faint outline-none resize-y min-h-[120px] border border-line rounded-xl p-4 focus:border-line-default transition-colors"
               value={edit.rawNotes}
               onChange={(event) =>
                 setEdit({ ...edit, rawNotes: event.target.value })

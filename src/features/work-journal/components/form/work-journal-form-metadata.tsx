@@ -5,7 +5,7 @@ import type { WorkJournalContext } from "../../api/work-journal-types";
 import { ActivityContextSelector } from "@/features/activity-context";
 
 const inputClass =
-  "w-full bg-transparent border-b border-line/10 px-0 py-2 text-[15px] font-medium text-text-main placeholder:text-text-faint outline-none transition-colors focus:border-action-border/50 focus:ring-0";
+  "w-full bg-transparent border-b border-line-strong px-0 py-2 text-[15px] font-medium text-text-main placeholder:text-text-faint outline-none transition-colors focus:border-action-border/50 focus:ring-0";
 const labelClass = "text-xs font-medium text-text-muted mb-1.5 block uppercase tracking-wider";
 
 interface WorkJournalFormMetadataProps {
@@ -49,7 +49,7 @@ export function WorkJournalFormMetadata({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-6 pt-4 border-t border-line/5">
+      <div className="grid grid-cols-2 gap-6 pt-4 border-t border-line">
         <div>
           <label className={labelClass}>{t("dateFrom")}</label>
           <input

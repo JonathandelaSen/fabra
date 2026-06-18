@@ -37,11 +37,11 @@ export function WorkJournalEntryDisplay({
         </p>
 
         {entry.rawNotes !== entry.finalText && (
-          <div className="mt-8 pt-6 border-t border-line/5">
+          <div className="mt-8 pt-6 border-t border-line">
             <h4 className="text-xs font-medium text-text-muted uppercase tracking-wider mb-4">
               {t("rawNotes")}
             </h4>
-            <p className="text-[14px] leading-relaxed text-text-muted whitespace-pre-wrap w-full bg-scrim-soft p-4 rounded-xl border border-line/[0.02]">
+            <p className="text-[14px] leading-relaxed text-text-muted whitespace-pre-wrap w-full bg-field p-4 rounded-xl border border-line">
               {entry.rawNotes}
             </p>
           </div>
