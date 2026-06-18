@@ -28,7 +28,7 @@ export function buildCVProfileEditingCopyPastePrompt(input: {
 Copy Paste transport instructions:
 - Return only valid JSON.
 - Do not include Markdown, comments, or explanation outside the JSON object.
-- Do not include Markdown inside JSON string values either.
+- Inside JSON string values, use Markdown only where the system prompt allows narrative-field Markdown.
 - Contact fields must stay scalar and clean: use "email": "name@example.com" and "url": "https://example.com", never "email": "[name@example.com](mailto:name@example.com)" or "url": "[example](https://example.com)".
 - Before returning, verify that every URL, email, and string field ends before the next JSON key. If a link-like value would require Markdown, split it into the existing "label" and "url" fields instead.
 - Use this exact envelope:

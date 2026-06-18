@@ -1,4 +1,5 @@
 import type { StandardCVEducation } from "@/lib/cv-profile";
+import { CVInlineMarkdown } from "./cv-inline-markdown";
 import { dateRange, hasItems } from "./cv-template-preview";
 
 interface CVTemplatePreviewEducationItemProps {
@@ -27,7 +28,7 @@ export function CVTemplatePreviewEducationItem({
             const bulletId = item.detailIds?.[index];
             return (
               <li key={index} data-bullet-id={bulletId}>
-                {detail}
+                <CVInlineMarkdown text={detail} />
               </li>
             );
           })}

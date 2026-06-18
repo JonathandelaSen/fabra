@@ -2,6 +2,7 @@
 
 import { Plus, Trash2, ArrowUp, ArrowDown } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { CVInlineMarkdownField } from "./cv-inline-markdown-field";
 
 interface EditableBulletListProps {
   items: string[];
@@ -56,14 +57,15 @@ export function EditableBulletList({ items, onChange, placeholder }: EditableBul
       {items.map((item, i) => (
         <div key={i} className="group flex items-center gap-2">
           <span className="text-[10px] text-text-faint w-3 shrink-0">{i + 1}.</span>
-          <input
-            type="text"
+          <div className="flex-1">
+            <CVInlineMarkdownField
             value={item}
-            onChange={(e) => update(i, e.target.value)}
+            onChange={(value) => update(i, value)}
             onKeyDown={(e) => handleKeyDown(e, i)}
             placeholder={inputPlaceholder}
-            className="flex-1 rounded-xl border border-line bg-panel-hover px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none"
+            multiline={false}
           />
+          </div>
           <div className="flex items-center gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all shrink-0">
             <button
               type="button"

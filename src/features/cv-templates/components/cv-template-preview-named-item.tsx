@@ -1,4 +1,5 @@
 import { buildExternalLinkHref, type StandardCVNamedItem } from "@/lib/cv-profile";
+import { CVInlineMarkdown } from "./cv-inline-markdown";
 import { hasItems } from "./cv-template-preview";
 
 interface CVTemplatePreviewNamedItemProps {
@@ -22,14 +23,14 @@ export function CVTemplatePreviewNamedItem({
         </div>
         <span>{item.date}</span>
       </div>
-      {item.description && <p className="cvp-description">{item.description}</p>}
+      {item.description && <p className="cvp-description"><CVInlineMarkdown text={item.description} /></p>}
       {hasItems(item.bullets) && (
         <ul>
           {item.bullets?.map((bullet, index) => {
             const bulletId = item.bulletIds?.[index];
             return (
               <li key={index} data-bullet-id={bulletId}>
-                {bullet}
+                <CVInlineMarkdown text={bullet} />
               </li>
             );
           })}

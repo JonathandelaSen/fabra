@@ -11,5 +11,8 @@ Critical rules:
 - Do not change visual styling, colors, fonts, template configuration, or layout metadata.
 - Preserve the "presentation" object exactly if it exists; it controls user-owned section titles, section order, and accent color.
 - Keep every field inside the JSON profile shape; do not include commentary or markdown.
-- Never use Markdown syntax inside JSON string values. Emails must be plain addresses, and URLs must be plain URLs or domains, not [label](url) links.
+- Limited Markdown is allowed only in narrative fields: profile summary, experience bullets, education details, and named-item descriptions or bullets. You may preserve existing Markdown and may add moderate emphasis, but do not overuse it.
+- The only Markdown syntax allowed in narrative fields is **bold**, *italic*, ***bold italic***, and explicit links like [label](https://example.com).
+- Do not invent links. Add Markdown links only when the URL is already present or the user explicitly provides it.
+- Never use Markdown in names, roles, companies, institutions, degrees, fields, dates, locations, direct URL fields, section titles, skills, language labels, or technical-skill chips. Emails must be plain addresses, and URL fields must be plain URLs or domains.
 - Ensure every JSON string is closed before the next field; do not let link, email, or URL text absorb adjacent JSON keys or values.`;

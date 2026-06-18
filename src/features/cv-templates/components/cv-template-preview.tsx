@@ -14,6 +14,7 @@ import { CVTemplatePreviewSection } from "./cv-template-preview-section";
 import { CVTemplatePreviewExperienceItem } from "./cv-template-preview-experience-item";
 import { CVTemplatePreviewEducationItem } from "./cv-template-preview-education-item";
 import { CVTemplatePreviewNamedItem } from "./cv-template-preview-named-item";
+import { CVInlineMarkdown } from "./cv-inline-markdown";
 
 export type CVTemplatePreviewScale = "card" | "full";
 
@@ -61,7 +62,7 @@ export default function CVTemplatePreview({
       return (
         <CVTemplatePreviewSection key={section} title={title} sectionId={section}>
           <p className="cvp-summary">
-            {profile.summary}
+            <CVInlineMarkdown text={profile.summary} />
           </p>
         </CVTemplatePreviewSection>
       );

@@ -8,8 +8,10 @@ import {
   renderToBuffer,
   Font,
 } from "@react-pdf/renderer";
+import type { Style } from "@react-pdf/types";
 import path from "path";
 import { Fragment, type ReactNode } from "react";
+import { parseCVInlineMarkdown } from "@/lib/cv-inline-markdown";
 import {
   buildExternalLinkHref,
   normalizeContactEmail,
@@ -34,8 +36,20 @@ Font.register({
 });
 
 Font.register({
+  family: "InterPDF",
+  src: path.join(process.cwd(), "public/fonts/Inter-Italic.ttf"),
+  fontStyle: "italic",
+});
+
+Font.register({
   family: "InterPDFSemiBold",
   src: path.join(process.cwd(), "public/fonts/Inter-SemiBold.ttf"),
+});
+
+Font.register({
+  family: "InterPDFSemiBold",
+  src: path.join(process.cwd(), "public/fonts/Inter-SemiBoldItalic.ttf"),
+  fontStyle: "italic",
 });
 
 Font.register({
@@ -44,8 +58,20 @@ Font.register({
 });
 
 Font.register({
+  family: "InterPDFBold",
+  src: path.join(process.cwd(), "public/fonts/Inter-BoldItalic.ttf"),
+  fontStyle: "italic",
+});
+
+Font.register({
   family: "InterPDFExtraBold",
   src: path.join(process.cwd(), "public/fonts/Inter-ExtraBold.ttf"),
+});
+
+Font.register({
+  family: "InterPDFExtraBold",
+  src: path.join(process.cwd(), "public/fonts/Inter-ExtraBoldItalic.ttf"),
+  fontStyle: "italic",
 });
 
 Font.register({
@@ -54,8 +80,20 @@ Font.register({
 });
 
 Font.register({
+  family: "GaramondPDF",
+  src: path.join(process.cwd(), "public/fonts/EBGaramond-Italic.ttf"),
+  fontStyle: "italic",
+});
+
+Font.register({
   family: "GaramondPDFBold",
   src: path.join(process.cwd(), "public/fonts/EBGaramond-Bold.ttf"),
+});
+
+Font.register({
+  family: "GaramondPDFBold",
+  src: path.join(process.cwd(), "public/fonts/EBGaramond-BoldItalic.ttf"),
+  fontStyle: "italic",
 });
 
 Font.registerHyphenationCallback((word) => [word]);
@@ -593,10 +631,88 @@ function BulletList({ items, s }: { items?: string[]; s: ReturnType<typeof getSt
       {items?.map((item, index) => (
         <View key={index} style={s.bulletContainer} wrap={false}>
           <Text style={s.bulletDot}>•</Text>
-          <Text style={s.bulletText}>{item}</Text>
+          <FormattedPDFText text={item} style={s.bulletText} s={s} />
         </View>
       ))}
     </View>
+  );
+}
+
+function getStrongFontFamily(style: Style | Style[]) {
+  const styleRecord = Array.isArray(style)
+    ? Object.assign({}, ...style)
+    : style;
+  const fontFamily = styleRecord.fontFamily;
+  if (fontFamily === "GaramondPDF" || fontFamily === "GaramondPDFBold") {
+    return "GaramondPDFBold";
+  }
+  return "InterPDFSemiBold";
+}
+
+function getBaseFontFamily(style: Style | Style[]) {
+  const styleRecord = Array.isArray(style)
+    ? Object.assign({}, ...style)
+    : style;
+  const fontFamily = styleRecord.fontFamily;
+  return typeof fontFamily === "string" ? fontFamily : "InterPDF";
+}
+
+export function getPDFInlineMarkdownStyles(style: Style | Style[]) {
+  const strongStyle: Style = {
+    fontFamily: getStrongFontFamily(style),
+    fontWeight: 600,
+  };
+  const emphasisStyle: Style = {
+    fontFamily: getBaseFontFamily(style),
+    fontStyle: "italic",
+  };
+  const strongEmphasisStyle: Style = {
+    ...strongStyle,
+    fontStyle: "italic",
+  };
+
+  return { strongStyle, emphasisStyle, strongEmphasisStyle };
+}
+
+function FormattedPDFText({
+  text,
+  style,
+  s,
+}: {
+  text: string;
+  style: Style | Style[];
+  s: ReturnType<typeof getStyles>;
+}) {
+  const effectiveStyle: Style[] = [
+    { fontFamily: s.page.fontFamily },
+    ...(Array.isArray(style) ? style : [style]),
+  ];
+  const { strongStyle, emphasisStyle, strongEmphasisStyle } =
+    getPDFInlineMarkdownStyles(effectiveStyle);
+  const tokens = parseCVInlineMarkdown(text);
+
+  return (
+    <Text style={style}>
+      {tokens.map((token, index) => {
+        if (token.type === "strong") {
+          return <Text key={index} style={strongStyle}>{token.text}</Text>;
+        }
+        if (token.type === "emphasis") {
+          return <Text key={index} style={emphasisStyle}>{token.text}</Text>;
+        }
+        if (token.type === "strongEmphasis") {
+          return <Text key={index} style={strongEmphasisStyle}>{token.text}</Text>;
+        }
+        if (token.type === "link") {
+          return (
+            <Link key={index} src={token.href} style={s.link}>
+              {token.text}
+            </Link>
+          );
+        }
+        return token.text;
+      })}
+    </Text>
   );
 }
 
@@ -667,7 +783,7 @@ function NamedPDF({ item, s }: { item: StandardCVNamedItem; s: ReturnType<typeof
         </View>
         <Text style={s.itemDate}>{item.date}</Text>
       </View>
-      {item.description && <Text style={s.summary}>{item.description}</Text>}
+      {item.description && <FormattedPDFText text={item.description} style={s.summary} s={s} />}
       <BulletList items={item.bullets} s={s} />
     </View>
   );
@@ -710,7 +826,7 @@ function CVTemplateDocument({
       return (
         <Section key={section} title={title} s={s} accentColor={accentColor}>
           <View style={s.item}>
-            <Text style={s.summary}>{profile.summary}</Text>
+            <FormattedPDFText text={profile.summary} style={s.summary} s={s} />
           </View>
         </Section>
       );

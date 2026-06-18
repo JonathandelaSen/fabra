@@ -26,7 +26,10 @@ Critical rules:
 - Do not change visual styling, colors, fonts, template configuration, or layout metadata.
 - Preserve the "presentation" object exactly if it exists; it controls user-owned section titles, section order, and accent color.
 - Keep every field inside the JSON profile shape; do not include commentary or markdown.
-- Never use Markdown syntax inside JSON string values. Emails must be plain addresses, and URLs must be plain URLs or domains, not [label](url) links.
+- Limited Markdown is allowed only in narrative fields: profile summary, experience bullets, education details, and named-item descriptions or bullets. You may preserve existing Markdown and may add moderate emphasis, but do not overuse it.
+- The only Markdown syntax allowed in narrative fields is **bold**, *italic*, ***bold italic***, and explicit links like [label](https://example.com).
+- Do not invent links. Add Markdown links only when the URL is already present or the user explicitly provides it.
+- Never use Markdown in names, roles, companies, institutions, degrees, fields, dates, locations, direct URL fields, section titles, skills, language labels, or technical-skill chips. Emails must be plain addresses, and URL fields must be plain URLs or domains.
 - Ensure every JSON string is closed before the next field; do not let link, email, or URL text absorb adjacent JSON keys or values.
 ```
 
@@ -44,7 +47,7 @@ The result shape is the full edited profile (same schema as integrated mode), no
 
 Copy Paste transport rules additionally require:
 - No Markdown outside the JSON object.
-- No Markdown inside JSON string values.
+- Markdown inside JSON string values only where the system prompt allows narrative-field Markdown.
 - Contact fields remain scalar and clean: `email` is a plain address, and `url` is a plain URL/domain.
 - Links use separate `label` and `url` fields instead of Markdown link syntax.
 - The model must verify that URL/email strings are closed before the next JSON key.
@@ -58,6 +61,7 @@ Copy Paste transport rules additionally require:
 - System instruction data: editing safety rules and output contract.
 - The integrated controller always restores the original `presentation` object after parsing.
 - The Copy Paste prompt builder (`buildCVProfileEditingCopyPastePrompt`) includes the system prompt, envelope instructions, template context, recommendations, instruction, and full profile JSON in a single prompt string.
+- Narrative fields may contain limited inline Markdown that is stored as plain strings and rendered by the manual editor preview/public CV/PDF surfaces. Non-narrative fields remain plain text.
 
 ## Runtime Flow
 
@@ -78,4 +82,4 @@ Copy Paste transport rules additionally require:
 The preview step compares the current profile against the edited profile section by section (basics, summary, experience, education, skills, etc.) and reports which sections changed. A warning is shown when more than 5 sections changed (large rewrite).
 
 ## Maintenance
-When `SYSTEM_PROMPT`, `EditCVProfileWithAIUseCase`, `buildCVProfileEditingCopyPastePrompt`, recommendations handling, or presentation preservation changes, update this document in the same change.
+When `SYSTEM_PROMPT`, `EditCVProfileWithAIUseCase`, `buildCVProfileEditingCopyPastePrompt`, recommendations handling, narrative Markdown rules, or presentation preservation changes, update this document in the same change.

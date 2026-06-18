@@ -1103,6 +1103,13 @@ export const messages = {
         addBullet: "Add bullet",
         addItem: "Add {label}",
         technicalSkillsPlaceholder: "E.g. React, Node.js, Python...",
+        markdown: {
+          bold: "Bold",
+          italic: "Italic",
+          boldItalic: "Bold italic",
+          link: "Link",
+          selectedText: "text",
+        },
         sections: {
           basics: "Personal details",
           summary: "Summary",
@@ -2836,6 +2843,13 @@ export const messages = {
         addBullet: "Añadir punto",
         addItem: "Añadir {label}",
         technicalSkillsPlaceholder: "Ej: React, Node.js, Python...",
+        markdown: {
+          bold: "Negrita",
+          italic: "Cursiva",
+          boldItalic: "Negrita y cursiva",
+          link: "Enlace",
+          selectedText: "texto",
+        },
         sections: {
           basics: "Datos personales",
           summary: "Resumen",

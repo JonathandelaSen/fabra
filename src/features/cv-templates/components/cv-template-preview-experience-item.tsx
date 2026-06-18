@@ -1,4 +1,5 @@
 import type { StandardCVExperience } from "@/lib/cv-profile";
+import { CVInlineMarkdown } from "./cv-inline-markdown";
 import { dateRange, hasItems } from "./cv-template-preview";
 
 interface CVTemplatePreviewExperienceItemProps {
@@ -29,7 +30,7 @@ export function CVTemplatePreviewExperienceItem({
             const bulletId = item.bulletIds?.[index];
             return (
               <li key={index} data-bullet-id={bulletId}>
-                {bullet}
+                <CVInlineMarkdown text={bullet} />
               </li>
             );
           })}
