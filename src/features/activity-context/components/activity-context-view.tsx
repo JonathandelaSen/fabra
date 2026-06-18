@@ -194,7 +194,7 @@ export function ActivityContextView() {
               <Loader2 className="h-5 w-5 animate-spin text-text-faint" />
             </div>
           ) : sortedContexts.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-line/[0.08] px-6 py-10 text-center">
+            <div className="rounded-lg border border-dashed border-line px-6 py-10 text-center">
               <p className="text-sm text-text-faint">{t("empty")}</p>
             </div>
           ) : (

@@ -83,7 +83,7 @@ export function ContextRow({
 
   if (editState) {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-line/[0.06] bg-panel/[0.02] px-4 py-3">
+      <div className="flex items-center gap-2 rounded-lg border border-line bg-panel-subtle px-4 py-3">
         <select
           className="h-8 w-28 shrink-0 rounded-lg border border-input bg-transparent px-2 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
           value={editState.type}
@@ -124,8 +124,8 @@ export function ContextRow({
   }
 
   return (
-    <div className="group flex items-center gap-3 rounded-lg border border-line/[0.06] bg-panel/[0.02] px-4 py-3 transition-colors hover:border-line/10 hover:bg-panel/[0.04]">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-panel/[0.04] text-text-muted">
+    <div className="group flex items-center gap-3 rounded-lg border border-line bg-panel-subtle px-4 py-3 transition-colors hover:border-line-default hover:bg-panel-hover">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-panel-control text-text-muted">
         {TYPE_ICONS[context.type]}
       </span>
 

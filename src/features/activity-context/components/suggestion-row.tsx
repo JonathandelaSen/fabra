@@ -28,7 +28,7 @@ export function SuggestionRow({
   const t = useTranslations("activityContexts");
 
   return (
-    <div className="group flex items-center gap-3 rounded-lg border border-dashed border-line/[0.06] bg-panel/[0.01] px-4 py-3 transition-colors hover:border-warning-border hover:bg-panel/[0.02]">
+    <div className="group flex items-center gap-3 rounded-lg border border-dashed border-line bg-panel-subtle px-4 py-3 transition-colors hover:border-warning-border hover:bg-panel-hover">
       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-warning/10 text-warning-text">
         <Sparkles className="h-3.5 w-3.5" />
       </span>
