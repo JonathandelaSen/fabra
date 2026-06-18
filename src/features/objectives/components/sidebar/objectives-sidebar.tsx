@@ -54,10 +54,10 @@ export function ObjectivesSidebar({
         <ObjectivesSidebarSkeleton />
       ) : commitments.length === 0 ? (
         <div className="px-4 py-12 text-center">
-          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-500/10">
-            <Target className="h-5 w-5 text-indigo-400" />
+          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-action/10">
+            <Target className="h-5 w-5 text-action-text" />
           </div>
-          <p className="text-sm font-medium text-zinc-400">
+          <p className="text-sm font-medium text-text-muted">
             {t("empty")}
           </p>
         </div>

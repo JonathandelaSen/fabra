@@ -54,7 +54,7 @@ export function DeleteAccountPanel({ userEmail }: DeleteAccountPanelProps) {
           autoComplete="email"
           placeholder={userEmail || t("accountEmail")}
           required
-          className="h-11 rounded-xl border border-rose-500/20 bg-field px-4 text-sm text-text-main outline-none transition-all placeholder:text-text-faint focus:border-rose-400/40 focus:ring-2 focus:ring-rose-500/10"
+          className="h-11 rounded-xl border border-danger-border bg-field px-4 text-sm text-text-main outline-none transition-all placeholder:text-text-faint focus:border-danger-border focus:ring-2 focus:ring-danger-border"
         />
         <input
           name="password"
@@ -64,7 +64,7 @@ export function DeleteAccountPanel({ userEmail }: DeleteAccountPanelProps) {
           autoComplete="current-password"
           placeholder={t("currentPassword")}
           required
-          className="h-11 rounded-xl border border-rose-500/20 bg-field px-4 text-sm text-text-main outline-none transition-all placeholder:text-text-faint focus:border-rose-400/40 focus:ring-2 focus:ring-rose-500/10"
+          className="h-11 rounded-xl border border-danger-border bg-field px-4 text-sm text-text-main outline-none transition-all placeholder:text-text-faint focus:border-danger-border focus:ring-2 focus:ring-danger-border"
         />
       </div>
 

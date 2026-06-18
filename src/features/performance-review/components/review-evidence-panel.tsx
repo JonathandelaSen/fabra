@@ -182,7 +182,7 @@ export function ReviewEvidencePanel(props: ReviewEvidencePanelProps) {
               className={cn(
                 "rounded-lg border p-3 transition-colors",
                 item.highlighted
-                  ? "border-amber-400/35 bg-amber-400/[0.06]"
+                  ? "border-warning-border bg-warning/[0.06]"
                   : "border-line",
               )}
             >
@@ -207,7 +207,7 @@ export function ReviewEvidencePanel(props: ReviewEvidencePanelProps) {
                   >
                     <Star
                       className={cn(
-                        item.highlighted && "fill-current text-amber-400",
+                        item.highlighted && "fill-current text-warning-text",
                       )}
                     />
                   </Button>

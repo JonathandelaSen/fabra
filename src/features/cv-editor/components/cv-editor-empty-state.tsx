@@ -14,7 +14,7 @@ const PDFPreview = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-32 w-full items-center justify-center bg-zinc-950 text-zinc-600">
+      <div className="flex h-32 w-full items-center justify-center bg-field-code text-text-faint">
         <Loader2 className="h-6 w-6 animate-spin" />
       </div>
     ),
@@ -42,16 +42,16 @@ export function CVEditorEmptyState({
   const t = useTranslations("cvEditor");
 
   return (
-    <div className={`flex h-full w-full flex-col items-center bg-[#050509] px-4 py-8 sm:p-10 text-center overflow-y-auto ${templateCvs.length > 0 ? "justify-start" : "justify-center"}`}>
+    <div className={`flex h-full w-full flex-col items-center bg-pdf-canvas px-4 py-8 sm:p-10 text-center overflow-y-auto ${templateCvs.length > 0 ? "justify-start" : "justify-center"}`}>
       <div className="max-w-5xl w-full mx-auto">
         <div className="hidden sm:block">
-          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-500/10 text-teal-400">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-teal/10 text-accent-teal-text">
             <LayoutTemplate className="h-8 w-8" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">
+          <h2 className="text-2xl font-bold text-text-main mb-2">
             {t("empty.title")}
           </h2>
-          <p className="text-zinc-500 mb-8">
+          <p className="text-text-muted mb-8">
             {t("empty.description")}
           </p>
         </div>
@@ -70,22 +70,22 @@ export function CVEditorEmptyState({
                     onSelectVersion(cv.id);
                   }
                 }}
-                className="flex w-full flex-col items-start rounded-xl border border-white/5 bg-white/5 hover:border-teal-500/30 hover:bg-white/10 transition-all duration-300 shadow-md hover:shadow-teal-500/5 hover:-translate-y-0.5 group overflow-hidden cursor-pointer select-none"
+                className="flex w-full flex-col items-start rounded-xl border border-line/5 bg-panel/5 hover:border-accent-teal-border hover:bg-panel/10 transition-all duration-300 shadow-md hover:shadow-[var(--ui-teal-shadow)] hover:-translate-y-0.5 group overflow-hidden cursor-pointer select-none"
               >
-                <div className="relative w-full h-48 bg-zinc-950/85 border-b border-white/5 flex items-start justify-center overflow-hidden transition-colors duration-300 group-hover:bg-zinc-950">
+                <div className="relative w-full h-48 bg-field-code/85 border-b border-line/5 flex items-start justify-center overflow-hidden transition-colors duration-300 group-hover:bg-field-code">
                   <div className="w-full pointer-events-none">
                     <PDFPreview url={`/api/cvs/${cv.id}/template-pdf`} mini />
                   </div>
                 </div>
                 <div className="w-full p-4 flex flex-col items-start text-left">
-                  <span className="font-semibold text-white truncate w-full group-hover:text-teal-400 transition-colors duration-300">
+                  <span className="font-semibold text-text-main truncate w-full group-hover:text-accent-teal-text transition-colors duration-300">
                     {cv.name}
                   </span>
                   <div className="flex items-center gap-2 mt-2">
-                    <span className="rounded-md bg-white/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-zinc-400">
+                    <span className="rounded-md bg-panel/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-text-muted">
                       {getCVTemplate(cv.templateId!)?.name || cv.templateId}
                     </span>
-                    <span className="rounded-md bg-white/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-zinc-400">
+                    <span className="rounded-md bg-panel/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-text-muted">
                       {cv.templateLocale}
                     </span>
                   </div>
@@ -94,8 +94,8 @@ export function CVEditorEmptyState({
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-8 mx-auto max-w-md">
-            <p className="text-zinc-500 mb-6">
+          <div className="rounded-2xl border border-line/5 bg-panel/[0.02] p-8 mx-auto max-w-md">
+            <p className="text-text-muted mb-6">
               {t("empty.noTemplateCvs")}
             </p>
             <IconTextButton

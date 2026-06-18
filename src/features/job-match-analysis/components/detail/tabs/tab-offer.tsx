@@ -32,7 +32,7 @@ export default function TabOffer({
           transition={{ delay: 0.1 }}
         >
           <BasicPanel className="p-6">
-          <h4 className="text-sm font-semibold text-sky-300 flex items-center gap-2 mb-4">
+          <h4 className="text-sm font-semibold text-info-text flex items-center gap-2 mb-4">
             <ListChecks className="w-4 h-4" />
             {t("keyData")}
           </h4>
@@ -55,7 +55,7 @@ export default function TabOffer({
                 <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-text-faint">
                   {label}
                 </p>
-                <p className="mt-1 text-sm sm:text-base text-zinc-200">
+                <p className="mt-1 text-sm sm:text-base text-text-soft">
                   {value || t("notSpecified")}
                 </p>
               </div>
@@ -76,7 +76,7 @@ export default function TabOffer({
                   key={label}
                   className="rounded-xl border border-line bg-field p-4"
                 >
-                  <p className="mb-3 text-xs sm:text-sm font-semibold text-zinc-200">
+                  <p className="mb-3 text-xs sm:text-sm font-semibold text-text-soft">
                     {label}
                   </p>
                   {list.length > 0 ? (
@@ -84,9 +84,9 @@ export default function TabOffer({
                       {list.map((item, index) => (
                         <li
                           key={`${item}-${index}`}
-                          className="flex gap-2 text-xs sm:text-sm text-zinc-300"
+                          className="flex gap-2 text-xs sm:text-sm text-text-soft"
                         >
-                          <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-sky-400/70" />
+                          <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-info-text/70" />
                           {item}
                         </li>
                       ))}
@@ -107,18 +107,18 @@ export default function TabOffer({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="rounded-2xl border border-emerald-500/10 bg-emerald-500/[0.03] p-6"
+          className="rounded-2xl border border-success-border bg-success/[0.03] p-6"
         >
           <Accordion>
             <AccordionItem className="border-none">
               <AccordionTrigger className="py-0 hover:no-underline">
-                <h4 className="text-sm font-semibold text-emerald-300 flex items-center gap-2">
+                <h4 className="text-sm font-semibold text-success-text flex items-center gap-2">
                   <Briefcase className="w-4 h-4" />
                   {t("fullDescription")}
                 </h4>
               </AccordionTrigger>
               <AccordionContent className="pt-4">
-                <div className="text-sm sm:text-base text-zinc-300 bg-field rounded-xl p-4 border border-line whitespace-pre-wrap max-h-96 overflow-y-auto">
+                <div className="text-sm sm:text-base text-text-soft bg-field rounded-xl p-4 border border-line whitespace-pre-wrap max-h-96 overflow-y-auto">
                   {jobDescription}
                 </div>
               </AccordionContent>

@@ -20,12 +20,12 @@ export function ObjectivePlanningSection({
 }: ObjectivePlanningSectionProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest border-b border-white/[0.04] pb-1">
+      <h3 className="text-[10px] font-bold text-action-text uppercase tracking-widest border-b border-line/[0.04] pb-1">
         {t("sections.planning")}
       </h3>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="space-y-1.5 block text-left">
-          <span className="text-xs font-semibold text-zinc-400">{t("fields.source")}</span>
+          <span className="text-xs font-semibold text-text-muted">{t("fields.source")}</span>
           <Select
             value={form.source}
             onChange={(e) =>
@@ -33,14 +33,14 @@ export function ObjectivePlanningSection({
             }
           >
             {["manager", "self", "company", "project", "other"].map((source) => (
-              <option key={source} value={source} className="bg-panel-elevated text-text-main">
+              <option key={source} value={source} className="bg-panel-elevated text-text-on-bright">
                 {sourceLabel(source as ObjectiveSource)}
               </option>
             ))}
           </Select>
         </label>
         <label className="space-y-1.5 block text-left">
-          <span className="text-xs font-semibold text-zinc-400">
+          <span className="text-xs font-semibold text-text-muted">
             {t("fields.priority")}
           </span>
           <Select
@@ -52,35 +52,35 @@ export function ObjectivePlanningSection({
               })
             }
           >
-            <option value="" className="bg-panel-elevated text-text-main">{t("priority.none")}</option>
-            <option value="low" className="bg-panel-elevated text-text-main">{priorityLabel("low")}</option>
-            <option value="medium" className="bg-panel-elevated text-text-main">{priorityLabel("medium")}</option>
-            <option value="high" className="bg-panel-elevated text-text-main">{priorityLabel("high")}</option>
+            <option value="" className="bg-panel-elevated text-text-on-bright">{t("priority.none")}</option>
+            <option value="low" className="bg-panel-elevated text-text-on-bright">{priorityLabel("low")}</option>
+            <option value="medium" className="bg-panel-elevated text-text-on-bright">{priorityLabel("medium")}</option>
+            <option value="high" className="bg-panel-elevated text-text-on-bright">{priorityLabel("high")}</option>
           </Select>
         </label>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="space-y-1.5 block text-left">
-          <span className="text-xs font-semibold text-zinc-400">
+          <span className="text-xs font-semibold text-text-muted">
             {t("fields.startDate")}
           </span>
           <Input
             type="date"
             value={form.startDate}
             onChange={(e) => onFormChange({ ...form, startDate: e.target.value })}
-            className="bg-zinc-950 border-white/[0.06] focus-visible:ring-emerald-500/20 py-2 h-auto text-sm"
+            className="bg-field-code border-line/[0.06] focus-visible:ring-success-border py-2 h-auto text-sm"
           />
         </label>
         <label className="space-y-1.5 block text-left">
-          <span className="text-xs font-semibold text-zinc-400">
+          <span className="text-xs font-semibold text-text-muted">
             {t("fields.targetDate")}
           </span>
           <Input
             type="date"
             value={form.targetDate}
             onChange={(e) => onFormChange({ ...form, targetDate: e.target.value })}
-            className="bg-zinc-950 border-white/[0.06] focus-visible:ring-emerald-500/20 py-2 h-auto text-sm"
+            className="bg-field-code border-line/[0.06] focus-visible:ring-success-border py-2 h-auto text-sm"
           />
         </label>
       </div>

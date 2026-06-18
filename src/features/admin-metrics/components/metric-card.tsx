@@ -37,12 +37,12 @@ export function MetricCard({
           {hasDelta && (
             <div>
               {windowCount > 0 ? (
-                <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-success/10 text-success-text dark:text-success-text">
                   <ArrowUpRight className="h-3 w-3" />
                   {t("windowDelta", { count: windowCount, days: windowDays })}
                 </span>
               ) : windowCount < 0 ? (
-                <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-warning/10 text-warning-text dark:text-warning-text">
                   <ArrowDownRight className="h-3 w-3" />
                   {t("windowDelta", { count: windowCount, days: windowDays })}
                 </span>

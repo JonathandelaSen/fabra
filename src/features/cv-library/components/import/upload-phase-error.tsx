@@ -11,7 +11,7 @@ export function UploadPhaseError({ error }: UploadPhaseErrorProps) {
     <motion.div
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: "auto" }}
-      className="mt-4 px-4 py-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-sm"
+      className="mt-4 px-4 py-3 rounded-xl bg-danger-soft border border-danger-border text-danger-text text-sm"
     >
       {error}
     </motion.div>

@@ -52,33 +52,33 @@ export function ArraySectionWrapper<T>({ items, onChange, renderItem, createEmpt
   return (
     <div className="space-y-2">
       {items.map((item, i) => (
-        <div key={i} className="rounded-xl border border-white/5 bg-white/[0.02] overflow-hidden">
+        <div key={i} className="rounded-xl border border-line/5 bg-panel/[0.02] overflow-hidden">
           <div
-            className="flex items-center gap-2 px-3 py-2.5 cursor-pointer hover:bg-white/[0.03] transition-colors"
+            className="flex items-center gap-2 px-3 py-2.5 cursor-pointer hover:bg-panel/[0.03] transition-colors"
             onClick={() => setExpandedIndex(expandedIndex === i ? null : i)}
           >
-            <ChevronDown className={`h-3.5 w-3.5 text-zinc-600 transition-transform ${expandedIndex === i ? "rotate-180" : ""}`} />
-            <span className="flex-1 truncate text-xs text-zinc-300">{getPreview(item) || `${label} ${i + 1}`}</span>
+            <ChevronDown className={`h-3.5 w-3.5 text-text-faint transition-transform ${expandedIndex === i ? "rotate-180" : ""}`} />
+            <span className="flex-1 truncate text-xs text-text-soft">{getPreview(item) || `${label} ${i + 1}`}</span>
             <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-              <button onClick={() => moveUp(i)} disabled={i === 0} className="text-zinc-600 hover:text-zinc-300 disabled:opacity-20 p-0.5">
+              <button onClick={() => moveUp(i)} disabled={i === 0} className="text-text-faint hover:text-text-soft disabled:opacity-20 p-0.5">
                 <ChevronUp className="h-3.5 w-3.5" />
               </button>
-              <button onClick={() => moveDown(i)} disabled={i === items.length - 1} className="text-zinc-600 hover:text-zinc-300 disabled:opacity-20 p-0.5">
+              <button onClick={() => moveDown(i)} disabled={i === items.length - 1} className="text-text-faint hover:text-text-soft disabled:opacity-20 p-0.5">
                 <ChevronDown className="h-3.5 w-3.5" />
               </button>
-              <button onClick={() => remove(i)} className="text-zinc-600 hover:text-rose-400 p-0.5 ml-1">
+              <button onClick={() => remove(i)} className="text-text-faint hover:text-danger-text p-0.5 ml-1">
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
             </div>
           </div>
           {expandedIndex === i && (
-            <div className="px-3 pb-3 space-y-3 border-t border-white/5 pt-3">
+            <div className="px-3 pb-3 space-y-3 border-t border-line/5 pt-3">
               {renderItem(item, i, (value) => updateItem(i, value))}
             </div>
           )}
         </div>
       ))}
-      <button onClick={add} className="flex items-center gap-1.5 text-[11px] text-teal-400 hover:text-teal-300 pt-1">
+      <button onClick={add} className="flex items-center gap-1.5 text-[11px] text-accent-teal-text hover:text-accent-teal-text pt-1">
         <Plus className="h-3 w-3" />
         {t("addItem", { label: label.toLowerCase() })}
       </button>

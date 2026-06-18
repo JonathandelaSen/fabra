@@ -26,22 +26,22 @@ export function AnalysisNextStep({ cvId, isTemplateCv }: AnalysisNextStepProps) 
   const cta = isTemplateCv ? t("templateCta") : t("uploadedCta");
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-4 rounded-2xl border border-emerald-500/25 bg-gradient-to-r from-emerald-500/10 to-sky-500/5 p-5">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-4 rounded-2xl border border-success-border bg-gradient-to-r from-success-soft to-info-soft p-5">
       <div className="flex items-start gap-3 flex-1 min-w-0">
-        <div className="flex-shrink-0 grid place-items-center w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/25 text-emerald-300">
+        <div className="flex-shrink-0 grid place-items-center w-10 h-10 rounded-xl bg-success/15 border border-success-border text-success-text">
           <Sparkles className="w-5 h-5" />
         </div>
         <div className="min-w-0 space-y-1">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-emerald-400/80">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-success-text/80">
             {t("eyebrow")}
           </p>
-          <h4 className="text-base font-bold text-zinc-100">{title}</h4>
-          <p className="text-sm text-zinc-400 leading-relaxed">{description}</p>
+          <h4 className="text-base font-bold text-text-main">{title}</h4>
+          <p className="text-sm text-text-muted leading-relaxed">{description}</p>
         </div>
       </div>
       <Link
         href={href}
-        className="inline-flex flex-shrink-0 items-center justify-center gap-2 text-sm font-semibold text-emerald-50 bg-emerald-600 hover:bg-emerald-500 px-4 py-2.5 rounded-xl transition-colors shadow-lg shadow-emerald-900/30"
+        className="inline-flex flex-shrink-0 items-center justify-center gap-2 text-sm font-semibold text-text-on-bright bg-success hover:bg-success px-4 py-2.5 rounded-xl transition-colors shadow-lg shadow-[var(--ui-success-shadow)]"
       >
         <ActionIcon className="w-4 h-4" />
         {cta}

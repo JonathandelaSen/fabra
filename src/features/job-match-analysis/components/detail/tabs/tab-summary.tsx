@@ -33,9 +33,9 @@ export default function TabSummary({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="rounded-2xl border border-amber-500/20 bg-amber-500/[0.03] p-6 shadow-lg shadow-amber-500/[0.02]"
+          className="rounded-2xl border border-warning-border bg-warning/[0.03] p-6 shadow-lg shadow-[var(--ui-warning-shadow)]/[0.02]"
         >
-          <h4 className="text-sm font-semibold text-amber-400 flex items-center gap-2 mb-4">
+          <h4 className="text-sm font-semibold text-warning-text flex items-center gap-2 mb-4">
             <Star className="w-4 h-4" />
             {t("improvements")}
           </h4>
@@ -47,14 +47,14 @@ export default function TabSummary({
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 + i * 0.05 }}
-                  className="flex items-start gap-2.5 text-sm sm:text-base text-zinc-200"
+                  className="flex items-start gap-2.5 text-sm sm:text-base text-text-soft"
                 >
-                  <ChevronRight className="w-4 h-4 mt-0.5 text-amber-500/70 shrink-0" />
+                  <ChevronRight className="w-4 h-4 mt-0.5 text-warning-text/70 shrink-0" />
                   <AnalysisMarkdown content={imp} className="min-w-0 flex-1" />
                 </motion.li>
               ))
             ) : (
-              <span className="text-zinc-500 text-sm italic">
+              <span className="text-text-muted text-sm italic">
                 {t("noImprovements")}
               </span>
             )}
@@ -67,20 +67,20 @@ export default function TabSummary({
           transition={{ delay: 0.15 }}
         >
           <BasicPanel className="p-6">
-          <h4 className="text-sm font-semibold text-emerald-400 flex items-center gap-2 mb-4">
+          <h4 className="text-sm font-semibold text-success-text flex items-center gap-2 mb-4">
             <CheckCircle2 className="w-4 h-4" />
             {t("keywordsFound")}
           </h4>
           <div className="mb-4 grid gap-3">
             <div>
-              <p className="mb-2 text-xs sm:text-sm font-semibold text-zinc-400">
+              <p className="mb-2 text-xs sm:text-sm font-semibold text-text-muted">
                 {t("offer")}
               </p>
               <div className="flex flex-wrap gap-2">
                 {jobKeywords.map((kw) => (
                   <span
                     key={kw}
-                    className="rounded-lg border border-sky-500/20 bg-sky-500/10 px-2.5 py-1 text-xs sm:text-sm font-medium text-sky-300"
+                    className="rounded-lg border border-info-border/20 bg-info/10 px-2.5 py-1 text-xs sm:text-sm font-medium text-info-text"
                   >
                     {kw}
                   </span>
@@ -88,12 +88,12 @@ export default function TabSummary({
               </div>
             </div>
             <div>
-              <p className="mb-2 text-xs sm:text-sm font-semibold text-zinc-400">{t("cv")}</p>
+              <p className="mb-2 text-xs sm:text-sm font-semibold text-text-muted">{t("cv")}</p>
               <div className="flex flex-wrap gap-2">
                 {cvKeywords.map((kw) => (
                   <span
                     key={kw}
-                    className="rounded-lg border border-violet-500/20 bg-violet-500/10 px-2.5 py-1 text-xs sm:text-sm font-medium text-violet-300"
+                    className="rounded-lg border border-action-border bg-action-soft px-2.5 py-1 text-xs sm:text-sm font-medium text-action-text"
                   >
                     {kw}
                   </span>
@@ -109,13 +109,13 @@ export default function TabSummary({
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.3 + i * 0.05 }}
-                  className="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs sm:text-sm font-medium"
+                  className="px-3 py-1.5 rounded-lg bg-success/10 border border-success-border text-success-text text-xs sm:text-sm font-medium"
                 >
                   {kw}
                 </motion.span>
               ))
             ) : (
-              <span className="text-zinc-500 text-sm italic">
+              <span className="text-text-muted text-sm italic">
                 {t("noKeywords")}
               </span>
             )}
@@ -132,7 +132,7 @@ export default function TabSummary({
           transition={{ delay: 0.2 }}
         >
           <BasicPanel className="p-6">
-          <h4 className="text-sm font-semibold text-emerald-400 flex items-center gap-2 mb-4">
+          <h4 className="text-sm font-semibold text-success-text flex items-center gap-2 mb-4">
             <CheckCircle2 className="w-4 h-4" />
             {t("matchingKeywords")}
           </h4>
@@ -141,13 +141,13 @@ export default function TabSummary({
               matchingKeywords.map((kw) => (
                 <span
                   key={kw}
-                  className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs sm:text-sm font-medium text-emerald-300"
+                  className="rounded-lg border border-success-border bg-success/10 px-3 py-1.5 text-xs sm:text-sm font-medium text-success-text"
                 >
                   {kw}
                 </span>
               ))
             ) : (
-              <span className="text-sm italic text-zinc-500">
+              <span className="text-sm italic text-text-muted">
                 {t("noMatches")}
               </span>
             )}
@@ -160,7 +160,7 @@ export default function TabSummary({
         transition={{ delay: 0.25 }}
       >
         <BasicPanel className="p-6">
-          <h4 className="text-sm font-semibold text-rose-400 flex items-center gap-2 mb-4">
+          <h4 className="text-sm font-semibold text-danger-text flex items-center gap-2 mb-4">
             <XCircle className="w-4 h-4" />
             {t("missingKeywords")}
           </h4>
@@ -169,13 +169,13 @@ export default function TabSummary({
               missingKeywords.map((kw) => (
                 <span
                   key={kw}
-                  className="rounded-lg border border-rose-500/20 bg-rose-500/10 px-3 py-1.5 text-xs sm:text-sm font-medium text-rose-300"
+                  className="rounded-lg border border-danger-border bg-danger-soft px-3 py-1.5 text-xs sm:text-sm font-medium text-danger-text"
                 >
                   {kw}
                 </span>
               ))
             ) : (
-              <span className="text-sm italic text-zinc-500">
+              <span className="text-sm italic text-text-muted">
                 {t("noMissingKeywords")}
               </span>
             )}

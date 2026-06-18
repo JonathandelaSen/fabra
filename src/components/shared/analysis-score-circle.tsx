@@ -20,7 +20,7 @@ export default function AnalysisScoreCircle({
           cx="50"
           cy="50"
           r="42"
-          className="fill-none stroke-white/[0.06]"
+          className="fill-none stroke-line-strong/[0.06]"
           strokeWidth="6"
         />
         <motion.circle
@@ -44,7 +44,7 @@ export default function AnalysisScoreCircle({
         >
           {score}
         </motion.span>
-        <span className="text-zinc-500 text-[10px] font-semibold tracking-wider mt-0.5">
+        <span className="text-text-muted text-[10px] font-semibold tracking-wider mt-0.5">
           / 100
         </span>
       </div>

@@ -47,8 +47,8 @@ export default function ExtractionHeader({
   return (
     <div className="shrink-0 py-4 border-b border-line flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-xl bg-indigo-500/15 flex items-center justify-center shrink-0">
-          <FileText className="w-4.5 h-4.5 text-indigo-400" />
+        <div className="w-9 h-9 rounded-xl bg-action/15 flex items-center justify-center shrink-0">
+          <FileText className="w-4.5 h-4.5 text-action-text" />
         </div>
         <div className="min-w-0">
           <h2 className="text-base sm:text-lg font-semibold text-text-main truncate">
@@ -85,8 +85,8 @@ export default function ExtractionHeader({
               onClick={onTogglePdfPreview}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 showPdfPreview
-                  ? "bg-indigo-500 text-white"
-                  : "text-text-muted bg-panel-control hover:bg-panel-active hover:text-text-main"
+                  ? "bg-action text-text-on-dark"
+                  : "text-text-muted bg-panel-control hover:bg-panel-active hover:text-text-on-bright"
               }`}
             >
               <Eye className="w-3.5 h-3.5" />
@@ -101,7 +101,7 @@ export default function ExtractionHeader({
               href={pdfUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-action-text bg-action/10 hover:bg-action/20 border border-action-border/20 transition-all"
               title={t("viewPdf")}
             >
               <Download className="w-3.5 h-3.5" />

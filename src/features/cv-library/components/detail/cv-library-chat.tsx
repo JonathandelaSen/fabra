@@ -96,7 +96,7 @@ export default function CVLibraryChat({ cvId }: CVLibraryChatProps) {
               exit={{ opacity: 0, height: 0 }}
               className="mx-4"
             >
-              <p className="rounded-lg border border-red-500/20 bg-red-500/[0.06] px-3 py-2 text-xs text-red-400">
+              <p className="rounded-lg border border-danger-border bg-danger/[0.06] px-3 py-2 text-xs text-danger-text">
                 {chat.error}
               </p>
             </motion.div>

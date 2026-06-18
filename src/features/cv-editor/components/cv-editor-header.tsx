@@ -61,22 +61,22 @@ export function CVEditorHeader({
           tone={ACTION_ICON_BUTTON_TONES.MUTED}
           onClick={onBackToLibrary}
         />
-        <div className="hidden h-4 w-[1px] bg-white/10 sm:block" />
+        <div className="hidden h-4 w-[1px] bg-panel/10 sm:block" />
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <h2 className="truncate text-sm font-semibold text-white">
+            <h2 className="truncate text-sm font-semibold text-text-main">
               {versionName}
             </h2>
-            <span className="hidden text-[10px] text-zinc-600 lg:inline">{t("basedOn")}</span>
-            <span className="hidden truncate text-[11px] font-medium text-teal-500/80 italic lg:inline">
+            <span className="hidden text-[10px] text-text-faint lg:inline">{t("basedOn")}</span>
+            <span className="hidden truncate text-[11px] font-medium text-accent-teal-text italic lg:inline">
               {t("originalCv")}
             </span>
           </div>
-          <div className="flex items-center gap-2 text-[10px] text-zinc-500">
-            <span className="rounded-full bg-white/5 px-1.5 py-0.5 uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-[10px] text-text-muted">
+            <span className="rounded-full bg-panel/5 px-1.5 py-0.5 uppercase tracking-wider">
               {templateName}
             </span>
-            <span className="rounded-full bg-white/5 px-1.5 py-0.5 uppercase tracking-wider">
+            <span className="rounded-full bg-panel/5 px-1.5 py-0.5 uppercase tracking-wider">
               {locale}
             </span>
           </div>
@@ -84,7 +84,7 @@ export function CVEditorHeader({
       </div>
 
       <div className="flex shrink-0 items-center gap-1 sm:gap-3">
-        <div className="hidden items-center gap-1 rounded-md border border-white/5 bg-white/5 p-1 sm:flex">
+        <div className="hidden items-center gap-1 rounded-md border border-line/5 bg-panel/5 p-1 sm:flex">
           <ActionIconButton
             icon={Undo2}
             disabled={!canUndo}
@@ -109,13 +109,13 @@ export function CVEditorHeader({
           <span className="hidden sm:inline">{t("saveNewVersion")}</span>{" "}
         </IconTextButton>
 
-        <div className="hidden h-4 w-[1px] bg-white/10 md:block" />
+        <div className="hidden h-4 w-[1px] bg-panel/10 md:block" />
 
         <a
           href={`/api/cvs/${versionId}/template-pdf`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-9 items-center gap-2 rounded-md border border-white/5 bg-white/5 px-3 text-xs text-white hover:bg-white/10"
+          className="inline-flex h-9 items-center gap-2 rounded-md border border-line/5 bg-panel/5 px-3 text-xs text-text-main hover:bg-panel/10"
         >
           <Download className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">{t("downloadPdf")}</span>

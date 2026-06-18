@@ -80,7 +80,7 @@ export default function CopyPasteWorkflowModal<TPreview>({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-0 sm:p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-scrim p-0 sm:p-4"
       role="dialog"
       aria-modal="true"
       aria-label={title}
@@ -141,7 +141,7 @@ export default function CopyPasteWorkflowModal<TPreview>({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg px-4 py-2 text-sm font-semibold text-text-muted hover:bg-panel-hover hover:text-text-main"
+            className="rounded-lg px-4 py-2 text-sm font-semibold text-text-muted hover:bg-panel-hover hover:text-text-on-bright"
           >
             {t("cancel")}
           </button>
@@ -150,7 +150,7 @@ export default function CopyPasteWorkflowModal<TPreview>({
               type="button"
               onClick={onApply}
               disabled={loading}
-              className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-emerald-400 disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-lg bg-success px-4 py-2 text-sm font-semibold text-text-on-bright hover:bg-success disabled:opacity-50"
             >
               {isApplying && <Loader2 className="h-4 w-4 animate-spin" />}
               {getApplyLabel(previewData)}

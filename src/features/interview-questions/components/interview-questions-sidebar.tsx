@@ -46,9 +46,9 @@ export function InterviewQuestionsSidebar({
           }
           className="text-xs"
         >
-          <option value="" className="bg-[#1a1a24] text-zinc-100">{t("allCvs")}</option>
+          <option value="" className="bg-panel-elevated text-text-on-bright">{t("allCvs")}</option>
           {cvs.map((cv) => (
-            <option key={cv.id} value={cv.id} className="bg-[#1a1a24] text-zinc-100">
+            <option key={cv.id} value={cv.id} className="bg-panel-elevated text-text-on-bright">
               {cv.name}
             </option>
           ))}
@@ -60,9 +60,9 @@ export function InterviewQuestionsSidebar({
           }
           className="text-xs"
         >
-          <option value="" className="bg-[#1a1a24] text-zinc-100">{t("allOffers")}</option>
+          <option value="" className="bg-panel-elevated text-text-on-bright">{t("allOffers")}</option>
           {analyses.map((analysis) => (
-            <option key={analysis.id} value={analysis.id} className="bg-[#1a1a24] text-zinc-100">
+            <option key={analysis.id} value={analysis.id} className="bg-panel-elevated text-text-on-bright">
               {analysis.title}
             </option>
           ))}
@@ -77,9 +77,9 @@ export function InterviewQuestionsSidebar({
         }
         className="text-xs"
       >
-        <option value="all" className="bg-[#1a1a24] text-zinc-100">{t("all")}</option>
-        <option value="answered" className="bg-[#1a1a24] text-zinc-100">{t("answeredFilter")}</option>
-        <option value="empty" className="bg-[#1a1a24] text-zinc-100">{t("pendingFilter")}</option>
+        <option value="all" className="bg-panel-elevated text-text-on-bright">{t("all")}</option>
+        <option value="answered" className="bg-panel-elevated text-text-on-bright">{t("answeredFilter")}</option>
+        <option value="empty" className="bg-panel-elevated text-text-on-bright">{t("pendingFilter")}</option>
       </Select>
     </div>
   );
@@ -88,10 +88,10 @@ export function InterviewQuestionsSidebar({
     <FeatureSidebarPanel header={filterHeader}>
       {questions.length === 0 ? (
         <div className="px-4 py-12 text-center">
-          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-500/10">
-            <MessageSquareQuote className="h-5 w-5 text-indigo-400" />
+          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-action/10">
+            <MessageSquareQuote className="h-5 w-5 text-action-text" />
           </div>
-          <p className="text-sm font-medium text-zinc-400">
+          <p className="text-sm font-medium text-text-muted">
             {t("emptyFiltered")}
           </p>
         </div>

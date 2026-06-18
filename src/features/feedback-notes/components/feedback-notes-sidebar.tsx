@@ -115,9 +115,9 @@ export function FeedbackNotesSidebar({
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <div className="mt-2 flex flex-col gap-3 border-t border-white/[0.04] pt-3">
+                <div className="mt-2 flex flex-col gap-3 border-t border-line/[0.04] pt-3">
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="feedback-person-name" className="text-xs font-medium text-zinc-500">
+                    <label htmlFor="feedback-person-name" className="text-xs font-medium text-text-muted">
                       {t("fields.personName")}
                     </label>
                     <input
@@ -129,7 +129,7 @@ export function FeedbackNotesSidebar({
                         if (event.key === "Enter") submit();
                       }}
                       placeholder={t("placeholders.personName")}
-                      className="h-9 w-full rounded-lg border border-input bg-white/[0.03] px-2.5 py-1 text-sm text-zinc-100 outline-none transition-colors placeholder:text-zinc-600 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                      className="h-9 w-full rounded-lg border border-input bg-panel/[0.03] px-2.5 py-1 text-sm text-text-main outline-none transition-colors placeholder:text-text-faint focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
@@ -147,7 +147,7 @@ export function FeedbackNotesSidebar({
                         type="button"
                         onClick={submit}
                         disabled={isCreating || !personName.trim()}
-                        className="inline-flex h-7 items-center justify-center gap-1 rounded-lg bg-indigo-600 px-2.5 text-[0.8rem] font-medium text-white transition-colors hover:bg-indigo-500 disabled:pointer-events-none disabled:opacity-50"
+                        className="inline-flex h-7 items-center justify-center gap-1 rounded-lg bg-action px-2.5 text-[0.8rem] font-medium text-text-on-dark transition-colors hover:bg-action disabled:pointer-events-none disabled:opacity-50"
                       >
                         {isCreating ? (
                           <RefreshCw className="h-3.5 w-3.5 animate-spin" />
@@ -171,10 +171,10 @@ export function FeedbackNotesSidebar({
         <FeedbackNotesListSkeleton />
       ) : feedbacks.length === 0 ? (
         <div className="px-4 py-12 text-center">
-          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-500/10">
-            <MessageSquareQuote className="h-5 w-5 text-indigo-400" />
+          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-action/10">
+            <MessageSquareQuote className="h-5 w-5 text-action-text" />
           </div>
-          <p className="text-sm font-medium text-zinc-400">
+          <p className="text-sm font-medium text-text-muted">
             {t("empty")}
           </p>
         </div>

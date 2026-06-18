@@ -37,8 +37,8 @@ export function ThemeSettingsPanel() {
               onClick={() => changeTheme(value)}
               className={`flex h-10 items-center justify-center gap-2 rounded-lg px-3 text-sm font-medium transition-colors ${
                 selected
-                  ? "bg-action text-white shadow-sm"
-                  : "text-text-soft hover:bg-panel-hover hover:text-text-main"
+                  ? "bg-action text-text-on-dark shadow-sm"
+                  : "text-text-soft hover:bg-panel-hover hover:text-text-on-bright"
               }`}
             >
               <Icon className="h-4 w-4" />

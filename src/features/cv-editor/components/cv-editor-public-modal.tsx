@@ -27,26 +27,26 @@ export function CVEditorPublicModal({
   const t = useTranslations("cvEditor");
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-0 sm:p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-scrim p-0 sm:p-4 backdrop-blur-sm">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="h-full w-full sm:h-auto sm:max-w-md overflow-hidden rounded-none sm:rounded-3xl border-0 sm:border border-rose-500/20 bg-modal p-6 shadow-2xl flex flex-col justify-center"
+        className="h-full w-full sm:h-auto sm:max-w-md overflow-hidden rounded-none sm:rounded-3xl border-0 sm:border border-danger-border bg-modal p-6 shadow-2xl flex flex-col justify-center"
       >
-        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-500/10 text-rose-300">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-danger-soft text-danger-text">
           <AlertTriangle className="h-6 w-6" />
         </div>
-        <h3 className="text-lg font-semibold text-white">
+        <h3 className="text-lg font-semibold text-text-main">
           {t("publicModal.title")}
         </h3>
-        <p className="mt-3 text-sm leading-relaxed text-zinc-400">
+        <p className="mt-3 text-sm leading-relaxed text-text-muted">
           {t("publicModal.description")}
         </p>
         <AlertBanner tone={ALERT_BANNER_TONES.DANGER} className="mt-4">
           {t("publicModal.warning")}
         </AlertBanner>
-        <div className="mt-6 rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-xs text-zinc-300">
+        <div className="mt-6 rounded-xl border border-line/5 bg-panel/5 px-3 py-2 text-xs text-text-soft">
           {publicDraftUrl || `/cv/id/${normalizedPublicSlug}`}
         </div>
         <div className="mt-6 flex min-w-0 gap-3">

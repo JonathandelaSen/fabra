@@ -175,7 +175,7 @@ export function WorkJournalMainPane({
             variant="ghost"
             size="sm"
             onClick={onBackToTimeline}
-            className="text-zinc-400 hover:text-zinc-200"
+            className="text-text-muted hover:text-text-soft"
           >
             <ArrowLeft className="h-4 w-4" />
             {t("timeline.backToTimeline")}

@@ -29,7 +29,7 @@ const TONE_CLASS_NAMES = {
     "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
   [ICON_TEXT_BUTTON_TONES.PRIMARY]: "border-transparent bg-action text-primary-foreground hover:bg-action-hover",
   [ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT]:
-    "border-transparent bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-900/30 hover:from-indigo-500 hover:to-violet-500",
+    "border-transparent bg-gradient-to-r from-action to-action-hover text-text-on-dark shadow-lg shadow-[var(--ui-action-shadow)] hover:from-action-hover hover:to-action",
   [ICON_TEXT_BUTTON_TONES.SUCCESS]: "border-success-border bg-success-soft text-success-text hover:bg-success-soft",
   [ICON_TEXT_BUTTON_TONES.WARNING]: "border-warning-border bg-warning-soft text-warning-text hover:bg-warning-soft",
   [ICON_TEXT_BUTTON_TONES.DANGER]: "border-danger-border bg-danger-soft text-danger-text hover:bg-danger-soft",

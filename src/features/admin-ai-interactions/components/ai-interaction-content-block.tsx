@@ -65,7 +65,7 @@ export function AIInteractionContentBlock({
         )}
       </div>
       <pre
-        className="w-full h-auto max-h-none overflow-x-auto overflow-y-visible whitespace-pre-wrap rounded-xl bg-zinc-950 p-4 font-mono text-sm leading-relaxed text-zinc-300 border border-zinc-900"
+        className="w-full h-auto max-h-none overflow-x-auto overflow-y-visible whitespace-pre-wrap rounded-xl bg-field-code p-4 font-mono text-sm leading-relaxed text-text-soft border border-line"
       >
         {formatted || emptyLabel}
       </pre>

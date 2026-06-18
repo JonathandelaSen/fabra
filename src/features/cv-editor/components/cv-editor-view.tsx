@@ -21,7 +21,7 @@ const PDFPreview = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-full w-full items-center justify-center bg-zinc-900 text-zinc-500">
+      <div className="flex h-full w-full items-center justify-center bg-panel-elevated text-text-muted">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     ),
@@ -177,7 +177,7 @@ export default function CVEditorView({
   } satisfies Omit<CVEditorSidePanelProps, "displayMode">;
 
   return (
-    <div className="flex h-full w-full flex-col overflow-hidden bg-[#050509]">
+    <div className="flex h-full w-full flex-col overflow-hidden bg-pdf-canvas">
       <CVEditorHeader
         versionName={currentVersion.name}
         versionId={currentVersion.id}
@@ -200,11 +200,11 @@ export default function CVEditorView({
       />
 
       <div className="relative flex flex-1 overflow-hidden">
-        <div className="relative flex-1 overflow-auto bg-[#050509] scrollbar-thin">
+        <div className="relative flex-1 overflow-auto bg-pdf-canvas scrollbar-thin">
           <div
             className="absolute inset-0 opacity-[0.03] pointer-events-none"
             style={{
-              backgroundImage: "radial-gradient(#fff 1px, transparent 0)",
+              backgroundImage: "radial-gradient(var(--ui-pdf-dot) 1px, transparent 0)",
               backgroundSize: "24px 24px",
             }}
           />
@@ -212,7 +212,7 @@ export default function CVEditorView({
           {currentProfile ? (
             <PDFPreview url={previewSrc} fitMobile />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-zinc-900 text-zinc-500">
+            <div className="flex h-full w-full items-center justify-center bg-panel-elevated text-text-muted">
               <Loader2 className="h-8 w-8 animate-spin" />
             </div>
           )}

@@ -86,7 +86,7 @@ export function ReceivedFeedbackDetail({
               icon={Lock}
               title={t("fields.privateNote")}
             >
-              <div className="text-white whitespace-pre-wrap">{item.userNote}</div>
+              <div className="text-text-main whitespace-pre-wrap">{item.userNote}</div>
             </AlertBanner>
           )}
         </div>

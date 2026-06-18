@@ -6,7 +6,7 @@ export function AuthHeroTitle() {
   const t = useTranslations("auth");
 
   return (
-    <h1 className="text-3xl font-black leading-tight tracking-normal text-zinc-50">
+    <h1 className="text-3xl font-black leading-tight tracking-normal text-text-main">
       {t("hero")}
     </h1>
   );

@@ -81,13 +81,13 @@ export function JsonResumeImport({ onSuccess }: JsonResumeImportProps) {
 
   return (
     <div className="grid gap-4">
-      <div className="flex gap-1 rounded-lg bg-zinc-900/50 p-1">
+      <div className="flex gap-1 rounded-lg bg-panel-elevated/50 p-1">
         <button
           onClick={() => setTab("upload")}
           className={`flex-1 flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
             tab === "upload"
-              ? "bg-zinc-800 text-zinc-100"
-              : "text-zinc-400 hover:text-zinc-200"
+              ? "bg-panel-control text-text-on-bright"
+              : "text-text-muted hover:text-text-soft"
           }`}
         >
           <Upload className="h-4 w-4" />
@@ -97,8 +97,8 @@ export function JsonResumeImport({ onSuccess }: JsonResumeImportProps) {
           onClick={() => setTab("paste")}
           className={`flex-1 flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
             tab === "paste"
-              ? "bg-zinc-800 text-zinc-100"
-              : "text-zinc-400 hover:text-zinc-200"
+              ? "bg-panel-control text-text-on-bright"
+              : "text-text-muted hover:text-text-soft"
           }`}
         >
           <ClipboardPaste className="h-4 w-4" />
@@ -109,14 +109,14 @@ export function JsonResumeImport({ onSuccess }: JsonResumeImportProps) {
       {tab === "upload" ? (
         <div
           onClick={() => fileInputRef.current?.click()}
-          className="flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 border-dashed border-zinc-800/60 p-8 text-center transition-colors hover:border-zinc-700/80 hover:bg-white/[0.02]"
+          className="flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 border-dashed border-line-default/60 p-8 text-center transition-colors hover:border-line-strong/80 hover:bg-panel/[0.02]"
         >
-          <FileJson className="h-10 w-10 text-zinc-500" />
+          <FileJson className="h-10 w-10 text-text-muted" />
           <div>
-            <p className="text-sm font-medium text-zinc-200">
+            <p className="text-sm font-medium text-text-soft">
               {file ? file.name : t("uploadArea.drop")}
             </p>
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-text-muted">
               {file
                 ? `${(file.size / 1024).toFixed(1)} KB`
                 : t("uploadArea.click")}
@@ -139,12 +139,12 @@ export function JsonResumeImport({ onSuccess }: JsonResumeImportProps) {
           }}
           placeholder={t("pasteArea.placeholder")}
           rows={8}
-          className="w-full rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-3 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-indigo-500/40 focus:outline-none focus:ring-1 focus:ring-indigo-500/20"
+          className="w-full rounded-xl border border-line-default bg-panel-elevated/50 px-4 py-3 text-sm text-text-soft placeholder:text-text-faint focus:border-action-border/40 focus:outline-none focus:ring-1 focus:ring-action-border"
         />
       )}
 
       <div className="grid gap-1.5">
-        <label className="text-xs font-medium text-zinc-400">
+        <label className="text-xs font-medium text-text-muted">
           {t("nameLabel")}
         </label>
         <input
@@ -152,21 +152,21 @@ export function JsonResumeImport({ onSuccess }: JsonResumeImportProps) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder={t("namePlaceholder")}
-          className="rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-indigo-500/40 focus:outline-none focus:ring-1 focus:ring-indigo-500/20"
+          className="rounded-lg border border-line-default bg-panel-elevated/50 px-3 py-2 text-sm text-text-soft placeholder:text-text-faint focus:border-action-border/40 focus:outline-none focus:ring-1 focus:ring-action-border"
         />
       </div>
 
       {localError && (
-        <p className="text-sm text-red-400">{localError}</p>
+        <p className="text-sm text-danger-text">{localError}</p>
       )}
 
       {warnings.length > 0 && (
-        <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
-          <p className="mb-1 flex items-center gap-1.5 text-xs font-medium text-amber-400">
+        <div className="rounded-lg border border-warning-border bg-warning/5 p-3">
+          <p className="mb-1 flex items-center gap-1.5 text-xs font-medium text-warning-text">
             <AlertTriangle className="h-3.5 w-3.5" />
             {t("warnings.title")}
           </p>
-          <ul className="list-inside list-disc text-xs text-amber-300/80">
+          <ul className="list-inside list-disc text-xs text-warning-text/80">
             {warnings.map((w) => (
               <li key={w}>{w}</li>
             ))}
@@ -179,8 +179,8 @@ export function JsonResumeImport({ onSuccess }: JsonResumeImportProps) {
         disabled={!canSubmit}
         className={`flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
           canSubmit
-            ? "bg-gradient-to-r from-indigo-600 to-violet-600 text-white hover:from-indigo-500 hover:to-violet-500"
-            : "bg-zinc-800/60 text-zinc-500 cursor-not-allowed"
+            ? "bg-gradient-to-r from-action to-action-hover text-text-on-dark hover:from-action-hover hover:to-action"
+            : "bg-panel-control/60 text-text-muted cursor-not-allowed"
         }`}
       >
         {mutation.isPending ? (

@@ -174,7 +174,7 @@ export function AdminUsersView({ userEmail }: AdminUsersViewProps) {
       />
 
       {impersonation.isPending && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-scrim backdrop-blur-xs">
           <div className="flex items-center gap-3 rounded-lg border border-line bg-modal px-5 py-4 text-sm text-text-main">
             <UserRound className="h-4 w-4 animate-pulse" />
             {t("startingImpersonation")}
@@ -183,7 +183,7 @@ export function AdminUsersView({ userEmail }: AdminUsersViewProps) {
       )}
 
       {deleteMutation.isPending && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-scrim backdrop-blur-xs">
           <div className="flex items-center gap-3 rounded-lg border border-line bg-modal px-5 py-4 text-sm text-text-main">
             <Loader2 className="h-4 w-4 animate-spin text-text-muted" />
             {t("deletingUser")}

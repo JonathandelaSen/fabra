@@ -14,7 +14,7 @@ export function CVLibrarySkeleton() {
         {Array.from({ length: 5 }).map((_, index) => (
           <div
             key={index}
-            className="space-y-2 rounded-xl border border-white/[0.04] bg-white/[0.01] p-4"
+            className="space-y-2 rounded-xl border border-line/[0.04] bg-panel/[0.01] p-4"
           >
             <div className="flex items-center justify-between">
               <Skeleton className="h-4 w-3/4" />
@@ -35,7 +35,7 @@ export function CVLibrarySkeleton() {
 export function CVLibraryDetailSkeleton() {
   return (
     <BasicPanel className="flex w-full flex-col gap-6 p-6">
-      <div className="flex flex-col gap-4 border-b border-white/[0.04] pb-6 md:flex-row md:items-end md:justify-between">
+      <div className="flex flex-col gap-4 border-b border-line/[0.04] pb-6 md:flex-row md:items-end md:justify-between">
         <div className="space-y-3 flex-1">
           <Skeleton className="h-3 w-24" />
           <Skeleton className="h-8 w-2/3" />

@@ -126,7 +126,7 @@ export default function Sidebar({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={() => setCollapsed(false)}
-            className="md:hidden fixed bottom-6 right-6 z-[60] w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-900/30 active:scale-95 transition-transform cursor-pointer"
+            className="md:hidden fixed bottom-6 right-6 z-[60] w-12 h-12 rounded-full bg-action text-text-on-dark flex items-center justify-center shadow-lg shadow-[var(--ui-action-shadow)] active:scale-95 transition-transform cursor-pointer"
           >
             <Menu className="w-5 h-5" />
           </motion.button>
@@ -140,7 +140,7 @@ export default function Sidebar({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setCollapsed(true)}
-            className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[40]"
+            className="md:hidden fixed inset-0 bg-scrim backdrop-blur-sm z-[40]"
           />
         )}
       </AnimatePresence>

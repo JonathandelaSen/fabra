@@ -76,10 +76,10 @@ export default async function PublicCVPage({ params }: PublicCVPageProps) {
   const noteValues = notes.map((note) => note.toPrimitives());
 
   return (
-    <main className="public-cv-page min-h-screen bg-[#d9e2eb] text-zinc-950 dark:bg-[#151620] dark:text-foreground transition-colors duration-200">
-      <header className="border-b border-zinc-200/50 dark:border-border/30 bg-[#d9e2eb]/90 dark:bg-[#151620]/90 backdrop-blur sticky top-0 z-50 transition-colors duration-200">
+    <main className="public-cv-page min-h-screen bg-pdf-canvas text-text-main dark:bg-pdf-canvas dark:text-foreground transition-colors duration-200">
+      <header className="border-b border-line/50 dark:border-border/30 bg-pdf-canvas/90 dark:bg-pdf-canvas/90 backdrop-blur sticky top-0 z-50 transition-colors duration-200">
         <div className="mx-auto flex max-w-[210mm] items-center justify-between gap-4 px-4 py-5 sm:px-6">
-          <Link href="/" className="flex items-center gap-2 text-sm font-bold tracking-tight text-zinc-950 dark:text-foreground transition-opacity hover:opacity-85">
+          <Link href="/" className="flex items-center gap-2 text-sm font-bold tracking-tight text-text-main dark:text-foreground transition-opacity hover:opacity-85">
             <img src="/brand/fabra-logo.svg" alt="Fabra Logo" className="h-5 w-5 object-contain" />
             <span>Fabra</span>
           </Link>
@@ -87,7 +87,7 @@ export default async function PublicCVPage({ params }: PublicCVPageProps) {
             <PublicCVThemeToggle />
             <a
               href={`${buildPublicCVPath(cv.public_id, cv.public_slug)}/pdf`}
-              className="inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-zinc-300 bg-white/70 px-4 text-xs font-semibold text-zinc-700 transition-all hover:border-zinc-400 hover:bg-white hover:text-zinc-950 hover:shadow-sm dark:border-border dark:bg-card/70 dark:text-muted-foreground dark:hover:border-primary/50 dark:hover:bg-card dark:hover:text-foreground"
+              className="inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-line-default bg-panel/70 px-4 text-xs font-semibold text-text-faint transition-all hover:border-line-strong hover:bg-panel hover:text-text-on-bright hover:shadow-sm dark:border-border dark:bg-card/70 dark:text-muted-foreground dark:hover:border-primary/50 dark:hover:bg-card dark:hover:text-foreground"
             >
               <Download className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">{messages.publicCv.downloadPdf}</span>
@@ -95,7 +95,7 @@ export default async function PublicCVPage({ params }: PublicCVPageProps) {
             </a>
             <Link
               href="/"
-              className="inline-flex h-9 items-center justify-center rounded-xl border border-zinc-300 bg-white/70 px-4 text-xs font-semibold text-zinc-700 transition-all hover:border-zinc-400 hover:bg-white hover:text-zinc-950 hover:shadow-sm dark:border-border dark:bg-card/70 dark:text-muted-foreground dark:hover:border-primary/50 dark:hover:bg-card dark:hover:text-foreground"
+              className="inline-flex h-9 items-center justify-center rounded-xl border border-line-default bg-panel/70 px-4 text-xs font-semibold text-text-faint transition-all hover:border-line-strong hover:bg-panel hover:text-text-on-bright hover:shadow-sm dark:border-border dark:bg-card/70 dark:text-muted-foreground dark:hover:border-primary/50 dark:hover:bg-card dark:hover:text-foreground"
             >
               {messages.publicCv.createMyCv}
             </Link>

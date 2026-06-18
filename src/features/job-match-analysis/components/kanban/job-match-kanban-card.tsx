@@ -28,10 +28,10 @@ interface JobMatchKanbanCardProps {
 }
 
 function scoreClassName(score: number | null) {
-  if (score === null) return "border-zinc-700 bg-zinc-800/70 text-zinc-500";
-  if (score >= 80) return "border-emerald-500/20 bg-emerald-500/15 text-emerald-300";
-  if (score >= 60) return "border-amber-500/20 bg-amber-500/15 text-amber-300";
-  return "border-rose-500/20 bg-rose-500/15 text-rose-300";
+  if (score === null) return "border-line-strong bg-panel-control/70 text-text-muted";
+  if (score >= 80) return "border-success-border bg-success/15 text-success-text";
+  if (score >= 60) return "border-warning-border bg-warning/15 text-warning-text";
+  return "border-danger-border bg-danger-soft text-danger-text";
 }
 
 export function JobMatchKanbanCard({
@@ -66,7 +66,7 @@ export function JobMatchKanbanCard({
       <div className="flex items-start gap-2">
         <button
           type="button"
-          className="mt-0.5 flex h-7 w-7 shrink-0 cursor-grab items-center justify-center rounded-md text-text-muted hover:bg-panel-active hover:text-text-main focus-visible:outline focus-visible:outline-2 focus-visible:outline-action-border active:cursor-grabbing"
+          className="mt-0.5 flex h-7 w-7 shrink-0 cursor-grab items-center justify-center rounded-md text-text-muted hover:bg-panel-active hover:text-text-on-bright focus-visible:outline focus-visible:outline-2 focus-visible:outline-action-border active:cursor-grabbing"
           aria-label={t("dragCard", { title })}
           {...(isOverlay ? {} : attributes)}
           {...(isOverlay ? {} : listeners)}

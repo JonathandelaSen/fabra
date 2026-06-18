@@ -76,20 +76,20 @@ export function PDFPreview({
           externalLinkTarget="_blank"
           loading={
             <div className="flex items-center justify-center p-8 text-text-muted w-full aspect-[1/1.414]">
-              <Loader2 className="h-6 w-6 animate-spin text-zinc-500" />
+              <Loader2 className="h-6 w-6 animate-spin text-text-muted" />
             </div>
           }
           className="w-full flex flex-col items-center"
         >
-          <div className="relative w-full overflow-hidden bg-[#050509] [&_.react-pdf__Page]:!w-full [&_.react-pdf__Page]:!h-auto [&_canvas]:!w-full [&_canvas]:!h-auto">
+          <div className="relative w-full overflow-hidden bg-pdf-canvas [&_.react-pdf__Page]:!w-full [&_.react-pdf__Page]:!h-auto [&_canvas]:!w-full [&_canvas]:!h-auto">
             <Page
               pageNumber={1}
               width={400}
               renderAnnotationLayer={false}
               renderTextLayer={false}
               loading={
-                <div className="flex items-center justify-center text-text-muted bg-[#050509] w-full aspect-[1/1.414]">
-                  <Loader2 className="h-4 w-4 animate-spin text-zinc-600" />
+                <div className="flex items-center justify-center text-text-muted bg-pdf-canvas w-full aspect-[1/1.414]">
+                  <Loader2 className="h-4 w-4 animate-spin text-text-faint" />
                 </div>
               }
             />
@@ -156,7 +156,7 @@ export function PDFPreview({
                     <div 
                       key={`page_${index + 1}`} 
                       className={cn(
-                        "relative overflow-hidden border border-line bg-white shadow-[0_0_40px_rgba(0,0,0,0.5)] max-w-full",
+                        "relative overflow-hidden border border-line bg-panel shadow-[var(--ui-pdf-page-shadow)] max-w-full",
                         expanded 
                           ? "w-full [&_.react-pdf__Page]:!w-full [&_.react-pdf__Page]:!h-auto [&_.react-pdf__Page]:!min-w-0 [&_canvas]:!w-full [&_canvas]:!h-auto"
                           : ""

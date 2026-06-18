@@ -100,7 +100,7 @@ export function ReviewSelfAssessmentPanel(props: ReviewSelfAssessmentPanelProps)
             </>
           ) : (
             <div className="space-y-4">
-              <div className="min-h-64 whitespace-pre-wrap rounded-xl border border-line bg-panel-subtle p-5 text-sm leading-7 text-text-main">
+              <div className="min-h-64 whitespace-pre-wrap rounded-xl border border-line bg-panel-subtle p-5 text-sm leading-7 text-text-on-bright">
                 {props.review.selfAssessmentContent}
               </div>
               <div className="flex justify-end">
@@ -139,14 +139,14 @@ export function ReviewSelfAssessmentPanel(props: ReviewSelfAssessmentPanelProps)
               key={item.id}
               className={
                 item.highlighted
-                  ? "rounded-lg border border-amber-400/35 bg-amber-400/[0.06] p-3"
+                  ? "rounded-lg border border-warning-border bg-warning/[0.06] p-3"
                   : "rounded-lg border border-line p-3"
               }
             >
               <div className="mb-1.5 flex items-center gap-2">
                 <LabelBadge>{tSources(item.source)}</LabelBadge>
                 {item.highlighted && (
-                  <Star className="h-3.5 w-3.5 fill-current text-amber-400" />
+                  <Star className="h-3.5 w-3.5 fill-current text-warning-text" />
                 )}
               </div>
               <p className="line-clamp-3 text-sm text-text-main">{item.content}</p>

@@ -34,7 +34,7 @@ export function WorkJournalTimelineGranularityToggle({
             aria-pressed={isActive}
             className={`transition-all duration-200 ${
               isActive
-                ? "bg-panel-base text-text-main shadow-xs border border-line/40 font-semibold"
+                ? "bg-panel-base text-text-on-bright shadow-xs border border-line/40 font-semibold"
                 : "text-text-soft hover:text-text-main hover:bg-panel-hover/50 border-transparent"
             }`}
           >

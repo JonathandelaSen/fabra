@@ -14,11 +14,11 @@ export function ObjectiveNarrativeSection({
 }: ObjectiveNarrativeSectionProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest border-b border-white/[0.04] pb-1">
+      <h3 className="text-[10px] font-bold text-action-text uppercase tracking-widest border-b border-line/[0.04] pb-1">
         {t("sections.narrative")}
       </h3>
       <label className="block space-y-1.5 text-left">
-        <span className="text-xs font-semibold text-zinc-400">
+        <span className="text-xs font-semibold text-text-muted">
           {t("fields.description")}
         </span>
         <Textarea
@@ -26,12 +26,12 @@ export function ObjectiveNarrativeSection({
           value={form.description}
           onChange={(e) => onFormChange({ ...form, description: e.target.value })}
           placeholder={t("placeholders.details")}
-          className="bg-zinc-950 border-white/[0.06] focus-visible:ring-emerald-500/20 text-sm py-2"
+          className="bg-field-code border-line/[0.06] focus-visible:ring-success-border text-sm py-2"
         />
       </label>
 
       <label className="block space-y-1.5 text-left">
-        <span className="text-xs font-semibold text-zinc-400">
+        <span className="text-xs font-semibold text-text-muted">
           {t("fields.successCriteria")}
         </span>
         <Textarea
@@ -41,12 +41,12 @@ export function ObjectiveNarrativeSection({
             onFormChange({ ...form, successCriteria: e.target.value })
           }
           placeholder={t("placeholders.successCriteria")}
-          className="bg-zinc-950 border-white/[0.06] focus-visible:ring-emerald-500/20 text-sm py-2"
+          className="bg-field-code border-line/[0.06] focus-visible:ring-success-border text-sm py-2"
         />
       </label>
 
       <label className="block space-y-1.5 text-left">
-        <span className="text-xs font-semibold text-amber-400/80">
+        <span className="text-xs font-semibold text-warning-text/80">
           {t("fields.resultNotes")}
         </span>
         <Textarea
@@ -54,7 +54,7 @@ export function ObjectiveNarrativeSection({
           value={form.resultNotes}
           onChange={(e) => onFormChange({ ...form, resultNotes: e.target.value })}
           placeholder={t("placeholders.resultNotes")}
-          className="bg-zinc-950 border-white/[0.06] focus-visible:ring-amber-500/20 text-sm py-2"
+          className="bg-field-code border-line/[0.06] focus-visible:ring-warning-border text-sm py-2"
         />
       </label>
     </div>

@@ -1,14 +1,12 @@
 "use client";
 
-import { FileSearch, Search, Trash2 } from "lucide-react";
+import { FileSearch, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { FormattedDate } from "@/components/shared/formatted-date";
 import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
-import { IconBox, ICON_BOX_TONES } from "@/components/shared/icon-box";
 import { CVAnalysesListSkeleton } from "./cv-analyses-list-skeleton";
 import type { AnalysisSummary } from "@/lib/analysis-types";
 import { featureListItemClassName } from "@/components/shared/feature-visual-system";
-import { cn } from "@/lib/utils";
 
 interface CVAnalysesListViewProps {
   analyses: AnalysisSummary[];
@@ -16,7 +14,6 @@ interface CVAnalysesListViewProps {
   searchQuery: string;
   onSelect: (id: string) => void;
   onSearchChange: (value: string) => void;
-  onDelete: (id: string) => void;
   isLoading?: boolean;
 }
 
@@ -33,7 +30,6 @@ export default function CVAnalysesListView({
   searchQuery,
   onSelect,
   onSearchChange,
-  onDelete,
   isLoading = false,
 }: CVAnalysesListViewProps) {
   const t = useTranslations("analysisFlow.lists");
@@ -88,15 +84,6 @@ export default function CVAnalysesListView({
               }}
               className={featureListItemClassName(selectedId === analysis.id, "flex items-start gap-3")}
             >
-              <IconBox
-                icon={FileSearch}
-                tone={
-                  selectedId === analysis.id
-                    ? ICON_BOX_TONES.ACTION
-                    : ICON_BOX_TONES.NEUTRAL
-                }
-              />
-
               <div className="min-w-0 flex-1">
                 <div className="flex min-w-0 items-start gap-2">
                   <p className="min-w-0 flex-1 truncate text-sm font-semibold text-text-soft transition-colors group-hover:text-action-text">
@@ -118,25 +105,6 @@ export default function CVAnalysesListView({
                   <FormattedDate value={analysis.created_at} />
                 </div>
               </div>
-
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onDelete(analysis.id);
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    onDelete(analysis.id);
-                  }
-                }}
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-text-faint opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-visible:opacity-100 hover:bg-danger-soft hover:text-danger-text transition-all"
-                aria-label={t("deleteAnalysis")}
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
             </div>
           ))}
         </div>

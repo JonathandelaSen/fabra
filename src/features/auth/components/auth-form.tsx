@@ -69,25 +69,25 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
       : t("login.description");
 
   return (
-    <div className="rounded-2xl border border-line bg-panel-base/90 backdrop-blur-xl p-5 shadow-2xl shadow-black/30 sm:p-6">
+    <div className="rounded-2xl border border-line bg-panel-base/90 backdrop-blur-xl p-5 shadow-2xl shadow-[var(--ui-shadow-strong)] sm:p-6">
       <div className="mb-6">
         <div className="mb-4 flex justify-end">
           <InterfaceLanguageSelect compact />
         </div>
-        <h2 className="text-2xl font-bold text-zinc-100">{title}</h2>
-        {description && <p className="mt-2 text-sm text-zinc-500">{description}</p>}
+        <h2 className="text-2xl font-bold text-text-main">{title}</h2>
+        {description && <p className="mt-2 text-sm text-text-muted">{description}</p>}
       </div>
 
       {!isRecover && (
         <>
-          <div className="grid grid-cols-2 gap-1 rounded-lg bg-white/[0.04] p-1 mb-6">
+          <div className="grid grid-cols-2 gap-1 rounded-lg bg-panel/[0.04] p-1 mb-6">
             <button
               type="button"
               onClick={() => setMode("login")}
               className={`h-9 rounded-md text-sm font-medium transition-all ${
                 !isSignup
-                  ? "bg-white/[0.08] text-zinc-100 shadow-sm"
-                  : "text-zinc-500 hover:text-zinc-300"
+                  ? "bg-panel/[0.08] text-text-on-bright shadow-sm"
+                  : "text-text-muted hover:text-text-soft"
               }`}
             >
               {t("login.tab")}
@@ -97,8 +97,8 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
               onClick={() => setMode("signup")}
               className={`h-9 rounded-md text-sm font-medium transition-all ${
                 isSignup
-                  ? "bg-white/[0.08] text-zinc-100 shadow-sm"
-                  : "text-zinc-500 hover:text-zinc-300"
+                  ? "bg-panel/[0.08] text-text-on-bright shadow-sm"
+                  : "text-text-muted hover:text-text-soft"
               }`}
             >
               {t("signup.tab")}
@@ -115,7 +115,7 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
       >
         <input type="hidden" name="interfaceLanguage" value={locale} />
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-zinc-300">
+          <Label htmlFor="email" className="text-text-soft">
             {t("fields.email")}
           </Label>
           <Input
@@ -127,13 +127,13 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
             autoComplete="email"
             placeholder={t("fields.emailPlaceholder")}
             required
-            className="h-11 bg-white/[0.04] border-white/[0.08]"
+            className="h-11 bg-panel/[0.04] border-line/[0.08]"
           />
         </div>
 
         {!isRecover && (
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-zinc-300">
+            <Label htmlFor="password" className="text-text-soft">
               {t("fields.password")}
             </Label>
             <div className="relative">
@@ -147,12 +147,12 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
                 placeholder={t("fields.passwordPlaceholder")}
                 minLength={6}
                 required
-                className="h-11 border-white/[0.08] bg-white/[0.04] pr-12"
+                className="h-11 border-line/[0.08] bg-panel/[0.04] pr-12"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((value) => !value)}
-                className="absolute inset-y-0 right-2 flex w-9 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-white/[0.06] hover:text-zinc-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40"
+                className="absolute inset-y-0 right-2 flex w-9 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-panel/[0.06] hover:text-text-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action-border"
                 aria-label={
                   showPassword ? common("actions.hidePassword") : common("actions.showPassword")
                 }
@@ -169,18 +169,18 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
         )}
 
         {visibleError && (
-          <Alert variant="destructive" className="border-rose-500/20 bg-rose-500/10">
+          <Alert variant="destructive" className="border-danger-border bg-danger-soft">
             <AlertCircle className="w-4 h-4" />
-            <AlertDescription className="text-rose-200">
+            <AlertDescription className="text-danger-text">
               {visibleError}
             </AlertDescription>
           </Alert>
         )}
 
         {visibleMessage && (
-          <Alert className="border-emerald-500/20 bg-emerald-500/10">
-            <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-            <AlertDescription className="text-emerald-200">
+          <Alert className="border-success-border bg-success/10">
+            <CheckCircle2 className="w-4 h-4 text-success-text" />
+            <AlertDescription className="text-success-text">
               {visibleMessage}
             </AlertDescription>
           </Alert>
@@ -228,14 +228,14 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
             <button
               type="button"
               onClick={() => setMode("login")}
-              className="font-medium text-zinc-400 transition-colors hover:text-zinc-200"
+              className="font-medium text-text-muted transition-colors hover:text-text-soft"
             >
               {t("recover.backToLogin")}
             </button>
             <button
               type="button"
               onClick={() => setMode("signup")}
-              className="font-medium text-zinc-400 transition-colors hover:text-zinc-200"
+              className="font-medium text-text-muted transition-colors hover:text-text-soft"
             >
               {t("recover.goToSignup")}
             </button>
@@ -244,7 +244,7 @@ export function AuthForm({ initialError, initialMessage }: AuthFormProps) {
           <button
             type="button"
             onClick={() => setMode("recover")}
-            className="font-medium text-indigo-300 transition-colors hover:text-indigo-200"
+            className="font-medium text-action-text transition-colors hover:text-action-text"
           >
             {t("recover.link")}
           </button>

@@ -30,7 +30,7 @@ export function LanguageSettingsPanel() {
         <option value="es">{t("options.es")}</option>
       </select>
       {(saved || error) && (
-        <p className={`mt-3 text-sm ${error ? "text-rose-300" : "text-emerald-300"}`}>
+        <p className={`mt-3 text-sm ${error ? "text-danger-text" : "text-success-text"}`}>
           {error ? t("error") : t("saved")}
         </p>
       )}

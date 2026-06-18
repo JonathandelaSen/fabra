@@ -117,8 +117,8 @@ export function OllamaSettingsCard({
   return (
     <div className={cn(
       "rounded-xl border p-5 flex flex-col justify-between transition-all duration-300",
-      isOllamaActive 
-        ? "border-emerald-500/20 bg-panel-active shadow-[0_0_12px_rgba(16,185,129,0.03)] hover:border-emerald-500/30" 
+      isOllamaActive
+        ? "border-success-border bg-panel-active shadow-[var(--ui-success-shadow)] hover:border-success-border"
         : "border-line bg-panel-elevated/40 opacity-65 hover:opacity-85"
     )}>
       <div>
@@ -132,10 +132,10 @@ export function OllamaSettingsCard({
           <span className={cn(
             "text-[10px] px-2 py-0.5 rounded-full font-medium border flex items-center gap-1.5",
             isOllamaActive
-              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-              : "bg-zinc-500/10 text-zinc-400 border-zinc-500/20",
+              ? "bg-success/10 text-success-text border-success-border"
+              : "bg-panel-control/10 text-text-muted border-line-default",
           )}>
-            <span className={cn("w-1.5 h-1.5 rounded-full", isOllamaActive ? "bg-emerald-400 animate-pulse" : "bg-zinc-500")} />
+            <span className={cn("w-1.5 h-1.5 rounded-full", isOllamaActive ? "bg-success animate-pulse" : "bg-panel-control")} />
             {isOllamaActive ? `${getSummary(state.url)} (${state.model})` : common("states.notConfigured")}
           </span>
         </div>

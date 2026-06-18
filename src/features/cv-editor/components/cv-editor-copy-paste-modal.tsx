@@ -96,15 +96,15 @@ function CVEditorCopyPastePreview({
         />
       </div>
       {data.preview.changedSections.length > 0 && (
-        <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
-          <p className="mb-2 text-xs font-medium uppercase text-zinc-500">
+        <div className="rounded-lg border border-line/10 bg-panel/[0.03] p-4">
+          <p className="mb-2 text-xs font-medium uppercase text-text-muted">
             {t("changedSectionsLabel")}
           </p>
           <div className="flex flex-wrap gap-2">
             {data.preview.changedSections.map((section) => (
               <span
                 key={section}
-                className="rounded-md bg-teal-500/10 px-2 py-0.5 text-xs text-teal-300"
+                className="rounded-md bg-accent-teal/10 px-2 py-0.5 text-xs text-accent-teal-text"
               >
                 {section}
               </span>

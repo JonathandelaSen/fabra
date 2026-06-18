@@ -13,9 +13,9 @@ export function SidebarEmptyState({
 }: SidebarEmptyStateProps) {
   return (
     <div
-      className={`flex flex-col items-center justify-center gap-4 py-24 text-zinc-600 ${className}`}
+      className={`flex flex-col items-center justify-center gap-4 py-24 text-text-faint ${className}`}
     >
-      <Icon className="h-8 w-8 stroke-1 text-zinc-700" />
+      <Icon className="h-8 w-8 stroke-1 text-text-faint" />
       <p className="text-sm font-light tracking-wide">{message}</p>
     </div>
   );

@@ -31,7 +31,7 @@ export default function NewAnalysisUploadCV({
   };
 
   return (
-    <section className="grid gap-4 rounded-xl border border-line bg-white/[0.02] p-5 md:grid-cols-[1fr_260px]">
+    <section className="grid gap-4 rounded-xl border border-line bg-panel/[0.02] p-5 md:grid-cols-[1fr_260px]">
       <div
         onClick={() => fileInputRef.current?.click()}
         onDragOver={(event) => {
@@ -50,10 +50,10 @@ export default function NewAnalysisUploadCV({
         }}
         className={`flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-6 text-center transition-all ${
           file
-            ? "border-emerald-500/40 bg-emerald-500/5"
+            ? "border-success-border bg-success/5"
             : dragActive
-              ? "border-emerald-400/60 bg-emerald-500/10"
-              : "border-zinc-800/70 hover:border-zinc-700"
+              ? "border-success-border bg-success/10"
+              : "border-line-default/70 hover:border-line-strong"
         }`}
       >
         <input
@@ -68,28 +68,28 @@ export default function NewAnalysisUploadCV({
           }}
         />
         {file ? (
-          <CheckCircle2 className="mb-3 h-8 w-8 text-emerald-300" />
+          <CheckCircle2 className="mb-3 h-8 w-8 text-success-text" />
         ) : (
-          <UploadCloud className="mb-3 h-8 w-8 text-zinc-500" />
+          <UploadCloud className="mb-3 h-8 w-8 text-text-muted" />
         )}
-        <p className="font-medium text-zinc-200">
+        <p className="font-medium text-text-soft">
           {file ? file.name : t("dropPdf")}
         </p>
-        <p className="mt-1 text-sm text-zinc-500">
+        <p className="mt-1 text-sm text-text-muted">
           {file
             ? `${(file.size / 1024 / 1024).toFixed(2)} MB`
             : t("clickToSelect")}
         </p>
       </div>
       <div>
-        <label className="mb-2 block text-sm text-zinc-400">
+        <label className="mb-2 block text-sm text-text-muted">
           {t("cvName")}
         </label>
         <input
           value={cvName}
           onChange={(event) => onCvNameChange(event.target.value)}
           placeholder={t("cvNamePlaceholder")}
-          className="h-11 w-full rounded-xl border border-line bg-field px-4 text-sm text-text-main placeholder:text-text-faint focus:border-emerald-500/40 focus:outline-none"
+          className="h-11 w-full rounded-xl border border-line bg-field px-4 text-sm text-text-main placeholder:text-text-faint focus:border-success-border focus:outline-none"
         />
       </div>
     </section>

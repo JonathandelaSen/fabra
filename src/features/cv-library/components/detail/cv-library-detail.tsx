@@ -54,7 +54,7 @@ export function CVLibraryDetail({
   if (!selected) {
     return (
       <BasicPanel as="section" radius="xl" className="overflow-hidden">
-        <div className="flex min-h-[520px] items-center justify-center text-sm text-zinc-500">
+        <div className="flex min-h-[520px] items-center justify-center text-sm text-text-muted">
           {t("selectToPreview")}
         </div>
       </BasicPanel>
@@ -92,7 +92,7 @@ export function CVLibraryDetail({
         />
 
         <Tabs defaultValue="overview" className="min-w-0">
-          <div className="border-b border-white/[0.06] px-5 pt-4">
+          <div className="border-b border-line/[0.06] px-5 pt-4">
             <TabsList className="w-fit">
               <TabsTrigger value="overview" className="gap-2">
                 <PanelsTopLeft className="size-4" />

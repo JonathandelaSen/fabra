@@ -37,23 +37,23 @@ export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: 
   };
 
   return (
-    <section className="space-y-4 border-t border-white/5 pt-4">
+    <section className="space-y-4 border-t border-line/5 pt-4">
       <div className="flex items-center gap-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-warning/10 text-warning-text">
           <Globe className="h-4 w-4" />
         </div>
         <div>
-          <h3 className="text-sm font-semibold text-white">{t("title")}</h3>
-          <p className="text-[11px] text-zinc-600">{t("description")}</p>
+          <h3 className="text-sm font-semibold text-text-main">{t("title")}</h3>
+          <p className="text-[11px] text-text-faint">{t("description")}</p>
         </div>
       </div>
 
-      <label className="flex items-center gap-2.5 rounded-xl border border-white/5 bg-white/5 p-3 text-xs text-zinc-300 transition-colors hover:bg-white/10 cursor-pointer">
+      <label className="flex items-center gap-2.5 rounded-xl border border-line/5 bg-panel/5 p-3 text-xs text-text-soft transition-colors hover:bg-panel/10 cursor-pointer">
         <input
           type="checkbox"
           defaultChecked={feedbackEnabled}
           onChange={(event) => publicNotes.setFeedbackEnabled.mutate(event.target.checked)}
-          className="rounded border-zinc-700 bg-zinc-900 text-sky-600 focus:ring-sky-600"
+          className="rounded border-line-strong bg-panel-elevated text-info-text focus:ring-info-border"
         />
         <span className="select-none font-medium">{t("acceptFeedback")}</span>
       </label>
@@ -77,10 +77,10 @@ export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: 
           }
 
           return (
-            <div key={index} className="space-y-3 rounded-2xl border border-white/5 bg-white/[0.02] p-4 transition-all hover:border-white/10 hover:bg-white/[0.04]">
+            <div key={index} className="space-y-3 rounded-2xl border border-line/5 bg-panel/[0.02] p-4 transition-all hover:border-line/10 hover:bg-panel/[0.04]">
               <div className="grid grid-cols-2 gap-2">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">{t("anchorTypeLabel")}</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-text-muted">{t("anchorTypeLabel")}</label>
                   <select
                     value={note.anchorType}
                     onChange={(e) => {
@@ -102,7 +102,7 @@ export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: 
                         anchorId: nextAnchorId,
                       });
                     }}
-                    className="w-full rounded-xl border border-white/5 bg-zinc-900 px-3 py-2 text-xs text-white outline-none focus:border-sky-500"
+                    className="w-full rounded-xl border border-line/5 bg-panel-elevated px-3 py-2 text-xs text-text-main outline-none focus:border-info-border"
                   >
                     <option value="presentation">{t("presentation")}</option>
                     <option value="section">{t("section")}</option>
@@ -113,7 +113,7 @@ export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: 
 
                 {note.anchorType !== "presentation" && (
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">{t("sectionLabel")}</label>
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-text-muted">{t("sectionLabel")}</label>
                     <select
                       value={note.sectionId ?? ""}
                       onChange={(e) => {
@@ -132,7 +132,7 @@ export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: 
                           anchorId: nextAnchorId,
                         });
                       }}
-                      className="w-full rounded-xl border border-white/5 bg-zinc-900 px-3 py-2 text-xs text-white outline-none focus:border-sky-500"
+                      className="w-full rounded-xl border border-line/5 bg-panel-elevated px-3 py-2 text-xs text-text-main outline-none focus:border-info-border"
                     >
                       {availableSections.map((s) => (
                         <option key={s} value={s}>
@@ -146,11 +146,11 @@ export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: 
 
               {note.anchorType === "item" && items.length > 0 && (
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">{t("targetItemLabel")}</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-text-muted">{t("targetItemLabel")}</label>
                   <select
                     value={selectedItemId}
                     onChange={(e) => updateNote(index, { anchorId: e.target.value })}
-                    className="w-full rounded-xl border border-white/5 bg-zinc-900 px-3 py-2 text-xs text-white outline-none focus:border-sky-500"
+                    className="w-full rounded-xl border border-line/5 bg-panel-elevated px-3 py-2 text-xs text-text-main outline-none focus:border-info-border"
                   >
                     {items.map((it) => (
                       <option key={it.id} value={it.id}>
@@ -164,7 +164,7 @@ export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: 
               {note.anchorType === "bullet" && items.length > 0 && (
                 <div className="grid grid-cols-2 gap-2">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">{t("targetItemLabel")}</label>
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-text-muted">{t("targetItemLabel")}</label>
                     <select
                       value={selectedItemId}
                       onChange={(e) => {
@@ -173,7 +173,7 @@ export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: 
                         const firstBulletId = item?.bulletIds[0] || null;
                         updateNote(index, { anchorId: firstBulletId });
                       }}
-                      className="w-full rounded-xl border border-white/5 bg-zinc-900 px-3 py-2 text-xs text-white outline-none focus:border-sky-500 col-span-1"
+                      className="w-full rounded-xl border border-line/5 bg-panel-elevated px-3 py-2 text-xs text-text-main outline-none focus:border-info-border col-span-1"
                     >
                       <option value="">{t("chooseItemLabel")}</option>
                       {items.map((it) => (
@@ -185,12 +185,12 @@ export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: 
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">{t("targetBulletLabel")}</label>
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-text-muted">{t("targetBulletLabel")}</label>
                     <select
                       value={selectedBulletId}
                       disabled={!selectedItemId}
                       onChange={(e) => updateNote(index, { anchorId: e.target.value })}
-                      className="w-full rounded-xl border border-white/5 bg-zinc-900 px-3 py-2 text-xs text-white outline-none focus:border-sky-500 col-span-1"
+                      className="w-full rounded-xl border border-line/5 bg-panel-elevated px-3 py-2 text-xs text-text-main outline-none focus:border-info-border col-span-1"
                     >
                       <option value="">{t("chooseBulletLabel")}</option>
                       {(() => {
@@ -212,12 +212,12 @@ export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: 
               )}
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">{t("noteContentLabel")}</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-text-muted">{t("noteContentLabel")}</label>
                 <textarea
                   value={note.body}
                   onChange={(e) => updateNote(index, { body: e.target.value })}
                   placeholder={t("notePlaceholderText")}
-                  className="min-h-24 w-full rounded-xl border border-white/5 bg-zinc-900 p-3 text-xs text-white outline-none focus:border-sky-500 placeholder:text-zinc-600 resize-y"
+                  className="min-h-24 w-full rounded-xl border border-line/5 bg-panel-elevated p-3 text-xs text-text-main outline-none focus:border-info-border placeholder:text-text-faint resize-y"
                 />
               </div>
 
@@ -225,7 +225,7 @@ export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: 
                 <button
                   type="button"
                   onClick={() => removeNote(index)}
-                  className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-rose-400 transition-colors hover:bg-rose-500/10 active:bg-rose-500/20"
+                  className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-danger-text transition-colors hover:bg-danger-soft active:bg-danger-soft"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                   {t("remove")}
@@ -240,7 +240,7 @@ export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: 
         <button
           type="button"
           onClick={add}
-          className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/5 bg-white/5 px-4 py-2.5 text-xs font-medium text-white transition-all hover:bg-white/10 active:bg-white/15 cursor-pointer"
+          className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-line/5 bg-panel/5 px-4 py-2.5 text-xs font-medium text-text-main transition-all hover:bg-panel/10 active:bg-panel/15 cursor-pointer"
         >
           <Plus className="h-4 w-4" />
           {t("add")}
@@ -249,7 +249,7 @@ export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: 
           type="button"
           onClick={() => publicNotes.replace.mutate(notes)}
           disabled={publicNotes.replace.isPending}
-          className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-sky-600 px-4 py-2.5 text-xs font-semibold text-white transition-all hover:bg-sky-500 active:bg-sky-700 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-info px-4 py-2.5 text-xs font-semibold text-text-on-dark transition-all hover:bg-info active:bg-info disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           <Save className="h-4 w-4" />
           {publicNotes.replace.isPending ? t("saving") : t("save")}
@@ -257,12 +257,12 @@ export function CVPublicNotesEditor({ cvId, profile, feedbackEnabled }: { cvId: 
       </div>
 
       {feedbackEnabled && (
-        <Link href={`/public-cv-messages/${encodeURIComponent(cvId)}`} className="flex items-center justify-between gap-3 rounded-xl border border-white/5 bg-white/5 p-3 transition-colors hover:bg-white/10">
-          <span className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5 uppercase tracking-wider">
+        <Link href={`/public-cv-messages/${encodeURIComponent(cvId)}`} className="flex items-center justify-between gap-3 rounded-xl border border-line/5 bg-panel/5 p-3 transition-colors hover:bg-panel/10">
+          <span className="text-xs font-semibold text-text-soft flex items-center gap-1.5 uppercase tracking-wider">
             <MessageSquare className="h-3.5 w-3.5" />
             {t("receivedFeedbackTitle")}
           </span>
-          <ArrowRight className="h-4 w-4 text-zinc-500" />
+          <ArrowRight className="h-4 w-4 text-text-muted" />
         </Link>
       )}
     </section>

@@ -41,7 +41,7 @@ export function ChatInput({
   const t = useTranslations("analysisDetail.chat");
 
   return (
-    <div className="border-t border-white/[0.06] p-3">
+    <div className="border-t border-line/[0.06] p-3">
       <form onSubmit={onSubmit} className="flex items-end gap-2">
         <Textarea
           ref={textareaRef}
@@ -55,7 +55,7 @@ export function ChatInput({
           }}
           placeholder={t("inputPlaceholder")}
           rows={1}
-          className="min-h-[40px] max-h-[120px] flex-1 resize-none rounded-xl border-white/[0.08] bg-white/[0.03] px-3.5 py-2.5 text-sm text-zinc-200 placeholder:text-zinc-600 focus-visible:ring-cyan-500/20"
+          className="min-h-[40px] max-h-[120px] flex-1 resize-none rounded-xl border-line/[0.08] bg-panel/[0.03] px-3.5 py-2.5 text-sm text-text-soft placeholder:text-text-faint focus-visible:ring-info-border"
         />
         <AIActionLauncher
           actionLabel={t("sendAction")}

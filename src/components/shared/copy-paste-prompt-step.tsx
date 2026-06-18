@@ -33,7 +33,7 @@ export function CopyPastePromptStep({
         type="button"
         onClick={onCopyPrompt}
         disabled={disabled}
-        className="inline-flex items-center gap-2 rounded-lg bg-text-main px-3 py-2 text-xs font-semibold text-text-inverse transition-colors hover:bg-white disabled:opacity-50"
+        className="inline-flex items-center gap-2 rounded-lg bg-text-main px-3 py-2 text-xs font-semibold text-text-on-dark transition-colors hover:bg-panel disabled:opacity-50"
       >
         {copiedPrompt ? (
           <Check className="h-3.5 w-3.5" />

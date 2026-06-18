@@ -38,7 +38,7 @@ export function FeedbackNotesDetailSkeleton() {
             </BasicPanel>
           ))}
         </div>
-        <section className="relative min-w-0 rounded-lg border border-indigo-500/15 bg-[linear-gradient(135deg,rgba(99,102,241,0.12),rgba(255,255,255,0.01)_50%,rgba(16,185,129,0.06))] shadow-[0_4px_30px_rgba(99,102,241,0.03)] p-4 space-y-3">
+        <section className="relative min-w-0 rounded-lg border border-action-border/15 bg-[image:var(--ui-feedback-panel-bg)] shadow-[var(--ui-action-glow-shadow)] p-4 space-y-3">
           <Skeleton className="h-4 w-28" />
           <Skeleton className="h-2 w-48" />
           <Skeleton className="h-[18rem] w-full rounded-lg" />

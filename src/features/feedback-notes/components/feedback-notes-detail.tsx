@@ -96,7 +96,7 @@ export function FeedbackNotesDetail({
                 <div className="min-w-0">
                   <label
                     htmlFor="feedback-detail-person-name"
-                    className="mb-1.5 block text-xs font-medium text-zinc-500"
+                    className="mb-1.5 block text-xs font-medium text-text-muted"
                   >
                     {t("fields.personName")}
                   </label>
@@ -105,7 +105,7 @@ export function FeedbackNotesDetail({
                     value={personNameDraft}
                     onChange={(event) => setPersonNameDraft(event.target.value)}
                     onInput={(event) => setPersonNameDraft(event.currentTarget.value)}
-                    className="h-auto w-full border-b border-white/10 bg-transparent px-0 py-0.5 text-3xl font-semibold tracking-tight text-zinc-100 outline-none transition-colors focus:border-indigo-500 focus:text-white"
+                    className="h-auto w-full border-b border-line/10 bg-transparent px-0 py-0.5 text-3xl font-semibold tracking-tight text-text-main outline-none transition-colors focus:border-action-border focus:text-text-main"
                   />
                 </div>
                 <div className="flex min-w-0 flex-col gap-1.5">
@@ -128,10 +128,10 @@ export function FeedbackNotesDetail({
               </div>
             ) : (
               <div className="flex flex-col gap-2">
-                <h2 className="py-1 text-3xl font-semibold tracking-tight text-zinc-100 min-h-[2.5rem] flex items-center">
+                <h2 className="py-1 text-3xl font-semibold tracking-tight text-text-main min-h-[2.5rem] flex items-center">
                   {feedback.personName}
                 </h2>
-                <div className="flex flex-wrap items-center gap-2 text-xs text-zinc-500">
+                <div className="flex flex-wrap items-center gap-2 text-xs text-text-muted">
                   {isClosed && (
                     <LabelBadge
                       label={t(`status.${feedback.status}`)}
@@ -142,7 +142,7 @@ export function FeedbackNotesDetail({
                     label={contexts.find((c) => c.id === feedback.activityContextId)?.name || t("fields.activityContext")}
                     tone={LABEL_BADGE_TONES.INDIGO}
                   />
-                  <span className="text-zinc-700">•</span>
+                  <span className="text-text-faint">•</span>
                   <span>
                     {t("updated", { date: formatDate(feedback.updatedAt) })}
                   </span>

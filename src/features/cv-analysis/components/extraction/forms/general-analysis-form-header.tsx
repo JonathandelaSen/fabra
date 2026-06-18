@@ -9,11 +9,11 @@ export function GeneralAnalysisFormHeader() {
   return (
     <div className="flex items-center justify-between mb-5">
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-xs font-medium text-violet-300">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-action-soft border border-action-border text-xs font-medium text-action-text">
           <Sparkles className="w-3.5 h-3.5" />
           {t("generalTitle")}
         </div>
-        <span className="text-[10px] text-zinc-600">
+        <span className="text-[10px] text-text-faint">
           {t("allFieldsOptional")}
         </span>
       </div>

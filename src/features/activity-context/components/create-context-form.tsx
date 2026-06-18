@@ -38,7 +38,7 @@ export function CreateContextForm({ isPending, hasReturnTo, onCreate }: CreateCo
         onChange={(e) => setType(e.target.value as ActivityContextType)}
       >
         {TYPE_OPTIONS.map(([value, key]) => (
-          <option key={value} value={value} className="bg-zinc-900">
+          <option key={value} value={value} className="bg-panel-elevated">
             {t(`contextTypes.${key}`)}
           </option>
         ))}

@@ -44,7 +44,7 @@ export function CVLibraryDetailHeader({
   const t = useTranslations("analysisFlow.cvLibrary");
 
   return (
-    <div className="flex flex-col gap-4 border-b border-white/[0.06] bg-white/[0.01] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-4 border-b border-line/[0.06] bg-panel/[0.01] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0 flex-1 pr-4">
         {editing ? (
           <div className="flex items-center gap-2 max-w-md">
@@ -79,14 +79,14 @@ export function CVLibraryDetailHeader({
         ) : (
           <>
             <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="truncate text-base font-semibold text-zinc-100">
+              <h2 className="truncate text-base font-semibold text-text-main">
                 {selected.name}
               </h2>
               <LabelBadge tone={selected.type === "template" ? LABEL_BADGE_TONES.TEAL : LABEL_BADGE_TONES.NEUTRAL} size="xs" className="uppercase" strong>
                 {selected.type === "template" ? t("typeTemplate") : t("typeOriginal")}
               </LabelBadge>
             </div>
-            <p className="mt-1 truncate text-xs text-zinc-500">
+            <p className="mt-1 truncate text-xs text-text-muted">
               {selected.filename || "—"}
             </p>
           </>
@@ -114,7 +114,7 @@ export function CVLibraryDetailHeader({
           href={pdfPath}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/[0.04] bg-white/[0.02] text-zinc-400 hover:bg-white/5 hover:text-zinc-200 transition-colors"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-line/[0.04] bg-panel/[0.02] text-text-muted hover:bg-panel/5 hover:text-text-soft transition-colors"
           title={t("viewPdf")}
         >
           <Download className="h-4 w-4" />

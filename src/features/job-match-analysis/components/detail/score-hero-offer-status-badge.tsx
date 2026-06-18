@@ -9,33 +9,33 @@ export const STATUS_CONFIG: Record<
   { readonly bg: string; readonly dotBg: string; readonly pingBg: string | null }
 > = {
   interesting: {
-    bg: "bg-sky-500/15 border-sky-500/30 text-sky-300 hover:bg-sky-500/25 shadow-[0_0_8px_rgba(14,165,233,0.1)]",
-    dotBg: "bg-sky-400",
+    bg: "bg-info/15 border-info-border/30 text-info-text hover:bg-info/25 shadow-[var(--ui-status-info-shadow)]",
+    dotBg: "bg-info",
     pingBg: null,
   },
   applied: {
-    bg: "bg-indigo-500/15 border-indigo-500/30 text-indigo-300 hover:bg-indigo-500/25 shadow-[0_0_8px_rgba(99,102,241,0.1)]",
-    dotBg: "bg-indigo-400",
+    bg: "bg-action/15 border-action-border/30 text-action-text hover:bg-action/25 shadow-[var(--ui-status-action-shadow)]",
+    dotBg: "bg-action",
     pingBg: null,
   },
   interview: {
-    bg: "bg-amber-500/15 border-amber-500/30 text-amber-300 hover:bg-amber-500/25 shadow-[0_0_12px_rgba(245,158,11,0.2)] animate-pulse",
-    dotBg: "bg-amber-400",
-    pingBg: "bg-amber-400",
+    bg: "bg-warning/15 border-warning-border text-warning-text hover:bg-warning/25 shadow-[var(--ui-status-warning-shadow)] animate-pulse",
+    dotBg: "bg-warning",
+    pingBg: "bg-warning",
   },
   offer: {
-    bg: "bg-emerald-500/15 border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/25 shadow-[0_0_12px_rgba(16,185,129,0.2)] font-semibold",
-    dotBg: "bg-emerald-400",
-    pingBg: "bg-emerald-400",
+    bg: "bg-success/15 border-success-border text-success-text hover:bg-success/25 shadow-[var(--ui-status-success-shadow)] font-semibold",
+    dotBg: "bg-success",
+    pingBg: "bg-success",
   },
   rejected: {
-    bg: "bg-rose-500/15 border-rose-500/30 text-rose-300 hover:bg-rose-500/25",
-    dotBg: "bg-rose-400",
+    bg: "bg-danger-soft border-danger-border text-danger-text hover:bg-danger-soft",
+    dotBg: "bg-danger",
     pingBg: null,
   },
   discarded: {
-    bg: "bg-zinc-500/15 border-zinc-500/30 text-zinc-400 hover:bg-zinc-500/25",
-    dotBg: "bg-zinc-400",
+    bg: "bg-panel-control/15 border-line-default text-text-muted hover:bg-panel-control/25",
+    dotBg: "bg-text-muted",
     pingBg: null,
   },
 } as const;
@@ -68,7 +68,7 @@ export function ScoreHeroOfferStatusBadge({
         )}
         <span className={`relative inline-flex rounded-full h-1.5 w-1.5 ${config.dotBg}`} />
       </span>
-      <span className="text-zinc-400/80 font-medium text-[10px] uppercase tracking-wider">
+      <span className="text-text-muted/80 font-medium text-[10px] uppercase tracking-wider">
         {tTracking("status")}:
       </span>
       <span>

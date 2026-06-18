@@ -32,10 +32,10 @@ export function PerformanceReviewList(props: PerformanceReviewListProps) {
       )}
       {!props.isLoading && props.reviews.length === 0 && (
         <div className="px-4 py-12 text-center">
-          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-500/10">
-            <ClipboardCheck className="h-5 w-5 text-indigo-400" />
+          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-action/10">
+            <ClipboardCheck className="h-5 w-5 text-action-text" />
           </div>
-          <p className="text-sm font-medium text-zinc-400">{t("empty.sidebar")}</p>
+          <p className="text-sm font-medium text-text-muted">{t("empty.sidebar")}</p>
         </div>
       )}
       {!props.isLoading && <div className="space-y-1">

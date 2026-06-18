@@ -25,7 +25,7 @@ export function ActivityContextSelector({
   return (
     <div className="flex flex-col gap-1.5 w-full">
       {label && (
-        <label htmlFor={id} className="text-xs font-semibold text-zinc-400">
+        <label htmlFor={id} className="text-xs font-semibold text-text-muted">
           {label}
         </label>
       )}
@@ -36,7 +36,7 @@ export function ActivityContextSelector({
           onChange={(e) => onChange(e.target.value)}
         >
           {contexts.map((ctx) => (
-            <option key={ctx.id} value={ctx.id} className="bg-panel-elevated text-text-main">
+            <option key={ctx.id} value={ctx.id} className="bg-panel-elevated text-text-on-bright">
               {ctx.name}
             </option>
           ))}

@@ -51,8 +51,8 @@ export function InterviewQuestionCopyPastePanel({
               onClick={() => setMode("generate")}
               className={`rounded-lg px-3 py-1.5 text-xs font-semibold border transition-all duration-200 cursor-pointer ${
                 mode === "generate"
-                  ? "bg-indigo-600/20 text-indigo-200 border-indigo-500/30"
-                  : "bg-zinc-850 text-zinc-450 border border-white/[0.04] hover:bg-zinc-800"
+                  ? "bg-action/20 text-action-text border-action-border/30"
+                  : "bg-panel-control text-text-muted border border-line/[0.04] hover:bg-panel-control"
               }`}
             >
               {t("modeGenerate")}
@@ -63,8 +63,8 @@ export function InterviewQuestionCopyPastePanel({
               disabled={!hasAnswer}
               className={`rounded-lg px-3 py-1.5 text-xs font-semibold border transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:pointer-events-none ${
                 mode === "edit"
-                  ? "bg-indigo-600/20 text-indigo-200 border-indigo-500/30"
-                  : "bg-zinc-850 text-zinc-450 border border-white/[0.04] hover:bg-zinc-800"
+                  ? "bg-action/20 text-action-text border-action-border/30"
+                  : "bg-panel-control text-text-muted border border-line/[0.04] hover:bg-panel-control"
               }`}
             >
               {t("modeEdit")}
@@ -75,7 +75,7 @@ export function InterviewQuestionCopyPastePanel({
             <div>
               <label
                 htmlFor="copy-paste-instruction"
-                className="mb-1 block text-xs font-medium text-zinc-450"
+                className="mb-1 block text-xs font-medium text-text-muted"
               >
                 {t("instructionLabel")}
               </label>
@@ -84,13 +84,13 @@ export function InterviewQuestionCopyPastePanel({
                 value={instruction}
                 onChange={(e) => setInstruction(e.target.value)}
                 placeholder={t("instructionPlaceholder")}
-                className="w-full rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-zinc-100 outline-none placeholder:text-zinc-600 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                className="w-full rounded-lg border border-line/10 bg-scrim-soft px-3 py-2 text-sm text-text-main outline-none placeholder:text-text-faint focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               />
             </div>
           )}
 
           {error && (
-            <p className="text-xs text-rose-300">{error}</p>
+            <p className="text-xs text-danger-text">{error}</p>
           )}
 
           <IconTextButton

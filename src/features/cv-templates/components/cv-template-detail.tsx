@@ -67,8 +67,8 @@ export function CVTemplateDetail({
 
   if (!template) {
     return (
-      <section className="min-h-0 overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]">
-        <div className="flex h-full min-h-[520px] items-center justify-center text-sm text-zinc-500">
+      <section className="min-h-0 overflow-hidden rounded-xl border border-line/[0.06] bg-panel/[0.02]">
+        <div className="flex h-full min-h-[520px] items-center justify-center text-sm text-text-muted">
           {t("emptySelection")}
         </div>
       </section>
@@ -76,7 +76,7 @@ export function CVTemplateDetail({
   }
 
   return (
-    <section className="min-h-0 overflow-y-auto rounded-xl border border-line bg-panel-subtle shadow-[0_8px_32px_rgba(0,0,0,0.24)]">
+    <section className="min-h-0 overflow-y-auto rounded-xl border border-line bg-panel-subtle shadow-[var(--ui-panel-shadow-large)]">
       <div className="flex flex-col h-full min-h-[620px]">
         <div className="flex items-center justify-between border-b border-line p-6 bg-canvas">
           <div>
@@ -96,14 +96,14 @@ export function CVTemplateDetail({
         )}
 
         <div className="p-6 grid gap-8 xl:grid-cols-2 items-start flex-1">
-          <div className="rounded-2xl border border-white/5 bg-zinc-900 p-6 flex items-center justify-center">
+          <div className="rounded-2xl border border-line/5 bg-panel-elevated p-6 flex items-center justify-center">
             <svg
               className="w-full h-auto max-w-full rounded-sm shadow-2xl"
               viewBox="0 0 794 1123"
               preserveAspectRatio="xMidYMid meet"
             >
               <foreignObject width="794" height="1123">
-                <div className="w-[794px] h-[1123px] bg-white overflow-hidden">
+                <div className="w-[794px] h-[1123px] bg-panel overflow-hidden">
                   <CVTemplatePreview
                     profile={template.fixtureProfile}
                     templateId={template.templateId}
@@ -116,7 +116,7 @@ export function CVTemplateDetail({
 
           <div className="space-y-8">
             <div>
-              <h3 className="text-lg font-medium text-white mb-6">
+              <h3 className="text-lg font-medium text-text-main mb-6">
                 {t("configureVersion")}
               </h3>
               

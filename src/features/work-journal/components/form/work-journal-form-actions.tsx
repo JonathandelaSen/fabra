@@ -20,7 +20,7 @@ export function WorkJournalFormActions({
       <button
         type="button"
         onClick={onSave}
-        className="px-6 py-2 bg-white text-black text-sm font-medium rounded-full hover:bg-zinc-200 transition-colors flex items-center gap-2"
+        className="px-6 py-2 bg-panel text-text-main text-sm font-medium rounded-full hover:bg-panel-elevated transition-colors flex items-center gap-2"
       >
         <Save className="h-4 w-4" />
         {t("saveEntry")}
@@ -28,7 +28,7 @@ export function WorkJournalFormActions({
       <button
         type="button"
         onClick={onCancel}
-        className="px-4 py-2 text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+        className="px-4 py-2 text-sm text-text-muted hover:text-text-soft transition-colors"
       >
         {common("cancel")}
       </button>

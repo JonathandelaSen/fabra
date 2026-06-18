@@ -55,19 +55,19 @@ export function CVLibrarySidebar({
     <FeatureSidebarPanel header={sidebarHeader}>
       {cvs.length === 0 ? (
         <div className="px-4 py-12 text-center">
-          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-500/10">
-            <FileText className="h-5 w-5 text-indigo-400" />
+          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-action/10">
+            <FileText className="h-5 w-5 text-action-text" />
           </div>
-          <p className="text-sm font-medium text-zinc-400">
+          <p className="text-sm font-medium text-text-muted">
             {t("noSavedCvs")}
           </p>
         </div>
       ) : filteredCvs.length === 0 ? (
         <div className="px-4 py-12 text-center">
-          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-500/10">
-            <Search className="h-5 w-5 text-indigo-400" />
+          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-action/10">
+            <Search className="h-5 w-5 text-action-text" />
           </div>
-          <p className="text-sm font-medium text-zinc-400">
+          <p className="text-sm font-medium text-text-muted">
             {t("noSavedCvs")}
           </p>
         </div>

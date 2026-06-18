@@ -8,7 +8,7 @@ const PDFPreview = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex min-h-[400px] w-full items-center justify-center bg-zinc-950 text-zinc-500">
+      <div className="flex min-h-[400px] w-full items-center justify-center bg-field-code text-text-muted">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     ),
@@ -24,7 +24,7 @@ export function CVLibraryDetailPreview({
   pdfPath,
 }: CVLibraryDetailPreviewProps) {
   return (
-    <div className="relative w-full bg-zinc-950">
+    <div className="relative w-full bg-field-code">
       <PDFPreview url={pdfPath} expanded />
     </div>
   );

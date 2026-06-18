@@ -42,7 +42,7 @@ export function ChatMessagesArea({
     <ScrollArea className="min-w-0 flex-1 overflow-hidden">
       <div className="flex min-w-0 flex-col gap-1 p-3 sm:p-4">
         {isLoading ? (
-          <div className="flex flex-1 items-center justify-center py-20 text-sm text-zinc-600">
+          <div className="flex flex-1 items-center justify-center py-20 text-sm text-text-faint">
             <Loader2 className="mr-2 size-4 animate-spin" />
             {labels?.loading ?? t("loading")}
           </div>
@@ -70,7 +70,7 @@ export function ChatMessagesArea({
             animate={{ opacity: 1, y: 0 }}
             className="flex gap-3 py-2"
           >
-            <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-cyan-500/10 text-cyan-400">
+            <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-info-soft text-info-text">
               <Bot className="size-3.5" />
             </div>
             <div className="flex items-center gap-2 rounded-2xl rounded-tl-md bg-panel-subtle px-4 py-2.5 text-sm text-text-muted">

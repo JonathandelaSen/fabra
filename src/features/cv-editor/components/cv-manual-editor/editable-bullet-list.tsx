@@ -55,21 +55,21 @@ export function EditableBulletList({ items, onChange, placeholder }: EditableBul
     <div className="space-y-1.5">
       {items.map((item, i) => (
         <div key={i} className="group flex items-center gap-2">
-          <span className="text-[10px] text-zinc-600 w-3 shrink-0">{i + 1}.</span>
+          <span className="text-[10px] text-text-faint w-3 shrink-0">{i + 1}.</span>
           <input
             type="text"
             value={item}
             onChange={(e) => update(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(e, i)}
             placeholder={inputPlaceholder}
-            className="flex-1 rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-teal-500/30 focus:outline-none"
+            className="flex-1 rounded-xl border border-line/5 bg-panel/5 px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none"
           />
           <div className="flex items-center gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all shrink-0">
             <button
               type="button"
               onClick={() => move(i, -1)}
               disabled={i === 0}
-              className="text-zinc-600 hover:text-teal-400 disabled:opacity-20 disabled:pointer-events-none p-1 transition-colors rounded hover:bg-white/5"
+              className="text-text-faint hover:text-accent-teal-text disabled:opacity-20 disabled:pointer-events-none p-1 transition-colors rounded hover:bg-panel/5"
               title={t("moveUp")}
             >
               <ArrowUp className="h-3.5 w-3.5" />
@@ -78,7 +78,7 @@ export function EditableBulletList({ items, onChange, placeholder }: EditableBul
               type="button"
               onClick={() => move(i, 1)}
               disabled={i === items.length - 1}
-              className="text-zinc-600 hover:text-teal-400 disabled:opacity-20 disabled:pointer-events-none p-1 transition-colors rounded hover:bg-white/5"
+              className="text-text-faint hover:text-accent-teal-text disabled:opacity-20 disabled:pointer-events-none p-1 transition-colors rounded hover:bg-panel/5"
               title={t("moveDown")}
             >
               <ArrowDown className="h-3.5 w-3.5" />
@@ -86,14 +86,14 @@ export function EditableBulletList({ items, onChange, placeholder }: EditableBul
             <button
               type="button"
               onClick={() => remove(i)}
-              className="text-zinc-600 hover:text-rose-400 p-1 transition-colors rounded hover:bg-white/5"
+              className="text-text-faint hover:text-danger-text p-1 transition-colors rounded hover:bg-panel/5"
             >
               <Trash2 className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>
       ))}
-      <button type="button" onClick={add} className="flex items-center gap-1.5 text-[11px] text-teal-400 hover:text-teal-300 pt-1">
+      <button type="button" onClick={add} className="flex items-center gap-1.5 text-[11px] text-accent-teal-text hover:text-accent-teal-text pt-1">
         <Plus className="h-3 w-3" />
         {t("addBullet")}
       </button>

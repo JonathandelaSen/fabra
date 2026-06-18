@@ -25,8 +25,8 @@ export function WorkJournalInputModeTabs({
           onClick={() => onChange(mode)}
           className={`text-sm font-medium transition-colors pb-1 border-b-2 ${
             value === mode
-              ? "text-zinc-100 border-zinc-100"
-              : "text-zinc-600 border-transparent hover:text-zinc-400"
+              ? "text-text-main border-line"
+              : "text-text-faint border-transparent hover:text-text-muted"
           }`}
         >
           {mode === "manual" ? t("freeWriting") : t("aiWriting")}

@@ -124,10 +124,10 @@ export function PublicCVNotesOverlay({ notes }: { notes: Note[] }) {
                 setActiveNoteId(isActive ? null : note.id);
               }}
               className={cn(
-                "flex h-8 w-8 items-center justify-center rounded-full border-2 text-white shadow-lg transition-all hover:scale-110 active:scale-95 duration-200 cursor-pointer",
+                "flex h-8 w-8 items-center justify-center rounded-full border-2 text-text-main shadow-lg transition-all hover:scale-110 active:scale-95 duration-200 cursor-pointer",
                 isActive
-                  ? "bg-amber-600 border-amber-400 scale-110 ring-4 ring-amber-500/20"
-                  : "bg-amber-500 border-white hover:bg-amber-600"
+                  ? "bg-warning border-warning-border scale-110 ring-4 ring-warning-border"
+                  : "bg-warning border-line hover:bg-warning"
               )}
               title={t("ownerNoteLabel")}
             >
@@ -137,7 +137,7 @@ export function PublicCVNotesOverlay({ notes }: { notes: Note[] }) {
             {/* The Figma-style popover comment box */}
             {isActive && (
               <div
-                className="absolute z-50 mt-3 w-72 rounded-2xl border border-zinc-200 bg-white p-4 shadow-xl text-zinc-950 animate-in fade-in slide-in-from-top-2 duration-200 pointer-events-auto dark:border-border dark:bg-popover dark:text-popover-foreground"
+                className="absolute z-50 mt-3 w-72 rounded-2xl border border-line bg-panel p-4 shadow-xl text-text-on-bright animate-in fade-in slide-in-from-top-2 duration-200 pointer-events-auto dark:border-border dark:bg-popover dark:text-popover-foreground"
                 style={{
                   // Position relative to the pin
                   left: -12,
@@ -145,22 +145,22 @@ export function PublicCVNotesOverlay({ notes }: { notes: Note[] }) {
                 }}
               >
                 {/* Caret pointing to pin */}
-                <div className="absolute -top-1.5 left-4 h-3 w-3 rotate-45 border-t border-l border-zinc-200 bg-white dark:border-border dark:bg-popover" />
+                <div className="absolute -top-1.5 left-4 h-3 w-3 rotate-45 border-t border-l border-line bg-panel dark:border-border dark:bg-popover" />
 
                 <div className="relative">
                   <div className="flex items-center justify-between gap-3 mb-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md dark:text-amber-400 dark:bg-amber-950/40">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-warning-text bg-warning-soft px-2 py-0.5 rounded-md dark:text-warning-text dark:bg-warning-soft">
                       {t("ownerNoteLabel")}
                     </span>
                     <button
                       type="button"
                       onClick={() => setActiveNoteId(null)}
-                      className="rounded-lg p-0.5 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 cursor-pointer dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-foreground"
+                      className="rounded-lg p-0.5 text-text-muted hover:bg-panel-elevated hover:text-text-faint cursor-pointer dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-foreground"
                     >
                       <X className="h-4 w-4" />
                     </button>
                   </div>
-                  <p className="text-xs leading-relaxed text-zinc-700 font-medium whitespace-pre-wrap dark:text-muted-foreground">
+                  <p className="text-xs leading-relaxed text-text-faint font-medium whitespace-pre-wrap dark:text-muted-foreground">
                     {note.body}
                   </p>
                 </div>

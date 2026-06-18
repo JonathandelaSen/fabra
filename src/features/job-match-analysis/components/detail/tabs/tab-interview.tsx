@@ -54,17 +54,17 @@ export default function TabInterview({
       transition={{ delay: 0.1 }}
       className="space-y-6"
     >
-      <section className="rounded-2xl border border-fuchsia-500/15 bg-fuchsia-500/[0.025] p-5">
+      <section className="rounded-2xl border border-action-border bg-action/[0.025] p-5">
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-fuchsia-500/20 bg-fuchsia-500/10 text-fuchsia-300">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-action-border bg-action/10 text-action-text">
               <MessageSquareQuote className="h-4 w-4" />
             </div>
             <div>
-              <h4 className="text-sm font-semibold text-fuchsia-300">
+              <h4 className="text-sm font-semibold text-action-text">
                 {t("title")}
               </h4>
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-text-muted">
                 {t("linkedCount", { count: interviewQuestions.length })}
               </p>
             </div>
@@ -72,7 +72,7 @@ export default function TabInterview({
           <button
             type="button"
             onClick={onOpenQuestions}
-            className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-fuchsia-500/20 bg-fuchsia-500/10 px-3 text-xs font-semibold text-fuchsia-300 transition-colors hover:bg-fuchsia-500/20"
+            className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-action-border bg-action/10 px-3 text-xs font-semibold text-action-text transition-colors hover:bg-action/20"
           >
             <ExternalLink className="h-3.5 w-3.5" />
             {t("openManager")}
@@ -86,17 +86,17 @@ export default function TabInterview({
                 key={question.id}
                 type="button"
                 onClick={onOpenQuestions}
-                className="group rounded-xl border border-line bg-panel-elevated p-3 text-left transition-colors hover:border-fuchsia-500/25 hover:bg-fuchsia-500/10"
+                className="group rounded-xl border border-line bg-panel-elevated p-3 text-left transition-colors hover:border-action-border hover:bg-action/10"
               >
                 <span className="block text-sm font-semibold leading-5 text-text-main">
                   {question.question}
                 </span>
                 {question.answer ? (
-                  <span className="mt-2 line-clamp-3 block text-xs leading-5 text-zinc-500 group-hover:text-zinc-400">
+                  <span className="mt-2 line-clamp-3 block text-xs leading-5 text-text-muted group-hover:text-text-muted">
                     {question.answer}
                   </span>
                 ) : (
-                  <span className="mt-2 inline-flex rounded-md border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold text-amber-300">
+                  <span className="mt-2 inline-flex rounded-md border border-warning-border bg-warning/10 px-2 py-0.5 text-[10px] font-semibold text-warning-text">
                     {t("pendingAnswer")}
                   </span>
                 )}
@@ -110,7 +110,7 @@ export default function TabInterview({
         )}
 
         <div className="rounded-xl border border-line bg-panel-elevated p-4">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-600">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-text-faint">
             {t("createTitle")}
           </p>
           <div className="grid gap-3 lg:grid-cols-2">
@@ -119,7 +119,7 @@ export default function TabInterview({
               onChange={(event) => onQuickQuestionChange(event.target.value)}
               placeholder={t("questionPlaceholder")}
               rows={2}
-              className="resize-none rounded-lg border border-line bg-field px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-fuchsia-500/40 focus:outline-none focus:ring-1 focus:ring-fuchsia-500/40"
+              className="resize-none rounded-lg border border-line bg-field px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-action-border focus:outline-none focus:ring-1 focus:ring-action-border"
             />
             <textarea
               value={quickQuestionContext}
@@ -128,14 +128,14 @@ export default function TabInterview({
               }
               placeholder={t("contextPlaceholder")}
               rows={2}
-              className="resize-none rounded-lg border border-line bg-field px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-fuchsia-500/40 focus:outline-none focus:ring-1 focus:ring-fuchsia-500/40"
+              className="resize-none rounded-lg border border-line bg-field px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-action-border focus:outline-none focus:ring-1 focus:ring-action-border"
             />
             <div className="flex flex-wrap items-center gap-2 lg:col-span-2">
               <button
                 type="button"
                 onClick={() => onCreateQuestion(false)}
                 disabled={isCreatingQuestion || !quickQuestion.trim()}
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-zinc-100 px-4 text-xs font-semibold text-zinc-950 transition-colors hover:bg-white disabled:opacity-50"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-panel-elevated px-4 text-xs font-semibold text-text-main transition-colors hover:bg-panel disabled:opacity-50"
               >
                 {isCreatingQuestion ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />

@@ -139,21 +139,21 @@ export function ActivityContextView() {
               <button
                 type="button"
                 onClick={() => router.push(returnTo)}
-                className="inline-flex items-center gap-1.5 text-xs text-zinc-500 transition-colors hover:text-zinc-200"
+                className="inline-flex items-center gap-1.5 text-xs text-text-muted transition-colors hover:text-text-soft"
               >
                 <ArrowLeft className="h-3.5 w-3.5" />
                 {t("back")}
               </button>
             )}
             {hasReturnTo && (
-              <span className="text-zinc-700" aria-hidden="true">
+              <span className="text-text-faint" aria-hidden="true">
                 |
               </span>
             )}
-            <h1 className="text-2xl font-semibold tracking-tight text-zinc-50">{t("title")}</h1>
+            <h1 className="text-2xl font-semibold tracking-tight text-text-main">{t("title")}</h1>
           </div>
           {!isWorkJournal && t(`description.${resolveSourceKey(source)}`) && (
-            <p className="mt-1 text-sm leading-relaxed text-zinc-500">
+            <p className="mt-1 text-sm leading-relaxed text-text-muted">
               {t(`description.${resolveSourceKey(source)}`)}
             </p>
           )}
@@ -167,9 +167,9 @@ export function ActivityContextView() {
           )}
 
           {lastCreated && hasReturnTo && (
-            <div className="flex items-center gap-3 rounded-lg border border-emerald-500/20 bg-emerald-500/[0.06] px-4 py-3">
-              <Check className="h-4 w-4 shrink-0 text-emerald-400" />
-              <p className="flex-1 text-sm text-zinc-200">
+            <div className="flex items-center gap-3 rounded-lg border border-success-border bg-success/[0.06] px-4 py-3">
+              <Check className="h-4 w-4 shrink-0 text-success-text" />
+              <p className="flex-1 text-sm text-text-soft">
                 {t("created", { name: lastCreated.name })}
               </p>
               <IconTextButton
@@ -191,11 +191,11 @@ export function ActivityContextView() {
 
           {query.isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-5 w-5 animate-spin text-zinc-600" />
+              <Loader2 className="h-5 w-5 animate-spin text-text-faint" />
             </div>
           ) : sortedContexts.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-white/[0.08] px-6 py-10 text-center">
-              <p className="text-sm text-zinc-600">{t("empty")}</p>
+            <div className="rounded-lg border border-dashed border-line/[0.08] px-6 py-10 text-center">
+              <p className="text-sm text-text-faint">{t("empty")}</p>
             </div>
           ) : (
             <div className="space-y-1">
@@ -216,12 +216,12 @@ export function ActivityContextView() {
 
         {!isWorkJournal && (
           <aside className="space-y-3">
-            <div className="flex items-center gap-2 text-sm font-medium text-zinc-400">
-              <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+            <div className="flex items-center gap-2 text-sm font-medium text-text-muted">
+              <Sparkles className="h-3.5 w-3.5 text-warning-text" />
               {t("suggestionsTitle")}
             </div>
             {suggestions.length === 0 ? (
-              <p className="text-xs leading-5 text-zinc-600">
+              <p className="text-xs leading-5 text-text-faint">
                 {t("suggestionsEmpty")}
               </p>
             ) : (

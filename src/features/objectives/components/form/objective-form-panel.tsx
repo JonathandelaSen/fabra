@@ -45,8 +45,8 @@ export function ObjectiveFormPanel({
 }: ObjectiveFormPanelProps) {
   return (
     <BasicPanel className="flex flex-col overflow-hidden">
-      <div className="border-b border-white/[0.06] px-5 py-4 flex items-center justify-between bg-white/[0.01]">
-        <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-200">
+      <div className="border-b border-line/[0.06] px-5 py-4 flex items-center justify-between bg-panel/[0.01]">
+        <h2 className="text-sm font-bold uppercase tracking-wider text-text-soft">
           {isCreating ? t("newObjective") : t("editObjective")}
         </h2>
         <ActionIconButton
@@ -79,7 +79,7 @@ export function ObjectiveFormPanel({
           t={t}
         />
 
-        <div className="mt-4 flex justify-end gap-3 border-t border-white/[0.06] pt-4">
+        <div className="mt-4 flex justify-end gap-3 border-t border-line/[0.06] pt-4">
           <IconTextButton
             icon={X}
             onClick={onCancel}

@@ -199,8 +199,8 @@ export function JobMatchKanbanBoard({
                   className={cn(
                     "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold border transition-all duration-200",
                     isActive
-                      ? "bg-indigo-500/15 border-indigo-500/35 text-indigo-200"
-                      : "bg-panel-base/60 border-line text-text-muted hover:text-text-main"
+                      ? "bg-action/15 border-action-border/35 text-action-text"
+                      : "bg-panel-base/60 border-line text-text-muted hover:text-text-on-bright"
                   )}
                 >
                   <span

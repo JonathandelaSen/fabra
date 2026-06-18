@@ -4,7 +4,7 @@ export const featureSurfaces = {
   panel: "border border-line bg-panel",
   section: "border border-line bg-panel-subtle",
   row: "border border-transparent bg-transparent",
-  selectedRow: "border-action-border bg-panel-selected shadow-[0_4px_12px_rgba(0,0,0,0.52)]",
+  selectedRow: "border-action-border bg-panel-selected shadow-[var(--ui-row-selected-shadow)]",
   rowHover: "hover:border-line hover:bg-panel-row-hover",
   field: "border border-line-default bg-panel-subtle",
   modal: "border border-line-default bg-modal shadow-2xl",

@@ -131,11 +131,11 @@ export default function AIActionLauncherIntegrated({
 
   return (
     <div
-      className="relative p-4 rounded-xl border transition-all duration-300 bg-panel-subtle flex flex-col gap-3 border-line hover:border-violet-500/30 hover:bg-panel-hover"
+      className="relative p-4 rounded-xl border transition-all duration-300 bg-panel-subtle flex flex-col gap-3 border-line hover:border-action-border hover:bg-panel-hover"
     >
       <div className="flex items-start gap-3">
-        <div className="w-9 h-9 rounded-lg bg-violet-500/10 flex items-center justify-center shrink-0 border border-violet-500/10">
-          <Sparkles className="w-4 h-4 text-violet-400" />
+        <div className="w-9 h-9 rounded-lg bg-action-soft flex items-center justify-center shrink-0 border border-action-border">
+          <Sparkles className="w-4 h-4 text-action-text" />
         </div>
         <div className="flex-1 min-w-0">
           <h4 className="text-xs sm:text-sm font-semibold text-text-main">
@@ -205,13 +205,13 @@ export default function AIActionLauncherIntegrated({
                         className={cn(
                           "w-full text-left px-3 py-2 rounded-md text-xs flex items-center justify-between transition-all cursor-pointer",
                           provider.id === selectedProvider
-                            ? "bg-violet-500/10 text-violet-300 font-semibold"
-                            : "text-text-muted hover:bg-panel-hover hover:text-text-main"
+                            ? "bg-action-soft text-action-text font-semibold"
+                            : "text-text-muted hover:bg-panel-hover hover:text-text-on-bright"
                         )}
                       >
                         <span>{provider.label}</span>
                         {provider.id === selectedProvider && (
-                          <Check className="w-3.5 h-3.5 text-violet-400" />
+                          <Check className="w-3.5 h-3.5 text-action-text" />
                         )}
                       </button>
                     ))}
@@ -274,8 +274,8 @@ export default function AIActionLauncherIntegrated({
                         className={cn(
                           "w-full text-left px-3 py-2 rounded-md text-xs flex items-center justify-between transition-all cursor-pointer",
                           model.id === selectedModelId
-                            ? "bg-violet-500/10 text-violet-300 font-semibold"
-                            : "text-text-muted hover:bg-panel-hover hover:text-text-main"
+                            ? "bg-action-soft text-action-text font-semibold"
+                            : "text-text-muted hover:bg-panel-hover hover:text-text-on-bright"
                         )}
                       >
                         <span className="flex items-center gap-2">
@@ -287,7 +287,7 @@ export default function AIActionLauncherIntegrated({
                           )}
                         </span>
                         {model.id === selectedModelId && (
-                          <Check className="w-3.5 h-3.5 text-violet-400" />
+                          <Check className="w-3.5 h-3.5 text-action-text" />
                         )}
                       </button>
                     ))}
@@ -301,7 +301,7 @@ export default function AIActionLauncherIntegrated({
             <button
               type="button"
               onClick={handleIntegratedRun}
-              className="w-full mt-1 py-2 px-4 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold text-xs transition-all active:scale-[0.98] shadow-md shadow-violet-950/20 cursor-pointer"
+              className="w-full mt-1 py-2 px-4 rounded-lg bg-gradient-to-r from-action to-action-hover hover:from-action-hover hover:to-action text-text-on-dark font-semibold text-xs transition-all active:scale-[0.98] shadow-md shadow-[var(--ui-action-shadow)] cursor-pointer"
             >
               {t("continue")}
             </button>
@@ -317,7 +317,7 @@ export default function AIActionLauncherIntegrated({
                     onClose();
                     onConfigure?.();
                   }}
-                  className="w-full py-2 px-4 rounded-lg border border-amber-500/30 hover:bg-amber-500/15 text-amber-300 font-semibold text-xs transition-all cursor-pointer"
+                  className="w-full py-2 px-4 rounded-lg border border-warning-border hover:bg-warning/15 text-warning-text font-semibold text-xs transition-all cursor-pointer"
                 >
                   {t("configureAI")}
                 </button>

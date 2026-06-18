@@ -56,25 +56,25 @@ const PARSERS: {
     key: "python",
     labelKey: "parserLabels.python",
     descriptionKey: "python",
-    color: "bg-emerald-500",
+    color: "bg-success",
     badgeKey: "parserBadges.python",
-    badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+    badgeColor: "bg-success/10 text-success-text border-success-border",
   },
   {
     key: "pdfjs",
     labelKey: "parserLabels.pdfjs",
     descriptionKey: "pdfjs",
-    color: "bg-sky-500",
+    color: "bg-info",
     badgeKey: "parserBadges.pdfjs",
-    badgeColor: "bg-sky-500/10 text-sky-400 border-sky-500/20",
+    badgeColor: "bg-info/10 text-info-text border-info-border/20",
   },
   {
     key: "node",
     labelKey: "parserLabels.node",
     descriptionKey: "node",
-    color: "bg-amber-500",
+    color: "bg-warning",
     badgeKey: "parserBadges.node",
-    badgeColor: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+    badgeColor: "bg-warning/10 text-warning-text border-warning-border",
   },
 ];
 
@@ -200,7 +200,7 @@ export default function JobMatchExtractionView({
 
         {fullscreen && (
           <div
-            className="fixed inset-0 bg-black/80 z-40"
+            className="fixed inset-0 bg-scrim z-40"
             onClick={() => setFullscreen(false)}
           />
         )}

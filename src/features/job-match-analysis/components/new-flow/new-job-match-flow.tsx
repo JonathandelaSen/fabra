@@ -167,7 +167,7 @@ export default function NewJobMatchFlow({
         className="mx-auto flex w-full max-w-5xl flex-col gap-6"
       >
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold text-zinc-100">{t("title")}</h1>
+          <h1 className="text-3xl font-bold text-text-main">{t("title")}</h1>
         </div>
 
         <NewJobMatchCVSourceSelector

@@ -11,7 +11,7 @@ import type { FeedbackEntry, FeedbackListItem } from "../api/feedback-notes-api"
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 const textareaClass =
-  "w-full resize-y border-indigo-300/10 bg-indigo-300/[0.035] text-sm leading-6 text-zinc-100 placeholder:text-zinc-600 focus-visible:border-indigo-300/40 disabled:cursor-not-allowed disabled:opacity-60";
+  "w-full resize-y border-action-border bg-action/[0.035] text-sm leading-6 text-text-main placeholder:text-text-faint focus-visible:border-action-border disabled:cursor-not-allowed disabled:opacity-60";
 
 interface FeedbackFinalPanelProps {
   feedback: FeedbackListItem;
@@ -92,11 +92,11 @@ export function FeedbackFinalPanel({
   };
 
   return (
-    <section className="relative min-w-0 rounded-lg border border-indigo-500/15 bg-[linear-gradient(135deg,rgba(99,102,241,0.12),rgba(255,255,255,0.01)_50%,rgba(16,185,129,0.06))] shadow-[0_4px_30px_rgba(99,102,241,0.03)] p-4">
+    <section className="relative min-w-0 rounded-lg border border-action-border/15 bg-[image:var(--ui-feedback-panel-bg)] shadow-[var(--ui-action-glow-shadow)] p-4">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-sm font-semibold text-zinc-100">{t("final.title")}</h2>
-          <p className="mt-1 text-xs text-zinc-500">{t("final.description")}</p>
+          <h2 className="text-sm font-semibold text-text-main">{t("final.title")}</h2>
+          <p className="mt-1 text-xs text-text-muted">{t("final.description")}</p>
         </div>
       </div>
       <label htmlFor="feedback-final-draft" className="sr-only">
@@ -112,14 +112,14 @@ export function FeedbackFinalPanel({
           className={textareaClass}
         />
       ) : hasFinalFeedback ? (
-        <div className="min-h-[18rem] rounded-lg border border-line bg-panel-elevated px-3 py-3 text-sm leading-6 text-text-main">
+        <div className="min-h-[18rem] rounded-lg border border-line bg-panel-elevated px-3 py-3 text-sm leading-6 text-text-on-bright">
           <p className="whitespace-pre-wrap">{feedback.finalFeedback}</p>
         </div>
       ) : (
         <div className="flex min-h-[18rem] flex-col items-center justify-center rounded-lg border border-dashed border-line bg-panel-subtle px-4 py-8 text-center">
-          <p className="text-sm font-medium text-zinc-500">{t("final.empty")}</p>
+          <p className="text-sm font-medium text-text-muted">{t("final.empty")}</p>
           {!isClosed && !isEditingMode && (
-            <p className="mt-2 text-xs text-zinc-600">
+            <p className="mt-2 text-xs text-text-faint">
               {t("final.emptyHint")}
             </p>
           )}

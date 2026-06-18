@@ -49,7 +49,7 @@ export function WorkJournalSidebar({
             className="h-9 w-full rounded-lg border border-line bg-field px-3 py-1.5 text-xs text-text-main outline-none placeholder:text-text-faint focus:border-ring/40 transition-colors"
           />
           <select
-            className="h-9 w-full rounded-lg border border-line bg-panel-elevated px-3 py-1.5 text-xs text-text-muted outline-none focus:border-ring/40 focus:text-text-main transition-colors cursor-pointer appearance-none"
+            className="h-9 w-full rounded-lg border border-line bg-panel-elevated px-3 py-1.5 text-xs text-text-muted outline-none focus:border-ring/40 focus:text-text-on-bright transition-colors cursor-pointer appearance-none"
             value={contextFilter}
             onChange={(e) => setContextFilter(e.target.value)}
           >
@@ -67,10 +67,10 @@ export function WorkJournalSidebar({
         <WorkJournalSidebarSkeleton />
       ) : entries.length === 0 ? (
         <div className="px-4 py-12 text-center">
-          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-indigo-500/10">
-            <BookOpenText className="h-5 w-5 text-indigo-400" />
+          <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-action/10">
+            <BookOpenText className="h-5 w-5 text-action-text" />
           </div>
-          <p className="text-sm font-medium text-zinc-400">
+          <p className="text-sm font-medium text-text-muted">
             {search || contextFilter ? "No matches found." : t("empty")}
           </p>
         </div>

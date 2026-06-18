@@ -9,9 +9,9 @@ interface SectionBasicsProps {
   onChange: (basics: StandardCVBasics) => void;
 }
 
-const inputBaseClass = "rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-teal-500/30 focus:outline-none";
+const inputBaseClass = "rounded-xl border border-line/5 bg-panel/5 px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none";
 const inputClass = `w-full ${inputBaseClass}`;
-const labelClass = "text-[11px] font-medium text-zinc-500 uppercase tracking-wider";
+const labelClass = "text-[11px] font-medium text-text-muted uppercase tracking-wider";
 const EMAIL_PLACEHOLDER = "tu@email.com";
 const URL_PLACEHOLDER = "https://...";
 
@@ -61,12 +61,12 @@ export function SectionBasics({ basics, onChange }: SectionBasicsProps) {
                 <input type="text" value={link.label ?? ""} onChange={(e) => updateLink(i, "label", e.target.value)} placeholder={t("linkLabel")} className={inputClass} />
                 <input type="url" value={link.url} onChange={(e) => updateLink(i, "url", e.target.value)} placeholder={URL_PLACEHOLDER} className={inputClass} />
               </div>
-              <button onClick={() => removeLink(i)} className="shrink-0 mt-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 text-zinc-600 hover:text-rose-400 transition-opacity">
+              <button onClick={() => removeLink(i)} className="shrink-0 mt-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 text-text-faint hover:text-danger-text transition-opacity">
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
             </div>
           ))}
-          <button onClick={addLink} className="flex items-center gap-1.5 text-[11px] text-teal-400 hover:text-teal-300">
+          <button onClick={addLink} className="flex items-center gap-1.5 text-[11px] text-accent-teal-text hover:text-accent-teal-text">
             <Plus className="h-3 w-3" />
             {t("addLink")}
           </button>

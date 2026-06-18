@@ -101,23 +101,23 @@ function DetailedInteractionView({ interaction }: { interaction: Interaction }) 
           </div>
         </CardHeader>
         <CardContent className="p-6 pb-4 flex flex-wrap gap-2 items-center">
-          <span className="text-xs font-semibold text-text-muted font-mono bg-zinc-800/40 border border-zinc-700/30 rounded-lg px-2.5 py-1">
+          <span className="text-xs font-semibold text-text-muted font-mono bg-panel-control/40 border border-line-strong/30 rounded-lg px-2.5 py-1">
             {interaction.provider}
           </span>
           {interaction.model && (
-            <span className="text-xs font-semibold text-text-muted font-mono bg-zinc-800/40 border border-zinc-700/30 rounded-lg px-2.5 py-1">
+            <span className="text-xs font-semibold text-text-muted font-mono bg-panel-control/40 border border-line-strong/30 rounded-lg px-2.5 py-1">
               {interaction.model}
             </span>
           )}
           {latestEventName && (
             <span
-              className="text-xs font-semibold text-text-muted font-mono bg-zinc-800/40 border border-zinc-700/30 rounded-lg px-2.5 py-1"
+              className="text-xs font-semibold text-text-muted font-mono bg-panel-control/40 border border-line-strong/30 rounded-lg px-2.5 py-1"
               title={interaction.eventNames.join("\n")}
             >
               {t("eventName")}: {latestEventName}
             </span>
           )}
-          <span className="text-xs font-semibold text-text-muted font-mono bg-zinc-800/40 border border-zinc-700/30 rounded-lg px-2.5 py-1 ml-auto">
+          <span className="text-xs font-semibold text-text-muted font-mono bg-panel-control/40 border border-line-strong/30 rounded-lg px-2.5 py-1 ml-auto">
             UUID: {interaction.interactionId}
           </span>
         </CardContent>
@@ -136,7 +136,7 @@ function DetailedInteractionView({ interaction }: { interaction: Interaction }) 
                   onClick={() => setActiveTab(tab.id)}
                   className={`inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg transition-all ${
                     active
-                      ? "bg-card text-text-main shadow-[0_1px_3px_rgba(0,0,0,0.1)]"
+                      ? "bg-card text-text-main shadow-[var(--ui-panel-shadow-soft)]"
                       : "text-text-muted hover:text-text-main hover:bg-card/40"
                   }`}
                 >

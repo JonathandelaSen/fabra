@@ -78,10 +78,10 @@ export default function UploadPhase({ onUploadComplete }: UploadPhaseProps) {
             relative border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition-all duration-300
             ${
               file
-                ? "border-indigo-500/40 bg-indigo-500/5"
+                ? "border-action-border/40 bg-action/5"
                 : dragActive
-                  ? "border-indigo-400/60 bg-indigo-500/10 scale-[1.01]"
-                  : "border-zinc-800/60 hover:border-zinc-700/80 hover:bg-white/[0.02]"
+                  ? "border-action-border bg-action/10 scale-[1.01]"
+                  : "border-line-default/60 hover:border-line-strong/80 hover:bg-panel/[0.02]"
             }
           `}
         >
@@ -97,20 +97,20 @@ export default function UploadPhase({ onUploadComplete }: UploadPhaseProps) {
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="w-16 h-16 rounded-2xl bg-indigo-500/15 flex items-center justify-center"
+                className="w-16 h-16 rounded-2xl bg-action/15 flex items-center justify-center"
               >
-                <CheckCircle2 className="w-8 h-8 text-indigo-400" />
+                <CheckCircle2 className="w-8 h-8 text-action-text" />
               </motion.div>
             ) : (
-              <div className="w-16 h-16 rounded-2xl bg-zinc-800/60 flex items-center justify-center group-hover:bg-zinc-800">
-                <UploadCloud className="w-8 h-8 text-zinc-500" />
+              <div className="w-16 h-16 rounded-2xl bg-panel-control/60 flex items-center justify-center group-hover:bg-panel-control">
+                <UploadCloud className="w-8 h-8 text-text-muted" />
               </div>
             )}
             <div>
-              <p className="text-zinc-200 font-medium text-lg">
+              <p className="text-text-soft font-medium text-lg">
                 {file ? file.name : t("dropPdf")}
               </p>
-              <p className="text-zinc-500 text-sm mt-1">
+              <p className="text-text-muted text-sm mt-1">
                 {file
                   ? `${(file.size / 1024 / 1024).toFixed(2)} MB`
                   : t("clickToSelect")}
@@ -130,8 +130,8 @@ export default function UploadPhase({ onUploadComplete }: UploadPhaseProps) {
             w-full mt-6 flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold text-base transition-all duration-200
             ${
               file && !loading
-                ? "bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-xl shadow-indigo-900/30"
-                : "bg-zinc-800/60 text-zinc-500 cursor-not-allowed"
+                ? "bg-gradient-to-r from-action to-action-hover hover:from-action-hover hover:to-action text-text-on-dark shadow-xl shadow-[var(--ui-action-shadow)]"
+                : "bg-panel-control/60 text-text-muted cursor-not-allowed"
             }
           `}
         >

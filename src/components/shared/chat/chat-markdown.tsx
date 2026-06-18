@@ -30,13 +30,13 @@ export function ChatMarkdown({ content }: { content: string }) {
           const isBlock = className?.includes("language-");
           if (isBlock) {
             return (
-              <code className="block overflow-x-auto rounded-lg bg-black/40 p-3 text-xs text-emerald-300">
+              <code className="block overflow-x-auto rounded-lg bg-scrim-soft p-3 text-xs text-success-text">
                 {children}
               </code>
             );
           }
           return (
-            <code className="rounded bg-panel-control px-1.5 py-0.5 text-xs text-emerald-300">
+            <code className="rounded bg-panel-control px-1.5 py-0.5 text-xs text-success-text">
               {children}
             </code>
           );
@@ -54,7 +54,7 @@ export function ChatMarkdown({ content }: { content: string }) {
           </h3>
         ),
         blockquote: ({ children }) => (
-          <blockquote className="mb-3 border-l-2 border-cyan-500/30 pl-3 italic text-text-muted last:mb-0">
+          <blockquote className="mb-3 border-l-2 border-info-border pl-3 italic text-text-muted last:mb-0">
             {children}
           </blockquote>
         ),

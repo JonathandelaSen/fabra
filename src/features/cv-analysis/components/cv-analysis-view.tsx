@@ -176,7 +176,6 @@ export default function CVAnalysisView({
               setSelectedAnalysisId(id);
               route.goToDetail(id);
             }}
-            onDelete={(id) => void handleDelete(id)}
           />
         }
       >

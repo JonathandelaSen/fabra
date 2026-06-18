@@ -28,14 +28,14 @@ export default function InterviewQuestionPromptPanel({
 
   return (
     <BasicPanel className="p-5 flex flex-col gap-4 animate-fade-in">
-      <h3 className="text-sm font-semibold tracking-tight text-zinc-300 flex items-center gap-2">
+      <h3 className="text-sm font-semibold tracking-tight text-text-soft flex items-center gap-2">
         <MessageSquare className="h-4 w-4 text-primary-2" />
         {t("question")}
       </h3>
       {isEditing ? (
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="question-textarea" className="text-xs font-medium text-zinc-500">
+            <label htmlFor="question-textarea" className="text-xs font-medium text-text-muted">
               {t("question")}
             </label>
             <Textarea
@@ -48,11 +48,11 @@ export default function InterviewQuestionPromptPanel({
                 event.target.value.trim() !== question.question &&
                 onUpdate({ question: event.target.value })
               }
-              className="min-h-24 bg-white/[0.01] border-white/[0.08] focus-visible:ring-indigo-500/50"
+              className="min-h-24 bg-panel/[0.01] border-line/[0.08] focus-visible:ring-action-border"
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="context-textarea" className="text-xs font-medium text-zinc-500">
+            <label htmlFor="context-textarea" className="text-xs font-medium text-text-muted">
               {t("context")}
             </label>
             <Textarea
@@ -65,7 +65,7 @@ export default function InterviewQuestionPromptPanel({
                 event.target.value !== (question.context ?? "") &&
                 onUpdate({ context: event.target.value || null })
               }
-              className="min-h-24 bg-white/[0.01] border-white/[0.08] focus-visible:ring-indigo-500/50"
+              className="min-h-24 bg-panel/[0.01] border-line/[0.08] focus-visible:ring-action-border"
               placeholder={t("aiContext")}
             />
           </div>
@@ -73,23 +73,23 @@ export default function InterviewQuestionPromptPanel({
       ) : (
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <span className="text-xs font-medium text-zinc-500">
+            <span className="text-xs font-medium text-text-muted">
               {t("question")}
             </span>
-            <div className="rounded-lg border border-white/[0.04] bg-white/[0.01] p-3.5 text-sm leading-relaxed text-zinc-100 min-h-[5.5rem] whitespace-pre-wrap">
+            <div className="rounded-lg border border-line/[0.04] bg-panel/[0.01] p-3.5 text-sm leading-relaxed text-text-on-bright min-h-[5.5rem] whitespace-pre-wrap">
               {question.question}
             </div>
           </div>
           <div className="flex flex-col gap-1.5">
-            <span className="text-xs font-medium text-zinc-500">
+            <span className="text-xs font-medium text-text-muted">
               {t("context")}
             </span>
             {question.context ? (
-              <div className="rounded-lg border border-white/[0.04] bg-white/[0.01] p-3.5 text-sm leading-relaxed text-zinc-300 min-h-[6rem] whitespace-pre-wrap">
+              <div className="rounded-lg border border-line/[0.04] bg-panel/[0.01] p-3.5 text-sm leading-relaxed text-text-soft min-h-[6rem] whitespace-pre-wrap">
                 {question.context}
               </div>
             ) : (
-              <div className="flex rounded-lg border border-dashed border-white/[0.08] bg-white/[0.005] p-3.5 text-sm italic text-zinc-500 min-h-[6rem] items-center justify-center">
+              <div className="flex rounded-lg border border-dashed border-line/[0.08] bg-panel/[0.005] p-3.5 text-sm italic text-text-muted min-h-[6rem] items-center justify-center">
                 {t("noContextSpecified")}
               </div>
             )}

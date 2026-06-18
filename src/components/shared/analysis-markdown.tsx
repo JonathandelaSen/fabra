@@ -14,7 +14,7 @@ export function AnalysisMarkdown({
   className,
 }: AnalysisMarkdownProps) {
   return (
-    <div className={cn("text-zinc-300", className)}>
+    <div className={cn("text-text-soft", className)}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         skipHtml
@@ -23,9 +23,9 @@ export function AnalysisMarkdown({
             <p className="mb-2 leading-relaxed last:mb-0">{children}</p>
           ),
           strong: ({ children }) => (
-            <strong className="font-semibold text-zinc-100">{children}</strong>
+            <strong className="font-semibold text-text-main">{children}</strong>
           ),
-          em: ({ children }) => <em className="italic text-zinc-200">{children}</em>,
+          em: ({ children }) => <em className="italic text-text-soft">{children}</em>,
           ul: ({ children }) => (
             <ul className="mb-2 ml-5 list-disc space-y-1 last:mb-0">{children}</ul>
           ),
@@ -36,21 +36,21 @@ export function AnalysisMarkdown({
           ),
           li: ({ children }) => <li className="pl-0.5 leading-relaxed">{children}</li>,
           h1: ({ children }) => (
-            <h1 className="mb-2 text-lg font-semibold text-zinc-100">{children}</h1>
+            <h1 className="mb-2 text-lg font-semibold text-text-main">{children}</h1>
           ),
           h2: ({ children }) => (
-            <h2 className="mb-2 text-base font-semibold text-zinc-100">{children}</h2>
+            <h2 className="mb-2 text-base font-semibold text-text-main">{children}</h2>
           ),
           h3: ({ children }) => (
-            <h3 className="mb-1.5 font-semibold text-zinc-100">{children}</h3>
+            <h3 className="mb-1.5 font-semibold text-text-main">{children}</h3>
           ),
           blockquote: ({ children }) => (
-            <blockquote className="mb-2 border-l-2 border-zinc-600 pl-3 text-zinc-400 last:mb-0">
+            <blockquote className="mb-2 border-l-2 border-line-strong pl-3 text-text-muted last:mb-0">
               {children}
             </blockquote>
           ),
           code: ({ children }) => (
-            <code className="rounded bg-zinc-950/50 px-1 py-0.5 text-[0.9em] text-emerald-300">
+            <code className="rounded bg-field-code/50 px-1 py-0.5 text-[0.9em] text-success-text">
               {children}
             </code>
           ),
@@ -59,7 +59,7 @@ export function AnalysisMarkdown({
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sky-400 underline decoration-sky-400/40 underline-offset-2 hover:text-sky-300"
+              className="text-info-text underline decoration-info-text underline-offset-2 hover:text-info-text"
             >
               {children}
             </a>

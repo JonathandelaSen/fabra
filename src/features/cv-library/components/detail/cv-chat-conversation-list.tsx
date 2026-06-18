@@ -57,9 +57,9 @@ export function ConversationList({
   };
 
   return (
-    <div className="flex max-h-48 w-full shrink-0 flex-col border-b border-white/[0.06] md:max-h-none md:w-64 md:border-b-0 md:border-r">
-      <div className="flex items-center justify-between border-b border-white/[0.06] px-3 py-3">
-        <span className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+    <div className="flex max-h-48 w-full shrink-0 flex-col border-b border-line/[0.06] md:max-h-none md:w-64 md:border-b-0 md:border-r">
+      <div className="flex items-center justify-between border-b border-line/[0.06] px-3 py-3">
+        <span className="text-xs font-medium uppercase tracking-wider text-text-muted">
           {t("conversations")}
         </span>
         <ActionIconButton
@@ -71,7 +71,7 @@ export function ConversationList({
       <ScrollArea className="flex-1">
         <div className="space-y-0.5 p-2">
           {conversations.length === 0 && (
-            <p className="px-2 py-6 text-center text-xs text-zinc-600">
+            <p className="px-2 py-6 text-center text-xs text-text-faint">
               {t("noConversations")}
             </p>
           )}
@@ -80,8 +80,8 @@ export function ConversationList({
               key={conv.id}
               className={`group flex items-center gap-1.5 rounded-lg px-2.5 py-2 transition-colors cursor-pointer ${
                 activeId === conv.id
-                  ? "bg-cyan-500/10 text-cyan-300"
-                  : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-300"
+                  ? "bg-info-soft text-info-text"
+                  : "text-text-muted hover:bg-panel/[0.04] hover:text-text-soft"
               }`}
               onClick={() => onSelect(conv.id)}
             >
@@ -107,7 +107,7 @@ export function ConversationList({
               <DropdownMenu>
                 <DropdownMenuTrigger
                   onClick={(e) => e.stopPropagation()}
-                  className="shrink-0 rounded p-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-white/10 transition-opacity"
+                  className="shrink-0 rounded p-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-panel/10 transition-opacity"
                 >
                   <MoreHorizontal className="size-3.5" />
                 </DropdownMenuTrigger>
@@ -117,7 +117,7 @@ export function ConversationList({
                     {t("rename")}
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    className="text-red-400 focus:text-red-400"
+                    className="text-danger-text focus:text-danger-text"
                     onClick={() => onDelete(conv.id)}
                   >
                     <Trash2 className="mr-2 size-3.5" />

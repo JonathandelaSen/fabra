@@ -34,7 +34,7 @@ export function ExtractionTextPanel({
   currentError,
   copied,
   fullscreen,
-  parserColor = "bg-emerald-500",
+  parserColor = "bg-success",
   parserDescriptionKey,
   onCopy,
   onToggleFullscreen,
@@ -61,7 +61,7 @@ export function ExtractionTextPanel({
           initial={{ top: "0%" }}
           animate={{ top: "100%" }}
           transition={{ duration: 1.4, ease: "easeInOut" }}
-          className="absolute left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-indigo-500/70 to-transparent shadow-[0_0_10px_rgba(99,102,241,0.7)] z-10 pointer-events-none"
+          className="absolute left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-action to-transparent shadow-[var(--ui-action-line-shadow)] z-10 pointer-events-none"
         />
       )}
 
@@ -79,7 +79,7 @@ export function ExtractionTextPanel({
             className="flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg text-xs text-text-muted hover:text-text-main hover:bg-panel-hover transition-all disabled:opacity-30"
           >
             {copied ? (
-              <Check className="w-3.5 h-3.5 text-emerald-400" />
+              <Check className="w-3.5 h-3.5 text-success-text" />
             ) : (
               <Copy className="w-3.5 h-3.5" />
             )}
@@ -119,11 +119,11 @@ export function ExtractionTextPanel({
       {!isCollapsed && (
         <div className="flex-1 overflow-auto p-4 sm:p-5">
         {currentError && !currentText ? (
-          <div className="flex items-start gap-3 text-rose-300">
+          <div className="flex items-start gap-3 text-danger-text">
             <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
             <div>
               <p className="font-medium text-sm">{t("extractionError")}</p>
-              <p className="text-xs text-rose-400/70 mt-1 font-mono break-all text-left">
+              <p className="text-xs text-danger-text/70 mt-1 font-mono break-all text-left">
                 {currentError}
               </p>
             </div>

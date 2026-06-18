@@ -79,7 +79,7 @@ export function ManualEditor({
   const sectionTitles = profile.presentation?.sectionTitles ?? {};
   const hiddenSections = profile.presentation?.hiddenSections ?? [];
   const accentColor = profile.presentation?.accentColor ?? getTemplateAccentColor(templateId);
-  const tagsColor = profile.presentation?.tagsColor ?? "#f4f4f5";
+  const tagsColor = profile.presentation?.tagsColor ?? "var(--ui-cv-tag-default)";
 
   const moveSection = (section: CVRenderableSectionId, direction: -1 | 1) => {
     const index = sectionOrder.indexOf(section);

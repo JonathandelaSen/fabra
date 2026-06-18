@@ -18,7 +18,7 @@ import {
 import { BasicPanel } from "@/components/shared/basic-panel";
 
 const textareaClass =
-  "w-full resize-y border-white/10 bg-white/[0.03] text-sm text-zinc-100 placeholder:text-zinc-600 focus-visible:border-zinc-300 disabled:cursor-not-allowed disabled:opacity-60";
+  "w-full resize-y border-line/10 bg-panel/[0.03] text-sm text-text-main placeholder:text-text-faint focus-visible:border-line-default disabled:cursor-not-allowed disabled:opacity-60";
 
 interface FeedbackEntriesPanelProps {
   entries: FeedbackEntry[];
@@ -70,7 +70,7 @@ export function FeedbackEntriesPanel({
     <section className="min-w-0 space-y-4">
       {isClosed && (
         <div className="flex items-center justify-end">
-          <span className="inline-flex items-center gap-1 text-xs text-zinc-500">
+          <span className="inline-flex items-center gap-1 text-xs text-text-muted">
             <Lock className="h-3.5 w-3.5" />
             {t("status.closed")}
           </span>
@@ -88,7 +88,7 @@ export function FeedbackEntriesPanel({
             placeholder={t("entries.placeholder")}
             rows={4}
             disabled={isSaving}
-            className="w-full resize-y border-transparent bg-transparent text-sm text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-0 focus-visible:border-transparent p-0 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full resize-y border-transparent bg-transparent text-sm text-text-main placeholder:text-text-faint focus-visible:ring-0 focus-visible:border-transparent p-0 disabled:cursor-not-allowed disabled:opacity-60"
           />
           <div className="mt-2 flex justify-end">
             <IconTextButton
@@ -117,7 +117,7 @@ export function FeedbackEntriesPanel({
               className="p-3"
             >
               <div className="mb-2 flex items-center justify-between gap-2">
-                <p className="text-xs text-zinc-500">{formatDate(entry.createdAt)}</p>
+                <p className="text-xs text-text-muted">{formatDate(entry.createdAt)}</p>
                 {!isClosed && isEditingMode && (
                   <div className="flex items-center gap-1">
                     <EditButton
@@ -162,7 +162,7 @@ export function FeedbackEntriesPanel({
                   </div>
                 </div>
               ) : (
-                <p className="whitespace-pre-wrap text-sm leading-6 text-zinc-300">
+                <p className="whitespace-pre-wrap text-sm leading-6 text-text-soft">
                   {entry.content}
                 </p>
               )}

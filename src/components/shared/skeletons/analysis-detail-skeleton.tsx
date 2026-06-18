@@ -77,7 +77,7 @@ export function AnalysisDetailSkeleton() {
           <Skeleton className="h-4 w-4 shrink-0" />
           <Skeleton className="h-4 w-32" />
         </div>
-        <div className="rounded-lg border border-line bg-zinc-900/30 p-3">
+        <div className="rounded-lg border border-line bg-panel-elevated/30 p-3">
           <Skeleton className="h-4 w-3/4" />
         </div>
       </div>

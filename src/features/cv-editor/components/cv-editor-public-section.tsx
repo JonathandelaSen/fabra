@@ -50,17 +50,17 @@ export function CVEditorPublicSection({
   const t = useTranslations("cvEditor");
 
   return (
-    <section className="space-y-4 border-t border-white/5 pt-4">
+    <section className="space-y-4 border-t border-line/5 pt-4">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-500/10 text-sky-400">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-info/10 text-info-text">
             <Globe2 className="h-4 w-4" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-white">
+            <h3 className="text-sm font-semibold text-text-main">
               {t("publicPage.title")}
             </h3>
-            <p className="text-[11px] text-zinc-600">
+            <p className="text-[11px] text-text-faint">
               {publicEnabled
                 ? t("publicPage.enabled")
                 : t("publicPage.disabled")}
@@ -93,11 +93,11 @@ export function CVEditorPublicSection({
       </div>
 
       <div className="space-y-2">
-        <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-600">
+        <label className="text-[10px] font-bold uppercase tracking-wider text-text-faint">
           {t("publicPage.editableUrl")}
         </label>
-        <div className="flex min-w-0 items-center gap-2 rounded-xl border border-white/5 bg-white/5 p-1.5">
-          <span className="hidden shrink-0 pl-2 text-[11px] text-zinc-600 sm:inline">
+        <div className="flex min-w-0 items-center gap-2 rounded-xl border border-line/5 bg-panel/5 p-1.5">
+          <span className="hidden shrink-0 pl-2 text-[11px] text-text-faint sm:inline">
             /cv/{publicId ?? "id"}/
           </span>
           <input
@@ -114,11 +114,11 @@ export function CVEditorPublicSection({
                 value: normalizedPublicSlug,
               })
             }
-            className="min-w-0 flex-1 bg-transparent px-2 text-xs text-white outline-none placeholder:text-zinc-700"
+            className="min-w-0 flex-1 bg-transparent px-2 text-xs text-text-main outline-none placeholder:text-text-faint"
             placeholder={t("publicPage.urlPlaceholder")}
           />
         </div>
-        <p className="text-[11px] leading-relaxed text-zinc-600">
+        <p className="text-[11px] leading-relaxed text-text-faint">
           {t("publicPage.urlHelp")}
         </p>
       </div>
@@ -155,7 +155,7 @@ export function CVEditorPublicSection({
               href={publicUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-white/5 bg-white/5 px-3 text-xs text-zinc-300 hover:bg-white/10"
+              className="inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-line/5 bg-panel/5 px-3 text-xs text-text-soft hover:bg-panel/10"
             >
               <ExternalLink className="h-3.5 w-3.5" />
             </a>

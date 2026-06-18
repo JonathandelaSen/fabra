@@ -65,7 +65,7 @@ export function AISettingsPanel({
   useEffect(() => {
     const storedGemini = getStoredAIApiKeyForProvider(AI_PROVIDER.GEMINI);
     const storedOpenai = getStoredAIApiKeyForProvider(AI_PROVIDER.OPENAI);
-    
+
     setState((prev) => ({
       ...prev,
       geminiKey: storedGemini,
@@ -144,7 +144,7 @@ export function AISettingsPanel({
 
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="flex items-center gap-2 text-lg font-semibold text-text-main">
-          <ShieldCheck className="h-5 w-5 text-emerald-400" />
+          <ShieldCheck className="h-5 w-5 text-success-text" />
           {t("title")}
         </h2>
       </div>
@@ -160,8 +160,8 @@ export function AISettingsPanel({
             return (
               <div className={cn(
                 "rounded-xl border p-5 flex flex-col justify-between transition-all duration-300",
-                isGeminiActive 
-                  ? "border-emerald-500/20 bg-panel-active shadow-[0_0_12px_rgba(16,185,129,0.03)] hover:border-emerald-500/30" 
+                isGeminiActive
+                  ? "border-success-border bg-panel-active shadow-[var(--ui-success-shadow)] hover:border-success-border"
                   : "border-line bg-panel-elevated/40 opacity-65 hover:opacity-85"
               )}>
                 <div>
@@ -174,18 +174,18 @@ export function AISettingsPanel({
                     </div>
                     <span className={cn(
                       "text-[10px] px-2 py-0.5 rounded-full font-medium border flex items-center gap-1.5",
-                      isGeminiActive 
-                        ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
-                        : "bg-zinc-500/10 text-zinc-400 border-zinc-500/20"
+                      isGeminiActive
+                        ? "bg-success/10 text-success-text border-success-border"
+                        : "bg-panel-control/10 text-text-muted border-line-default"
                     )}>
-                      <span className={cn("w-1.5 h-1.5 rounded-full", isGeminiActive ? "bg-emerald-400 animate-pulse" : "bg-zinc-500")} />
+                      <span className={cn("w-1.5 h-1.5 rounded-full", isGeminiActive ? "bg-success animate-pulse" : "bg-panel-control")} />
                       {isGeminiActive ? getSummary(state.geminiKey) : common("states.notConfigured")}
                     </span>
                   </div>
                   <p className="text-xs text-text-muted mb-4 leading-relaxed">
                     {t("placeholder")}
                   </p>
-                  
+
                   <div className="relative mb-4">
                     <input
                       type={state.showGeminiKey ? "text" : "password"}
@@ -199,7 +199,7 @@ export function AISettingsPanel({
                     <button
                       type="button"
                       onClick={() => updateState({ showGeminiKey: !state.showGeminiKey })}
-                      className="absolute inset-y-0 right-2 flex w-8 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-panel-hover hover:text-text-main"
+                      className="absolute inset-y-0 right-2 flex w-8 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-panel-hover hover:text-text-on-bright"
                       title={state.showGeminiKey ? common("actions.hideKey") : common("actions.showKey")}
                     >
                       {state.showGeminiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -238,8 +238,8 @@ export function AISettingsPanel({
             return (
               <div className={cn(
                 "rounded-xl border p-5 flex flex-col justify-between transition-all duration-300",
-                isOpenaiActive 
-                  ? "border-emerald-500/20 bg-panel-active shadow-[0_0_12px_rgba(16,185,129,0.03)] hover:border-emerald-500/30" 
+                isOpenaiActive
+                  ? "border-success-border bg-panel-active shadow-[var(--ui-success-shadow)] hover:border-success-border"
                   : "border-line bg-panel-elevated/40 opacity-65 hover:opacity-85"
               )}>
                 <div>
@@ -252,18 +252,18 @@ export function AISettingsPanel({
                     </div>
                     <span className={cn(
                       "text-[10px] px-2 py-0.5 rounded-full font-medium border flex items-center gap-1.5",
-                      isOpenaiActive 
-                        ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
-                        : "bg-zinc-500/10 text-zinc-400 border-zinc-500/20"
+                      isOpenaiActive
+                        ? "bg-success/10 text-success-text border-success-border"
+                        : "bg-panel-control/10 text-text-muted border-line-default"
                     )}>
-                      <span className={cn("w-1.5 h-1.5 rounded-full", isOpenaiActive ? "bg-emerald-400 animate-pulse" : "bg-zinc-500")} />
+                      <span className={cn("w-1.5 h-1.5 rounded-full", isOpenaiActive ? "bg-success animate-pulse" : "bg-panel-control")} />
                       {isOpenaiActive ? getSummary(state.openaiKey) : common("states.notConfigured")}
                     </span>
                   </div>
                   <p className="text-xs text-text-muted mb-4 leading-relaxed">
                     {t("openaiPlaceholder")}
                   </p>
-                  
+
                   <div className="relative mb-4">
                     <input
                       type={state.showOpenaiKey ? "text" : "password"}
@@ -277,7 +277,7 @@ export function AISettingsPanel({
                     <button
                       type="button"
                       onClick={() => updateState({ showOpenaiKey: !state.showOpenaiKey })}
-                      className="absolute inset-y-0 right-2 flex w-8 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-panel-hover hover:text-text-main"
+                      className="absolute inset-y-0 right-2 flex w-8 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-panel-hover hover:text-text-on-bright"
                       title={state.showOpenaiKey ? common("actions.hideKey") : common("actions.showKey")}
                     >
                       {state.showOpenaiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

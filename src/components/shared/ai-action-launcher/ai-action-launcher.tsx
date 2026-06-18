@@ -51,7 +51,7 @@ export default function AIActionLauncher({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         disabled={loading || disabled}
-        className="w-fit flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-lg shadow-indigo-950/30 hover:shadow-indigo-900/40 transition-all duration-300 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed group cursor-pointer"
+        className="w-fit flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-action to-action-hover hover:from-action-hover hover:to-action text-text-on-dark shadow-lg shadow-[var(--ui-action-shadow)] hover:shadow-[var(--ui-action-shadow)] transition-all duration-300 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed group cursor-pointer"
       >
         {loading ? (
           <>
@@ -60,7 +60,7 @@ export default function AIActionLauncher({
           </>
         ) : (
           <>
-            <Sparkles className="w-4.5 h-4.5 text-indigo-200 group-hover:scale-110 transition-transform duration-300 animate-pulse" />
+            <Sparkles className="w-4.5 h-4.5 text-action-text group-hover:scale-110 transition-transform duration-300 animate-pulse" />
             <span>{actionLabel}</span>
             <ChevronDown className="w-4 h-4 ml-1 opacity-70 group-hover:translate-y-0.5 transition-transform duration-300" />
           </>
@@ -71,7 +71,7 @@ export default function AIActionLauncher({
         align="end"
         sideOffset={8}
         positionerClassName="max-sm:!fixed max-sm:!inset-0 max-sm:!transform-none"
-        className="w-[360px] xs:w-[380px] p-0 overflow-hidden bg-panel-overlay/95 backdrop-blur-xl border border-line rounded-2xl shadow-2xl shadow-black/80 animate-in fade-in-0 zoom-in-95 duration-200 max-sm:!w-full max-sm:!h-full max-sm:!max-w-none max-sm:!max-h-none max-sm:!rounded-none max-sm:!border-none max-sm:flex max-sm:flex-col"
+        className="w-[360px] xs:w-[380px] p-0 overflow-hidden bg-panel-overlay/95 backdrop-blur-xl border border-line rounded-2xl shadow-2xl shadow-[var(--ui-shadow-strong)] animate-in fade-in-0 zoom-in-95 duration-200 max-sm:!w-full max-sm:!h-full max-sm:!max-w-none max-sm:!max-h-none max-sm:!rounded-none max-sm:!border-none max-sm:flex max-sm:flex-col"
       >
         <AIActionLauncherHeader onClose={handleClose} />
 

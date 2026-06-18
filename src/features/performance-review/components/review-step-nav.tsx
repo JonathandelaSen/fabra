@@ -39,16 +39,16 @@ export function ReviewStepNav({
             onClick={() => onStepChange(item.key)}
             className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm transition ${
               active
-                ? "border-action-border bg-action-soft text-text-main"
+                ? "border-action-border bg-action-soft text-action-text"
                 : "border-line bg-card text-text-muted hover:bg-panel-hover"
             }`}
           >
             <span
               className={`flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold ${
                 item.done
-                  ? "bg-emerald-500/20 text-emerald-400"
+                  ? "bg-success/20 text-success-text"
                   : active
-                    ? "bg-action-soft text-text-main"
+                    ? "bg-action-soft text-action-text"
                     : "bg-panel-subtle text-text-muted"
               }`}
             >

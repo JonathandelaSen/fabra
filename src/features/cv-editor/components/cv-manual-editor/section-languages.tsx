@@ -4,7 +4,7 @@ import type { StandardCVLanguage } from "@/lib/cv-profile";
 import { Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-const inputClass = "w-full rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-teal-500/30 focus:outline-none";
+const inputClass = "w-full rounded-xl border border-line/5 bg-panel/5 px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none";
 
 interface Props {
   items: StandardCVLanguage[];
@@ -25,12 +25,12 @@ export function SectionLanguages({ items, onChange }: Props) {
         <div key={i} className="group flex items-center gap-2">
           <input type="text" value={lang.name ?? ""} onChange={(e) => update(i, { ...lang, name: e.target.value })} placeholder={t("language")} className={`${inputClass} flex-1`} />
           <input type="text" value={lang.level ?? ""} onChange={(e) => update(i, { ...lang, level: e.target.value })} placeholder={t("level")} className={`${inputClass} w-1/3`} />
-          <button onClick={() => onChange(items.filter((_, idx) => idx !== i))} className="opacity-100 md:opacity-0 md:group-hover:opacity-100 text-zinc-600 hover:text-rose-400 transition-opacity">
+          <button onClick={() => onChange(items.filter((_, idx) => idx !== i))} className="opacity-100 md:opacity-0 md:group-hover:opacity-100 text-text-faint hover:text-danger-text transition-opacity">
             <Trash2 className="h-3.5 w-3.5" />
           </button>
         </div>
       ))}
-      <button onClick={() => onChange([...items, { name: "", level: "" }])} className="flex items-center gap-1.5 text-[11px] text-teal-400 hover:text-teal-300 pt-1">
+      <button onClick={() => onChange([...items, { name: "", level: "" }])} className="flex items-center gap-1.5 text-[11px] text-accent-teal-text hover:text-accent-teal-text pt-1">
         <Plus className="h-3 w-3" />
         {t("addLanguage")}
       </button>

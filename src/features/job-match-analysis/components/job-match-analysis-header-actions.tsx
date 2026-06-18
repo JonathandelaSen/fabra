@@ -49,7 +49,7 @@ export function JobMatchAnalysisHeaderActions({
           aria-pressed={view === JOB_MATCH_ROUTE_VIEWS.list}
           className={`transition-all duration-200 ${
             view === JOB_MATCH_ROUTE_VIEWS.list
-              ? "bg-panel-base text-text-main shadow-xs border border-line/40 font-semibold"
+              ? "bg-panel-base text-text-on-bright shadow-xs border border-line/40 font-semibold"
               : "text-text-soft hover:text-text-main hover:bg-panel-hover/50 border-transparent"
           }`}
         >
@@ -64,7 +64,7 @@ export function JobMatchAnalysisHeaderActions({
           aria-pressed={view === JOB_MATCH_ROUTE_VIEWS.kanban}
           className={`transition-all duration-200 ${
             view === JOB_MATCH_ROUTE_VIEWS.kanban
-              ? "bg-panel-base text-text-main shadow-xs border border-line/40 font-semibold"
+              ? "bg-panel-base text-text-on-bright shadow-xs border border-line/40 font-semibold"
               : "text-text-soft hover:text-text-main hover:bg-panel-hover/50 border-transparent"
           }`}
         >

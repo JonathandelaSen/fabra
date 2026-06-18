@@ -24,8 +24,8 @@ function getAvatarColor(name: string) {
   for (let i = 0; i < name.length; i++) {
     hash = name.charCodeAt(i) + ((hash << 5) - hash);
   }
-  const h = Math.abs(hash % 360);
-  return `hsl(${h}, 65%, 42%)`;
+  const index = Math.abs(hash % 8);
+  return `var(--ui-avatar-${index})`;
 }
 
 export function PublicCVMessagesView() {
@@ -97,7 +97,7 @@ export function PublicCVMessagesView() {
         sidebar={
           <FeatureSidebarPanel
             header={
-              <select aria-label={t("cvSelector")} value={cvId ?? ""} onChange={(event) => selectCV(event.target.value)} className="w-full rounded-md border border-line bg-panel-control px-3 py-2 text-sm text-text-main">
+              <select aria-label={t("cvSelector")} value={cvId ?? ""} onChange={(event) => selectCV(event.target.value)} className="w-full rounded-md border border-line bg-panel-control px-3 py-2 text-sm text-text-on-bright">
                 {publicCVs.map((cv) => <option key={cv.id} value={cv.id}>{cv.name}</option>)}
               </select>
             }
@@ -144,7 +144,7 @@ export function PublicCVMessagesView() {
                 <div className="flex items-start gap-4">
                   <div
                     style={{ backgroundColor: avatarColor }}
-                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white text-base font-bold shadow-sm ring-2 ring-white/10"
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-text-main text-base font-bold shadow-sm ring-2 ring-line-default"
                   >
                     {initials || <User className="h-5 w-5" />}
                   </div>

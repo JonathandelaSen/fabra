@@ -37,7 +37,7 @@ export function ImpersonationBanner({ userEmail }: ImpersonationBannerProps) {
   };
 
   return (
-    <div className="flex shrink-0 items-center justify-between gap-3 border-b border-amber-500/40 bg-amber-500/15 px-4 py-2 text-sm text-amber-200">
+    <div className="flex shrink-0 items-center justify-between gap-3 border-b border-warning-border bg-warning/15 px-4 py-2 text-sm text-warning-text">
       <div className="flex min-w-0 items-center gap-2">
         <UserRound className="h-4 w-4 shrink-0" />
         <span className="truncate">{t("banner", { email: userEmail })}</span>
@@ -46,7 +46,7 @@ export function ImpersonationBanner({ userEmail }: ImpersonationBannerProps) {
         type="button"
         onClick={handleExit}
         disabled={exiting}
-        className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-amber-400/40 px-2.5 py-1 text-xs font-medium text-amber-100 transition hover:bg-amber-500/20 disabled:opacity-60"
+        className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-warning-border px-2.5 py-1 text-xs font-medium text-warning-text transition hover:bg-warning/20 disabled:opacity-60"
       >
         <LogOut className="h-3.5 w-3.5" />
         {t("exit")}

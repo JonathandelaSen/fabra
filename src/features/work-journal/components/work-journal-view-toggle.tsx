@@ -30,7 +30,7 @@ export function WorkJournalViewToggle({
         aria-pressed={listActive}
         className={`transition-all duration-200 ${
           listActive
-            ? "bg-panel-base text-text-main shadow-xs border border-line/40 font-semibold"
+            ? "bg-panel-base text-text-on-bright shadow-xs border border-line/40 font-semibold"
             : "text-text-soft hover:text-text-main hover:bg-panel-hover/50 border-transparent"
         }`}
       >
@@ -45,7 +45,7 @@ export function WorkJournalViewToggle({
         aria-pressed={timelineActive}
         className={`transition-all duration-200 ${
           timelineActive
-            ? "bg-panel-base text-text-main shadow-xs border border-line/40 font-semibold"
+            ? "bg-panel-base text-text-on-bright shadow-xs border border-line/40 font-semibold"
             : "text-text-soft hover:text-text-main hover:bg-panel-hover/50 border-transparent"
         }`}
       >

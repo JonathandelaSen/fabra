@@ -44,7 +44,7 @@ export default function SidebarFooter({
           onClick={onOpenAdmin}
           className={`
             w-full flex items-center gap-2 rounded-lg font-medium cursor-pointer transition-all duration-150
-            ${activeView === "admin" ? "bg-emerald-500/10 text-emerald-200" : "text-emerald-300 hover:bg-emerald-500/10 hover:text-emerald-200"}
+            ${activeView === "admin" ? "bg-success/10 text-success-text" : "text-success-text hover:bg-success/10 hover:text-success-text"}
             ${collapsed ? "justify-center p-2" : "px-3 py-2.5 text-sm"}
           `}
           title={adminLabel}
@@ -55,7 +55,7 @@ export default function SidebarFooter({
       )}
       {!collapsed && (
         <div className="flex items-center justify-between gap-2 px-1">
-          <div className="flex items-center gap-2 min-w-0 text-[11px] text-zinc-500">
+          <div className="flex items-center gap-2 min-w-0 text-[11px] text-text-muted">
             <UserCircle className="w-3.5 h-3.5 shrink-0" />
             <span className="truncate">{userEmail}</span>
           </div>

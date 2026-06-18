@@ -102,7 +102,7 @@ export default function CVTemplatePreview({
                 <span 
                   key={index} 
                   className="cvp-tag"
-                  style={tagsColor ? { backgroundColor: tagsColor, color: "#ffffff" } : undefined}
+                  style={tagsColor ? { backgroundColor: tagsColor, color: "var(--ui-cv-tag-on-custom)" } : undefined}
                 >
                   {skill}
                 </span>
@@ -151,7 +151,7 @@ export default function CVTemplatePreview({
             {profile.languages?.map((language, index) => (
               <span 
                 key={index}
-                style={tagsColor ? { backgroundColor: tagsColor, color: "#ffffff" } : undefined}
+                style={tagsColor ? { backgroundColor: tagsColor, color: "var(--ui-cv-tag-on-custom)" } : undefined}
               >
                 {[language.name, language.level].filter(Boolean).join(" · ")}
               </span>

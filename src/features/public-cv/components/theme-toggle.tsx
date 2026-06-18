@@ -16,7 +16,7 @@ export function PublicCVThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="h-9 w-9 rounded-xl border border-zinc-300 bg-white/70 dark:border-zinc-800 dark:bg-zinc-900/70" />
+      <div className="h-9 w-9 rounded-xl border border-line-default bg-panel/70 dark:border-line-default dark:bg-panel-elevated/70" />
     );
   }
 
@@ -26,7 +26,7 @@ export function PublicCVThemeToggle() {
     <button
       type="button"
       onClick={() => changeTheme(isDark ? "light" : "dark")}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-300 bg-white/70 text-zinc-700 transition-all hover:border-zinc-400 hover:bg-white hover:text-zinc-950 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900/70 dark:text-zinc-300 dark:hover:border-zinc-700 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-line-default bg-panel/70 text-text-faint transition-all hover:border-line-strong hover:bg-panel hover:text-text-main hover:shadow-sm dark:border-line-default dark:bg-panel-elevated/70 dark:text-text-soft dark:hover:border-line-strong dark:hover:bg-panel-elevated dark:hover:text-text-on-bright"
       aria-label={t("label")}
     >
       {isDark ? (

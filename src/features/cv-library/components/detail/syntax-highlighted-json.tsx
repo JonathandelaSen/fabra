@@ -1,11 +1,11 @@
 const COLORS = {
-  key: "text-violet-400",
-  string: "text-emerald-400",
-  number: "text-amber-300",
-  boolean: "text-sky-400",
-  null: "text-zinc-500 italic",
-  brace: "text-zinc-500",
-  comma: "text-zinc-600",
+  key: "text-action-text",
+  string: "text-success-text",
+  number: "text-warning-text",
+  boolean: "text-info-text",
+  null: "text-text-muted italic",
+  brace: "text-text-muted",
+  comma: "text-text-faint",
 };
 
 function tokenize(json: string): { type: keyof typeof COLORS; value: string }[] {
@@ -79,7 +79,7 @@ export function SyntaxHighlightedJson({ value }: SyntaxHighlightedJsonProps) {
 
           return (
             <div key={lineNum} className="flex">
-              <span className="mr-4 inline-block w-8 select-none text-right text-zinc-700">
+              <span className="mr-4 inline-block w-8 select-none text-right text-text-faint">
                 {lineNum + 1}
               </span>
               <span>{lineTokens}</span>

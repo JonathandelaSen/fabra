@@ -133,11 +133,11 @@ function CVScoreCopyPastePreview({
           value={data.preview.recommendationsCount}
         />
       </div>
-      <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
-        <p className="mb-2 text-xs font-medium uppercase text-zinc-500">
+      <div className="rounded-lg border border-line/10 bg-panel/[0.03] p-4">
+        <p className="mb-2 text-xs font-medium uppercase text-text-muted">
           {t("summaryLabel")}
         </p>
-        <p className="text-sm text-zinc-200">{data.preview.summary}</p>
+        <p className="text-sm text-text-soft">{data.preview.summary}</p>
       </div>
     </div>
   );

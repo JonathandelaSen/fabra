@@ -57,14 +57,14 @@ export default function JobMatchForm({
       <BasicPanel className="shrink-0 p-6">
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-300">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-success/10 border border-success-border text-xs font-medium text-success-text">
             <Briefcase className="w-3.5 h-3.5" />
             {t("jobTitle")}
           </div>
         </div>
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 text-xs text-text-muted hover:text-text-soft transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           {t("changeMode")}
@@ -73,33 +73,33 @@ export default function JobMatchForm({
 
       <div className="space-y-4 mb-6">
         <div>
-          <label className="flex items-center gap-2 text-sm text-zinc-400 mb-1.5">
+          <label className="flex items-center gap-2 text-sm text-text-muted mb-1.5">
             <Link className="w-3.5 h-3.5" />
             {t("jobUrl")}
-            <span className="text-[10px] text-zinc-500 bg-zinc-800/60 px-1.5 py-0.5 rounded border border-white/[0.05]">
+            <span className="text-[10px] text-text-muted bg-panel-control/60 px-1.5 py-0.5 rounded border border-line/[0.05]">
               {t("optional")}
             </span>
           </label>
           <input
             type="url"
             placeholder={t("jobUrlPlaceholder")}
-            className="w-full h-10 px-4 rounded-xl bg-field border border-line text-sm text-text-main placeholder:text-text-faint focus:outline-none focus:border-emerald-500/40 focus:ring-2 focus:ring-emerald-500/10 transition-all"
+            className="w-full h-10 px-4 rounded-xl bg-field border border-line text-sm text-text-main placeholder:text-text-faint focus:outline-none focus:border-success-border focus:ring-2 focus:ring-success-border transition-all"
             value={jobUrl}
             onChange={(e) => setJobUrl(e.target.value)}
           />
         </div>
 
         <div>
-          <label className="flex items-center gap-2 text-sm text-zinc-400 mb-1.5">
+          <label className="flex items-center gap-2 text-sm text-text-muted mb-1.5">
             <Briefcase className="w-3.5 h-3.5" />
             {t("jobDescription")}
-            <span className="text-[10px] text-rose-400 bg-rose-500/10 px-1.5 py-0.5 rounded border border-rose-500/20">
+            <span className="text-[10px] text-danger-text bg-danger-soft px-1.5 py-0.5 rounded border border-danger-border">
               {t("required")}
             </span>
           </label>
           <textarea
             placeholder={t("jobDescriptionPlaceholder")}
-            className="w-full h-48 px-4 py-3 rounded-xl bg-field border border-line text-sm text-text-main placeholder:text-text-faint resize-none focus:outline-none focus:border-emerald-500/40 focus:ring-2 focus:ring-emerald-500/10 transition-all"
+            className="w-full h-48 px-4 py-3 rounded-xl bg-field border border-line text-sm text-text-main placeholder:text-text-faint resize-none focus:outline-none focus:border-success-border focus:ring-2 focus:ring-success-border transition-all"
             value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
           />
@@ -131,7 +131,7 @@ export default function JobMatchForm({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="mt-3 flex flex-col gap-3 rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-100 sm:flex-row sm:items-center sm:justify-between"
+          className="mt-3 flex flex-col gap-3 rounded-xl border border-warning-border bg-warning/10 px-4 py-3 text-sm text-warning-text sm:flex-row sm:items-center sm:justify-between"
         >
           <span>
             {t("missingApiKey")}
@@ -139,7 +139,7 @@ export default function JobMatchForm({
           <button
             type="button"
             onClick={onOpenSettings}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-amber-400 px-3 py-2 text-xs font-semibold text-zinc-950 transition-colors hover:bg-amber-300 cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-warning px-3 py-2 text-xs font-semibold text-text-on-bright transition-colors hover:bg-warning cursor-pointer"
           >
             <KeyRound className="h-3.5 w-3.5" />
             {common("actions.configure")}
@@ -151,7 +151,7 @@ export default function JobMatchForm({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="mt-3 px-4 py-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-sm"
+          className="mt-3 px-4 py-3 rounded-xl bg-danger-soft border border-danger-border text-danger-text text-sm"
         >
           {error}
         </motion.div>

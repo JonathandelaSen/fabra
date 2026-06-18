@@ -34,33 +34,33 @@ export function CVLibraryDetailSummary({
   const t = useTranslations("analysisFlow.cvLibrary");
 
   return (
-    <div className="grid gap-5 border-b border-white/[0.06] bg-white/[0.015] p-5 lg:grid-cols-[auto_1fr] items-start">
+    <div className="grid gap-5 border-b border-line/[0.06] bg-panel/[0.015] p-5 lg:grid-cols-[auto_1fr] items-start">
       <CVLibraryAtsScoreCircle displayScore={displayScore} />
 
       <div className="flex min-w-0 flex-col justify-between">
         <Tabs defaultValue="analyses" className="w-full flex flex-col">
           <TabsList
             variant="default"
-            className="mb-4 bg-zinc-950/40 w-full max-w-full overflow-x-auto justify-start flex-nowrap md:justify-center [&::-webkit-scrollbar]:hidden [scrollbar-width:none]"
+            className="mb-4 bg-field-code/40 w-full max-w-full overflow-x-auto justify-start flex-nowrap md:justify-center [&::-webkit-scrollbar]:hidden [scrollbar-width:none]"
           >
             <TabsTrigger value="analyses" className="flex items-center gap-1.5">
               <FileSearch className="h-3.5 w-3.5" />
               <span>{t("associatedAnalyses")}</span>
-              <span className="rounded-full bg-white/[0.04] px-1.5 py-0.2 text-[10px] font-bold text-zinc-500">
+              <span className="rounded-full bg-panel/[0.04] px-1.5 py-0.2 text-[10px] font-bold text-text-muted">
                 {analyses.length}
               </span>
             </TabsTrigger>
             <TabsTrigger value="questions" className="flex items-center gap-1.5">
               <MessageSquareQuote className="h-3.5 w-3.5" />
               <span>{t("questionsTab")}</span>
-              <span className="rounded-full bg-white/[0.04] px-1.5 py-0.2 text-[10px] font-bold text-zinc-500">
+              <span className="rounded-full bg-panel/[0.04] px-1.5 py-0.2 text-[10px] font-bold text-text-muted">
                 {questions.length}
               </span>
             </TabsTrigger>
             <TabsTrigger value="templates" className="flex items-center gap-1.5">
               <Pencil className="h-3.5 w-3.5" />
               <span>{t("templateVersions")}</span>
-              <span className="rounded-full bg-white/[0.04] px-1.5 py-0.2 text-[10px] font-bold text-zinc-500">
+              <span className="rounded-full bg-panel/[0.04] px-1.5 py-0.2 text-[10px] font-bold text-text-muted">
                 {templateVersions.length}
               </span>
             </TabsTrigger>

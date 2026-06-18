@@ -41,10 +41,10 @@ export function CVEditorAIPanel({
   return (
     <section>
       <header className="mb-4 flex items-center gap-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-500/10 text-teal-400">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-teal/10 text-accent-teal-text">
           <Sparkles className="h-4 w-4" />
         </div>
-        <h3 className="text-sm font-semibold text-white">
+        <h3 className="text-sm font-semibold text-text-main">
           {t("aiEditor")}
         </h3>
       </header>
@@ -60,7 +60,7 @@ export function CVEditorAIPanel({
           value={editInstruction}
           onChange={(e) => setEditInstruction(e.target.value)}
           placeholder={t("aiPlaceholder")}
-          className="h-32 w-full resize-none rounded-2xl border border-white/5 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:border-teal-500/30 focus:outline-none transition-colors"
+          className="h-32 w-full resize-none rounded-2xl border border-line/5 bg-panel/5 px-4 py-3 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none transition-colors"
         />
 
         <AIActionLauncher
@@ -95,7 +95,7 @@ export function CVEditorAIPanel({
             <button
               key={hint}
               onClick={() => setEditInstruction(hint)}
-              className="rounded-full border border-white/5 bg-white/5 px-3 py-1 text-[11px] text-zinc-400 hover:border-white/10 hover:bg-white/10 hover:text-zinc-200 transition-colors"
+              className="rounded-full border border-line/5 bg-panel/5 px-3 py-1 text-[11px] text-text-muted hover:border-line/10 hover:bg-panel/10 hover:text-text-soft transition-colors"
             >
               {hint}
             </button>

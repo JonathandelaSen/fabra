@@ -47,16 +47,16 @@ export function ObjectiveSummaryPanel({
               </LabelBadge>
             )}
             {selectedContext && (
-              <span className="rounded-full border border-white/[0.06] bg-white/[0.02] px-2 py-0.5 text-zinc-400 font-medium text-[11px]">
+              <span className="rounded-full border border-line/[0.06] bg-panel/[0.02] px-2 py-0.5 text-text-muted font-medium text-[11px]">
                 {selectedContext.name}
               </span>
             )}
           </div>
-          <h2 className="mt-3 text-2xl font-bold tracking-tight text-zinc-50 lg:text-3xl leading-tight">
+          <h2 className="mt-3 text-2xl font-bold tracking-tight text-text-main lg:text-3xl leading-tight">
             {selected.title}
           </h2>
           {selected.description && (
-            <p className="mt-3.5 text-sm leading-relaxed text-zinc-400 whitespace-pre-wrap">
+            <p className="mt-3.5 text-sm leading-relaxed text-text-muted whitespace-pre-wrap">
               {selected.description}
             </p>
           )}
@@ -84,24 +84,24 @@ export function ObjectiveSummaryPanel({
 
       {/* Success Criteria and closing reflection */}
       {(selected.successCriteria || selected.resultNotes) && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-white/[0.06] pt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-line/[0.06] pt-4">
           {selected.successCriteria && (
-            <div className="rounded-lg border border-emerald-500/10 bg-emerald-500/[0.02] p-4.5">
-              <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-emerald-400/60">
+            <div className="rounded-lg border border-success-border bg-success/[0.02] p-4.5">
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-success-text/60">
                 {t("fields.successCriteria")}
               </p>
-              <p className="text-sm leading-relaxed text-zinc-300 whitespace-pre-wrap">
+              <p className="text-sm leading-relaxed text-text-soft whitespace-pre-wrap">
                 {selected.successCriteria}
               </p>
             </div>
           )}
 
           {selected.resultNotes && (
-            <div className="rounded-lg border border-amber-500/10 bg-amber-500/[0.02] p-4.5">
-              <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-amber-400/60">
+            <div className="rounded-lg border border-warning-border bg-warning/[0.02] p-4.5">
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-warning-text/60">
                 {t("fields.result")}
               </p>
-              <p className="text-sm leading-relaxed text-zinc-300 whitespace-pre-wrap">
+              <p className="text-sm leading-relaxed text-text-soft whitespace-pre-wrap">
                 {selected.resultNotes}
               </p>
             </div>

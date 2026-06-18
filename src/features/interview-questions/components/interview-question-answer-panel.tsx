@@ -58,14 +58,14 @@ export default function InterviewQuestionAnswerPanel({
 
   return (
     <BasicPanel className="p-5 flex flex-col gap-4 animate-fade-in">
-      <h3 className="text-sm font-semibold tracking-tight text-zinc-300 flex items-center gap-2">
-        <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+      <h3 className="text-sm font-semibold tracking-tight text-text-soft flex items-center gap-2">
+        <CheckCircle2 className="h-4 w-4 text-success-text" />
         {t("answer")}
       </h3>
       {isEditing ? (
         <>
           <div className="flex flex-1 flex-col gap-1.5">
-            <label htmlFor="answer-textarea" className="text-xs font-medium text-zinc-500">
+            <label htmlFor="answer-textarea" className="text-xs font-medium text-text-muted">
               {t("answer")}
             </label>
             <Textarea
@@ -78,12 +78,12 @@ export default function InterviewQuestionAnswerPanel({
                 event.target.value !== (question.answer ?? "") &&
                 onUpdate({ answer: event.target.value || null })
               }
-              className="min-h-64 flex-1 bg-white/[0.01] border-white/[0.08] focus-visible:ring-indigo-500/50 leading-relaxed"
+              className="min-h-64 flex-1 bg-panel/[0.01] border-line/[0.08] focus-visible:ring-action-border leading-relaxed"
               placeholder={t("manualAnswer")}
             />
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-white/[0.04]">
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-line/[0.04]">
             <div className="flex flex-wrap items-center gap-3">
               <AIActionLauncher
                 actionLabel={t("generateWithAI")}
@@ -106,7 +106,7 @@ export default function InterviewQuestionAnswerPanel({
 
             <div className="flex items-center gap-3">
               {isSaving && (
-                <p className="inline-flex items-center gap-2 text-xs text-zinc-500">
+                <p className="inline-flex items-center gap-2 text-xs text-text-muted">
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
                   {t("saving")}
                 </p>
@@ -127,21 +127,21 @@ export default function InterviewQuestionAnswerPanel({
       ) : (
         <>
           <div className="flex flex-1 flex-col gap-1.5">
-            <span className="text-xs font-medium text-zinc-500">
+            <span className="text-xs font-medium text-text-muted">
               {t("answer")}
             </span>
             {question.answer ? (
-              <div className="rounded-lg border border-white/[0.04] bg-white/[0.01] p-4 text-sm leading-relaxed text-zinc-200 min-h-[16rem] whitespace-pre-wrap">
+              <div className="rounded-lg border border-line/[0.04] bg-panel/[0.01] p-4 text-sm leading-relaxed text-text-soft min-h-[16rem] whitespace-pre-wrap">
                 {question.answer}
               </div>
             ) : (
-              <div className="flex flex-col rounded-lg border border-dashed border-white/[0.08] bg-white/[0.005] p-4 text-sm italic text-zinc-500 min-h-[16rem] items-center justify-center text-center">
+              <div className="flex flex-col rounded-lg border border-dashed border-line/[0.08] bg-panel/[0.005] p-4 text-sm italic text-text-muted min-h-[16rem] items-center justify-center text-center">
                 {t("noAnswerGenerated")}
               </div>
             )}
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center justify-end gap-3 pt-3 border-t border-white/[0.04]">
+          <div className="mt-4 flex flex-wrap items-center justify-end gap-3 pt-3 border-t border-line/[0.04]">
             {question.answer && (
               <IconTextButton
                 icon={copied ? CheckCircle2 : Copy}

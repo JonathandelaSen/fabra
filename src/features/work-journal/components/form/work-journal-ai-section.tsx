@@ -7,7 +7,7 @@ import type { StoredAIProvider } from "@/lib/browser-preferences";
 import AIActionLauncher from "@/components/shared/ai-action-launcher";
 import { WorkJournalCopyPastePanel } from "./work-journal-copy-paste-panel";
 
-const labelClass = "text-xs font-medium text-zinc-500 mb-1 block";
+const labelClass = "text-xs font-medium text-text-muted mb-1 block";
 
 interface WorkJournalAISectionProps {
   rawNotes: string;
@@ -59,7 +59,7 @@ export function WorkJournalAISection({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="space-y-4 pt-4 border-t border-white/5"
+      className="space-y-4 pt-4 border-t border-line/5"
     >
       <div className="flex justify-end">
         <AIActionLauncher
@@ -101,7 +101,7 @@ export function WorkJournalAISection({
           </label>
           <textarea
             id="work-journal-final-text"
-            className="w-full bg-teal-950/20 text-teal-50/90 rounded-xl p-4 text-base leading-relaxed outline-none resize-none min-h-[160px] border border-teal-900/50"
+            className="w-full bg-accent-teal-soft text-text-on-bright rounded-xl p-4 text-base leading-relaxed outline-none resize-none min-h-[160px] border border-accent-teal-border"
             value={finalText}
             onChange={(event) => onFinalTextChange(event.target.value)}
           />

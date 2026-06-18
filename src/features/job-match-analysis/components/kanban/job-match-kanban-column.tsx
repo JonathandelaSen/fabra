@@ -16,12 +16,12 @@ interface JobMatchKanbanColumnProps {
 }
 
 export const statusAccent: Record<JobMatchAnalysisOfferStatus, string> = {
-  interesting: "border-sky-500/25 bg-sky-500/10 text-sky-300",
-  applied: "border-indigo-500/25 bg-indigo-500/10 text-indigo-300",
-  interview: "border-amber-500/25 bg-amber-500/10 text-amber-300",
-  offer: "border-emerald-500/30 bg-emerald-500/10 text-emerald-300",
-  rejected: "border-rose-500/20 bg-rose-500/10 text-rose-300",
-  discarded: "border-zinc-500/20 bg-zinc-500/10 text-zinc-400",
+  interesting: "border-info-border/25 bg-info/10 text-info-text",
+  applied: "border-action-border/25 bg-action/10 text-action-text",
+  interview: "border-warning-border bg-warning/10 text-warning-text",
+  offer: "border-success-border bg-success/10 text-success-text",
+  rejected: "border-danger-border bg-danger-soft text-danger-text",
+  discarded: "border-line-default bg-panel-control/10 text-text-muted",
 };
 
 export function jobMatchKanbanDroppableId(status: JobMatchAnalysisOfferStatus) {
@@ -72,7 +72,7 @@ export function JobMatchKanbanColumn({
         {activeAnalysis.title || activeAnalysis.filename.replace(/\.pdf$/i, "")}
       </span>
       <div className="mt-3 flex items-center justify-between gap-2 opacity-50">
-        <span className="rounded-md border px-2 py-0.5 text-xs font-bold border-zinc-700 bg-zinc-800/70 text-zinc-500">
+        <span className="rounded-md border px-2 py-0.5 text-xs font-bold border-line-strong bg-panel-control/70 text-text-muted">
           {activeAnalysis.aiScore ?? "..."}
         </span>
       </div>

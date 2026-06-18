@@ -69,7 +69,7 @@ export default function ExtractionWorkspace({
 
       {fullscreen && (
         <div
-          className="fixed inset-0 bg-black/80 z-40"
+          className="fixed inset-0 bg-scrim z-40"
           onClick={onToggleFullscreen}
         />
       )}

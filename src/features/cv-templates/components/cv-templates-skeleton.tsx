@@ -13,7 +13,7 @@ export function CVTemplatesSkeleton() {
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
-            className="space-y-2 rounded-xl border border-white/[0.04] bg-white/[0.01] p-4"
+            className="space-y-2 rounded-xl border border-line/[0.04] bg-panel/[0.01] p-4"
           >
             <Skeleton className="h-4 w-3/4" />
             <Skeleton className="h-3 w-full" />

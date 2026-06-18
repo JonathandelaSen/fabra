@@ -83,7 +83,7 @@ export function ContextRow({
 
   if (editState) {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] px-4 py-3">
+      <div className="flex items-center gap-2 rounded-lg border border-line/[0.06] bg-panel/[0.02] px-4 py-3">
         <select
           className="h-8 w-28 shrink-0 rounded-lg border border-input bg-transparent px-2 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
           value={editState.type}
@@ -92,7 +92,7 @@ export function ContextRow({
           }
         >
           {TYPE_OPTIONS.map(([value, key]) => (
-            <option key={value} value={value} className="bg-zinc-900">
+            <option key={value} value={value} className="bg-panel-elevated">
               {t(`contextTypes.${key}`)}
             </option>
           ))}
@@ -124,14 +124,14 @@ export function ContextRow({
   }
 
   return (
-    <div className="group flex items-center gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] px-4 py-3 transition-colors hover:border-white/10 hover:bg-white/[0.04]">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white/[0.04] text-zinc-500">
+    <div className="group flex items-center gap-3 rounded-lg border border-line/[0.06] bg-panel/[0.02] px-4 py-3 transition-colors hover:border-line/10 hover:bg-panel/[0.04]">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-panel/[0.04] text-text-muted">
         {TYPE_ICONS[context.type]}
       </span>
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <span className="truncate text-sm font-medium text-zinc-100">
+          <span className="truncate text-sm font-medium text-text-main">
             {context.name}
           </span>
           {context.isDefault && (
@@ -146,11 +146,11 @@ export function ContextRow({
               label={t("badges.archived")}
               size={LABEL_BADGE_SIZES.XS}
               tone={LABEL_BADGE_TONES.NEUTRAL}
-              className="border-zinc-600/40 text-zinc-500"
+              className="border-line-strong/40 text-text-muted"
             />
           )}
         </div>
-        <span className="text-xs text-zinc-600">
+        <span className="text-xs text-text-faint">
           {t(`contextTypes.${context.type}`)}
         </span>
       </div>

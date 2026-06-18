@@ -61,10 +61,10 @@ function SelfAssessmentCopyPastePreview({
   const t = useTranslations("performanceReview.copyPaste");
   return (
     <div className="space-y-2">
-      <p className="text-xs font-medium uppercase text-zinc-500">
+      <p className="text-xs font-medium uppercase text-text-muted">
         {t("previewTitle")}
       </p>
-      <div className="max-h-72 overflow-y-auto whitespace-pre-wrap rounded-lg border border-white/10 bg-white/[0.03] p-4 text-sm leading-relaxed text-zinc-200">
+      <div className="max-h-72 overflow-y-auto whitespace-pre-wrap rounded-lg border border-line/10 bg-panel/[0.03] p-4 text-sm leading-relaxed text-text-soft">
         {data.content}
       </div>
     </div>

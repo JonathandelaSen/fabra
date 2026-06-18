@@ -291,7 +291,7 @@ export default function WorkJournalView({
       >
         <div className="flex flex-col gap-4">
           {visibleError && (
-            <div className="mb-8 text-sm text-rose-400 bg-rose-500/10 px-4 py-3 rounded-lg border border-rose-500/20">
+            <div className="mb-8 text-sm text-danger-text bg-danger-soft px-4 py-3 rounded-lg border border-danger-border">
               {visibleError}
             </div>
           )}

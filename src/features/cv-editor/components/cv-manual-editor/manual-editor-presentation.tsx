@@ -22,14 +22,14 @@ export function ManualEditorPresentation({
 
   return (
     <section className="mb-4 space-y-3">
-      <div className="flex items-center justify-between pb-2 border-b border-white/[0.02]">
+      <div className="flex items-center justify-between pb-2 border-b border-line/[0.02]">
         <div className="flex items-center gap-2">
-          <Palette className="h-3.5 w-3.5 text-teal-400" />
-          <h4 className="text-xs font-semibold text-white tracking-wide">{t("presentation")}</h4>
+          <Palette className="h-3.5 w-3.5 text-accent-teal-text" />
+          <h4 className="text-xs font-semibold text-text-main tracking-wide">{t("presentation")}</h4>
         </div>
         <button
           onClick={onReset}
-          className="text-[10px] text-zinc-500 hover:text-white transition-colors flex items-center gap-1 bg-white/5 px-2 py-0.5 rounded border border-white/5"
+          className="text-[10px] text-text-muted hover:text-text-on-bright transition-colors flex items-center gap-1 bg-panel/5 px-2 py-0.5 rounded border border-line/5"
           title={t("resetPresentation")}
         >
           <RotateCcw className="h-2.5 w-2.5" />
@@ -37,14 +37,14 @@ export function ManualEditorPresentation({
         </button>
       </div>
       <div className="grid grid-cols-2 gap-4 pt-1">
-        <label className="flex items-center justify-between gap-2 cursor-pointer group bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.03] rounded-lg p-2 transition-all">
-          <span className="text-[10px] text-zinc-400 group-hover:text-zinc-200 transition-colors font-medium">{t("accent")}</span>
+        <label className="flex items-center justify-between gap-2 cursor-pointer group bg-panel/[0.02] hover:bg-panel/[0.04] border border-line/[0.03] rounded-lg p-2 transition-all">
+          <span className="text-[10px] text-text-muted group-hover:text-text-soft transition-colors font-medium">{t("accent")}</span>
           <div className="relative flex items-center gap-1.5">
             <div
-              className="h-3.5 w-3.5 rounded-full border border-white/20 shadow-inner"
+              className="h-3.5 w-3.5 rounded-full border border-line/20 shadow-inner"
               style={{ backgroundColor: accentColor }}
             />
-            <span className="text-[9px] font-mono text-zinc-500 group-hover:text-zinc-400">{accentColor}</span>
+            <span className="text-[9px] font-mono text-text-muted group-hover:text-text-muted">{accentColor}</span>
             <input
               type="color"
               value={accentColor}
@@ -54,14 +54,14 @@ export function ManualEditorPresentation({
             />
           </div>
         </label>
-        <label className="flex items-center justify-between gap-2 cursor-pointer group bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.03] rounded-lg p-2 transition-all">
-          <span className="text-[10px] text-zinc-400 group-hover:text-zinc-200 transition-colors font-medium">{t("tags")}</span>
+        <label className="flex items-center justify-between gap-2 cursor-pointer group bg-panel/[0.02] hover:bg-panel/[0.04] border border-line/[0.03] rounded-lg p-2 transition-all">
+          <span className="text-[10px] text-text-muted group-hover:text-text-soft transition-colors font-medium">{t("tags")}</span>
           <div className="relative flex items-center gap-1.5">
             <div
-              className="h-3.5 w-3.5 rounded-full border border-white/20 shadow-inner"
+              className="h-3.5 w-3.5 rounded-full border border-line/20 shadow-inner"
               style={{ backgroundColor: tagsColor }}
             />
-            <span className="text-[9px] font-mono text-zinc-500 group-hover:text-zinc-400">{tagsColor}</span>
+            <span className="text-[9px] font-mono text-text-muted group-hover:text-text-muted">{tagsColor}</span>
             <input
               type="color"
               value={tagsColor}

@@ -21,7 +21,7 @@ export function NewJobMatchCVSourceSelector({
   return (
     <section className="grid gap-4 md:grid-cols-3">
       <SourceButton
-        icon={<FileText className="mb-4 h-6 w-6 text-indigo-300" />}
+        icon={<FileText className="mb-4 h-6 w-6 text-action-text" />}
         selected={source === "existing"}
         disabled={cvs.length === 0}
         tone="indigo"
@@ -30,7 +30,7 @@ export function NewJobMatchCVSourceSelector({
         onClick={() => onSourceChange("existing")}
       />
       <SourceButton
-        icon={<UploadCloud className="mb-4 h-6 w-6 text-emerald-300" />}
+        icon={<UploadCloud className="mb-4 h-6 w-6 text-success-text" />}
         selected={source === "upload"}
         tone="emerald"
         title={t("upload")}
@@ -38,7 +38,7 @@ export function NewJobMatchCVSourceSelector({
         onClick={() => onSourceChange("upload")}
       />
       <SourceButton
-        icon={<FileJson className="mb-4 h-6 w-6 text-violet-300" />}
+        icon={<FileJson className="mb-4 h-6 w-6 text-action-text" />}
         selected={source === "json_resume"}
         tone="violet"
         title={t("jsonResume")}
@@ -69,9 +69,9 @@ function SourceButton({
   onClick: () => void;
 }) {
   const selectedClass = {
-    indigo: "border-indigo-500/40 bg-indigo-500/10 text-zinc-100",
-    emerald: "border-emerald-500/40 bg-emerald-500/10 text-zinc-100",
-    violet: "border-violet-500/40 bg-violet-500/10 text-zinc-100",
+    indigo: "border-action-border/40 bg-action/10 text-action-text",
+    emerald: "border-success-border bg-success/10 text-text-on-bright",
+    violet: "border-action-border bg-action-soft text-action-text",
   }[tone];
 
   return (
@@ -82,12 +82,12 @@ function SourceButton({
       className={`rounded-xl border p-5 text-left transition-all ${
         selected
           ? selectedClass
-          : "border-white/[0.06] bg-white/[0.02] text-zinc-400 hover:bg-white/[0.04]"
+          : "border-line/[0.06] bg-panel/[0.02] text-text-muted hover:bg-panel/[0.04]"
       } ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
     >
       {icon}
       <p className="font-semibold">{title}</p>
-      <p className="mt-1 text-sm text-zinc-500">{description}</p>
+      <p className="mt-1 text-sm text-text-muted">{description}</p>
     </button>
   );
 }

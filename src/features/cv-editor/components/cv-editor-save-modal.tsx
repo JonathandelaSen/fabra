@@ -26,7 +26,7 @@ export function CVEditorSaveModal({
   const t = useTranslations("cvEditor");
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-0 sm:p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-scrim p-0 sm:p-4 backdrop-blur-sm">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -41,14 +41,14 @@ export function CVEditorSaveModal({
         </p>
         <div className="mt-6 space-y-4">
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-zinc-600">
+            <label className="text-xs font-bold uppercase tracking-wider text-text-faint">
               {t("saveModal.nameLabel")}
             </label>
             <input
               type="text"
               value={saveName}
               onChange={(e) => setSaveName(e.target.value)}
-              className="h-10 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-sm text-white focus:border-teal-500/50 focus:outline-none"
+              className="h-10 w-full rounded-xl border border-line/10 bg-panel/5 px-4 text-sm text-text-main focus:border-accent-teal-border focus:outline-none"
               placeholder={t("saveModal.namePlaceholder")}
               autoFocus
             />

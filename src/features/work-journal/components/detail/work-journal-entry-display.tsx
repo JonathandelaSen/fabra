@@ -32,16 +32,16 @@ export function WorkJournalEntryDisplay({
       </div>
 
       <BasicPanel className="p-6 md:p-8">
-        <p className="text-zinc-200 leading-[1.7] whitespace-pre-wrap w-full">
+        <p className="text-text-soft leading-[1.7] whitespace-pre-wrap w-full">
           {entry.finalText}
         </p>
 
         {entry.rawNotes !== entry.finalText && (
-          <div className="mt-8 pt-6 border-t border-white/5">
-            <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-4">
+          <div className="mt-8 pt-6 border-t border-line/5">
+            <h4 className="text-xs font-medium text-text-muted uppercase tracking-wider mb-4">
               {t("rawNotes")}
             </h4>
-            <p className="text-[14px] leading-relaxed text-zinc-400 whitespace-pre-wrap w-full bg-black/20 p-4 rounded-xl border border-white/[0.02]">
+            <p className="text-[14px] leading-relaxed text-text-muted whitespace-pre-wrap w-full bg-scrim-soft p-4 rounded-xl border border-line/[0.02]">
               {entry.rawNotes}
             </p>
           </div>

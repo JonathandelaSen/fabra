@@ -63,7 +63,7 @@ export function ObjectiveOutcomes({
 
       <div className="p-5 flex flex-col gap-4">
         {outcomes.length === 0 ? (
-          <div className="py-8 text-center text-xs text-zinc-600 italic">
+          <div className="py-8 text-center text-xs text-text-faint italic">
             {t("outcomes.empty")}
           </div>
         ) : (
@@ -73,12 +73,12 @@ export function ObjectiveOutcomes({
               return (
                 <div
                   key={outcome.id}
-                  className="group rounded-xl border border-amber-500/10 bg-amber-500/[0.01] hover:bg-amber-500/[0.02] transition-colors duration-150 overflow-hidden"
+                  className="group rounded-xl border border-warning-border bg-warning/[0.01] hover:bg-warning/[0.02] transition-colors duration-150 overflow-hidden"
                 >
                   {isEditing && outcomeForm ? (
-                    <div className="space-y-3 p-4 bg-[#1e1c14]/50">
+                    <div className="space-y-3 p-4 bg-warning-soft/50">
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider">
+                        <span className="text-[11px] font-bold text-warning-text uppercase tracking-wider">
                           {t("outcomes.edit")}
                         </span>
                         <ActionIconButton
@@ -97,11 +97,11 @@ export function ObjectiveOutcomes({
                           })
                         }
                         placeholder={t("outcomes.titlePlaceholder")}
-                        className="bg-zinc-950/50 border-white/[0.06] focus-visible:ring-amber-500/20"
+                        className="bg-field-code/50 border-line/[0.06] focus-visible:ring-warning-border"
                       />
                       <div className="grid gap-3 sm:grid-cols-2">
                         <label className="space-y-1 block">
-                          <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+                          <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
                             {t("fields.type")}
                           </span>
                           <Select
@@ -109,12 +109,12 @@ export function ObjectiveOutcomes({
                             onChange={(e) => onOutcomeFormChange({ ...outcomeForm, type: e.target.value as ObjectiveOutcomeType })}
                           >
                             {Object.keys(outcomeLabels).map((key) => (
-                              <option key={key} value={key} className="bg-panel-elevated text-text-main">{outcomeLabel(key as ObjectiveOutcomeType)}</option>
+                              <option key={key} value={key} className="bg-panel-elevated text-text-on-bright">{outcomeLabel(key as ObjectiveOutcomeType)}</option>
                             ))}
                           </Select>
                         </label>
                         <label className="space-y-1 block">
-                          <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+                          <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
                             {t("fields.status")}
                           </span>
                           <Select
@@ -122,7 +122,7 @@ export function ObjectiveOutcomes({
                             onChange={(e) => onOutcomeFormChange({ ...outcomeForm, status: e.target.value as ObjectiveOutcomeStatus })}
                           >
                             {["expected", "achieved", "missed"].map((status) => (
-                              <option key={status} value={status} className="bg-panel-elevated text-text-main">{outcomeStatusLabel(status as ObjectiveOutcomeStatus)}</option>
+                              <option key={status} value={status} className="bg-panel-elevated text-text-on-bright">{outcomeStatusLabel(status as ObjectiveOutcomeStatus)}</option>
                             ))}
                           </Select>
                         </label>
@@ -130,7 +130,7 @@ export function ObjectiveOutcomes({
                       {(outcomeForm.type === "money" || outcomeForm.amount) && (
                         <div className="grid gap-3 sm:grid-cols-2">
                           <label className="space-y-1 block">
-                            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+                            <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
                               {t("fields.amount")}
                             </span>
                             <Input
@@ -138,24 +138,24 @@ export function ObjectiveOutcomes({
                               value={outcomeForm.amount}
                               onChange={(e) => onOutcomeFormChange({ ...outcomeForm, amount: e.target.value })}
                               placeholder="0"
-                              className="bg-zinc-950/50 border-white/[0.06] text-xs h-9 focus-visible:ring-amber-500/20"
+                              className="bg-field-code/50 border-line/[0.06] text-xs h-9 focus-visible:ring-warning-border"
                             />
                           </label>
                           <label className="space-y-1 block">
-                            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+                            <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
                               {t("fields.currency")}
                             </span>
                             <Input
                               value={outcomeForm.currency}
                               onChange={(e) => onOutcomeFormChange({ ...outcomeForm, currency: e.target.value })}
                               placeholder="EUR"
-                              className="bg-zinc-950/50 border-white/[0.06] text-xs h-9 focus-visible:ring-amber-500/20"
+                              className="bg-field-code/50 border-line/[0.06] text-xs h-9 focus-visible:ring-warning-border"
                             />
                           </label>
                         </div>
                       )}
                       <label className="block space-y-1">
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+                        <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
                           {t("fields.description")}
                         </span>
                         <Textarea
@@ -163,10 +163,10 @@ export function ObjectiveOutcomes({
                           value={outcomeForm.description}
                           onChange={(e) => onOutcomeFormChange({ ...outcomeForm, description: e.target.value })}
                           placeholder={t("outcomes.descriptionPlaceholder")}
-                          className="bg-zinc-950/50 border-white/[0.06] text-xs focus-visible:ring-amber-500/20 min-h-0 py-2"
+                          className="bg-field-code/50 border-line/[0.06] text-xs focus-visible:ring-warning-border min-h-0 py-2"
                         />
                       </label>
-                      <div className="flex justify-end gap-2 pt-1 border-t border-white/[0.04]">
+                      <div className="flex justify-end gap-2 pt-1 border-t border-line/[0.04]">
                         <IconTextButton icon={X} onClick={onStopEditingOutcome} className="h-8">
                           {t("actions.cancel")}
                         </IconTextButton>
@@ -184,27 +184,27 @@ export function ObjectiveOutcomes({
                   ) : (
                     <div className="flex flex-col sm:flex-row sm:items-start gap-3 p-3.5">
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-semibold text-amber-100">{outcome.title}</p>
+                        <p className="text-sm font-semibold text-warning-text">{outcome.title}</p>
                         {outcome.description && (
-                          <p className="mt-1 text-xs leading-relaxed text-zinc-400 whitespace-pre-wrap">
+                          <p className="mt-1 text-xs leading-relaxed text-text-muted whitespace-pre-wrap">
                             {outcome.description}
                           </p>
                         )}
-                        <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[10px] font-bold text-amber-400/80 uppercase tracking-wider">
-                          <span className="rounded bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5">
+                        <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[10px] font-bold text-warning-text/80 uppercase tracking-wider">
+                          <span className="rounded bg-warning/10 border border-warning-border px-1.5 py-0.5">
                             {outcomeLabel(outcome.type)}
                           </span>
-                          <span className="rounded bg-white/[0.04] border border-white/[0.04] px-1.5 py-0.5 text-zinc-400">
+                          <span className="rounded bg-panel/[0.04] border border-line/[0.04] px-1.5 py-0.5 text-text-muted">
                             {outcomeStatusLabel(outcome.status)}
                           </span>
                           {outcome.amount != null && (
-                            <span className="rounded bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 text-emerald-400">
+                            <span className="rounded bg-success/10 border border-success-border px-1.5 py-0.5 text-success-text">
                               {outcome.amount} {outcome.currency}
                             </span>
                           )}
                         </div>
                       </div>
-                      <div className="flex items-center gap-1.5 w-full sm:w-auto justify-between sm:justify-start mt-3 sm:mt-0 pt-3 sm:pt-0 border-t border-white/[0.04] sm:border-t-0 shrink-0">
+                      <div className="flex items-center gap-1.5 w-full sm:w-auto justify-between sm:justify-start mt-3 sm:mt-0 pt-3 sm:pt-0 border-t border-line/[0.04] sm:border-t-0 shrink-0">
                         <Select
                           className="h-8 py-0.5 text-xs font-semibold w-auto px-2"
                           value={outcome.status}
@@ -214,7 +214,7 @@ export function ObjectiveOutcomes({
                           disabled={isEmpty}
                         >
                           {["expected", "achieved", "missed"].map((status) => (
-                            <option key={status} value={status} className="bg-panel-elevated text-text-main">{outcomeStatusLabel(status as ObjectiveOutcomeStatus)}</option>
+                            <option key={status} value={status} className="bg-panel-elevated text-text-on-bright">{outcomeStatusLabel(status as ObjectiveOutcomeStatus)}</option>
                           ))}
                         </Select>
                         <div className="flex items-center gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">

@@ -88,7 +88,7 @@ export function CopyPasteTextPanel({
         <button
           type="button"
           onClick={applyText}
-          className="rounded-lg bg-teal-400 px-3 py-2 text-xs font-semibold text-zinc-950 transition-colors hover:bg-teal-300"
+          className="rounded-lg bg-accent-teal px-3 py-2 text-xs font-semibold text-text-on-bright transition-colors hover:bg-accent-teal"
         >
           {applyLabel}
         </button>

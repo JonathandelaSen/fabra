@@ -40,7 +40,7 @@ export function FeatureDetailTabBar<T extends string = string>({
           className={cn(
             "flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all",
             activeTab === tab.id
-              ? "bg-panel-active text-text-main shadow-sm"
+              ? "bg-panel-active text-text-on-bright shadow-sm"
               : "text-text-muted hover:bg-panel-subtle hover:text-text-soft",
           )}
         >

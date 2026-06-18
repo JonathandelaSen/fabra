@@ -5,8 +5,8 @@ import { ArraySectionWrapper } from "./array-section-wrapper";
 import { EditableBulletList } from "./editable-bullet-list";
 import { useTranslations } from "next-intl";
 
-const inputClass = "w-full rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-zinc-600 focus:border-teal-500/30 focus:outline-none";
-const labelClass = "text-[11px] font-medium text-zinc-500 uppercase tracking-wider";
+const inputClass = "w-full rounded-xl border border-line/5 bg-panel/5 px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none";
+const labelClass = "text-[11px] font-medium text-text-muted uppercase tracking-wider";
 const ROLE_PLACEHOLDER = "Software Engineer";
 const COMPANY_PLACEHOLDER = "Edpuzzle";
 

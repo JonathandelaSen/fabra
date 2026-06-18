@@ -66,7 +66,7 @@ export function ObjectiveItems({
 
       <div className="p-3 sm:p-5 flex flex-col gap-4">
         {items.length === 0 ? (
-          <div className="py-8 text-center text-xs text-zinc-600 italic">
+          <div className="py-8 text-center text-xs text-text-faint italic">
             {t("items.empty")}
           </div>
         ) : (
@@ -76,12 +76,12 @@ export function ObjectiveItems({
               return (
                 <div
                   key={item.id}
-                  className="group rounded-xl border border-white/[0.04] bg-white/[0.01] hover:bg-white/[0.02] transition-colors duration-150 overflow-hidden"
+                  className="group rounded-xl border border-line/[0.04] bg-panel/[0.01] hover:bg-panel/[0.02] transition-colors duration-150 overflow-hidden"
                 >
                   {isEditing && itemForm ? (
-                    <div className="space-y-3 p-4 bg-[#14141e]/50">
+                    <div className="space-y-3 p-4 bg-panel-elevated/50">
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-bold text-indigo-400 uppercase tracking-wider">
+                        <span className="text-[11px] font-bold text-action-text uppercase tracking-wider">
                           {t("items.edit")}
                         </span>
                         <ActionIconButton
@@ -97,11 +97,11 @@ export function ObjectiveItems({
                           onItemFormChange({ ...itemForm, title: e.target.value })
                         }
                         placeholder={t("fields.title")}
-                        className="bg-zinc-950/50 border-white/[0.06] focus-visible:ring-emerald-500/20"
+                        className="bg-field-code/50 border-line/[0.06] focus-visible:ring-success-border"
                       />
                       <div className="grid gap-3 sm:grid-cols-2">
                         <label className="space-y-1 block">
-                          <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+                          <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
                             {t("fields.status")}
                           </span>
                           <Select
@@ -109,26 +109,26 @@ export function ObjectiveItems({
                           onChange={(e) => onItemFormChange({ ...itemForm, status: e.target.value as ObjectiveItemStatus })}
                           >
                             {Object.keys(itemStatusLabels).map((key) => (
-                              <option key={key} value={key} className="bg-panel-elevated text-text-main">
+                              <option key={key} value={key} className="bg-panel-elevated text-text-on-bright">
                                 {itemStatusLabel(key as ObjectiveItemStatus)}
                               </option>
                             ))}
                           </Select>
                         </label>
                         <label className="space-y-1 block">
-                          <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+                          <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
                             {t("fields.dueDate")}
                           </span>
                           <Input
                             type="date"
                             value={itemForm.dueDate}
                             onChange={(e) => onItemFormChange({ ...itemForm, dueDate: e.target.value })}
-                            className="bg-zinc-950/50 border-white/[0.06] focus-visible:ring-emerald-500/20 py-1.5 h-auto text-xs"
+                            className="bg-field-code/50 border-line/[0.06] focus-visible:ring-success-border py-1.5 h-auto text-xs"
                           />
                         </label>
                       </div>
                       <label className="block space-y-1">
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+                        <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
                           {t("fields.notes")}
                         </span>
                         <Textarea
@@ -136,11 +136,11 @@ export function ObjectiveItems({
                           value={itemForm.notes}
                           onChange={(e) => onItemFormChange({ ...itemForm, notes: e.target.value })}
                           placeholder={t("placeholders.itemNotes")}
-                          className="bg-zinc-950/50 border-white/[0.06] text-xs focus-visible:ring-emerald-500/20 min-h-0 py-2"
+                          className="bg-field-code/50 border-line/[0.06] text-xs focus-visible:ring-success-border min-h-0 py-2"
                         />
                       </label>
                       <label className="block space-y-1">
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+                        <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
                           {t("fields.evidence")}
                         </span>
                         <Textarea
@@ -148,10 +148,10 @@ export function ObjectiveItems({
                           value={itemForm.evidenceNotes}
                           onChange={(e) => onItemFormChange({ ...itemForm, evidenceNotes: e.target.value })}
                           placeholder={t("placeholders.evidence")}
-                          className="bg-zinc-950/50 border-white/[0.06] text-xs focus-visible:ring-emerald-500/20 min-h-0 py-2"
+                          className="bg-field-code/50 border-line/[0.06] text-xs focus-visible:ring-success-border min-h-0 py-2"
                         />
                       </label>
-                      <div className="flex justify-end gap-2 pt-1 border-t border-white/[0.04]">
+                      <div className="flex justify-end gap-2 pt-1 border-t border-line/[0.04]">
                         <IconTextButton
                           icon={X}
                           onClick={onStopEditingItem}
@@ -189,30 +189,30 @@ export function ObjectiveItems({
                           <p
                             className={`text-sm font-semibold transition-all ${
                               item.status === "done"
-                                ? "text-zinc-500 line-through font-normal"
-                                : "text-zinc-100"
+                                ? "text-text-muted line-through font-normal"
+                                : "text-text-main"
                             }`}
                           >
                             {item.title}
                           </p>
                           {(item.notes || item.evidenceNotes || item.dueDate) && (
-                            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-500 font-medium">
+                            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-text-muted font-medium">
                               {item.dueDate && (
-                                <span className="inline-flex items-center gap-1 text-amber-500/70">
+                                <span className="inline-flex items-center gap-1 text-warning-text/70">
                                   <Calendar className="h-3 w-3" />
                                   <span>{formatDate(item.dueDate, locale)}</span>
                                 </span>
                               )}
                               {item.notes && (
-                                <span className="text-zinc-400 whitespace-pre-wrap leading-relaxed">
+                                <span className="text-text-muted whitespace-pre-wrap leading-relaxed">
                                   {item.notes}
                                 </span>
                               )}
                             </div>
                           )}
                           {item.evidenceNotes && (
-                            <div className="mt-2 rounded bg-zinc-950/40 border border-white/[0.02] p-2 text-xs italic text-zinc-400 leading-relaxed">
-                              <span className="font-bold text-[9px] uppercase tracking-wider text-zinc-600 block not-italic mb-0.5">
+                            <div className="mt-2 rounded bg-field-code/40 border border-line/[0.02] p-2 text-xs italic text-text-muted leading-relaxed">
+                              <span className="font-bold text-[9px] uppercase tracking-wider text-text-faint block not-italic mb-0.5">
                                 {t("fields.evidence")}
                               </span>
                               {item.evidenceNotes}
@@ -220,7 +220,7 @@ export function ObjectiveItems({
                           )}
                         </div>
                       </div>
-                      <div className="flex items-center gap-1 w-full sm:w-auto justify-end mt-2 pt-2 border-t border-white/[0.04] sm:mt-0 sm:pt-0 sm:border-t-0 shrink-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center gap-1 w-full sm:w-auto justify-end mt-2 pt-2 border-t border-line/[0.04] sm:mt-0 sm:pt-0 sm:border-t-0 shrink-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                         <ActionIconButton
                           icon={Pencil}
                           tone={ACTION_ICON_BUTTON_TONES.MUTED}

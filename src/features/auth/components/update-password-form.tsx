@@ -26,15 +26,15 @@ export function UpdatePasswordForm() {
   const isFormValid = isValidPassword(passwordValue) && isValidPassword(confirmPasswordValue);
 
   return (
-    <div className="rounded-2xl border border-line bg-panel-base/90 p-5 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-6">
+    <div className="rounded-2xl border border-line bg-panel-base/90 p-5 shadow-2xl shadow-[var(--ui-shadow-strong)] backdrop-blur-xl sm:p-6">
       <div className="mb-6">
         <div className="mb-4 flex justify-end">
           <InterfaceLanguageSelect compact />
         </div>
-        <h2 className="text-2xl font-bold text-zinc-100">
+        <h2 className="text-2xl font-bold text-text-main">
           {t("title")}
         </h2>
-        <p className="mt-2 text-sm leading-6 text-zinc-500">
+        <p className="mt-2 text-sm leading-6 text-text-muted">
           {t("description")}
         </p>
       </div>
@@ -42,7 +42,7 @@ export function UpdatePasswordForm() {
       <form action={action} className="space-y-4">
         <input type="hidden" name="interfaceLanguage" value={locale} />
         <div className="space-y-2">
-          <Label htmlFor="password" className="text-zinc-300">
+          <Label htmlFor="password" className="text-text-soft">
             {t("passwordLabel")}
           </Label>
           <Input
@@ -55,12 +55,12 @@ export function UpdatePasswordForm() {
             placeholder={auth("fields.passwordPlaceholder")}
             minLength={6}
             required
-            className="h-11 border-white/[0.08] bg-white/[0.04]"
+            className="h-11 border-line/[0.08] bg-panel/[0.04]"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="confirmPassword" className="text-zinc-300">
+          <Label htmlFor="confirmPassword" className="text-text-soft">
             {t("confirmLabel")}
           </Label>
           <Input
@@ -73,17 +73,17 @@ export function UpdatePasswordForm() {
             placeholder={t("confirmPlaceholder")}
             minLength={6}
             required
-            className="h-11 border-white/[0.08] bg-white/[0.04]"
+            className="h-11 border-line/[0.08] bg-panel/[0.04]"
           />
         </div>
 
         {state.error && (
           <Alert
             variant="destructive"
-            className="border-rose-500/20 bg-rose-500/10"
+            className="border-danger-border bg-danger-soft"
           >
             <AlertCircle className="w-4 h-4" />
-            <AlertDescription className="text-rose-200">
+            <AlertDescription className="text-danger-text">
               {state.error}
             </AlertDescription>
           </Alert>

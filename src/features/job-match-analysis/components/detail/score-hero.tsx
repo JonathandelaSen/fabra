@@ -110,7 +110,7 @@ export default function ScoreHero({
               >
                 {t(getScoreLabelKey(score))}
               </span>
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-success/10 border border-success-border text-success-text">
                 <Briefcase className="w-3 h-3" />
                 {t("jobMatch")}
               </span>
@@ -121,27 +121,27 @@ export default function ScoreHero({
                 tabValue={JOB_MATCH_DETAIL_TABS.tracking}
               />
             </div>
-            <h3 className="text-xl font-bold text-zinc-100">
+            <h3 className="text-xl font-bold text-text-main">
               {title || t("matchScore")}
             </h3>
           </div>
-          <p className="text-zinc-300 leading-relaxed text-base">
+          <p className="text-text-soft leading-relaxed text-base">
             {feedback}
           </p>
 
           {/* Meta row: model, date, CV, URL */}
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
-            <span className="inline-flex items-center gap-1.5 text-[11px] text-zinc-500 bg-zinc-800/50 px-2 py-1 rounded-md">
+            <span className="inline-flex items-center gap-1.5 text-[11px] text-text-muted bg-panel-control/50 px-2 py-1 rounded-md">
               <Cpu className="w-3 h-3" />
               {model}
             </span>
             <FormattedDate
               value={analyzedAt}
               variant="dateTime"
-              className="gap-1.5 bg-zinc-800/50 px-2 py-1 rounded-md"
+              className="gap-1.5 bg-panel-control/50 px-2 py-1 rounded-md"
             />
             {jobDescription && (
-              <span className="inline-flex items-center gap-1.5 text-[11px] text-zinc-500 bg-zinc-800/50 px-2 py-1 rounded-md">
+              <span className="inline-flex items-center gap-1.5 text-[11px] text-text-muted bg-panel-control/50 px-2 py-1 rounded-md">
                 <Briefcase className="w-3 h-3" />
                 {t("withOffer")}
               </span>
@@ -150,12 +150,12 @@ export default function ScoreHero({
             {/* CV link inline */}
             {hasCv && (
               <>
-                <span className="text-zinc-700 text-[10px]">|</span>
+                <span className="text-text-faint text-[10px]">|</span>
                 <a
                   href={cvHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-[11px] font-medium text-sky-400 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/20 px-2 py-1 rounded-md transition-colors"
+                  className="inline-flex items-center gap-1.5 text-[11px] font-medium text-info-text bg-info/10 hover:bg-info/20 border border-info-border/20 px-2 py-1 rounded-md transition-colors"
                 >
                   <FileText className="w-3 h-3" />
                   {cv?.name ?? filename}
@@ -166,7 +166,7 @@ export default function ScoreHero({
 
             {/* Job URL inline */}
             <>
-              <span className="text-zinc-700 text-[10px]">|</span>
+              <span className="text-text-faint text-[10px]">|</span>
               {isEditingUrl ? (
                 <div className="inline-flex items-center gap-1.5">
                   <input
@@ -174,13 +174,13 @@ export default function ScoreHero({
                     value={editedUrl}
                     onChange={(e) => setEditedUrl(e.target.value)}
                     placeholder={URL_PLACEHOLDER}
-                    className="h-6 w-48 rounded-md bg-field border border-line px-2 text-[11px] text-text-main focus:outline-none focus:border-emerald-500/40"
+                    className="h-6 w-48 rounded-md bg-field border border-line px-2 text-[11px] text-text-main focus:outline-none focus:border-success-border"
                     autoFocus
                   />
                   <button
                     onClick={handleSaveUrl}
                     disabled={isSavingUrl}
-                    className="p-1 rounded-md bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition-colors"
+                    className="p-1 rounded-md bg-success/10 hover:bg-success/20 text-success-text transition-colors"
                   >
                     {isSavingUrl ? (
                       <Loader2 className="w-3 h-3 animate-spin" />
@@ -194,7 +194,7 @@ export default function ScoreHero({
                       setEditedUrl(jobUrl || "");
                     }}
                     disabled={isSavingUrl}
-                    className="p-1 rounded-md bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors"
+                    className="p-1 rounded-md bg-danger-soft hover:bg-danger-soft text-danger-text transition-colors"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -205,7 +205,7 @@ export default function ScoreHero({
                     href={jobUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 px-2 py-1 rounded-md transition-colors max-w-[180px] truncate"
+                    className="inline-flex items-center gap-1.5 text-[11px] font-medium text-success-text bg-success/10 hover:bg-success/20 border border-success-border px-2 py-1 rounded-md transition-colors max-w-[180px] truncate"
                   >
                     <ExternalLink className="w-3 h-3 shrink-0" />
                     {getUrlHostname(jobUrl)}
@@ -215,7 +215,7 @@ export default function ScoreHero({
                       setEditedUrl(jobUrl);
                       setIsEditingUrl(true);
                     }}
-                    className="p-1 rounded-md text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors"
+                    className="p-1 rounded-md text-text-muted hover:text-text-soft hover:bg-panel-control transition-colors"
                   >
                     <Pencil className="w-2.5 h-2.5" />
                   </button>
@@ -226,7 +226,7 @@ export default function ScoreHero({
                     setEditedUrl("");
                     setIsEditingUrl(true);
                   }}
-                  className="inline-flex items-center gap-1.5 text-[11px] font-medium text-zinc-500 bg-zinc-800/50 hover:bg-zinc-800 px-2 py-1 rounded-md transition-colors"
+                  className="inline-flex items-center gap-1.5 text-[11px] font-medium text-text-muted bg-panel-control/50 hover:bg-panel-control px-2 py-1 rounded-md transition-colors"
                 >
                   <Plus className="w-3 h-3" />
                   {t("offerUrl")}

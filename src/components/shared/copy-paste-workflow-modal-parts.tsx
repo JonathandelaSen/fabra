@@ -25,7 +25,7 @@ export function CopyPasteWorkflowModalHeader({
       <button
         type="button"
         onClick={onClose}
-        className="rounded-lg p-2 text-text-muted hover:bg-panel-hover hover:text-text-main"
+        className="rounded-lg p-2 text-text-muted hover:bg-panel-hover hover:text-text-on-bright"
         aria-label={t("close")}
       >
         <X className="h-4 w-4" />
@@ -53,7 +53,7 @@ export function CopyPasteWorkflowError({
         <button
           type="button"
           onClick={onCopyCorrection}
-          className="mt-3 inline-flex items-center gap-2 rounded-lg bg-rose-400 px-3 py-2 text-xs font-semibold text-zinc-950 hover:bg-rose-300"
+          className="mt-3 inline-flex items-center gap-2 rounded-lg bg-danger px-3 py-2 text-xs font-semibold text-text-on-bright hover:bg-danger"
         >
           <Copy className="h-3.5 w-3.5" />
           {copiedCorrection ? t("correctionCopied") : t("copyCorrection")}

@@ -110,7 +110,7 @@ export default function NewAnalysisFlow({
         className="mx-auto flex w-full max-w-5xl flex-col gap-6"
       >
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold text-zinc-100">
+          <h1 className="text-3xl font-bold text-text-main">
             {t("title")}
           </h1>
         </div>
@@ -122,13 +122,13 @@ export default function NewAnalysisFlow({
             disabled={cvs.length === 0}
             className={`rounded-xl border p-5 text-left transition-all ${
               source === "existing"
-                ? "border-indigo-500/40 bg-indigo-500/10 text-zinc-100"
-                : "border-white/[0.06] bg-white/[0.02] text-zinc-400 hover:bg-white/[0.04]"
+                ? "border-action-border/40 bg-action/10 text-action-text"
+                : "border-line/[0.06] bg-panel/[0.02] text-text-muted hover:bg-panel/[0.04]"
             } ${cvs.length === 0 ? "cursor-not-allowed opacity-50" : ""}`}
           >
-            <FileText className="mb-4 h-6 w-6 text-indigo-300" />
+            <FileText className="mb-4 h-6 w-6 text-action-text" />
             <p className="font-semibold">{t("existing")}</p>
-            <p className="mt-1 text-sm text-zinc-500">
+            <p className="mt-1 text-sm text-text-muted">
               {t("existingDescription", { count: cvs.length })}
             </p>
           </button>
@@ -138,13 +138,13 @@ export default function NewAnalysisFlow({
             data-testid="new-analysis-upload-source"
             className={`rounded-xl border p-5 text-left transition-all ${
               source === "upload"
-                ? "border-emerald-500/40 bg-emerald-500/10 text-zinc-100"
-                : "border-white/[0.06] bg-white/[0.02] text-zinc-400 hover:bg-white/[0.04]"
+                ? "border-success-border bg-success/10 text-text-on-bright"
+                : "border-line/[0.06] bg-panel/[0.02] text-text-muted hover:bg-panel/[0.04]"
             }`}
           >
-            <UploadCloud className="mb-4 h-6 w-6 text-emerald-300" />
+            <UploadCloud className="mb-4 h-6 w-6 text-success-text" />
             <p className="font-semibold">{t("upload")}</p>
-            <p className="mt-1 text-sm text-zinc-500">
+            <p className="mt-1 text-sm text-text-muted">
               {t("uploadDescription")}
             </p>
           </button>
@@ -153,13 +153,13 @@ export default function NewAnalysisFlow({
             onClick={() => setSource("json_resume")}
             className={`rounded-xl border p-5 text-left transition-all ${
               source === "json_resume"
-                ? "border-violet-500/40 bg-violet-500/10 text-zinc-100"
-                : "border-white/[0.06] bg-white/[0.02] text-zinc-400 hover:bg-white/[0.04]"
+                ? "border-action-border bg-action-soft text-action-text"
+                : "border-line/[0.06] bg-panel/[0.02] text-text-muted hover:bg-panel/[0.04]"
             }`}
           >
-            <FileJson className="mb-4 h-6 w-6 text-violet-300" />
+            <FileJson className="mb-4 h-6 w-6 text-action-text" />
             <p className="font-semibold">{t("jsonResume")}</p>
-            <p className="mt-1 text-sm text-zinc-500">
+            <p className="mt-1 text-sm text-text-muted">
               {t("jsonResumeDescription")}
             </p>
           </button>
@@ -185,15 +185,15 @@ export default function NewAnalysisFlow({
           />
         )}
 
-        <section className="rounded-xl border border-line bg-white/[0.02] p-5">
-          <label className="mb-2 block text-sm text-zinc-400">
+        <section className="rounded-xl border border-line bg-panel/[0.02] p-5">
+          <label className="mb-2 block text-sm text-text-muted">
             {t("extractionName")}
           </label>
           <input
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             placeholder={t("extractionNamePlaceholder")}
-            className="h-11 w-full rounded-xl border border-line bg-field px-4 text-sm text-text-main placeholder:text-text-faint focus:border-indigo-500/40 focus:outline-none"
+            className="h-11 w-full rounded-xl border border-line bg-field px-4 text-sm text-text-main placeholder:text-text-faint focus:border-action-border/40 focus:outline-none"
           />
         </section>
 
@@ -208,7 +208,7 @@ export default function NewAnalysisFlow({
           onClick={handleSubmit}
           disabled={loading}
           data-testid="new-analysis-submit"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-4 text-sm font-semibold text-white shadow-xl shadow-indigo-900/30 transition-all hover:from-indigo-500 hover:to-violet-500 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-action to-action-hover px-6 py-4 text-sm font-semibold text-text-on-dark shadow-xl shadow-[var(--ui-action-shadow)] transition-all hover:from-action-hover hover:to-action disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? (
             <>

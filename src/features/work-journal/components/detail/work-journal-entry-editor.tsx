@@ -99,13 +99,13 @@ export function WorkJournalEntryEditor({
           <div className="flex flex-wrap gap-4 flex-1 items-end">
             <input
               type="date"
-              className="bg-transparent border-b border-zinc-700 text-sm text-zinc-200 outline-none pb-1"
+              className="bg-transparent border-b border-line-strong text-sm text-text-soft outline-none pb-1"
               value={edit.dateStart}
               onChange={(e) => setEdit({ ...edit, dateStart: e.target.value })}
             />
             <input
               type="date"
-              className="bg-transparent border-b border-zinc-700 text-sm text-zinc-200 outline-none pb-1"
+              className="bg-transparent border-b border-line-strong text-sm text-text-soft outline-none pb-1"
               value={edit.dateEnd || ""}
               onChange={(e) =>
                 setEdit({ ...edit, dateEnd: e.target.value || null })
@@ -113,7 +113,7 @@ export function WorkJournalEntryEditor({
             />
             <input
               placeholder={t("editTopicPlaceholder")}
-              className="bg-transparent border-b border-zinc-700 text-sm text-zinc-200 outline-none pb-1 flex-1 min-w-[200px]"
+              className="bg-transparent border-b border-line-strong text-sm text-text-soft outline-none pb-1 flex-1 min-w-[200px]"
               value={edit.topic || ""}
               onChange={(e) =>
                 setEdit({ ...edit, topic: e.target.value || null })
@@ -124,11 +124,11 @@ export function WorkJournalEntryEditor({
 
         <div className="space-y-4">
           <div>
-            <label className="text-xs font-medium text-zinc-500 mb-2 block">
+            <label className="text-xs font-medium text-text-muted mb-2 block">
               {t("finalText")}
             </label>
             <textarea
-              className="w-full bg-transparent text-[17px] md:text-lg font-light leading-relaxed text-zinc-200 placeholder:text-zinc-700 outline-none resize-y min-h-[240px] border border-white/10 rounded-xl p-4 focus:border-white/20 transition-colors"
+              className="w-full bg-transparent text-[17px] md:text-lg font-light leading-relaxed text-text-soft placeholder:text-text-faint outline-none resize-y min-h-[240px] border border-line/10 rounded-xl p-4 focus:border-line/20 transition-colors"
               value={edit.finalText}
               onChange={(event) =>
                 setEdit({ ...edit, finalText: event.target.value })
@@ -137,11 +137,11 @@ export function WorkJournalEntryEditor({
           </div>
 
           <div>
-            <label className="text-xs font-medium text-zinc-500 mb-2 block">
+            <label className="text-xs font-medium text-text-muted mb-2 block">
               {t("rawNotes")}
             </label>
             <textarea
-              className="w-full bg-transparent text-[15px] font-light leading-relaxed text-zinc-400 placeholder:text-zinc-700 outline-none resize-y min-h-[120px] border border-white/5 rounded-xl p-4 focus:border-white/20 transition-colors"
+              className="w-full bg-transparent text-[15px] font-light leading-relaxed text-text-muted placeholder:text-text-faint outline-none resize-y min-h-[120px] border border-line/5 rounded-xl p-4 focus:border-line/20 transition-colors"
               value={edit.rawNotes}
               onChange={(event) =>
                 setEdit({ ...edit, rawNotes: event.target.value })
@@ -151,7 +151,7 @@ export function WorkJournalEntryEditor({
         </div>
 
         {error && (
-          <div className="text-sm text-rose-400 bg-rose-500/10 px-4 py-3 rounded-lg border border-rose-500/20">
+          <div className="text-sm text-danger-text bg-danger-soft px-4 py-3 rounded-lg border border-danger-border">
             {error}
           </div>
         )}
@@ -160,14 +160,14 @@ export function WorkJournalEntryEditor({
           <button
             onClick={() => onSave(edit)}
             disabled={aiLoading}
-            className="px-4 py-2 bg-white text-black text-sm font-medium rounded-full hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-panel text-text-main text-sm font-medium rounded-full hover:bg-panel-elevated transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {t("saveChanges")}
           </button>
           <button
             onClick={onCancel}
             disabled={aiLoading}
-            className="px-4 py-2 text-sm text-zinc-500 hover:text-zinc-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 text-sm text-text-muted hover:text-text-soft transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {common("cancel")}
           </button>

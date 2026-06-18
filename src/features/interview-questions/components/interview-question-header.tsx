@@ -41,10 +41,10 @@ export default function InterviewQuestionHeader({
     <BasicPanel as="section" className="p-5 animate-fade-in">
       <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
         <div className="min-w-0 flex-1">
-          <h2 className="text-2xl font-bold tracking-tight text-zinc-100 line-clamp-2">
+          <h2 className="text-2xl font-bold tracking-tight text-text-main line-clamp-2">
             {question.question}
           </h2>
-          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-zinc-500">
+          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-text-muted">
             {question.answer ? (
               <LabelBadge tone={LABEL_BADGE_TONES.SUCCESS} size="md" icon={CheckCircle2}  >
                 {t("answered")}

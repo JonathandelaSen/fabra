@@ -16,7 +16,7 @@ export function CVLibraryTypeIcon({
       className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors ${
         selected
           ? "bg-action-soft text-action-text"
-          : "bg-zinc-800/50 text-zinc-500 group-hover:bg-zinc-800/80 group-hover:text-zinc-300"
+          : "bg-panel-control/50 text-text-muted group-hover:bg-panel-control/80 group-hover:text-text-soft"
       }`}
     >
       {cvType === "template" ? (

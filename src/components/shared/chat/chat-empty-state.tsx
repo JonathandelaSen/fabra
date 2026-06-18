@@ -21,7 +21,7 @@ export function ChatEmptyState({ onNew, labels }: ChatEmptyStateProps) {
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 py-20 text-center">
-      <div className="flex size-14 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-400">
+      <div className="flex size-14 items-center justify-center rounded-2xl bg-info-soft text-info-text">
         <MessageCircle className="size-6" />
       </div>
       <div>

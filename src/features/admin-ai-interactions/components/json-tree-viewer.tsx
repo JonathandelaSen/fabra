@@ -18,14 +18,14 @@ function StaticHighlightedJson({ content }: { content: string }) {
     if (index > lastIndex) tokens.push(content.slice(lastIndex, index));
 
     const className = match[1]
-      ? "text-sky-400"
+      ? "text-info-text"
       : match[2]
-        ? "text-emerald-400"
+        ? "text-success-text"
         : match[3]
-          ? "text-amber-400"
+          ? "text-warning-text"
           : match[4]
-            ? "text-violet-400"
-            : "text-rose-400";
+            ? "text-action-text"
+            : "text-danger-text";
 
     tokens.push(
       <span key={index} className={className}>
@@ -65,7 +65,7 @@ export function JSONTreeViewer({
   };
 
   if (data === null || data === undefined) {
-    return <div className="text-sm font-mono text-zinc-500">{t("noData")}</div>;
+    return <div className="text-sm font-mono text-text-muted">{t("noData")}</div>;
   }
 
   const isJsonContainer = typeof data === "object" && data !== null;
@@ -76,22 +76,22 @@ export function JSONTreeViewer({
     : rawContent ?? String(data);
 
   return (
-    <div className="flex min-w-0 flex-col gap-3 overflow-hidden rounded-xl border border-zinc-900 bg-zinc-950 shadow-inner">
-      <div className="flex min-w-0 flex-wrap items-center justify-between gap-2 border-b border-zinc-900 bg-zinc-900/40 px-4 py-2">
-        <div className="flex min-w-0 items-center gap-2 text-xs font-mono text-zinc-400">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+    <div className="flex min-w-0 flex-col gap-3 overflow-hidden rounded-xl border border-line bg-field-code shadow-inner">
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-2 border-b border-line bg-panel-elevated/40 px-4 py-2">
+        <div className="flex min-w-0 items-center gap-2 text-xs font-mono text-text-muted">
+          <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
           <span>{title || t("parsedJsonTrace")}</span>
-          <span className="text-[10px] text-zinc-600">({rootType})</span>
+          <span className="text-[10px] text-text-faint">({rootType})</span>
         </div>
 
-        <div className="flex items-center gap-1.5 p-0.5 bg-zinc-900 border border-zinc-800 rounded-lg">
+        <div className="flex items-center gap-1.5 p-0.5 bg-panel-elevated border border-line-default rounded-lg">
           <button
             type="button"
             onClick={() => setMode("interactive")}
             className={`px-2.5 py-1 text-[10px] font-bold uppercase rounded-md transition-all ${
               mode === "interactive"
-                ? "bg-zinc-800 text-zinc-100"
-                : "text-zinc-400 hover:text-zinc-200"
+                ? "bg-panel-control text-text-on-bright"
+                : "text-text-muted hover:text-text-soft"
             }`}
           >
             {t("viewInteractive")}
@@ -101,8 +101,8 @@ export function JSONTreeViewer({
             onClick={() => setMode("raw")}
             className={`px-2.5 py-1 text-[10px] font-bold uppercase rounded-md transition-all ${
               mode === "raw"
-                ? "bg-zinc-800 text-zinc-100"
-                : "text-zinc-400 hover:text-zinc-200"
+                ? "bg-panel-control text-text-on-bright"
+                : "text-text-muted hover:text-text-soft"
             }`}
           >
             {t("viewRaw")}
@@ -112,11 +112,11 @@ export function JSONTreeViewer({
         <button
           type="button"
           onClick={handleCopy}
-          className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold text-zinc-400 hover:text-zinc-200 border border-zinc-800 hover:border-zinc-700 bg-zinc-900 rounded-lg transition-all"
+          className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold text-text-muted hover:text-text-soft border border-line-default hover:border-line-strong bg-panel-elevated rounded-lg transition-all"
         >
           {copied ? (
             <>
-              <Check className="h-3 w-3 text-green-500" />
+              <Check className="h-3 w-3 text-success-text" />
               <span>{t("copied")}</span>
             </>
           ) : (
@@ -129,11 +129,11 @@ export function JSONTreeViewer({
       </div>
       
       {mode === "raw" ? (
-        <pre className="min-w-0 whitespace-pre-wrap break-words border-t border-zinc-900/40 bg-zinc-950 p-4 font-mono text-sm leading-relaxed text-zinc-300 select-text">
+        <pre className="min-w-0 whitespace-pre-wrap break-words border-t border-line/40 bg-field-code p-4 font-mono text-sm leading-relaxed text-text-soft select-text">
           <StaticHighlightedJson content={rawDisplayContent} />
         </pre>
       ) : (
-        <div className="min-w-0 overflow-x-auto p-4 font-mono text-sm select-text [&_.no-icon]:ml-4 [&_.pointer]:cursor-pointer [&_.pointer]:rounded [&_.pointer]:px-1 [&_.pointer:hover]:bg-zinc-800/60">
+        <div className="min-w-0 overflow-x-auto p-4 font-mono text-sm select-text [&_.no-icon]:ml-4 [&_.pointer]:cursor-pointer [&_.pointer]:rounded [&_.pointer]:px-1 [&_.pointer:hover]:bg-panel-control/60">
           {isJsonContainer ? (
             <JsonView
               data={data}
@@ -141,7 +141,7 @@ export function JSONTreeViewer({
               style={darkStyles}
             />
           ) : (
-            <span className="text-zinc-300">{JSON.stringify(data)}</span>
+            <span className="text-text-soft">{JSON.stringify(data)}</span>
           )}
         </div>
       )}
