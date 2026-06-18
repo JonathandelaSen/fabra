@@ -48,7 +48,7 @@ export function ChatHeader({ provider, onProviderChange, model, onModelChange }:
   };
 
   return (
-    <div className="flex items-center justify-between border-b border-line/[0.06] px-4 py-3">
+    <div className="flex items-center justify-between border-b border-line px-4 py-3">
       <div className="flex items-center gap-2.5">
         <div className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-info-soft to-info-soft text-info-text">
           <Sparkles className="size-3.5" />
@@ -66,7 +66,7 @@ export function ChatHeader({ provider, onProviderChange, model, onModelChange }:
         <select
           value={provider}
           onChange={(event) => handleProviderChange(event.target.value as StoredAIProvider)}
-          className="h-8 rounded-lg border border-line/[0.08] bg-panel/[0.03] px-2.5 text-[11px] text-text-muted outline-none transition-colors hover:border-line/[0.12] focus:border-info-border"
+          className="h-8 rounded-lg border border-line bg-panel/[0.03] px-2.5 text-[11px] text-text-muted outline-none transition-colors hover:border-line-default focus:border-info-border"
         >
           {(isGeminiActive || provider === "gemini") && <option value="gemini">{commonT("gemini")}</option>}
           {(isOpenaiActive || provider === "openai") && <option value="openai">{commonT("openai")}</option>}
@@ -77,7 +77,7 @@ export function ChatHeader({ provider, onProviderChange, model, onModelChange }:
           value={model}
           onChange={(event) => onModelChange(event.target.value)}
           aria-label={t("modelLabel")}
-          className="h-8 max-w-[140px] truncate rounded-lg border border-line/[0.08] bg-panel/[0.03] px-2.5 text-[11px] text-text-muted outline-none transition-colors hover:border-line/[0.12] focus:border-info-border"
+          className="h-8 max-w-[140px] truncate rounded-lg border border-line bg-panel/[0.03] px-2.5 text-[11px] text-text-muted outline-none transition-colors hover:border-line-default focus:border-info-border"
         >
           {provider === "gemini" && (
             Object.entries(GEMINI_MODELS).map(([id, label]) => (

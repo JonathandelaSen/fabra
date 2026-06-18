@@ -82,7 +82,7 @@ function SourceButton({
       className={`rounded-xl border p-5 text-left transition-all ${
         selected
           ? selectedClass
-          : "border-line/[0.06] bg-panel/[0.02] text-text-muted hover:bg-panel/[0.04]"
+          : "border-line bg-panel/[0.02] text-text-muted hover:bg-panel/[0.04]"
       } ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
     >
       {icon}

@@ -123,7 +123,7 @@ export default function NewAnalysisFlow({
             className={`rounded-xl border p-5 text-left transition-all ${
               source === "existing"
                 ? "border-action-border/40 bg-action/10 text-action-text"
-                : "border-line/[0.06] bg-panel/[0.02] text-text-muted hover:bg-panel/[0.04]"
+                : "border-line bg-panel/[0.02] text-text-muted hover:bg-panel/[0.04]"
             } ${cvs.length === 0 ? "cursor-not-allowed opacity-50" : ""}`}
           >
             <FileText className="mb-4 h-6 w-6 text-action-text" />
@@ -139,7 +139,7 @@ export default function NewAnalysisFlow({
             className={`rounded-xl border p-5 text-left transition-all ${
               source === "upload"
                 ? "border-success-border bg-success/10 text-text-on-bright"
-                : "border-line/[0.06] bg-panel/[0.02] text-text-muted hover:bg-panel/[0.04]"
+                : "border-line bg-panel/[0.02] text-text-muted hover:bg-panel/[0.04]"
             }`}
           >
             <UploadCloud className="mb-4 h-6 w-6 text-success-text" />
@@ -154,7 +154,7 @@ export default function NewAnalysisFlow({
             className={`rounded-xl border p-5 text-left transition-all ${
               source === "json_resume"
                 ? "border-action-border bg-action-soft text-action-text"
-                : "border-line/[0.06] bg-panel/[0.02] text-text-muted hover:bg-panel/[0.04]"
+                : "border-line bg-panel/[0.02] text-text-muted hover:bg-panel/[0.04]"
             }`}
           >
             <FileJson className="mb-4 h-6 w-6 text-action-text" />

@@ -7,7 +7,7 @@ export function ChatHeader() {
   const t = useTranslations("analysisDetail.chat");
 
   return (
-    <div className="flex min-w-0 items-center justify-between gap-3 border-b border-line/[0.06] px-3 py-3 sm:px-4">
+    <div className="flex min-w-0 items-center justify-between gap-3 border-b border-line px-3 py-3 sm:px-4">
       <div className="flex min-w-0 items-center gap-2.5">
         <div className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-info-soft to-info-soft text-info-text">
           <Sparkles className="size-3.5" />

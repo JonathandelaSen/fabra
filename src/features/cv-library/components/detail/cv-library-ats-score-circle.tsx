@@ -23,7 +23,7 @@ export function CVLibraryAtsScoreCircle({
     const scoreColors = getScoreColor(displayScore);
 
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-line/[0.04] bg-panel-overlay/50 p-4 self-start shadow-xl shadow-[var(--ui-shadow-soft)]">
+      <div className="flex flex-col items-center justify-center rounded-xl border border-line bg-panel-overlay/50 p-4 self-start shadow-xl shadow-[var(--ui-shadow-soft)]">
         <AnalysisScoreCircle
           score={displayScore}
           textClassName={scoreColors.text}
@@ -34,14 +34,14 @@ export function CVLibraryAtsScoreCircle({
   }
 
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-line/[0.08] bg-panel-overlay/20 p-4 self-start shadow-inner">
+    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-line bg-panel-overlay/20 p-4 self-start shadow-inner">
       <div className="relative w-32 h-32 flex flex-col items-center justify-center text-center">
         <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
           <circle
             cx="50"
             cy="50"
             r="42"
-            className="fill-none stroke-line-strong/[0.06] stroke-dashed"
+            className="fill-none stroke-line-strong stroke-dashed"
             strokeWidth="4"
             strokeDasharray="4 4"
           />

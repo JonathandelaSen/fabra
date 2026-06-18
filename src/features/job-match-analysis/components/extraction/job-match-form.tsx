@@ -76,7 +76,7 @@ export default function JobMatchForm({
           <label className="flex items-center gap-2 text-sm text-text-muted mb-1.5">
             <Link className="w-3.5 h-3.5" />
             {t("jobUrl")}
-            <span className="text-[10px] text-text-muted bg-panel-control/60 px-1.5 py-0.5 rounded border border-line/[0.05]">
+            <span className="text-[10px] text-text-muted bg-panel-control/60 px-1.5 py-0.5 rounded border border-line">
               {t("optional")}
             </span>
           </label>

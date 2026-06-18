@@ -26,7 +26,7 @@ export function JobMatchAnalysisDetailSkeleton() {
       </div>
 
       <div className="sticky top-[-16px] sm:top-[-24px] z-20 -mx-4 sm:-mx-6 mb-4 px-2 sm:px-6 py-2 backdrop-blur-md">
-        <div className="flex gap-1 rounded-2xl border border-line/[0.05] bg-panel/[0.03] p-1 w-fit max-w-full overflow-x-auto justify-start flex-nowrap [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+        <div className="flex gap-1 rounded-2xl border border-line bg-panel/[0.03] p-1 w-fit max-w-full overflow-x-auto justify-start flex-nowrap [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
           <Skeleton className="h-9 w-28 rounded-xl" />
           <Skeleton className="h-9 w-24 rounded-xl" />
           <Skeleton className="h-9 w-32 rounded-xl" />

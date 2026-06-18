@@ -57,8 +57,8 @@ export function ConversationList({
   };
 
   return (
-    <div className="flex w-64 shrink-0 flex-col border-r border-line/[0.06]">
-      <div className="flex items-center justify-between border-b border-line/[0.06] px-3 py-3">
+    <div className="flex w-64 shrink-0 flex-col border-r border-line">
+      <div className="flex items-center justify-between border-b border-line px-3 py-3">
         <span className="text-xs font-medium uppercase tracking-wider text-text-muted">
           {t("conversations")}
         </span>

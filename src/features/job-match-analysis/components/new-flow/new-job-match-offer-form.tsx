@@ -39,7 +39,7 @@ export function NewJobMatchOfferForm({
         <label className="mb-2 flex items-center gap-2 text-sm text-text-muted">
           <Link className="h-4 w-4" />
           {formsT("jobUrl")}
-          <span className="rounded border border-line/[0.05] bg-panel-control/60 px-1.5 py-0.5 text-[10px] text-text-muted">
+          <span className="rounded border border-line bg-panel-control/60 px-1.5 py-0.5 text-[10px] text-text-muted">
             {formsT("optional")}
           </span>
         </label>

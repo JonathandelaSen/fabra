@@ -43,7 +43,7 @@ describe("LabelBadge", () => {
     expect(screen.getByText(CHILD_LABEL).parentElement).toHaveClass(
       "font-semibold",
       "text-md",
-      "text-emerald-400",
+      "text-success-text",
     );
     expect(screen.getByTestId("badge-icon")).toHaveClass("h-3.5", "w-3.5");
   });
