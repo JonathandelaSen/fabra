@@ -48,7 +48,7 @@ export default function InterviewQuestionPromptPanel({
                 event.target.value.trim() !== question.question &&
                 onUpdate({ question: event.target.value })
               }
-              className="min-h-24 bg-panel/[0.01] border-line/[0.08] focus-visible:ring-action-border"
+              className="min-h-24 bg-panel/[0.01] border-line focus-visible:ring-action-border"
             />
           </div>
           <div className="flex flex-col gap-1.5">
@@ -65,7 +65,7 @@ export default function InterviewQuestionPromptPanel({
                 event.target.value !== (question.context ?? "") &&
                 onUpdate({ context: event.target.value || null })
               }
-              className="min-h-24 bg-panel/[0.01] border-line/[0.08] focus-visible:ring-action-border"
+              className="min-h-24 bg-panel/[0.01] border-line focus-visible:ring-action-border"
               placeholder={t("aiContext")}
             />
           </div>
@@ -76,7 +76,7 @@ export default function InterviewQuestionPromptPanel({
             <span className="text-xs font-medium text-text-muted">
               {t("question")}
             </span>
-            <div className="rounded-lg border border-line/[0.04] bg-panel/[0.01] p-3.5 text-sm leading-relaxed text-text-on-bright min-h-[5.5rem] whitespace-pre-wrap">
+            <div className="rounded-lg border border-line bg-panel/[0.01] p-3.5 text-sm leading-relaxed text-text-on-bright min-h-[5.5rem] whitespace-pre-wrap">
               {question.question}
             </div>
           </div>
@@ -85,11 +85,11 @@ export default function InterviewQuestionPromptPanel({
               {t("context")}
             </span>
             {question.context ? (
-              <div className="rounded-lg border border-line/[0.04] bg-panel/[0.01] p-3.5 text-sm leading-relaxed text-text-soft min-h-[6rem] whitespace-pre-wrap">
+              <div className="rounded-lg border border-line bg-panel/[0.01] p-3.5 text-sm leading-relaxed text-text-soft min-h-[6rem] whitespace-pre-wrap">
                 {question.context}
               </div>
             ) : (
-              <div className="flex rounded-lg border border-dashed border-line/[0.08] bg-panel/[0.005] p-3.5 text-sm italic text-text-muted min-h-[6rem] items-center justify-center">
+              <div className="flex rounded-lg border border-dashed border-line bg-panel/[0.005] p-3.5 text-sm italic text-text-muted min-h-[6rem] items-center justify-center">
                 {t("noContextSpecified")}
               </div>
             )}

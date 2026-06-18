@@ -78,12 +78,12 @@ export default function InterviewQuestionAnswerPanel({
                 event.target.value !== (question.answer ?? "") &&
                 onUpdate({ answer: event.target.value || null })
               }
-              className="min-h-64 flex-1 bg-panel/[0.01] border-line/[0.08] focus-visible:ring-action-border leading-relaxed"
+              className="min-h-64 flex-1 bg-panel/[0.01] border-line focus-visible:ring-action-border leading-relaxed"
               placeholder={t("manualAnswer")}
             />
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-line/[0.04]">
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-line">
             <div className="flex flex-wrap items-center gap-3">
               <AIActionLauncher
                 actionLabel={t("generateWithAI")}
@@ -131,17 +131,17 @@ export default function InterviewQuestionAnswerPanel({
               {t("answer")}
             </span>
             {question.answer ? (
-              <div className="rounded-lg border border-line/[0.04] bg-panel/[0.01] p-4 text-sm leading-relaxed text-text-soft min-h-[16rem] whitespace-pre-wrap">
+              <div className="rounded-lg border border-line bg-panel/[0.01] p-4 text-sm leading-relaxed text-text-soft min-h-[16rem] whitespace-pre-wrap">
                 {question.answer}
               </div>
             ) : (
-              <div className="flex flex-col rounded-lg border border-dashed border-line/[0.08] bg-panel/[0.005] p-4 text-sm italic text-text-muted min-h-[16rem] items-center justify-center text-center">
+              <div className="flex flex-col rounded-lg border border-dashed border-line bg-panel/[0.005] p-4 text-sm italic text-text-muted min-h-[16rem] items-center justify-center text-center">
                 {t("noAnswerGenerated")}
               </div>
             )}
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center justify-end gap-3 pt-3 border-t border-line/[0.04]">
+          <div className="mt-4 flex flex-wrap items-center justify-end gap-3 pt-3 border-t border-line">
             {question.answer && (
               <IconTextButton
                 icon={copied ? CheckCircle2 : Copy}
