@@ -161,7 +161,7 @@ export function AISettingsPanel({
               <div className={cn(
                 "rounded-xl border p-5 flex flex-col justify-between transition-all duration-300",
                 isGeminiActive
-                  ? "border-success-border bg-panel-active shadow-[var(--ui-success-shadow)] hover:border-success-border"
+                  ? "border-success-border/20 bg-panel-active shadow-[var(--ui-status-success-shadow)] hover:border-success-border/40"
                   : "border-line bg-panel-elevated/40 opacity-65 hover:opacity-85"
               )}>
                 <div>
@@ -239,7 +239,7 @@ export function AISettingsPanel({
               <div className={cn(
                 "rounded-xl border p-5 flex flex-col justify-between transition-all duration-300",
                 isOpenaiActive
-                  ? "border-success-border bg-panel-active shadow-[var(--ui-success-shadow)] hover:border-success-border"
+                  ? "border-success-border/20 bg-panel-active shadow-[var(--ui-status-success-shadow)] hover:border-success-border/40"
                   : "border-line bg-panel-elevated/40 opacity-65 hover:opacity-85"
               )}>
                 <div>

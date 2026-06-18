@@ -73,10 +73,10 @@ export function ObjectiveOutcomes({
               return (
                 <div
                   key={outcome.id}
-                  className="group rounded-xl border border-warning-border bg-warning/[0.01] hover:bg-warning/[0.02] transition-colors duration-150 overflow-hidden"
+                  className="group rounded-xl border border-warning-border bg-warning/2 hover:bg-warning/5 transition-colors duration-150 overflow-hidden"
                 >
                   {isEditing && outcomeForm ? (
-                    <div className="space-y-3 p-4 bg-warning-soft/50">
+                    <div className="space-y-3 p-4 bg-warning-soft">
                       <div className="flex items-center justify-between">
                         <span className="text-[11px] font-bold text-warning-text uppercase tracking-wider">
                           {t("outcomes.edit")}
@@ -97,7 +97,7 @@ export function ObjectiveOutcomes({
                           })
                         }
                         placeholder={t("outcomes.titlePlaceholder")}
-                        className="bg-field-code/50 border-line/[0.06] focus-visible:ring-warning-border"
+                        className="bg-field-code border-line focus-visible:ring-warning-border"
                       />
                       <div className="grid gap-3 sm:grid-cols-2">
                         <label className="space-y-1 block">
@@ -138,7 +138,7 @@ export function ObjectiveOutcomes({
                               value={outcomeForm.amount}
                               onChange={(e) => onOutcomeFormChange({ ...outcomeForm, amount: e.target.value })}
                               placeholder="0"
-                              className="bg-field-code/50 border-line/[0.06] text-xs h-9 focus-visible:ring-warning-border"
+                              className="bg-field-code border-line text-xs h-9 focus-visible:ring-warning-border"
                             />
                           </label>
                           <label className="space-y-1 block">
@@ -149,7 +149,7 @@ export function ObjectiveOutcomes({
                               value={outcomeForm.currency}
                               onChange={(e) => onOutcomeFormChange({ ...outcomeForm, currency: e.target.value })}
                               placeholder="EUR"
-                              className="bg-field-code/50 border-line/[0.06] text-xs h-9 focus-visible:ring-warning-border"
+                              className="bg-field-code border-line text-xs h-9 focus-visible:ring-warning-border"
                             />
                           </label>
                         </div>
@@ -163,10 +163,10 @@ export function ObjectiveOutcomes({
                           value={outcomeForm.description}
                           onChange={(e) => onOutcomeFormChange({ ...outcomeForm, description: e.target.value })}
                           placeholder={t("outcomes.descriptionPlaceholder")}
-                          className="bg-field-code/50 border-line/[0.06] text-xs focus-visible:ring-warning-border min-h-0 py-2"
+                          className="bg-field-code border-line text-xs focus-visible:ring-warning-border min-h-0 py-2"
                         />
                       </label>
-                      <div className="flex justify-end gap-2 pt-1 border-t border-line/[0.04]">
+                      <div className="flex justify-end gap-2 pt-1 border-t border-line">
                         <IconTextButton icon={X} onClick={onStopEditingOutcome} className="h-8">
                           {t("actions.cancel")}
                         </IconTextButton>
@@ -191,20 +191,20 @@ export function ObjectiveOutcomes({
                           </p>
                         )}
                         <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[10px] font-bold text-warning-text/80 uppercase tracking-wider">
-                          <span className="rounded bg-warning/10 border border-warning-border px-1.5 py-0.5">
+                          <span className="rounded bg-warning-soft border border-warning-border px-1.5 py-0.5">
                             {outcomeLabel(outcome.type)}
                           </span>
-                          <span className="rounded bg-panel/[0.04] border border-line/[0.04] px-1.5 py-0.5 text-text-muted">
+                          <span className="rounded bg-panel-control border border-line px-1.5 py-0.5 text-text-muted">
                             {outcomeStatusLabel(outcome.status)}
                           </span>
                           {outcome.amount != null && (
-                            <span className="rounded bg-success/10 border border-success-border px-1.5 py-0.5 text-success-text">
+                            <span className="rounded bg-success-soft border border-success-border px-1.5 py-0.5 text-success-text">
                               {outcome.amount} {outcome.currency}
                             </span>
                           )}
                         </div>
                       </div>
-                      <div className="flex items-center gap-1.5 w-full sm:w-auto justify-between sm:justify-start mt-3 sm:mt-0 pt-3 sm:pt-0 border-t border-line/[0.04] sm:border-t-0 shrink-0">
+                      <div className="flex items-center gap-1.5 w-full sm:w-auto justify-between sm:justify-start mt-3 sm:mt-0 pt-3 sm:pt-0 border-t border-line sm:border-t-0 shrink-0">
                         <Select
                           className="h-8 py-0.5 text-xs font-semibold w-auto px-2"
                           value={outcome.status}

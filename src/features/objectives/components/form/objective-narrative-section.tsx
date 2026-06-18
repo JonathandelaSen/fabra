@@ -14,7 +14,7 @@ export function ObjectiveNarrativeSection({
 }: ObjectiveNarrativeSectionProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-[10px] font-bold text-action-text uppercase tracking-widest border-b border-line/[0.04] pb-1">
+      <h3 className="text-[10px] font-bold text-action-text uppercase tracking-widest border-b border-line pb-1">
         {t("sections.narrative")}
       </h3>
       <label className="block space-y-1.5 text-left">
@@ -26,7 +26,7 @@ export function ObjectiveNarrativeSection({
           value={form.description}
           onChange={(e) => onFormChange({ ...form, description: e.target.value })}
           placeholder={t("placeholders.details")}
-          className="bg-field-code border-line/[0.06] focus-visible:ring-success-border text-sm py-2"
+          className="bg-field-code border-line focus-visible:ring-success-border text-sm py-2"
         />
       </label>
 
@@ -41,7 +41,7 @@ export function ObjectiveNarrativeSection({
             onFormChange({ ...form, successCriteria: e.target.value })
           }
           placeholder={t("placeholders.successCriteria")}
-          className="bg-field-code border-line/[0.06] focus-visible:ring-success-border text-sm py-2"
+          className="bg-field-code border-line focus-visible:ring-success-border text-sm py-2"
         />
       </label>
 
@@ -54,7 +54,7 @@ export function ObjectiveNarrativeSection({
           value={form.resultNotes}
           onChange={(e) => onFormChange({ ...form, resultNotes: e.target.value })}
           placeholder={t("placeholders.resultNotes")}
-          className="bg-field-code border-line/[0.06] focus-visible:ring-warning-border text-sm py-2"
+          className="bg-field-code border-line focus-visible:ring-warning-border text-sm py-2"
         />
       </label>
     </div>

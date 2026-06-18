@@ -20,7 +20,7 @@ export function ObjectivePlanningSection({
 }: ObjectivePlanningSectionProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-[10px] font-bold text-action-text uppercase tracking-widest border-b border-line/[0.04] pb-1">
+      <h3 className="text-[10px] font-bold text-action-text uppercase tracking-widest border-b border-line pb-1">
         {t("sections.planning")}
       </h3>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -69,7 +69,7 @@ export function ObjectivePlanningSection({
             type="date"
             value={form.startDate}
             onChange={(e) => onFormChange({ ...form, startDate: e.target.value })}
-            className="bg-field-code border-line/[0.06] focus-visible:ring-success-border py-2 h-auto text-sm"
+            className="bg-field-code border-line focus-visible:ring-success-border py-2 h-auto text-sm"
           />
         </label>
         <label className="space-y-1.5 block text-left">
@@ -80,7 +80,7 @@ export function ObjectivePlanningSection({
             type="date"
             value={form.targetDate}
             onChange={(e) => onFormChange({ ...form, targetDate: e.target.value })}
-            className="bg-field-code border-line/[0.06] focus-visible:ring-success-border py-2 h-auto text-sm"
+            className="bg-field-code border-line focus-visible:ring-success-border py-2 h-auto text-sm"
           />
         </label>
       </div>

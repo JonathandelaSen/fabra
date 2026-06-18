@@ -20,7 +20,7 @@ export function ObjectiveIdentitySection({
 }: ObjectiveIdentitySectionProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-[10px] font-bold text-action-text uppercase tracking-widest border-b border-line/[0.04] pb-1">
+      <h3 className="text-[10px] font-bold text-action-text uppercase tracking-widest border-b border-line pb-1">
         {t("sections.identity")}
       </h3>
       <label className="block space-y-1.5 text-left">
@@ -30,7 +30,7 @@ export function ObjectiveIdentitySection({
           onChange={(e) => onFormChange({ ...form, title: e.target.value })}
           maxLength={160}
           placeholder={t("placeholders.titlePlaceholder")}
-          className="bg-field-code border-line/[0.06] focus-visible:ring-success-border"
+          className="bg-field-code border-line focus-visible:ring-success-border"
         />
       </label>
 

@@ -47,7 +47,7 @@ export function ObjectiveSummaryPanel({
               </LabelBadge>
             )}
             {selectedContext && (
-              <span className="rounded-full border border-line/[0.06] bg-panel/[0.02] px-2 py-0.5 text-text-muted font-medium text-[11px]">
+              <span className="rounded-full border border-line bg-panel-subtle px-2 py-0.5 text-text-muted font-medium text-[11px]">
                 {selectedContext.name}
               </span>
             )}
@@ -84,9 +84,9 @@ export function ObjectiveSummaryPanel({
 
       {/* Success Criteria and closing reflection */}
       {(selected.successCriteria || selected.resultNotes) && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-line/[0.06] pt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-line pt-4">
           {selected.successCriteria && (
-            <div className="rounded-lg border border-success-border bg-success/[0.02] p-4.5">
+            <div className="rounded-lg border border-success-border bg-success/3 p-4.5">
               <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-success-text/60">
                 {t("fields.successCriteria")}
               </p>
@@ -97,7 +97,7 @@ export function ObjectiveSummaryPanel({
           )}
 
           {selected.resultNotes && (
-            <div className="rounded-lg border border-warning-border bg-warning/[0.02] p-4.5">
+            <div className="rounded-lg border border-warning-border bg-warning/3 p-4.5">
               <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-warning-text/60">
                 {t("fields.result")}
               </p>

@@ -25,7 +25,7 @@ export function ObjectiveProgressSection({
   const locale = useLocale();
 
   return (
-    <div className="border-t border-line/[0.06] pt-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="border-t border-line pt-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between text-xs mb-1.5">
           <span className="text-text-muted font-semibold uppercase tracking-wider text-[10px]">
@@ -35,7 +35,7 @@ export function ObjectiveProgressSection({
             {t("items.progress", { done: doneCount, total: totalItems, completion })}
           </span>
         </div>
-        <div className="h-2 w-full rounded-full bg-panel/[0.04] overflow-hidden border border-line/[0.02]">
+        <div className="h-2 w-full rounded-full bg-panel-control overflow-hidden border border-line">
           <div
             className="h-full rounded-full bg-gradient-to-r from-success to-accent-teal transition-all duration-500 ease-out"
             style={{ width: `${completion}%` }}
@@ -43,7 +43,7 @@ export function ObjectiveProgressSection({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-text-muted shrink-0 border-t md:border-t-0 border-line/[0.06] pt-3 md:pt-0">
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-text-muted shrink-0 border-t md:border-t-0 border-line pt-3 md:pt-0">
         {selected.startDate && (
           <span className="inline-flex items-center gap-1.5">
             <Calendar className="h-3.5 w-3.5 text-text-faint" />
@@ -52,14 +52,14 @@ export function ObjectiveProgressSection({
         )}
         {selected.targetDate && (
           <span className="inline-flex items-center gap-1.5">
-            <Calendar className="h-3.5 w-3.5 text-warning-text/60" />
-            <span className="text-warning-text/80 font-medium">
+            <Calendar className="h-3.5 w-3.5 text-warning-text" />
+            <span className="text-warning-text font-medium">
               {t("target", { date: formatDate(selected.targetDate, locale) })}
             </span>
           </span>
         )}
         {selected.source && selected.source !== "self" && (
-          <span className="rounded-md bg-panel/[0.02] border border-line/[0.04] px-1.5 py-0.5 text-text-muted">
+          <span className="rounded-md bg-panel-subtle border border-line px-1.5 py-0.5 text-text-muted">
             {t("sourceLabel", { source: sourceLabel(selected.source) })}
           </span>
         )}

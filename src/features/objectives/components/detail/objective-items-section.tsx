@@ -76,10 +76,10 @@ export function ObjectiveItems({
               return (
                 <div
                   key={item.id}
-                  className="group rounded-xl border border-line/[0.04] bg-panel/[0.01] hover:bg-panel/[0.02] transition-colors duration-150 overflow-hidden"
+                  className="group rounded-xl border border-line bg-panel-subtle hover:bg-panel-control transition-colors duration-150 overflow-hidden"
                 >
                   {isEditing && itemForm ? (
-                    <div className="space-y-3 p-4 bg-panel-elevated/50">
+                    <div className="space-y-3 p-4 bg-panel-elevated">
                       <div className="flex items-center justify-between">
                         <span className="text-[11px] font-bold text-action-text uppercase tracking-wider">
                           {t("items.edit")}
@@ -97,7 +97,7 @@ export function ObjectiveItems({
                           onItemFormChange({ ...itemForm, title: e.target.value })
                         }
                         placeholder={t("fields.title")}
-                        className="bg-field-code/50 border-line/[0.06] focus-visible:ring-success-border"
+                        className="bg-field-code border-line focus-visible:ring-success-border"
                       />
                       <div className="grid gap-3 sm:grid-cols-2">
                         <label className="space-y-1 block">
@@ -123,7 +123,7 @@ export function ObjectiveItems({
                             type="date"
                             value={itemForm.dueDate}
                             onChange={(e) => onItemFormChange({ ...itemForm, dueDate: e.target.value })}
-                            className="bg-field-code/50 border-line/[0.06] focus-visible:ring-success-border py-1.5 h-auto text-xs"
+                            className="bg-field-code border-line focus-visible:ring-success-border py-1.5 h-auto text-xs"
                           />
                         </label>
                       </div>
@@ -136,7 +136,7 @@ export function ObjectiveItems({
                           value={itemForm.notes}
                           onChange={(e) => onItemFormChange({ ...itemForm, notes: e.target.value })}
                           placeholder={t("placeholders.itemNotes")}
-                          className="bg-field-code/50 border-line/[0.06] text-xs focus-visible:ring-success-border min-h-0 py-2"
+                          className="bg-field-code border-line text-xs focus-visible:ring-success-border min-h-0 py-2"
                         />
                       </label>
                       <label className="block space-y-1">
@@ -148,10 +148,10 @@ export function ObjectiveItems({
                           value={itemForm.evidenceNotes}
                           onChange={(e) => onItemFormChange({ ...itemForm, evidenceNotes: e.target.value })}
                           placeholder={t("placeholders.evidence")}
-                          className="bg-field-code/50 border-line/[0.06] text-xs focus-visible:ring-success-border min-h-0 py-2"
+                          className="bg-field-code border-line text-xs focus-visible:ring-success-border min-h-0 py-2"
                         />
                       </label>
-                      <div className="flex justify-end gap-2 pt-1 border-t border-line/[0.04]">
+                      <div className="flex justify-end gap-2 pt-1 border-t border-line">
                         <IconTextButton
                           icon={X}
                           onClick={onStopEditingItem}
@@ -211,7 +211,7 @@ export function ObjectiveItems({
                             </div>
                           )}
                           {item.evidenceNotes && (
-                            <div className="mt-2 rounded bg-field-code/40 border border-line/[0.02] p-2 text-xs italic text-text-muted leading-relaxed">
+                            <div className="mt-2 rounded bg-panel-control border border-line p-2 text-xs italic text-text-muted leading-relaxed">
                               <span className="font-bold text-[9px] uppercase tracking-wider text-text-faint block not-italic mb-0.5">
                                 {t("fields.evidence")}
                               </span>
@@ -220,7 +220,7 @@ export function ObjectiveItems({
                           )}
                         </div>
                       </div>
-                      <div className="flex items-center gap-1 w-full sm:w-auto justify-end mt-2 pt-2 border-t border-line/[0.04] sm:mt-0 sm:pt-0 sm:border-t-0 shrink-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center gap-1 w-full sm:w-auto justify-end mt-2 pt-2 border-t border-line sm:mt-0 sm:pt-0 sm:border-t-0 shrink-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                         <ActionIconButton
                           icon={Pencil}
                           tone={ACTION_ICON_BUTTON_TONES.MUTED}

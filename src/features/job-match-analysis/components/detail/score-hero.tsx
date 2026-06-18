@@ -110,10 +110,6 @@ export default function ScoreHero({
               >
                 {t(getScoreLabelKey(score))}
               </span>
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-success/10 border border-success-border text-success-text">
-                <Briefcase className="w-3 h-3" />
-                {t("jobMatch")}
-              </span>
 
               <ScoreHeroOfferStatusBadge
                 offerStatus={offerStatus}
@@ -140,12 +136,7 @@ export default function ScoreHero({
               variant="dateTime"
               className="gap-1.5 bg-panel-control/50 px-2 py-1 rounded-md"
             />
-            {jobDescription && (
-              <span className="inline-flex items-center gap-1.5 text-[11px] text-text-muted bg-panel-control/50 px-2 py-1 rounded-md">
-                <Briefcase className="w-3 h-3" />
-                {t("withOffer")}
-              </span>
-            )}
+
 
             {/* CV link inline */}
             {hasCv && (

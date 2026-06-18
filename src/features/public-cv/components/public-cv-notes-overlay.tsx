@@ -124,10 +124,10 @@ export function PublicCVNotesOverlay({ notes }: { notes: Note[] }) {
                 setActiveNoteId(isActive ? null : note.id);
               }}
               className={cn(
-                "flex h-8 w-8 items-center justify-center rounded-full border-2 text-text-main shadow-lg transition-all hover:scale-110 active:scale-95 duration-200 cursor-pointer",
+                "flex h-8 w-8 items-center justify-center rounded-full border-2 text-white shadow-lg transition-all hover:scale-110 active:scale-95 duration-200 cursor-pointer",
                 isActive
-                  ? "bg-warning border-warning-border scale-110 ring-4 ring-warning-border"
-                  : "bg-warning border-line hover:bg-warning"
+                  ? "bg-amber-600 border-amber-400 scale-110 ring-4 ring-amber-500/20"
+                  : "bg-amber-500 border-white hover:bg-amber-600"
               )}
               title={t("ownerNoteLabel")}
             >

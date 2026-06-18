@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { SegmentedControl } from "@/components/shared/segmented-control";
 import type { EvidenceCandidate, EvidenceItem } from "../api/performance-review-api";
 
 const CANDIDATE_SOURCE_ORDER = [
@@ -87,19 +88,16 @@ export function ReviewEvidencePanel(props: ReviewEvidencePanelProps) {
               </div>
             )}
             <div>
-              <div className="flex w-full justify-start gap-1 overflow-x-auto rounded-xl border border-border/50 bg-muted/50 p-1">
-                {groups.map((group) => (
-                  <Button
-                    key={group.source}
-                    type="button"
-                    variant={selectedSource === group.source ? "secondary" : "ghost"}
-                    size="sm"
-                    onClick={() => setSelectedSource(group.source)}
-                  >
-                    {t(`sources.${group.source}`)} · {group.items.length}
-                  </Button>
-                ))}
-              </div>
+              <SegmentedControl
+                className="w-full"
+                value={selectedSource}
+                onChange={setSelectedSource}
+                options={groups.map((group) => ({
+                  value: group.source,
+                  label: t(`sources.${group.source}`),
+                  count: group.items.length,
+                }))}
+              />
               {groups
                 .filter((group) => group.source === selectedSource)
                 .map((group) => (
@@ -182,7 +180,7 @@ export function ReviewEvidencePanel(props: ReviewEvidencePanelProps) {
               className={cn(
                 "rounded-lg border p-3 transition-colors",
                 item.highlighted
-                  ? "border-warning-border bg-warning/[0.06]"
+                  ? "border-warning-border bg-warning/5"
                   : "border-line",
               )}
             >

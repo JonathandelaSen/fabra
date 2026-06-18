@@ -139,7 +139,7 @@ export function ReviewSelfAssessmentPanel(props: ReviewSelfAssessmentPanelProps)
               key={item.id}
               className={
                 item.highlighted
-                  ? "rounded-lg border border-warning-border bg-warning/[0.06] p-3"
+                  ? "rounded-lg border border-warning-border bg-warning/5 p-3"
                   : "rounded-lg border border-line p-3"
               }
             >
