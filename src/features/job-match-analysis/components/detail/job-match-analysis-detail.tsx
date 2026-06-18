@@ -175,7 +175,7 @@ export default function JobMatchAnalysisDetail({
             }}
             className="w-full"
           >
-            <JobMatchDetailTabsList interviewQuestionCount={interviewQuestions.length} />
+            <JobMatchDetailTabsList />
 
             <div className="min-h-0">
               <TabsContent value={DETAIL_TABS.summary}>

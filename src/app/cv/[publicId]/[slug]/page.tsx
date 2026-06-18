@@ -87,7 +87,7 @@ export default async function PublicCVPage({ params }: PublicCVPageProps) {
             <PublicCVThemeToggle />
             <a
               href={`${buildPublicCVPath(cv.public_id, cv.public_slug)}/pdf`}
-              className="inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-line-default bg-panel/70 px-4 text-xs font-semibold text-text-faint transition-all hover:border-line-strong hover:bg-panel hover:text-text-on-bright hover:shadow-sm dark:border-border dark:bg-card/70 dark:text-muted-foreground dark:hover:border-primary/50 dark:hover:bg-card dark:hover:text-foreground"
+              className="inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-line-default bg-panel/70 px-4 text-xs font-semibold text-text-soft transition-all hover:border-line-strong hover:bg-panel hover:text-text-main hover:shadow-sm dark:border-border dark:bg-card/70 dark:text-muted-foreground dark:hover:border-primary/50 dark:hover:bg-card dark:hover:text-foreground"
             >
               <Download className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">{messages.publicCv.downloadPdf}</span>
@@ -95,7 +95,7 @@ export default async function PublicCVPage({ params }: PublicCVPageProps) {
             </a>
             <Link
               href="/"
-              className="inline-flex h-9 items-center justify-center rounded-xl border border-line-default bg-panel/70 px-4 text-xs font-semibold text-text-faint transition-all hover:border-line-strong hover:bg-panel hover:text-text-on-bright hover:shadow-sm dark:border-border dark:bg-card/70 dark:text-muted-foreground dark:hover:border-primary/50 dark:hover:bg-card dark:hover:text-foreground"
+              className="inline-flex h-9 items-center justify-center rounded-xl border border-line-default bg-panel/70 px-4 text-xs font-semibold text-text-soft transition-all hover:border-line-strong hover:bg-panel hover:text-text-main hover:shadow-sm dark:border-border dark:bg-card/70 dark:text-muted-foreground dark:hover:border-primary/50 dark:hover:bg-card dark:hover:text-foreground"
             >
               {messages.publicCv.createMyCv}
             </Link>

@@ -62,7 +62,7 @@ export function EditableBulletList({ items, onChange, placeholder }: EditableBul
             onChange={(e) => update(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(e, i)}
             placeholder={inputPlaceholder}
-            className="flex-1 rounded-xl border border-line/5 bg-panel/5 px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none"
+            className="flex-1 rounded-xl border border-line bg-panel-hover px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none"
           />
           <div className="flex items-center gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all shrink-0">
             <button

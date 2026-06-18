@@ -36,7 +36,7 @@ export function CVEditorRecommendations({
     <section className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-warning/10 text-warning-text">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-recommendation-soft text-recommendation-text">
             <Lightbulb className="h-4 w-4" />
           </div>
           <h3 className="text-sm font-semibold text-text-main">
@@ -44,7 +44,7 @@ export function CVEditorRecommendations({
           </h3>
         </div>
         {recommendationAnalysis?.ai_score && (
-          <span className="text-xs font-bold text-warning-text">
+          <span className="text-xs font-bold text-recommendation-score">
             {recommendationAnalysis.ai_score}/100
           </span>
         )}
@@ -59,7 +59,7 @@ export function CVEditorRecommendations({
                 key={i}
                 className="flex gap-3 text-xs leading-relaxed text-text-muted"
               >
-                <div className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-warning/40" />
+                <div className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-recommendation/40" />
                 <p>{imp}</p>
               </div>
             ))}
@@ -73,7 +73,7 @@ export function CVEditorRecommendations({
                 .map((k) => (
                   <span
                     key={k}
-                    className="rounded-md bg-panel/5 px-1.5 py-0.5 text-[10px] text-text-muted"
+                    className="rounded-md bg-panel-hover px-1.5 py-0.5 text-[10px] text-text-muted"
                   >
                     {k}
                   </span>
@@ -82,7 +82,7 @@ export function CVEditorRecommendations({
           )}
         </div>
       ) : (
-        <div className="rounded-2xl border border-line/5 bg-panel/[0.02] p-4 text-center">
+        <div className="rounded-2xl border border-line bg-panel-hover p-4 text-center">
           <p className="text-xs text-text-muted mb-3">
             {t("recommendations.empty")}
           </p>

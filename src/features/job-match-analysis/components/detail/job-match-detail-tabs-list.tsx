@@ -7,38 +7,29 @@ import { JOB_MATCH_DETAIL_TABS } from "../../constants";
 
 export const DETAIL_TABS = JOB_MATCH_DETAIL_TABS;
 
-export function JobMatchDetailTabsList({
-  interviewQuestionCount,
-}: {
-  interviewQuestionCount: number;
-}) {
+export function JobMatchDetailTabsList() {
   const t = useTranslations("analysisDetail");
 
   return (
     <div className="sticky top-[-16px] sm:top-[-24px] z-20 -mx-4 sm:-mx-6 mb-4 px-2 sm:px-6 py-2 backdrop-blur-md">
-      <TabsList className="gap-1 rounded-2xl border-line/[0.05] bg-panel/[0.03] p-1 w-fit max-w-full overflow-x-auto justify-start flex-nowrap [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
-        <TabsTrigger value={DETAIL_TABS.summary} className="gap-2 px-5 py-2 text-sm font-semibold transition-all data-active:bg-panel/10 data-active:text-text-on-bright data-active:shadow-[var(--ui-active-tab-shadow)]">
+      <TabsList className="gap-1 rounded-2xl border-line bg-panel-subtle p-1 w-fit max-w-full overflow-x-auto justify-start flex-nowrap [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+        <TabsTrigger value={DETAIL_TABS.summary} className="gap-2 px-5 py-2 text-sm font-semibold transition-all data-active:bg-panel-active data-active:text-text-main data-active:shadow-[var(--ui-active-tab-shadow)]">
           <Sparkles className="size-4" />
           {t("tabs.summary")}
         </TabsTrigger>
-        <TabsTrigger value={DETAIL_TABS.offer} className="gap-2 px-5 py-2 text-sm font-semibold transition-all data-active:bg-panel/10 data-active:text-text-on-bright data-active:shadow-[var(--ui-active-tab-shadow)]">
+        <TabsTrigger value={DETAIL_TABS.offer} className="gap-2 px-5 py-2 text-sm font-semibold transition-all data-active:bg-panel-active data-active:text-text-main data-active:shadow-[var(--ui-active-tab-shadow)]">
           <Briefcase className="size-4" />
           {t("tabs.offer")}
         </TabsTrigger>
-        <TabsTrigger value={DETAIL_TABS.questions} className="gap-2 px-5 py-2 text-sm font-semibold transition-all data-active:bg-panel/10 data-active:text-text-on-bright data-active:shadow-[var(--ui-active-tab-shadow)]">
+        <TabsTrigger value={DETAIL_TABS.questions} className="gap-2 px-5 py-2 text-sm font-semibold transition-all data-active:bg-panel-active data-active:text-text-main data-active:shadow-[var(--ui-active-tab-shadow)]">
           <MessageSquareQuote className="size-4" />
           {t("tabs.questions")}
-          {interviewQuestionCount > 0 && (
-            <span className="ml-1 rounded-full border border-primary/30 bg-primary/20 px-2 py-0.5 text-[10px] font-bold text-primary">
-              {interviewQuestionCount}
-            </span>
-          )}
         </TabsTrigger>
-        <TabsTrigger value={DETAIL_TABS.chat} className="gap-2 px-5 py-2 text-sm font-semibold transition-all data-active:bg-panel/10 data-active:text-text-on-bright data-active:shadow-[var(--ui-active-tab-shadow)]">
+        <TabsTrigger value={DETAIL_TABS.chat} className="gap-2 px-5 py-2 text-sm font-semibold transition-all data-active:bg-panel-active data-active:text-text-main data-active:shadow-[var(--ui-active-tab-shadow)]">
           <MessageCircle className="size-4" />
           {t("tabs.chat")}
         </TabsTrigger>
-        <TabsTrigger value={DETAIL_TABS.tracking} className="gap-2 px-5 py-2 text-sm font-semibold transition-all data-active:bg-panel/10 data-active:text-text-on-bright data-active:shadow-[var(--ui-active-tab-shadow)]">
+        <TabsTrigger value={DETAIL_TABS.tracking} className="gap-2 px-5 py-2 text-sm font-semibold transition-all data-active:bg-panel-active data-active:text-text-main data-active:shadow-[var(--ui-active-tab-shadow)]">
           <CalendarClock className="size-4" />
           {t("tabs.tracking")}
         </TabsTrigger>

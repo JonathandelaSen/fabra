@@ -56,7 +56,6 @@ export default function CVTemplatesView({
   );
   const [selectedCvId, setSelectedCvId] = useState<string>("");
   const [locale, setLocale] = useState<CVTemplateLocale>("es");
-  const [searchQuery, setSearchQuery] = useState("");
   const [copyPasteOpen, setCopyPasteOpen] = useState(false);
   const [selectedProvider, setSelectedProvider] =
     useState<StoredAIProvider>(aiProviderValue);
@@ -75,12 +74,6 @@ export default function CVTemplatesView({
       templateCount: CV_TEMPLATES.length,
       templateId: selectedTemplateId,
     });
-
-  const filteredCvs = cvs.filter(
-    (cv) =>
-      cv.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (cv.filename ?? "").toLowerCase().includes(searchQuery.toLowerCase()),
-  );
 
   const selectedTemplate =
     CV_TEMPLATES.find(
@@ -171,24 +164,21 @@ export default function CVTemplatesView({
             />
           }
         >
-          <CVTemplateDetail
-            template={selectedTemplate}
-            cvs={cvs}
-            filteredCvs={filteredCvs}
-            selectedCvId={selectedCvId}
-            locale={locale}
-            searchQuery={searchQuery}
-            hasAIApiKey={hasAIApiKey}
+            <CVTemplateDetail
+              template={selectedTemplate}
+              cvs={cvs}
+              selectedCvId={selectedCvId}
+              locale={locale}
+              hasAIApiKey={hasAIApiKey}
             selectedProvider={selectedProvider}
             onProviderChange={setSelectedProvider}
             selectedModel={selectedModel}
             creating={createVersion.isPending}
             copyPasteOpen={copyPasteOpen}
             error={createVersion.errorMessage}
-            onSelectCv={setSelectedCvId}
-            onLocaleChange={setLocale}
-            onSearchChange={setSearchQuery}
-            onOpenUpload={onOpenUpload}
+              onSelectCv={setSelectedCvId}
+              onLocaleChange={setLocale}
+              onOpenUpload={onOpenUpload}
             onOpenSettings={onOpenSettings}
             onModelChange={setSelectedModel}
             onCreateVersion={handleCreateVersion}

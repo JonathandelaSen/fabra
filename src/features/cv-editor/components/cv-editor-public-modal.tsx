@@ -46,7 +46,7 @@ export function CVEditorPublicModal({
         <AlertBanner tone={ALERT_BANNER_TONES.DANGER} className="mt-4">
           {t("publicModal.warning")}
         </AlertBanner>
-        <div className="mt-6 rounded-xl border border-line/5 bg-panel/5 px-3 py-2 text-xs text-text-soft">
+        <div className="mt-6 rounded-xl border border-line bg-panel-hover px-3 py-2 text-xs text-text-soft">
           {publicDraftUrl || `/cv/id/${normalizedPublicSlug}`}
         </div>
         <div className="mt-6 flex min-w-0 gap-3">

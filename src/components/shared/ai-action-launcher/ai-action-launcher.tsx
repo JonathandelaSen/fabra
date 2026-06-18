@@ -51,7 +51,7 @@ export default function AIActionLauncher({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         disabled={loading || disabled}
-        className="w-fit flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-action to-action-hover hover:from-action-hover hover:to-action text-text-on-dark shadow-lg shadow-[var(--ui-action-shadow)] hover:shadow-[var(--ui-action-shadow)] transition-all duration-300 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed group cursor-pointer"
+        className="w-fit flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-ai-flow to-ai-flow-alt hover:from-ai-flow-alt hover:to-ai-flow text-text-on-dark shadow-lg shadow-[var(--ui-action-shadow)] hover:shadow-[var(--ui-action-shadow)] transition-all duration-300 active:scale-[0.98] disabled:brightness-90 disabled:saturate-75 disabled:cursor-not-allowed group cursor-pointer"
       >
         {loading ? (
           <>
@@ -60,7 +60,7 @@ export default function AIActionLauncher({
           </>
         ) : (
           <>
-            <Sparkles className="w-4.5 h-4.5 text-action-text group-hover:scale-110 transition-transform duration-300 animate-pulse" />
+            <Sparkles className="w-4.5 h-4.5 text-text-on-dark/80 group-hover:scale-110 transition-transform duration-300 animate-pulse" />
             <span>{actionLabel}</span>
             <ChevronDown className="w-4 h-4 ml-1 opacity-70 group-hover:translate-y-0.5 transition-transform duration-300" />
           </>

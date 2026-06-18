@@ -118,11 +118,11 @@ export function CVEditorSidePanel({
       >
         <div className="space-y-8">
           <div className="flex gap-1 rounded-xl border border-line bg-panel-control p-1">
-            <button onClick={() => onSetEditorTab("ai")} className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-all ${editorTab === "ai" ? "bg-panel/10 text-text-on-bright" : "text-text-muted hover:text-text-soft"}`}>
+            <button onClick={() => onSetEditorTab("ai")} className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-all ${editorTab === "ai" ? "bg-panel-active text-text-main" : "text-text-muted hover:text-text-soft"}`}>
               <Sparkles className="h-3.5 w-3.5" />
               {t("editorTabs.ai")}
             </button>
-            <button onClick={() => onSetEditorTab("manual")} className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-all ${editorTab === "manual" ? "bg-panel/10 text-text-on-bright" : "text-text-muted hover:text-text-soft"}`}>
+            <button onClick={() => onSetEditorTab("manual")} className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-all ${editorTab === "manual" ? "bg-panel-active text-text-main" : "text-text-muted hover:text-text-soft"}`}>
               <PenLine className="h-3.5 w-3.5" />
               {t("editorTabs.manual")}
             </button>

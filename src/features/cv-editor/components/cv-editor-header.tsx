@@ -84,7 +84,7 @@ export function CVEditorHeader({
       </div>
 
       <div className="flex shrink-0 items-center gap-1 sm:gap-3">
-        <div className="hidden items-center gap-1 rounded-md border border-line/5 bg-panel/5 p-1 sm:flex">
+        <div className="hidden items-center gap-1 rounded-md border border-line bg-panel-hover p-1 sm:flex">
           <ActionIconButton
             icon={Undo2}
             disabled={!canUndo}
@@ -115,7 +115,7 @@ export function CVEditorHeader({
           href={`/api/cvs/${versionId}/template-pdf`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-9 items-center gap-2 rounded-md border border-line/5 bg-panel/5 px-3 text-xs text-text-main hover:bg-panel/10"
+          className="inline-flex h-9 items-center gap-2 rounded-md border border-line bg-panel-hover px-3 text-xs text-text-main hover:bg-panel-active"
         >
           <Download className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">{t("downloadPdf")}</span>

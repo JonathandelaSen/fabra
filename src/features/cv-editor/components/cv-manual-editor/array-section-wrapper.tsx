@@ -52,9 +52,9 @@ export function ArraySectionWrapper<T>({ items, onChange, renderItem, createEmpt
   return (
     <div className="space-y-2">
       {items.map((item, i) => (
-        <div key={i} className="rounded-xl border border-line/5 bg-panel/[0.02] overflow-hidden">
+        <div key={i} className="rounded-xl border border-line-default bg-panel-subtle overflow-hidden">
           <div
-            className="flex items-center gap-2 px-3 py-2.5 cursor-pointer hover:bg-panel/[0.03] transition-colors"
+            className="flex items-center gap-2 px-3 py-2.5 cursor-pointer hover:bg-panel-hover transition-colors"
             onClick={() => setExpandedIndex(expandedIndex === i ? null : i)}
           >
             <ChevronDown className={`h-3.5 w-3.5 text-text-faint transition-transform ${expandedIndex === i ? "rotate-180" : ""}`} />
@@ -72,7 +72,7 @@ export function ArraySectionWrapper<T>({ items, onChange, renderItem, createEmpt
             </div>
           </div>
           {expandedIndex === i && (
-            <div className="px-3 pb-3 space-y-3 border-t border-line/5 pt-3">
+            <div className="px-3 pb-3 space-y-3 border-t border-line-default pt-3">
               {renderItem(item, i, (value) => updateItem(i, value))}
             </div>
           )}

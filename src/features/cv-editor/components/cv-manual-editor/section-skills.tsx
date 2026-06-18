@@ -4,7 +4,7 @@ import type { StandardCVSkillGroup } from "@/lib/cv-profile";
 import { Plus, Trash2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-const inputClass = "w-full rounded-xl border border-line/5 bg-panel/5 px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none";
+const inputClass = "w-full rounded-xl border border-line bg-panel-hover px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none";
 
 interface Props {
   items: StandardCVSkillGroup[];
@@ -42,7 +42,7 @@ export function SectionSkills({ items, onChange }: Props) {
   return (
     <div className="space-y-4">
       {items.map((group, gi) => (
-        <div key={gi} className="rounded-xl border border-line/5 bg-panel/[0.02] p-3 space-y-2">
+        <div key={gi} className="rounded-xl border border-line bg-panel-hover p-3 space-y-2">
           <div className="flex items-center gap-2">
             <input
               type="text"
@@ -57,7 +57,7 @@ export function SectionSkills({ items, onChange }: Props) {
           </div>
           <div className="flex flex-wrap gap-1.5">
             {(group.items ?? []).map((skill, si) => (
-              <div key={si} className="flex items-center gap-1 rounded-lg bg-panel/5 border border-line/5 px-2 py-1">
+              <div key={si} className="flex items-center gap-1 rounded-lg bg-panel-hover border border-line px-2 py-1">
                 <input
                   type="text"
                   value={skill}

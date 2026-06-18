@@ -60,7 +60,7 @@ export function CVEditorAIPanel({
           value={editInstruction}
           onChange={(e) => setEditInstruction(e.target.value)}
           placeholder={t("aiPlaceholder")}
-          className="h-32 w-full resize-none rounded-2xl border border-line/5 bg-panel/5 px-4 py-3 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none transition-colors"
+          className="h-32 w-full resize-none rounded-2xl border border-line bg-panel-hover px-4 py-3 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none transition-colors"
         />
 
         <AIActionLauncher
@@ -95,7 +95,7 @@ export function CVEditorAIPanel({
             <button
               key={hint}
               onClick={() => setEditInstruction(hint)}
-              className="rounded-full border border-line/5 bg-panel/5 px-3 py-1 text-[11px] text-text-muted hover:border-line/10 hover:bg-panel/10 hover:text-text-soft transition-colors"
+              className="rounded-full border border-line bg-panel-hover px-3 py-1 text-[11px] text-text-muted hover:border-line-default hover:bg-panel-active hover:text-text-soft transition-colors"
             >
               {hint}
             </button>

@@ -26,8 +26,8 @@ export function CVTemplateLanguageSelector({
             onClick={() => onLocaleChange(language)}
             className={`flex h-10 items-center justify-center rounded-xl border text-sm font-medium transition-all ${
               locale === language
-                ? "border-action-border/50 bg-action/10 text-action-text"
-                : "border-line/5 bg-panel/[0.02] text-text-muted hover:border-line/20 hover:bg-panel/5"
+                ? "border-template-language-border bg-template-language-soft text-template-language-text"
+                : "border-line bg-panel-subtle text-text-muted hover:border-line-default hover:bg-panel-hover"
             }`}
           >
             {language === "es" ? t("spanish") : t("english")}

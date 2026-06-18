@@ -19,7 +19,7 @@ export function ManualEditorHeader({
       <div className="flex items-center gap-2">
         {saveState === "saving" && <span className="rounded-full bg-accent-teal/10 px-2 py-0.5 text-[10px] text-accent-teal-text animate-pulse">{t("saving")}</span>}
         {saveState === "saved" && <span className="rounded-full bg-success/10 px-2 py-0.5 text-[10px] text-success-text">{t("saved")}</span>}
-        <button onClick={onSave} className="flex items-center gap-1 rounded-lg bg-panel/5 border border-line/5 px-2 py-1 text-[11px] text-text-muted hover:text-text-main hover:bg-panel/10">
+        <button onClick={onSave} className="flex items-center gap-1 rounded-lg bg-panel-hover border border-line px-2 py-1 text-[11px] text-text-muted hover:text-text-main hover:bg-panel-active">
           <Save className="h-3 w-3" />
         </button>
       </div>

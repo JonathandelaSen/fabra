@@ -27,7 +27,7 @@ export interface IconTextButtonProps extends Omit<ComponentProps<typeof Button>,
 const TONE_CLASS_NAMES = {
   [ICON_TEXT_BUTTON_TONES.DEFAULT]:
     "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
-  [ICON_TEXT_BUTTON_TONES.PRIMARY]: "border-transparent bg-action text-primary-foreground hover:bg-action-hover",
+  [ICON_TEXT_BUTTON_TONES.PRIMARY]: "border-transparent bg-action text-primary-foreground hover:bg-action-hover hover:text-primary-foreground",
   [ICON_TEXT_BUTTON_TONES.PRIMARY_GRADIENT]:
     "border-transparent bg-gradient-to-r from-action to-action-hover text-text-on-dark shadow-lg shadow-[var(--ui-action-shadow)] hover:from-action-hover hover:to-action",
   [ICON_TEXT_BUTTON_TONES.SUCCESS]: "border-success-border bg-success-soft text-success-text hover:bg-success-soft",

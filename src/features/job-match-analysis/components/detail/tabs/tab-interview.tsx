@@ -135,7 +135,7 @@ export default function TabInterview({
                 type="button"
                 onClick={() => onCreateQuestion(false)}
                 disabled={isCreatingQuestion || !quickQuestion.trim()}
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-panel-elevated px-4 text-xs font-semibold text-text-main transition-colors hover:bg-panel disabled:opacity-50"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-light-button px-4 text-xs font-semibold text-light-button-text transition-colors hover:bg-light-button-hover hover:text-light-button-text disabled:opacity-50"
               >
                 {isCreatingQuestion ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />

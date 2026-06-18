@@ -9,7 +9,7 @@ interface SectionBasicsProps {
   onChange: (basics: StandardCVBasics) => void;
 }
 
-const inputBaseClass = "rounded-xl border border-line/5 bg-panel/5 px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none";
+const inputBaseClass = "rounded-xl border border-line bg-panel-hover px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none";
 const inputClass = `w-full ${inputBaseClass}`;
 const labelClass = "text-[11px] font-medium text-text-muted uppercase tracking-wider";
 const EMAIL_PLACEHOLDER = "tu@email.com";

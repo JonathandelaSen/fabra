@@ -4,7 +4,7 @@ import type { StandardCVLanguage } from "@/lib/cv-profile";
 import { Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-const inputClass = "w-full rounded-xl border border-line/5 bg-panel/5 px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none";
+const inputClass = "w-full rounded-xl border border-line bg-panel-hover px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none";
 
 interface Props {
   items: StandardCVLanguage[];

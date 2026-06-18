@@ -16,7 +16,7 @@ export function SectionSummary({ summary, onChange }: SectionSummaryProps) {
       onChange={(e) => onChange(e.target.value)}
       placeholder={t("summaryPlaceholder")}
       rows={5}
-      className="w-full resize-none rounded-xl border border-line/5 bg-panel/5 px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none"
+      className="w-full resize-none rounded-xl border border-line bg-panel-hover px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none"
     />
   );
 }

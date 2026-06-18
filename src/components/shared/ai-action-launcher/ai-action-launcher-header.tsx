@@ -10,7 +10,7 @@ export default function AIActionLauncherHeader({ onClose }: { onClose?: () => vo
   return (
     <div className="px-5 py-4 border-b border-line bg-panel-subtle flex items-center justify-between">
       <h3 className="text-sm font-semibold text-text-main flex items-center gap-2">
-        <Sparkles className="w-4 h-4 text-action-text" />
+        <Sparkles className="w-4 h-4 text-ai-flow-icon" />
         {t("title")}
       </h3>
       {onClose && (

@@ -59,7 +59,7 @@ export function ManualEditorSectionItem({
           ? "opacity-20 scale-[0.96] border-dashed border-line-strong bg-field-code/50 shadow-inner"
           : isHidden
           ? "opacity-60 bg-field-code/20 border-dashed border-line-default/40"
-          : "border-transparent"
+          : "border-line-default bg-panel-subtle"
       }`}
       onDragOver={(event) => {
         event.preventDefault();
@@ -76,7 +76,7 @@ export function ManualEditorSectionItem({
       }}
     >
       <div className="relative">
-        <AccordionTrigger className={`rounded-xl px-3 py-2 hover:bg-panel/[0.03] hover:no-underline data-[state=open]:bg-panel/[0.03] [&>svg]:text-text-faint ${
+        <AccordionTrigger className={`rounded-xl px-3 py-2 hover:bg-panel-hover hover:no-underline data-[state=open]:bg-panel-hover [&>svg]:text-text-faint ${
           isHidden ? "bg-field-code/10 hover:bg-field-code/20" : ""
         }`}>
           <span className="block h-6 w-full" />

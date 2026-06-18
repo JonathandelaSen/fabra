@@ -50,7 +50,7 @@ export function CVEditorPublicSection({
   const t = useTranslations("cvEditor");
 
   return (
-    <section className="space-y-4 border-t border-line/5 pt-4">
+    <section className="space-y-4 border-t border-line pt-4">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-info/10 text-info-text">
@@ -96,7 +96,7 @@ export function CVEditorPublicSection({
         <label className="text-[10px] font-bold uppercase tracking-wider text-text-faint">
           {t("publicPage.editableUrl")}
         </label>
-        <div className="flex min-w-0 items-center gap-2 rounded-xl border border-line/5 bg-panel/5 p-1.5">
+        <div className="flex min-w-0 items-center gap-2 rounded-xl border border-line bg-panel-hover p-1.5">
           <span className="hidden shrink-0 pl-2 text-[11px] text-text-faint sm:inline">
             /cv/{publicId ?? "id"}/
           </span>
@@ -155,7 +155,7 @@ export function CVEditorPublicSection({
               href={publicUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-line/5 bg-panel/5 px-3 text-xs text-text-soft hover:bg-panel/10"
+              className="inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-line bg-panel-hover px-3 text-xs text-text-soft hover:bg-panel-active"
             >
               <ExternalLink className="h-3.5 w-3.5" />
             </a>

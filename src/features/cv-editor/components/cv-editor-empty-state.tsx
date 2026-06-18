@@ -70,9 +70,9 @@ export function CVEditorEmptyState({
                     onSelectVersion(cv.id);
                   }
                 }}
-                className="flex w-full flex-col items-start rounded-xl border border-line/5 bg-panel/5 hover:border-accent-teal-border hover:bg-panel/10 transition-all duration-300 shadow-md hover:shadow-[var(--ui-teal-shadow)] hover:-translate-y-0.5 group overflow-hidden cursor-pointer select-none"
+                className="flex w-full flex-col items-start rounded-xl border border-line bg-panel-hover hover:border-accent-teal-border hover:bg-panel-active transition-all duration-300 shadow-md hover:shadow-[var(--ui-teal-shadow)] hover:-translate-y-0.5 group overflow-hidden cursor-pointer select-none"
               >
-                <div className="relative w-full h-48 bg-field-code/85 border-b border-line/5 flex items-start justify-center overflow-hidden transition-colors duration-300 group-hover:bg-field-code">
+                <div className="relative w-full h-48 bg-field-code/85 border-b border-line flex items-start justify-center overflow-hidden transition-colors duration-300 group-hover:bg-field-code">
                   <div className="w-full pointer-events-none">
                     <PDFPreview url={`/api/cvs/${cv.id}/template-pdf`} mini />
                   </div>
@@ -94,7 +94,7 @@ export function CVEditorEmptyState({
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-line/5 bg-panel/[0.02] p-8 mx-auto max-w-md">
+          <div className="rounded-2xl border border-line bg-panel-hover p-8 mx-auto max-w-md">
             <p className="text-text-muted mb-6">
               {t("empty.noTemplateCvs")}
             </p>

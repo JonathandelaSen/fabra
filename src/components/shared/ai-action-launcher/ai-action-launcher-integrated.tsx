@@ -131,11 +131,11 @@ export default function AIActionLauncherIntegrated({
 
   return (
     <div
-      className="relative p-4 rounded-xl border transition-all duration-300 bg-panel-subtle flex flex-col gap-3 border-line hover:border-action-border hover:bg-panel-hover"
+      className="relative p-4 rounded-xl border transition-all duration-300 bg-panel-subtle flex flex-col gap-3 border-line hover:border-ai-flow-border hover:bg-panel-hover"
     >
       <div className="flex items-start gap-3">
-        <div className="w-9 h-9 rounded-lg bg-action-soft flex items-center justify-center shrink-0 border border-action-border">
-          <Sparkles className="w-4 h-4 text-action-text" />
+        <div className="w-9 h-9 rounded-lg bg-ai-flow-soft flex items-center justify-center shrink-0 border border-ai-flow-border">
+          <Sparkles className="w-4 h-4 text-ai-flow-icon" />
         </div>
         <div className="flex-1 min-w-0">
           <h4 className="text-xs sm:text-sm font-semibold text-text-main">
@@ -205,13 +205,13 @@ export default function AIActionLauncherIntegrated({
                         className={cn(
                           "w-full text-left px-3 py-2 rounded-md text-xs flex items-center justify-between transition-all cursor-pointer",
                           provider.id === selectedProvider
-                            ? "bg-action-soft text-action-text font-semibold"
-                            : "text-text-muted hover:bg-panel-hover hover:text-text-on-bright"
+                            ? "bg-ai-flow-soft text-ai-flow-text font-semibold"
+                            : "text-text-muted hover:bg-panel-hover hover:text-text-main"
                         )}
                       >
                         <span>{provider.label}</span>
                         {provider.id === selectedProvider && (
-                          <Check className="w-3.5 h-3.5 text-action-text" />
+                          <Check className="w-3.5 h-3.5 text-ai-flow-icon" />
                         )}
                       </button>
                     ))}
@@ -274,8 +274,8 @@ export default function AIActionLauncherIntegrated({
                         className={cn(
                           "w-full text-left px-3 py-2 rounded-md text-xs flex items-center justify-between transition-all cursor-pointer",
                           model.id === selectedModelId
-                            ? "bg-action-soft text-action-text font-semibold"
-                            : "text-text-muted hover:bg-panel-hover hover:text-text-on-bright"
+                            ? "bg-ai-flow-soft text-ai-flow-text font-semibold"
+                            : "text-text-muted hover:bg-panel-hover hover:text-text-main"
                         )}
                       >
                         <span className="flex items-center gap-2">
@@ -287,7 +287,7 @@ export default function AIActionLauncherIntegrated({
                           )}
                         </span>
                         {model.id === selectedModelId && (
-                          <Check className="w-3.5 h-3.5 text-action-text" />
+                          <Check className="w-3.5 h-3.5 text-ai-flow-icon" />
                         )}
                       </button>
                     ))}
@@ -301,7 +301,7 @@ export default function AIActionLauncherIntegrated({
             <button
               type="button"
               onClick={handleIntegratedRun}
-              className="w-full mt-1 py-2 px-4 rounded-lg bg-gradient-to-r from-action to-action-hover hover:from-action-hover hover:to-action text-text-on-dark font-semibold text-xs transition-all active:scale-[0.98] shadow-md shadow-[var(--ui-action-shadow)] cursor-pointer"
+              className="w-full mt-1 py-2 px-4 rounded-lg bg-gradient-to-r from-ai-flow to-ai-flow-alt hover:from-ai-flow-alt hover:to-ai-flow text-text-on-dark font-semibold text-xs transition-all active:scale-[0.98] shadow-md shadow-[var(--ui-action-shadow)] cursor-pointer"
             >
               {t("continue")}
             </button>

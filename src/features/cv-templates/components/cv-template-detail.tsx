@@ -15,10 +15,8 @@ import type { StoredAIProvider } from "@/lib/browser-preferences";
 interface CVTemplateDetailProps {
   template: CVTemplateDefinition | null;
   cvs: CVDocumentListItem[];
-  filteredCvs: CVDocumentListItem[];
   selectedCvId: string;
   locale: CVTemplateLocale;
-  searchQuery: string;
   hasAIApiKey: boolean;
   selectedProvider: StoredAIProvider;
   onProviderChange: (provider: StoredAIProvider) => void;
@@ -28,7 +26,6 @@ interface CVTemplateDetailProps {
   error: string | null;
   onSelectCv: (cvId: string) => void;
   onLocaleChange: (locale: CVTemplateLocale) => void;
-  onSearchChange: (query: string) => void;
   onOpenUpload: () => void;
   onOpenSettings: () => void;
   onModelChange: (model: string) => void;
@@ -41,10 +38,8 @@ interface CVTemplateDetailProps {
 export function CVTemplateDetail({
   template,
   cvs,
-  filteredCvs,
   selectedCvId,
   locale,
-  searchQuery,
   hasAIApiKey,
   selectedProvider,
   onProviderChange,
@@ -54,7 +49,6 @@ export function CVTemplateDetail({
   error,
   onSelectCv,
   onLocaleChange,
-  onSearchChange,
   onOpenUpload,
   onOpenSettings,
   onModelChange,
@@ -122,11 +116,8 @@ export function CVTemplateDetail({
               
               <CVTemplateCvSelector
                 cvs={cvs}
-                filteredCvs={filteredCvs}
                 selectedCvId={selectedCvId}
-                searchQuery={searchQuery}
                 onSelectCv={onSelectCv}
-                onSearchChange={onSearchChange}
                 onOpenUpload={onOpenUpload}
               />
             </div>
