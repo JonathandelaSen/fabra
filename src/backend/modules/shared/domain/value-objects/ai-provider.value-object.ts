@@ -1,15 +1,9 @@
 import { ErrorCode } from "@/shared/error-codes";
+import { AI_PROVIDER, AI_PROVIDERS } from "@/shared/ai-provider";
 import { DomainError } from "../errors/domain-error";
 import { ValueObject } from "./value-object";
 
-export const AI_PROVIDER = {
-  GEMINI: "gemini",
-  OPENAI: "openai",
-  MOCK: "mock",
-  OLLAMA: "ollama",
-} as const;
-
-export const AI_PROVIDERS = [AI_PROVIDER.GEMINI, AI_PROVIDER.OPENAI, AI_PROVIDER.MOCK, AI_PROVIDER.OLLAMA] as const;
+export { AI_PROVIDER, AI_PROVIDERS };
 
 export type AIProvider = (typeof AI_PROVIDERS)[number];
 
