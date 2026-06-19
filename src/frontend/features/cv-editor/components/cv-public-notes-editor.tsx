@@ -7,7 +7,7 @@ import { Plus, Trash2, Save, Globe, MessageSquare, ArrowRight } from "lucide-rea
 import type { StandardCVProfile } from "@/lib/cv-profile";
 import type { PublicCVNoteResponse } from "@/app/api/cvs/[id]/public-notes/responses";
 import { usePublicCVNotes } from "@/frontend/features/public-cv";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 
 import { getSectionItems, getAvailableSections } from "./cv-public-notes-helpers";
 

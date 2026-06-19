@@ -6,7 +6,7 @@ import {
   getStoredThemePreference,
   saveStoredThemePreference,
   type StoredThemePreference,
-} from "@/lib/browser-preferences";
+} from "@/frontend/utils/browser-preferences";
 
 export function useThemePreference() {
   const [theme, setTheme] = useState<StoredThemePreference>("dark");

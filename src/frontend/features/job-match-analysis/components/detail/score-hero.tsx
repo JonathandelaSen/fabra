@@ -18,7 +18,7 @@ import { type DetailTab } from "../../types";
 import { JOB_MATCH_DETAIL_TABS } from "../../constants";
 import AnalysisScoreCircle from "@/frontend/components/shared/analysis-score-circle";
 import { FormattedDate } from "@/frontend/components/shared/formatted-date";
-import { getScoreColor } from "@/lib/format";
+import { getScoreColor } from "@/frontend/utils/format";
 import { ScoreHeroOfferStatusBadge } from "./score-hero-offer-status-badge";
 
 interface ScoreHeroProps {

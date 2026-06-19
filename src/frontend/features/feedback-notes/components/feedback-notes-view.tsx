@@ -27,7 +27,7 @@ import { FeedbackCopyPastePanel } from "./feedback-copy-paste-panel";
 import { FeedbackNotesEmptyState } from "./feedback-notes-empty-state";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/utils/ai-models";
 
-import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 interface FeedbackNotesViewProps {
   aiProvider: StoredAIProvider;

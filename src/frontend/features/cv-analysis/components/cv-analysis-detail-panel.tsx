@@ -14,7 +14,7 @@ import type {
 } from "../hooks/use-cv-analysis-route-state";
 import AIAnalysisView from "./detail/analysis-view";
 import ExtractionView from "./extraction/extraction-view";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 interface CVAnalysisDetailPanelProps {
   selectedAnalysis: Analysis;

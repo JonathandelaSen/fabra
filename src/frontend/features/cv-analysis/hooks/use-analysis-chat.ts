@@ -14,7 +14,7 @@ import {
 import type { AnalysisChatConversation, AnalysisChatMessage } from "../components/detail/chat/chat-types";
 import type { ListOfferChatConversationsResponse } from "@/app/api/job-match-analyses/[id]/chat/responses";
 
-import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 type OfferChatConversation =
   ListOfferChatConversationsResponse["conversations"][number];

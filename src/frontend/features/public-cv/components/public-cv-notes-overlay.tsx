@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { MessageSquare, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 
 interface Note {
   id: string;

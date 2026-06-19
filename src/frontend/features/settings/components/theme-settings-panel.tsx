@@ -3,7 +3,7 @@
 import { Moon, Sun } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { SettingsSectionPanel } from "@/frontend/components/shared/settings-section-panel";
-import type { StoredThemePreference } from "@/lib/browser-preferences";
+import type { StoredThemePreference } from "@/frontend/utils/browser-preferences";
 import { useThemePreference } from "../hooks/use-theme-preference";
 
 const themeOptions: Array<{

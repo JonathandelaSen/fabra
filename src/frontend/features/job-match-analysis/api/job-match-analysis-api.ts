@@ -24,7 +24,7 @@ import type {
 } from "@/app/api/job-match-analyses/[id]/chat/responses";
 import type { PrepareOfferChatCopyPasteResponse } from "@/app/api/job-match-analyses/[id]/chat/copy-paste/prepare/responses";
 import type { ApplyOfferChatCopyPasteResponse } from "@/app/api/job-match-analyses/[id]/chat/copy-paste/apply/responses";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 export type JobMatchAnalysisSummary = ListJobMatchAnalysesResponse[number];
 export type { JobMatchAnalysisDetail } from "../types";

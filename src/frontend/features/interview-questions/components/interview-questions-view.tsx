@@ -34,7 +34,7 @@ import {
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/utils/ai-models";
 import { MessageSquareQuote } from "lucide-react";
 import { FeatureEmptyState } from "@/frontend/components/shared/feature-empty-state";
-import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/frontend/utils/browser-preferences";
 import type { InterviewQuestionAIMode } from "./interview-questions-types";
 
 interface InterviewQuestionsViewProps {

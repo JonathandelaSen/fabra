@@ -20,7 +20,7 @@ import {
   type CVTemplateId,
   type CVTemplateLocale,
 } from "@/lib/cv-templates";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 import { CVTemplatePreview } from "@/frontend/features/cv-templates";
 
 interface CVTemplateChangeSheetProps {

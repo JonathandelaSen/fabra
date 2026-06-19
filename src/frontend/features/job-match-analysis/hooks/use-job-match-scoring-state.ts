@@ -10,7 +10,7 @@ interface UseJobMatchScoringStateParams {
   hasAIApiKey: boolean;
 }
 
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 export function useJobMatchScoringState({ onScore, hasAIApiKey }: UseJobMatchScoringStateParams) {
   const t = useTranslations("analysisFlow.extraction");

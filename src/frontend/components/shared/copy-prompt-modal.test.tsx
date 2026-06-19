@@ -3,14 +3,14 @@ import { describe, expect, it, vi } from "vitest";
 import { renderWithProviders } from "@/frontend/testing/render";
 import { getMessages } from "@/frontend/i18n/messages";
 import { CopyPromptModal } from "./copy-prompt-modal";
-import { copyToClipboard } from "@/lib/clipboard";
+import { copyToClipboard } from "@/frontend/utils/clipboard";
 
 const messages = getMessages("en");
 const TITLE = messages.workJournal.copyPaste.promptCopied;
 const MESSAGE = messages.performanceReview.copyPaste.intro;
 const COPY_BTN_TEXT = messages.workJournal.copyPaste.copyPrompt;
 
-vi.mock("@/lib/clipboard", () => ({
+vi.mock("@/frontend/utils/clipboard", () => ({
   copyToClipboard: vi.fn(),
 }));
 

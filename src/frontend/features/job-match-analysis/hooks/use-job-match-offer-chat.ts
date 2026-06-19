@@ -18,7 +18,7 @@ import {
   sendJobMatchOfferChatMessage,
 } from "../api/job-match-analysis-api";
 
-import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 interface UseJobMatchOfferChatParams {
   analysisId: string;

@@ -12,7 +12,7 @@ import {
   getStoredAIModel,
   getStoredAIProvider,
   type StoredAIProvider,
-} from "@/lib/browser-preferences";
+} from "@/frontend/utils/browser-preferences";
 import AppShellContent from "./app-shell-content";
 import { ImpersonationBanner } from "./impersonation-banner";
 import type { SidebarActiveView } from "./sidebar-types";

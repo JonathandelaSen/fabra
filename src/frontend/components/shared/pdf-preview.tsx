@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 import { Document, Page, pdfjs } from "react-pdf";
 import { ZoomIn, ZoomOut, Loader2 } from "lucide-react";
 import {

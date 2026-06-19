@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import type { WorkJournalContext } from "../../api/work-journal-types";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher";
 import { WorkJournalCopyPastePanel } from "./work-journal-copy-paste-panel";
 

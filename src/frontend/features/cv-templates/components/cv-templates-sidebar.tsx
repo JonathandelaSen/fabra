@@ -4,7 +4,7 @@ import type { CVTemplateDefinition, CVTemplateLocale } from "@/lib/cv-templates"
 import { FeatureSidebarPanel } from "@/frontend/components/shared/feature-sidebar-panel";
 import CVTemplatePreview from "./cv-template-preview";
 import { Check, LayoutTemplate } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 
 interface CVTemplatesSidebarProps {
   templates: CVTemplateDefinition[];

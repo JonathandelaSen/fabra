@@ -1,5 +1,5 @@
 import type { AIContext } from "@/lib/analysis-types";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 import GeneralAnalysisForm from "./forms/general-analysis-form";
 
 interface ExtractionAIAnalysisSectionProps {

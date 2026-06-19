@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CopyPastePromptStep } from "./copy-paste-prompt-step";
-import { copyToClipboard } from "@/lib/clipboard";
+import { copyToClipboard } from "@/frontend/utils/clipboard";
 
 interface CopyPasteTextPanelProps {
   title: string;

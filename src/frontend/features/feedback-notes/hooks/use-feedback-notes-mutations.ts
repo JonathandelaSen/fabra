@@ -14,7 +14,7 @@ import {
   type FeedbackFilter,
 } from "../api/feedback-notes-api";
 import { feedbackNotesQueryKeys } from "../api/feedback-notes-query-keys";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 export function useFeedbackNotesMutations(status: FeedbackFilter) {
   const queryClient = useQueryClient();

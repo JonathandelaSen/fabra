@@ -25,7 +25,7 @@ import {
 } from "./work-journal-loading-state";
 import type { TimelineGranularity } from "./timeline/work-journal-timeline-utils";
 
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 interface WorkJournalViewProps {
   aiProvider: StoredAIProvider;

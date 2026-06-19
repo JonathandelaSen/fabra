@@ -9,7 +9,7 @@ import { LabelBadge } from "@/frontend/components/shared/label-badge";
 import { Button } from "@/frontend/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
 import { Textarea } from "@/frontend/components/ui/textarea";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 import type { EvidenceItem, PerformanceReviewItem } from "../api/performance-review-api";
 
 interface ReviewSelfAssessmentPanelProps {

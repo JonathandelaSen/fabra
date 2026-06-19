@@ -10,7 +10,7 @@ import type {
 import type { PrepareInterviewQuestionCopyPasteResponse } from "@/app/api/interview-questions/[id]/copy-paste/prepare/responses";
 export type { PrepareInterviewQuestionCopyPasteResponse } from "@/app/api/interview-questions/[id]/copy-paste/prepare/responses";
 import type { InterviewQuestionsFilters } from "../hooks/use-interview-questions-route-state";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 import { SELECTION_PROCESS_COPY_PASTE_PREPARE_MODES } from "@/shared/selection-process/constants";
 
 export type InterviewQuestion = ListInterviewQuestionsResponse[number];

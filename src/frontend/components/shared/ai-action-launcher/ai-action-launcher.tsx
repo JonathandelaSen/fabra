@@ -11,7 +11,7 @@ import AIActionLauncherHeader from "./ai-action-launcher-header";
 import AIActionLauncherIntegrated from "./ai-action-launcher-integrated";
 import AIActionLauncherCopyPaste from "./ai-action-launcher-copy-paste";
 
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 export interface AIActionLauncherProps {
   actionLabel: string;

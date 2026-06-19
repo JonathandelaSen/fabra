@@ -14,7 +14,7 @@ import {
 import type { CVChatConversation, CVChatMessage } from "../components/detail/cv-chat-types";
 import type { CVChatMessageResponse } from "@/app/api/cvs/[id]/chat/responses";
 
-import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/frontend/utils/browser-preferences";
 import { useErrorMessage } from "@/frontend/utils/errors/use-error-message";
 
 function toCVChatMessage(message: CVChatMessageResponse): CVChatMessage {

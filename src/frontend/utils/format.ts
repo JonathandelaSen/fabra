@@ -1,4 +1,4 @@
-import { formatDisplayDate } from "@/lib/date-format";
+import { formatDisplayDate } from "@/frontend/utils/date-format";
 
 export function formatDate(value: string): string {
   return formatDisplayDate(value);

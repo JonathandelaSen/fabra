@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 
 type Step = "copy" | "paste" | "review";
 

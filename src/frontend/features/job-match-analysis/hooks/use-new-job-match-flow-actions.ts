@@ -5,7 +5,7 @@ import { getErrorMessage } from "@/lib/errors";
 import {
   getAIRequestConfigForProvider,
   type StoredAIProvider,
-} from "@/lib/browser-preferences";
+} from "@/frontend/utils/browser-preferences";
 import type { JobMatchAnalysisDetailResponse } from "../types";
 import type { useJobMatchAnalysisMutations } from "./use-job-match-analysis-mutations";
 import type { AnalysisTab } from "./use-job-match-analysis-route-state";

@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { useInterfaceLanguage } from "@/frontend/components/shared/i18n-provider";
-import { formatDisplayDate } from "@/lib/date-format";
+import { formatDisplayDate } from "@/frontend/utils/date-format";
 import type { JobMatchAnalysisDetail } from "../api/job-match-analysis-api";
 
 interface UseJobMatchAnalysisExportParams {

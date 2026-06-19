@@ -1,7 +1,7 @@
 import { type ComponentProps } from "react";
 import { Loader2, Trash2 } from "lucide-react";
 import { Button } from "@/frontend/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 
 export interface DeleteButtonProps extends ComponentProps<typeof Button> {
   fullWidth?: boolean;

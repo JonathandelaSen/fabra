@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import { BasicPanel } from "./basic-panel";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 
 interface SectionCardProps {
   title?: string;

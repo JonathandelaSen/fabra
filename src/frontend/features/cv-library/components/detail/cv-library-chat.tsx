@@ -11,7 +11,7 @@ import {
   getStoredAIApiKey,
   getStoredAIModel,
   getStoredAIProvider,
-} from "@/lib/browser-preferences";
+} from "@/frontend/utils/browser-preferences";
 import { useTranslations } from "next-intl";
 
 interface CVLibraryChatProps {

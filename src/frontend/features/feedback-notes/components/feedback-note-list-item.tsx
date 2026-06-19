@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { featureMetaPillClassName } from "@/frontend/components/shared/feature-visual-system";
 import { SidebarListItem } from "@/frontend/components/shared/sidebar-list-item";
 import { LabelBadge, LABEL_BADGE_TONES } from "@/frontend/components/shared/label-badge";
-import { formatDate } from "@/lib/format";
+import { formatDate } from "@/frontend/utils/format";
 import type { FeedbackListItem } from "../api/feedback-notes-api";
 
 interface FeedbackNoteListItemProps {

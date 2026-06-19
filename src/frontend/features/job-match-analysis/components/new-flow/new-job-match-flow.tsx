@@ -7,7 +7,7 @@ import { Zap } from "lucide-react";
 import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
 import { getErrorMessage } from "@/lib/errors";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 import type { CVDocumentSummaryResponse } from "@/app/api/cvs/responses";
 import {
   NewJobMatchCVSourceSelector,

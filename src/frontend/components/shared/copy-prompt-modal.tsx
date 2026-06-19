@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, X, Copy, Check } from "lucide-react";
-import { copyToClipboard } from "@/lib/clipboard";
+import { copyToClipboard } from "@/frontend/utils/clipboard";
 
 interface CopyPromptModalProps {
   isOpen: boolean;

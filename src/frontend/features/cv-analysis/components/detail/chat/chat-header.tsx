@@ -15,7 +15,7 @@ import {
   getStoredAIBaseUrlForProvider,
   AI_PROVIDER,
   type StoredAIProvider,
-} from "@/lib/browser-preferences";
+} from "@/frontend/utils/browser-preferences";
 
 interface ChatHeaderProps {
   provider: StoredAIProvider;

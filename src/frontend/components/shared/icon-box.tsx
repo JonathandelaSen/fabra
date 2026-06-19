@@ -1,7 +1,7 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 
 export const ICON_BOX_TONES = {
   NEUTRAL: "neutral",

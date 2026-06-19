@@ -5,7 +5,7 @@ import {
   removeStoredAISettings,
   saveStoredAISettings,
   type StoredAIProvider,
-} from "@/lib/browser-preferences";
+} from "@/frontend/utils/browser-preferences";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/utils/ai-models";
 
 interface AISettingsDraftParams {

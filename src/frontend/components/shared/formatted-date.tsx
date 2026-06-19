@@ -6,8 +6,8 @@ import {
   formatDisplayDate,
   getDisplayDateLocale,
   type DateDisplayVariant,
-} from "@/lib/date-format";
-import { cn } from "@/lib/utils";
+} from "@/frontend/utils/date-format";
+import { cn } from "@/frontend/utils/utils";
 
 interface FormatDisplayDateOptions {
   locale?: string;

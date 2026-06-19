@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Cpu, ChevronDown, Check, KeyRound, Sparkles, Building2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 import { AlertBanner, ALERT_BANNER_TONES } from "../alert-banner";
 import {
   getAIRequestConfigForProvider,
@@ -14,7 +14,7 @@ import {
   getStoredAIBaseUrlForProvider,
   AI_PROVIDER,
   type StoredAIProvider,
-} from "@/lib/browser-preferences";
+} from "@/frontend/utils/browser-preferences";
 import {
   GEMINI_MODELS,
   OPENAI_MODELS,

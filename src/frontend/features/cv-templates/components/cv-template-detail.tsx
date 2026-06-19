@@ -10,7 +10,7 @@ import CVProfileStructureCopyPasteModal from "./cv-profile-structure-copy-paste-
 import CVTemplatePreview from "./cv-template-preview";
 import { CVTemplateCvSelector } from "./cv-template-cv-selector";
 import { CVTemplateLanguageSelector } from "./cv-template-language-selector";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 interface CVTemplateDetailProps {
   template: CVTemplateDefinition | null;

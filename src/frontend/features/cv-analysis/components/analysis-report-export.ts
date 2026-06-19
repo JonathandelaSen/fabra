@@ -1,4 +1,4 @@
-import { formatDisplayDate } from "@/lib/date-format";
+import { formatDisplayDate } from "@/frontend/utils/date-format";
 
 interface ExportAnalysisReportParams {
   analysis: {

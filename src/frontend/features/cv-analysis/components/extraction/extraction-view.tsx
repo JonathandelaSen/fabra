@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { copyToClipboard } from "@/lib/clipboard";
+import { copyToClipboard } from "@/frontend/utils/clipboard";
 import HowAtsWorksEducationBanner from "@/frontend/components/shared/how-ats-works-education-banner";
 import ExtractionHeader from "@/frontend/components/shared/extraction/extraction-header";
 import CVScoreCopyPasteModal from "../copy-paste/cv-score-copy-paste-modal";
@@ -13,7 +13,7 @@ import {
 import ExtractionAIAnalysisSection from "./extraction-ai-analysis-section";
 import { type ParserTab } from "./extraction-parser-config";
 import ExtractionWorkspace from "./extraction-workspace";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 interface ExtractionData {
   text_python: string | null;

@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { IconLabelBadge } from "@/frontend/components/shared/icon-label-badge";
 import { SidebarListItem } from "@/frontend/components/shared/sidebar-list-item";
-import { formatDate } from "@/lib/format";
+import { formatDate } from "@/frontend/utils/format";
 import type { ReceivedFeedbackItem } from "../api/received-feedback-api";
 
 interface ReceivedFeedbackListItemProps {

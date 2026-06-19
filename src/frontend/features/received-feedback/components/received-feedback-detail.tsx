@@ -10,7 +10,7 @@ import { DeleteButton, EditButton } from "@/frontend/components/shared/action-bu
 import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
 import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 import { IconLabelBadge } from "@/frontend/components/shared/icon-label-badge";
-import { formatDate } from "@/lib/format";
+import { formatDate } from "@/frontend/utils/format";
 import type {
   ActivityContext,
   ReceivedFeedbackItem,

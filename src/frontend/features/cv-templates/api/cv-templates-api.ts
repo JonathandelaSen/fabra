@@ -1,5 +1,5 @@
 import type { TemplateCVResponse } from "@/app/api/cvs/[id]/template/responses";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 import type { CVTemplateLocale } from "@/lib/cv-templates";
 
 interface CreateCVTemplateVersionInput {

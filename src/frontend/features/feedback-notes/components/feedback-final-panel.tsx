@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { copyToClipboard } from "@/lib/clipboard";
+import { copyToClipboard } from "@/frontend/utils/clipboard";
 import { Check, Copy, Pencil, Save, X } from "lucide-react";
 import { Textarea } from "@/frontend/components/ui/textarea";
 import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher";
 import { EditButton, IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/frontend/components/shared/action-buttons";
 import type { FeedbackEntry, FeedbackListItem } from "../api/feedback-notes-api";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 const textareaClass =
   "w-full resize-y border-action-border bg-action/[0.035] text-sm leading-6 text-text-main placeholder:text-text-faint focus-visible:border-action-border disabled:cursor-not-allowed disabled:opacity-60";

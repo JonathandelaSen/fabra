@@ -26,7 +26,7 @@ import {
 import {
   getAIRequestConfigForProvider,
   type StoredAIProvider,
-} from "@/lib/browser-preferences";
+} from "@/frontend/utils/browser-preferences";
 
 interface UseCVEditorMutationsInput {
   currentVersionId: string | null;

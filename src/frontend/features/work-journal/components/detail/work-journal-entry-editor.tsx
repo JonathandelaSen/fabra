@@ -7,7 +7,7 @@ import { ActivityContextSelector } from "@/frontend/features/activity-context";
 import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher";
 import { getErrorMessage } from "@/lib/errors";
 import { BasicPanel } from "@/frontend/components/shared/basic-panel";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 import { WorkJournalCopyPastePanel } from "../form/work-journal-copy-paste-panel";
 
 interface WorkJournalEntryEditorProps {

@@ -6,8 +6,8 @@ import { WorkJournalEntryDisplay } from "./work-journal-entry-display";
 import { WorkJournalEntryEditor } from "./work-journal-entry-editor";
 import { WorkJournalEmptyState } from "../work-journal-empty-state";
 import { FilePenLine } from "lucide-react";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
-import { cn } from "@/lib/utils";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
+import { cn } from "@/frontend/utils/utils";
 
 interface WorkJournalDetailProps {
   entry: WorkJournalEntry | null;

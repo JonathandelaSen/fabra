@@ -9,7 +9,7 @@ import {
   getStoredAIApiKey,
   getStoredAIProvider,
   type StoredAIProvider,
-} from "@/lib/browser-preferences";
+} from "@/frontend/utils/browser-preferences";
 import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
 import { FeatureTwoPaneLayout } from "@/frontend/components/shared/feature-two-pane-layout";
 import { useIsDesktopLayout } from "@/frontend/components/shared/use-is-desktop-layout";

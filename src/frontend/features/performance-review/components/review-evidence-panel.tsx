@@ -7,7 +7,7 @@ import { LabelBadge } from "@/frontend/components/shared/label-badge";
 import { Button } from "@/frontend/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
 import { Textarea } from "@/frontend/components/ui/textarea";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 import { SegmentedControl } from "@/frontend/components/shared/segmented-control";
 import type { EvidenceCandidate, EvidenceItem } from "../api/performance-review-api";
 

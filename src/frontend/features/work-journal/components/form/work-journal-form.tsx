@@ -9,7 +9,7 @@ import { WorkJournalFormMetadata } from "./work-journal-form-metadata";
 import { WorkJournalCopyPastePanel } from "./work-journal-copy-paste-panel";
 import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher";
 import { BasicPanel } from "@/frontend/components/shared/basic-panel";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 interface WorkJournalFormProps {
   draft: {

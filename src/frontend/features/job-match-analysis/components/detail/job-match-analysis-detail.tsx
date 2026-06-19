@@ -17,7 +17,7 @@ import TabFollowUp from "./tabs/tab-follow-up";
 import TabOfferChat from "./tabs/tab-offer-chat";
 import { useQuickInterviewQuestion } from "../../hooks/use-quick-interview-question";
 import { DETAIL_TABS, JobMatchDetailTabsList } from "./job-match-detail-tabs-list";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 interface JobMatchAnalysisDetailProps {
   analysis: JobMatchAnalysisDetailType;
   aiProvider?: StoredAIProvider;

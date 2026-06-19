@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { Lock, Pencil, Plus, Save, Trash2, X } from "lucide-react";
 import { Textarea } from "@/frontend/components/ui/textarea";
 import type { FeedbackEntry } from "../api/feedback-notes-api";
-import { formatDate } from "@/lib/format";
+import { formatDate } from "@/frontend/utils/format";
 import {
   ActionIconButton,
   ACTION_ICON_BUTTON_TONES,

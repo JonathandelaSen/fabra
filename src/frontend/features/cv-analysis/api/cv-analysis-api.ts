@@ -10,7 +10,7 @@ import type {
   ListCVDocumentsResponse,
 } from "@/app/api/cvs/responses";
 import type { AIContext } from "@/lib/analysis-types";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 export interface CreateCVAnalysisInput {
   cvId: string;

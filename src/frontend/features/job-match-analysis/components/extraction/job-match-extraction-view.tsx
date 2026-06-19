@@ -2,7 +2,7 @@
 
 import { type ComponentProps, useState } from "react";
 import { useTranslations } from "next-intl";
-import { copyToClipboard } from "@/lib/clipboard";
+import { copyToClipboard } from "@/frontend/utils/clipboard";
 import HowAtsWorksEducationBanner from "@/frontend/components/shared/how-ats-works-education-banner";
 import JobMatchForm from "./job-match-form";
 import JobMatchScoreCopyPasteModal from "../copy-paste/job-match-score-copy-paste-modal";
@@ -11,7 +11,7 @@ import JobMatchExtractionHeader from "@/frontend/components/shared/extraction/ex
 import JobMatchExtractionParserTabs from "@/frontend/components/shared/extraction/extraction-parser-tabs";
 import JobMatchExtractionPdfPreview from "./job-match-extraction-pdf-preview";
 import { useJobMatchScoringState } from "../../hooks/use-job-match-scoring-state";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 type ScoreInput = { jobDescription: string; jobUrl: string; provider: StoredAIProvider; model: string };
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

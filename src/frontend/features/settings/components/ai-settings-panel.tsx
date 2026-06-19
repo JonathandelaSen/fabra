@@ -19,7 +19,7 @@ import {
   ICON_TEXT_BUTTON_TONES,
 } from "@/frontend/components/shared/action-buttons";
 import { BasicPanel } from "@/frontend/components/shared/basic-panel";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 import {
   getStoredAIApiKeyForProvider,
   saveStoredAIApiKeyForProvider,
@@ -27,7 +27,7 @@ import {
   getStoredAIModel,
   type StoredAIProvider,
   AI_PROVIDER,
-} from "@/lib/browser-preferences";
+} from "@/frontend/utils/browser-preferences";
 import { OllamaSettingsCard } from "./ollama-settings-card";
 
 interface AISettingsPanelProps {

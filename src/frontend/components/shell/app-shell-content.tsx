@@ -18,7 +18,7 @@ import { HomeView } from "@/frontend/features/home";
 import { JobMatchAnalysisView } from "@/frontend/features/job-match-analysis";
 import { SettingsView } from "@/frontend/features/settings";
 import type { InterviewQuestionResponse as InterviewQuestionSummary } from "@/app/api/interview-questions/responses";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 import type { AnalysisMode } from "@/lib/analysis-types";
 import type { SidebarActiveView } from "./sidebar-types";
 

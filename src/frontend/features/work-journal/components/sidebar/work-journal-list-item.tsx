@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { SidebarListItem } from "@/frontend/components/shared/sidebar-list-item";
 import { LabelBadge } from "@/frontend/components/shared/label-badge";
-import { formatDate } from "@/lib/format";
+import { formatDate } from "@/frontend/utils/format";
 import type { WorkJournalEntry } from "../../api/work-journal-types";
 
 interface WorkJournalListItemProps {

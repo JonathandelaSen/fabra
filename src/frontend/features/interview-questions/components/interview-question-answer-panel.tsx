@@ -8,7 +8,7 @@ import { Textarea } from "@/frontend/components/ui/textarea";
 import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher";
 import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 import type { InterviewQuestion, UpdateInterviewQuestionInput } from "../api/interview-questions-api";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 import type { InterviewQuestionAIMode } from "./interview-questions-types";
 
 interface InterviewQuestionAnswerPanelProps {

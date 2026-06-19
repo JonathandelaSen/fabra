@@ -16,7 +16,7 @@ import {
   ICON_TEXT_BUTTON_TONES,
 } from "@/frontend/components/shared/action-buttons";
 import { BasicPanel } from "@/frontend/components/shared/basic-panel";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 interface FeedbackNotesDetailProps {
   feedback: FeedbackListItem;

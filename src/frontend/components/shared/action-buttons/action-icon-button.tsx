@@ -1,7 +1,7 @@
 import { type ComponentProps, type ElementType } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/frontend/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 
 export const ACTION_ICON_BUTTON_TONES = {
   DEFAULT: "default",

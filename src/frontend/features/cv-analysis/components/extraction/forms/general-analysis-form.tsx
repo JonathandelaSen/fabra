@@ -8,7 +8,7 @@ import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 import { GeneralAnalysisFormHeader } from "./general-analysis-form-header";
 import { GeneralAnalysisActionLauncher } from "./general-analysis-action-launcher";
 
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 import { MessageSquare } from "lucide-react";
 
 interface GeneralAnalysisFormProps {

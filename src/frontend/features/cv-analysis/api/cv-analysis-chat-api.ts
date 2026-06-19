@@ -7,7 +7,7 @@ import type {
   SendOfferChatMessageResponse,
 } from "@/app/api/job-match-analyses/[id]/chat/responses";
 
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 export interface SendAnalysisChatMessageInput {
   message: string;

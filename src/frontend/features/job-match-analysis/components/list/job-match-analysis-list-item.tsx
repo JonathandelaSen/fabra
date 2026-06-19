@@ -2,7 +2,7 @@
 
 import { FormattedDate } from "@/frontend/components/shared/formatted-date";
 import { featureListItemClassName } from "@/frontend/components/shared/feature-visual-system";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 import type { JobMatchAnalysisSummary } from "../../api/job-match-analysis-api";
 import { JobMatchAnalysisScoreBadge } from "./job-match-analysis-score-badge";
 import { JobMatchAnalysisStatusBadge } from "./job-match-analysis-status-badge";

@@ -9,7 +9,7 @@ import type { JobMatchAnalysisDetailResponse, JobMatchViewMode, InterviewQuestio
 import type { AnalysisTab } from "../hooks/use-job-match-analysis-route-state";
 import { JOB_MATCH_VIEW_MODES } from "../constants";
 import { JobMatchAnalysisMainPanel } from "./job-match-analysis-main-panel";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/frontend/components/shared/action-buttons";
 import { FeatureEmptyState } from "@/frontend/components/shared/feature-empty-state";
 

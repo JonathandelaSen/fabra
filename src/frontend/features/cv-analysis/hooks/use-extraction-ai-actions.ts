@@ -10,7 +10,7 @@ import {
   type ScoreCVAnalysisInput,
 } from "./use-cv-analysis-mutations";
 
-import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 interface ScoreAnalysisHandler {
   (id: string, input: ScoreCVAnalysisInput): Promise<void>;

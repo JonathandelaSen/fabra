@@ -8,7 +8,7 @@ import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
 } from "@/frontend/components/shared/action-buttons";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 import {
   getStoredAIApiKeyForProvider,
   getStoredAIBaseUrlForProvider,
@@ -18,7 +18,7 @@ import {
   saveStoredAIModelForProvider,
   type StoredAIProvider,
   AI_PROVIDER,
-} from "@/lib/browser-preferences";
+} from "@/frontend/utils/browser-preferences";
 
 interface OllamaSettingsCardProps {
   aiProvider: StoredAIProvider;

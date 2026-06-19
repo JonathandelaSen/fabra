@@ -14,7 +14,7 @@ import {
   draftWorkJournalEntry,
   updateWorkJournalEntry,
 } from "../api/work-journal-api";
-import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
+import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/frontend/utils/browser-preferences";
 import { workJournalQueryKeys } from "../api/work-journal-query-keys";
 import {
   addWorkJournalEntryToCache,

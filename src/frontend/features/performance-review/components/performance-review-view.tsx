@@ -14,7 +14,7 @@ import { DeleteButton, EditButton } from "@/frontend/components/shared/action-bu
 import {
   getAIRequestConfigForProvider,
   type StoredAIProvider,
-} from "@/lib/browser-preferences";
+} from "@/frontend/utils/browser-preferences";
 import { usePerformanceReviewActions } from "../hooks/use-performance-review-actions";
 import { usePerformanceReviewRouteState } from "../hooks/use-performance-review-route-state";
 import {

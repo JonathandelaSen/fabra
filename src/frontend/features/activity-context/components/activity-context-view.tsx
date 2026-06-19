@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, Check, Loader2, Sparkles } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/frontend/components/shared/action-buttons";
 import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";

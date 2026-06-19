@@ -5,7 +5,7 @@ import {
   LABEL_BADGE_SIZES,
   type LabelBadgeSize,
 } from "@/frontend/components/shared/label-badge";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 
 interface IconLabelBadgeProps {
   icon?: LucideIcon;

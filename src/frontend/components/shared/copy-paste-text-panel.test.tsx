@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { renderWithProviders } from "@/frontend/testing/render";
 import { getMessages } from "@/frontend/i18n/messages";
 import { CopyPasteTextPanel } from "./copy-paste-text-panel";
-import { copyToClipboard } from "@/lib/clipboard";
+import { copyToClipboard } from "@/frontend/utils/clipboard";
 
 const messages = getMessages("en");
 const TITLE = messages.workJournal.copyPaste.panelTitle;
@@ -16,7 +16,7 @@ const PASTED_TEXT_PLACEHOLDER = messages.workJournal.copyPaste.pasteResponsePlac
 const APPLY_LABEL = messages.workJournal.copyPaste.usePastedText;
 const EMPTY_RESPONSE_ERROR = messages.workJournal.copyPaste.emptyResponse;
 
-vi.mock("@/lib/clipboard", () => ({
+vi.mock("@/frontend/utils/clipboard", () => ({
   copyToClipboard: vi.fn(),
 }));
 

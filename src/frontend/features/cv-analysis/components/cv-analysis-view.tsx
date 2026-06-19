@@ -32,7 +32,7 @@ import NewAnalysisFlow from "./new-flow/new-analysis-flow";
 import { CVAnalysisHeaderActions } from "./cv-analysis-header-actions";
 import { CVAnalysisEmptyState } from "./cv-analysis-empty-state";
 
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 interface CVAnalysisViewProps {
   aiProvider: StoredAIProvider;

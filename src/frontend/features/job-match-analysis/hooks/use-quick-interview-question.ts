@@ -10,7 +10,7 @@ import {
   type CreateLinkedInterviewQuestionInput,
   type GenerateLinkedInterviewQuestionAnswerInput,
 } from "../api/job-match-analysis-api";
-import { getAIRequestConfigForProvider } from "@/lib/browser-preferences";
+import { getAIRequestConfigForProvider } from "@/frontend/utils/browser-preferences";
 
 interface UseQuickInterviewQuestionParams {
   analysisId: string;

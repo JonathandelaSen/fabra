@@ -12,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/frontend/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 import type { JobMatchAnalysisSummary } from "../../api/job-match-analysis-api";
 import {
   getJobMatchKanbanStatus,

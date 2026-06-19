@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { getErrorMessage } from "@/lib/errors";
-import { copyToClipboard } from "@/lib/clipboard";
+import { copyToClipboard } from "@/frontend/utils/clipboard";
 
 type Step = "copy" | "paste" | "review";
 

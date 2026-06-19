@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Textarea } from "@/frontend/components/ui/textarea";
 import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher";
 
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 interface ChatInputProps {
   draft: string;

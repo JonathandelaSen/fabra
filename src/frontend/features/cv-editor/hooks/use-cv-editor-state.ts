@@ -10,7 +10,7 @@ import {
   getStoredAIModel,
   getStoredAIProvider,
   type StoredAIProvider,
-} from "@/lib/browser-preferences";
+} from "@/frontend/utils/browser-preferences";
 import {
   buildPublicCVPath,
   normalizePublicCVSlug,

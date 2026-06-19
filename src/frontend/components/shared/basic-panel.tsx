@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/frontend/utils/utils";
 import { featureSurfaces } from "./feature-visual-system";
 
 type BasicPanelRadius = "lg" | "xl";

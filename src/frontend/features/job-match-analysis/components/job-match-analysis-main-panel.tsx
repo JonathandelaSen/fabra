@@ -13,7 +13,7 @@ import type { AnalysisTab } from "../hooks/use-job-match-analysis-route-state";
 import JobMatchAnalysisDetail from "./detail/job-match-analysis-detail";
 import JobMatchExtractionView from "./extraction/job-match-extraction-view";
 import { PendingJobMatchAnalysisView } from "./extraction/pending-job-match-analysis-view";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 interface JobMatchAnalysisMainPanelProps {
   detail: JobMatchAnalysisDetailResponse;

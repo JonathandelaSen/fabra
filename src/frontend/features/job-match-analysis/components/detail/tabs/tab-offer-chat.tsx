@@ -10,7 +10,7 @@ import { ChatMessagesArea } from "@/frontend/components/shared/chat/chat-message
 import { ChatInput } from "../chat/chat-input";
 import { OfferChatCopyPasteModal } from "../../copy-paste/offer-chat-copy-paste-modal";
 
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 
 interface TabOfferChatProps {
   analysisId: string;

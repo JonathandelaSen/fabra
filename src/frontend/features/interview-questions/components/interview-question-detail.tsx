@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { copyToClipboard } from "@/lib/clipboard";
+import { copyToClipboard } from "@/frontend/utils/clipboard";
 import type {
   InterviewQuestion,
   UpdateInterviewQuestionInput,
@@ -12,7 +12,7 @@ import type {
   InterviewQuestionCVOption,
   InterviewQuestionAIMode,
 } from "./interview-questions-types";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
+import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 import InterviewQuestionHeader from "./interview-question-header";
 import InterviewQuestionPromptPanel from "./interview-question-prompt-panel";
 import InterviewQuestionAnswerPanel from "./interview-question-answer-panel";

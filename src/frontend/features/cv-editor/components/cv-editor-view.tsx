@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { copyToClipboard } from "@/lib/clipboard";
+import { copyToClipboard } from "@/frontend/utils/clipboard";
 import { useTranslations } from "next-intl";
 import { AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
