@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { renderWithProviders } from "@/testing/render";
+import { renderWithProviders } from "@/frontend/testing/render";
 import { getMessages } from "@/frontend/i18n/messages";
 import { ExternalAIQuickActions } from "./external-ai-quick-actions";
 

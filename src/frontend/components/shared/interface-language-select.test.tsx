@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
 import { describe, expect, it, vi } from "vitest";
 import { getMessages } from "@/frontend/i18n/messages";
-import { server } from "@/testing/msw/server";
+import { server } from "@/frontend/testing/msw/server";
 import { I18nProvider } from "./i18n-provider";
 import { InterfaceLanguageSelect } from "./interface-language-select";
 

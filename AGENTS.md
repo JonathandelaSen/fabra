@@ -301,7 +301,7 @@ src/
       ui/               ← generic UI primitives, prefer shadcn/ui
     i18n/               ← translation messages and next-intl config
     utils/              ← cross-feature client infra (api/, errors/, helpers)
-  testing/              ← shared test setup, render helpers, msw
+    testing/            ← shared test setup, render helpers, msw
   shared/               ← contracts/constants shared between backend and frontend
   lib/                  ← cross-cutting utilities and infra (supabase, pdf, container)
   types/                ← global type declarations

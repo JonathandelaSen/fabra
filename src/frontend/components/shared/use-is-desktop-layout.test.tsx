@@ -1,6 +1,6 @@
 import { act } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { renderHookWithProviders } from "@/testing/render";
+import { renderHookWithProviders } from "@/frontend/testing/render";
 import { useIsDesktopLayout } from "./use-is-desktop-layout";
 
 type ChangeListener = () => void;

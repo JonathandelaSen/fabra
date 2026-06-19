@@ -1,6 +1,6 @@
 import { screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { renderWithProviders } from "@/testing/render";
+import { renderWithProviders } from "@/frontend/testing/render";
 import { getMessages } from "@/frontend/i18n/messages";
 import { I18nProvider } from "@/frontend/components/shared/i18n-provider";
 import Sidebar from "./sidebar";

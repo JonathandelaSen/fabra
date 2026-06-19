@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { renderWithProviders } from "@/testing/render";
+import { renderWithProviders } from "@/frontend/testing/render";
 import AnalysisScoreCircle from "./analysis-score-circle";
 
 describe("AnalysisScoreCircle", () => {

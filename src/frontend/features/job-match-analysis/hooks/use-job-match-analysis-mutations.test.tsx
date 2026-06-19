@@ -1,8 +1,8 @@
 import { act, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { describe, expect, it } from "vitest";
-import { renderHookWithProviders } from "@/testing/render";
-import { server } from "@/testing/msw/server";
+import { renderHookWithProviders } from "@/frontend/testing/render";
+import { server } from "@/frontend/testing/msw/server";
 import { useJobMatchAnalysisMutations } from "./use-job-match-analysis-mutations";
 
 const LIST_KEY = ["job-match-analyses", "list"] as const;

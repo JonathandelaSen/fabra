@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { renderWithProviders } from "@/testing/render";
+import { renderWithProviders } from "@/frontend/testing/render";
 import { SidebarListSkeleton } from "./sidebar-list-skeleton";
 
 describe("SidebarListSkeleton", () => {

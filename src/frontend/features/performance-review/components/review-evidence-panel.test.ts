@@ -1,4 +1,4 @@
-import { renderWithProviders } from "@/testing/render";
+import { renderWithProviders } from "@/frontend/testing/render";
 import { createElement } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { ReviewEvidencePanel } from "./review-evidence-panel";

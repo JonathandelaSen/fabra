@@ -1,6 +1,6 @@
 import { act, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { renderHookWithProviders } from "@/testing/render";
+import { renderHookWithProviders } from "@/frontend/testing/render";
 import { getMessages } from "@/frontend/i18n/messages";
 import { useCopyPasteWorkflowState } from "./use-copy-paste-workflow-state";
 

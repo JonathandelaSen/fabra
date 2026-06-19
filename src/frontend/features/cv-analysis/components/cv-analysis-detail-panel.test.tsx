@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { renderWithProviders } from "@/testing/render";
+import { renderWithProviders } from "@/frontend/testing/render";
 import { CVAnalysisDetailPanel } from "./cv-analysis-detail-panel";
 
 vi.mock("./detail/analysis-view", () => ({

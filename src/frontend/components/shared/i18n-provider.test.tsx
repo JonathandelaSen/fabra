@@ -4,7 +4,7 @@ import { HttpResponse, http } from "msw";
 import { useTranslations } from "next-intl";
 import { describe, expect, it, vi } from "vitest";
 import { render } from "@testing-library/react";
-import { server } from "@/testing/msw/server";
+import { server } from "@/frontend/testing/msw/server";
 import { I18nProvider, useInterfaceLanguage } from "./i18n-provider";
 
 function LanguageConsumer() {

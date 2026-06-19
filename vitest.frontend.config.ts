@@ -22,6 +22,6 @@ export default defineConfig({
       "src/frontend/**/*.test.ts",
       "src/frontend/**/*.test.tsx",
     ],
-    setupFiles: ["src/testing/setup.ts"],
+    setupFiles: ["src/frontend/testing/setup.ts"],
   },
 });

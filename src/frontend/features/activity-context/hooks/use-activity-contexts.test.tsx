@@ -2,8 +2,8 @@ import { act, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { describe, expect, it } from "vitest";
 import { useCreateActivityContext } from "./use-activity-contexts";
-import { renderHookWithProviders } from "@/testing/render";
-import { server } from "@/testing/msw/server";
+import { renderHookWithProviders } from "@/frontend/testing/render";
+import { server } from "@/frontend/testing/msw/server";
 
 const activityContextListQueryKey = ["activity-contexts", "list"] as const;
 

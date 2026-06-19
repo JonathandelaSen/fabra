@@ -1,6 +1,6 @@
 import { waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { renderHookWithProviders } from "@/testing/render";
+import { renderHookWithProviders } from "@/frontend/testing/render";
 import { useSelfAssessmentCopyPaste } from "./use-self-assessment-copy-paste";
 
 describe("useSelfAssessmentCopyPaste", () => {

@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { renderWithProviders } from "@/testing/render";
+import { renderWithProviders } from "@/frontend/testing/render";
 import { JobMatchAnalysisContent } from "./job-match-analysis-content";
 
 const noopAsync = async () => {};
