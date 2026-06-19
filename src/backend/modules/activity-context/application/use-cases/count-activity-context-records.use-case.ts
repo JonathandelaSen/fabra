@@ -1,4 +1,4 @@
-import { Counter, EntityId, UserId } from "@/modules/shared";
+import { Counter, EntityId, UserId } from "@/backend/modules/shared";
 import type { ActivityContextRepository } from "../../domain/repositories/activity-context.repository";
 
 export class CountActivityContextRecordsUseCase {

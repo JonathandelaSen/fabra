@@ -1,4 +1,4 @@
-import { badRequest, CopyPastePreparation, UserId } from "@/modules/shared";
+import { badRequest, CopyPastePreparation, UserId } from "@/backend/modules/shared";
 import type { StandardCVProfile } from "../../domain/cv-profile";
 import { ErrorCode } from "@/shared/error-codes";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";

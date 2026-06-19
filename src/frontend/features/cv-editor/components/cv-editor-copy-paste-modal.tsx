@@ -3,8 +3,8 @@
 import { useTranslations } from "next-intl";
 import CopyPasteWorkflowModal, {
   CopyPastePreviewItem,
-} from "@/components/shared/copy-paste-workflow-modal";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
+} from "@/frontend/components/shared/copy-paste-workflow-modal";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
 import type { ApplyCVEditorCopyPasteResponse, PreviewCVEditorCopyPasteResponse } from "../types";
 import { useCVEditorCopyPasteWorkflow } from "../hooks/use-cv-editor-copy-paste-workflow";
 

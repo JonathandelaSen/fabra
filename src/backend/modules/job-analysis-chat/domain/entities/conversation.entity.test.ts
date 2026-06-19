@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Timestamp, UserId } from "@/modules/shared";
+import { Timestamp, UserId } from "@/backend/modules/shared";
 import { Conversation } from "./conversation.entity";
 import { JobAnalysisChatConversationId } from "../value-objects/job-analysis-chat-conversation-id.value-object";
 import { JobAnalysisChatTitle } from "../value-objects/job-analysis-chat-title.value-object";

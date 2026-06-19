@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 
 export class CVStructuredProfileId extends ValueObject<string> {
   private constructor(private readonly value: string) {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createTestUser } from "@/modules/test-helpers/setup";
+import { createTestUser } from "@/backend/modules/test-helpers/setup";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { SupabaseContentMetricsRepository } from "./supabase-content-metrics.repository";
 import { ContentMetricsWindow } from "../../domain/value-objects/content-metrics-window.value-object";

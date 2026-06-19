@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { renderWithProviders } from "@/frontend/testing/render";
-import { getMessages } from "@/i18n/messages";
+import { renderWithProviders } from "@/testing/render";
+import { getMessages } from "@/frontend/i18n/messages";
 import { BasicPanel } from "./basic-panel";
 
 const PANEL_CONTENT = getMessages("en").settings.title;

@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { LayoutTemplate } from "lucide-react";
-import { IconTextButton } from "@/components/shared/action-buttons";
+import { IconTextButton } from "@/frontend/components/shared/action-buttons";
 
 import type { CVTemplateLocale } from "@/lib/cv-templates";
 

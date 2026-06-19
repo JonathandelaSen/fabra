@@ -4,9 +4,9 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { createRequestId, hasExtractedText } from "@/lib/observability";
 import { extractPdfText } from "@/lib/pdf-extraction";
 import { cvLibraryModule } from "@/lib/container";
-import { CV_PDFS_BUCKET, presentCVDocument, presentCVDocuments } from "@/modules/cv-library";
+import { CV_PDFS_BUCKET, presentCVDocument, presentCVDocuments } from "@/backend/modules/cv-library";
 import { parseUploadCVFormData } from "./validation";
-import { ok, errorResponse } from "@/modules/shared";
+import { ok, errorResponse } from "@/backend/modules/shared";
 import {
   type CVDocumentDetailResponse,
   type CVDocumentSummaryResponse,

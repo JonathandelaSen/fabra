@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { loginViaUI } from "./helpers/auth";
 import { createExtractionViaUI, createFixtureViaApi } from "./helpers/cv";
 import { adminClient, createConfirmedUser } from "./helpers/supabase";
-import { messages } from "../src/i18n/messages";
+import { messages } from "../src/frontend/i18n/messages";
 
 test("user can upload a PDF, create an extraction, and read persisted backend state", async ({
   page,

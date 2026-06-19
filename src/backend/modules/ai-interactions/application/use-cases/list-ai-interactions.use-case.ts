@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { UserId } from "@/modules/shared";
+import { UserId } from "@/backend/modules/shared";
 import type { AIInteractionEventRepository } from "../../domain/repositories/ai-interaction-event.repository";
 import type { AIInteractionReviewRepository } from "../../domain/repositories/ai-interaction-review.repository";
 import { AIInteractionReadModel } from "../../domain/value-objects/ai-interaction-read-model.value-object";

@@ -5,9 +5,9 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { getLatestRecommendationAnalysisForCV } from "@/lib/analysis-queries";
 import type { CVTemplateId, CVTemplateLocale } from "@/lib/cv-templates";
 import { cvLibraryModule } from "@/lib/container";
-import { presentCVDocument } from "@/modules/cv-library";
+import { presentCVDocument } from "@/backend/modules/cv-library";
 import { parseEditCVProfileRequest } from "./validation";
-import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
+import { ok, errorResponse, notFound, badRequest } from "@/backend/modules/shared";
 
 export const maxDuration = 60;
 

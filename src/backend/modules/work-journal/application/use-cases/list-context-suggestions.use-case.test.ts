@@ -3,7 +3,7 @@ import {
   createTestUser,
   getSupabaseClient,
   testLabel,
-} from "@/modules/test-helpers/setup";
+} from "@/backend/modules/test-helpers/setup";
 import type { CVDataRepository } from "../../domain/repositories/cv-data.repository";
 import { CVSummaryForSuggestions } from "../../domain/value-objects/cv-summary-for-suggestions.value-object";
 import { SupabaseWorkJournalContextRepository } from "../../infrastructure/repositories/supabase-work-journal-context.repository";

@@ -1,10 +1,10 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Analysis } from "@/lib/analysis-types";
 import { getBestCVText } from "@/lib/cv-profile";
-import type { QueryBus } from "@/modules/shared";
-import type { SupabaseAware } from "@/modules/shared/infrastructure/supabase-aware";
-import { GetCVAnalysisByIdQuery } from "@/modules/cv-analysis";
-import { GetJobMatchAnalysisByIdQuery } from "@/modules/job-match-analysis";
+import type { QueryBus } from "@/backend/modules/shared";
+import type { SupabaseAware } from "@/backend/modules/shared/infrastructure/supabase-aware";
+import { GetCVAnalysisByIdQuery } from "@/backend/modules/cv-analysis";
+import { GetJobMatchAnalysisByIdQuery } from "@/backend/modules/job-match-analysis";
 import { JobAnalysisChatContext } from "../../domain/value-objects/job-analysis-chat-context.value-object";
 import type { JobAnalysisChatContextReader } from "../../domain/repositories/job-analysis-chat-context.repository";
 

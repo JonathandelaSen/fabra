@@ -1,9 +1,9 @@
 import { act, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { renderHookWithProviders } from "@/frontend/testing/render";
-import { getMessages } from "@/i18n/messages";
-import { server } from "@/frontend/testing/msw/server";
+import { renderHookWithProviders } from "@/testing/render";
+import { getMessages } from "@/frontend/i18n/messages";
+import { server } from "@/testing/msw/server";
 import { useAnalysisChat } from "./use-analysis-chat";
 
 const ANALYSIS_ID = "analysis-1";

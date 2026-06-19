@@ -3,7 +3,7 @@ import {
   Timestamp,
   UserId,
   type UserId as UserIdType,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { UserEmail } from "../value-objects/user-email.value-object";
 
 export interface UserPrimitives {

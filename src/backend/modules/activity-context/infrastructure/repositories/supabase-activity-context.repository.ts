@@ -1,4 +1,4 @@
-import { BoundSupabaseRepository, Counter, EntityId, UserId } from "@/modules/shared";
+import { BoundSupabaseRepository, Counter, EntityId, UserId } from "@/backend/modules/shared";
 import { ActivityContext, type ActivityContextPrimitives, type ActivityContextStatus, type ActivityContextType } from "../../domain/entities/activity-context.entity";
 import type { ActivityContextRepository } from "../../domain/repositories/activity-context.repository";
 import { activityContextSuggestionKey } from "../../domain/services/suggest-activity-contexts.service";

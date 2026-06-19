@@ -1,7 +1,7 @@
 "use client";
 
 import type { ElementType, ReactNode } from "react";
-import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { AccordionContent, AccordionItem, AccordionTrigger } from "@/frontend/components/ui/accordion";
 
 interface ManualEditorBasicsItemProps {
   section: {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Timestamp, UserId } from "@/modules/shared";
+import { Timestamp, UserId } from "@/backend/modules/shared";
 import { WorkJournalContext } from "./journal-context.entity";
 import { WorkJournalContextId } from "../value-objects/work-journal-context-id.value-object";
 import { WorkJournalContextName } from "../value-objects/work-journal-context-name.value-object";

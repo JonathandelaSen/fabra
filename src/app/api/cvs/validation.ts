@@ -1,4 +1,4 @@
-import type { PublicCVSettingsRequest } from "@/modules/cv-library";
+import type { PublicCVSettingsRequest } from "@/backend/modules/cv-library";
 import { parseAIRequestConfig, type AIRequestConfig } from "@/app/api/_shared/ai-request";
 
 type Result<TValue, TError> =

@@ -1,5 +1,5 @@
-import { AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext, publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt, type EventBus } from "@/modules/shared";
-import type { AIProvider } from "@/modules/shared";
+import { AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext, publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt, type EventBus } from "@/backend/modules/shared";
+import type { AIProvider } from "@/backend/modules/shared";
 import { FeedbackClosedError } from "../../domain/errors/feedback-closed.error";
 import { FeedbackEntriesRequiredError } from "../../domain/errors/feedback-entries-required.error";
 import { FeedbackNotFoundError } from "../../domain/errors/feedback-not-found.error";

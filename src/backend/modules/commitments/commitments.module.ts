@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { instrumentUseCases, type Telemetry, type EventBus } from "@/modules/shared";
+import { instrumentUseCases, type Telemetry, type EventBus } from "@/backend/modules/shared";
 import { CreateCommitmentUseCase } from "./application/use-cases/create-commitment.use-case";
 import { CreateCommitmentItemUseCase } from "./application/use-cases/create-item.use-case";
 import { CreateCommitmentOutcomeUseCase } from "./application/use-cases/create-outcome.use-case";

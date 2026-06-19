@@ -1,6 +1,6 @@
-import { AuthForm, AuthHeroTitle } from "@/features/auth";
-import { getMessages } from "@/i18n/messages";
-import { resolveInterfaceLanguage } from "@/i18n/server";
+import { AuthForm, AuthHeroTitle } from "@/frontend/features/auth";
+import { getMessages } from "@/frontend/i18n/messages";
+import { resolveInterfaceLanguage } from "@/frontend/i18n/server";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 

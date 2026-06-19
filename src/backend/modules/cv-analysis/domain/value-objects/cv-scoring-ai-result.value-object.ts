@@ -1,4 +1,4 @@
-import { Counter, LongText, StringList, ValueObject } from "@/modules/shared";
+import { Counter, LongText, StringList, ValueObject } from "@/backend/modules/shared";
 import type { CVScoringAIResultPrimitives } from "../repositories/cv-scoring-ai.service";
 
 export class CVScoringAIResultVO extends ValueObject<CVScoringAIResultPrimitives> {

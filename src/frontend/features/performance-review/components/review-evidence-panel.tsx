@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { ArrowDown, ArrowUp, Briefcase, Plus, Star, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { LabelBadge } from "@/components/shared/label-badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+import { LabelBadge } from "@/frontend/components/shared/label-badge";
+import { Button } from "@/frontend/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
+import { Textarea } from "@/frontend/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { SegmentedControl } from "@/components/shared/segmented-control";
+import { SegmentedControl } from "@/frontend/components/shared/segmented-control";
 import type { EvidenceCandidate, EvidenceItem } from "../api/performance-review-api";
 
 const CANDIDATE_SOURCE_ORDER = [

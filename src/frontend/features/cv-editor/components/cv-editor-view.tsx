@@ -5,7 +5,7 @@ import { copyToClipboard } from "@/lib/clipboard";
 import { useTranslations } from "next-intl";
 import { AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle } from "@/frontend/components/ui/sheet";
 import { CVEditorEmptyState } from "./cv-editor-empty-state";
 import { CVEditorHeader } from "./cv-editor-header";
 import { CVEditorModals } from "./cv-editor-modals";
@@ -16,7 +16,7 @@ import { useCVEditorRouteState } from "../hooks/use-cv-editor-route-state";
 import { useCVEditorState } from "../hooks/use-cv-editor-state";
 import type { CVEditorTab } from "../types";
 const PDFPreview = dynamic(
-  () => import("@/components/shared/pdf-preview").then((mod) => mod.PDFPreview),
+  () => import("@/frontend/components/shared/pdf-preview").then((mod) => mod.PDFPreview),
   {
     ssr: false,
     loading: () => (

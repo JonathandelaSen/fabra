@@ -1,5 +1,5 @@
 import type { ProcessQuestionReadModel, ProcessQuestionRelatedCVPrimitives, ProcessQuestionRelatedAnalysisPrimitives } from "../../domain/value-objects/process-question-read-model.value-object";
-import { Timestamp, UserId, type EventBus } from "@/modules/shared";
+import { Timestamp, UserId, type EventBus } from "@/backend/modules/shared";
 import type {
   ProcessQuestionRepository,
 } from "../../domain/repositories/process-question.repository";

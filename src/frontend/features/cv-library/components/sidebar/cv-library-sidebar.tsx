@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { FileText, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { AnalysisSummary } from "@/lib/analysis-types";
-import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
+import { FeatureSidebarPanel } from "@/frontend/components/shared/feature-sidebar-panel";
 import type { CVDocumentListItem } from "../../api/cv-library-api";
 import { CVLibraryListItem } from "./cv-library-list-item";
 import { CVLibrarySearchInput } from "./cv-library-search-input";

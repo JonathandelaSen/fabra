@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
-import { Skeleton } from "@/components/ui/skeleton";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
+import { Skeleton } from "@/frontend/components/ui/skeleton";
 import { MetricCard } from "./metric-card";
 import { useGroupMetrics } from "../hooks/use-admin-metrics-queries";
 import type { MetricGroup } from "../constants";

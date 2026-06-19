@@ -4,8 +4,8 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { feedbackNotesModule } from "@/lib/container";
 import {
   presentFeedbackEntry,
-} from "@/modules/feedback-notes";
-import { ok, created, errorResponse } from "@/modules/shared";
+} from "@/backend/modules/feedback-notes";
+import { ok, created, errorResponse } from "@/backend/modules/shared";
 import { parseFeedbackEntryContentRequest } from "./validation";
 import {
   toFeedbackEntryResponse,

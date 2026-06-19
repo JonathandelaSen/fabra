@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { KeyRound, PenLine, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/frontend/components/shared/action-buttons";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import type { StandardCVProfile } from "@/lib/cv-profile";
 import type { CVTemplateId, CVTemplateLocale } from "@/lib/cv-templates";

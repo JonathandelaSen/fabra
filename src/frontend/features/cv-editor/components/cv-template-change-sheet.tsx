@@ -10,18 +10,18 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
+} from "@/frontend/components/ui/sheet";
 import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
+} from "@/frontend/components/shared/action-buttons";
 import {
   CV_TEMPLATES,
   type CVTemplateId,
   type CVTemplateLocale,
 } from "@/lib/cv-templates";
 import { cn } from "@/lib/utils";
-import { CVTemplatePreview } from "@/features/cv-templates";
+import { CVTemplatePreview } from "@/frontend/features/cv-templates";
 
 interface CVTemplateChangeSheetProps {
   activeTemplateId: CVTemplateId;

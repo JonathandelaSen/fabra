@@ -2,7 +2,7 @@ import {
   UserId,
   ValueObject,
   type UserId as UserIdType,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { UserEmail } from "./user-email.value-object";
 import { ImpersonationTokenHash } from "./impersonation-token-hash.value-object";
 

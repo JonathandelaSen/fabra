@@ -3,8 +3,8 @@ import type {
   ObjectiveWithRelations,
 } from "../../api/objectives-api";
 import { Target } from "lucide-react";
-import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
-import { SectionGroupHeader } from "@/components/shared/section-group-header";
+import { FeatureSidebarPanel } from "@/frontend/components/shared/feature-sidebar-panel";
+import { SectionGroupHeader } from "@/frontend/components/shared/section-group-header";
 import { ObjectivesSidebarSkeleton } from "../objectives-skeleton";
 import { ObjectiveListItem } from "./objective-list-item";
 

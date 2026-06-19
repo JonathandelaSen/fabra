@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { messages } from "../src/i18n/messages";
+import { messages } from "../src/frontend/i18n/messages";
 import { loginViaUI } from "./helpers/auth";
 import { createFixtureViaApi } from "./helpers/cv";
 import { uniqueLabel } from "./helpers/env";

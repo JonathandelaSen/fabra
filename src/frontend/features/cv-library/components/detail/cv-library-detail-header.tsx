@@ -3,7 +3,7 @@
 import { Pencil, Save, X, Trash2, Sparkles, Download } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { CVDocumentListItem } from "../../api/cv-library-api";
-import { LabelBadge, LABEL_BADGE_TONES } from "@/components/shared/label-badge";
+import { LabelBadge, LABEL_BADGE_TONES } from "@/frontend/components/shared/label-badge";
 import {
   ActionIconButton,
   ACTION_ICON_BUTTON_SIZES,
@@ -12,7 +12,7 @@ import {
   DeleteButton,
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
+} from "@/frontend/components/shared/action-buttons";
 
 interface CVLibraryDetailHeaderProps {
   selected: CVDocumentListItem;

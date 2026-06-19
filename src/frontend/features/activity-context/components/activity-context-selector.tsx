@@ -1,7 +1,7 @@
 import React from "react";
 import { Settings2 } from "lucide-react";
-import { Select } from "@/components/ui/select";
-import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import { Select } from "@/frontend/components/ui/select";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/frontend/components/shared/action-buttons";
 
 export interface ActivityContextSelectorProps {
   id?: string;

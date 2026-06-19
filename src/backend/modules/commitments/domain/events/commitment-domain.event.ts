@@ -1,4 +1,4 @@
-import type { DomainEvent } from "@/modules/shared";
+import type { DomainEvent } from "@/backend/modules/shared";
 
 export class CommitmentDomainEvent implements DomainEvent {
   readonly occurredAt = new Date();

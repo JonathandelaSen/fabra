@@ -3,7 +3,7 @@ import {
   Timestamp,
   UserId,
   type UserId as UserIdType,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { ConversationCreatedEvent } from "../events/conversation-created.event";
 import { ConversationRenamedEvent } from "../events/conversation-renamed.event";
 import { ConversationDeletedEvent } from "../events/conversation-deleted.event";

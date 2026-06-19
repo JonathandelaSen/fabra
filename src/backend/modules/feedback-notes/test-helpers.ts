@@ -1,6 +1,6 @@
 import {
   getSupabaseClient,
-} from "@/modules/test-helpers/setup";
+} from "@/backend/modules/test-helpers/setup";
 import { activityContextsModule } from "@/lib/container";
 import { SupabaseFeedbackEntryRepository } from "./infrastructure/repositories/supabase-feedback-entry.repository";
 import { SupabaseFeedbackRepository } from "./infrastructure/repositories/supabase-feedback.repository";

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { IsoDate, OptionalIsoDate, Timestamp, UserId } from "@/modules/shared";
+import { IsoDate, OptionalIsoDate, Timestamp, UserId } from "@/backend/modules/shared";
 import { WorkJournalEntry } from "./journal-entry.entity";
 import { WorkJournalContextId } from "../value-objects/work-journal-context-id.value-object";
 import { WorkJournalEntryId } from "../value-objects/work-journal-entry-id.value-object";

@@ -1,9 +1,9 @@
 import { ErrorCode } from "@/shared/error-codes";
-import { DomainError, ValueObject } from "@/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
 import {
   ASSISTANCE_MODE,
   type AssistanceMode,
-} from "@/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
+} from "@/backend/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
 
 export const SELF_ASSESSMENT_MODES = [
   ASSISTANCE_MODE.manual,

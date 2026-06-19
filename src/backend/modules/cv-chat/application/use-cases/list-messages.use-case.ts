@@ -1,4 +1,4 @@
-import { UserId } from "@/modules/shared";
+import { UserId } from "@/backend/modules/shared";
 import type { ChatMessage } from "../../domain/entities/chat-message.entity";
 import type { ChatMessageRepository } from "../../domain/repositories/chat-message.repository";
 import { CVChatConversationId } from "../../domain/value-objects/cv-chat-conversation-id.value-object";

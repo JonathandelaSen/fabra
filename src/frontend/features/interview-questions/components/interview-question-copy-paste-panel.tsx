@@ -2,12 +2,12 @@
 
 import { ClipboardList } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { CopyPasteTextPanel } from "@/components/shared/copy-paste-text-panel";
-import { CopyPasteDialog } from "@/components/shared/copy-paste-dialog";
+import { CopyPasteTextPanel } from "@/frontend/components/shared/copy-paste-text-panel";
+import { CopyPasteDialog } from "@/frontend/components/shared/copy-paste-dialog";
 import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
+} from "@/frontend/components/shared/action-buttons";
 import type { PrepareInterviewQuestionCopyPasteResponse } from "../api/interview-questions-api";
 import { useInterviewQuestionsCopyPaste } from "../hooks/use-interview-questions-copy-paste";
 

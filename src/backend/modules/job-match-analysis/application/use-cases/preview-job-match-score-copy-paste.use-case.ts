@@ -1,6 +1,6 @@
-import { UserId } from "@/modules/shared";
-import { extractCopyPasteJson } from "@/modules/shared/application/assisted-workflows/copy-paste-json-parser";
-import { validateCopyPasteEnvelope } from "@/modules/shared/application/assisted-workflows/copy-paste-json-envelope";
+import { UserId } from "@/backend/modules/shared";
+import { extractCopyPasteJson } from "@/backend/modules/shared/application/assisted-workflows/copy-paste-json-parser";
+import { validateCopyPasteEnvelope } from "@/backend/modules/shared/application/assisted-workflows/copy-paste-json-envelope";
 import type { JobMatchScoringAIResult } from "../../domain/repositories/job-match-scoring-ai.service";
 import type { JobMatchAnalysisRepository } from "../../domain/repositories/job-match-analysis.repository";
 import { JobMatchAnalysisId } from "../../domain/value-objects/job-match-analysis-id.value-object";

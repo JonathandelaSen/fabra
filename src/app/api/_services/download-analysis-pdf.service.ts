@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getErrorMessage } from "@/lib/errors";
 import { createClient } from "@/lib/supabase/server";
-import { CV_PDFS_BUCKET } from "@/modules/cv-library";
+import { CV_PDFS_BUCKET } from "@/backend/modules/cv-library";
 import { ErrorCode } from "@/shared/error-codes";
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;

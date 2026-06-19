@@ -1,4 +1,4 @@
-import { Timestamp, UserId, type EventBus } from "@/modules/shared";
+import { Timestamp, UserId, type EventBus } from "@/backend/modules/shared";
 import type { FollowUp } from "../../domain/entities/follow-up.entity";
 import type { FollowUpRepository } from "../../domain/repositories/follow-up.repository";
 import { FollowUpStatus } from "../../domain/value-objects/follow-up-status.value-object";

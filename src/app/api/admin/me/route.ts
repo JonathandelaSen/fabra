@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { isAdminUser } from "@/lib/observability";
-import { ok } from "@/modules/shared";
+import { ok } from "@/backend/modules/shared";
 import type { GetAdminMeResponse } from "./responses";
 
 export async function GET() {

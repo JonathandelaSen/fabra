@@ -46,9 +46,9 @@ function parseModulePath(relativePath) {
 }
 
 function shouldCheckSource(relativePath) {
-  if (!relativePath.startsWith("src/modules/")) return false;
+  if (!relativePath.startsWith("src/backend/modules/")) return false;
   if (relativePath.endsWith(".test.ts")) return false;
-  if (relativePath.startsWith("src/modules/test-helpers/")) return false;
+  if (relativePath.startsWith("src/backend/modules/test-helpers/")) return false;
   return parseModulePath(relativePath) !== null;
 }
 
@@ -74,13 +74,13 @@ function violationForImport(sourceInfo, targetInfo, targetRelativePath) {
 
   if (
     sourceInfo.moduleName !== targetInfo.moduleName &&
-    targetRelativePath.startsWith("src/modules/") &&
+    targetRelativePath.startsWith("src/backend/modules/") &&
     targetInfo.layer !== "composition"
   ) {
     return {
       rule: "cross-module-internal-import",
       reason:
-        "Feature modules should depend on their own internals or shared ports, not another feature module's internals. Use barrel imports (@/modules/<name>) for cross-module access.",
+        "Feature modules should depend on their own internals or shared ports, not another feature module's internals. Use barrel imports (@/backend/modules/<name>) for cross-module access.",
     };
   }
 
@@ -117,7 +117,7 @@ function violationForImport(sourceInfo, targetInfo, targetRelativePath) {
 }
 
 export async function findDddImportViolations({ rootDir = repoRoot } = {}) {
-  const modulesDir = path.join(rootDir, "src/modules");
+  const modulesDir = path.join(rootDir, "src/backend/modules");
   const files = (await walkFiles(modulesDir))
     .map((filePath) => toPosixRelative(rootDir, filePath))
     .filter(shouldCheckSource)

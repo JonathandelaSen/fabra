@@ -10,11 +10,11 @@ import {
   ACTION_ICON_BUTTON_TONES,
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
+} from "@/frontend/components/shared/action-buttons";
 import { ObjectiveIdentitySection } from "./objective-identity-section";
 import { ObjectivePlanningSection } from "./objective-planning-section";
 import { ObjectiveNarrativeSection } from "./objective-narrative-section";
-import { BasicPanel } from "@/components/shared/basic-panel";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 
 interface ObjectiveFormPanelProps {
   contexts: ObjectiveContext[];

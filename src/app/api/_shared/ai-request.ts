@@ -1,4 +1,4 @@
-import { isAIProvider, type AIProvider } from "@/modules/shared";
+import { isAIProvider, type AIProvider } from "@/backend/modules/shared";
 
 export interface AIRequestConfig {
   provider: AIProvider;

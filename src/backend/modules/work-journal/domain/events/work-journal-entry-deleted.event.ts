@@ -1,4 +1,4 @@
-import type { DomainEvent } from "@/modules/shared";
+import type { DomainEvent } from "@/backend/modules/shared";
 
 export class WorkJournalEntryDeletedEvent implements DomainEvent<{ entryId: string }> {
   readonly eventName = "work_journal_entry_deleted";

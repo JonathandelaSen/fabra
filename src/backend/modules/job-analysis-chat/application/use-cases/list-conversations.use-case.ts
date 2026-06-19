@@ -1,4 +1,4 @@
-import { UserId } from "@/modules/shared";
+import { UserId } from "@/backend/modules/shared";
 import type { Conversation } from "../../domain/entities/conversation.entity";
 import type { ConversationRepository } from "../../domain/repositories/conversation.repository";
 import { AnalysisReference } from "../../domain/value-objects/analysis-reference.value-object";

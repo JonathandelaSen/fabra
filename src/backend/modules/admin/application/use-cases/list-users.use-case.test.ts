@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createTestUser } from "@/modules/test-helpers/setup";
+import { createTestUser } from "@/backend/modules/test-helpers/setup";
 import { SupabaseUserRepository } from "../../infrastructure/repositories/supabase-user.repository";
 import { ListUsersUseCase, USERS_PER_PAGE } from "./list-users.use-case";
 

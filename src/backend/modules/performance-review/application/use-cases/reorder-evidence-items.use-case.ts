@@ -1,4 +1,4 @@
-import { Timestamp, UserId, type EventBus } from "@/modules/shared";
+import { Timestamp, UserId, type EventBus } from "@/backend/modules/shared";
 import type { ReviewEvidenceItem } from "../../domain/entities/review-evidence-item.entity";
 import { PerformanceReviewNotFoundError } from "../../domain/errors/performance-review-not-found.error";
 import { ReviewEvidenceItemNotFoundError } from "../../domain/errors/review-evidence-item-not-found.error";

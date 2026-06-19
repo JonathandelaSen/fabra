@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 import type { OpportunitiesContentMetricsPrimitives } from "./opportunities-content-metrics.value-object";
 import { OpportunitiesContentMetrics } from "./opportunities-content-metrics.value-object";
 import { ContentMetricsWindowDays } from "./content-metrics-window-days.value-object";

@@ -2,7 +2,7 @@
 
 import { useFormStatus } from "react-dom";
 import { LogOut } from "lucide-react";
-import { IconTextButton } from "@/components/shared/action-buttons";
+import { IconTextButton } from "@/frontend/components/shared/action-buttons";
 
 interface SignOutButtonProps {
   label: string;

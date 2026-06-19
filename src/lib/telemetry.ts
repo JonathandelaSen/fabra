@@ -1,5 +1,5 @@
-import type { Telemetry } from "@/modules/shared";
-import { NoOpTelemetry, SentryTelemetry } from "@/modules/shared";
+import type { Telemetry } from "@/backend/modules/shared";
+import { NoOpTelemetry, SentryTelemetry } from "@/backend/modules/shared";
 import { isTechnicalObservabilityEnabled } from "@/lib/technical-observability-policy";
 
 export {

@@ -7,14 +7,14 @@ import { cvLibraryModule, jobMatchAnalysisModule } from "@/lib/container";
 import {
   presentJobMatchAnalysis,
   presentJobMatchAnalysisSummary,
-} from "@/modules/job-match-analysis";
+} from "@/backend/modules/job-match-analysis";
 import { parseCreateJobMatchAnalysisRequest } from "./validation";
 import {
   toJobMatchAnalysisSummaryResponse,
   toJobMatchAnalysisDetailResponse,
   type JobMatchAnalysisOfferStatus,
 } from "./responses";
-import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
+import { ok, errorResponse, notFound, badRequest } from "@/backend/modules/shared";
 
 const ROUTE_SOURCE = "api_job_match_analyses";
 

@@ -1,4 +1,4 @@
-import { UserId } from "@/modules/shared";
+import { UserId } from "@/backend/modules/shared";
 import type { WorkJournalContextSuggestion } from "../../domain/value-objects/context-suggestion.value-object";
 import type { WorkJournalContextRepository } from "../../domain/repositories/work-journal-context.repository";
 import type { CVDataRepository } from "../../domain/repositories/cv-data.repository";

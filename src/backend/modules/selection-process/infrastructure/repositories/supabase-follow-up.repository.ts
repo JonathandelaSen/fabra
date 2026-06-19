@@ -1,4 +1,4 @@
-import { BoundSupabaseRepository, type UserId } from "@/modules/shared";
+import { BoundSupabaseRepository, type UserId } from "@/backend/modules/shared";
 import { FollowUp } from "../../domain/entities/follow-up.entity";
 import type { FollowUpRepository } from "../../domain/repositories/follow-up.repository";
 

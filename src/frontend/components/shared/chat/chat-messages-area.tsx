@@ -4,7 +4,7 @@ import type { RefObject } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Bot, Loader2 } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/frontend/components/ui/scroll-area";
 import { ChatBubble } from "./chat-bubble";
 import { ChatEmptyState } from "./chat-empty-state";
 import { ChatEmptyChat } from "./chat-empty-chat";

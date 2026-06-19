@@ -1,5 +1,5 @@
 import type { AIInteractionEvent } from "../entities/ai-interaction-event.entity";
-import type { UserId } from "@/modules/shared";
+import type { UserId } from "@/backend/modules/shared";
 
 export interface AIInteractionEventRepository {
   save(event: AIInteractionEvent): Promise<AIInteractionEvent>;

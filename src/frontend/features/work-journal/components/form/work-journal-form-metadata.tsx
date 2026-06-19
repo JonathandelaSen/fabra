@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import type { WorkJournalContext } from "../../api/work-journal-types";
-import { ActivityContextSelector } from "@/features/activity-context";
+import { ActivityContextSelector } from "@/frontend/features/activity-context";
 
 const inputClass =
   "w-full bg-transparent border-b border-line-strong px-0 py-2 text-[15px] font-medium text-text-main placeholder:text-text-faint outline-none transition-colors focus:border-action-border/50 focus:ring-0";

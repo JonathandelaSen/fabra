@@ -12,7 +12,7 @@ import {
   Zap,
 } from "lucide-react";
 import { getErrorMessage } from "@/lib/errors";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
 import NewAnalysisExistingCV from "./new-analysis-existing-cv";
 import NewAnalysisJsonResume from "./new-analysis-json-resume";
 import NewAnalysisUploadCV from "./new-analysis-upload-cv";

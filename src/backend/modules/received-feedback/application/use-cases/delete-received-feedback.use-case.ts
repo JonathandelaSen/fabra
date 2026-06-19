@@ -1,4 +1,4 @@
-import { UserId, type EventBus } from "@/modules/shared";
+import { UserId, type EventBus } from "@/backend/modules/shared";
 import { ReceivedFeedbackNotFoundError } from "../../domain/errors/received-feedback-not-found.error";
 import type { ReceivedFeedbackRepository } from "../../domain/repositories/received-feedback.repository";
 import { ReceivedFeedbackId } from "../../domain/value-objects/received-feedback-id.value-object";

@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { EventBus } from "@/modules/shared";
+import type { EventBus } from "@/backend/modules/shared";
 import { CVAnalysis } from "../../domain/entities/cv-analysis.entity";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
 
 interface CVLibrarySidebarErrorProps {
   error: string | null;

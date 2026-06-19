@@ -1,6 +1,6 @@
 import { Feedback } from "../../domain/entities/feedback.entity";
 import { FeedbackRepository } from "../../domain/repositories/feedback.repository";
-import { notFound } from "@/modules/shared";
+import { notFound } from "@/backend/modules/shared";
 
 interface Dependencies {
   feedbackRepo: FeedbackRepository;

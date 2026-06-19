@@ -2,7 +2,7 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { aiInteractionsModule } from "@/lib/container";
 import { isAdminUser } from "@/lib/observability";
-import { forbidden, ok } from "@/modules/shared";
+import { forbidden, ok } from "@/backend/modules/shared";
 import type { ListAdminAIInteractionsResponse } from "./responses";
 
 export async function GET() {

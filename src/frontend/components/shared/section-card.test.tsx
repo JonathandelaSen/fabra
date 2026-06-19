@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { renderWithProviders } from "@/frontend/testing/render";
+import { renderWithProviders } from "@/testing/render";
 import { SectionCard } from "./section-card";
 import { forwardRef } from "react";
 import type { LucideIcon } from "lucide-react";

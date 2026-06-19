@@ -1,4 +1,4 @@
-import { ExecutionResult, UserId, type EventBus } from "@/modules/shared";
+import { ExecutionResult, UserId, type EventBus } from "@/backend/modules/shared";
 import type { PerformanceReviewRepository } from "../../domain/repositories/performance-review.repository";
 import { PerformanceReviewId } from "../../domain/value-objects/performance-review-id.value-object";
 

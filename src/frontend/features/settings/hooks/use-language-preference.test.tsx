@@ -2,9 +2,9 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { getMessages } from "@/i18n/messages";
-import { server } from "@/frontend/testing/msw/server";
-import { I18nProvider } from "@/components/shared/i18n-provider";
+import { getMessages } from "@/frontend/i18n/messages";
+import { server } from "@/testing/msw/server";
+import { I18nProvider } from "@/frontend/components/shared/i18n-provider";
 import { useLanguagePreference } from "./use-language-preference";
 
 function Wrapper({ children }: { children: ReactNode }) {

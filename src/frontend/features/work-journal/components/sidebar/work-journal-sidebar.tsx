@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { BookOpenText } from "lucide-react";
-import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
+import { FeatureSidebarPanel } from "@/frontend/components/shared/feature-sidebar-panel";
 import type {
   WorkJournalEntry,
   WorkJournalContext,

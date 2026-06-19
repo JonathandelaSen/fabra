@@ -3,9 +3,9 @@ import {
   createTestUser,
   getSupabaseClient,
   testLabel,
-} from "@/modules/test-helpers/setup";
-import { createTestCV } from "@/modules/test-helpers/cv-fixtures";
-import { UserId } from "@/modules/shared";
+} from "@/backend/modules/test-helpers/setup";
+import { createTestCV } from "@/backend/modules/test-helpers/cv-fixtures";
+import { UserId } from "@/backend/modules/shared";
 import { SupabaseCVChatConversationRepository } from "./supabase-conversation.repository";
 import { CVChatConversationId } from "../../domain/value-objects/cv-chat-conversation-id.value-object";
 import { CVDocumentReference } from "../../domain/value-objects/cv-document-reference.value-object";

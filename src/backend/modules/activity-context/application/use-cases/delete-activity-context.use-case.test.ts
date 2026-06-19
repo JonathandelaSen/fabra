@@ -1,4 +1,4 @@
-import { Counter, EntityId, UserId } from "@/modules/shared";
+import { Counter, EntityId, UserId } from "@/backend/modules/shared";
 import { describe, expect, it, vi } from "vitest";
 import { ActivityContext } from "../../domain/entities/activity-context.entity";
 import { DeleteActivityContextUseCase } from "./delete-activity-context.use-case";

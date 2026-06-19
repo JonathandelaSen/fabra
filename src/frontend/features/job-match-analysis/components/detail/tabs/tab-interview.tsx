@@ -11,7 +11,7 @@ import {
 import { useTranslations } from "next-intl";
 import type { InterviewQuestionSummary } from "../../../types";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
-import AIActionLauncher from "@/components/shared/ai-action-launcher";
+import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher";
 
 interface TabInterviewProps {
   interviewQuestions: InterviewQuestionSummary[];

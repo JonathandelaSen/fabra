@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { CheckCircle2 } from "lucide-react";
-import { JsonResumeImport } from "@/features/cv-library";
+import { JsonResumeImport } from "@/frontend/features/cv-library";
 
 export function NewJobMatchJsonResumeSelector({
   importedCvId,

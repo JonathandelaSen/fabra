@@ -1,4 +1,4 @@
-import type { DomainEvent } from "@/modules/shared";
+import type { DomainEvent } from "@/backend/modules/shared";
 
 export class FeedbackReopenedEvent implements DomainEvent<{ feedbackId: string }> {
   readonly eventName = "feedback_reopened";

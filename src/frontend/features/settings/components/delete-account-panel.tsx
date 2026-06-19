@@ -4,10 +4,10 @@ import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { AlertCircle, Trash2 } from "lucide-react";
 import { deleteAccount, type AuthFormState } from "@/app/login/actions";
-import { DeleteButton } from "@/components/shared/action-buttons";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
-import { isValidEmail, isValidPassword } from "@/frontend/auth-validation";
+import { DeleteButton } from "@/frontend/components/shared/action-buttons";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
+import { useInterfaceLanguage } from "@/frontend/components/shared/i18n-provider";
+import { isValidEmail, isValidPassword } from "@/frontend/utils/auth-validation";
 
 const INITIAL_STATE: AuthFormState = {};
 

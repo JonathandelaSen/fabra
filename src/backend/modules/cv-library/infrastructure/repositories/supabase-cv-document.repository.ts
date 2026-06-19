@@ -1,4 +1,4 @@
-import { BoundSupabaseRepository } from "@/modules/shared";
+import { BoundSupabaseRepository } from "@/backend/modules/shared";
 import { normalizeStandardCVProfile } from "../../domain/cv-profile";
 import { CVDocument } from "../../domain/entities/cv-document.entity";
 import type {
@@ -6,7 +6,7 @@ import type {
   CVDocumentSearchCriteria,
 } from "../../domain/repositories/cv-document.repository";
 import type { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
-import type { UserId } from "@/modules/shared";
+import type { UserId } from "@/backend/modules/shared";
 
 import type { CVDocumentTypePrimitives } from "../../domain/value-objects/cv-document-type.value-object";
 import { CV_PDFS_BUCKET } from "../../domain/services/cv-storage";

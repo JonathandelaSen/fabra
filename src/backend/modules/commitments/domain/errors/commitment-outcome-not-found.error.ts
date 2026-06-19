@@ -1,4 +1,4 @@
-import { DomainError } from "@/modules/shared/domain/errors/domain-error";
+import { DomainError } from "@/backend/modules/shared/domain/errors/domain-error";
 import { ErrorCode } from "@/shared/error-codes";
 
 export class CommitmentOutcomeNotFoundError extends DomainError {

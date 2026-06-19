@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { ProviderJobAnalysisChatAIServiceFactory } from "@/modules/job-analysis-chat/infrastructure/services/provider-job-analysis-chat-ai-service.factory";
-import { ProviderCVScoringAIServiceFactory } from "@/modules/cv-analysis/infrastructure/services/provider-cv-scoring-ai-service.factory";
-import { ProviderCVProfileEditingAIServiceFactory } from "@/modules/cv-library/infrastructure/services/provider-cv-profile-editing-ai-service.factory";
-import { ProviderCVProfileStructuringAIServiceFactory } from "@/modules/cv-library/infrastructure/services/provider-cv-profile-structuring-ai-service.factory";
-import { ProviderFeedbackAIServiceFactory } from "@/modules/feedback-notes/infrastructure/services/provider-feedback-ai-service.factory";
-import { ProviderJobMatchScoringAIServiceFactory } from "@/modules/job-match-analysis/infrastructure/services/provider-job-match-scoring-ai-service.factory";
-import { ProviderInterviewQuestionAIServiceFactory } from "@/modules/selection-process/infrastructure/services/provider-interview-question-ai-service.factory";
-import { ProviderJournalAIServiceFactory } from "@/modules/work-journal/infrastructure/services/provider-journal-ai-service.factory";
+import { ProviderJobAnalysisChatAIServiceFactory } from "@/backend/modules/job-analysis-chat/infrastructure/services/provider-job-analysis-chat-ai-service.factory";
+import { ProviderCVScoringAIServiceFactory } from "@/backend/modules/cv-analysis/infrastructure/services/provider-cv-scoring-ai-service.factory";
+import { ProviderCVProfileEditingAIServiceFactory } from "@/backend/modules/cv-library/infrastructure/services/provider-cv-profile-editing-ai-service.factory";
+import { ProviderCVProfileStructuringAIServiceFactory } from "@/backend/modules/cv-library/infrastructure/services/provider-cv-profile-structuring-ai-service.factory";
+import { ProviderFeedbackAIServiceFactory } from "@/backend/modules/feedback-notes/infrastructure/services/provider-feedback-ai-service.factory";
+import { ProviderJobMatchScoringAIServiceFactory } from "@/backend/modules/job-match-analysis/infrastructure/services/provider-job-match-scoring-ai-service.factory";
+import { ProviderInterviewQuestionAIServiceFactory } from "@/backend/modules/selection-process/infrastructure/services/provider-interview-question-ai-service.factory";
+import { ProviderJournalAIServiceFactory } from "@/backend/modules/work-journal/infrastructure/services/provider-journal-ai-service.factory";
 
 function createDeps() {
   return {

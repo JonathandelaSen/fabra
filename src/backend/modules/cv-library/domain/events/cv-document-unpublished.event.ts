@@ -1,4 +1,4 @@
-import type { DomainEvent } from "@/modules/shared";
+import type { DomainEvent } from "@/backend/modules/shared";
 
 export class CVDocumentUnpublishedEvent implements DomainEvent<{ documentId: string }> {
   readonly eventName = "cv_document_unpublished";

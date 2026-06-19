@@ -4,9 +4,9 @@ import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { getBestCVText, getCVSourceTextHash } from "@/lib/cv-profile";
 import { cvLibraryModule } from "@/lib/container";
-import { presentCVDocument, presentCVStructuredProfile } from "@/modules/cv-library";
+import { presentCVDocument, presentCVStructuredProfile } from "@/backend/modules/cv-library";
 import { parseStructureCVProfileRequest } from "./validation";
-import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
+import { ok, errorResponse, notFound, badRequest } from "@/backend/modules/shared";
 
 export async function GET(
   _req: NextRequest,

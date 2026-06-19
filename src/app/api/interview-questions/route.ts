@@ -7,8 +7,8 @@ import {
   validateQuestionLinks,
 } from "./validation";
 import { selectionProcessModule } from "@/lib/container";
-import { presentProcessQuestion, presentProcessQuestions } from "@/modules/selection-process";
-import { ok, created, errorResponse } from "@/modules/shared";
+import { presentProcessQuestion, presentProcessQuestions } from "@/backend/modules/selection-process";
+import { ok, created, errorResponse } from "@/backend/modules/shared";
 import {
   toInterviewQuestionResponse,
   toInterviewQuestionResponses,

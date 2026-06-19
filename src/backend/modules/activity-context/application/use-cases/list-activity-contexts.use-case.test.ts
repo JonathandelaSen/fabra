@@ -1,4 +1,4 @@
-import { UserId } from "@/modules/shared";
+import { UserId } from "@/backend/modules/shared";
 import { describe, expect, it, vi } from "vitest";
 import { ListActivityContextsUseCase } from "./list-activity-contexts.use-case";
 

@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import {
   clearImpersonationMarker,
   setImpersonationMarker,
-} from "@/frontend/impersonation-storage";
+} from "@/frontend/utils/impersonation-storage";
 import { impersonateUser } from "../api/admin-users-api";
 
 export function useImpersonateUser() {

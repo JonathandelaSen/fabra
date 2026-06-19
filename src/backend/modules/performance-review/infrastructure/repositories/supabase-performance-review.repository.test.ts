@@ -3,8 +3,8 @@ import {
   IsoDate,
   Timestamp,
   UserId,
-} from "@/modules/shared";
-import { createTestUser, getSupabaseClient } from "@/modules/test-helpers/setup";
+} from "@/backend/modules/shared";
+import { createTestUser, getSupabaseClient } from "@/backend/modules/test-helpers/setup";
 import { PerformanceReview } from "../../domain/entities/performance-review.entity";
 import { PerformanceReviewId } from "../../domain/value-objects/performance-review-id.value-object";
 import { ReviewTitle } from "../../domain/value-objects/review-title.value-object";

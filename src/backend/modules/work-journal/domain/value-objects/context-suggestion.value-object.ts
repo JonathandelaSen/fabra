@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 import { WorkJournalContextName } from "./work-journal-context-name.value-object";
 import { type ContextType, WorkJournalContextType } from "./work-journal-context-type.value-object";
 import { WorkJournalIsCurrent } from "./work-journal-is-current.value-object";

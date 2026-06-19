@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import type { Analysis, CVRecord } from "@/lib/analysis-types";
 import { ErrorCode } from "@/shared/error-codes";
-import { badRequest } from "@/modules/shared";
+import { badRequest } from "@/backend/modules/shared";
 import {
   OFFER_CHAT_SYSTEM_PROMPT,
   buildOfferChatPrompt,

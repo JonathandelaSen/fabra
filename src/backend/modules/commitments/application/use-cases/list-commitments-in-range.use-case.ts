@@ -1,4 +1,4 @@
-import { UserId } from "@/modules/shared";
+import { UserId } from "@/backend/modules/shared";
 import type { CommitmentRepository } from "../../domain/repositories/commitment.repository";
 import { Commitment } from "../../domain/entities/commitment.entity";
 

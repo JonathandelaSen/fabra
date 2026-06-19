@@ -1,7 +1,7 @@
-import { UserId, type QueryBus } from "@/modules/shared";
-import { ListCommitmentsInRangeQuery, type CommitmentPrimitives } from "@/modules/commitments";
-import { ListJournalEntriesInRangeQuery, type WorkJournalEntryPrimitives } from "@/modules/work-journal";
-import { ListReceivedFeedbackInRangeQuery, type ReceivedFeedbackPrimitives } from "@/modules/received-feedback";
+import { UserId, type QueryBus } from "@/backend/modules/shared";
+import { ListCommitmentsInRangeQuery, type CommitmentPrimitives } from "@/backend/modules/commitments";
+import { ListJournalEntriesInRangeQuery, type WorkJournalEntryPrimitives } from "@/backend/modules/work-journal";
+import { ListReceivedFeedbackInRangeQuery, type ReceivedFeedbackPrimitives } from "@/backend/modules/received-feedback";
 import { PerformanceReviewNotFoundError } from "../../domain/errors/performance-review-not-found.error";
 import type { PerformanceReviewRepository } from "../../domain/repositories/performance-review.repository";
 import { EVIDENCE_SOURCE } from "../../domain/value-objects/evidence-source.value-object";

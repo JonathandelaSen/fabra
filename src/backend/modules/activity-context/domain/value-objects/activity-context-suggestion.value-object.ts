@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 import type { ActivityContextType } from "../entities/activity-context.entity";
 import { ActivityContextIsCurrent } from "./activity-context-is-current.value-object";
 import { ActivityContextRoleOrLabel } from "./activity-context-role-or-label.value-object";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import CopyPasteWorkflowModal from "@/components/shared/copy-paste-workflow-modal";
+import CopyPasteWorkflowModal from "@/frontend/components/shared/copy-paste-workflow-modal";
 import type { SelfAssessmentCopyPasteResponse } from "../api/performance-review-api";
 import {
   useSelfAssessmentCopyPaste,

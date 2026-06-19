@@ -3,8 +3,8 @@ import {
   createTestUser,
   getSupabaseClient,
   testLabel,
-} from "@/modules/test-helpers/setup";
-import { createTestCV } from "@/modules/test-helpers/cv-fixtures";
+} from "@/backend/modules/test-helpers/setup";
+import { createTestCV } from "@/backend/modules/test-helpers/cv-fixtures";
 import { SupabaseCVDataRepository } from "./supabase-cv-data.repository";
 
 const supabase = getSupabaseClient();

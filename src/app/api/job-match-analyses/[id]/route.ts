@@ -6,13 +6,13 @@ import {
   jobMatchAnalysisModule,
   selectionProcessModule,
 } from "@/lib/container";
-import { presentJobMatchAnalysis } from "@/modules/job-match-analysis";
+import { presentJobMatchAnalysis } from "@/backend/modules/job-match-analysis";
 import { parseUpdateJobMatchAnalysisRequest } from "./validation";
 import {
   toJobMatchAnalysisDetailResponse,
   type JobMatchAnalysisOfferStatus,
 } from "./responses";
-import { ok, errorResponse, notFound } from "@/modules/shared";
+import { ok, errorResponse, notFound } from "@/backend/modules/shared";
 
 interface FollowUpTrackingRow {
   status: JobMatchAnalysisOfferStatus;

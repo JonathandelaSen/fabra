@@ -7,7 +7,7 @@ import {
   UserId,
   type AIProvider,
   type EventBus,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import type {
   ProcessQuestionRepository,
 } from "../../domain/repositories/process-question.repository";

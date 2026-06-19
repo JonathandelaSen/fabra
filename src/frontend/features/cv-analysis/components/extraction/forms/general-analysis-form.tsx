@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import type { AIContext } from "@/lib/analysis-types";
-import { BasicPanel } from "@/components/shared/basic-panel";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 import { GeneralAnalysisFormHeader } from "./general-analysis-form-header";
 import { GeneralAnalysisActionLauncher } from "./general-analysis-action-launcher";
 

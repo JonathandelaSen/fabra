@@ -1,4 +1,4 @@
-import { UserId } from "@/modules/shared";
+import { UserId } from "@/backend/modules/shared";
 import type { PerformanceReview } from "../../domain/entities/performance-review.entity";
 import type { PerformanceReviewRepository } from "../../domain/repositories/performance-review.repository";
 

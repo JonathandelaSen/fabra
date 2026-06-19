@@ -1,6 +1,6 @@
 import { act } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { renderHookWithProviders } from "@/frontend/testing/render";
+import { renderHookWithProviders } from "@/testing/render";
 import { useJobMatchCopyPasteApplied } from "./use-job-match-copy-paste-applied";
 
 const LIST_KEY = ["job-match-analyses", "list"] as const;

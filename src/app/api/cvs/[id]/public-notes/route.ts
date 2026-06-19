@@ -2,8 +2,8 @@ import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { cvLibraryModule } from "@/lib/container";
-import { ok, errorResponse } from "@/modules/shared";
-import type { CVPublicNoteAnchorType } from "@/modules/cv-library";
+import { ok, errorResponse } from "@/backend/modules/shared";
+import type { CVPublicNoteAnchorType } from "@/backend/modules/cv-library";
 import type { ListPublicCVNotesResponse, ReplacePublicCVNotesResponse } from "./responses";
 const present = (notes: Awaited<ReturnType<typeof cvLibraryModule.listCVPublicNotes.execute>>) => notes.map((note) => { const p = note.toPrimitives(); return { id: p.id, anchorType: p.anchorType, sectionId: p.sectionId, anchorId: p.anchorId, body: p.body }; });
 

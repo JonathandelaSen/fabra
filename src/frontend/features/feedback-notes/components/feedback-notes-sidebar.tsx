@@ -8,11 +8,11 @@ import { MessageSquareQuote, Plus, RefreshCw } from "lucide-react";
 import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
-import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
-import { SegmentedControl } from "@/components/shared/segmented-control";
+} from "@/frontend/components/shared/action-buttons";
+import { FeatureSidebarPanel } from "@/frontend/components/shared/feature-sidebar-panel";
+import { SegmentedControl } from "@/frontend/components/shared/segmented-control";
 import type { FeedbackFilter, FeedbackListItem } from "../api/feedback-notes-api";
-import { ActivityContextSelector, type ActivityContext } from "@/features/activity-context";
+import { ActivityContextSelector, type ActivityContext } from "@/frontend/features/activity-context";
 import { FeedbackNotesListSkeleton } from "./feedback-notes-skeleton";
 import { FeedbackNoteListItem } from "./feedback-note-list-item";
 

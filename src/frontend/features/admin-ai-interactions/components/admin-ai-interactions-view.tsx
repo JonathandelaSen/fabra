@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
-import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import { Button } from "@/components/ui/button";
+import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
+import { Button } from "@/frontend/components/ui/button";
 import { useAdminAIInteractions } from "../hooks/use-admin-ai-interactions";
 import { AIInteractionCard } from "./ai-interaction-card";
 import { AIInteractionComparison } from "./ai-interaction-comparison";

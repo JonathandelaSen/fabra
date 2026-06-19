@@ -3,8 +3,8 @@ import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { jobAnalysisChatModule } from "@/lib/container";
 import { createRequestId } from "@/lib/observability";
-import { badRequest, errorResponse, notFound, ok } from "@/modules/shared";
-import { presentMessage } from "@/modules/job-analysis-chat";
+import { badRequest, errorResponse, notFound, ok } from "@/backend/modules/shared";
+import { presentMessage } from "@/backend/modules/job-analysis-chat";
 import { parseApplyOfferChatCopyPasteRequest } from "./validation";
 import type { ApplyOfferChatCopyPasteResponse } from "./responses";
 

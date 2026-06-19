@@ -4,7 +4,7 @@ import {
   NoOpTelemetry,
   Timestamp,
   UserId,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { ChatMessage } from "../../domain/entities/chat-message.entity";
 import { Conversation } from "../../domain/entities/conversation.entity";
 import type { ChatMessageRepository } from "../../domain/repositories/chat-message.repository";

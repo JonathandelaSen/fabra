@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 import { ChatMessage, type ChatMessagePrimitives } from "../entities/chat-message.entity";
 
 export interface JobAnalysisChatExchangePrimitives {

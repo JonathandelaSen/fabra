@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/utils/ai-models";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
+import { FeatureHeaderActionButton } from "@/frontend/components/shared/feature-header-action-button";
 import { getErrorMessage } from "@/lib/errors";
-import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
-import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
+import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
+import { FeatureTwoPaneLayout } from "@/frontend/components/shared/feature-two-pane-layout";
+import { useIsDesktopLayout } from "@/frontend/components/shared/use-is-desktop-layout";
 import {
   useWorkJournalContexts,
   useWorkJournalEntries,

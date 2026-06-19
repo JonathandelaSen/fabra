@@ -3,7 +3,7 @@ import {
   Timestamp,
   UserId,
   type UserId as UserIdType,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { CVDocumentCreatedEvent } from "../events/cv-document-created.event";
 import { CVDocumentDeletedEvent } from "../events/cv-document-deleted.event";
 import { CVDocumentExtractedTextUpdatedEvent } from "../events/cv-document-extracted-text-updated.event";

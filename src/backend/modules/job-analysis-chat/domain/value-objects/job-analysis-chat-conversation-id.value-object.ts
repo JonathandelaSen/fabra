@@ -1,4 +1,4 @@
-import { EntityId } from "@/modules/shared";
+import { EntityId } from "@/backend/modules/shared";
 
 export class JobAnalysisChatConversationId extends EntityId {
   private constructor(value: string) {

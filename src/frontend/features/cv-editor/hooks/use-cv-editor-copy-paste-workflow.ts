@@ -1,6 +1,6 @@
 "use client";
 
-import { useCopyPasteWorkflowState } from "@/components/shared/use-copy-paste-workflow-state";
+import { useCopyPasteWorkflowState } from "@/frontend/components/shared/use-copy-paste-workflow-state";
 import type { ApplyCVEditorCopyPasteResponse } from "../types";
 import {
   applyCVEditorCopyPaste,

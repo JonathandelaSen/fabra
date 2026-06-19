@@ -1,4 +1,4 @@
-import type { DomainEvent } from "@/modules/shared";
+import type { DomainEvent } from "@/backend/modules/shared";
 
 export class ActivityContextDeletedEvent implements DomainEvent<{ contextId: string }> {
   readonly eventName = "activity_context_deleted";

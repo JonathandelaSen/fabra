@@ -2,8 +2,8 @@ import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { activityContextsModule, receivedFeedbackModule } from "@/lib/container";
-import { presentReceivedFeedback } from "@/modules/received-feedback";
-import { ok, created, errorResponse } from "@/modules/shared";
+import { presentReceivedFeedback } from "@/backend/modules/received-feedback";
+import { ok, created, errorResponse } from "@/backend/modules/shared";
 import { parseCreateReceivedFeedbackRequest } from "./validation";
 import {
   toReceivedFeedbackResponse,

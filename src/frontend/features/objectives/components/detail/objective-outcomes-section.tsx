@@ -7,11 +7,11 @@ import {
   ACTION_ICON_BUTTON_TONES,
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select } from "@/components/ui/select";
-import { BasicPanel } from "@/components/shared/basic-panel";
+} from "@/frontend/components/shared/action-buttons";
+import { Input } from "@/frontend/components/ui/input";
+import { Textarea } from "@/frontend/components/ui/textarea";
+import { Select } from "@/frontend/components/ui/select";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 import { ObjectiveOutcomeAddBar, ObjectiveOutcomesHeader } from "./objective-outcomes-section-parts";
 
 interface ObjectiveOutcomesProps {

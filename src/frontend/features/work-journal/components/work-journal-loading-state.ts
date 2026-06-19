@@ -3,7 +3,7 @@ import {
   shouldShowListShellLoader,
   shouldShowMainLoader,
   type ListDetailLoadingState,
-} from "@/frontend/list-detail/list-detail-loading-state";
+} from "@/frontend/utils/list-detail-loading-state/list-detail-loading-state";
 import type { WorkJournalRouteView } from "../hooks/use-work-journal-route-state";
 
 interface WorkJournalAutoSelectionState {

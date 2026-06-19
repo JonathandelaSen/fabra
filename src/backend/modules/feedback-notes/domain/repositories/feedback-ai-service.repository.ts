@@ -1,5 +1,5 @@
 import type { FeedbackEntryPrimitives } from "../entities/feedback-entry.entity";
-import type { AIProvider } from "@/modules/shared";
+import type { AIProvider } from "@/backend/modules/shared";
 
 export interface GenerateFinalFeedbackInput {
   personName: string;

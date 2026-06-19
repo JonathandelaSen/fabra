@@ -1,5 +1,5 @@
 import { ErrorCode, isErrorCode } from "@/shared/error-codes";
-import { ApiError } from "@/frontend/api/api-error";
+import { ApiError } from "@/frontend/utils/api/api-error";
 
 /**
  * Minimal shape of a next-intl translator scoped to the `errors` namespace.

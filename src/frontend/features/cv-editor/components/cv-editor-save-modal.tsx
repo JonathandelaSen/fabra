@@ -6,7 +6,7 @@ import { Save, X } from "lucide-react";
 import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
+} from "@/frontend/components/shared/action-buttons";
 
 interface CVEditorSaveModalProps {
   saveName: string;

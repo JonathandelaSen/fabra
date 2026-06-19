@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 
 export class ContentMetricsWindowDays extends ValueObject<number | null> {
   private constructor(private readonly value: number | null) {

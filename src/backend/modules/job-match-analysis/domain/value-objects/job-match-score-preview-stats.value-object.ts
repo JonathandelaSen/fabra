@@ -4,7 +4,7 @@ import {
   CopyPasteOriginLabel,
   LongText,
   ValueObject,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 
 export interface JobMatchScorePreviewStatsPrimitives {
   score: number;

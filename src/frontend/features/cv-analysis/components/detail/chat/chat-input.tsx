@@ -7,8 +7,8 @@ import {
   ActionIconButton,
   ACTION_ICON_BUTTON_SIZES,
   ACTION_ICON_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/frontend/components/shared/action-buttons";
+import { Textarea } from "@/frontend/components/ui/textarea";
 
 interface ChatInputProps {
   draft: string;

@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/utils/ai-models";
 import type { JobKeyData } from "@/lib/analysis-types";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { InterviewQuestionSummary } from "../../types";
 import type { JobMatchAnalysisDetail as JobMatchAnalysisDetailType, DetailTab } from "../../types";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/frontend/components/ui/tabs";
 import ScoreHero from "./score-hero";
 import TabSummary from "./tabs/tab-summary";
 import TabOffer from "./tabs/tab-offer";

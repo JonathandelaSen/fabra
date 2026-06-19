@@ -1,4 +1,4 @@
-import { UserId } from "@/modules/shared";
+import { UserId } from "@/backend/modules/shared";
 import type { CVDataRepository } from "../../domain/repositories/cv-data.repository";
 import type { ActivityContextRepository } from "../../domain/repositories/activity-context.repository";
 import type { ActivityContextSuggestion } from "../../domain/value-objects/activity-context-suggestion.value-object";

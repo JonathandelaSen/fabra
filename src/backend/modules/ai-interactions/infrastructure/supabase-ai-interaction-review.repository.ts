@@ -1,4 +1,4 @@
-import { BoundSupabaseRepository, type UserId } from "@/modules/shared";
+import { BoundSupabaseRepository, type UserId } from "@/backend/modules/shared";
 import { AIInteractionReview, type AIInteractionRating } from "../domain/entities/ai-interaction-review.entity";
 import type { AIInteractionReviewRepository } from "../domain/repositories/ai-interaction-review.repository";
 

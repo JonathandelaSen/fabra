@@ -1,5 +1,5 @@
 import type { ChatMessagePrimitives } from "../entities/chat-message.entity";
-import type { AIProvider } from "@/modules/shared";
+import type { AIProvider } from "@/backend/modules/shared";
 import type { CVChatContext } from "../value-objects/cv-chat-context.value-object";
 
 export interface CVChatAIInput {

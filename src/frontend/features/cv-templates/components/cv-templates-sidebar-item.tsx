@@ -1,6 +1,6 @@
 "use client";
 
-import { SidebarListItem } from "@/components/shared/sidebar-list-item";
+import { SidebarListItem } from "@/frontend/components/shared/sidebar-list-item";
 import type { CVTemplateDefinition } from "@/lib/cv-templates";
 
 interface CVTemplatesSidebarItemProps {

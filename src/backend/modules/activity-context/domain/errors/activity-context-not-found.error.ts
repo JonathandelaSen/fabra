@@ -1,4 +1,4 @@
-import { DomainError } from "@/modules/shared";
+import { DomainError } from "@/backend/modules/shared";
 import { ErrorCode } from "@/shared/error-codes";
 
 export class ActivityContextNotFoundError extends DomainError {

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { Counter } from "@/modules/shared";
+import { Counter } from "@/backend/modules/shared";
 import { CountActivityContextRecordsUseCase } from "./count-activity-context-records.use-case";
 
 describe("CountActivityContextRecordsUseCase", () => {

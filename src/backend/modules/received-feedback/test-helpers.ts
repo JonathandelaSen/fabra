@@ -1,5 +1,5 @@
-import { EntityId, UserId } from "@/modules/shared";
-import { getDefaultActivityContextId, getSupabaseClient } from "@/modules/test-helpers/setup";
+import { EntityId, UserId } from "@/backend/modules/shared";
+import { getDefaultActivityContextId, getSupabaseClient } from "@/backend/modules/test-helpers/setup";
 import { ReceivedFeedback } from "./domain/entities/received-feedback.entity";
 import { ReceivedFeedbackDate } from "./domain/value-objects/received-feedback-date.value-object";
 import { ReceivedFeedbackGiverName } from "./domain/value-objects/received-feedback-giver-name.value-object";

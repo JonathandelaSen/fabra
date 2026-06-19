@@ -1,4 +1,4 @@
-import { AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext, publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt, type AIProvider, type EventBus } from "@/modules/shared";
+import { AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext, publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt, type AIProvider, type EventBus } from "@/backend/modules/shared";
 import type { StandardCVProfile } from "../../domain/cv-profile";
 import type { CVProfileStructuringAIServiceFactory } from "../../domain/repositories/cv-profile-ai.service";
 

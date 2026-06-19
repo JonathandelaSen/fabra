@@ -1,4 +1,4 @@
-import { BoundSupabaseRepository } from "@/modules/shared";
+import { BoundSupabaseRepository } from "@/backend/modules/shared";
 import { CVPublicNote, type CVPublicNotePrimitives } from "../../domain/entities/cv-public-note.entity";
 import type { CVPublicNoteRepository } from "../../domain/repositories/cv-public-note.repository";
 

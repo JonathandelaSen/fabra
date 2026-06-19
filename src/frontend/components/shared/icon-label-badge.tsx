@@ -4,7 +4,7 @@ import {
   LABEL_BADGE_SIZE_CLASS_NAMES,
   LABEL_BADGE_SIZES,
   type LabelBadgeSize,
-} from "@/components/shared/label-badge";
+} from "@/frontend/components/shared/label-badge";
 import { cn } from "@/lib/utils";
 
 interface IconLabelBadgeProps {

@@ -17,7 +17,7 @@ import { getErrorMessage } from "@/lib/errors";
 import { useObjectivesMutations } from "./use-objectives-mutations";
 import { useObjectivesWorkspace } from "./use-objectives-queries";
 import { useObjectivesRouteState } from "./use-objectives-route-state";
-import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
+import { useIsDesktopLayout } from "@/frontend/components/shared/use-is-desktop-layout";
 import type {
   ItemEditForm,
   ObjectiveForm,

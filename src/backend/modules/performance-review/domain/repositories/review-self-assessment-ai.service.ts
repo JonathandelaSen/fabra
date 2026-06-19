@@ -1,4 +1,4 @@
-import type { AIProvider } from "@/modules/shared";
+import type { AIProvider } from "@/backend/modules/shared";
 
 export interface ReviewSelfAssessmentEvidenceInput {
   source: string;

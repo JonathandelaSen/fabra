@@ -2,7 +2,7 @@ import type { StandardCVProfile } from "@/lib/cv-profile";
 import { normalizeStandardCVProfile } from "@/lib/cv-profile";
 import type { CVRecommendationAnalysis } from "@/lib/analysis-types";
 import type { CVTemplateLocale } from "@/lib/cv-templates";
-import type { CVDocumentListItem } from "@/features/cv-library";
+import type { CVDocumentListItem } from "@/frontend/features/cv-library";
 import type { UpdateCVDocumentResponse } from "@/app/api/cvs/responses";
 import type { EditCVProfileResponse } from "@/app/api/cvs/[id]/edit/responses";
 import type { SaveTemplateAsCVResponse } from "@/app/api/cvs/[id]/save-as-cv/responses";

@@ -1,7 +1,7 @@
 "use client";
 
 import { Clock, type LucideIcon } from "lucide-react";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
+import { useInterfaceLanguage } from "@/frontend/components/shared/i18n-provider";
 import {
   formatDisplayDate,
   getDisplayDateLocale,

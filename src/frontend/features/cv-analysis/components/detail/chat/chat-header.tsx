@@ -6,7 +6,7 @@ import {
   CHEAPEST_OPENAI_MODEL,
   GEMINI_MODELS, 
   OPENAI_MODELS 
-} from "@/frontend/ai-models";
+} from "@/frontend/utils/ai-models";
 import { Sparkles } from "lucide-react";
 import {
   getStoredAIModelForProvider,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { IsoDate, Timestamp, UserId } from "@/modules/shared";
+import { IsoDate, Timestamp, UserId } from "@/backend/modules/shared";
 import { PerformanceReview } from "./performance-review.entity";
 import { PerformanceReviewId } from "../value-objects/performance-review-id.value-object";
 import { ReviewTitle } from "../value-objects/review-title.value-object";

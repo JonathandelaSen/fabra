@@ -1,4 +1,4 @@
-import { badRequest } from "@/modules/shared";
+import { badRequest } from "@/backend/modules/shared";
 import type { CopyPasteEnvelopeExpected } from "./copy-paste-workflow.types";
 import { ErrorCode } from "@/shared/error-codes";
 

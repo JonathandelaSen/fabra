@@ -1,8 +1,8 @@
 import { screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { renderWithProviders } from "@/frontend/testing/render";
-import { getMessages } from "@/i18n/messages";
-import { I18nProvider } from "@/components/shared/i18n-provider";
+import { renderWithProviders } from "@/testing/render";
+import { getMessages } from "@/frontend/i18n/messages";
+import { I18nProvider } from "@/frontend/components/shared/i18n-provider";
 import Sidebar from "./sidebar";
 
 const messages = getMessages("en");

@@ -1,4 +1,4 @@
-import { AggregateRoot, Timestamp, UserId } from "@/modules/shared";
+import { AggregateRoot, Timestamp, UserId } from "@/backend/modules/shared";
 import { CVDocumentId } from "../value-objects/cv-document-id.value-object";
 
 export interface CVPublicFeedbackPrimitives {

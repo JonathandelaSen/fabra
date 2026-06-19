@@ -1,5 +1,5 @@
 import type { ObjectiveForm } from "../objectives-ui";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/frontend/components/ui/textarea";
 
 interface ObjectiveNarrativeSectionProps {
   form: ObjectiveForm;

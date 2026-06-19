@@ -7,7 +7,7 @@ import { cvAnalysisModule, cvLibraryModule } from "@/lib/container";
 import {
   presentCVAnalysis,
   presentCVAnalysisSummary,
-} from "@/modules/cv-analysis";
+} from "@/backend/modules/cv-analysis";
 import {
   toCVAnalysisDetailResponse,
   toCVAnalysisSummaryResponse,
@@ -15,7 +15,7 @@ import {
   type ListCVAnalysesResponse,
 } from "./responses";
 import { parseCreateCVAnalysisRequest } from "./validation";
-import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
+import { ok, errorResponse, notFound, badRequest } from "@/backend/modules/shared";
 
 const ROUTE_SOURCE = "api_cv_analyses";
 

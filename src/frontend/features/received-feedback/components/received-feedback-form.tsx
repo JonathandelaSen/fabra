@@ -7,9 +7,9 @@ import {
   ACTION_ICON_BUTTON_TONES,
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
-import { BasicPanel } from "@/components/shared/basic-panel";
-import { ActivityContextSelector } from "@/features/activity-context";
+} from "@/frontend/components/shared/action-buttons";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
+import { ActivityContextSelector } from "@/frontend/features/activity-context";
 import type { ActivityContext } from "../api/received-feedback-api";
 
 const inputClass =

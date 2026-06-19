@@ -8,8 +8,8 @@ const approvedSentryImports = new Set([
   "src/app/global-error.tsx",
   "src/instrumentation-client.ts",
   "src/instrumentation.ts",
-  "src/modules/shared/infrastructure/telemetry/sentry-telemetry.test.ts",
-  "src/modules/shared/infrastructure/telemetry/sentry-telemetry.ts",
+  "src/backend/modules/shared/infrastructure/telemetry/sentry-telemetry.test.ts",
+  "src/backend/modules/shared/infrastructure/telemetry/sentry-telemetry.ts",
   "src/sentry.edge.config.ts",
   "src/sentry.server.config.ts",
 ]);
@@ -63,7 +63,7 @@ for (const file of sourceFiles) {
 const eventBusSource = fs.readFileSync(
   path.join(
     root,
-    "src/modules/shared/infrastructure/bus/event-bus/in-memory-event-bus.ts",
+    "src/backend/modules/shared/infrastructure/bus/event-bus/in-memory-event-bus.ts",
   ),
   "utf8",
 );

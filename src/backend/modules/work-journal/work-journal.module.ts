@@ -1,6 +1,6 @@
 import { OllamaJournalAIServiceFactory } from "./infrastructure/services/ollama-journal-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { instrumentUseCases, type Telemetry, type EventBus } from "@/modules/shared";
+import { instrumentUseCases, type Telemetry, type EventBus } from "@/backend/modules/shared";
 import { SupabaseWorkJournalEntryRepository } from "./infrastructure/repositories/supabase-work-journal-entry.repository";
 import { GeminiJournalAIServiceFactory } from "./infrastructure/services/gemini-journal-ai.service";
 import { MockJournalAIServiceFactory } from "./infrastructure/services/mock-journal-ai.service";

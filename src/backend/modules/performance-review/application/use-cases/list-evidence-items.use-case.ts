@@ -1,4 +1,4 @@
-import { UserId } from "@/modules/shared";
+import { UserId } from "@/backend/modules/shared";
 import type { ReviewEvidenceItem } from "../../domain/entities/review-evidence-item.entity";
 import { PerformanceReviewNotFoundError } from "../../domain/errors/performance-review-not-found.error";
 import type { PerformanceReviewRepository } from "../../domain/repositories/performance-review.repository";

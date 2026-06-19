@@ -18,4 +18,4 @@ export {
   CV_TEMPLATES,
   getCVTemplate,
   getSectionLabels,
-} from "@/modules/cv-library/domain/cv-templates";
+} from "@/backend/modules/cv-library/domain/cv-templates";

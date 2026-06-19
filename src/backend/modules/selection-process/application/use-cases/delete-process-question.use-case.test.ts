@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ExecutionResult } from "@/modules/shared";
+import { ExecutionResult } from "@/backend/modules/shared";
 import { DeleteProcessQuestionUseCase } from "./delete-process-question.use-case";
 import { processQuestionRepo, eventBus } from "./selection-process-test-helpers.test";
 

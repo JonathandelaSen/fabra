@@ -1,11 +1,11 @@
-import { BoundSupabaseRepository } from "@/modules/shared";
+import { BoundSupabaseRepository } from "@/backend/modules/shared";
 import { ReceivedFeedback, type ReceivedFeedbackPrimitives } from "../../domain/entities/received-feedback.entity";
 import type {
   ReceivedFeedbackRepository,
   ReceivedFeedbackSearchCriteria,
 } from "../../domain/repositories/received-feedback.repository";
 import type { ReceivedFeedbackId } from "../../domain/value-objects/received-feedback-id.value-object";
-import type { UserId } from "@/modules/shared";
+import type { UserId } from "@/backend/modules/shared";
 
 interface ReceivedFeedbackRow {
   id: string;

@@ -6,7 +6,7 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "@/components/ui/popover";
+} from "@/frontend/components/ui/popover";
 import AIActionLauncherHeader from "./ai-action-launcher-header";
 import AIActionLauncherIntegrated from "./ai-action-launcher-integrated";
 import AIActionLauncherCopyPaste from "./ai-action-launcher-copy-paste";

@@ -2,7 +2,7 @@
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/utils/ai-models";
 import {
   createCVChatConversation,
   deleteCVChatConversation,
@@ -15,7 +15,7 @@ import type { CVChatConversation, CVChatMessage } from "../components/detail/cv-
 import type { CVChatMessageResponse } from "@/app/api/cvs/[id]/chat/responses";
 
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
-import { useErrorMessage } from "@/frontend/errors/use-error-message";
+import { useErrorMessage } from "@/frontend/utils/errors/use-error-message";
 
 function toCVChatMessage(message: CVChatMessageResponse): CVChatMessage {
   return {

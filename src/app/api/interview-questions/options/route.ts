@@ -3,9 +3,9 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { cvLibraryModule, jobMatchAnalysisModule } from "@/lib/container";
 import {
   presentCVDocumentSummary,
-} from "@/modules/cv-library";
-import { presentJobMatchAnalysisSummary } from "@/modules/job-match-analysis";
-import { ok } from "@/modules/shared";
+} from "@/backend/modules/cv-library";
+import { presentJobMatchAnalysisSummary } from "@/backend/modules/job-match-analysis";
+import { ok } from "@/backend/modules/shared";
 import type { InterviewQuestionOptionsResponse } from "./responses";
 
 export async function GET() {

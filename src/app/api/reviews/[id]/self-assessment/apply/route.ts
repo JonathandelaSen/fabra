@@ -2,8 +2,8 @@ import { NextRequest } from "next/server";
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { performanceReviewModule } from "@/lib/container";
-import { presentPerformanceReview } from "@/modules/performance-review";
-import { ok } from "@/modules/shared";
+import { presentPerformanceReview } from "@/backend/modules/performance-review";
+import { ok } from "@/backend/modules/shared";
 import type { PerformanceReviewDetailResponse } from "./responses";
 
 export async function POST(

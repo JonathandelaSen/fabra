@@ -1,4 +1,4 @@
-import type { AIInteractionRating } from "@/modules/ai-interactions";
+import type { AIInteractionRating } from "@/backend/modules/ai-interactions";
 
 type Result<TValue, TError> =
   | { ok: true; value: TValue }

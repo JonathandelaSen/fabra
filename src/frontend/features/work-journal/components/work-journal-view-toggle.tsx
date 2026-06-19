@@ -2,7 +2,7 @@
 
 import { CalendarRange, List } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/frontend/components/ui/button";
 import type { WorkJournalRouteView } from "../hooks/use-work-journal-route-state";
 
 interface WorkJournalViewToggleProps {

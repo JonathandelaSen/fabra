@@ -1,8 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { CopyPasteDialog } from "@/components/shared/copy-paste-dialog";
-import { CopyPasteTextPanel } from "@/components/shared/copy-paste-text-panel";
+import { CopyPasteDialog } from "@/frontend/components/shared/copy-paste-dialog";
+import { CopyPasteTextPanel } from "@/frontend/components/shared/copy-paste-text-panel";
 
 interface OfferChatCopyPasteModalProps {
   isOpen: boolean;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createTestUser } from "@/modules/test-helpers/setup";
+import { createTestUser } from "@/backend/modules/test-helpers/setup";
 import { SupabaseImpersonationSessionService } from "./supabase-impersonation-session.service";
 
 const service = new SupabaseImpersonationSessionService();

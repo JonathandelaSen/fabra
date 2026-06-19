@@ -2,10 +2,10 @@
 
 import { FileDown, Loader2, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useConfirm } from "@/components/shared/confirm-provider";
-import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
-import { Button } from "@/components/ui/button";
+import { useConfirm } from "@/frontend/components/shared/confirm-provider";
+import { FeatureHeaderActionButton } from "@/frontend/components/shared/feature-header-action-button";
+import { useInterfaceLanguage } from "@/frontend/components/shared/i18n-provider";
+import { Button } from "@/frontend/components/ui/button";
 import type { Analysis } from "@/lib/analysis-types";
 import { exportAnalysisReport } from "./analysis-report-export";
 

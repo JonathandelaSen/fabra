@@ -3,8 +3,8 @@ import {
   createConfirmedUser,
   e2eEnv,
   type E2EUser,
-} from "../../../e2e/helpers/supabase";
-import { uniqueLabel } from "../../../e2e/helpers/env";
+} from "../../../../e2e/helpers/supabase";
+import { uniqueLabel } from "../../../../e2e/helpers/env";
 
 export const supabase = createClient(
   e2eEnv.supabaseUrl,

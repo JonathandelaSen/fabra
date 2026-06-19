@@ -1,5 +1,5 @@
 import type { WorkJournalContext } from "../entities/journal-context.entity";
-import type { AIProvider } from "@/modules/shared";
+import type { AIProvider } from "@/backend/modules/shared";
 
 export interface DraftEntryInput {
   context: Pick<WorkJournalContext, "type" | "name" | "roleOrLabel">;

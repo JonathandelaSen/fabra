@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { DomainEvent, EventBus } from "@/modules/shared";
+import type { DomainEvent, EventBus } from "@/backend/modules/shared";
 import { AIEntityType, AIModule, AIOperation } from "../../domain/ai-runtime/ai-runtime.types";
 import { createIntegratedAIInteractionContext, runTrackedAIInteraction } from "./track-integrated-ai-interaction";
 

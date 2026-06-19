@@ -1,4 +1,4 @@
-import { EntityId, LongText, ValueObject } from "@/modules/shared";
+import { EntityId, LongText, ValueObject } from "@/backend/modules/shared";
 import { JobAnalysisChatSnapshot } from "./job-analysis-chat-snapshot.value-object";
 
 export interface JobAnalysisChatContextPrimitives {

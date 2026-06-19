@@ -1,4 +1,4 @@
-import { IsoDate, OptionalIsoDate, UserId, type EventBus } from "@/modules/shared";
+import { IsoDate, OptionalIsoDate, UserId, type EventBus } from "@/backend/modules/shared";
 import type { WorkJournalEntry } from "../../domain/entities/journal-entry.entity";
 import type { WorkJournalEntryRepository } from "../../domain/repositories/work-journal-entry.repository";
 import { EntryNotFoundError } from "../../domain/errors/entry-not-found.error";

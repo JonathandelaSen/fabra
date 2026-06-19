@@ -4,7 +4,7 @@ import {
   LongText,
   StringList,
   ValueObject,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 
 export interface CVProfileStructureCopyPastePreviewPrimitives {
   basicsName: string | null;

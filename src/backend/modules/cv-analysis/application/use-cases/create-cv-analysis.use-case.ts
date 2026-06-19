@@ -1,4 +1,4 @@
-import { Timestamp, UserId, type EventBus } from "@/modules/shared";
+import { Timestamp, UserId, type EventBus } from "@/backend/modules/shared";
 import {
   CVAnalysis,
   type CVAnalysisExtractedTextPrimitives,

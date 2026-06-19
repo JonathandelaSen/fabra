@@ -1,5 +1,5 @@
 import { jsonrepair } from "jsonrepair";
-import { badRequest } from "@/modules/shared";
+import { badRequest } from "@/backend/modules/shared";
 import { ErrorCode } from "@/shared/error-codes";
 
 const FENCED_JSON_BLOCK = /^```json\s*\n([\s\S]*?)\n?```\s*$/i;

@@ -13,7 +13,7 @@ import {
   cvLibraryQueryKeys,
   useCVDocumentList,
   type CVDocumentListItem,
-} from "@/features/cv-library";
+} from "@/frontend/features/cv-library";
 import type { ApplyCVEditorCopyPasteResponse } from "@/app/api/cvs/[id]/edit/copy-paste/apply/responses";
 import {
   applyInstruction as applyInstructionApi,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Timestamp, UserId } from "@/modules/shared";
+import { Timestamp, UserId } from "@/backend/modules/shared";
 import { FollowUp } from "./follow-up.entity";
 import { FollowUpId } from "../value-objects/follow-up-id.value-object";
 import { FollowUpStatus } from "../value-objects/follow-up-status.value-object";

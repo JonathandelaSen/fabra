@@ -1,4 +1,4 @@
-import { Counter, LongText, StringList, ValueObject } from "@/modules/shared";
+import { Counter, LongText, StringList, ValueObject } from "@/backend/modules/shared";
 import type { JobMatchScoringAIResultPrimitives } from "../repositories/job-match-scoring-ai.service";
 import { JobMatchJobKeyData } from "./job-match-job-key-data.value-object";
 

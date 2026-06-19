@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
-import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
+import { useIsDesktopLayout } from "@/frontend/components/shared/use-is-desktop-layout";
 import { FileText, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
+import { FeatureDetailTabBar } from "@/frontend/components/shared/feature-detail-tab-bar";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { InterviewQuestionSummary, JobMatchAnalysisDetailResponse, JobMatchViewMode } from "../types";
 import { JOB_MATCH_VIEW_MODES } from "../constants";

@@ -1,5 +1,5 @@
 import { normalizeStandardCVProfile } from "../../domain/cv-profile";
-import { BoundSupabaseRepository, type UserId } from "@/modules/shared";
+import { BoundSupabaseRepository, type UserId } from "@/backend/modules/shared";
 import { CVStructuredProfile } from "../../domain/entities/cv-structured-profile.entity";
 import type { CVStructuredProfileRepository } from "../../domain/repositories/cv-structured-profile.repository";
 import type { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";

@@ -1,4 +1,4 @@
-import { Timestamp, UserId, type EventBus } from "@/modules/shared";
+import { Timestamp, UserId, type EventBus } from "@/backend/modules/shared";
 import { CVDocument } from "../../domain/entities/cv-document.entity";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import type { CVPdfStorage } from "../../domain/repositories/cv-analysis-preparation-services";

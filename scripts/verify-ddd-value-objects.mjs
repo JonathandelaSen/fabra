@@ -429,7 +429,7 @@ function checkValueObjectFile(sourceFile, file, violations) {
 }
 
 export async function findValueObjectViolations({ rootDir = repoRoot } = {}) {
-  const modulesDir = path.join(rootDir, "src/modules");
+  const modulesDir = path.join(rootDir, "src/backend/modules");
   const files = (await walkFiles(modulesDir))
     .map((filePath) => toPosixRelative(rootDir, filePath))
     .filter(

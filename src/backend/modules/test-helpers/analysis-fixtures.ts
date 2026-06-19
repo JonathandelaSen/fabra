@@ -2,12 +2,12 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   createCVAnalysisModule,
   presentCVAnalysis,
-} from "@/modules/cv-analysis";
+} from "@/backend/modules/cv-analysis";
 import {
   createJobMatchAnalysisModule,
   presentJobMatchAnalysis,
-} from "@/modules/job-match-analysis";
-import { NoOpTelemetry, InMemoryEventBus } from "@/modules/shared";
+} from "@/backend/modules/job-match-analysis";
+import { NoOpTelemetry, InMemoryEventBus } from "@/backend/modules/shared";
 
 export async function createTestCVAnalysis(
   supabase: SupabaseClient,

@@ -2,8 +2,8 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { createRequestId } from "@/lib/observability";
 import { cvChatModule } from "@/lib/container";
-import { presentConversation } from "@/modules/cv-chat";
-import { errorResponse, ok } from "@/modules/shared";
+import { presentConversation } from "@/backend/modules/cv-chat";
+import { errorResponse, ok } from "@/backend/modules/shared";
 import type { CVChatConversationMutationResponse } from "./responses";
 import { parseRenameCVChatConversationRequest } from "./validation";
 

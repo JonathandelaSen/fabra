@@ -1,4 +1,4 @@
-import { Counter, EntityId, LongText, StringList, Timestamp, ValueObject } from "@/modules/shared";
+import { Counter, EntityId, LongText, StringList, Timestamp, ValueObject } from "@/backend/modules/shared";
 import type { AIInteractionRating } from "../entities/ai-interaction-review.entity";
 import { AIInteractionAssistanceMode } from "./ai-interaction-assistance-mode.value-object";
 import { AIInteractionEntityType } from "./ai-interaction-entity-type.value-object";

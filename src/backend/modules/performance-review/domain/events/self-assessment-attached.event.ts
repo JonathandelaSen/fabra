@@ -1,4 +1,4 @@
-import type { DomainEvent } from "@/modules/shared";
+import type { DomainEvent } from "@/backend/modules/shared";
 
 export class SelfAssessmentAttachedEvent
   implements DomainEvent<{ reviewId: string; mode: string }>

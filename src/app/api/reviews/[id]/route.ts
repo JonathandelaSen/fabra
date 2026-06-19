@@ -5,8 +5,8 @@ import { performanceReviewModule } from "@/lib/container";
 import {
   PerformanceReviewNotFoundError,
   presentPerformanceReview,
-} from "@/modules/performance-review";
-import { errorResponse, ok } from "@/modules/shared";
+} from "@/backend/modules/performance-review";
+import { errorResponse, ok } from "@/backend/modules/shared";
 import { parseUpdatePerformanceReviewRequest } from "./validation";
 import type { PerformanceReviewDetailResponse } from "./responses";
 

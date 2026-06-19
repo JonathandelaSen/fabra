@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { ExecutionResult } from "@/modules/shared";
+import { ExecutionResult } from "@/backend/modules/shared";
 import {
   createTestUser,
   getSupabaseClient,
-} from "@/modules/test-helpers/setup";
+} from "@/backend/modules/test-helpers/setup";
 import { SupabaseWorkJournalContextRepository } from "../../infrastructure/repositories/supabase-work-journal-context.repository";
 import { HideWorkJournalSuggestionUseCase } from "./hide-work-journal-suggestion.use-case";
 

@@ -1,4 +1,4 @@
-import type { UserId } from "@/modules/shared";
+import type { UserId } from "@/backend/modules/shared";
 import type { ProcessQuestion } from "../entities/process-question.entity";
 import type { ProcessQuestionId } from "../value-objects/process-question-id.value-object";
 import type { ProcessQuestionReadModel } from "../value-objects/process-question-read-model.value-object";

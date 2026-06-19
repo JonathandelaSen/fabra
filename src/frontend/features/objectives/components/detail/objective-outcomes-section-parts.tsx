@@ -1,9 +1,9 @@
 import { Plus, Trophy } from "lucide-react";
 import type { ObjectiveOutcomeType } from "../../types";
 import { outcomeLabels } from "../objectives-ui";
-import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
-import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import { Input } from "@/frontend/components/ui/input";
+import { Select } from "@/frontend/components/ui/select";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/frontend/components/shared/action-buttons";
 
 export function ObjectiveOutcomesHeader({ t }: { t: (key: string) => string }) {
   return (

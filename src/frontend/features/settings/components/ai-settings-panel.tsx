@@ -12,13 +12,13 @@ import {
   Sparkles,
   Cpu,
 } from "lucide-react";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
 import {
   DeleteButton,
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
-import { BasicPanel } from "@/components/shared/basic-panel";
+} from "@/frontend/components/shared/action-buttons";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 import { cn } from "@/lib/utils";
 import {
   getStoredAIApiKeyForProvider,

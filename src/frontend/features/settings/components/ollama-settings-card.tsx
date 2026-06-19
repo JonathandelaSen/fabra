@@ -7,7 +7,7 @@ import {
   DeleteButton,
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
+} from "@/frontend/components/shared/action-buttons";
 import { cn } from "@/lib/utils";
 import {
   getStoredAIApiKeyForProvider,

@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { Sparkles } from "lucide-react";
-import AnalysisScoreCircle from "@/components/shared/analysis-score-circle";
+import AnalysisScoreCircle from "@/frontend/components/shared/analysis-score-circle";
 
 interface CVLibraryAtsScoreCircleProps {
   displayScore: number | null;

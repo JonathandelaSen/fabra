@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 import type { WorkspaceContentMetricsPrimitives } from "./workspace-content-metrics.value-object";
 import { WorkspaceContentMetrics } from "./workspace-content-metrics.value-object";
 import { ContentMetricsWindowDays } from "./content-metrics-window-days.value-object";

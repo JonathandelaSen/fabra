@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
-import type { InterfaceLanguage } from "@/i18n/config";
+import { useInterfaceLanguage } from "@/frontend/components/shared/i18n-provider";
+import type { InterfaceLanguage } from "@/frontend/i18n/config";
 
 export function useLanguagePreference() {
   const { locale, setInterfaceLanguage } = useInterfaceLanguage();

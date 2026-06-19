@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/frontend/components/ui/skeleton";
 
 export function JobAnalysesListSkeleton() {
   return (

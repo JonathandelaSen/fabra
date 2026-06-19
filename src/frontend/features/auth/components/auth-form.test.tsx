@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { I18nProvider } from "@/components/shared/i18n-provider";
+import { I18nProvider } from "@/frontend/components/shared/i18n-provider";
 import { render } from "@testing-library/react";
 import { AuthForm } from "./auth-form";
 import { signUp } from "../api/auth-actions";

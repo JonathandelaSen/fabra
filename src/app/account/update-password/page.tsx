@@ -1,4 +1,4 @@
-import { UpdatePasswordForm } from "@/features/auth";
+import { UpdatePasswordForm } from "@/frontend/features/auth";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 

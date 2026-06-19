@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { createTestUser } from "@/modules/test-helpers/setup";
+import { createTestUser } from "@/backend/modules/test-helpers/setup";
 import { createDefaultContext, createFeedbackFixture } from "../../test-helpers";
 import { FeedbackEntry } from "../../domain/entities/feedback-entry.entity";
 import { SupabaseFeedbackEntryRepository } from "./supabase-feedback-entry.repository";
-import { getSupabaseClient } from "@/modules/test-helpers/setup";
+import { getSupabaseClient } from "@/backend/modules/test-helpers/setup";
 
 const repo = new SupabaseFeedbackEntryRepository();
 repo.bindRequest(getSupabaseClient());

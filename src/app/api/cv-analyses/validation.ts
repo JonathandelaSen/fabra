@@ -1,7 +1,7 @@
 import type { AIContext } from "@/lib/analysis-types";
 import { parseAIRequestConfig, type AIRequestConfig } from "@/app/api/_shared/ai-request";
-import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
-import { isInterfaceLanguage, type InterfaceLanguage } from "@/i18n/config";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/utils/ai-models";
+import { isInterfaceLanguage, type InterfaceLanguage } from "@/frontend/i18n/config";
 
 type Result<TValue, TError> =
   | { ok: true; value: TValue }

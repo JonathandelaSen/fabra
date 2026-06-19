@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { createTestCV } from "@/modules/test-helpers/cv-fixtures";
+import { createTestCV } from "@/backend/modules/test-helpers/cv-fixtures";
 import {
   createTestUser,
   getSupabaseClient,
   testLabel,
-} from "@/modules/test-helpers/setup";
+} from "@/backend/modules/test-helpers/setup";
 import { SupabaseCVDataRepository } from "./supabase-cv-data.repository";
 
 const supabase = getSupabaseClient();

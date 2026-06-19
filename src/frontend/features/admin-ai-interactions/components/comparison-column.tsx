@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 import type { ListAdminAIInteractionsResponse } from "@/app/api/admin/ai-interactions/responses";
-import { LabelBadge } from "@/components/shared/label-badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+import { LabelBadge } from "@/frontend/components/shared/label-badge";
+import { Button } from "@/frontend/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
+import { Textarea } from "@/frontend/components/ui/textarea";
 import { useReviewAdminAIInteraction } from "../hooks/use-admin-ai-interactions";
 import { AIInteractionContentBlock } from "./ai-interaction-content-block";
 import { useTranslations } from "next-intl";

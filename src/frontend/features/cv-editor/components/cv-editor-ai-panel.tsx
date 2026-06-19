@@ -2,8 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { Sparkles } from "lucide-react";
-import AIActionLauncher from "@/components/shared/ai-action-launcher/ai-action-launcher";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
+import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher/ai-action-launcher";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
 
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 

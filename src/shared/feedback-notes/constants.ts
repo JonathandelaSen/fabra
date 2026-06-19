@@ -1,3 +1,3 @@
 export {
   feedbackStatuses as FEEDBACK_STATUSES,
-} from "@/modules/feedback-notes/domain/entities/feedback.entity";
+} from "@/backend/modules/feedback-notes/domain/entities/feedback.entity";

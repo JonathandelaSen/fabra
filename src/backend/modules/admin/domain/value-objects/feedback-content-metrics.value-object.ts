@@ -1,4 +1,4 @@
-import { Counter, ValueObject } from "@/modules/shared";
+import { Counter, ValueObject } from "@/backend/modules/shared";
 
 export interface FeedbackContentMetricsPrimitives {
   feedbackNotesFeedbacks: number;

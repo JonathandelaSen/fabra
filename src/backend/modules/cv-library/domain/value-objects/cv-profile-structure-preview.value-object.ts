@@ -1,4 +1,4 @@
-import { ValueObject, StringList } from "@/modules/shared";
+import { ValueObject, StringList } from "@/backend/modules/shared";
 import type { StandardCVProfilePrimitives } from "../cv-profile";
 import type { CVProfileStructureCopyPastePreviewPrimitives } from "./cv-profile-structure-copy-paste-preview.value-object";
 import { CVProfileStructureCopyPastePreview } from "./cv-profile-structure-copy-paste-preview.value-object";

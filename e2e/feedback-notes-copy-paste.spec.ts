@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { messages } from "../src/i18n/messages";
+import { messages } from "../src/frontend/i18n/messages";
 import { loginViaUI } from "./helpers/auth";
 import { uniqueLabel } from "./helpers/env";
 import { createConfirmedUser } from "./helpers/supabase";

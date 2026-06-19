@@ -1,4 +1,4 @@
-import type { CVDocumentResponse } from "@/modules/cv-library";
+import type { CVDocumentResponse } from "@/backend/modules/cv-library";
 
 export interface EditCVProfileResponse {
   version: CVDocumentResponse | null;

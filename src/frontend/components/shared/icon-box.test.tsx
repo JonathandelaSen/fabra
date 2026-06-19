@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { renderWithProviders } from "@/frontend/testing/render";
+import { renderWithProviders } from "@/testing/render";
 import { IconBox, ICON_BOX_TONES } from "./icon-box";
 
 import type { LucideIcon } from "lucide-react";

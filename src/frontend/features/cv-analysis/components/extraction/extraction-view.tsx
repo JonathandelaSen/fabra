@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { copyToClipboard } from "@/lib/clipboard";
-import HowAtsWorksEducationBanner from "@/components/shared/how-ats-works-education-banner";
-import ExtractionHeader from "@/components/shared/extraction/extraction-header";
+import HowAtsWorksEducationBanner from "@/frontend/components/shared/how-ats-works-education-banner";
+import ExtractionHeader from "@/frontend/components/shared/extraction/extraction-header";
 import CVScoreCopyPasteModal from "../copy-paste/cv-score-copy-paste-modal";
 import {
   useExtractionAIActions,

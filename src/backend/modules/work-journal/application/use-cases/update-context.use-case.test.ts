@@ -3,7 +3,7 @@ import {
   createTestUser,
   getSupabaseClient,
   testLabel,
-} from "@/modules/test-helpers/setup";
+} from "@/backend/modules/test-helpers/setup";
 import { ContextNotFoundError } from "../../domain/errors/context-not-found.error";
 import { SupabaseWorkJournalContextRepository } from "../../infrastructure/repositories/supabase-work-journal-context.repository";
 import { UpdateContextUseCase } from "./update-context.use-case";

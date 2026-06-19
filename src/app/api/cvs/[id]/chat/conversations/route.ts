@@ -3,8 +3,8 @@ import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { ErrorCode } from "@/shared/error-codes";
 import { createRequestId } from "@/lib/observability";
 import { cvChatModule } from "@/lib/container";
-import { presentConversation } from "@/modules/cv-chat";
-import { created, notFound } from "@/modules/shared";
+import { presentConversation } from "@/backend/modules/cv-chat";
+import { created, notFound } from "@/backend/modules/shared";
 import type { CVChatConversationMutationResponse } from "./responses";
 import { parseCreateCVChatConversationRequest } from "./validation";
 

@@ -1,6 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 import type { E2EUser } from "./supabase";
-import { messages } from "../../src/i18n/messages";
+import { messages } from "../../src/frontend/i18n/messages";
 
 export async function loginViaUI(page: Page, user: E2EUser) {
   const tAuth = messages.en.auth;

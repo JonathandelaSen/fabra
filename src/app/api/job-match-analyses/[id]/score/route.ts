@@ -3,10 +3,10 @@ import { NextRequest } from "next/server";
 import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { jobMatchAnalysisModule } from "@/lib/container";
-import { presentJobMatchAnalysis } from "@/modules/job-match-analysis";
+import { presentJobMatchAnalysis } from "@/backend/modules/job-match-analysis";
 import { parseScoreJobMatchAnalysisRequest } from "./validation";
 import { toJobMatchAnalysisDetailResponse } from "./responses";
-import { ok, errorResponse, notFound } from "@/modules/shared";
+import { ok, errorResponse, notFound } from "@/backend/modules/shared";
 
 export const maxDuration = 60;
 

@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { createTestJobMatchAnalysis } from "@/modules/test-helpers/analysis-fixtures";
-import { createTestCV } from "@/modules/test-helpers/cv-fixtures";
+import { createTestJobMatchAnalysis } from "@/backend/modules/test-helpers/analysis-fixtures";
+import { createTestCV } from "@/backend/modules/test-helpers/cv-fixtures";
 import {
   createTestUser,
   getSupabaseClient,
   testLabel,
-} from "@/modules/test-helpers/setup";
-import { UserId } from "@/modules/shared";
+} from "@/backend/modules/test-helpers/setup";
+import { UserId } from "@/backend/modules/shared";
 import { ProcessQuestion } from "../../domain/entities/process-question.entity";
 import { ProcessQuestionId } from "../../domain/value-objects/process-question-id.value-object";
 import { SupabaseProcessQuestionRepository } from "./supabase-process-question.repository";

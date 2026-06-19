@@ -1,4 +1,4 @@
-import { StringList, ValueObject } from "@/modules/shared";
+import { StringList, ValueObject } from "@/backend/modules/shared";
 import type { JobMatchScoringAIResultPrimitives } from "../repositories/job-match-scoring-ai.service";
 import { JobMatchScoringAIResultVO } from "./job-match-scoring-ai-result.value-object";
 import type { JobMatchScorePreviewStatsPrimitives } from "./job-match-score-preview-stats.value-object";

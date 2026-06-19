@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useThemePreference } from "@/features/settings";
+import { useThemePreference } from "@/frontend/features/settings";
 
 export function PublicCVThemeToggle() {
   const t = useTranslations("settings.theme");

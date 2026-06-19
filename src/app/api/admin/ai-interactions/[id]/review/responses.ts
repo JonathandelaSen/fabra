@@ -1,4 +1,4 @@
-import type { AIInteractionRating } from "@/modules/ai-interactions";
+import type { AIInteractionRating } from "@/backend/modules/ai-interactions";
 
 export interface ReviewAdminAIInteractionResponse {
   interactionId: string;

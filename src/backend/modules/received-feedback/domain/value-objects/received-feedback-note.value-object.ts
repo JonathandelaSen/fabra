@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 
 export class ReceivedFeedbackNote extends ValueObject<string | null> {
   private constructor(private readonly value: string | null) {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createTestUser, getDefaultActivityContextId, getSupabaseClient } from "@/modules/test-helpers/setup";
-import { EntityId, UserId } from "@/modules/shared";
+import { createTestUser, getDefaultActivityContextId, getSupabaseClient } from "@/backend/modules/test-helpers/setup";
+import { EntityId, UserId } from "@/backend/modules/shared";
 import { ReceivedFeedback } from "../../domain/entities/received-feedback.entity";
 import { ReceivedFeedbackId } from "../../domain/value-objects/received-feedback-id.value-object";
 import { ReceivedFeedbackDate } from "../../domain/value-objects/received-feedback-date.value-object";

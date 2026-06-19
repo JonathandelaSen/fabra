@@ -2,7 +2,7 @@ import {
   CopyPastePreparation,
   UserId,
   type QueryBus,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { AnalysisContextNotFoundError } from "../../domain/errors/analysis-context-not-found.error";
 import { ConversationNotFoundError } from "../../domain/errors/conversation-not-found.error";
 import type { ChatMessageRepository } from "../../domain/repositories/chat-message.repository";

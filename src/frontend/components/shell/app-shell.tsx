@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import type { AnalysisMode } from "@/lib/analysis-types";
-import Sidebar from "@/components/shell/sidebar";
+import Sidebar from "@/frontend/components/shell/sidebar";
 import { createClient } from "@/lib/supabase/client";
 import type { InterviewQuestionResponse as InterviewQuestionSummary } from "@/app/api/interview-questions/responses";
 import {
@@ -16,8 +16,8 @@ import {
 import AppShellContent from "./app-shell-content";
 import { ImpersonationBanner } from "./impersonation-banner";
 import type { SidebarActiveView } from "./sidebar-types";
-import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
-import { APP_VIEWS, type AppView } from "@/frontend/app-views";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/utils/ai-models";
+import { APP_VIEWS, type AppView } from "@/frontend/utils/app-views";
 
 let userEmailRequest: Promise<string | null> | null = null;
 let adminStatusRequest: Promise<boolean> | null = null;

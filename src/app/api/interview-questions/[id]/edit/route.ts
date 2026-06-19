@@ -8,8 +8,8 @@ import {
   validateQuestionLinks,
 } from "./validation";
 import { selectionProcessModule } from "@/lib/container";
-import { presentProcessQuestion } from "@/modules/selection-process";
-import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
+import { presentProcessQuestion } from "@/backend/modules/selection-process";
+import { ok, errorResponse, notFound, badRequest } from "@/backend/modules/shared";
 import {
   toInterviewQuestionResponse,
   type EditInterviewQuestionResponse,

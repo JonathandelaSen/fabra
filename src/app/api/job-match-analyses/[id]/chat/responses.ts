@@ -8,12 +8,12 @@ import {
   type Conversation,
   type ChatMessage,
   JobAnalysisChatExchange,
-} from "@/modules/job-analysis-chat";
+} from "@/backend/modules/job-analysis-chat";
 
 export type {
   JobAnalysisChatConversation,
   JobAnalysisChatMessage,
-} from "@/modules/job-analysis-chat";
+} from "@/backend/modules/job-analysis-chat";
 
 export interface ListOfferChatConversationsResponse {
   conversations: JobAnalysisChatConversation[];

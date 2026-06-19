@@ -1,4 +1,4 @@
-import { AggregateRoot, Timestamp, UserId, type UserId as UserIdType } from "@/modules/shared";
+import { AggregateRoot, Timestamp, UserId, type UserId as UserIdType } from "@/backend/modules/shared";
 import { WorkJournalContextCreatedEvent } from "../events/work-journal-context-created.event";
 import { WorkJournalContextUpdatedEvent } from "../events/work-journal-context-updated.event";
 import { WorkJournalContextId } from "../value-objects/work-journal-context-id.value-object";

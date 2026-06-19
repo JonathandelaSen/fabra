@@ -1,11 +1,11 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import AIActionLauncher from "@/components/shared/ai-action-launcher";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
+import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
 import type { ApplyCVProfileCopyPasteResponse } from "@/app/api/cvs/[id]/structured-profile/copy-paste/apply/responses";
 import type { CVTemplateDefinition, CVTemplateLocale } from "@/lib/cv-templates";
-import type { CVDocumentListItem } from "@/features/cv-library";
+import type { CVDocumentListItem } from "@/frontend/features/cv-library";
 import CVProfileStructureCopyPasteModal from "./cv-profile-structure-copy-paste-modal";
 import CVTemplatePreview from "./cv-template-preview";
 import { CVTemplateCvSelector } from "./cv-template-cv-selector";

@@ -6,10 +6,10 @@ import {
   MessageSquareQuote,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { DeleteButton, EditButton } from "@/components/shared/action-buttons";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
-import { BasicPanel } from "@/components/shared/basic-panel";
-import { IconLabelBadge } from "@/components/shared/icon-label-badge";
+import { DeleteButton, EditButton } from "@/frontend/components/shared/action-buttons";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
+import { IconLabelBadge } from "@/frontend/components/shared/icon-label-badge";
 import { formatDate } from "@/lib/format";
 import type {
   ActivityContext,

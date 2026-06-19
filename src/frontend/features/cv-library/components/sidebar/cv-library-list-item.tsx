@@ -1,6 +1,6 @@
 "use client";
 
-import { SidebarListItem } from "@/components/shared/sidebar-list-item";
+import { SidebarListItem } from "@/frontend/components/shared/sidebar-list-item";
 import type { CVDocumentListItem } from "../../api/cv-library-api";
 import { CVLibraryTypeBadge } from "./cv-library-type-badge";
 import { CVLibraryAnalysisCountBadge } from "./cv-library-analysis-count-badge";

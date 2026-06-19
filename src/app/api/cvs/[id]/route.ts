@@ -5,15 +5,15 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import {
   generatePublicCVId,
   normalizePublicCVSlug,
-} from "@/modules/cv-library";
+} from "@/backend/modules/cv-library";
 import {
   cvAnalysisModule,
   cvLibraryModule,
   jobMatchAnalysisModule,
 } from "@/lib/container";
-import { presentCVDocument } from "@/modules/cv-library";
+import { presentCVDocument } from "@/backend/modules/cv-library";
 import { parseUpdateCVDocumentRequest } from "./validation";
-import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
+import { ok, errorResponse, notFound, badRequest } from "@/backend/modules/shared";
 import {
   type CVDocumentDetailResponse,
   toCVDocumentDetailResponse,

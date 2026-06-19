@@ -1,4 +1,4 @@
-import { Counter, EntityId, UserId, type EventBus } from "@/modules/shared";
+import { Counter, EntityId, UserId, type EventBus } from "@/backend/modules/shared";
 import { ActivityContextNotFoundError } from "../../domain/errors/activity-context-not-found.error";
 import { DefaultActivityContextDeleteError } from "../../domain/errors/default-activity-context-delete.error";
 import { DefaultActivityContextMissingError } from "../../domain/errors/default-activity-context-missing.error";

@@ -1,7 +1,7 @@
 import { OllamaCVChatAIServiceFactory } from "./infrastructure/services/ollama-cv-chat-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Telemetry, EventBus } from "@/modules/shared";
-import { instrumentUseCases } from "@/modules/shared";
+import type { Telemetry, EventBus } from "@/backend/modules/shared";
+import { instrumentUseCases } from "@/backend/modules/shared";
 import { CreateConversationUseCase } from "./application/use-cases/create-conversation.use-case";
 import { DeleteConversationUseCase } from "./application/use-cases/delete-conversation.use-case";
 import { ListConversationsUseCase } from "./application/use-cases/list-conversations.use-case";

@@ -1,8 +1,8 @@
 import { screen, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { renderWithProviders } from "@/frontend/testing/render";
-import { server } from "@/frontend/testing/msw/server";
+import { renderWithProviders } from "@/testing/render";
+import { server } from "@/testing/msw/server";
 import { ReceivedFeedbackView } from "..";
 
 const nav = vi.hoisted(() => {

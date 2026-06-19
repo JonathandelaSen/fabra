@@ -3,13 +3,13 @@ import { NextRequest } from "next/server";
 import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvAnalysisModule } from "@/lib/container";
-import { presentCVAnalysis } from "@/modules/cv-analysis";
+import { presentCVAnalysis } from "@/backend/modules/cv-analysis";
 import {
   toCVAnalysisDetailResponse,
   type DeleteCVAnalysisResponse,
   type GetCVAnalysisResponse,
 } from "./responses";
-import { ok, notFound } from "@/modules/shared";
+import { ok, notFound } from "@/backend/modules/shared";
 
 export async function GET(
   _req: NextRequest,

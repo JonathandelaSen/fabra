@@ -2,8 +2,8 @@
 
 import type { ReactNode } from "react";
 import { ArrowLeft, Search } from "lucide-react";
-import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
-import { Button } from "@/components/ui/button";
+import { FeatureTwoPaneLayout } from "@/frontend/components/shared/feature-two-pane-layout";
+import { Button } from "@/frontend/components/ui/button";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { JobMatchAnalysisSummary } from "../api/job-match-analysis-api";
 import type { JobMatchAnalysisRouteMode, JobMatchAnalysisRouteView } from "../hooks/use-job-match-analysis-route-state";

@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 
 export class ActivityContextRoleOrLabel extends ValueObject<string | null> {
   private constructor(private readonly value: string | null) {

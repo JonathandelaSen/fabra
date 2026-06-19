@@ -3,11 +3,11 @@
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { AlertTriangle, Globe2, X } from "lucide-react";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
 import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
+} from "@/frontend/components/shared/action-buttons";
 
 interface CVEditorPublicModalProps {
   publicDraftUrl: string | null;

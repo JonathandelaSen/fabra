@@ -1,4 +1,4 @@
-import { ValueObject, Counter } from "@/modules/shared";
+import { ValueObject, Counter } from "@/backend/modules/shared";
 import type { UserPrimitives } from "../entities/user.entity";
 import { User } from "../entities/user.entity";
 

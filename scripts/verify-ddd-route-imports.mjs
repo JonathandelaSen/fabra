@@ -36,13 +36,13 @@ function toPosixRelative(rootDir, filePath) {
 }
 
 function isModuleInternalImport(specifier) {
-  if (!specifier.startsWith("@/modules/")) return false;
-  const rest = specifier.slice("@/modules/".length);
+  if (!specifier.startsWith("@/backend/modules/")) return false;
+  const rest = specifier.slice("@/backend/modules/".length);
   const parts = rest.split("/");
   if (parts[0] === "shared") return false;
-  // @/modules/<name> or @/modules/<name>/index → barrel (OK)
-  // @/modules/<name>/client → client barrel (OK)
-  // @/modules/<name>/anything/else → internal (violation)
+  // @/backend/modules/<name> or @/backend/modules/<name>/index → barrel (OK)
+  // @/backend/modules/<name>/client → client barrel (OK)
+  // @/backend/modules/<name>/anything/else → internal (violation)
   if (parts.length <= 1) return false;
   if (parts.length === 2 && (parts[1] === "index" || parts[1] === "client")) return false;
   return true;
@@ -67,7 +67,7 @@ function isCrossRouteRelativeImport(file, specifier) {
 
 async function findRouteImportViolations() {
   const appDir = path.join(repoRoot, "src/app");
-  const componentDir = path.join(repoRoot, "src/components");
+  const componentDir = path.join(repoRoot, "src/frontend/components");
   const libDir = path.join(repoRoot, "src/lib");
 
   const files = [

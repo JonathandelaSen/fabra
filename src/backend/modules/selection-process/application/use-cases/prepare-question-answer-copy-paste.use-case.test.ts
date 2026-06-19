@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { Timestamp, UserId } from "@/modules/shared";
+import { Timestamp, UserId } from "@/backend/modules/shared";
 import { ProcessQuestion } from "../../domain/entities/process-question.entity";
 import type { ProcessQuestionRepository } from "../../domain/repositories/process-question.repository";
 import { ProcessQuestionId } from "../../domain/value-objects/process-question-id.value-object";

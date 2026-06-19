@@ -1,4 +1,4 @@
-import { CopyPastePreparation, UserId } from "@/modules/shared";
+import { CopyPastePreparation, UserId } from "@/backend/modules/shared";
 import { PerformanceReviewNotFoundError } from "../../domain/errors/performance-review-not-found.error";
 import type { PerformanceReviewRepository } from "../../domain/repositories/performance-review.repository";
 import type { ReviewEvidenceItemRepository } from "../../domain/repositories/review-evidence-item.repository";

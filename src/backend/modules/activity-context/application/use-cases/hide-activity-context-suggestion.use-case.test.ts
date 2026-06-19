@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { ExecutionResult } from "@/modules/shared";
+import { ExecutionResult } from "@/backend/modules/shared";
 import { HideActivityContextSuggestionUseCase } from "./hide-activity-context-suggestion.use-case";
 
 describe("HideActivityContextSuggestionUseCase", () => {

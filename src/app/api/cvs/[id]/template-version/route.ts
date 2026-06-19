@@ -2,8 +2,8 @@ import { NextRequest } from "next/server";
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvLibraryModule } from "@/lib/container";
-import { presentCVDocument } from "@/modules/cv-library";
-import { errorResponse, ok } from "@/modules/shared";
+import { presentCVDocument } from "@/backend/modules/cv-library";
+import { errorResponse, ok } from "@/backend/modules/shared";
 import { parseCreateTemplateVersionRequest } from "./validation";
 
 export async function POST(

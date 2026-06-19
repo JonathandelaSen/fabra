@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/utils/ai-models";
 import {
   ArrowLeft,
   Briefcase,
@@ -10,8 +10,8 @@ import {
   Link,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import AIActionLauncher from "@/components/shared/ai-action-launcher";
-import { BasicPanel } from "@/components/shared/basic-panel";
+import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 
 interface JobMatchFormProps {
   onSubmit: (jobDescription: string, jobUrl: string, provider: StoredAIProvider, model: string) => void;

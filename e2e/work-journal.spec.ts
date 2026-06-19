@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { loginViaUI } from "./helpers/auth";
 import { createConfirmedUser } from "./helpers/supabase";
 import { uniqueLabel } from "./helpers/env";
-import { messages } from "../src/i18n/messages";
+import { messages } from "../src/frontend/i18n/messages";
 
 const t = messages.en.workJournal;
 

@@ -1,4 +1,4 @@
-import type { UserId } from "@/modules/shared";
+import type { UserId } from "@/backend/modules/shared";
 import type { ChatMessage } from "../entities/chat-message.entity";
 import type { JobAnalysisChatMessageId } from "../value-objects/job-analysis-chat-message-id.value-object";
 import type { JobAnalysisChatConversationId } from "../value-objects/job-analysis-chat-conversation-id.value-object";

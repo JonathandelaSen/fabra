@@ -1,16 +1,16 @@
 "use client";
 
-import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
-import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
+import { FeatureHeaderActionButton } from "@/frontend/components/shared/feature-header-action-button";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
+import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
+import { FeatureTwoPaneLayout } from "@/frontend/components/shared/feature-two-pane-layout";
 import { ObjectiveDetail } from "./detail/objective-detail";
 import { ObjectiveFormPanel } from "./form/objective-form-panel";
 import { ObjectivesDetailSkeleton } from "./objectives-skeleton";
 import { ObjectivesSidebar } from "./sidebar/objectives-sidebar";
 import { Target, Plus } from "lucide-react";
-import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
-import { FeatureEmptyState } from "@/components/shared/feature-empty-state";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/frontend/components/shared/action-buttons";
+import { FeatureEmptyState } from "@/frontend/components/shared/feature-empty-state";
 import { ObjectiveConfirmDialog } from "./objective-confirm-dialog";
 import { useObjectivesViewState } from "../hooks/use-objectives-view-state";
 

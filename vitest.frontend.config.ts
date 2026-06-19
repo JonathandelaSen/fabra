@@ -15,13 +15,13 @@ export default defineConfig({
       },
     },
     include: [
-      "src/components/**/*.test.ts",
-      "src/components/**/*.test.tsx",
-      "src/features/**/*.test.ts",
-      "src/features/**/*.test.tsx",
+      "src/frontend/components/**/*.test.ts",
+      "src/frontend/components/**/*.test.tsx",
+      "src/frontend/features/**/*.test.ts",
+      "src/frontend/features/**/*.test.tsx",
       "src/frontend/**/*.test.ts",
       "src/frontend/**/*.test.tsx",
     ],
-    setupFiles: ["src/frontend/testing/setup.ts"],
+    setupFiles: ["src/testing/setup.ts"],
   },
 });

@@ -2,8 +2,8 @@ import { NextRequest } from "next/server";
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { performanceReviewModule } from "@/lib/container";
-import { presentReviewEvidenceItems } from "@/modules/performance-review";
-import { errorResponse, ok } from "@/modules/shared";
+import { presentReviewEvidenceItems } from "@/backend/modules/performance-review";
+import { errorResponse, ok } from "@/backend/modules/shared";
 import { parseReorderEvidenceRequest } from "./validation";
 import type { ListEvidenceItemsResponse } from "./responses";
 

@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { createTestCV } from "@/modules/test-helpers/cv-fixtures";
+import { createTestCV } from "@/backend/modules/test-helpers/cv-fixtures";
 import {
   createTestUser,
   getSupabaseClient,
   testLabel,
-} from "@/modules/test-helpers/setup";
-import { UserId } from "@/modules/shared";
+} from "@/backend/modules/test-helpers/setup";
+import { UserId } from "@/backend/modules/shared";
 import { CVStructuredProfile } from "../../domain/entities/cv-structured-profile.entity";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
 import { ProfileSchemaVersion } from "../../domain/value-objects/profile-schema-version.value-object";

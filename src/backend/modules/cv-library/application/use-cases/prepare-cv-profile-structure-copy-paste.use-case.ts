@@ -1,5 +1,5 @@
 import { createRequestId } from "@/lib/observability";
-import { badRequest, CopyPastePreparation } from "@/modules/shared";
+import { badRequest, CopyPastePreparation } from "@/backend/modules/shared";
 import { ErrorCode } from "@/shared/error-codes";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import {

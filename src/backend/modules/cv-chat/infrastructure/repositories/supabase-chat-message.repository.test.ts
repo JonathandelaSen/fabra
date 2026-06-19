@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { Timestamp, UserId } from "@/modules/shared";
+import { Timestamp, UserId } from "@/backend/modules/shared";
 import {
   createTestUser,
   getSupabaseClient,
   testLabel,
-} from "@/modules/test-helpers/setup";
-import { createTestCV } from "@/modules/test-helpers/cv-fixtures";
+} from "@/backend/modules/test-helpers/setup";
+import { createTestCV } from "@/backend/modules/test-helpers/cv-fixtures";
 import { ChatMessage } from "../../domain/entities/chat-message.entity";
 import { CVChatContent } from "../../domain/value-objects/cv-chat-content.value-object";
 import { CVChatConversationId } from "../../domain/value-objects/cv-chat-conversation-id.value-object";

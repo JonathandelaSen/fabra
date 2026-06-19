@@ -1,4 +1,4 @@
-import { AggregateRoot } from "@/modules/shared";
+import { AggregateRoot } from "@/backend/modules/shared";
 
 export const aiInteractionRatings = {
   good: "good",

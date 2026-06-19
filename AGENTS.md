@@ -57,12 +57,12 @@ Observability is handled exclusively through Sentry (see `docs/architecture/tech
 
 ## Hexagonal architecture (DDD modules)
 
-The backend is being migrated progressively from `src/lib/db.ts` to hexagonal architecture under `src/modules/`. **Work Journal** is the first migrated module and serves as the reference pattern for future modules.
+The backend is being migrated progressively from `src/lib/db.ts` to hexagonal architecture under `src/backend/modules/`. **Work Journal** is the first migrated module and serves as the reference pattern for future modules.
 
 ### Module structure
 
 ```
-src/modules/
+src/backend/modules/
   shared/                              ← Cross-module infrastructure
     domain/repositories/               ← Cross-module port interfaces
     infrastructure/repositories/       ← Shared infrastructure implementations
@@ -89,14 +89,14 @@ src/modules/
 
 - **Domain uses camelCase**. `snake_case` belongs to database rows and legacy HTTP payloads only. New internal API response contracts should be camelCase; infrastructure repositories and route presenters map between DB/API shapes and domain primitives.
 - **Entities are aggregate roots**: classes extending `AggregateRoot`, built from ValueObjects, with an ID, `static create(params)`, `static fromPrimitives(primitives)`, `toPrimitives()`, private/protected constructors, and domain methods that record domain events internally.
-- **Value objects are immutable**: one `*.value-object.ts` file per VO, `static fromPrimitives(...)`, `toPrimitives()`, private/protected state, no mutating methods. Shared concerns such as IDs, ISO dates, optional ISO dates, timestamps, and user IDs live under `src/modules/shared/domain/value-objects/`.
+- **Value objects are immutable**: one `*.value-object.ts` file per VO, `static fromPrimitives(...)`, `toPrimitives()`, private/protected state, no mutating methods. Shared concerns such as IDs, ISO dates, optional ISO dates, timestamps, and user IDs live under `src/backend/modules/shared/domain/value-objects/`.
 - **Primitives are boundary data**: `EntityPrimitives` interfaces live with the entity and use camelCase. Only `fromPrimitives` and `toPrimitives` convert between VOs and primitives. Do not pass primitives into entity constructors or domain methods.
 - **Repositories work with aggregates and VOs**: aggregate repositories expose `search(criteria)`, `findById(id VO, userId VO)`, `save(aggregate)`, and `delete(id VO, userId VO)`. They must not accept or return `*Primitives`, `Create*Input`, `Update*Input`, or primitive entity fields. Infrastructure repositories map DB `snake_case` rows to domain camelCase primitives and hydrate aggregates.
 - **Associations use IDs in the domain**. Do not nest aggregate instances inside other aggregates. Compose read models for UI/API responses in the application/route boundary.
 - **Domain events are internal for now**. Aggregate methods record events with `recordDomainEvent`; use cases may call `pullDomainEvents()` later. Technical observability is handled by Sentry, not by a domain-level tracker.
 - **Use cases** receive dependencies via constructor injection (`{ repo, tracker, ... }`).
 - **Modules are singletons** constructed once at import time — not rebuilt per request. The app container (`src/lib/container.ts`) is the composition root that wires up all modules, query buses, and query handler registrations. Route handlers import modules from the container.
-- **Infrastructure repositories implement `SupabaseAware`** (`src/modules/shared/infrastructure/supabase-aware.ts`). They have no constructor parameters. Instead they expose a `bindRequest(client: SupabaseClient)` method that sets the Supabase client for the current request. The module's own `bindRequest` method delegates to all its repositories. Route handlers call `myModule.bindRequest(supabase)` once per request before calling any use case. **Reference implementation:** `job-analysis-chat` module.
+- **Infrastructure repositories implement `SupabaseAware`** (`src/backend/modules/shared/infrastructure/supabase-aware.ts`). They have no constructor parameters. Instead they expose a `bindRequest(client: SupabaseClient)` method that sets the Supabase client for the current request. The module's own `bindRequest` method delegates to all its repositories. Route handlers call `myModule.bindRequest(supabase)` once per request before calling any use case. **Reference implementation:** `job-analysis-chat` module.
 - **Route handlers** import the module singleton from `src/lib/container.ts`, call `module.bindRequest(supabase)`, and then call use case `.execute()`. HTTP validation (`normalize*` functions) stays in the route handlers.
 - **Domain errors** are caught by `handleDomainError()` which maps them to HTTP status codes.
 - **AI prompts and controllers live inside their module** under `infrastructure/services/`. Prompt builders go in a `*-prompts.ts` file, and the SDK client call goes in a separate `gemini-*-ai.service.ts` file. Both files are colocated in the same directory. **Reference:** `feedback-notes` module.
@@ -153,7 +153,7 @@ if (!parsed.ok) {
 }
 ```
 
-`errorResponse` is imported from `@/modules/shared`.
+`errorResponse` is imported from `@/backend/modules/shared`.
 
 #### 4. Error handling — always `handleApiError` in the `catch`
 
@@ -165,7 +165,7 @@ Wrap the entire handler body in `try/catch` and delegate all error handling to `
 }
 ```
 
-`handleApiError` (from `@/modules/shared`) handles:
+`handleApiError` (from `@/backend/modules/shared`) handles:
 
 - `HttpError` (thrown by `notFound()`, `badRequest()`, `forbidden()`, `conflict()`) → proper 4xx status.
 - `DomainError` subclasses → 404 for `*NotFoundError`, 400 otherwise.
@@ -175,7 +175,7 @@ Do **not** use the legacy `handleDomainError()` from `domain-error-handler.ts` i
 
 #### 5. Response helpers
 
-Use the response helpers from `@/modules/shared` — never construct `NextResponse` manually:
+Use the response helpers from `@/backend/modules/shared` — never construct `NextResponse` manually:
 
 | Helper                 | Status     | Use for                                                  |
 | ---------------------- | ---------- | -------------------------------------------------------- |
@@ -193,8 +193,8 @@ Use the response helpers from `@/modules/shared` — never construct `NextRespon
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { myModule } from "@/lib/container";
-import { presentMyEntity } from "@/modules/my-module";
-import { ok, created, errorResponse, handleApiError } from "@/modules/shared";
+import { presentMyEntity } from "@/backend/modules/my-module";
+import { ok, created, errorResponse, handleApiError } from "@/backend/modules/shared";
 import { parseCreateMyEntityRequest } from "./validation";
 
 export async function GET() {
@@ -266,60 +266,66 @@ Each step should be a separate commit.
 - **Never test AI services directly** — AI service implementations must not be exercised in automated tests. Use mocks injected into use cases whenever AI behavior is required.
 - Run with `npm run test:backend` (auto-starts Supabase E2E stack if not running).
 - Test files live next to the code they test and share the source filename plus `.test.ts`: `create-context.use-case.ts` → `create-context.use-case.test.ts`, `supabase-work-journal-entry.repository.ts` → `supabase-work-journal-entry.repository.test.ts`.
-- Run `npm run ddd:check` before finishing changes under `src/modules/`. It runs:
-  - `scripts/verify-ddd-tests.mjs`: every `src/modules/**/application/use-cases/*.use-case.ts` and every `src/modules/**/infrastructure/repositories/*.repository.ts` must have a colocated `*.test.ts` file with the same basename.
-  - `scripts/verify-ddd-imports.mjs`: module internals must respect DDD import direction. Domain cannot import application or infrastructure, application cannot import infrastructure, infrastructure cannot import application, and feature modules cannot import another feature module's internal paths. Barrel imports (`@/modules/<name>`) across modules are allowed for cross-module query dispatch via QueryBus. Composition roots (`<module>.module.ts`), module barrels, tests, test helpers, external packages, and `src/modules/shared/**` are allowed where appropriate.
+- Run `npm run ddd:check` before finishing changes under `src/backend/modules/`. It runs:
+  - `scripts/verify-ddd-tests.mjs`: every `src/backend/modules/**/application/use-cases/*.use-case.ts` and every `src/backend/modules/**/infrastructure/repositories/*.repository.ts` must have a colocated `*.test.ts` file with the same basename.
+  - `scripts/verify-ddd-imports.mjs`: module internals must respect DDD import direction. Domain cannot import application or infrastructure, application cannot import infrastructure, infrastructure cannot import application, and feature modules cannot import another feature module's internal paths. Barrel imports (`@/backend/modules/<name>`) across modules are allowed for cross-module query dispatch via QueryBus. Composition roots (`<module>.module.ts`), module barrels, tests, test helpers, external packages, and `src/backend/modules/shared/**` are allowed where appropriate.
   - `scripts/verify-ddd-entities.mjs`: modules listed in `migratedModules` must follow the AggregateRoot/ValueObject/repository rules above.
-  - `scripts/verify-ddd-value-objects.mjs`: every `src/modules/**/domain/value-objects/*.value-object.ts` (all modules) must export a class extending `ValueObject` (or a shared base VO), with a private/protected constructor, `static fromPrimitives(...)`, `toPrimitives()`, no mutator methods, and no public mutable properties. Additionally, `*Primitives` boundary interfaces must use plain primitives — a field typed as a VO union alias or domain type (e.g. `EvidenceSourceValue`, `ContextType`, `Date`) is rejected; widen it to its primitive (e.g. `string`) and let `fromPrimitives` narrow/validate. See the patterns in `docs/architecture/value-objects.md`.
-  - `scripts/verify-ddd-route-imports.mjs`: files under `src/app/`, `src/components/`, and `src/lib/` that import from `@/modules/<name>` must use the barrel (`@/modules/<name>` or `@/modules/<name>/index`), never reach into internal paths like `@/modules/<name>/infrastructure/...`. `@/modules/shared` is exempt.
-  - `scripts/verify-ddd-barrel-exports.mjs`: module barrel files (`index.ts`) must not re-export from `infrastructure/` or from `domain/repositories/`. Infrastructure details must be accessed through use cases, and repository port interfaces are module-internal (consumers use them via relative/alias imports within the same module). `@/modules/shared` is exempt.
+  - `scripts/verify-ddd-value-objects.mjs`: every `src/backend/modules/**/domain/value-objects/*.value-object.ts` (all modules) must export a class extending `ValueObject` (or a shared base VO), with a private/protected constructor, `static fromPrimitives(...)`, `toPrimitives()`, no mutator methods, and no public mutable properties. Additionally, `*Primitives` boundary interfaces must use plain primitives — a field typed as a VO union alias or domain type (e.g. `EvidenceSourceValue`, `ContextType`, `Date`) is rejected; widen it to its primitive (e.g. `string`) and let `fromPrimitives` narrow/validate. See the patterns in `docs/architecture/value-objects.md`.
+  - `scripts/verify-ddd-route-imports.mjs`: files under `src/app/`, `src/frontend/components/`, and `src/lib/` that import from `@/backend/modules/<name>` must use the barrel (`@/backend/modules/<name>` or `@/backend/modules/<name>/index`), never reach into internal paths like `@/backend/modules/<name>/infrastructure/...`. `@/backend/modules/shared` is exempt.
+  - `scripts/verify-ddd-barrel-exports.mjs`: module barrel files (`index.ts`) must not re-export from `infrastructure/` or from `domain/repositories/`. Infrastructure details must be accessed through use cases, and repository port interfaces are module-internal (consumers use them via relative/alias imports within the same module). `@/backend/modules/shared` is exempt.
 
 ### Re-export shims in `src/lib/`
 
-Some `src/lib/` files are thin re-export shims that bridge old import paths to domain files inside modules (e.g., `src/lib/cv-profile.ts` → `@/modules/cv-library/domain/cv-profile`). These shims **must import from the domain file directly**, not from the module barrel (`@/modules/<name>`), because the barrel re-exports the full module (use cases, repositories, etc.) and Next.js Turbopack does not tree-shake barrel re-exports in client components — importing the barrel from a client component drags in `server-only` code and breaks the build. These shim files are listed in the `reExportShims` set in `scripts/verify-ddd-route-imports.mjs` so they are exempt from the barrel-only rule.
+Some `src/lib/` files are thin re-export shims that bridge old import paths to domain files inside modules (e.g., `src/lib/cv-profile.ts` → `@/backend/modules/cv-library/domain/cv-profile`). These shims **must import from the domain file directly**, not from the module barrel (`@/backend/modules/<name>`), because the barrel re-exports the full module (use cases, repositories, etc.) and Next.js Turbopack does not tree-shake barrel re-exports in client components — importing the barrel from a client component drags in `server-only` code and breaks the build. These shim files are listed in the `reExportShims` set in `scripts/verify-ddd-route-imports.mjs` so they are exempt from the barrel-only rule.
 
 ## Frontend feature architecture
 
-The frontend is moving from component-only module folders to route-driven feature folders. New substantial frontend work should use `src/features/<feature-name>/` instead of adding more business logic under `src/components/<module-name>/`.
+The frontend is moving from component-only module folders to route-driven feature folders. New substantial frontend work should use `src/frontend/features/<feature-name>/` instead of adding more business logic under `src/frontend/components/<module-name>/`.
+
+`src/` is organized by layer:
 
 ```
-src/features/
-  <feature-name>/
-    api/          ← frontend HTTP client and query keys for the feature
-    hooks/        ← route state, TanStack Query hooks, mutation orchestration
-    components/   ← feature-specific React components
-    index.ts      ← public feature barrel
-
-src/frontend/
-  api/            ← cross-feature fetch helpers
-  query/          ← TanStack Query provider/config
-  data/           ← shared frontend data hooks/API clients when truly cross-feature
-
-src/components/
-  shell/          ← global app chrome
-  shared/         ← cross-feature reusable UI components
-  ui/             ← generic UI primitives, prefer shadcn/ui
+src/
+  app/                  ← Next.js routes + API handlers (Next.js convention, untouched)
+  backend/
+    modules/            ← hexagonal DDD modules
+  frontend/             ← all client-side code
+    features/<feature-name>/
+      api/              ← frontend HTTP client and query keys for the feature
+      hooks/            ← route state, TanStack Query hooks, mutation orchestration
+      components/       ← feature-specific React components
+      index.ts          ← public feature barrel
+    components/         ← cross-feature UI
+      shell/            ← global app chrome
+      shared/           ← cross-feature reusable UI components
+      ui/               ← generic UI primitives, prefer shadcn/ui
+    i18n/               ← translation messages and next-intl config
+    utils/              ← cross-feature client infra (api/, errors/, helpers)
+  testing/              ← shared test setup, render helpers, msw
+  shared/               ← contracts/constants shared between backend and frontend
+  lib/                  ← cross-cutting utilities and infra (supabase, pdf, container)
+  types/                ← global type declarations
 ```
 
 ### Conventions
 
-1. New feature UI, feature-specific hooks, and feature-specific API clients go in `src/features/<feature-name>/`.
-2. `src/components/<module-name>/` is legacy for existing screens. Do not add new business-heavy screens there unless the file is only a temporary migration shim.
-3. Cross-feature reusable UI components go in `src/components/shared/`.
-4. Generic UI primitives go in `src/components/ui/` and should prefer shadcn/ui.
+1. New feature UI, feature-specific hooks, and feature-specific API clients go in `src/frontend/features/<feature-name>/`.
+2. `src/frontend/components/<module-name>/` is legacy for existing screens. Do not add new business-heavy screens there unless the file is only a temporary migration shim.
+3. Cross-feature reusable UI components go in `src/frontend/components/shared/`.
+4. Generic UI primitives go in `src/frontend/components/ui/` and should prefer shadcn/ui.
 5. Feature internals are private by default. A feature may be imported by other code only through its `index.ts` public barrel.
-6. Do not deep-import from another feature. If a hook/API/type is needed by multiple features, either intentionally export it from the owning feature barrel or move it to `src/frontend/data/<domain>/` once a second real consumer exists.
+6. Do not deep-import from another feature. If a hook/API/type is needed by multiple features, either intentionally export it from the owning feature barrel or move it to `src/frontend/utils/` once a second real consumer exists.
 7. Do not move code to shared speculatively. Shared frontend code should be extracted only after reuse is real or dependency direction would otherwise be wrong.
 
 ### Frontend component composition
 
-Do not leave large feature screens as one monolithic component. Route/view components in `src/features/<feature>/components/*-view.tsx` should orchestrate data, route state, mutations, and top-level local UI state, while substantial UI regions live in **separate sibling files** in the same `components/` directory. Split obvious sections such as sidebars, detail headers, forms, lists, list rows, inline editors, modals, and repeated panels into their own `*.tsx` file before finishing the change. As a rule of thumb, once a view component grows beyond roughly 250-300 lines or contains multiple independent UI regions, extract components into separate files in the same feature folder instead of waiting for a follow-up review.
+Do not leave large feature screens as one monolithic component. Route/view components in `src/frontend/features/<feature>/components/*-view.tsx` should orchestrate data, route state, mutations, and top-level local UI state, while substantial UI regions live in **separate sibling files** in the same `components/` directory. Split obvious sections such as sidebars, detail headers, forms, lists, list rows, inline editors, modals, and repeated panels into their own `*.tsx` file before finishing the change. As a rule of thumb, once a view component grows beyond roughly 250-300 lines or contains multiple independent UI regions, extract components into separate files in the same feature folder instead of waiting for a follow-up review.
 
 Do not use JSX comments to label regions that should be components, such as `{/* Header */}`, `{/* Sidebar */}`, `{/* Tabs */}`, `{/* Panel Body */}`, or `{/* Footer Actions */}`. When a block needs that kind of label to be understandable, extract the block into a clearly named component in a separate sibling file and render that component instead. For example, prefer `ObjectiveFormHeader`, `OfferChatSidebar`, or `ExtractionParserTabs` over keeping a commented block inline.
 
 ### Component folder organization within a feature
 
-`src/features/<feature>/components/` organizes its files by **functional region of the product**, not by render hierarchy. The goal is that a folder name tells you which part of the feature a component belongs to (kanban, detail, chat, new-flow), and that the folder stays stable across refactors.
+`src/frontend/features/<feature>/components/` organizes its files by **functional region of the product**, not by render hierarchy. The goal is that a folder name tells you which part of the feature a component belongs to (kanban, detail, chat, new-flow), and that the folder stays stable across refactors.
 
 **Threshold — do not reorganize small features.** A feature with roughly **fewer than 15 components** keeps a single flat `components/` directory. Most features are this size and must not grow speculative subfolders. Only once a feature crosses ~15 components, or clearly contains multiple independent UI regions, introduce region subfolders.
 
@@ -331,11 +337,11 @@ Do not use JSX comments to label regions that should be components, such as `{/*
 4. **Name folders after the domain region**, as a short noun (`kanban`, `detail`, `new-flow`). Never use catch-all names like `parts/`, `misc/`, `shared/`, or `common/`.
 5. **Folder structure is feature-internal.** Features remain private behind their `index.ts` barrel; no DDD/boundary check inspects the internal shape of `components/`, so regions can be introduced per feature as they grow. The barrel and any test `vi.mock(...)` paths must be updated when files move.
 
-**Reference implementation:** `src/features/job-match-analysis/components/` (root orchestration spine + `list/`, `kanban/`, `new-flow/`, `extraction/`, `detail/` with `detail/tabs/` and `detail/chat/`, and `copy-paste/`).
+**Reference implementation:** `src/frontend/features/job-match-analysis/components/` (root orchestration spine + `list/`, `kanban/`, `new-flow/`, `extraction/`, `detail/` with `detail/tabs/` and `detail/chat/`, and `copy-paste/`).
 
 ### Internationalization (i18n)
 
-All user-visible strings in React components must use `next-intl` translations via `useTranslations()`. Never hardcode UI strings (labels, descriptions, placeholders, error messages, microcopy) directly in components. Add translation keys to `src/i18n/messages.ts` under both the `en` and `es` sections. Use a feature-scoped namespace key (e.g., `activityContexts`, `feedbackNotes`) and call `const t = useTranslations("featureNamespace")` in each component. Existing features that already use translations serve as reference.
+All user-visible strings in React components must use `next-intl` translations via `useTranslations()`. Never hardcode UI strings (labels, descriptions, placeholders, error messages, microcopy) directly in components. Add translation keys to `src/frontend/i18n/messages.ts` under both the `en` and `es` sections. Use a feature-scoped namespace key (e.g., `activityContexts`, `feedbackNotes`) and call `const t = useTranslations("featureNamespace")` in each component. Existing features that already use translations serve as reference.
 
 ### Code style: no decorative comments
 
@@ -363,18 +369,18 @@ Rules:
 Allowed frontend data flow:
 
 ```
-src/modules/<module>/application presenters
+src/backend/modules/<module>/application presenters
         ↓
 src/app/api/**/responses.ts
         ↓
-src/features/<feature>/api/*-api.ts
+src/frontend/features/<feature>/api/*-api.ts
         ↓
-src/features/<feature>/hooks/*
+src/frontend/features/<feature>/hooks/*
         ↓
-src/features/<feature>/components/*
+src/frontend/features/<feature>/components/*
 ```
 
-Frontend files under `src/features/**`, `src/components/**`, and `src/frontend/**` must not import from `src/modules/**` or `@/modules/**`. Module types and presenters are consumed by API routes/responses, not by React components or frontend hooks.
+Frontend files under `src/frontend/features/**`, `src/frontend/components/**`, and `src/frontend/**` must not import from `src/backend/modules/**` or `@/backend/modules/**`. Module types and presenters are consumed by API routes/responses, not by React components or frontend hooks.
 
 ### TanStack Query and frontend state
 
@@ -382,7 +388,7 @@ TanStack Query is the standard owner for server state in migrated frontend featu
 
 All frontend mutations in migrated features should use optimistic updates by default. Update the affected TanStack Query cache in `onMutate`, cancel in-flight queries for that cache key, roll back from the saved previous value in `onError`, and reconcile the optimistic entity with the server response in `onSuccess`. Do not refetch broad list/workspace endpoints after routine create/update/delete mutations unless the mutation response cannot provide enough data to keep the cache correct or the workflow intentionally needs server recomputation.
 
-Mutation hooks must live in `src/features/<feature>/hooks/` and encapsulate `useMutation()` calls with their `mutationFn`, `onSuccess` invalidation, and any orchestration logic. View components must not call `mutations.create.mutateAsync(...)` directly — instead, they should call purpose-named hook callbacks (e.g., `useCreateActivityContext()`, `usePromoteSuggestion()`) that internally handle the mutation, error state, and cache invalidation. This keeps view components thin and mutation logic testable and reusable.
+Mutation hooks must live in `src/frontend/features/<feature>/hooks/` and encapsulate `useMutation()` calls with their `mutationFn`, `onSuccess` invalidation, and any orchestration logic. View components must not call `mutations.create.mutateAsync(...)` directly — instead, they should call purpose-named hook callbacks (e.g., `useCreateActivityContext()`, `usePromoteSuggestion()`) that internally handle the mutation, error state, and cache invalidation. This keeps view components thin and mutation logic testable and reusable.
 
 Do not copy `useQuery().data` into `useState` unless it is intentionally becoming an editable local draft.
 
@@ -398,7 +404,7 @@ Do not create view models that are 1:1 copies of API response types. Prefer fron
 
 ### Build verification
 
-After any change under `src/modules/`, `src/lib/`, `src/app/`, `src/components/`, `src/features/`, or `src/frontend/`, run `npm run build` before finishing. Type-checking alone (`tsc --noEmit`) does not catch Next.js server/client boundary errors — only the full build does.
+After any change under `src/backend/modules/`, `src/lib/`, `src/app/`, `src/frontend/components/`, `src/frontend/features/`, or `src/frontend/`, run `npm run build` before finishing. Type-checking alone (`tsc --noEmit`) does not catch Next.js server/client boundary errors — only the full build does.
 
 ### Agent check
 
@@ -408,7 +414,7 @@ After touching code, always run `npm run agent:check` before handing work back. 
 
 Frontend boundary checks should be automated alongside the existing DDD checks. The verification should reject:
 
-- frontend imports from `src/modules/**` or `@/modules/**`
+- frontend imports from `src/backend/modules/**` or `@/backend/modules/**`
 - frontend imports from `src/app/api/**/route` or `@/app/api/**/route`
 - cross-feature deep imports that bypass a feature `index.ts`
 - `responses.ts` files importing Next runtime, `server-only`, Supabase, `@/lib/container`, auth request context, or module infrastructure

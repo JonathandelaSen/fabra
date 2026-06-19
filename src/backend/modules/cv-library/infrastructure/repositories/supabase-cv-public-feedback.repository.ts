@@ -1,4 +1,4 @@
-import { BoundSupabaseRepository } from "@/modules/shared";
+import { BoundSupabaseRepository } from "@/backend/modules/shared";
 import { CVPublicFeedback } from "../../domain/entities/cv-public-feedback.entity";
 import type { CVPublicFeedbackRepository } from "../../domain/repositories/cv-public-feedback.repository";
 

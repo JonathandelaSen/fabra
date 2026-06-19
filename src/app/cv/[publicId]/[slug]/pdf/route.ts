@@ -4,7 +4,7 @@ import { renderTemplatePDF } from "@/lib/cv-template-pdf";
 import { getErrorMessage } from "@/lib/errors";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { cvLibraryModule } from "@/lib/container";
-import { presentCVDocument } from "@/modules/cv-library";
+import { presentCVDocument } from "@/backend/modules/cv-library";
 
 export async function GET(
   _req: NextRequest,

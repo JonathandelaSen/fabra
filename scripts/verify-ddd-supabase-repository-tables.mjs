@@ -35,31 +35,31 @@ const tableOwners = new Map(
 );
 
 const legacyCrossModuleReads = new Set([
-  "src/modules/selection-process/infrastructure/repositories/supabase-follow-up.repository.ts::job_match_analyses",
-  "src/modules/work-journal/infrastructure/repositories/supabase-cv-data.repository.ts::cvs",
-  "src/modules/activity-context/infrastructure/repositories/supabase-cv-data.repository.ts::cvs",
-  "src/modules/activity-context/infrastructure/repositories/supabase-cv-data.repository.ts::cv_structured_profiles",
-  "src/modules/work-journal/infrastructure/repositories/supabase-work-journal-context.repository.ts::work_journal_hidden_context_suggestions",
-  "src/modules/received-feedback/infrastructure/repositories/supabase-received-feedback.repository.ts::activity_contexts",
-  "src/modules/work-journal/infrastructure/repositories/supabase-work-journal-context.repository.ts::activity_contexts",
+  "src/backend/modules/selection-process/infrastructure/repositories/supabase-follow-up.repository.ts::job_match_analyses",
+  "src/backend/modules/work-journal/infrastructure/repositories/supabase-cv-data.repository.ts::cvs",
+  "src/backend/modules/activity-context/infrastructure/repositories/supabase-cv-data.repository.ts::cvs",
+  "src/backend/modules/activity-context/infrastructure/repositories/supabase-cv-data.repository.ts::cv_structured_profiles",
+  "src/backend/modules/work-journal/infrastructure/repositories/supabase-work-journal-context.repository.ts::work_journal_hidden_context_suggestions",
+  "src/backend/modules/received-feedback/infrastructure/repositories/supabase-received-feedback.repository.ts::activity_contexts",
+  "src/backend/modules/work-journal/infrastructure/repositories/supabase-work-journal-context.repository.ts::activity_contexts",
 ]);
 
 // Admin platform read models: aggregate counters for the admin dashboard.
 // Every new dashboard table must be added here deliberately.
 const adminReadModelReads = new Set([
-  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::cvs",
-  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::cv_structured_profiles",
-  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::job_match_analyses",
-  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::analysis_chat_conversations",
-  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::analysis_chat_messages",
-  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::interview_questions",
-  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::job_opportunities",
-  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::process_questions",
-  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::feedback_notes_feedbacks",
-  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::received_feedback",
-  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::work_journal_entries",
-  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::commitments",
-  "src/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::activity_contexts",
+  "src/backend/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::cvs",
+  "src/backend/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::cv_structured_profiles",
+  "src/backend/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::job_match_analyses",
+  "src/backend/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::analysis_chat_conversations",
+  "src/backend/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::analysis_chat_messages",
+  "src/backend/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::interview_questions",
+  "src/backend/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::job_opportunities",
+  "src/backend/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::process_questions",
+  "src/backend/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::feedback_notes_feedbacks",
+  "src/backend/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::received_feedback",
+  "src/backend/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::work_journal_entries",
+  "src/backend/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::commitments",
+  "src/backend/modules/admin/infrastructure/repositories/supabase-content-metrics.repository.ts::activity_contexts",
 ]);
 
 async function walkFiles(dir) {
@@ -118,7 +118,7 @@ function reasonForTable(moduleName, table, owner) {
 export async function findSupabaseRepositoryTableViolations({
   rootDir = repoRoot,
 } = {}) {
-  const modulesDir = path.join(rootDir, "src/modules");
+  const modulesDir = path.join(rootDir, "src/backend/modules");
   const files = (await walkFiles(modulesDir))
     .map((filePath) => toPosixRelative(rootDir, filePath))
     .sort();

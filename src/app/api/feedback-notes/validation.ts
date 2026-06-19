@@ -1,4 +1,4 @@
-import type { FeedbackStatus } from "@/modules/feedback-notes";
+import type { FeedbackStatus } from "@/backend/modules/feedback-notes";
 import { parseAIRequestConfig, type AIRequestConfig } from "@/app/api/_shared/ai-request";
 
 type Result<TValue, TError> =

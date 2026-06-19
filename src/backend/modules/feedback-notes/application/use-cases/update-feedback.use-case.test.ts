@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createTestUser, getSupabaseClient } from "@/modules/test-helpers/setup";
+import { createTestUser, getSupabaseClient } from "@/backend/modules/test-helpers/setup";
 import { activityContextsModule } from "@/lib/container";
 import { createFeedbackFixture, makeFeedbackDeps } from "../../test-helpers";
 import { FeedbackClosedError } from "../../domain/errors/feedback-closed.error";

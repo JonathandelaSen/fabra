@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import { Input } from "@/frontend/components/ui/input";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/frontend/components/shared/action-buttons";
 
 export function ObjectiveItemsHeader({ completion, doneCount, totalItems, t }: { completion: number; doneCount: number; totalItems: number; t: (key: string, values?: Record<string, number | string>) => string }) {
   return (

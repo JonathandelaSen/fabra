@@ -5,7 +5,7 @@ import {
   Timestamp,
   UserId,
   type UserId as UserIdType,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { PerformanceReviewCompletedEvent } from "../events/performance-review-completed.event";
 import { PerformanceReviewCreatedEvent } from "../events/performance-review-created.event";
 import { PerformanceReviewDeletedEvent } from "../events/performance-review-deleted.event";

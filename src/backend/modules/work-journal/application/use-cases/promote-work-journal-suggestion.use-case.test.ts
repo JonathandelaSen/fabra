@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   createTestUser,
   getSupabaseClient,
-} from "@/modules/test-helpers/setup";
+} from "@/backend/modules/test-helpers/setup";
 import { SupabaseWorkJournalContextRepository } from "../../infrastructure/repositories/supabase-work-journal-context.repository";
 import { PromoteWorkJournalSuggestionUseCase } from "./promote-work-journal-suggestion.use-case";
 

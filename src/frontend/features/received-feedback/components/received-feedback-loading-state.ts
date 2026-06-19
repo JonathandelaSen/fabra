@@ -2,7 +2,7 @@ import {
   shouldAutoSelectFirstItem,
   shouldShowMainLoader,
   type ListDetailLoadingState,
-} from "@/frontend/list-detail/list-detail-loading-state";
+} from "@/frontend/utils/list-detail-loading-state/list-detail-loading-state";
 
 interface ReceivedFeedbackAutoSelectionState {
   activeSelectedId: string | null;

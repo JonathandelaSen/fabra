@@ -1,10 +1,10 @@
 "use server";
 
-import { CV_PDFS_BUCKET } from "@/modules/cv-library";
+import { CV_PDFS_BUCKET } from "@/backend/modules/cv-library";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
-import { isInterfaceLanguage, type InterfaceLanguage } from "@/i18n/config";
-import { getMessages } from "@/i18n/messages";
+import { isInterfaceLanguage, type InterfaceLanguage } from "@/frontend/i18n/config";
+import { getMessages } from "@/frontend/i18n/messages";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 

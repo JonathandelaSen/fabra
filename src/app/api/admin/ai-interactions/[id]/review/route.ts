@@ -3,7 +3,7 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { aiInteractionsModule } from "@/lib/container";
 import { isAdminUser } from "@/lib/observability";
-import { errorResponse, forbidden, ok } from "@/modules/shared";
+import { errorResponse, forbidden, ok } from "@/backend/modules/shared";
 import { parseReviewAdminAIInteractionRequest } from "./validation";
 import type { ReviewAdminAIInteractionResponse } from "./responses";
 

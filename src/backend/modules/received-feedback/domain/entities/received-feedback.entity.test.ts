@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EntityId, UserId } from "@/modules/shared";
+import { EntityId, UserId } from "@/backend/modules/shared";
 import { ReceivedFeedback } from "./received-feedback.entity";
 import { ReceivedFeedbackId } from "../value-objects/received-feedback-id.value-object";
 import { ReceivedFeedbackDate } from "../value-objects/received-feedback-date.value-object";

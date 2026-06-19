@@ -3,9 +3,9 @@
 import { useLocale, useTranslations } from "next-intl";
 import CopyPasteWorkflowModal, {
   CopyPastePreviewItem,
-} from "@/components/shared/copy-paste-workflow-modal";
-import { useCopyPasteWorkflowState } from "@/components/shared/use-copy-paste-workflow-state";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
+} from "@/frontend/components/shared/copy-paste-workflow-modal";
+import { useCopyPasteWorkflowState } from "@/frontend/components/shared/use-copy-paste-workflow-state";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
 import type { JobMatchAnalysisDetailResponse } from "@/app/api/job-match-analyses/responses";
 import type { PreviewJobMatchAnalysisCopyPasteResponse } from "@/app/api/job-match-analyses/[id]/score/copy-paste/preview/responses";
 import { useJobMatchAnalysisCopyPaste } from "../../hooks/use-job-match-analysis-copy-paste";

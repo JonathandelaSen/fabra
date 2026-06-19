@@ -1,5 +1,5 @@
-import ExtractionParserTabs from "@/components/shared/extraction/extraction-parser-tabs";
-import { ExtractionTextPanel as CvExtractionTextPanel } from "@/components/shared/extraction/extraction-text-panel";
+import ExtractionParserTabs from "@/frontend/components/shared/extraction/extraction-parser-tabs";
+import { ExtractionTextPanel as CvExtractionTextPanel } from "@/frontend/components/shared/extraction/extraction-text-panel";
 import ExtractionPdfPreview from "./extraction-pdf-preview";
 import { PARSERS, type ParserTab } from "./extraction-parser-config";
 

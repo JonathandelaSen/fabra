@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { EventBus } from "@/modules/shared";
+import type { EventBus } from "@/backend/modules/shared";
 import { CVDocument } from "../../domain/entities/cv-document.entity";
 import { CVStructuredProfile } from "../../domain/entities/cv-structured-profile.entity";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";

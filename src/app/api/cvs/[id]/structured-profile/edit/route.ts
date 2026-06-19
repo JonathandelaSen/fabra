@@ -12,9 +12,9 @@ import { cvLibraryModule } from "@/lib/container";
 import {
   presentCVDocument,
   presentCVStructuredProfile,
-} from "@/modules/cv-library";
+} from "@/backend/modules/cv-library";
 import { parseEditCVProfileRequest } from "./validation";
-import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
+import { ok, errorResponse, notFound, badRequest } from "@/backend/modules/shared";
 
 export const maxDuration = 60;
 

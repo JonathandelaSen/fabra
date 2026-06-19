@@ -1,4 +1,4 @@
-import { type EventBus } from "@/modules/shared";
+import { type EventBus } from "@/backend/modules/shared";
 import { FeedbackEntry } from "../../domain/entities/feedback-entry.entity";
 import { FeedbackClosedError } from "../../domain/errors/feedback-closed.error";
 import { FeedbackNotFoundError } from "../../domain/errors/feedback-not-found.error";

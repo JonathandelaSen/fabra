@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card } from "@/frontend/components/ui/card";
 import { useTranslations } from "next-intl";
 import { ArrowUpRight, ArrowDownRight, Minus } from "lucide-react";
 

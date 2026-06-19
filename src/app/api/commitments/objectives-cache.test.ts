@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ObjectivesWorkspace } from "@/features/objectives/api/objectives-api";
+import type { ObjectivesWorkspace } from "@/frontend/features/objectives/api/objectives-api";
 import {
   addObjectiveItemToWorkspace,
   addObjectiveToWorkspace,
@@ -7,7 +7,7 @@ import {
   removeObjectiveItemFromWorkspace,
   replaceObjectiveInWorkspace,
   replaceObjectiveItemInWorkspace,
-} from "@/features/objectives/api/objectives-cache";
+} from "@/frontend/features/objectives/api/objectives-cache";
 
 describe("objectives workspace cache helpers", () => {
   const workspace: ObjectivesWorkspace = {

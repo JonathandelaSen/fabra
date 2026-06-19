@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { useTranslations } from "next-intl";
-import { SearchInput } from "@/components/shared/search-input";
+import { SearchInput } from "@/frontend/components/shared/search-input";
 
 interface CVLibrarySearchInputProps {
   searchQuery: string;

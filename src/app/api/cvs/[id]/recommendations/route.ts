@@ -4,7 +4,7 @@ import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { getLatestRecommendationAnalysisForCV } from "@/lib/analysis-queries";
 import { cvLibraryModule } from "@/lib/container";
-import { ok, notFound } from "@/modules/shared";
+import { ok, notFound } from "@/backend/modules/shared";
 
 export async function GET(
   _req: NextRequest,

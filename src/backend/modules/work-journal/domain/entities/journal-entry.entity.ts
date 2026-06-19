@@ -5,7 +5,7 @@ import {
   Timestamp,
   UserId,
   type UserId as UserIdType,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { WorkJournalEntryCreatedEvent } from "../events/work-journal-entry-created.event";
 import { WorkJournalEntryDeletedEvent } from "../events/work-journal-entry-deleted.event";
 import { WorkJournalEntryUpdatedEvent } from "../events/work-journal-entry-updated.event";

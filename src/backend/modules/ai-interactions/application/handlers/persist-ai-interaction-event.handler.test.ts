@@ -6,7 +6,7 @@ import {
   AIInteractionProvider,
   AIModule,
   AIOperation,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { PersistAIInteractionEventHandler } from "./persist-ai-interaction-event.handler";
 
 describe("PersistAIInteractionEventHandler", () => {

@@ -22,7 +22,7 @@ import {
   replaceWorkJournalEntryInCache,
 } from "../api/work-journal-entry-cache";
 import { getErrorMessage } from "@/lib/errors";
-import { useConfirm } from "@/components/shared/confirm-provider";
+import { useConfirm } from "@/frontend/components/shared/confirm-provider";
 
 const today = () => new Date().toISOString().slice(0, 10);
 

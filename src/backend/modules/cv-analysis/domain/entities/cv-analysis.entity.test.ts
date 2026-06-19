@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Timestamp, UserId } from "@/modules/shared";
+import { Timestamp, UserId } from "@/backend/modules/shared";
 import { CVAnalysis } from "./cv-analysis.entity";
 import { CVAnalysisId } from "../value-objects/cv-analysis-id.value-object";
 

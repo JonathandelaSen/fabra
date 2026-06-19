@@ -1,5 +1,5 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import { BasicPanel } from "@/components/shared/basic-panel";
+import { Skeleton } from "@/frontend/components/ui/skeleton";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 
 export function WorkJournalSkeleton() {
   return (

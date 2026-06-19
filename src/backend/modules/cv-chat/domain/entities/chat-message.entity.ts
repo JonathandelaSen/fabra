@@ -3,7 +3,7 @@ import {
   Timestamp,
   UserId,
   type UserId as UserIdType,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { ChatMessageCreatedEvent } from "../events/chat-message-created.event";
 import { CVChatContent } from "../value-objects/cv-chat-content.value-object";
 import { CVChatConversationId } from "../value-objects/cv-chat-conversation-id.value-object";

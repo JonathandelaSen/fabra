@@ -1,8 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import CopyPasteWorkflowModal from "@/components/shared/copy-paste-workflow-modal";
-import { useCopyPasteWorkflowState } from "@/components/shared/use-copy-paste-workflow-state";
+import CopyPasteWorkflowModal from "@/frontend/components/shared/copy-paste-workflow-modal";
+import { useCopyPasteWorkflowState } from "@/frontend/components/shared/use-copy-paste-workflow-state";
 import type { ApplyCVProfileCopyPasteResponse } from "@/app/api/cvs/[id]/structured-profile/copy-paste/apply/responses";
 import type { PreviewCVProfileCopyPasteResponse } from "@/app/api/cvs/[id]/structured-profile/copy-paste/preview/responses";
 import type { CVTemplateLocale } from "@/lib/cv-templates";

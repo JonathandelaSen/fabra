@@ -1,6 +1,6 @@
 import type { ComponentProps, ElementType } from "react";
 
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/frontend/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 export const LABEL_BADGE_TONES = {

@@ -45,7 +45,7 @@ function expectedTestPath(sourcePath) {
 
 function isUseCaseSource(relativePath) {
   return (
-    relativePath.startsWith("src/modules/") &&
+    relativePath.startsWith("src/backend/modules/") &&
     relativePath.includes("/application/use-cases/") &&
     relativePath.endsWith(".use-case.ts") &&
     !relativePath.endsWith(".test.ts")
@@ -54,7 +54,7 @@ function isUseCaseSource(relativePath) {
 
 function isRepositoryImplementationSource(relativePath) {
   return (
-    relativePath.startsWith("src/modules/") &&
+    relativePath.startsWith("src/backend/modules/") &&
     relativePath.includes("/infrastructure/repositories/") &&
     relativePath.endsWith(".repository.ts") &&
     !relativePath.endsWith(".test.ts")
@@ -63,7 +63,7 @@ function isRepositoryImplementationSource(relativePath) {
 
 function isDomainEntitySource(relativePath) {
   return (
-    relativePath.startsWith("src/modules/") &&
+    relativePath.startsWith("src/backend/modules/") &&
     relativePath.includes("/domain/entities/") &&
     relativePath.endsWith(".entity.ts") &&
     !relativePath.endsWith(".test.ts")
@@ -72,7 +72,7 @@ function isDomainEntitySource(relativePath) {
 
 function isValueObjectSource(relativePath) {
   return (
-    relativePath.startsWith("src/modules/") &&
+    relativePath.startsWith("src/backend/modules/") &&
     relativePath.includes("/domain/value-objects/") &&
     relativePath.endsWith(".value-object.ts") &&
     !relativePath.endsWith(".test.ts")
@@ -81,7 +81,7 @@ function isValueObjectSource(relativePath) {
 
 function isQueryHandlerSource(relativePath) {
   return (
-    relativePath.startsWith("src/modules/") &&
+    relativePath.startsWith("src/backend/modules/") &&
     relativePath.includes("/application/queries/") &&
     relativePath.endsWith(".query-handler.ts") &&
     !relativePath.endsWith(".test.ts")
@@ -90,8 +90,8 @@ function isQueryHandlerSource(relativePath) {
 
 function isSharedBusSource(relativePath) {
   return (
-    (relativePath.startsWith("src/modules/shared/domain/bus/") ||
-     relativePath.startsWith("src/modules/shared/infrastructure/bus/")) &&
+    (relativePath.startsWith("src/backend/modules/shared/domain/bus/") ||
+     relativePath.startsWith("src/backend/modules/shared/infrastructure/bus/")) &&
     relativePath.endsWith(".ts") &&
     !relativePath.endsWith(".test.ts")
   );
@@ -110,7 +110,7 @@ async function missingTestsFor(files, rootDir) {
 }
 
 export async function findMissingDddTests({ rootDir = repoRoot } = {}) {
-  const modulesDir = path.join(rootDir, "src/modules");
+  const modulesDir = path.join(rootDir, "src/backend/modules");
   const files = (await walkFiles(modulesDir)).map((filePath) =>
     toPosixRelative(rootDir, filePath)
   );

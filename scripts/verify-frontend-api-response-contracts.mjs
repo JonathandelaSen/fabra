@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 import ts from "typescript";
 
 const root = process.cwd();
-const apiFilePatterns = ["src/features/**/api/*-api.ts", "src/frontend/**/api/*-api.ts"];
+const apiFilePatterns = ["src/frontend/features/**/api/*-api.ts", "src/frontend/**/api/*-api.ts"];
 const responseImportPattern = /^(?:@\/|src\/)app\/api\/.+\/responses$/;
 
 function listFiles(patterns) {

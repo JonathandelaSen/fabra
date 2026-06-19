@@ -1,5 +1,5 @@
 import { normalizeStandardCVProfile } from "@/lib/cv-profile";
-import { BoundSupabaseRepository } from "@/modules/shared";
+import { BoundSupabaseRepository } from "@/backend/modules/shared";
 import { CVSummaryForActivityContextSuggestions } from "../../domain/value-objects/cv-summary-for-activity-context-suggestions.value-object";
 import type { CVDataRepository } from "../../domain/repositories/cv-data.repository";
 

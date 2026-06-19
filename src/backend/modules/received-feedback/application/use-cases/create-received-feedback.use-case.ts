@@ -1,4 +1,4 @@
-import { EntityId, UserId, type EventBus } from "@/modules/shared";
+import { EntityId, UserId, type EventBus } from "@/backend/modules/shared";
 import { ReceivedFeedback } from "../../domain/entities/received-feedback.entity";
 import type { ReceivedFeedbackRepository } from "../../domain/repositories/received-feedback.repository";
 import { ReceivedFeedbackDate } from "../../domain/value-objects/received-feedback-date.value-object";

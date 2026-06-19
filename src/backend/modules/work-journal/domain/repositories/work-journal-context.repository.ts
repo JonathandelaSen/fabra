@@ -1,4 +1,4 @@
-import type { UserId } from "@/modules/shared";
+import type { UserId } from "@/backend/modules/shared";
 import type { WorkJournalContext } from "../entities/journal-context.entity";
 import type { WorkJournalContextSuggestion } from "../value-objects/context-suggestion.value-object";
 import type { WorkJournalContextId } from "../value-objects/work-journal-context-id.value-object";

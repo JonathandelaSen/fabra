@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 import { Commitment, type CommitmentPrimitives } from "../entities/commitment.entity";
 import { CommitmentItem, type CommitmentItemPrimitives } from "../entities/commitment-item.entity";
 import { CommitmentOutcome, type CommitmentOutcomePrimitives } from "../entities/commitment-outcome.entity";

@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { badRequest, AI_PROVIDER } from "@/modules/shared";
+import { badRequest, AI_PROVIDER } from "@/backend/modules/shared";
 import { ErrorCode } from "@/shared/error-codes";
 import {
   CV_PROFILE_SCHEMA_VERSION,

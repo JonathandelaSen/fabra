@@ -1,8 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { SidebarListItem } from "@/components/shared/sidebar-list-item";
-import { LabelBadge } from "@/components/shared/label-badge";
+import { SidebarListItem } from "@/frontend/components/shared/sidebar-list-item";
+import { LabelBadge } from "@/frontend/components/shared/label-badge";
 import { formatDate } from "@/lib/format";
 import type { WorkJournalEntry } from "../../api/work-journal-types";
 

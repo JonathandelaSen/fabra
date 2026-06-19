@@ -1,5 +1,5 @@
-import { Timestamp, UserId, badRequest, type EventBus } from "@/modules/shared";
-import { validateCopyPasteEnvelope } from "@/modules/shared/application/assisted-workflows/copy-paste-json-envelope";
+import { Timestamp, UserId, badRequest, type EventBus } from "@/backend/modules/shared";
+import { validateCopyPasteEnvelope } from "@/backend/modules/shared/application/assisted-workflows/copy-paste-json-envelope";
 import { ErrorCode } from "@/shared/error-codes";
 import type { PerformanceReview } from "../../domain/entities/performance-review.entity";
 import { PerformanceReviewNotFoundError } from "../../domain/errors/performance-review-not-found.error";

@@ -5,7 +5,7 @@ import {
   UserId,
   type AIProvider,
   type EventBus,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { AnalysisContextNotFoundError } from "../../domain/errors/analysis-context-not-found.error";
 import { ConversationNotFoundError } from "../../domain/errors/conversation-not-found.error";
 import { ChatMessage } from "../../domain/entities/chat-message.entity";

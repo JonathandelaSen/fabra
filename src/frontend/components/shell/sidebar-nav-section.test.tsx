@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import { screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { LucideIcon } from "lucide-react";
-import { renderWithProviders } from "@/frontend/testing/render";
+import { renderWithProviders } from "@/testing/render";
 import SidebarNavSection from "./sidebar-nav-section";
 
 const TestIcon = forwardRef<SVGSVGElement, { className?: string }>(

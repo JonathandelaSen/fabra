@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { adminModule } from "@/lib/container";
 import { isAdminUser } from "@/lib/observability";
-import { ok, errorResponse, forbidden } from "@/modules/shared";
+import { ok, errorResponse, forbidden } from "@/backend/modules/shared";
 import { parseImpersonateUserRequest } from "./validation";
 import type { ImpersonateUserResponse } from "./responses";
 

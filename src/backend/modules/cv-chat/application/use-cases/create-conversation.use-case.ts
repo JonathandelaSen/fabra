@@ -1,4 +1,4 @@
-import { Timestamp, UserId, type EventBus } from "@/modules/shared";
+import { Timestamp, UserId, type EventBus } from "@/backend/modules/shared";
 import { Conversation } from "../../domain/entities/conversation.entity";
 import type { ConversationRepository } from "../../domain/repositories/conversation.repository";
 import { CVChatConversationId } from "../../domain/value-objects/cv-chat-conversation-id.value-object";

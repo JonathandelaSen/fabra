@@ -3,9 +3,9 @@ import { NextRequest } from "next/server";
 import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvLibraryModule } from "@/lib/container";
-import { presentCVDocument } from "@/modules/cv-library";
+import { presentCVDocument } from "@/backend/modules/cv-library";
 import { parseSaveTemplateAsCVRequest } from "./validation";
-import { ok, errorResponse, notFound } from "@/modules/shared";
+import { ok, errorResponse, notFound } from "@/backend/modules/shared";
 
 export async function POST(
   req: NextRequest,

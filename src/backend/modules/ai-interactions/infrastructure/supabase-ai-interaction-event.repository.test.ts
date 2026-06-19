@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   createTestUser,
   getSupabaseClient,
-} from "@/modules/test-helpers/setup";
+} from "@/backend/modules/test-helpers/setup";
 import { AIInteractionEvent } from "../domain/entities/ai-interaction-event.entity";
 import { SupabaseAIInteractionEventRepository } from "./supabase-ai-interaction-event.repository";
 

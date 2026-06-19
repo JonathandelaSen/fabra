@@ -1,4 +1,4 @@
-import { BoundSupabaseRepository } from "@/modules/shared";
+import { BoundSupabaseRepository } from "@/backend/modules/shared";
 import { CV_PDFS_BUCKET } from "../../domain/services/cv-storage";
 import type { CVPdfStorage } from "../../domain/repositories/cv-analysis-preparation-services";
 

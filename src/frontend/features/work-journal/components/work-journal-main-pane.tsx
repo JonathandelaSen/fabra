@@ -3,7 +3,7 @@
 import type { Dispatch, SetStateAction } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/frontend/components/ui/button";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import type {
   WorkJournalContext,

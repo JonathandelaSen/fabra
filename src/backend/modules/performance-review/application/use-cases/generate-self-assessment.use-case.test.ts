@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { AI_PROVIDER } from "@/modules/shared";
-import { createTestUser } from "@/modules/test-helpers/setup";
+import { AI_PROVIDER } from "@/backend/modules/shared";
+import { createTestUser } from "@/backend/modules/test-helpers/setup";
 import {
   makePerformanceReviewDeps,
   seedReview,

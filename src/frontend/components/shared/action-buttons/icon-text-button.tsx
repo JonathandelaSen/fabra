@@ -1,6 +1,6 @@
 import { type ComponentProps, type ElementType } from "react";
 import { Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/frontend/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export const ICON_TEXT_BUTTON_TONES = {

@@ -1,4 +1,4 @@
-import { Timestamp, UserId, type EventBus } from "@/modules/shared";
+import { Timestamp, UserId, type EventBus } from "@/backend/modules/shared";
 import { WorkJournalContext } from "../../domain/entities/journal-context.entity";
 import type { WorkJournalContextRepository } from "../../domain/repositories/work-journal-context.repository";
 import { WorkJournalContextId } from "../../domain/value-objects/work-journal-context-id.value-object";

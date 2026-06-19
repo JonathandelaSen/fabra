@@ -1,4 +1,4 @@
-import { badRequest } from "@/modules/shared";
+import { badRequest } from "@/backend/modules/shared";
 import type { JobMatchScoringAIResult } from "../../domain/repositories/job-match-scoring-ai.service";
 import { ErrorCode } from "@/shared/error-codes";
 

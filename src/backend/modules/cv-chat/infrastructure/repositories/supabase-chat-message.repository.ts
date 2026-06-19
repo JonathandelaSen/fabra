@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { UserId } from "@/modules/shared";
-import type { SupabaseAware } from "@/modules/shared/infrastructure/supabase-aware";
+import { UserId } from "@/backend/modules/shared";
+import type { SupabaseAware } from "@/backend/modules/shared/infrastructure/supabase-aware";
 import {
   ChatMessage,
   type ChatMessagePrimitives,

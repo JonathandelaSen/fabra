@@ -1,4 +1,4 @@
-import { EntityId, LongText, ValueObject } from "@/modules/shared";
+import { EntityId, LongText, ValueObject } from "@/backend/modules/shared";
 import { CVChatSnapshot } from "./cv-chat-snapshot.value-object";
 
 export interface CVChatContextPrimitives {

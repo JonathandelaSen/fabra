@@ -1,4 +1,4 @@
-import type { DomainEvent } from "@/modules/shared";
+import type { DomainEvent } from "@/backend/modules/shared";
 
 export class JobOpportunityCreatedEvent implements DomainEvent<{ opportunityId: string }> {
   readonly eventName = "job_opportunity_created";

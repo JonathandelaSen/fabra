@@ -1,4 +1,4 @@
-import type { InterfaceLanguage } from "@/i18n/config";
+import type { InterfaceLanguage } from "@/frontend/i18n/config";
 
 export async function saveInterfaceLanguage(locale: InterfaceLanguage) {
   const response = await fetch("/api/user-preferences/interface-language", {

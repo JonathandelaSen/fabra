@@ -5,7 +5,7 @@ import type {
   OfferStatus,
 } from "@/lib/analysis-types";
 import { OFFER_STATUSES } from "@/lib/analysis-types";
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 import {
   CVDeletionStatus,
   type CVDeletionStatusPrimitives,

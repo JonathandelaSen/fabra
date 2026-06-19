@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Timestamp, UserId } from "@/modules/shared";
+import { Timestamp, UserId } from "@/backend/modules/shared";
 import { ReviewEvidenceItem } from "./review-evidence-item.entity";
 import { EvidenceContent } from "../value-objects/evidence-content.value-object";
 import { EvidenceSource } from "../value-objects/evidence-source.value-object";

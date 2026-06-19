@@ -10,13 +10,13 @@ import {
   AIOperation,
   UserId,
   type EventBus,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import {
   extractCopyPasteJson,
-} from "@/modules/shared/application/assisted-workflows/copy-paste-json-parser";
+} from "@/backend/modules/shared/application/assisted-workflows/copy-paste-json-parser";
 import {
   validateCopyPasteEnvelope,
-} from "@/modules/shared/application/assisted-workflows/copy-paste-json-envelope";
+} from "@/backend/modules/shared/application/assisted-workflows/copy-paste-json-envelope";
 import type { CVScoringAIResult } from "../../domain/repositories/cv-scoring-ai.service";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 import { CVAnalysisId } from "../../domain/value-objects/cv-analysis-id.value-object";

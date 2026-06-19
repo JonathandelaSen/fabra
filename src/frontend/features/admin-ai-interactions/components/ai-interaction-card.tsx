@@ -2,9 +2,9 @@
 
 import type React from "react";
 import type { ListAdminAIInteractionsResponse } from "@/app/api/admin/ai-interactions/responses";
-import { LabelBadge } from "@/components/shared/label-badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LabelBadge } from "@/frontend/components/shared/label-badge";
+import { Button } from "@/frontend/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
 import { useTranslations } from "next-intl";
 import { Clock } from "lucide-react";
 

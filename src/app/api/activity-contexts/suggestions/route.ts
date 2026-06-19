@@ -3,8 +3,8 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { activityContextsModule } from "@/lib/container";
 import {
   presentActivityContextSuggestion,
-} from "@/modules/activity-context";
-import { ok } from "@/modules/shared";
+} from "@/backend/modules/activity-context";
+import { ok } from "@/backend/modules/shared";
 import {
   toActivityContextSuggestionResponse,
   type ListActivityContextSuggestionsResponse,

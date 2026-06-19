@@ -1,4 +1,4 @@
-import { AggregateRoot, EntityId, UserId } from "@/modules/shared";
+import { AggregateRoot, EntityId, UserId } from "@/backend/modules/shared";
 import { CommitmentDomainEvent } from "../events/commitment-domain.event";
 
 export const commitmentSources = {

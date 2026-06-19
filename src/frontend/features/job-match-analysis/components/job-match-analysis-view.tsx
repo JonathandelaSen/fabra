@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { useConfirm } from "@/components/shared/confirm-provider";
+import { useConfirm } from "@/frontend/components/shared/confirm-provider";
 import type { OfferStatus } from "@/lib/analysis-types";
 import type { InterviewQuestionSummary } from "../types";
-import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
+import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
+import { useIsDesktopLayout } from "@/frontend/components/shared/use-is-desktop-layout";
 import { useJobMatchAnalysisList, useJobMatchAnalysisDetail, useJobMatchAnalysisCVOptions } from "../hooks/use-job-match-analysis-queries";
 import { useJobMatchAnalysisMutations } from "../hooks/use-job-match-analysis-mutations";
 import { shouldShowJobMatchAnalysisView, useJobMatchAnalysisRouteState } from "../hooks/use-job-match-analysis-route-state";

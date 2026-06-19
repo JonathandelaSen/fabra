@@ -11,17 +11,17 @@ import {
   MailCheck,
   UserPlus,
 } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/frontend/components/ui/alert";
 import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
-import { InterfaceLanguageSelect } from "@/components/shared/interface-language-select";
+} from "@/frontend/components/shared/action-buttons";
+import { Input } from "@/frontend/components/ui/input";
+import { Label } from "@/frontend/components/ui/label";
+import { useInterfaceLanguage } from "@/frontend/components/shared/i18n-provider";
+import { InterfaceLanguageSelect } from "@/frontend/components/shared/interface-language-select";
 import { useAuthFormState } from "../hooks/use-auth-form-state";
-import { isValidEmail, isValidPassword } from "@/frontend/auth-validation";
+import { isValidEmail, isValidPassword } from "@/frontend/utils/auth-validation";
 
 interface AuthFormProps {
   initialError?: string;

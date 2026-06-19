@@ -3,15 +3,15 @@ import Link from "next/link";
 import { Download, Quote } from "lucide-react";
 import { notFound } from "next/navigation";
 import { cache } from "react";
-import { CVTemplatePreview } from "@/features/cv-templates";
+import { CVTemplatePreview } from "@/frontend/features/cv-templates";
 import { cvLibraryModule } from "@/lib/container";
-import { buildPublicCVPath } from "@/modules/cv-library";
+import { buildPublicCVPath } from "@/backend/modules/cv-library";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCVTemplate, type CVTemplateId, type CVTemplateLocale } from "@/lib/cv-templates";
-import { presentCVDocument } from "@/modules/cv-library";
-import { getMessages } from "@/i18n/messages";
-import { resolveInterfaceLanguage } from "@/i18n/server";
-import { PublicFeedbackForm, PublicCVNotesOverlay, PublicCVThemeToggle } from "@/features/public-cv";
+import { presentCVDocument } from "@/backend/modules/cv-library";
+import { getMessages } from "@/frontend/i18n/messages";
+import { resolveInterfaceLanguage } from "@/frontend/i18n/server";
+import { PublicFeedbackForm, PublicCVNotesOverlay, PublicCVThemeToggle } from "@/frontend/features/public-cv";
 
 type PublicCVPageProps = {
   params: Promise<{

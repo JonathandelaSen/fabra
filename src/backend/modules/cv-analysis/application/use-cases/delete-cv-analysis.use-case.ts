@@ -1,4 +1,4 @@
-import { ExecutionResult, UserId } from "@/modules/shared";
+import { ExecutionResult, UserId } from "@/backend/modules/shared";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 import { CVAnalysisId } from "../../domain/value-objects/cv-analysis-id.value-object";
 

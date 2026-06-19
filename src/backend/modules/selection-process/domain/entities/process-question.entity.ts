@@ -3,7 +3,7 @@ import {
   Timestamp,
   UserId,
   type UserId as UserIdType,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { ProcessQuestionAnsweredEvent } from "../events/process-question-answered.event";
 import { ProcessQuestionCreatedEvent } from "../events/process-question-created.event";
 import { ProcessQuestionDeletedEvent } from "../events/process-question-deleted.event";

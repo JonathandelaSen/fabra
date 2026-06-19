@@ -3,7 +3,7 @@ import {
   Timestamp,
   UserId,
   type UserId as UserIdType,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { JobOpportunityCreatedEvent } from "../events/job-opportunity-created.event";
 import { JobOpportunityId } from "../value-objects/job-opportunity-id.value-object";
 

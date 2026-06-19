@@ -2,8 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { Globe2 } from "lucide-react";
-import { SettingsSectionPanel } from "@/components/shared/settings-section-panel";
-import type { InterfaceLanguage } from "@/i18n/config";
+import { SettingsSectionPanel } from "@/frontend/components/shared/settings-section-panel";
+import type { InterfaceLanguage } from "@/frontend/i18n/config";
 import { useLanguagePreference } from "../hooks/use-language-preference";
 
 export function LanguageSettingsPanel() {

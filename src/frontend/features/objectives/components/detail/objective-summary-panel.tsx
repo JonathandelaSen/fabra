@@ -1,6 +1,6 @@
-import { LabelBadge, LABEL_BADGE_TONES } from "@/components/shared/label-badge";
-import { EditButton, DeleteButton } from "@/components/shared/action-buttons";
-import { BasicPanel } from "@/components/shared/basic-panel";
+import { LabelBadge, LABEL_BADGE_TONES } from "@/frontend/components/shared/label-badge";
+import { EditButton, DeleteButton } from "@/frontend/components/shared/action-buttons";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 import { ObjectiveProgressSection } from "./objective-progress-section";
 import type {
   ObjectiveContext,

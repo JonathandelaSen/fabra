@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/ai-models";
+import { DEFAULT_GEMINI_MODEL, GEMINI_MODELS } from "@/frontend/utils/ai-models";
 import { getErrorMessage } from "@/lib/errors";
 import type { AIContext } from "@/lib/analysis-types";
 import {

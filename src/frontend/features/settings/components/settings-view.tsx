@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
-import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
+import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
 import { AISettingsPanel } from "./ai-settings-panel";
 import { AccountSecurityPanel } from "./account-security-panel";
 import { DeleteAccountPanel } from "./delete-account-panel";

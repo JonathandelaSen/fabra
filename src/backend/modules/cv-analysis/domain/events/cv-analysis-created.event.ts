@@ -1,4 +1,4 @@
-import type { DomainEvent } from "@/modules/shared";
+import type { DomainEvent } from "@/backend/modules/shared";
 
 export class CVAnalysisCreatedEvent implements DomainEvent<{ analysisId: string }> {
   readonly eventName = "cv_analysis_created";

@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
-import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
-import { AnalysisDetailSkeleton } from "@/components/shared/skeletons";
-import { FeatureDetailTabBar } from "@/components/shared/feature-detail-tab-bar";
+import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
+import { FeatureTwoPaneLayout } from "@/frontend/components/shared/feature-two-pane-layout";
+import { useIsDesktopLayout } from "@/frontend/components/shared/use-is-desktop-layout";
+import { AnalysisDetailSkeleton } from "@/frontend/components/shared/skeletons";
+import { FeatureDetailTabBar } from "@/frontend/components/shared/feature-detail-tab-bar";
 import { FileText, Sparkles } from "lucide-react";
 import {
   useCreateCVAnalysis,

@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Archive, Check, Pencil, RefreshCw, Save, Trash2 } from "lucide-react";
-import { LabelBadge, LABEL_BADGE_TONES } from "@/components/shared/label-badge";
+import { LabelBadge, LABEL_BADGE_TONES } from "@/frontend/components/shared/label-badge";
 import type { FeedbackEntry, FeedbackListItem } from "../api/feedback-notes-api";
-import { ActivityContextSelector, type ActivityContext } from "@/features/activity-context";
+import { ActivityContextSelector, type ActivityContext } from "@/frontend/features/activity-context";
 import { FeedbackEntriesPanel } from "./feedback-entries-panel";
 import { FeedbackFinalPanel } from "./feedback-final-panel";
 import {
@@ -14,8 +14,8 @@ import {
   DeleteButton,
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
-import { BasicPanel } from "@/components/shared/basic-panel";
+} from "@/frontend/components/shared/action-buttons";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface FeedbackNotesDetailProps {

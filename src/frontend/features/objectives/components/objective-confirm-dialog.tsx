@@ -1,6 +1,6 @@
 "use client";
 
-import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { ConfirmDialog } from "@/frontend/components/shared/confirm-dialog";
 
 interface ObjectiveConfirmDialogProps {
   title: string;

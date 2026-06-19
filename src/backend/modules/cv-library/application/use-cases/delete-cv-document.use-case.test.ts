@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   ListCVAnalysisUsageByDocumentQuery,
-} from "@/modules/cv-analysis";
-import { ListJobMatchAnalysisUsageByDocumentQuery } from "@/modules/job-match-analysis";
-import type { Query, QueryBus } from "@/modules/shared";
+} from "@/backend/modules/cv-analysis";
+import { ListJobMatchAnalysisUsageByDocumentQuery } from "@/backend/modules/job-match-analysis";
+import type { Query, QueryBus } from "@/backend/modules/shared";
 import { documentRepo } from "./cv-library-test-helpers.test";
 import { DeleteCVDocumentUseCase } from "./delete-cv-document.use-case";
 

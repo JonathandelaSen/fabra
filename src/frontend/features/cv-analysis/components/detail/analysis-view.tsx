@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { type AIContext } from "@/lib/analysis-types";
-import { Tabs } from "@/components/ui/tabs";
+import { Tabs } from "@/frontend/components/ui/tabs";
 import ScoreHero from "./score-hero";
 import { AnalysisNextStep } from "./analysis-next-step";
 import { AnalysisTabsContent } from "./analysis-tabs-content";

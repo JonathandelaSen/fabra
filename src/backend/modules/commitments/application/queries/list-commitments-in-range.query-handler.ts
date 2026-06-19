@@ -1,4 +1,4 @@
-import type { QueryHandler } from "@/modules/shared";
+import type { QueryHandler } from "@/backend/modules/shared";
 import type { ListCommitmentsInRangeUseCase } from "../use-cases/list-commitments-in-range.use-case";
 import { ListCommitmentsInRangeQuery } from "./list-commitments-in-range.query";
 import type { CommitmentPrimitives } from "../../domain/entities/commitment.entity";

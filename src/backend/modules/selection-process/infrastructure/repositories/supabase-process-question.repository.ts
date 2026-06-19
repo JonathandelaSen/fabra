@@ -1,5 +1,5 @@
 import { ProcessQuestionReadModel, type ProcessQuestionRelatedCVPrimitives, type ProcessQuestionRelatedAnalysisPrimitives } from "../../domain/value-objects/process-question-read-model.value-object";
-import { BoundSupabaseRepository, type UserId } from "@/modules/shared";
+import { BoundSupabaseRepository, type UserId } from "@/backend/modules/shared";
 import { ProcessQuestion } from "../../domain/entities/process-question.entity";
 import type {
   ProcessQuestionRepository,

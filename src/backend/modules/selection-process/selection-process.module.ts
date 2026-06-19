@@ -1,6 +1,6 @@
 import { OllamaInterviewQuestionAIServiceFactory } from "./infrastructure/services/ollama-interview-question-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { instrumentUseCases, type Telemetry, type EventBus } from "@/modules/shared";
+import { instrumentUseCases, type Telemetry, type EventBus } from "@/backend/modules/shared";
 import { CreateProcessQuestionUseCase } from "./application/use-cases/create-process-question.use-case";
 import { DeleteProcessQuestionUseCase } from "./application/use-cases/delete-process-question.use-case";
 import { EditQuestionAnswerUseCase } from "./application/use-cases/edit-question-answer.use-case";

@@ -1,4 +1,4 @@
-import type { Query } from "@/modules/shared";
+import type { Query } from "@/backend/modules/shared";
 import type { CommitmentPrimitives } from "../../domain/entities/commitment.entity";
 
 export interface ListCommitmentsInRangeInput {

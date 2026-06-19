@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { jobMatchAnalysisModule } from "@/lib/container";
-import { errorResponse, notFound, ok } from "@/modules/shared";
+import { errorResponse, notFound, ok } from "@/backend/modules/shared";
 import { parsePreviewJobMatchAnalysisCopyPasteRequest } from "./validation";
 import type { PreviewJobMatchAnalysisCopyPasteResponse } from "./responses";
 

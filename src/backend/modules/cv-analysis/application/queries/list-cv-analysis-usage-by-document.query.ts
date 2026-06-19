@@ -1,5 +1,5 @@
 import type { AnalysisSummary } from "@/lib/analysis-types";
-import type { Query } from "@/modules/shared";
+import type { Query } from "@/backend/modules/shared";
 
 export type ListCVAnalysisUsageByDocumentResult = AnalysisSummary;
 

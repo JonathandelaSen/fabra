@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { LabelBadge, LABEL_BADGE_TONES } from "@/components/shared/label-badge";
+import { LabelBadge, LABEL_BADGE_TONES } from "@/frontend/components/shared/label-badge";
 
 interface CVLibraryTypeBadgeProps {
   cvType: string;

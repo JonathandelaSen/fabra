@@ -1,4 +1,4 @@
-import { AggregateRoot, EntityId, UserId } from "@/modules/shared";
+import { AggregateRoot, EntityId, UserId } from "@/backend/modules/shared";
 import { ReceivedFeedbackCreatedEvent } from "../events/received-feedback-created.event";
 import { ReceivedFeedbackDeletedEvent } from "../events/received-feedback-deleted.event";
 import { ReceivedFeedbackUpdatedEvent } from "../events/received-feedback-updated.event";

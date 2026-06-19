@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { instrumentUseCases, type Telemetry, type EventBus } from "@/modules/shared";
+import { instrumentUseCases, type Telemetry, type EventBus } from "@/backend/modules/shared";
 import { CreateReceivedFeedbackUseCase } from "./application/use-cases/create-received-feedback.use-case";
 import { DeleteReceivedFeedbackUseCase } from "./application/use-cases/delete-received-feedback.use-case";
 import { ListReceivedFeedbackUseCase } from "./application/use-cases/list-received-feedback.use-case";

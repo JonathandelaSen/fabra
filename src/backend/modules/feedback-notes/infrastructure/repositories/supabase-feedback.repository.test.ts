@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createTestUser, getSupabaseClient } from "@/modules/test-helpers/setup";
+import { createTestUser, getSupabaseClient } from "@/backend/modules/test-helpers/setup";
 import { activityContextsModule } from "@/lib/container";
 import { Feedback } from "../../domain/entities/feedback.entity";
 import { SupabaseFeedbackRepository } from "./supabase-feedback.repository";

@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { FileText, Download, Eye } from "lucide-react";
-import AIActionLauncher from "@/components/shared/ai-action-launcher";
+import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface ExtractionHeaderProps {

@@ -1,6 +1,6 @@
 import { vi } from "vitest";
-import { getSupabaseClient } from "@/modules/test-helpers/setup";
-import type { EventBus } from "@/modules/shared";
+import { getSupabaseClient } from "@/backend/modules/test-helpers/setup";
+import type { EventBus } from "@/backend/modules/shared";
 import { SupabasePerformanceReviewRepository } from "../infrastructure/repositories/supabase-performance-review.repository";
 import { SupabaseReviewEvidenceItemRepository } from "../infrastructure/repositories/supabase-review-evidence-item.repository";
 

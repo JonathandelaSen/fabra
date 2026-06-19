@@ -1,4 +1,4 @@
-import type { StandardCVProfile } from "@/modules/cv-library";
+import type { StandardCVProfile } from "@/backend/modules/cv-library";
 
 export interface PreviewCVProfileCopyPasteResponse {
   parsedResult: StandardCVProfile;

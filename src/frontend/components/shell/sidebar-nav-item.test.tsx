@@ -1,6 +1,6 @@
 import { screen, fireEvent } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { renderWithProviders } from "@/frontend/testing/render";
+import { renderWithProviders } from "@/testing/render";
 import SidebarNavItem from "./sidebar-nav-item";
 import { forwardRef } from "react";
 import type { LucideIcon } from "lucide-react";

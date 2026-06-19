@@ -3,8 +3,8 @@
 import { motion } from "framer-motion";
 import { CheckCircle2, Star, ChevronRight, FileSearch } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { BasicPanel } from "@/components/shared/basic-panel";
-import { AnalysisMarkdown } from "@/components/shared/analysis-markdown";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
+import { AnalysisMarkdown } from "@/frontend/components/shared/analysis-markdown";
 
 interface TabSummaryProps {
   improvements: string[];

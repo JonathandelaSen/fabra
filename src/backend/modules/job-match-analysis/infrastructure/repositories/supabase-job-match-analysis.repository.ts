@@ -1,4 +1,4 @@
-import { BoundSupabaseRepository, type UserId } from "@/modules/shared";
+import { BoundSupabaseRepository, type UserId } from "@/backend/modules/shared";
 import { JobMatchAnalysis } from "../../domain/entities/job-match-analysis.entity";
 import type { JobMatchAnalysisRepository } from "../../domain/repositories/job-match-analysis.repository";
 import type { JobMatchAnalysisId } from "../../domain/value-objects/job-match-analysis-id.value-object";

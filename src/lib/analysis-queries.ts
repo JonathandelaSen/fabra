@@ -4,8 +4,8 @@ import {
   cvAnalysisModule,
   jobMatchAnalysisModule,
 } from "@/lib/container";
-import { presentCVAnalysis } from "@/modules/cv-analysis";
-import { presentJobMatchAnalysis } from "@/modules/job-match-analysis";
+import { presentCVAnalysis } from "@/backend/modules/cv-analysis";
+import { presentJobMatchAnalysis } from "@/backend/modules/job-match-analysis";
 
 export async function getLatestRecommendationAnalysisForCV(
   supabase: SupabaseClient,

@@ -10,10 +10,10 @@ import {
   getStoredAIProvider,
   type StoredAIProvider,
 } from "@/lib/browser-preferences";
-import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
-import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
-import { useCVDocumentList } from "@/features/cv-library";
+import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
+import { FeatureTwoPaneLayout } from "@/frontend/components/shared/feature-two-pane-layout";
+import { useIsDesktopLayout } from "@/frontend/components/shared/use-is-desktop-layout";
+import { useCVDocumentList } from "@/frontend/features/cv-library";
 import { useCreateCVTemplateVersion } from "../hooks/use-cv-template-mutations";
 import { CVTemplatesSidebar } from "./cv-templates-sidebar";
 import { CVTemplateDetail } from "./cv-template-detail";
@@ -22,7 +22,7 @@ import {
   shouldShowCVTemplatesLoader,
 } from "./cv-templates-loading-state";
 import { CVTemplatesSkeleton } from "./cv-templates-skeleton";
-import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/utils/ai-models";
 
 interface CVTemplatesViewProps {
   onOpenSettings: () => void;

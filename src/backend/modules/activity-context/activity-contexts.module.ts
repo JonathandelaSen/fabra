@@ -7,7 +7,7 @@ import { HideActivityContextSuggestionUseCase } from "./application/use-cases/hi
 import { ListActivityContextSuggestionsUseCase } from "./application/use-cases/list-activity-context-suggestions.use-case";
 import { ListActivityContextsUseCase } from "./application/use-cases/list-activity-contexts.use-case";
 import { UpdateActivityContextUseCase } from "./application/use-cases/update-activity-context.use-case";
-import { instrumentUseCases, type Telemetry, type EventBus } from "@/modules/shared";
+import { instrumentUseCases, type Telemetry, type EventBus } from "@/backend/modules/shared";
 import { SupabaseActivityContextRepository } from "./infrastructure/repositories/supabase-activity-context.repository";
 import { SupabaseCVDataRepository } from "./infrastructure/repositories/supabase-cv-data.repository";
 

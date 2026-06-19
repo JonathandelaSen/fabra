@@ -13,7 +13,7 @@ const exportPattern =
 const EXEMPT_MODULES = new Set(["shared"]);
 
 async function main() {
-  const modulesDir = path.join(repoRoot, "src/modules");
+  const modulesDir = path.join(repoRoot, "src/backend/modules");
   const entries = await readdir(modulesDir, { withFileTypes: true });
 
   const violations = [];
@@ -34,7 +34,7 @@ async function main() {
       if (specifier.includes("/infrastructure/")) {
         violations.push({
           module: entry.name,
-          file: `src/modules/${entry.name}/index.ts`,
+          file: `src/backend/modules/${entry.name}/index.ts`,
           reExport: specifier,
           reason: "infrastructure internals must not be re-exported",
         });
@@ -42,7 +42,7 @@ async function main() {
       if (specifier.includes("/domain/repositories/")) {
         violations.push({
           module: entry.name,
-          file: `src/modules/${entry.name}/index.ts`,
+          file: `src/backend/modules/${entry.name}/index.ts`,
           reExport: specifier,
           reason: "repository port interfaces are module-internal",
         });

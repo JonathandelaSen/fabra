@@ -3,17 +3,17 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { AlertCircle, KeyRound } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/frontend/components/ui/alert";
 import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
-import { InterfaceLanguageSelect } from "@/components/shared/interface-language-select";
+} from "@/frontend/components/shared/action-buttons";
+import { Input } from "@/frontend/components/ui/input";
+import { Label } from "@/frontend/components/ui/label";
+import { useInterfaceLanguage } from "@/frontend/components/shared/i18n-provider";
+import { InterfaceLanguageSelect } from "@/frontend/components/shared/interface-language-select";
 import { useUpdatePasswordFormState } from "../hooks/use-update-password-form-state";
-import { isValidPassword } from "@/frontend/auth-validation";
+import { isValidPassword } from "@/frontend/utils/auth-validation";
 
 export function UpdatePasswordForm() {
   const t = useTranslations("auth.updatePassword");

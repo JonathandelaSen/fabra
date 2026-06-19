@@ -25,7 +25,7 @@ function rel(file) {
   return path.relative(root, file);
 }
 
-for (const file of walk(path.join(root, "src/modules"), (file) =>
+for (const file of walk(path.join(root, "src/backend/modules"), (file) =>
   /domain\/repositories\/.*ai.*service.*\.ts$/.test(file),
 )) {
   const source = read(file);
@@ -37,7 +37,7 @@ for (const file of walk(path.join(root, "src/modules"), (file) =>
   }
 }
 
-for (const file of walk(path.join(root, "src/modules"), (file) =>
+for (const file of walk(path.join(root, "src/backend/modules"), (file) =>
   /\/[^/]+\.module\.ts$/.test(file),
 )) {
   const source = read(file);
@@ -46,7 +46,7 @@ for (const file of walk(path.join(root, "src/modules"), (file) =>
   }
 }
 
-for (const file of walk(path.join(root, "src/modules"), (file) =>
+for (const file of walk(path.join(root, "src/backend/modules"), (file) =>
   /infrastructure\/services\/provider-.*ai.*\.((service\.)?factory\.)?ts$/.test(file),
 )) {
   const source = read(file);

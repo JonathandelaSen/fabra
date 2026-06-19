@@ -4,7 +4,7 @@ import {
   type StandardCVProfile,
 } from "@/lib/cv-profile";
 import type { ExtractedPdfText } from "@/lib/pdf-extraction";
-import { cvDocumentTypes, type CVDocumentTypePrimitives } from "@/modules/cv-library/domain/value-objects/cv-document-type.value-object";
+import { cvDocumentTypes, type CVDocumentTypePrimitives } from "@/backend/modules/cv-library/domain/value-objects/cv-document-type.value-object";
 
 export type TestCVType = Extract<
   CVDocumentTypePrimitives,

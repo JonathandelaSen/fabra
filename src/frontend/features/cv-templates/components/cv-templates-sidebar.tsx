@@ -1,7 +1,7 @@
 "use client";
 
 import type { CVTemplateDefinition, CVTemplateLocale } from "@/lib/cv-templates";
-import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
+import { FeatureSidebarPanel } from "@/frontend/components/shared/feature-sidebar-panel";
 import CVTemplatePreview from "./cv-template-preview";
 import { Check, LayoutTemplate } from "lucide-react";
 import { cn } from "@/lib/utils";

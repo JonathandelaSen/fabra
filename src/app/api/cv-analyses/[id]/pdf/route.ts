@@ -3,7 +3,7 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { ErrorCode } from "@/shared/error-codes";
 import { cvAnalysisModule } from "@/lib/container";
 import { downloadAnalysisPdf } from "../../../_services/download-analysis-pdf.service";
-import { notFound } from "@/modules/shared";
+import { notFound } from "@/backend/modules/shared";
 
 export async function GET(
   req: NextRequest,

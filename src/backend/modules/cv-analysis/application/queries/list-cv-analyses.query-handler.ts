@@ -1,4 +1,4 @@
-import type { QueryHandler } from "@/modules/shared";
+import type { QueryHandler } from "@/backend/modules/shared";
 import type { AnalysisSummary } from "@/lib/analysis-types";
 import { ListCVAnalysesUseCase } from "../use-cases/list-cv-analyses.use-case";
 import { presentCVAnalysisSummary } from "../presenters/cv-analysis-presenters";

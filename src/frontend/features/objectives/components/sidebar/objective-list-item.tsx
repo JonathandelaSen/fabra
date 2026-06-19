@@ -1,7 +1,7 @@
 import type {
   ObjectiveWithRelations,
 } from "../../api/objectives-api";
-import { SidebarListItem } from "@/components/shared/sidebar-list-item";
+import { SidebarListItem } from "@/frontend/components/shared/sidebar-list-item";
 
 interface ObjectiveListItemProps {
   commitment: ObjectiveWithRelations;

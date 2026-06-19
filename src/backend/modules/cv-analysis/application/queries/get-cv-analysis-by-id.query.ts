@@ -1,4 +1,4 @@
-import type { Query } from "@/modules/shared";
+import type { Query } from "@/backend/modules/shared";
 import type { Analysis } from "@/lib/analysis-types";
 
 export interface GetCVAnalysisByIdInput {

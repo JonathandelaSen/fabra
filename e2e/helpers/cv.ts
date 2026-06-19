@@ -4,7 +4,7 @@ import path from "node:path";
 import { expect, type APIRequestContext, type Page } from "@playwright/test";
 import { uniqueLabel } from "./env";
 import { adminClient } from "./supabase";
-import { messages } from "../../src/i18n/messages";
+import { messages } from "../../src/frontend/i18n/messages";
 
 export interface CreatedAnalysisFixture {
   cv: {

@@ -19,19 +19,19 @@ import {
   ACTION_ICON_BUTTON_TONES,
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
+} from "@/frontend/components/shared/action-buttons";
 import {
   LabelBadge,
   LABEL_BADGE_SIZES,
   LABEL_BADGE_TONES,
-} from "@/components/shared/label-badge";
+} from "@/frontend/components/shared/label-badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/frontend/components/ui/dropdown-menu";
 import type {
   ActivityContext,
   ActivityContextType,

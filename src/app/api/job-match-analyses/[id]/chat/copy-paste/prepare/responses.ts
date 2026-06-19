@@ -1,3 +1,3 @@
-import type { CopyPastePreparationPrimitives } from "@/modules/shared";
+import type { CopyPastePreparationPrimitives } from "@/backend/modules/shared";
 
 export type PrepareOfferChatCopyPasteResponse = CopyPastePreparationPrimitives;

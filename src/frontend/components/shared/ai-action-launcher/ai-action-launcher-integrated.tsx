@@ -25,7 +25,7 @@ import {
   FAST_OPENAI_MODEL,
   POWERFUL_GEMINI_MODEL,
   POWERFUL_OPENAI_MODEL,
-} from "@/frontend/ai-models";
+} from "@/frontend/utils/ai-models";
 
 interface AIActionLauncherIntegratedProps {
   available: boolean;

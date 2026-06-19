@@ -1,4 +1,4 @@
-import { IsoDate } from "@/modules/shared";
+import { IsoDate } from "@/backend/modules/shared";
 
 export class ReceivedFeedbackDate extends IsoDate {
   private constructor(value: string, today: string) {

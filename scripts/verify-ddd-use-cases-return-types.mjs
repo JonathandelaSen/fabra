@@ -98,7 +98,7 @@ function getBaseTypeName(typeNode, sourceFile) {
 export async function findUseCaseReturnTypesViolations({
   rootDir = repoRoot,
 } = {}) {
-  const modulesDir = path.join(rootDir, "src/modules");
+  const modulesDir = path.join(rootDir, "src/backend/modules");
   const allFiles = await walkFiles(modulesDir);
   const useCaseFiles = allFiles
     .map((filePath) => toPosixRelative(rootDir, filePath))
@@ -239,8 +239,8 @@ export async function findUseCaseReturnTypesViolations({
           importPath.includes("/entities") ||
           importPath.includes("/value-objects/") ||
           importPath.includes("/value-objects") ||
-          importPath === "@/modules/shared" ||
-          importPath.startsWith("@/modules/shared/") ||
+          importPath === "@/backend/modules/shared" ||
+          importPath.startsWith("@/backend/modules/shared/") ||
           importPath.includes("cv-profile");
 
         if (!isValidImport) {

@@ -1,4 +1,4 @@
-import type { DomainEvent } from "@/modules/shared";
+import type { DomainEvent } from "@/backend/modules/shared";
 
 export class WorkJournalContextCreatedEvent implements DomainEvent<{ contextId: string }> {
   readonly eventName = "work_journal_context_created";

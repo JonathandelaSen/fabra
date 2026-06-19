@@ -1,4 +1,4 @@
-import type { CVStructuredProfileResponse } from "@/modules/cv-library";
+import type { CVStructuredProfileResponse } from "@/backend/modules/cv-library";
 
 export interface EditCVStructuredProfileResponse {
   profile: CVStructuredProfileResponse;

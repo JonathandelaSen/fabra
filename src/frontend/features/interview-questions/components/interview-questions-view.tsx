@@ -3,11 +3,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
-import { useConfirm } from "@/components/shared/confirm-provider";
-import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
-import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
+import { useConfirm } from "@/frontend/components/shared/confirm-provider";
+import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
+import { FeatureTwoPaneLayout } from "@/frontend/components/shared/feature-two-pane-layout";
+import { useIsDesktopLayout } from "@/frontend/components/shared/use-is-desktop-layout";
 import type {
   InterviewQuestion,
   UpdateInterviewQuestionInput,
@@ -31,9 +31,9 @@ import {
   InterviewQuestionsDetailSkeleton,
   InterviewQuestionsSkeleton,
 } from "./interview-questions-skeleton";
-import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/utils/ai-models";
 import { MessageSquareQuote } from "lucide-react";
-import { FeatureEmptyState } from "@/components/shared/feature-empty-state";
+import { FeatureEmptyState } from "@/frontend/components/shared/feature-empty-state";
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 import type { InterviewQuestionAIMode } from "./interview-questions-types";
 

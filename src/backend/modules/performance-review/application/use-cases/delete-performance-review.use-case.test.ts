@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { ExecutionResult } from "@/modules/shared";
-import { createTestUser } from "@/modules/test-helpers/setup";
+import { ExecutionResult } from "@/backend/modules/shared";
+import { createTestUser } from "@/backend/modules/test-helpers/setup";
 import {
   makePerformanceReviewDeps,
   reviewInput,

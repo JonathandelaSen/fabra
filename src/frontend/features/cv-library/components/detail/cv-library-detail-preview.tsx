@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { Loader2 } from "lucide-react";
 
 const PDFPreview = dynamic(
-  () => import("@/components/shared/pdf-preview").then((mod) => mod.PDFPreview),
+  () => import("@/frontend/components/shared/pdf-preview").then((mod) => mod.PDFPreview),
   {
     ssr: false,
     loading: () => (

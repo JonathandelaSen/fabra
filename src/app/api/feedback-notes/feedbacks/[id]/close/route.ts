@@ -4,8 +4,8 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { feedbackNotesModule } from "@/lib/container";
 import {
   presentFeedback,
-} from "@/modules/feedback-notes";
-import { ok } from "@/modules/shared";
+} from "@/backend/modules/feedback-notes";
+import { ok } from "@/backend/modules/shared";
 import { toFeedbackResponse, type CloseFeedbackResponse } from "./responses";
 
 export async function POST(

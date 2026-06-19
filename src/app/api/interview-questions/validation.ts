@@ -8,9 +8,9 @@ import {
   cvLibraryModule,
   jobMatchAnalysisModule,
 } from "@/lib/container";
-import { presentCVAnalysis } from "@/modules/cv-analysis";
-import { presentJobMatchAnalysis } from "@/modules/job-match-analysis";
-import { presentCVDocument, type CVDocumentResponse } from "@/modules/cv-library";
+import { presentCVAnalysis } from "@/backend/modules/cv-analysis";
+import { presentJobMatchAnalysis } from "@/backend/modules/job-match-analysis";
+import { presentCVDocument, type CVDocumentResponse } from "@/backend/modules/cv-library";
 
 type Result<TValue, TError> =
   | { ok: true; value: TValue }

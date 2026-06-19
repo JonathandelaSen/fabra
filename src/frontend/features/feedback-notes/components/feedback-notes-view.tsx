@@ -3,11 +3,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
-import { useConfirm } from "@/components/shared/confirm-provider";
-import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
-import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
+import { useConfirm } from "@/frontend/components/shared/confirm-provider";
+import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
+import { FeatureTwoPaneLayout } from "@/frontend/components/shared/feature-two-pane-layout";
+import { useIsDesktopLayout } from "@/frontend/components/shared/use-is-desktop-layout";
 import { useFeedbackNotesMutations } from "../hooks/use-feedback-notes-mutations";
 import {
   useFeedbackEntries,
@@ -15,7 +15,7 @@ import {
   useFeedbackNotesList,
 } from "../hooks/use-feedback-notes-queries";
 import { useFeedbackNotesRouteState } from "../hooks/use-feedback-notes-route-state";
-import { useActivityContexts } from "@/features/activity-context";
+import { useActivityContexts } from "@/frontend/features/activity-context";
 import { FeedbackNotesDetailSkeleton } from "./feedback-notes-skeleton";
 import { FeedbackNotesDetail } from "./feedback-notes-detail";
 import {
@@ -25,7 +25,7 @@ import {
 import { FeedbackNotesSidebar } from "./feedback-notes-sidebar";
 import { FeedbackCopyPastePanel } from "./feedback-copy-paste-panel";
 import { FeedbackNotesEmptyState } from "./feedback-notes-empty-state";
-import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/utils/ai-models";
 
 import { getAIRequestConfigForProvider, type StoredAIProvider } from "@/lib/browser-preferences";
 

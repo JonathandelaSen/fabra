@@ -3,7 +3,7 @@ import {
   AI_PROVIDER,
   assertAIProviderAllowedForRuntime,
   badRequest,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import type {
   CVProfileStructuringAIService,
   CVProfileStructuringAIServiceFactory,

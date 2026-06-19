@@ -6,9 +6,9 @@ import {
   FileText,
   ExternalLink,
 } from "lucide-react";
-import AnalysisScoreCircle from "@/components/shared/analysis-score-circle";
-import { AnalysisMarkdown } from "@/components/shared/analysis-markdown";
-import { FormattedDate } from "@/components/shared/formatted-date";
+import AnalysisScoreCircle from "@/frontend/components/shared/analysis-score-circle";
+import { AnalysisMarkdown } from "@/frontend/components/shared/analysis-markdown";
+import { FormattedDate } from "@/frontend/components/shared/formatted-date";
 import { getScoreColor } from "@/lib/format";
 
 interface ScoreHeroProps {

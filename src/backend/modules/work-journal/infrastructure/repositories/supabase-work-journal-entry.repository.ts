@@ -1,5 +1,5 @@
-import { BoundSupabaseRepository } from "@/modules/shared";
-import { IsoDate, OptionalIsoDate, Timestamp, UserId } from "@/modules/shared";
+import { BoundSupabaseRepository } from "@/backend/modules/shared";
+import { IsoDate, OptionalIsoDate, Timestamp, UserId } from "@/backend/modules/shared";
 import {
   WorkJournalEntry,
   type WorkJournalEntryPrimitives,

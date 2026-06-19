@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { renderWithProviders } from "@/frontend/testing/render";
+import { renderWithProviders } from "@/testing/render";
 import { ChatMarkdown } from "./chat-markdown";
 
 describe("ChatMarkdown", () => {

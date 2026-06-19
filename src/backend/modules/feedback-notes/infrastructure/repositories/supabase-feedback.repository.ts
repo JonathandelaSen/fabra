@@ -1,4 +1,4 @@
-import { BoundSupabaseRepository } from "@/modules/shared";
+import { BoundSupabaseRepository } from "@/backend/modules/shared";
 import {
   Feedback,
   type FeedbackStatus,

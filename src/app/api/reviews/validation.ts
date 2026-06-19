@@ -3,7 +3,7 @@ import {
   REVIEW_TYPES,
   type EvidenceSourceValue,
   type ReviewTypeValue,
-} from "@/modules/performance-review";
+} from "@/backend/modules/performance-review";
 
 type Result<TValue> =
   | { ok: true; value: TValue }

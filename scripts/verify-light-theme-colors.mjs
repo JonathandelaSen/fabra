@@ -3,7 +3,7 @@ import { spawnSync } from "node:child_process";
 
 const root = process.cwd();
 
-const SCAN_DIRS = ["src/features", "src/components", "src/app"];
+const SCAN_DIRS = ["src/frontend/features", "src/frontend/components", "src/app"];
 
 const WHITELIST = [];
 

@@ -3,14 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
-import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
+import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
+import { FeatureHeaderActionButton } from "@/frontend/components/shared/feature-header-action-button";
+import { FeatureTwoPaneLayout } from "@/frontend/components/shared/feature-two-pane-layout";
 import { ClipboardCheck, Plus } from "lucide-react";
-import { FeatureEmptyState } from "@/components/shared/feature-empty-state";
-import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
-import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
-import { DeleteButton, EditButton } from "@/components/shared/action-buttons";
+import { FeatureEmptyState } from "@/frontend/components/shared/feature-empty-state";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/frontend/components/shared/action-buttons";
+import { useIsDesktopLayout } from "@/frontend/components/shared/use-is-desktop-layout";
+import { DeleteButton, EditButton } from "@/frontend/components/shared/action-buttons";
 import {
   getAIRequestConfigForProvider,
   type StoredAIProvider,

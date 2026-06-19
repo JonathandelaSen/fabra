@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 
 export const analysisReferenceTypes = {
   jobMatchAnalysis: "job_match_analysis",

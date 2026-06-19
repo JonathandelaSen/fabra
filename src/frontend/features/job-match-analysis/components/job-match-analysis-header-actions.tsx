@@ -1,9 +1,9 @@
 "use client";
 
 import { Columns3, FileDown, List } from "lucide-react";
-import { DeleteButton } from "@/components/shared/action-buttons";
-import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
-import { Button } from "@/components/ui/button";
+import { DeleteButton } from "@/frontend/components/shared/action-buttons";
+import { FeatureHeaderActionButton } from "@/frontend/components/shared/feature-header-action-button";
+import { Button } from "@/frontend/components/ui/button";
 import type { JobMatchAnalysisRouteView } from "../hooks/use-job-match-analysis-route-state";
 import { JOB_MATCH_ROUTE_VIEWS } from "../constants";
 

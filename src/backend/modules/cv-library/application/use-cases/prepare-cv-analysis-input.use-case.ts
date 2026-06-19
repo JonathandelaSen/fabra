@@ -23,7 +23,7 @@ import type {
 } from "../../domain/repositories/cv-analysis-preparation-services";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
 import { CVAnalysisInput } from "../../domain/value-objects/cv-analysis-input.value-object";
-import { Timestamp, UserId, type EventBus } from "@/modules/shared";
+import { Timestamp, UserId, type EventBus } from "@/backend/modules/shared";
 
 export interface PrepareCVAnalysisInputInput {
   cvId: string;

@@ -1,4 +1,4 @@
-import { AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext, publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt, UserId, type AIProvider, type EventBus } from "@/modules/shared";
+import { AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext, publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt, UserId, type AIProvider, type EventBus } from "@/backend/modules/shared";
 import { JobMatchAnalysis } from "../../domain/entities/job-match-analysis.entity";
 import type { JobMatchAnalysisRepository } from "../../domain/repositories/job-match-analysis.repository";
 import type { JobMatchScoringAIServiceFactory } from "../../domain/repositories/job-match-scoring-ai.service";

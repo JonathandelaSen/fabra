@@ -1,6 +1,6 @@
 import { OllamaJobMatchScoringAIServiceFactory } from "./infrastructure/services/ollama-job-match-scoring-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { instrumentUseCases, type Telemetry, type EventBus } from "@/modules/shared";
+import { instrumentUseCases, type Telemetry, type EventBus } from "@/backend/modules/shared";
 import { CreateJobMatchAnalysisUseCase } from "./application/use-cases/create-job-match-analysis.use-case";
 import { DeleteJobMatchAnalysisUseCase } from "./application/use-cases/delete-job-match-analysis.use-case";
 import { GetJobMatchAnalysisByIdUseCase } from "./application/use-cases/get-job-match-analysis-by-id.use-case";

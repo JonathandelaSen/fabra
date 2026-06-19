@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { useTranslations } from "next-intl";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
+import { useInterfaceLanguage } from "@/frontend/components/shared/i18n-provider";
 import { formatDisplayDate } from "@/lib/date-format";
 import type { JobMatchAnalysisDetail } from "../api/job-match-analysis-api";
 

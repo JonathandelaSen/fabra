@@ -1,5 +1,5 @@
 import { ErrorCode } from "@/shared/error-codes";
-import { DomainError, ValueObject } from "@/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
 
 export class EvidenceContent extends ValueObject<string> {
   private constructor(private readonly value: string) {

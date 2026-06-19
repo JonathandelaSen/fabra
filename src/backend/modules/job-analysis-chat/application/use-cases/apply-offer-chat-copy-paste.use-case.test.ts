@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { Timestamp, UserId } from "@/modules/shared";
+import { Timestamp, UserId } from "@/backend/modules/shared";
 import { Conversation } from "../../domain/entities/conversation.entity";
 import type { ChatMessageRepository } from "../../domain/repositories/chat-message.repository";
 import type { ConversationRepository } from "../../domain/repositories/conversation.repository";

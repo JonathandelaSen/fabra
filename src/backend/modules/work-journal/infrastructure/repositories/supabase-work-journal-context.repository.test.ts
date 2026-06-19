@@ -3,7 +3,7 @@ import {
   createTestUser,
   getSupabaseClient,
   testLabel,
-} from "@/modules/test-helpers/setup";
+} from "@/backend/modules/test-helpers/setup";
 import { SupabaseWorkJournalContextRepository } from "./supabase-work-journal-context.repository";
 import { SupabaseWorkJournalEntryRepository } from "./supabase-work-journal-entry.repository";
 

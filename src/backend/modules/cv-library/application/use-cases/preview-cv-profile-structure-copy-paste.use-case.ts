@@ -1,6 +1,6 @@
-import { UserId } from "@/modules/shared";
-import { extractCopyPasteJson } from "@/modules/shared/application/assisted-workflows/copy-paste-json-parser";
-import { validateCopyPasteEnvelope } from "@/modules/shared/application/assisted-workflows/copy-paste-json-envelope";
+import { UserId } from "@/backend/modules/shared";
+import { extractCopyPasteJson } from "@/backend/modules/shared/application/assisted-workflows/copy-paste-json-parser";
+import { validateCopyPasteEnvelope } from "@/backend/modules/shared/application/assisted-workflows/copy-paste-json-envelope";
 import type { StandardCVProfile } from "../../domain/cv-profile";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import {

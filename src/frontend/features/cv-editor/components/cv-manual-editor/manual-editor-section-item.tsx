@@ -2,7 +2,7 @@
 
 import { type ReactNode } from "react";
 import { useTranslations } from "next-intl";
-import { AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { AccordionItem, AccordionTrigger, AccordionContent } from "@/frontend/components/ui/accordion";
 import { ArrowDown, ArrowUp, GripVertical, Eye, EyeOff } from "lucide-react";
 import { type LucideIcon } from "lucide-react";
 import { getSectionTitle, type CVRenderableSectionId, type CVTemplateLocale } from "@/lib/cv-templates";

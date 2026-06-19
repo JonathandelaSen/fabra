@@ -1,4 +1,4 @@
-import type { InterfaceLanguage } from "@/i18n/config";
+import type { InterfaceLanguage } from "@/frontend/i18n/config";
 
 export interface InterfaceLanguagePreferenceResponse {
   interfaceLanguage: InterfaceLanguage;

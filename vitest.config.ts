@@ -11,9 +11,9 @@ export default defineConfig({
   test: {
     include: [
       "src/lib/**/*.test.ts",
-      "src/modules/**/*.test.ts",
+      "src/backend/modules/**/*.test.ts",
       "src/app/api/**/*.test.ts",
     ],
-    setupFiles: ["src/modules/test-helpers/setup.ts"],
+    setupFiles: ["src/backend/modules/test-helpers/setup.ts"],
   },
 });

@@ -1,3 +1,3 @@
-import type { AIInteractionReadModelPrimitives } from "@/modules/ai-interactions";
+import type { AIInteractionReadModelPrimitives } from "@/backend/modules/ai-interactions";
 
 export type ListAdminAIInteractionsResponse = AIInteractionReadModelPrimitives[];

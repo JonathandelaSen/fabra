@@ -37,7 +37,7 @@ function toPosixRelative(rootDir, filePath) {
 
 function isQueryFile(relativePath) {
   return (
-    relativePath.startsWith("src/modules/") &&
+    relativePath.startsWith("src/backend/modules/") &&
     relativePath.includes("/application/queries/") &&
     relativePath.endsWith(".query.ts") &&
     !relativePath.endsWith(".test.ts")
@@ -46,7 +46,7 @@ function isQueryFile(relativePath) {
 
 function isQueryHandlerFile(relativePath) {
   return (
-    relativePath.startsWith("src/modules/") &&
+    relativePath.startsWith("src/backend/modules/") &&
     relativePath.includes("/application/queries/") &&
     relativePath.endsWith(".query-handler.ts") &&
     !relativePath.endsWith(".test.ts")
@@ -106,7 +106,7 @@ function handlerImportsInfrastructure(source, handlerPath) {
 }
 
 export async function findQueryBusViolations({ rootDir = repoRoot } = {}) {
-  const modulesDir = path.join(rootDir, "src/modules");
+  const modulesDir = path.join(rootDir, "src/backend/modules");
   const files = (await walkFiles(modulesDir))
     .map((filePath) => toPosixRelative(rootDir, filePath))
     .sort();

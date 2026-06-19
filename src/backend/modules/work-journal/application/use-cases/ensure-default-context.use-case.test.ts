@@ -3,8 +3,8 @@ import {
   createTestUser,
   getSupabaseClient,
   testLabel,
-} from "@/modules/test-helpers/setup";
-import { UserId } from "@/modules/shared";
+} from "@/backend/modules/test-helpers/setup";
+import { UserId } from "@/backend/modules/shared";
 import { SupabaseCVDataRepository } from "../../infrastructure/repositories/supabase-cv-data.repository";
 import { SupabaseWorkJournalContextRepository } from "../../infrastructure/repositories/supabase-work-journal-context.repository";
 import { SupabaseWorkJournalEntryRepository } from "../../infrastructure/repositories/supabase-work-journal-entry.repository";

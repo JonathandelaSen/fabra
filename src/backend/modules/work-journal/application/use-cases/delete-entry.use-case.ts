@@ -1,4 +1,4 @@
-import { UserId, type EventBus } from "@/modules/shared";
+import { UserId, type EventBus } from "@/backend/modules/shared";
 import type { WorkJournalEntryRepository } from "../../domain/repositories/work-journal-entry.repository";
 import { EntryNotFoundError } from "../../domain/errors/entry-not-found.error";
 import { WorkJournalEntryId } from "../../domain/value-objects/work-journal-entry-id.value-object";

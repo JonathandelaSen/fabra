@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvAnalysisModule } from "@/lib/container";
-import { errorResponse, notFound, ok } from "@/modules/shared";
+import { errorResponse, notFound, ok } from "@/backend/modules/shared";
 import { parsePreviewCVAnalysisCopyPasteRequest } from "./validation";
 import type { PreviewCVAnalysisCopyPasteResponse } from "./responses";
 

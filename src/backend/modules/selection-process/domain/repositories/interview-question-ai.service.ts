@@ -1,5 +1,5 @@
 import type { Analysis, CVRecord } from "@/lib/analysis-types";
-import type { AIProvider } from "@/modules/shared";
+import type { AIProvider } from "@/backend/modules/shared";
 
 export interface InterviewQuestionAIInput {
   question: string;

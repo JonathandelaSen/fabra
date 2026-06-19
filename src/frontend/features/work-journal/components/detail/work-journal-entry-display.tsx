@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import type { WorkJournalEntry } from "../../api/work-journal-types";
 import { TimelineEntryMeta } from "./timeline-entry-meta";
 import { TimelineEntryActions } from "./timeline-entry-actions";
-import { BasicPanel } from "@/components/shared/basic-panel";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 
 interface TimelineEntryDisplayProps {
   entry: WorkJournalEntry;

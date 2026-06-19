@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   createTestUser,
   testLabel,
-} from "@/modules/test-helpers/setup";
+} from "@/backend/modules/test-helpers/setup";
 import type { JournalAIService } from "../../domain/repositories/journal-ai-service.repository";
 import { DraftEntryUseCase } from "./draft-entry.use-case";
 import { WorkJournalDraft } from "../../domain/value-objects/work-journal-draft.value-object";

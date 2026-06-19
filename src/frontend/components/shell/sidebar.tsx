@@ -20,7 +20,7 @@ import {
   Home,
   X,
 } from "lucide-react";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
+import { useInterfaceLanguage } from "@/frontend/components/shared/i18n-provider";
 import SidebarNavSection from "./sidebar-nav-section";
 import SidebarFooter from "./sidebar-footer";
 import type { SidebarActiveView } from "./sidebar-types";

@@ -1,4 +1,4 @@
-import type { QueryHandler } from "@/modules/shared";
+import type { QueryHandler } from "@/backend/modules/shared";
 import { GetJobAnalysisChatContextUseCase } from "../use-cases/get-job-analysis-chat-context.use-case";
 import {
   GetJobAnalysisChatContextQuery,

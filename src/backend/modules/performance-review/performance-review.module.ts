@@ -4,7 +4,7 @@ import {
   type EventBus,
   type QueryBus,
   type Telemetry,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { AddEvidenceItemUseCase } from "./application/use-cases/add-evidence-item.use-case";
 import { ApplySelfAssessmentCopyPasteUseCase } from "./application/use-cases/apply-self-assessment-copy-paste.use-case";
 import { CreatePerformanceReviewUseCase } from "./application/use-cases/create-performance-review.use-case";

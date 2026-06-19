@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import type { QueryBus } from "@/modules/shared";
-import { createTestUser } from "@/modules/test-helpers/setup";
+import type { QueryBus } from "@/backend/modules/shared";
+import { createTestUser } from "@/backend/modules/test-helpers/setup";
 import {
   makePerformanceReviewDeps,
   seedReview,

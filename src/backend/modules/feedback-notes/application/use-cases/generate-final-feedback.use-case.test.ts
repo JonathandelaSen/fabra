@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createTestUser } from "@/modules/test-helpers/setup";
+import { createTestUser } from "@/backend/modules/test-helpers/setup";
 import {
   createDefaultContext,
   createEntryFixture,

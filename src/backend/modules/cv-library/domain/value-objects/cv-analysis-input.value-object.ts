@@ -1,4 +1,4 @@
-import { Counter, LongText, ValueObject } from "@/modules/shared";
+import { Counter, LongText, ValueObject } from "@/backend/modules/shared";
 import type {
   CVDocumentPrimitives,
   CVDocumentExtractedTextPrimitives,

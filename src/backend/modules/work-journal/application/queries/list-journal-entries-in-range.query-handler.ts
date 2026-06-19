@@ -1,4 +1,4 @@
-import type { QueryHandler } from "@/modules/shared";
+import type { QueryHandler } from "@/backend/modules/shared";
 import type { WorkJournalEntryPrimitives } from "../../domain/entities/journal-entry.entity";
 import type { ListJournalEntriesInRangeUseCase } from "../use-cases/list-journal-entries-in-range.use-case";
 import {

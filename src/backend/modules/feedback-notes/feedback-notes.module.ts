@@ -1,6 +1,6 @@
 import { OllamaFeedbackAIServiceFactory } from "./infrastructure/services/ollama-feedback-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { instrumentUseCases, type Telemetry, type EventBus } from "@/modules/shared";
+import { instrumentUseCases, type Telemetry, type EventBus } from "@/backend/modules/shared";
 import { CreateEntryUseCase } from "./application/use-cases/create-entry.use-case";
 import { CreateFeedbackUseCase } from "./application/use-cases/create-feedback.use-case";
 import { DeleteEntryUseCase } from "./application/use-cases/delete-entry.use-case";

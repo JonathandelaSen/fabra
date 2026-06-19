@@ -6,7 +6,7 @@ import type {
 } from "@/app/api/cvs/[id]/chat/responses";
 
 import type { StoredAIProvider } from "@/lib/browser-preferences";
-import { parseJsonResponse as readJsonResponse } from "@/frontend/api/api-error";
+import { parseJsonResponse as readJsonResponse } from "@/frontend/utils/api/api-error";
 
 export interface SendCVChatMessageInput {
   message: string;

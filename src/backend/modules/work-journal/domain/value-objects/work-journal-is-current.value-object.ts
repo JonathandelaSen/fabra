@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 
 export class WorkJournalIsCurrent extends ValueObject<boolean> {
   private constructor(private readonly value: boolean) {

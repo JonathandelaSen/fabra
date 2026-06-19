@@ -1,4 +1,4 @@
-import { LongText, ValueObject } from "@/modules/shared";
+import { LongText, ValueObject } from "@/backend/modules/shared";
 import { AIInteractionRating } from "./ai-interaction-rating.value-object";
 import type { AIInteractionRating as AIInteractionRatingValue } from "../entities/ai-interaction-review.entity";
 

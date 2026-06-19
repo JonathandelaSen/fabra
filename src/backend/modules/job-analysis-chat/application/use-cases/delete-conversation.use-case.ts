@@ -1,4 +1,4 @@
-import { UserId, type EventBus } from "@/modules/shared";
+import { UserId, type EventBus } from "@/backend/modules/shared";
 import { ConversationNotFoundError } from "../../domain/errors/conversation-not-found.error";
 import type { ConversationRepository } from "../../domain/repositories/conversation.repository";
 import { JobAnalysisChatConversationId } from "../../domain/value-objects/job-analysis-chat-conversation-id.value-object";

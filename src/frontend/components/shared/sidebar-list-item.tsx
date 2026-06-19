@@ -5,7 +5,7 @@ import { ChevronRight } from "lucide-react";
 import {
   featureListItemClassName,
   featureListItemIconClassName,
-} from "@/components/shared/feature-visual-system";
+} from "@/frontend/components/shared/feature-visual-system";
 
 interface SidebarListItemProps {
   title?: string;

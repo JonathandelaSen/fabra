@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { Pencil, Save, Star } from "lucide-react";
 import { useTranslations } from "next-intl";
-import AIActionLauncher from "@/components/shared/ai-action-launcher";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
-import { LabelBadge } from "@/components/shared/label-badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
+import { LabelBadge } from "@/frontend/components/shared/label-badge";
+import { Button } from "@/frontend/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
+import { Textarea } from "@/frontend/components/ui/textarea";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import type { EvidenceItem, PerformanceReviewItem } from "../api/performance-review-api";
 

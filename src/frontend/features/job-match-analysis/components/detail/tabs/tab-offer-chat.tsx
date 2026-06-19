@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
+import { useInterfaceLanguage } from "@/frontend/components/shared/i18n-provider";
 import { useJobMatchOfferChat } from "../../../hooks/use-job-match-offer-chat";
 import { ConversationList } from "../chat/conversation-list";
 import { ChatHeader } from "../chat/chat-header";
-import { ChatMessagesArea } from "@/components/shared/chat/chat-messages-area";
+import { ChatMessagesArea } from "@/frontend/components/shared/chat/chat-messages-area";
 import { ChatInput } from "../chat/chat-input";
 import { OfferChatCopyPasteModal } from "../../copy-paste/offer-chat-copy-paste-modal";
 

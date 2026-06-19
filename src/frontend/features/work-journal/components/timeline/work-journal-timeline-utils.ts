@@ -1,4 +1,4 @@
-import type { LabelBadgeTone } from "@/components/shared/label-badge";
+import type { LabelBadgeTone } from "@/frontend/components/shared/label-badge";
 import type { WorkJournalEntry } from "../../api/work-journal-types";
 
 export type TimelineGranularity = "month" | "week";

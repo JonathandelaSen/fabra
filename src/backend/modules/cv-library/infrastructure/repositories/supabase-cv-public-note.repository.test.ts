@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createTestCV } from "@/modules/test-helpers/cv-fixtures";
-import { createTestUser, getSupabaseClient } from "@/modules/test-helpers/setup";
+import { createTestCV } from "@/backend/modules/test-helpers/cv-fixtures";
+import { createTestUser, getSupabaseClient } from "@/backend/modules/test-helpers/setup";
 import { CVPublicNote } from "../../domain/entities/cv-public-note.entity";
 import { SupabaseCVPublicNoteRepository } from "./supabase-cv-public-note.repository";
 

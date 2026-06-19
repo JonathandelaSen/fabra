@@ -3,8 +3,8 @@ import { NextRequest } from "next/server";
 import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvLibraryModule } from "@/lib/container";
-import { presentCVDocument } from "@/modules/cv-library";
-import { errorResponse, notFound, ok } from "@/modules/shared";
+import { presentCVDocument } from "@/backend/modules/cv-library";
+import { errorResponse, notFound, ok } from "@/backend/modules/shared";
 import { parseApplyCVEditorCopyPasteRequest } from "./validation";
 import type { ApplyCVEditorCopyPasteResponse } from "./responses";
 

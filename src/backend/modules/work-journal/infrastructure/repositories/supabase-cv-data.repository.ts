@@ -1,4 +1,4 @@
-import { BoundSupabaseRepository } from "@/modules/shared";
+import { BoundSupabaseRepository } from "@/backend/modules/shared";
 import { normalizeStandardCVProfile } from "@/lib/cv-profile";
 import type { CVDataRepository } from "../../domain/repositories/cv-data.repository";
 import { CVSummaryForSuggestions } from "../../domain/value-objects/cv-summary-for-suggestions.value-object";

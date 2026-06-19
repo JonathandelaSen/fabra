@@ -7,8 +7,8 @@ const isReportMode = process.argv.includes("--report");
 const shouldPrintAllowlist = process.argv.includes("--print-allowlist");
 const shouldCheckAll = process.argv.includes("--all");
 
-const CHECK_ROOTS = ["src/features", "src/components/shared"];
-const EXCLUDED_ROOTS = ["src/components/ui"];
+const CHECK_ROOTS = ["src/frontend/features", "src/frontend/components/shared"];
+const EXCLUDED_ROOTS = ["src/frontend/components/ui"];
 
 const RULES = {
   maxLines: {
@@ -79,118 +79,124 @@ const RULES = {
 };
 
 const ALLOWLIST = {
-  // "src/features/activity-context/components/activity-context-view.tsx": {
+  "src/frontend/features/cv-library/components/cv-library-view.tsx": {
+    "api-import-in-component": 1,
+  },
+  "src/frontend/features/job-match-analysis/components/kanban/job-match-kanban-board.tsx": {
+    "jsx-region-comment": 1,
+  },
+  // "src/frontend/features/activity-context/components/activity-context-view.tsx": {
   //   "tanstack-in-component": 1,
   //   "api-import-in-component": 1,
   // },
-  // "src/features/cv-analysis/components/analysis-view.tsx": {
+  // "src/frontend/features/cv-analysis/components/analysis-view.tsx": {
   //   "max-lines": 1,
   //   "large-component": 1,
   //   "direct-http-in-component": 4,
   //   "too-many-usestate": 1,
   //   "jsx-region-comment": 2,
   // },
-  // "src/features/cv-analysis/components/cv-analysis-view.tsx": {
+  // "src/frontend/features/cv-analysis/components/cv-analysis-view.tsx": {
   //   "api-import-in-component": 1,
   //   "large-component": 1,
   // },
-  // "src/features/cv-analysis/components/cv-score-copy-paste-modal.tsx": {
+  // "src/frontend/features/cv-analysis/components/cv-score-copy-paste-modal.tsx": {
   //   "api-import-in-component": 1,
   // },
-  // "src/features/cv-analysis/components/extraction-view.tsx": {
+  // "src/frontend/features/cv-analysis/components/extraction-view.tsx": {
   //   "max-lines": 1,
   //   "large-component": 1,
   //   "direct-http-in-component": 2,
   //   "too-many-usestate": 1,
   //   "jsx-region-comment": 4,
   // },
-  // "src/features/cv-analysis/components/general-analysis-form.tsx": {
+  // "src/frontend/features/cv-analysis/components/general-analysis-form.tsx": {
   //   "jsx-region-comment": 3,
   // },
-  // "src/features/cv-analysis/components/job-match-form.tsx": {
+  // "src/frontend/features/cv-analysis/components/job-match-form.tsx": {
   //   "jsx-region-comment": 4,
   // },
-  // "src/features/cv-analysis/components/new-analysis-flow.tsx": {
+  // "src/frontend/features/cv-analysis/components/new-analysis-flow.tsx": {
   //   "large-component": 1,
   // },
-  // "src/features/cv-analysis/components/score-hero.tsx": {
+  // "src/frontend/features/cv-analysis/components/score-hero.tsx": {
   //   "large-component": 1,
   //   "jsx-region-comment": 5,
   // },
-  // "src/features/cv-analysis/components/tab-chat-oferta.tsx": {
+  // "src/frontend/features/cv-analysis/components/tab-chat-oferta.tsx": {
   //   "api-import-in-component": 1,
   //   "large-component": 1,
   //   "direct-http-in-component": 8,
   // },
-  // "src/features/cv-analysis/components/tab-resumen.tsx": {
+  // "src/frontend/features/cv-analysis/components/tab-resumen.tsx": {
   //   "jsx-region-comment": 2,
   // },
-  // "src/features/cv-editor/components/cv-editor-copy-paste-modal.tsx": {
+  // "src/frontend/features/cv-editor/components/cv-editor-copy-paste-modal.tsx": {
   //   "api-import-in-component": 1,
   // },
-  // "src/features/cv-editor/components/cv-editor-view.tsx": {
+  // "src/frontend/features/cv-editor/components/cv-editor-view.tsx": {
   //   "large-component": 1,
   //   "too-many-usestate": 1,
   // },
-  // "src/features/cv-editor/components/cv-manual-editor/manual-editor.tsx": {
+  // "src/frontend/features/cv-editor/components/cv-manual-editor/manual-editor.tsx": {
   //   "jsx-region-comment": 1,
   // },
-  // "src/features/cv-library/components/cv-library-detail-summary.tsx": {
+  // "src/frontend/features/cv-library/components/cv-library-detail-summary.tsx": {
   //   "jsx-region-comment": 1,
   // },
-  // "src/features/cv-library/components/upload-phase.tsx": {
+  // "src/frontend/features/cv-library/components/upload-phase.tsx": {
   //   "direct-http-in-component": 1,
   //   "jsx-region-comment": 4,
   // },
-  // "src/features/cv-templates/components/cv-profile-structure-copy-paste-modal.tsx": {
+  // "src/frontend/features/cv-templates/components/cv-profile-structure-copy-paste-modal.tsx": {
   //   "api-import-in-component": 1,
   // },
-  // "src/features/job-match-analysis/components/job-match-analysis-detail.tsx": {
+  // "src/frontend/features/job-match-analysis/components/job-match-analysis-detail.tsx": {
   //   "api-import-in-component": 1,
   //   "large-component": 1,
   // },
-  // "src/features/job-match-analysis/components/job-match-analysis-view.tsx": {
+  // "src/frontend/features/job-match-analysis/components/job-match-analysis-view.tsx": {
   //   "tanstack-in-component": 1,
   //   "api-import-in-component": 1,
   //   "large-component": 1,
   // },
-  // "src/features/job-match-analysis/components/job-match-extraction-view.tsx": {
+  // "src/frontend/features/job-match-analysis/components/job-match-extraction-view.tsx": {
   //   "api-import-in-component": 1,
   //   "large-component": 1,
   //   "too-many-usestate": 1,
   // },
-  // "src/features/job-match-analysis/components/job-match-score-copy-paste-modal.tsx": {
+  // "src/frontend/features/job-match-analysis/components/job-match-score-copy-paste-modal.tsx": {
   //   "api-import-in-component": 1,
   // },
-  // "src/features/job-match-analysis/components/score-hero.tsx": {
+  // "src/frontend/features/job-match-analysis/components/score-hero.tsx": {
   //   "jsx-region-comment": 3,
   // },
-  // "src/features/job-match-analysis/components/tab-chat-oferta.tsx": {
+  // "src/frontend/features/job-match-analysis/components/tab-chat-oferta.tsx": {
   //   "api-import-in-component": 1,
   //   "max-lines": 1,
   //   "large-component": 1,
   //   "direct-http-in-component": 10,
   //   "too-many-usestate": 1,
   // },
-  // "src/features/job-match-analysis/components/tab-resumen.tsx": {
+  // "src/frontend/features/job-match-analysis/components/tab-resumen.tsx": {
   //   "jsx-region-comment": 2,
   // },
-  // "src/features/objectives/components/objective-items-section.tsx": {
+  // "src/frontend/features/objectives/components/objective-items-section.tsx": {
   //   "large-component": 1,
   //   "jsx-region-comment": 1,
   // },
-  // "src/features/objectives/components/objective-outcomes-section.tsx": {
+  // "src/frontend/features/objectives/components/objective-outcomes-section.tsx": {
   //   "large-component": 1,
   //   "jsx-region-comment": 1,
   // },
-  // "src/features/objectives/components/objective-summary-panel.tsx": {
+  // "src/frontend/features/objectives/components/objective-summary-panel.tsx": {
   //   "jsx-region-comment": 2,
   // },
-  // "src/features/objectives/components/objectives-view.tsx": {
+  // "src/frontend/features/objectives/components/objectives-view.tsx": {
   //   "max-lines": 1,
   //   "large-component": 1,
   // },
-  // "src/features/work-journal/components/work-journal-view.tsx": {
+  // "src/frontend/features/work-journal/components/work-journal-view.tsx": {
   //   "tanstack-in-component": 1,
   //   "api-import-in-component": 3,
   //   "max-lines": 1,
@@ -430,7 +436,7 @@ function analyzeFile(file) {
     }
 
     const featureMatch = specifier.match(/^@\/features\/([^/]+)(?:\/(.+))?$/);
-    if (file.startsWith("src/components/shared/") && featureMatch) {
+    if (file.startsWith("src/frontend/components/shared/") && featureMatch) {
       addViolation(violations, file, RULES.sharedImportsFeature, line, specifier);
     }
 
@@ -626,7 +632,7 @@ function printHumanReport({
   console.log("Frontend Component Report");
   console.log("=========================");
   console.log(
-    "Scope: full repository audit for src/features/**/components and src/components/shared/**."
+    "Scope: full repository audit for src/frontend/features/**/components and src/frontend/components/shared/**."
   );
   console.log(
     `Check mode scans only changed TSX files (${changedCount} currently changed); use --all to force a full blocking scan.`

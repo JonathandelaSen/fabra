@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createTestUser, getSupabaseClient } from "@/modules/test-helpers/setup";
+import { createTestUser, getSupabaseClient } from "@/backend/modules/test-helpers/setup";
 import { activityContextsModule } from "@/lib/container";
 import { makeFeedbackDeps } from "../../test-helpers";
 import { CreateFeedbackUseCase } from "./create-feedback.use-case";

@@ -2,7 +2,7 @@ import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { activityContextsModule } from "@/lib/container";
-import { ok, errorResponse } from "@/modules/shared";
+import { ok, errorResponse } from "@/backend/modules/shared";
 import { parseHideActivityContextSuggestionRequest } from "./validation";
 import { type DismissActivityContextSuggestionResponse } from "./responses";
 

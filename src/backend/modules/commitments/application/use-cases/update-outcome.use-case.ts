@@ -1,4 +1,4 @@
-import { EntityId, UserId, type EventBus } from "@/modules/shared";
+import { EntityId, UserId, type EventBus } from "@/backend/modules/shared";
 import { CommitmentOutcomeNotFoundError } from "../../domain/errors/commitment-outcome-not-found.error";
 import { CommitmentOutcome, type CommitmentOutcomeStatus, type CommitmentOutcomeType } from "../../domain/entities/commitment-outcome.entity";
 import type { CommitmentOutcomeRepository } from "../../domain/repositories/commitment-outcome.repository";

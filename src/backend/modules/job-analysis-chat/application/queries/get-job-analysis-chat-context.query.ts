@@ -1,4 +1,4 @@
-import type { Query } from "@/modules/shared";
+import type { Query } from "@/backend/modules/shared";
 import type { JobAnalysisChatContext } from "../../domain/value-objects/job-analysis-chat-context.value-object";
 
 export interface GetJobAnalysisChatContextInput {

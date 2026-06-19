@@ -1,4 +1,4 @@
-import { EntityId, OptionalIsoDate, ValueObject } from "@/modules/shared";
+import { EntityId, OptionalIsoDate, ValueObject } from "@/backend/modules/shared";
 import { EvidenceContent } from "./evidence-content.value-object";
 import {
   EvidenceSource,

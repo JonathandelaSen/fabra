@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/frontend/components/ui/tabs";
 import { useTranslations } from "next-intl";
 
 interface MetricsWindowFilterProps {

@@ -1,4 +1,4 @@
-import type { DomainEvent } from "@/modules/shared";
+import type { DomainEvent } from "@/backend/modules/shared";
 
 export class ChatMessageCreatedEvent
   implements DomainEvent<{ messageId: string; conversationId: string; role: string }>

@@ -7,7 +7,7 @@ import {
   ACTION_ICON_BUTTON_TONES,
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
+} from "@/frontend/components/shared/action-buttons";
 import type { ActivityContextSuggestion } from "../api/activity-context-api";
 
 interface SuggestionRowProps {

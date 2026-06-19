@@ -1,4 +1,4 @@
-import type { Query } from "@/modules/shared";
+import type { Query } from "@/backend/modules/shared";
 import type { ReceivedFeedbackPrimitives } from "../../domain/entities/received-feedback.entity";
 
 export interface ListReceivedFeedbackInRangeInput {

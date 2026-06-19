@@ -1,4 +1,4 @@
-import { AggregateRoot, EntityId, UserId } from "@/modules/shared";
+import { AggregateRoot, EntityId, UserId } from "@/backend/modules/shared";
 import { ActivityContextArchivedEvent } from "../events/activity-context-archived.event";
 import { ActivityContextCreatedEvent } from "../events/activity-context-created.event";
 import { ActivityContextDeletedEvent } from "../events/activity-context-deleted.event";

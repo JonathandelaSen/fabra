@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
+import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
 import { MetricsWindowFilter } from "./metrics-window-filter";
 import { MetricsGroupSection } from "./metrics-group-section";
 import { METRIC_GROUPS } from "../constants";

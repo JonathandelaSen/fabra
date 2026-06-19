@@ -1,4 +1,4 @@
-import type { UserId } from "@/modules/shared";
+import type { UserId } from "@/backend/modules/shared";
 import type { CVDocument } from "../entities/cv-document.entity";
 import type { CVDocumentId } from "../value-objects/cv-document-id.value-object";
 

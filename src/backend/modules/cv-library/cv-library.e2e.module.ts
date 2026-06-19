@@ -1,7 +1,7 @@
 import { OllamaCVProfileStructuringAIServiceFactory } from "./infrastructure/services/ollama-cv-profile-structuring-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { QueryBus, Telemetry, EventBus } from "@/modules/shared";
-import { instrumentUseCases } from "@/modules/shared";
+import type { QueryBus, Telemetry, EventBus } from "@/backend/modules/shared";
+import { instrumentUseCases } from "@/backend/modules/shared";
 import { CreateUploadedCVDocumentUseCase } from "./application/use-cases/create-uploaded-cv-document.use-case";
 import { GetCVDocumentUseCase } from "./application/use-cases/get-cv-document.use-case";
 import { ListCVDocumentsUseCase } from "./application/use-cases/list-cv-documents.use-case";

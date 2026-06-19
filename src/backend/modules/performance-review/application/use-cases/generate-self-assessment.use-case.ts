@@ -1,4 +1,4 @@
-import { AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext, publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt, Timestamp, UserId, type AIProvider, type EventBus } from "@/modules/shared";
+import { AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext, publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt, Timestamp, UserId, type AIProvider, type EventBus } from "@/backend/modules/shared";
 import type { PerformanceReview } from "../../domain/entities/performance-review.entity";
 import { PerformanceReviewNotFoundError } from "../../domain/errors/performance-review-not-found.error";
 import type { PerformanceReviewRepository } from "../../domain/repositories/performance-review.repository";

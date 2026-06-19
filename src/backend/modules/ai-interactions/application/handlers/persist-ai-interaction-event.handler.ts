@@ -1,4 +1,4 @@
-import type { DomainEvent, EventHandler } from "@/modules/shared";
+import type { DomainEvent, EventHandler } from "@/backend/modules/shared";
 import type { RecordAIInteractionEventUseCase } from "../use-cases/record-ai-interaction-event.use-case";
 
 export class PersistAIInteractionEventHandler implements EventHandler {

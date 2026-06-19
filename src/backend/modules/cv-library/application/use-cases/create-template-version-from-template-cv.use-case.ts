@@ -1,5 +1,5 @@
 import { ErrorCode } from "@/shared/error-codes";
-import { badRequest, notFound, UserId } from "@/modules/shared";
+import { badRequest, notFound, UserId } from "@/backend/modules/shared";
 import {
   CV_TEMPLATES,
   getCVTemplate,

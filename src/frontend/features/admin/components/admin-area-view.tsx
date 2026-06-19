@@ -3,10 +3,10 @@
 import { useTranslations } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 import { Users, LayoutDashboard, Sparkles } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AdminUsersView } from "@/features/admin-users";
-import { AdminMetricsView } from "@/features/admin-metrics";
-import { AdminAIInteractionsView } from "@/features/admin-ai-interactions";
+import { Tabs, TabsList, TabsTrigger } from "@/frontend/components/ui/tabs";
+import { AdminUsersView } from "@/frontend/features/admin-users";
+import { AdminMetricsView } from "@/frontend/features/admin-metrics";
+import { AdminAIInteractionsView } from "@/frontend/features/admin-ai-interactions";
 
 type AdminSection = "dashboard" | "users" | "ai-interactions";
 

@@ -2,7 +2,7 @@
 
 import { Briefcase, CalendarClock, MessageCircle, MessageSquareQuote, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TabsList, TabsTrigger } from "@/frontend/components/ui/tabs";
 import { JOB_MATCH_DETAIL_TABS } from "../../constants";
 
 export const DETAIL_TABS = JOB_MATCH_DETAIL_TABS;

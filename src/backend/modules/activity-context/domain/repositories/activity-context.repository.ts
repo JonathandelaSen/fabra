@@ -1,4 +1,4 @@
-import type { Counter, EntityId, UserId } from "@/modules/shared";
+import type { Counter, EntityId, UserId } from "@/backend/modules/shared";
 import type { ActivityContext } from "../entities/activity-context.entity";
 
 export interface ActivityContextRepository {

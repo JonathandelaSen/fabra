@@ -1,4 +1,4 @@
-import { EntityId, ValueObject } from "@/modules/shared";
+import { EntityId, ValueObject } from "@/backend/modules/shared";
 
 export interface CVDocumentReferencePrimitives {
   readonly id: string;

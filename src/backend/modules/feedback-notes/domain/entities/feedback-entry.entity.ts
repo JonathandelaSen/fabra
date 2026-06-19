@@ -1,4 +1,4 @@
-import { AggregateRoot } from "@/modules/shared";
+import { AggregateRoot } from "@/backend/modules/shared";
 import { FeedbackEntryCreatedEvent } from "../events/feedback-entry-created.event";
 import { FeedbackEntryDeletedEvent } from "../events/feedback-entry-deleted.event";
 import { FeedbackEntryUpdatedEvent } from "../events/feedback-entry-updated.event";

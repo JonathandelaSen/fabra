@@ -7,10 +7,10 @@ import { getCVTemplate } from "@/lib/cv-templates";
 import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
+} from "@/frontend/components/shared/action-buttons";
 
 const PDFPreview = dynamic(
-  () => import("@/components/shared/pdf-preview").then((mod) => mod.PDFPreview),
+  () => import("@/frontend/components/shared/pdf-preview").then((mod) => mod.PDFPreview),
   {
     ssr: false,
     loading: () => (

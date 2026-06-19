@@ -7,12 +7,12 @@ import {
   AIOperation,
   UserId,
   type EventBus,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { CVAnalysis } from "../../domain/entities/cv-analysis.entity";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 import type { CVScoringAIResult } from "../../domain/repositories/cv-scoring-ai.service";
 import { CVAnalysisId } from "../../domain/value-objects/cv-analysis-id.value-object";
-import { ASSISTANCE_MODE } from "@/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
+import { ASSISTANCE_MODE } from "@/backend/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
 import {
   CV_SCORE_COPY_PASTE_MODEL,
   CV_SCORE_COPY_PASTE_SCHEMA_VERSION,

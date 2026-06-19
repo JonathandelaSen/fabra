@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import {
   clearImpersonationMarker,
   getImpersonationMarker,
-} from "@/frontend/impersonation-storage";
+} from "@/frontend/utils/impersonation-storage";
 
 interface ImpersonationBannerProps {
   userEmail: string | null;

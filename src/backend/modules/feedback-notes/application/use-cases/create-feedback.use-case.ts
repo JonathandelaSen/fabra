@@ -1,4 +1,4 @@
-import { type EventBus } from "@/modules/shared";
+import { type EventBus } from "@/backend/modules/shared";
 import { Feedback } from "../../domain/entities/feedback.entity";
 import type { FeedbackRepository } from "../../domain/repositories/feedback.repository";
 

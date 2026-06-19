@@ -1,4 +1,4 @@
-import type { UserId } from "@/modules/shared";
+import type { UserId } from "@/backend/modules/shared";
 import type { FollowUp } from "../entities/follow-up.entity";
 
 export interface FollowUpRepository {

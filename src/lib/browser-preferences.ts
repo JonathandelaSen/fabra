@@ -1,5 +1,5 @@
-import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
-import { AI_PROVIDER } from "@/modules/shared/domain/value-objects/ai-provider.value-object";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/utils/ai-models";
+import { AI_PROVIDER } from "@/backend/modules/shared/domain/value-objects/ai-provider.value-object";
 
 export { AI_PROVIDER };
 export type StoredAIProvider = typeof AI_PROVIDER[keyof typeof AI_PROVIDER];

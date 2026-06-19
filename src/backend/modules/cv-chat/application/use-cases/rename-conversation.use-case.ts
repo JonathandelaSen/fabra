@@ -1,4 +1,4 @@
-import { Timestamp, UserId, type EventBus } from "@/modules/shared";
+import { Timestamp, UserId, type EventBus } from "@/backend/modules/shared";
 import { ConversationNotFoundError } from "../../domain/errors/conversation-not-found.error";
 import type { Conversation } from "../../domain/entities/conversation.entity";
 import type { ConversationRepository } from "../../domain/repositories/conversation.repository";

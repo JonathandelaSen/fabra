@@ -1,4 +1,4 @@
-import type { UserId } from "@/modules/shared";
+import type { UserId } from "@/backend/modules/shared";
 import type { CVAnalysis } from "../entities/cv-analysis.entity";
 import type { CVAnalysisId } from "../value-objects/cv-analysis-id.value-object";
 

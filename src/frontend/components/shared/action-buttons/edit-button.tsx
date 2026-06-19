@@ -1,6 +1,6 @@
 import { type ComponentProps } from "react";
 import { Edit, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/frontend/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export interface EditButtonProps extends ComponentProps<typeof Button> {

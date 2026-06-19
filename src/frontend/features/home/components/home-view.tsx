@@ -9,8 +9,8 @@ import {
   Target,
   Inbox,
 } from "lucide-react";
-import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import type { SidebarActiveView } from "@/components/shell/sidebar-types";
+import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
+import type { SidebarActiveView } from "@/frontend/components/shell/sidebar-types";
 import HeroSection from "./hero-section";
 import QuickActionsBlock from "./quick-actions-block";
 import type { QuickAction } from "./quick-actions-block";

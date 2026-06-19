@@ -13,12 +13,12 @@ import {
   useInterviewQuestionsForLibrary,
 } from "../hooks/use-cv-library-queries";
 import { useCVLibraryRouteState } from "../hooks/use-cv-library-route-state";
-import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
-import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
-import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
+import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
+import { FeatureHeaderActionButton } from "@/frontend/components/shared/feature-header-action-button";
+import { FeatureTwoPaneLayout } from "@/frontend/components/shared/feature-two-pane-layout";
+import { useIsDesktopLayout } from "@/frontend/components/shared/use-is-desktop-layout";
 import { CVLibraryDetail } from "./detail/cv-library-detail";
-import { useConfirm } from "@/components/shared/confirm-provider";
+import { useConfirm } from "@/frontend/components/shared/confirm-provider";
 import { CVLibraryEmptyState } from "./cv-library-empty-state";
 import {
   shouldAutoSelectCVLibraryItem,

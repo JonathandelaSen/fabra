@@ -3,8 +3,8 @@
 import type { RefObject } from "react";
 import { MessageSquare } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Textarea } from "@/components/ui/textarea";
-import { BasicPanel } from "@/components/shared/basic-panel";
+import { Textarea } from "@/frontend/components/ui/textarea";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 import type { InterviewQuestion, UpdateInterviewQuestionInput } from "../api/interview-questions-api";
 
 interface InterviewQuestionPromptPanelProps {

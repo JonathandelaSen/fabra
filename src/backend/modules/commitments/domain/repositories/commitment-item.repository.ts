@@ -1,4 +1,4 @@
-import type { UserId, EntityId } from "@/modules/shared";
+import type { UserId, EntityId } from "@/backend/modules/shared";
 import type { CommitmentItem } from "../entities/commitment-item.entity";
 
 export interface CommitmentItemRepository {

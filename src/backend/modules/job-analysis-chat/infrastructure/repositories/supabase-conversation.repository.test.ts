@@ -3,10 +3,10 @@ import {
   createTestUser,
   getSupabaseClient,
   testLabel,
-} from "@/modules/test-helpers/setup";
-import { createTestJobMatchAnalysis } from "@/modules/test-helpers/analysis-fixtures";
-import { createTestCV } from "@/modules/test-helpers/cv-fixtures";
-import { UserId } from "@/modules/shared";
+} from "@/backend/modules/test-helpers/setup";
+import { createTestJobMatchAnalysis } from "@/backend/modules/test-helpers/analysis-fixtures";
+import { createTestCV } from "@/backend/modules/test-helpers/cv-fixtures";
+import { UserId } from "@/backend/modules/shared";
 import { SupabaseConversationRepository } from "./supabase-conversation.repository";
 import { JobAnalysisChatConversationId } from "../../domain/value-objects/job-analysis-chat-conversation-id.value-object";
 import { AnalysisReference } from "../../domain/value-objects/analysis-reference.value-object";

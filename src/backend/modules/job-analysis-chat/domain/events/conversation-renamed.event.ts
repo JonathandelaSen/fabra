@@ -1,4 +1,4 @@
-import type { DomainEvent } from "@/modules/shared";
+import type { DomainEvent } from "@/backend/modules/shared";
 
 export class ConversationRenamedEvent implements DomainEvent<{ conversationId: string }> {
   readonly eventName = "analysis_chat_conversation_renamed";

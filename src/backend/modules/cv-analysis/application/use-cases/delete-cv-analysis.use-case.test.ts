@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { ExecutionResult } from "@/modules/shared";
+import { ExecutionResult } from "@/backend/modules/shared";
 import { DeleteCVAnalysisUseCase } from "./delete-cv-analysis.use-case";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 

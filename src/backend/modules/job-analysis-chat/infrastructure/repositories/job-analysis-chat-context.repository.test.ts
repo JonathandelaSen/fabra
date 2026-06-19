@@ -1,22 +1,22 @@
 import { describe, expect, it } from "vitest";
-import { InMemoryQueryBus, InMemoryEventBus } from "@/modules/shared";
-import { NoOpTelemetry } from "@/modules/shared";
+import { InMemoryQueryBus, InMemoryEventBus } from "@/backend/modules/shared";
+import { NoOpTelemetry } from "@/backend/modules/shared";
 import {
   createCVAnalysisModule,
   GetCVAnalysisByIdQuery,
   GetCVAnalysisByIdQueryHandler,
-} from "@/modules/cv-analysis";
+} from "@/backend/modules/cv-analysis";
 import {
   createJobMatchAnalysisModule,
   GetJobMatchAnalysisByIdQuery,
   GetJobMatchAnalysisByIdQueryHandler,
-} from "@/modules/job-match-analysis";
-import { createTestCV } from "@/modules/test-helpers/cv-fixtures";
+} from "@/backend/modules/job-match-analysis";
+import { createTestCV } from "@/backend/modules/test-helpers/cv-fixtures";
 import {
   createTestUser,
   getSupabaseClient,
   testLabel,
-} from "@/modules/test-helpers/setup";
+} from "@/backend/modules/test-helpers/setup";
 import { JobAnalysisChatContextRepository } from "./job-analysis-chat-context.repository";
 
 const supabase = getSupabaseClient();

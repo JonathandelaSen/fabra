@@ -3,10 +3,10 @@
 import type { RefObject } from "react";
 import { CheckCircle2, Copy, Loader2, Save } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
-import { Textarea } from "@/components/ui/textarea";
-import AIActionLauncher from "@/components/shared/ai-action-launcher";
-import { BasicPanel } from "@/components/shared/basic-panel";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/frontend/components/shared/action-buttons";
+import { Textarea } from "@/frontend/components/ui/textarea";
+import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 import type { InterviewQuestion, UpdateInterviewQuestionInput } from "../api/interview-questions-api";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import type { InterviewQuestionAIMode } from "./interview-questions-types";

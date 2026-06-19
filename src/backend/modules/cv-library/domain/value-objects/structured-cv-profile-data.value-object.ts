@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 import type { StandardCVProfilePrimitives } from "../cv-profile";
 import { ProfileSchemaVersion } from "./profile-schema-version.value-object";
 

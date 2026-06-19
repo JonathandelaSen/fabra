@@ -1,10 +1,10 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
-import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
-import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
-import { BasicPanel } from "@/components/shared/basic-panel";
+import { Skeleton } from "@/frontend/components/ui/skeleton";
+import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
+import { FeatureTwoPaneLayout } from "@/frontend/components/shared/feature-two-pane-layout";
+import { FeatureSidebarPanel } from "@/frontend/components/shared/feature-sidebar-panel";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 
 export function InterviewQuestionsSkeleton() {
   const sidebarHeaderSkeleton = (

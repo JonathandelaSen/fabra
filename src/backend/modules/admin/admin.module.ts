@@ -1,4 +1,4 @@
-import { instrumentUseCases, type Telemetry } from "@/modules/shared";
+import { instrumentUseCases, type Telemetry } from "@/backend/modules/shared";
 import { ListUsersUseCase } from "./application/use-cases/list-users.use-case";
 import { DeleteUserUseCase } from "./application/use-cases/delete-user.use-case";
 import { StartUserImpersonationUseCase } from "./application/use-cases/start-user-impersonation.use-case";

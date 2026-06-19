@@ -1,4 +1,4 @@
-import { UserId, type EventBus } from "@/modules/shared";
+import { UserId, type EventBus } from "@/backend/modules/shared";
 import { CVAnalysis } from "../../domain/entities/cv-analysis.entity";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 import { CVAnalysisId } from "../../domain/value-objects/cv-analysis-id.value-object";

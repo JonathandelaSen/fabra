@@ -3,7 +3,7 @@ import {
   Timestamp,
   UserId,
   type UserId as UserIdType,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { CVAnalysisCreatedEvent } from "../events/cv-analysis-created.event";
 import { CVAnalysisScoredEvent } from "../events/cv-analysis-scored.event";
 import { CVAnalysisId } from "../value-objects/cv-analysis-id.value-object";

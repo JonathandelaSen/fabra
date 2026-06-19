@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createTestUser } from "@/modules/test-helpers/setup";
+import { createTestUser } from "@/backend/modules/test-helpers/setup";
 import { createReceivedFeedbackFixture, makeReceivedFeedbackDeps } from "../../test-helpers";
 import { ListReceivedFeedbackUseCase } from "./list-received-feedback.use-case";
 

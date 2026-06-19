@@ -2,9 +2,9 @@
 
 import { Briefcase, CheckCircle2, FileText } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { SidebarListItem } from "@/components/shared/sidebar-list-item";
-import { IconLabelBadge } from "@/components/shared/icon-label-badge";
-import { LabelBadge, LABEL_BADGE_TONES } from "@/components/shared/label-badge";
+import { SidebarListItem } from "@/frontend/components/shared/sidebar-list-item";
+import { IconLabelBadge } from "@/frontend/components/shared/icon-label-badge";
+import { LabelBadge, LABEL_BADGE_TONES } from "@/frontend/components/shared/label-badge";
 import type { InterviewQuestion } from "../api/interview-questions-api";
 
 interface InterviewQuestionListItemProps {

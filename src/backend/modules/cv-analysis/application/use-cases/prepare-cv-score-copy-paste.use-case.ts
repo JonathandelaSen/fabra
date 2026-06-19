@@ -8,7 +8,7 @@ import {
   CopyPastePreparation,
   UserId,
   type EventBus,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 import { CVAnalysisId } from "../../domain/value-objects/cv-analysis-id.value-object";
 import { selectBestCVAnalysisText } from "../services/cv-analysis-text";

@@ -9,7 +9,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/frontend/components/ui/tooltip";
 
 interface CVInlineMarkdownFieldProps {
   value: string;

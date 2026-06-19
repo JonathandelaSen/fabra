@@ -1,7 +1,7 @@
 import {
   AIInfrastructureEventName,
   type EventBus,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { PersistAIInteractionEventHandler } from "./application/handlers/persist-ai-interaction-event.handler";
 import { RecordAIInteractionEventUseCase } from "./application/use-cases/record-ai-interaction-event.use-case";
 import { SupabaseAIInteractionEventRepository } from "./infrastructure/supabase-ai-interaction-event.repository";

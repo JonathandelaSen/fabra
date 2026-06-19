@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { Lightbulb, Sparkles } from "lucide-react";
-import { IconTextButton } from "@/components/shared/action-buttons";
+import { IconTextButton } from "@/frontend/components/shared/action-buttons";
 
 function safeParseArray(value: string | null | undefined): string[] {
   try {

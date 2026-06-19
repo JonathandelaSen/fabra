@@ -6,16 +6,16 @@ import { AlertCircle, Check, LockKeyhole, Save, UserX } from "lucide-react";
 import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
-import { SettingsSectionPanel } from "@/components/shared/settings-section-panel";
+} from "@/frontend/components/shared/action-buttons";
+import { SettingsSectionPanel } from "@/frontend/components/shared/settings-section-panel";
 import { SignOutButton } from "./sign-out-button";
 import {
   changePasswordWithCurrent,
   signOut,
   type AuthFormState,
 } from "@/app/login/actions";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
-import { isValidPassword } from "@/frontend/auth-validation";
+import { useInterfaceLanguage } from "@/frontend/components/shared/i18n-provider";
+import { isValidPassword } from "@/frontend/utils/auth-validation";
 
 const INITIAL_STATE: AuthFormState = {};
 

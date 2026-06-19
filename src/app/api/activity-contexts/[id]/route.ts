@@ -2,8 +2,8 @@ import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { activityContextsModule } from "@/lib/container";
-import { presentActivityContext } from "@/modules/activity-context";
-import { errorResponse, ok } from "@/modules/shared";
+import { presentActivityContext } from "@/backend/modules/activity-context";
+import { errorResponse, ok } from "@/backend/modules/shared";
 import { parseUpdateActivityContextRequest } from "./validation";
 import {
   toActivityContextResponse,

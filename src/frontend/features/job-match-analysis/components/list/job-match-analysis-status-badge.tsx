@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import type { JobMatchAnalysisOfferStatus } from "@/app/api/job-match-analyses/responses";
-import { LabelBadge, LABEL_BADGE_TONES, LABEL_BADGE_SIZES, type LabelBadgeTone } from "@/components/shared/label-badge";
+import { LabelBadge, LABEL_BADGE_TONES, LABEL_BADGE_SIZES, type LabelBadgeTone } from "@/frontend/components/shared/label-badge";
 
 const STATUS_TONES: Record<JobMatchAnalysisOfferStatus, LabelBadgeTone> = {
   interesting: LABEL_BADGE_TONES.INFO,

@@ -1,7 +1,7 @@
 import { OllamaJobAnalysisChatAIServiceFactory } from "./infrastructure/services/ollama-job-analysis-chat-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { QueryBus, Telemetry, EventBus } from "@/modules/shared";
-import { instrumentUseCases } from "@/modules/shared";
+import type { QueryBus, Telemetry, EventBus } from "@/backend/modules/shared";
+import { instrumentUseCases } from "@/backend/modules/shared";
 import { GetJobAnalysisChatContextQueryHandler } from "./application/queries/get-job-analysis-chat-context.query-handler";
 import { GetJobAnalysisChatContextQuery } from "./application/queries/get-job-analysis-chat-context.query";
 import { CreateConversationUseCase } from "./application/use-cases/create-conversation.use-case";

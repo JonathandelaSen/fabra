@@ -3,7 +3,7 @@ import {
   shouldShowDetailLoader,
   shouldShowListShellLoader,
   type ListDetailLoadingState,
-} from "@/frontend/list-detail/list-detail-loading-state";
+} from "@/frontend/utils/list-detail-loading-state/list-detail-loading-state";
 
 interface CVLibraryAutoSelectionState {
   cvCount: number;

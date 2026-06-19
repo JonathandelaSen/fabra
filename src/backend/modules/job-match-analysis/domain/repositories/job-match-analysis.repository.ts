@@ -1,4 +1,4 @@
-import type { UserId } from "@/modules/shared";
+import type { UserId } from "@/backend/modules/shared";
 import type { JobMatchAnalysis } from "../entities/job-match-analysis.entity";
 import type { JobMatchAnalysisId } from "../value-objects/job-match-analysis-id.value-object";
 

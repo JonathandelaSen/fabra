@@ -2,7 +2,7 @@
 
 import { Briefcase, FileSearch, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { FormattedDate } from "@/components/shared/formatted-date";
+import { FormattedDate } from "@/frontend/components/shared/formatted-date";
 import type { AnalysisMode, AnalysisSummary } from "@/lib/analysis-types";
 
 interface CVLibraryAssociatedAnalysesProps {

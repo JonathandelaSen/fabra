@@ -1,7 +1,7 @@
 import type {
   CVDocumentResponse,
   CVStructuredProfileResponse,
-} from "@/modules/cv-library";
+} from "@/backend/modules/cv-library";
 
 export interface ApplyCVProfileCopyPasteResponse {
   profile: CVStructuredProfileResponse;

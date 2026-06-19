@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 import { CVDocument, type CVDocumentPrimitives } from "../entities/cv-document.entity";
 import { CVStructuredProfile, type CVStructuredProfilePrimitives } from "../entities/cv-structured-profile.entity";
 

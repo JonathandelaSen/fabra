@@ -1,9 +1,9 @@
 import {
   ListCVAnalysisUsageByDocumentQuery,
   type ListCVAnalysisUsageByDocumentResult,
-} from "@/modules/cv-analysis";
-import { ListJobMatchAnalysisUsageByDocumentQuery } from "@/modules/job-match-analysis";
-import { UserId, type EventBus, type QueryBus } from "@/modules/shared";
+} from "@/backend/modules/cv-analysis";
+import { ListJobMatchAnalysisUsageByDocumentQuery } from "@/backend/modules/job-match-analysis";
+import { UserId, type EventBus, type QueryBus } from "@/backend/modules/shared";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
 import { CVDeletionOutcome } from "../../domain/value-objects/cv-deletion-outcome.value-object";

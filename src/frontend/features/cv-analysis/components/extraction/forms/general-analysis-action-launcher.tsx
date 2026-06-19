@@ -1,6 +1,6 @@
 "use client";
 
-import AIActionLauncher from "@/components/shared/ai-action-launcher";
+import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher";
 import { useTranslations } from "next-intl";
 
 import type { StoredAIProvider } from "@/lib/browser-preferences";

@@ -1,6 +1,6 @@
 import { act } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
-import { renderHookWithProviders } from "@/frontend/testing/render";
+import { renderHookWithProviders } from "@/testing/render";
 import { useThemePreference } from "./use-theme-preference";
 
 describe("useThemePreference", () => {

@@ -3,9 +3,9 @@ import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { activityContextsModule, commitmentsModule } from "@/lib/container";
 import { presentCommitment,
-  presentCommitmentsWorkspace } from "@/modules/commitments";
-import { presentActivityContext } from "@/modules/activity-context";
-import { ok, created, errorResponse } from "@/modules/shared";
+  presentCommitmentsWorkspace } from "@/backend/modules/commitments";
+import { presentActivityContext } from "@/backend/modules/activity-context";
+import { ok, created, errorResponse } from "@/backend/modules/shared";
 import { parseCreateCommitmentRequest } from "./validation";
 import {
   toCommitmentResponse,

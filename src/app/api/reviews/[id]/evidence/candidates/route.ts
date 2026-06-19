@@ -7,8 +7,8 @@ import {
   receivedFeedbackModule,
   workJournalModule,
 } from "@/lib/container";
-import { presentEvidenceCandidates } from "@/modules/performance-review";
-import { ok } from "@/modules/shared";
+import { presentEvidenceCandidates } from "@/backend/modules/performance-review";
+import { ok } from "@/backend/modules/shared";
 import type { ListEvidenceCandidatesResponse } from "./responses";
 
 export async function GET(

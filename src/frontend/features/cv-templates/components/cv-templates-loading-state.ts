@@ -1,4 +1,4 @@
-import { shouldShowMainLoader } from "@/frontend/list-detail/list-detail-loading-state";
+import { shouldShowMainLoader } from "@/frontend/utils/list-detail-loading-state/list-detail-loading-state";
 
 const TEMPLATES_BASE_PATH = "/templates";
 

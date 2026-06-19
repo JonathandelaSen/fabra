@@ -1,4 +1,4 @@
-import { UserId } from "@/modules/shared";
+import { UserId } from "@/backend/modules/shared";
 import type { ReceivedFeedback } from "../../domain/entities/received-feedback.entity";
 import type { ReceivedFeedbackRepository } from "../../domain/repositories/received-feedback.repository";
 

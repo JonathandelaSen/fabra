@@ -1,4 +1,4 @@
-import { UserId, type EventBus } from "@/modules/shared";
+import { UserId, type EventBus } from "@/backend/modules/shared";
 import { JobMatchAnalysis } from "../../domain/entities/job-match-analysis.entity";
 import type { JobMatchAnalysisRepository } from "../../domain/repositories/job-match-analysis.repository";
 import { JobMatchAnalysisId } from "../../domain/value-objects/job-match-analysis-id.value-object";

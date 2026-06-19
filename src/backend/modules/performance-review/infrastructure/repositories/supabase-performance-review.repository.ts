@@ -1,4 +1,4 @@
-import { BoundSupabaseRepository, type UserId } from "@/modules/shared";
+import { BoundSupabaseRepository, type UserId } from "@/backend/modules/shared";
 import { PerformanceReview } from "../../domain/entities/performance-review.entity";
 import type {
   PerformanceReviewRepository,

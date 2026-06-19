@@ -4,7 +4,7 @@ import {
   Timestamp,
   UserId,
   type EventBus,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { PerformanceReview } from "../../domain/entities/performance-review.entity";
 import type { PerformanceReviewRepository } from "../../domain/repositories/performance-review.repository";
 import { PerformanceReviewId } from "../../domain/value-objects/performance-review-id.value-object";

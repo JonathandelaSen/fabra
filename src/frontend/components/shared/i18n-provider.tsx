@@ -2,13 +2,13 @@
 
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "@/i18n/messages";
+import { getMessages } from "@/frontend/i18n/messages";
 import {
   INTERFACE_LANGUAGE_COOKIE,
   isInterfaceLanguage,
   type InterfaceLanguage,
-} from "@/i18n/config";
-import { saveInterfaceLanguage } from "@/frontend/user-preferences";
+} from "@/frontend/i18n/config";
+import { saveInterfaceLanguage } from "@/frontend/utils/user-preferences";
 
 type InterfaceLanguageContextValue = {
   locale: InterfaceLanguage;

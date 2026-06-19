@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { createTestJobMatchAnalysis } from "@/modules/test-helpers/analysis-fixtures";
-import { createTestCV } from "@/modules/test-helpers/cv-fixtures";
+import { createTestJobMatchAnalysis } from "@/backend/modules/test-helpers/analysis-fixtures";
+import { createTestCV } from "@/backend/modules/test-helpers/cv-fixtures";
 import {
   createTestUser,
   getSupabaseClient,
   testLabel,
-} from "@/modules/test-helpers/setup";
-import { UserId } from "@/modules/shared";
+} from "@/backend/modules/test-helpers/setup";
+import { UserId } from "@/backend/modules/shared";
 import { SupabaseFollowUpRepository } from "./supabase-follow-up.repository";
 
 const supabase = getSupabaseClient();
@@ -50,7 +50,7 @@ describe("SupabaseFollowUpRepository", () => {
       notes: "Sent",
       nextAction: "Follow up",
       nextActionAt: null,
-      updatedAt: await import("@/modules/shared").then((mod) =>
+      updatedAt: await import("@/backend/modules/shared").then((mod) =>
         mod.Timestamp.fromPrimitives("2026-05-13T11:00:00.000Z"),
       ),
     });

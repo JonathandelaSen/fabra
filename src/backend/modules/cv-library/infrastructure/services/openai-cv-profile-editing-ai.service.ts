@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { badRequest } from "@/modules/shared";
+import { badRequest } from "@/backend/modules/shared";
 import { ErrorCode } from "@/shared/error-codes";
 import type { StandardCVProfile } from "../../domain/cv-profile";
 import type { CVProfileEditingAIService } from "../../domain/repositories/cv-profile-ai.service";

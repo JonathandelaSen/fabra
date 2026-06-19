@@ -1,5 +1,5 @@
 import { ErrorCode } from "@/shared/error-codes";
-import { DomainError, ValueObject } from "@/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
 
 export const REVIEW_TYPE = {
   performanceReview: "performance_review",

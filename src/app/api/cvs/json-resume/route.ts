@@ -2,8 +2,8 @@ import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvLibraryModule } from "@/lib/container";
-import { presentCVDocument } from "@/modules/cv-library";
-import { created, errorResponse } from "@/modules/shared";
+import { presentCVDocument } from "@/backend/modules/cv-library";
+import { created, errorResponse } from "@/backend/modules/shared";
 import { parseJsonResumeFromJson, parseJsonResumeFromFormData } from "./validation";
 import type { CreateJsonResumeCVDocumentResponse } from "./responses";
 

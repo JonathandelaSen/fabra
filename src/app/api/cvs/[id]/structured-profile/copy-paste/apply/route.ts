@@ -6,8 +6,8 @@ import { cvLibraryModule } from "@/lib/container";
 import {
   presentCVDocument,
   presentCVStructuredProfile,
-} from "@/modules/cv-library";
-import { errorResponse, notFound, ok } from "@/modules/shared";
+} from "@/backend/modules/cv-library";
+import { errorResponse, notFound, ok } from "@/backend/modules/shared";
 import { parseApplyCVProfileCopyPasteRequest } from "./validation";
 import type { ApplyCVProfileCopyPasteResponse } from "./responses";
 

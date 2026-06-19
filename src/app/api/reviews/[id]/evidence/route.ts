@@ -5,8 +5,8 @@ import { performanceReviewModule } from "@/lib/container";
 import {
   presentReviewEvidenceItem,
   presentReviewEvidenceItems,
-} from "@/modules/performance-review";
-import { created, errorResponse, ok } from "@/modules/shared";
+} from "@/backend/modules/performance-review";
+import { created, errorResponse, ok } from "@/backend/modules/shared";
 import { parseAddEvidenceItemRequest } from "./validation";
 import type {
   ListEvidenceItemsResponse,

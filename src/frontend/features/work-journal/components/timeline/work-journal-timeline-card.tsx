@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { ArrowRight } from "lucide-react";
-import { LabelBadge } from "@/components/shared/label-badge";
+import { LabelBadge } from "@/frontend/components/shared/label-badge";
 import type { TimelineEntryView } from "./work-journal-timeline-utils";
 import { getContextTone } from "./work-journal-timeline-utils";
 

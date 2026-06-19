@@ -1,7 +1,7 @@
 import { screen, act } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { renderWithProviders } from "@/frontend/testing/render";
-import { getMessages } from "@/i18n/messages";
+import { renderWithProviders } from "@/testing/render";
+import { getMessages } from "@/frontend/i18n/messages";
 import { CopyPromptModal } from "./copy-prompt-modal";
 import { copyToClipboard } from "@/lib/clipboard";
 

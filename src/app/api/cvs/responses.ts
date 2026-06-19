@@ -1,4 +1,4 @@
-import type { StandardCVProfile } from "@/modules/cv-library";
+import type { StandardCVProfile } from "@/backend/modules/cv-library";
 import type { AnalysisSummary } from "@/lib/analysis-types";
 import { ErrorCode, type ErrorResponseBody } from "@/shared/error-codes";
 import { CV_DOCUMENT_TYPES } from "@/shared/cv-library/constants";

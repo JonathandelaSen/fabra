@@ -1,4 +1,4 @@
-import { EntityId, UserId, type EventBus } from "@/modules/shared";
+import { EntityId, UserId, type EventBus } from "@/backend/modules/shared";
 import { CommitmentNotFoundError } from "../../domain/errors/commitment-not-found.error";
 import type { CommitmentRepository } from "../../domain/repositories/commitment.repository";
 

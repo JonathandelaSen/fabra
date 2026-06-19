@@ -1,4 +1,4 @@
-import type { Query } from "@/modules/shared";
+import type { Query } from "@/backend/modules/shared";
 import type { WorkJournalEntryPrimitives } from "../../domain/entities/journal-entry.entity";
 
 export interface ListJournalEntriesInRangeInput {

@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { createTestCV } from "@/modules/test-helpers/cv-fixtures";
+import { createTestCV } from "@/backend/modules/test-helpers/cv-fixtures";
 import {
   createTestUser,
   getSupabaseClient,
   testLabel,
-} from "@/modules/test-helpers/setup";
-import { UserId } from "@/modules/shared";
+} from "@/backend/modules/test-helpers/setup";
+import { UserId } from "@/backend/modules/shared";
 import { JobMatchAnalysis } from "../../domain/entities/job-match-analysis.entity";
 import { JobMatchAnalysisId } from "../../domain/value-objects/job-match-analysis-id.value-object";
 import { SupabaseJobMatchAnalysisRepository } from "./supabase-job-match-analysis.repository";

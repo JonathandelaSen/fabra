@@ -2,10 +2,10 @@
 
 import { useTranslations } from "next-intl";
 import { Search, Terminal } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Select } from "@/components/ui/select";
+import { Card, CardContent, CardHeader } from "@/frontend/components/ui/card";
+import { Input } from "@/frontend/components/ui/input";
+import { Button } from "@/frontend/components/ui/button";
+import { Select } from "@/frontend/components/ui/select";
 
 export type AIInteractionsSortOrder = "newest" | "oldest";
 

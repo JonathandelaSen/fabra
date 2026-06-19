@@ -1,11 +1,11 @@
-import { InMemoryQueryBus, InMemoryEventBus } from "@/modules/shared";
-import { createActivityContextsModule } from "@/modules/activity-context";
-import { createAdminModule } from "@/modules/admin";
+import { InMemoryQueryBus, InMemoryEventBus } from "@/backend/modules/shared";
+import { createActivityContextsModule } from "@/backend/modules/activity-context";
+import { createAdminModule } from "@/backend/modules/admin";
 import {
   createJobAnalysisChatModule,
   registerJobAnalysisChatQueries,
-} from "@/modules/job-analysis-chat";
-import { createCVChatModule } from "@/modules/cv-chat";
+} from "@/backend/modules/job-analysis-chat";
+import { createCVChatModule } from "@/backend/modules/cv-chat";
 import {
   createCVAnalysisModule,
   GetCVAnalysisByIdQuery,
@@ -14,15 +14,15 @@ import {
   ListCVAnalysesQueryHandler,
   ListCVAnalysisUsageByDocumentQuery,
   ListCVAnalysisUsageByDocumentQueryHandler,
-} from "@/modules/cv-analysis";
-import { createCVLibraryModule } from "@/modules/cv-library";
+} from "@/backend/modules/cv-analysis";
+import { createCVLibraryModule } from "@/backend/modules/cv-library";
 import {
   createCommitmentsModule,
   ListCommitmentsInRangeQuery,
   ListCommitmentsInRangeQueryHandler,
-} from "@/modules/commitments";
-import { createFeedbackNotesModule } from "@/modules/feedback-notes";
-import { createPerformanceReviewModule } from "@/modules/performance-review";
+} from "@/backend/modules/commitments";
+import { createFeedbackNotesModule } from "@/backend/modules/feedback-notes";
+import { createPerformanceReviewModule } from "@/backend/modules/performance-review";
 import {
   createJobMatchAnalysisModule,
   GetJobMatchAnalysisByIdQuery,
@@ -31,20 +31,20 @@ import {
   ListJobMatchAnalysesQueryHandler,
   ListJobMatchAnalysisUsageByDocumentQuery,
   ListJobMatchAnalysisUsageByDocumentQueryHandler,
-} from "@/modules/job-match-analysis";
+} from "@/backend/modules/job-match-analysis";
 import {
   createReceivedFeedbackModule,
   ListReceivedFeedbackInRangeQuery,
   ListReceivedFeedbackInRangeQueryHandler,
-} from "@/modules/received-feedback";
-import { createSelectionProcessModule } from "@/modules/selection-process";
+} from "@/backend/modules/received-feedback";
+import { createSelectionProcessModule } from "@/backend/modules/selection-process";
 import {
   createWorkJournalModule,
   ListJournalEntriesInRangeQuery,
   ListJournalEntriesInRangeQueryHandler,
-} from "@/modules/work-journal";
+} from "@/backend/modules/work-journal";
 import { telemetry } from "@/lib/telemetry";
-import { createAIInteractionsModule } from "@/modules/ai-interactions";
+import { createAIInteractionsModule } from "@/backend/modules/ai-interactions";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const eventBus = new InMemoryEventBus(telemetry);

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createTestUser } from "@/modules/test-helpers/setup";
+import { createTestUser } from "@/backend/modules/test-helpers/setup";
 import { ImpersonationTargetNotFoundError } from "../../domain/errors/impersonation-target-not-found.error";
 import { SelfImpersonationError } from "../../domain/errors/self-impersonation.error";
 import { SupabaseImpersonationSessionService } from "../../infrastructure/services/supabase-impersonation-session.service";

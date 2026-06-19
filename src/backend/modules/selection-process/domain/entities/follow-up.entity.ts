@@ -3,7 +3,7 @@ import {
   Timestamp,
   UserId,
   type UserId as UserIdType,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { FollowUpCreatedEvent } from "../events/follow-up-created.event";
 import { FollowUpStatusChangedEvent } from "../events/follow-up-status-changed.event";
 import { FollowUpUpdatedEvent } from "../events/follow-up-updated.event";

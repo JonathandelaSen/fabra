@@ -1,7 +1,7 @@
 import { createHash } from "crypto";
 import { NextRequest } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { ok, errorResponse } from "@/modules/shared";
+import { ok, errorResponse } from "@/backend/modules/shared";
 import { parseSubmitPublicCVFeedbackRequest } from "./validation";
 import type { SubmitPublicCVFeedbackResponse } from "./responses";
 

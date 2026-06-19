@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Accordion } from "@/components/ui/accordion";
+import { Accordion } from "@/frontend/components/ui/accordion";
 import { Briefcase, Code, GraduationCap, Languages, User, FileText, Wrench, Award, FolderOpen, Heart, Trophy, BookOpen } from "lucide-react";
 import type { StandardCVProfile } from "@/lib/cv-profile";
 import {

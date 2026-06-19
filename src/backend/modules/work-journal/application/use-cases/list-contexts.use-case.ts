@@ -1,4 +1,4 @@
-import { UserId } from "@/modules/shared";
+import { UserId } from "@/backend/modules/shared";
 import type { WorkJournalContext } from "../../domain/entities/journal-context.entity";
 import type { WorkJournalContextRepository } from "../../domain/repositories/work-journal-context.repository";
 

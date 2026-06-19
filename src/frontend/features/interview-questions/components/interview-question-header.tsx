@@ -7,10 +7,10 @@ import {
   EditButton,
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
-import { IconLabelBadge } from "@/components/shared/icon-label-badge";
-import { LabelBadge, LABEL_BADGE_TONES } from "@/components/shared/label-badge";
-import { BasicPanel } from "@/components/shared/basic-panel";
+} from "@/frontend/components/shared/action-buttons";
+import { IconLabelBadge } from "@/frontend/components/shared/icon-label-badge";
+import { LabelBadge, LABEL_BADGE_TONES } from "@/frontend/components/shared/label-badge";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 import type { InterviewQuestion } from "../api/interview-questions-api";
 
 interface InterviewQuestionHeaderProps {

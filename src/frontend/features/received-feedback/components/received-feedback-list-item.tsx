@@ -1,8 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { IconLabelBadge } from "@/components/shared/icon-label-badge";
-import { SidebarListItem } from "@/components/shared/sidebar-list-item";
+import { IconLabelBadge } from "@/frontend/components/shared/icon-label-badge";
+import { SidebarListItem } from "@/frontend/components/shared/sidebar-list-item";
 import { formatDate } from "@/lib/format";
 import type { ReceivedFeedbackItem } from "../api/received-feedback-api";
 

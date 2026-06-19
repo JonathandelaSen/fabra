@@ -1,4 +1,4 @@
-import { Timestamp, UserId, type EventBus } from "@/modules/shared";
+import { Timestamp, UserId, type EventBus } from "@/backend/modules/shared";
 import { CV_PROFILE_SCHEMA_VERSION } from "../../domain/cv-profile";
 import { CVStructuredProfile } from "../../domain/entities/cv-structured-profile.entity";
 import type { CVStructuredProfileRepository } from "../../domain/repositories/cv-structured-profile.repository";

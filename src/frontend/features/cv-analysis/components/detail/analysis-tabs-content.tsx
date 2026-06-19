@@ -1,8 +1,8 @@
 "use client";
 
-import { TabsContent } from "@/components/ui/tabs";
+import { TabsContent } from "@/frontend/components/ui/tabs";
 import TabSummary from "./tabs/tab-summary";
-import { CVLibraryChat } from "@/features/cv-library";
+import { CVLibraryChat } from "@/frontend/features/cv-library";
 
 interface AnalysisTabsContentProps {
   improvements: string[];

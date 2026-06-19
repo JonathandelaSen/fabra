@@ -1,6 +1,6 @@
 import { type ComponentProps } from "react";
 import { Loader2, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/frontend/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export interface DeleteButtonProps extends ComponentProps<typeof Button> {

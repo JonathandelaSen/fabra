@@ -2,7 +2,7 @@ import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { activityContextsModule, workJournalModule } from "@/lib/container";
-import { ok, created, errorResponse } from "@/modules/shared";
+import { ok, created, errorResponse } from "@/backend/modules/shared";
 import {
   parseCreateWorkJournalEntryRequest,
   parseListWorkJournalEntriesRequest,

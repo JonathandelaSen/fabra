@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { copyToClipboard } from "@/lib/clipboard";
 import { Check, Copy, Pencil, Save, X } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
-import AIActionLauncher from "@/components/shared/ai-action-launcher";
-import { EditButton, IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import { Textarea } from "@/frontend/components/ui/textarea";
+import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher";
+import { EditButton, IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/frontend/components/shared/action-buttons";
 import type { FeedbackEntry, FeedbackListItem } from "../api/feedback-notes-api";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 

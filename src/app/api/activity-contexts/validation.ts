@@ -1,4 +1,4 @@
-import type { ActivityContextStatus, ActivityContextType } from "@/modules/activity-context";
+import type { ActivityContextStatus, ActivityContextType } from "@/backend/modules/activity-context";
 import {
   ACTIVITY_CONTEXT_STATUSES,
   ACTIVITY_CONTEXT_TYPES,

@@ -1,7 +1,7 @@
 import { act, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { useJobMatchScoringState } from "./use-job-match-scoring-state";
-import { renderHookWithProviders } from "@/frontend/testing/render";
+import { renderHookWithProviders } from "@/testing/render";
 
 const MISSING_API_KEY_MESSAGE =
   "Configure your Gemini API key before launching analysis.";

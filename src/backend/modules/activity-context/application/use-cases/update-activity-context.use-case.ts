@@ -1,4 +1,4 @@
-import { EntityId, UserId, type EventBus } from "@/modules/shared";
+import { EntityId, UserId, type EventBus } from "@/backend/modules/shared";
 import { ActivityContextNotFoundError } from "../../domain/errors/activity-context-not-found.error";
 import type { ActivityContext, ActivityContextStatus, ActivityContextType } from "../../domain/entities/activity-context.entity";
 import type { ActivityContextRepository } from "../../domain/repositories/activity-context.repository";

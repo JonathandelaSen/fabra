@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Timestamp, UserId } from "@/modules/shared";
+import { Timestamp, UserId } from "@/backend/modules/shared";
 import { ProcessQuestion } from "./process-question.entity";
 import { JobOpportunityId } from "../value-objects/job-opportunity-id.value-object";
 import { ProcessQuestionId } from "../value-objects/process-question-id.value-object";

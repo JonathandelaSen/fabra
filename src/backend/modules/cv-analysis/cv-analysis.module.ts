@@ -1,6 +1,6 @@
 import { OllamaCVScoringAIServiceFactory } from "./infrastructure/services/ollama-cv-scoring-ai.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { instrumentUseCases, type Telemetry, type EventBus } from "@/modules/shared";
+import { instrumentUseCases, type Telemetry, type EventBus } from "@/backend/modules/shared";
 import { ApplyCVScoreCopyPasteUseCase } from "./application/use-cases/apply-cv-score-copy-paste.use-case";
 import { CreateCVAnalysisUseCase } from "./application/use-cases/create-cv-analysis.use-case";
 import { DeleteCVAnalysisUseCase } from "./application/use-cases/delete-cv-analysis.use-case";

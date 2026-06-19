@@ -1,4 +1,4 @@
-import type { DomainEvent } from "@/modules/shared";
+import type { DomainEvent } from "@/backend/modules/shared";
 
 export class ProcessQuestionDeletedEvent implements DomainEvent<{ questionId: string }> {
   readonly eventName = "process_question_deleted";

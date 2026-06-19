@@ -13,14 +13,14 @@ import type { JobAnalysisChatConversation } from "../../../types";
 import {
   ActionIconButton,
   ACTION_ICON_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@/frontend/components/shared/action-buttons";
+import { ScrollArea } from "@/frontend/components/ui/scroll-area";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/frontend/components/ui/dropdown-menu";
 
 interface ConversationListProps {
   conversations: JobAnalysisChatConversation[];

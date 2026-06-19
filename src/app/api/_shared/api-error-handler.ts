@@ -1,4 +1,4 @@
 import { telemetry } from "@/lib/telemetry";
-import { createApiErrorHandler } from "@/modules/shared";
+import { createApiErrorHandler } from "@/backend/modules/shared";
 
 export const handleApiError = createApiErrorHandler(telemetry);

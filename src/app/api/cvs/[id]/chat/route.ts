@@ -2,8 +2,8 @@ import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-c
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { ErrorCode } from "@/shared/error-codes";
 import { cvChatModule } from "@/lib/container";
-import { presentConversations } from "@/modules/cv-chat";
-import { notFound, ok } from "@/modules/shared";
+import { presentConversations } from "@/backend/modules/cv-chat";
+import { notFound, ok } from "@/backend/modules/shared";
 import type { ListCVChatConversationsResponse } from "./responses";
 
 export async function GET(

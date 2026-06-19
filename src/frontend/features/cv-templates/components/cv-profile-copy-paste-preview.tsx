@@ -3,8 +3,8 @@
 import { useTranslations } from "next-intl";
 import {
   CopyPastePreviewItem,
-} from "@/components/shared/copy-paste-workflow-modal";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
+} from "@/frontend/components/shared/copy-paste-workflow-modal";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
 import type { PreviewCVProfileCopyPasteResponse } from "@/app/api/cvs/[id]/structured-profile/copy-paste/preview/responses";
 
 interface CVProfileCopyPastePreviewProps {

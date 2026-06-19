@@ -8,8 +8,8 @@ import {
 import userEvent from "@testing-library/user-event";
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactElement, ReactNode } from "react";
-import { DEFAULT_INTERFACE_LANGUAGE, type InterfaceLanguage } from "@/i18n/config";
-import { getMessages } from "@/i18n/messages";
+import { DEFAULT_INTERFACE_LANGUAGE, type InterfaceLanguage } from "@/frontend/i18n/config";
+import { getMessages } from "@/frontend/i18n/messages";
 
 export function createTestQueryClient() {
   return new QueryClient({
@@ -36,7 +36,7 @@ interface RenderHookWithProvidersOptions<Props>
   queryClient?: QueryClient;
 }
 
-import { ConfirmProvider } from "@/components/shared/confirm-provider";
+import { ConfirmProvider } from "@/frontend/components/shared/confirm-provider";
 
 function createProviderWrapper(locale: InterfaceLanguage, queryClient: QueryClient) {
   function Wrapper({ children }: { children: ReactNode }) {

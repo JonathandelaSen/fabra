@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createTestUser, getSupabaseClient } from "@/modules/test-helpers/setup";
-import { UserId } from "@/modules/shared";
+import { createTestUser, getSupabaseClient } from "@/backend/modules/test-helpers/setup";
+import { UserId } from "@/backend/modules/shared";
 import { AIInteractionReview } from "../domain/entities/ai-interaction-review.entity";
 import { SupabaseAIInteractionReviewRepository } from "./supabase-ai-interaction-review.repository";
 

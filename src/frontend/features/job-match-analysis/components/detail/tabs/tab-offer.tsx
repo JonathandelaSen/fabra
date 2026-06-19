@@ -8,9 +8,9 @@ import {
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from "@/components/ui/accordion";
+} from "@/frontend/components/ui/accordion";
 import type { JobKeyData } from "@/lib/analysis-types";
-import { BasicPanel } from "@/components/shared/basic-panel";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 
 interface TabOfferProps {
   jobKeyData: JobKeyData | null;

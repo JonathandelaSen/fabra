@@ -2,8 +2,8 @@
 
 import { useMemo } from "react";
 import { useTranslations } from "next-intl";
-import { CopyPasteTextPanel } from "@/components/shared/copy-paste-text-panel";
-import { CopyPasteDialog } from "@/components/shared/copy-paste-dialog";
+import { CopyPasteTextPanel } from "@/frontend/components/shared/copy-paste-text-panel";
+import { CopyPasteDialog } from "@/frontend/components/shared/copy-paste-dialog";
 import { buildWorkJournalEntryDraftClipboardPrompt } from "../../api/work-journal-prompt";
 import type {
   WorkJournalContext,

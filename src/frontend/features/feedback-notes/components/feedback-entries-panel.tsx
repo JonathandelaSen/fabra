@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Lock, Pencil, Plus, Save, Trash2, X } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/frontend/components/ui/textarea";
 import type { FeedbackEntry } from "../api/feedback-notes-api";
 import { formatDate } from "@/lib/format";
 import {
@@ -14,8 +14,8 @@ import {
   DeleteButton,
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
-import { BasicPanel } from "@/components/shared/basic-panel";
+} from "@/frontend/components/shared/action-buttons";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 
 const textareaClass =
   "w-full resize-y border-line/10 bg-panel/[0.03] text-sm text-text-main placeholder:text-text-faint focus-visible:border-line-default disabled:cursor-not-allowed disabled:opacity-60";

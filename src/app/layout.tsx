@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { ConfirmProvider } from "@/components/shared/confirm-provider";
-import { I18nProvider } from "@/components/shared/i18n-provider";
-import { FrontendQueryClientProvider } from "@/frontend/query/query-client-provider";
-import { getMessages } from "@/i18n/messages";
-import { resolveInterfaceLanguage } from "@/i18n/server";
+import { ConfirmProvider } from "@/frontend/components/shared/confirm-provider";
+import { I18nProvider } from "@/frontend/components/shared/i18n-provider";
+import { FrontendQueryClientProvider } from "@/frontend/utils/api/query-client-provider";
+import { getMessages } from "@/frontend/i18n/messages";
+import { resolveInterfaceLanguage } from "@/frontend/i18n/server";
 import "./globals.css";
 
 const inter = Inter({

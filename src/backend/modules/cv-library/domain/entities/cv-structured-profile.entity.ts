@@ -3,7 +3,7 @@ import {
   Timestamp,
   UserId,
   type UserId as UserIdType,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { CVStructuredProfileCreatedEvent } from "../events/cv-structured-profile-created.event";
 import { AIModelName } from "../value-objects/ai-model-name.value-object";
 import { CVDocumentId } from "../value-objects/cv-document-id.value-object";

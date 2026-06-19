@@ -1,4 +1,4 @@
-import { EntityId, UserId } from "@/modules/shared";
+import { EntityId, UserId } from "@/backend/modules/shared";
 import { describe, expect, it } from "vitest";
 import { ActivityContext } from "./activity-context.entity";
 

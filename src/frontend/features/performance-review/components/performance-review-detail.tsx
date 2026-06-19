@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Briefcase, CalendarDays } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { LabelBadge } from "@/components/shared/label-badge";
-import { IconLabelBadge } from "@/components/shared/icon-label-badge";
+import { LabelBadge } from "@/frontend/components/shared/label-badge";
+import { IconLabelBadge } from "@/frontend/components/shared/icon-label-badge";
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 import type {
   EvidenceCandidate,

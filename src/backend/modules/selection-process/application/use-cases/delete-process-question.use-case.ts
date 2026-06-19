@@ -1,4 +1,4 @@
-import { ExecutionResult, UserId, type EventBus } from "@/modules/shared";
+import { ExecutionResult, UserId, type EventBus } from "@/backend/modules/shared";
 import type { ProcessQuestionRepository } from "../../domain/repositories/process-question.repository";
 import { ProcessQuestionId } from "../../domain/value-objects/process-question-id.value-object";
 

@@ -1,8 +1,8 @@
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { renderWithProviders } from "@/frontend/testing/render";
-import { getMessages } from "@/i18n/messages";
+import { renderWithProviders } from "@/testing/render";
+import { getMessages } from "@/frontend/i18n/messages";
 import type { JobMatchAnalysisDetailResponse } from "../types";
 import { JobMatchAnalysisMainPanel } from "./job-match-analysis-main-panel";
 

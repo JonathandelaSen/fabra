@@ -1,6 +1,6 @@
-import { BasicPanel } from "@/components/shared/basic-panel";
-import { SidebarListSkeleton } from "@/components/shared/skeletons/sidebar-list-skeleton";
-import { Skeleton } from "@/components/ui/skeleton";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
+import { SidebarListSkeleton } from "@/frontend/components/shared/skeletons/sidebar-list-skeleton";
+import { Skeleton } from "@/frontend/components/ui/skeleton";
 
 export function PerformanceReviewSidebarSkeleton() {
   return <SidebarListSkeleton itemCount={4} />;

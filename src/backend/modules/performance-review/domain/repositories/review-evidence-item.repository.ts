@@ -1,4 +1,4 @@
-import type { UserId } from "@/modules/shared";
+import type { UserId } from "@/backend/modules/shared";
 import type { ReviewEvidenceItem } from "../entities/review-evidence-item.entity";
 import type { PerformanceReviewId } from "../value-objects/performance-review-id.value-object";
 import type { ReviewEvidenceItemId } from "../value-objects/review-evidence-item-id.value-object";

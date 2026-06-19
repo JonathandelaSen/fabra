@@ -15,7 +15,7 @@ import {
   toOfferChatConversationMutationResponse,
   toSendOfferChatMessageResponse,
 } from "./responses";
-import { ok, errorResponse, notFound, badRequest } from "@/modules/shared";
+import { ok, errorResponse, notFound, badRequest } from "@/backend/modules/shared";
 
 export const maxDuration = 60;
 

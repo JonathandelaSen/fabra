@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, Loader2, Search, UserRound, Users } from "lucide-react";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
-import { ConfirmDialog } from "@/components/shared/confirm-dialog";
-import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
+import { ConfirmDialog } from "@/frontend/components/shared/confirm-dialog";
+import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
+import { useInterfaceLanguage } from "@/frontend/components/shared/i18n-provider";
+import { Button } from "@/frontend/components/ui/button";
+import { Input } from "@/frontend/components/ui/input";
 import type { AdminUserResponse } from "@/app/api/admin/users/responses";
 import { useAdminUsersQuery } from "../hooks/use-admin-users-query";
 import { useImpersonateUser } from "../hooks/use-impersonate-user";

@@ -2,8 +2,8 @@ import { NextRequest } from "next/server";
 import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { performanceReviewModule } from "@/lib/container";
-import { presentPerformanceReview } from "@/modules/performance-review";
-import { errorResponse, ok, parseAIProvider } from "@/modules/shared";
+import { presentPerformanceReview } from "@/backend/modules/performance-review";
+import { errorResponse, ok, parseAIProvider } from "@/backend/modules/shared";
 import { parseGenerateSelfAssessmentRequest } from "./validation";
 import type { PerformanceReviewDetailResponse } from "./responses";
 

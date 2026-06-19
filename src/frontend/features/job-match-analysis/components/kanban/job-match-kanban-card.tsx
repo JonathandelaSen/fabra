@@ -5,13 +5,13 @@ import { useDraggable } from "@dnd-kit/core";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import type { JobMatchAnalysisOfferStatus } from "@/app/api/job-match-analyses/responses";
-import { FormattedDate } from "@/components/shared/formatted-date";
+import { FormattedDate } from "@/frontend/components/shared/formatted-date";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/frontend/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import type { JobMatchAnalysisSummary } from "../../api/job-match-analysis-api";
 import {

@@ -3,7 +3,7 @@ import {
   Timestamp,
   UserId,
   type UserId as UserIdType,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { ReviewEvidenceItemCreatedEvent } from "../events/review-evidence-item-created.event";
 import { ReviewEvidenceItemDeletedEvent } from "../events/review-evidence-item-deleted.event";
 import { ReviewEvidenceItemUpdatedEvent } from "../events/review-evidence-item-updated.event";

@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { MessageCircle, Plus } from "lucide-react";
-import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/frontend/components/shared/action-buttons";
 
 interface ChatEmptyStateProps {
   onNew: () => void;

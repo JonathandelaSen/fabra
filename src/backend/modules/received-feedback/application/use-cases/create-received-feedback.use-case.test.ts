@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createTestUser, getDefaultActivityContextId } from "@/modules/test-helpers/setup";
+import { createTestUser, getDefaultActivityContextId } from "@/backend/modules/test-helpers/setup";
 import { makeReceivedFeedbackDeps } from "../../test-helpers";
 import { CreateReceivedFeedbackUseCase } from "./create-received-feedback.use-case";
 

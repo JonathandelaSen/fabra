@@ -1,4 +1,4 @@
-import { EntityId, UserId, type EventBus } from "@/modules/shared";
+import { EntityId, UserId, type EventBus } from "@/backend/modules/shared";
 import { Commitment, type CommitmentPriority, type CommitmentSource } from "../../domain/entities/commitment.entity";
 import type { CommitmentRepository } from "../../domain/repositories/commitment.repository";
 

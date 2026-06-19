@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 import {
   aiInteractionRatings,
   type AIInteractionRating as AIInteractionRatingValue,

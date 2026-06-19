@@ -1,4 +1,4 @@
-import { ExecutionResult, UserId } from "@/modules/shared";
+import { ExecutionResult, UserId } from "@/backend/modules/shared";
 import type { ActivityContextType } from "../../domain/entities/activity-context.entity";
 import type { ActivityContextRepository } from "../../domain/repositories/activity-context.repository";
 

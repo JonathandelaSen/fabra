@@ -2,11 +2,11 @@
 
 import { FileSearch, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { FormattedDate } from "@/components/shared/formatted-date";
-import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
+import { FormattedDate } from "@/frontend/components/shared/formatted-date";
+import { FeatureSidebarPanel } from "@/frontend/components/shared/feature-sidebar-panel";
 import { CVAnalysesListSkeleton } from "./cv-analyses-list-skeleton";
 import type { AnalysisSummary } from "@/lib/analysis-types";
-import { featureListItemClassName } from "@/components/shared/feature-visual-system";
+import { featureListItemClassName } from "@/frontend/components/shared/feature-visual-system";
 
 interface CVAnalysesListViewProps {
   analyses: AnalysisSummary[];

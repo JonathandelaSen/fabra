@@ -1,7 +1,7 @@
 "use client";
 
 import { Inbox } from "lucide-react";
-import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
+import { FeatureSidebarPanel } from "@/frontend/components/shared/feature-sidebar-panel";
 import type { ActivityContext, ReceivedFeedbackItem } from "../types";
 import { ReceivedFeedbackListItem } from "./received-feedback-list-item";
 import { ReceivedFeedbackListSkeleton } from "./received-feedback-skeleton";

@@ -16,4 +16,4 @@ export {
   getBestCVText,
   profileToPlainText,
   getCVSourceTextHash,
-} from "@/modules/cv-library/domain/cv-profile";
+} from "@/backend/modules/cv-library/domain/cv-profile";

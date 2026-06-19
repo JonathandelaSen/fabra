@@ -5,7 +5,7 @@ import {
   MessageCircle,
   Sparkles,
 } from "lucide-react";
-import { TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TabsList, TabsTrigger } from "@/frontend/components/ui/tabs";
 
 const tabClassName =
   "px-5 py-2 gap-2 text-sm font-semibold transition-all data-active:bg-panel-active data-active:text-text-main data-active:shadow-[var(--ui-active-tab-shadow)]";

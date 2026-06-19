@@ -9,9 +9,9 @@ import { CVLibraryDetailHeader } from "./cv-library-detail-header";
 import { CVLibraryDetailSummary } from "./cv-library-detail-summary";
 import { CVLibraryDetailPreview } from "./cv-library-detail-preview";
 import { CVLibraryJsonPreview } from "./cv-library-json-preview";
-import { BasicPanel } from "@/components/shared/basic-panel";
+import { BasicPanel } from "@/frontend/components/shared/basic-panel";
 import { MessageCircle, PanelsTopLeft } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/frontend/components/ui/tabs";
 import CVLibraryChat from "./cv-library-chat";
 
 interface CVLibraryDetailProps {

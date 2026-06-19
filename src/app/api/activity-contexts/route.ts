@@ -5,8 +5,8 @@ import { activityContextsModule } from "@/lib/container";
 import {
   presentActivityContext,
   presentActivityContextSuggestion,
-} from "@/modules/activity-context";
-import { created, errorResponse, ok } from "@/modules/shared";
+} from "@/backend/modules/activity-context";
+import { created, errorResponse, ok } from "@/backend/modules/shared";
 import { parseCreateActivityContextRequest } from "./validation";
 import {
   toActivityContextResponse,

@@ -3,7 +3,7 @@ import {
   Timestamp,
   UserId,
   type UserId as UserIdType,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { JobMatchAnalysisCreatedEvent } from "../events/job-match-analysis-created.event";
 import { JobMatchAnalysisJobUrlUpdatedEvent } from "../events/job-match-analysis-job-url-updated.event";
 import { JobMatchAnalysisScoredEvent } from "../events/job-match-analysis-scored.event";

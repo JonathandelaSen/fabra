@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import type { ListAdminAIInteractionsResponse } from "@/app/api/admin/ai-interactions/responses";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
 import { AIInteractionContentBlock } from "./ai-interaction-content-block";
 import { useTranslations } from "next-intl";
 import {

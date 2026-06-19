@@ -1,7 +1,7 @@
 import { createRequestId } from "@/lib/observability";
-import { ASSISTANCE_MODE } from "@/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
+import { ASSISTANCE_MODE } from "@/backend/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
 import { ErrorCode } from "@/shared/error-codes";
-import { badRequest, UserId } from "@/modules/shared";
+import { badRequest, UserId } from "@/backend/modules/shared";
 import {
   getCVSourceTextHash,
   type StandardCVProfile,

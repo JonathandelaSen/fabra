@@ -1,4 +1,4 @@
-import type { DomainEvent } from "@/modules/shared";
+import type { DomainEvent } from "@/backend/modules/shared";
 
 export class FollowUpUpdatedEvent implements DomainEvent<{ followUpId: string }> {
   readonly eventName = "follow_up_updated";

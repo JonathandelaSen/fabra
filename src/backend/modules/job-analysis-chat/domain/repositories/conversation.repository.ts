@@ -1,4 +1,4 @@
-import type { UserId } from "@/modules/shared";
+import type { UserId } from "@/backend/modules/shared";
 import type { Conversation } from "../entities/conversation.entity";
 import type { JobAnalysisChatConversationId } from "../value-objects/job-analysis-chat-conversation-id.value-object";
 import type { AnalysisReference } from "../value-objects/analysis-reference.value-object";

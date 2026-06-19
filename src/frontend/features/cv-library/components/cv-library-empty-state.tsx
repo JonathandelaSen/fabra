@@ -2,8 +2,8 @@
 
 import { FileText, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { FeatureEmptyState } from "@/components/shared/feature-empty-state";
-import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/components/shared/action-buttons";
+import { FeatureEmptyState } from "@/frontend/components/shared/feature-empty-state";
+import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/frontend/components/shared/action-buttons";
 
 interface CVLibraryEmptyStateProps {
   hasCvs: boolean;

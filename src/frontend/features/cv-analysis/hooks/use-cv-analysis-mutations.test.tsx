@@ -1,8 +1,8 @@
 import { act, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { describe, expect, it } from "vitest";
-import { renderHookWithProviders } from "@/frontend/testing/render";
-import { server } from "@/frontend/testing/msw/server";
+import { renderHookWithProviders } from "@/testing/render";
+import { server } from "@/testing/msw/server";
 import {
   useCreateCVAnalysis,
   useDeleteCVAnalysis,

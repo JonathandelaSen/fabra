@@ -1,5 +1,5 @@
-import { BoundSupabaseRepository } from "@/modules/shared";
-import { EntityId, UserId } from "@/modules/shared";
+import { BoundSupabaseRepository } from "@/backend/modules/shared";
+import { EntityId, UserId } from "@/backend/modules/shared";
 import {
   CommitmentOutcome,
   type CommitmentOutcomePrimitives,

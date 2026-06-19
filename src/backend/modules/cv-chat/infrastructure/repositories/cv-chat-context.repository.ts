@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { SupabaseAware } from "@/modules/shared/infrastructure/supabase-aware";
+import type { SupabaseAware } from "@/backend/modules/shared/infrastructure/supabase-aware";
 import type { CVChatContextReader } from "../../domain/repositories/cv-chat-context.repository";
 import { CVChatContext } from "../../domain/value-objects/cv-chat-context.value-object";
 

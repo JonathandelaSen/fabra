@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { ConfirmDialog, type ConfirmDialogVariant } from "@/components/shared/confirm-dialog";
+import { ConfirmDialog, type ConfirmDialogVariant } from "@/frontend/components/shared/confirm-dialog";
 
 export interface ConfirmOptions {
   title: string;

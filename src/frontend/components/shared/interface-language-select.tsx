@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
-import type { InterfaceLanguage } from "@/i18n/config";
+import { useInterfaceLanguage } from "@/frontend/components/shared/i18n-provider";
+import type { InterfaceLanguage } from "@/frontend/i18n/config";
 
 export function InterfaceLanguageSelect({ compact = false }: { compact?: boolean }) {
   const t = useTranslations("settings.language");

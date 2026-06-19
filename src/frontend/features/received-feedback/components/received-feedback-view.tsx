@@ -2,12 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FeatureHeaderActionButton } from "@/components/shared/feature-header-action-button";
+import { FeatureHeaderActionButton } from "@/frontend/components/shared/feature-header-action-button";
 import { useTranslations } from "next-intl";
 import { getErrorMessage } from "@/lib/errors";
-import { FeatureScreenShell } from "@/components/shared/feature-screen-shell";
-import { FeatureTwoPaneLayout } from "@/components/shared/feature-two-pane-layout";
-import { useIsDesktopLayout } from "@/components/shared/use-is-desktop-layout";
+import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
+import { FeatureTwoPaneLayout } from "@/frontend/components/shared/feature-two-pane-layout";
+import { useIsDesktopLayout } from "@/frontend/components/shared/use-is-desktop-layout";
 import type { ActivityContext, ReceivedFeedbackItem } from "../types";
 import { useReceivedFeedbackMutations } from "../hooks/use-received-feedback-mutations";
 import { useReceivedFeedbackContexts, useReceivedFeedbackList } from "../hooks/use-received-feedback-queries";
@@ -20,7 +20,7 @@ import {
 } from "./received-feedback-loading-state";
 import { ReceivedFeedbackMain } from "./received-feedback-main";
 import { ReceivedFeedbackSidebar } from "./received-feedback-sidebar";
-import { useConfirm } from "@/components/shared/confirm-provider";
+import { useConfirm } from "@/frontend/components/shared/confirm-provider";
 
 function emptyForm(): FormState {
   return {

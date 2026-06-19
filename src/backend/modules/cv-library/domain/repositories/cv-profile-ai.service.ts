@@ -1,6 +1,6 @@
 import type { StandardCVProfile } from "../cv-profile";
 import type { CVTemplateId, CVTemplateLocale } from "../cv-templates";
-import type { AIProvider } from "@/modules/shared";
+import type { AIProvider } from "@/backend/modules/shared";
 
 export interface StructuredCVProfileResult {
   schemaVersion: string;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Timestamp, UserId } from "@/modules/shared";
+import { Timestamp, UserId } from "@/backend/modules/shared";
 import { CVDocument } from "./cv-document.entity";
 import { CVDocumentId } from "../value-objects/cv-document-id.value-object";
 import { CVDocumentName } from "../value-objects/cv-document-name.value-object";

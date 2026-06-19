@@ -1,7 +1,7 @@
 import type {
   ContextType as WorkJournalContextType,
   EntryInputMode as WorkJournalEntryInputMode,
-} from "@/modules/work-journal";
+} from "@/backend/modules/work-journal";
 import {
   WORK_JOURNAL_CONTEXT_STATUSES,
   WORK_JOURNAL_CONTEXT_TYPES,

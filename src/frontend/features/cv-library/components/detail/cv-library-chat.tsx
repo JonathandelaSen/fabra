@@ -2,8 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useInterfaceLanguage } from "@/components/shared/i18n-provider";
-import { ChatMessagesArea } from "@/components/shared/chat/chat-messages-area";
+import { useInterfaceLanguage } from "@/frontend/components/shared/i18n-provider";
+import { ChatMessagesArea } from "@/frontend/components/shared/chat/chat-messages-area";
 import { useCVChat } from "../../hooks/use-cv-chat";
 import { ConversationList } from "./cv-chat-conversation-list";
 import { ChatInput } from "./cv-chat-input";

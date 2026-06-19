@@ -16,12 +16,12 @@ import {
   normalizePublicCVSlug,
   useCVDocumentList,
   type CVDocumentListItem,
-} from "@/features/cv-library";
+} from "@/frontend/features/cv-library";
 import { useProfileHistory } from "./use-profile-history";
 import { cvEditorKeys } from "../api/cv-editor-query-keys";
 import { fetchRecommendations, saveProfile as saveProfileApi } from "../api/cv-editor-api";
 import { getErrorMessage } from "@/lib/errors";
-import { DEFAULT_GEMINI_MODEL } from "@/frontend/ai-models";
+import { DEFAULT_GEMINI_MODEL } from "@/frontend/utils/ai-models";
 import type { CVSaveState } from "../types";
 
 function serializeProfile(profile: StandardCVProfile | null | undefined) {

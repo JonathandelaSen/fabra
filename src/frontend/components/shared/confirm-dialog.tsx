@@ -8,7 +8,7 @@ import {
   DeleteButton,
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
+} from "@/frontend/components/shared/action-buttons";
 
 export type ConfirmDialogVariant = "danger" | "default";
 

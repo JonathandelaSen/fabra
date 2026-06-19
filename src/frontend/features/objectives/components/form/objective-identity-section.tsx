@@ -1,7 +1,7 @@
 import type { ObjectiveContext } from "../../api/objectives-api";
 import type { ObjectiveForm } from "../objectives-ui";
-import { Input } from "@/components/ui/input";
-import { ActivityContextSelector } from "@/features/activity-context";
+import { Input } from "@/frontend/components/ui/input";
+import { ActivityContextSelector } from "@/frontend/features/activity-context";
 
 interface ObjectiveIdentitySectionProps {
   contexts: ObjectiveContext[];

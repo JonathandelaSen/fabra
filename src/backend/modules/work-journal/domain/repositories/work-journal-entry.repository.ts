@@ -1,4 +1,4 @@
-import type { IsoDate, UserId } from "@/modules/shared";
+import type { IsoDate, UserId } from "@/backend/modules/shared";
 import type { WorkJournalEntry } from "../entities/journal-entry.entity";
 import type { WorkJournalContextId } from "../value-objects/work-journal-context-id.value-object";
 import type { WorkJournalEntryId } from "../value-objects/work-journal-entry-id.value-object";

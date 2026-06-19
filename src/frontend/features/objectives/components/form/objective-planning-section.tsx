@@ -1,7 +1,7 @@
 import type { ObjectivePriority, ObjectiveSource } from "../../api/objectives-api";
 import { type ObjectiveForm } from "../objectives-ui";
-import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
+import { Input } from "@/frontend/components/ui/input";
+import { Select } from "@/frontend/components/ui/select";
 
 interface ObjectivePlanningSectionProps {
   form: ObjectiveForm;

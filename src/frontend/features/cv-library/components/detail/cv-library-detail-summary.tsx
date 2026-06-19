@@ -3,8 +3,8 @@
 import { FileSearch, MessageSquareQuote, Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { AnalysisMode, AnalysisSummary } from "@/lib/analysis-types";
-import type { InterviewQuestionResponse, CVDocumentListItem } from "@/features/cv-library";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import type { InterviewQuestionResponse, CVDocumentListItem } from "@/frontend/features/cv-library";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/frontend/components/ui/tabs";
 import { CVLibraryAtsScoreCircle } from "./cv-library-ats-score-circle";
 import { CVLibraryAssociatedAnalyses } from "./cv-library-associated-analyses";
 import { CVLibraryAssociatedQuestions } from "./cv-library-associated-questions";

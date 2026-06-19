@@ -470,7 +470,7 @@ async function readSourceFile(rootDir, relativePath) {
 }
 
 async function checkMigratedModule(moduleName, rootDir, violations) {
-  const moduleDir = path.join(rootDir, "src/modules", moduleName);
+  const moduleDir = path.join(rootDir, "src/backend/modules", moduleName);
   const files = (await walkFiles(moduleDir))
     .map((filePath) => toPosixRelative(rootDir, filePath))
     .filter((file) => file.includes("/domain/"))
@@ -521,7 +521,7 @@ async function checkMigratedModule(moduleName, rootDir, violations) {
     );
     if (!repository) {
       violations.push({
-        file: `src/modules/${moduleName}/domain/entities`,
+        file: `src/backend/modules/${moduleName}/domain/entities`,
         rule: "entity-repository-missing",
         reason: `Aggregate ${className} must have an associated ${className}Repository interface.`,
         location: null,

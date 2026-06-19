@@ -1,7 +1,7 @@
 import {
   isInterfaceLanguage,
   type InterfaceLanguage,
-} from "@/i18n/config";
+} from "@/frontend/i18n/config";
 
 type Result<TValue, TError> =
   | { ok: true; value: TValue }

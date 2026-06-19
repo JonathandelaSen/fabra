@@ -14,7 +14,7 @@ import {
   type AIInteractionContext,
   type AIProvider,
   type EventBus,
-} from "@/modules/shared";
+} from "@/backend/modules/shared";
 import { CVAnalysis } from "../../domain/entities/cv-analysis.entity";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 import type { CVScoringAIServiceFactory } from "../../domain/repositories/cv-scoring-ai.service";

@@ -1,4 +1,4 @@
-import { StringList, ValueObject } from "@/modules/shared";
+import { StringList, ValueObject } from "@/backend/modules/shared";
 import { CVDocument, type CVDocumentPrimitives } from "../entities/cv-document.entity";
 
 export interface ImportedCVDocumentPrimitives {

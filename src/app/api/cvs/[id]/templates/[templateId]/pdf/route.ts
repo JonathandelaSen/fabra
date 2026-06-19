@@ -9,9 +9,9 @@ import {
 } from "@/lib/cv-templates";
 import { renderTemplatePDF } from "@/lib/cv-template-pdf";
 import { cvLibraryModule } from "@/lib/container";
-import { presentCVDocument, presentCVStructuredProfile } from "@/modules/cv-library";
+import { presentCVDocument, presentCVStructuredProfile } from "@/backend/modules/cv-library";
 import { parseTemplatePdfRequest } from "./validation";
-import { notFound } from "@/modules/shared";
+import { notFound } from "@/backend/modules/shared";
 
 export async function GET(
   req: NextRequest,

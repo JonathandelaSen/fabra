@@ -7,7 +7,7 @@ import { ZoomIn, ZoomOut, Loader2 } from "lucide-react";
 import {
   ActionIconButton,
   ACTION_ICON_BUTTON_SIZES,
-} from "@/components/shared/action-buttons";
+} from "@/frontend/components/shared/action-buttons";
 
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";

@@ -5,8 +5,8 @@ import { Check, FileText, Plus } from "lucide-react";
 import {
   IconTextButton,
   ICON_TEXT_BUTTON_TONES,
-} from "@/components/shared/action-buttons";
-import type { CVDocumentListItem } from "@/features/cv-library";
+} from "@/frontend/components/shared/action-buttons";
+import type { CVDocumentListItem } from "@/frontend/features/cv-library";
 
 interface CVTemplateCvSelectorProps {
   cvs: CVDocumentListItem[];

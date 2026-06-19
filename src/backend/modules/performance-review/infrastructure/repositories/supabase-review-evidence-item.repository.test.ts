@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { IsoDate, Timestamp, UserId } from "@/modules/shared";
-import { createTestUser, getSupabaseClient } from "@/modules/test-helpers/setup";
+import { IsoDate, Timestamp, UserId } from "@/backend/modules/shared";
+import { createTestUser, getSupabaseClient } from "@/backend/modules/test-helpers/setup";
 import { PerformanceReview } from "../../domain/entities/performance-review.entity";
 import { ReviewEvidenceItem } from "../../domain/entities/review-evidence-item.entity";
 import { EvidenceContent } from "../../domain/value-objects/evidence-content.value-object";

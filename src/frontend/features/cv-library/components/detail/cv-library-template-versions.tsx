@@ -2,7 +2,7 @@
 
 import { Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { FormattedDate } from "@/components/shared/formatted-date";
+import { FormattedDate } from "@/frontend/components/shared/formatted-date";
 import type { CVDocumentListItem } from "../../api/cv-library-api";
 
 interface CVLibraryTemplateVersionsProps {

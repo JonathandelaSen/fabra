@@ -1,4 +1,4 @@
-import { ValueObject } from "@/modules/shared";
+import { ValueObject } from "@/backend/modules/shared";
 import { OFFER_STATUSES, type OfferStatus } from "@/lib/analysis-types";
 
 export class ProcessQuestionOfferStatus extends ValueObject<OfferStatus> {

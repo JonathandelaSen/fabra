@@ -1,4 +1,4 @@
-import { ValueObject, StringList } from "@/modules/shared";
+import { ValueObject, StringList } from "@/backend/modules/shared";
 import type { CVScoringAIResultPrimitives } from "../repositories/cv-scoring-ai.service";
 import { CVScoringAIResultVO } from "./cv-scoring-ai-result.value-object";
 import type { CVScoreCopyPastePreviewPrimitives } from "./cv-score-copy-paste-preview.value-object";

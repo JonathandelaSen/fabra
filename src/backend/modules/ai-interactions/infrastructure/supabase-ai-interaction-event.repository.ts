@@ -1,6 +1,6 @@
 import "server-only";
 
-import { BoundSupabaseRepository, type UserId } from "@/modules/shared";
+import { BoundSupabaseRepository, type UserId } from "@/backend/modules/shared";
 import { AIInteractionEvent, type AIInteractionEventPrimitives } from "../domain/entities/ai-interaction-event.entity";
 import type { AIInteractionEventRepository } from "../domain/repositories/ai-interaction-event.repository";
 

@@ -2,9 +2,9 @@
 
 import { useTranslations } from "next-intl";
 import { UserRound } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { DeleteButton } from "@/components/shared/action-buttons";
-import { LabelBadge, LABEL_BADGE_SIZES } from "@/components/shared/label-badge";
+import { Button } from "@/frontend/components/ui/button";
+import { DeleteButton } from "@/frontend/components/shared/action-buttons";
+import { LabelBadge, LABEL_BADGE_SIZES } from "@/frontend/components/shared/label-badge";
 import type { AdminUserResponse } from "@/app/api/admin/users/responses";
 
 interface AdminUsersTableProps {

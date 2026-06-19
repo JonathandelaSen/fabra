@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvLibraryModule } from "@/lib/container";
-import { CV_PDFS_BUCKET, presentCVDocument } from "@/modules/cv-library";
+import { CV_PDFS_BUCKET, presentCVDocument } from "@/backend/modules/cv-library";
 import { parseTemplatePdfRequest } from "./validation";
-import { notFound } from "@/modules/shared";
+import { notFound } from "@/backend/modules/shared";
 
 export async function GET(
   req: NextRequest,

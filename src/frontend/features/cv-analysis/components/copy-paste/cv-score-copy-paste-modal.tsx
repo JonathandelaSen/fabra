@@ -3,9 +3,9 @@
 import { useLocale, useTranslations } from "next-intl";
 import CopyPasteWorkflowModal, {
   CopyPastePreviewItem,
-} from "@/components/shared/copy-paste-workflow-modal";
-import { useCopyPasteWorkflowState } from "@/components/shared/use-copy-paste-workflow-state";
-import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banner";
+} from "@/frontend/components/shared/copy-paste-workflow-modal";
+import { useCopyPasteWorkflowState } from "@/frontend/components/shared/use-copy-paste-workflow-state";
+import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
 import type { CVAnalysisDetailResponse } from "@/app/api/cv-analyses/responses";
 import type {
   CVAnalysisCopyPasteResult,

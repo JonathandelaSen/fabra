@@ -2,8 +2,8 @@
 
 import { MessageSquareQuote } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
-import { Select } from "@/components/ui/select";
+import { FeatureSidebarPanel } from "@/frontend/components/shared/feature-sidebar-panel";
+import { Select } from "@/frontend/components/ui/select";
 import type { InterviewQuestion } from "../api/interview-questions-api";
 import type {
   InterviewQuestionAnsweredFilter,

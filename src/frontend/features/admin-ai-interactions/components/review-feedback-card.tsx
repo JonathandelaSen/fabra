@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useReviewAdminAIInteraction } from "../hooks/use-admin-ai-interactions";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
+import { Textarea } from "@/frontend/components/ui/textarea";
+import { Button } from "@/frontend/components/ui/button";
 import { UserCheck, ThumbsUp, ThumbsDown, AlertTriangle, RotateCw, Check } from "lucide-react";
 import type { ListAdminAIInteractionsResponse } from "@/app/api/admin/ai-interactions/responses";
 import { AI_INTERACTION_RATINGS } from "@/shared/ai-interactions/constants";

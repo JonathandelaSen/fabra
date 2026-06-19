@@ -1,4 +1,4 @@
-import { BooleanFlag, Counter, LongText, ValueObject } from "@/modules/shared";
+import { BooleanFlag, Counter, LongText, ValueObject } from "@/backend/modules/shared";
 
 export interface CVExtractionDiagnosticsPrimitives {
   filename: string | null;

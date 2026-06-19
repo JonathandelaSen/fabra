@@ -1,5 +1,5 @@
-import { Timestamp, UserId, type EventBus } from "@/modules/shared";
-import { ASSISTANCE_MODE } from "@/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
+import { Timestamp, UserId, type EventBus } from "@/backend/modules/shared";
+import { ASSISTANCE_MODE } from "@/backend/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
 import { ConversationNotFoundError } from "../../domain/errors/conversation-not-found.error";
 import { ChatMessage } from "../../domain/entities/chat-message.entity";
 import type { ChatMessageRepository } from "../../domain/repositories/chat-message.repository";

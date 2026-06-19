@@ -3,8 +3,8 @@ import {
   addWorkJournalEntryToCache,
   removeWorkJournalEntryFromCache,
   replaceWorkJournalEntryInCache,
-} from "@/features/work-journal/api/work-journal-entry-cache";
-import type { WorkJournalEntry } from "@/features/work-journal/api/work-journal-types";
+} from "@/frontend/features/work-journal/api/work-journal-entry-cache";
+import type { WorkJournalEntry } from "@/frontend/features/work-journal/api/work-journal-types";
 
 function entry(id: string, dateStart = "2026-05-18"): WorkJournalEntry {
   return {

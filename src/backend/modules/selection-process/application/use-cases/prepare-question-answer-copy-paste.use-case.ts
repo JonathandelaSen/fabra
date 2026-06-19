@@ -1,5 +1,5 @@
 import type { Analysis, CVRecord } from "@/lib/analysis-types";
-import { CopyPastePreparation, UserId } from "@/modules/shared";
+import { CopyPastePreparation, UserId } from "@/backend/modules/shared";
 import type { ProcessQuestionRepository } from "../../domain/repositories/process-question.repository";
 import { ProcessQuestionId } from "../../domain/value-objects/process-question-id.value-object";
 import type { CopyPastePrepareMode } from "../selection-process-copy-paste.constants";

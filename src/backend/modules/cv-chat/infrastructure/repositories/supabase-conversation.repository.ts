@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { Timestamp, UserId } from "@/modules/shared";
-import type { SupabaseAware } from "@/modules/shared/infrastructure/supabase-aware";
+import { Timestamp, UserId } from "@/backend/modules/shared";
+import type { SupabaseAware } from "@/backend/modules/shared/infrastructure/supabase-aware";
 import {
   Conversation,
   type ConversationPrimitives,

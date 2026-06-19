@@ -1,4 +1,4 @@
-import { LongText, ValueObject } from "@/modules/shared";
+import { LongText, ValueObject } from "@/backend/modules/shared";
 import type { StandardCVProfile } from "@/lib/cv-profile";
 
 export interface CVSummaryForActivityContextSuggestionsPrimitives {

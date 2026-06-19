@@ -3,16 +3,16 @@ import { dirname, join, normalize } from "node:path";
 import { spawnSync } from "node:child_process";
 
 const root = process.cwd();
-const frontendRoots = ["src/features", "src/frontend"];
+const frontendRoots = ["src/frontend/features", "src/frontend"];
 const responseFiles = "src/app/api/**/responses.ts";
-const restrictedPrimitiveRoots = ["src/app", "src/components", "src/features", "src/frontend"];
+const restrictedPrimitiveRoots = ["src/app", "src/frontend/components", "src/frontend/features", "src/frontend"];
 
 const restrictedPrimitiveImports = [
   {
     name: "Badge primitive",
-    modulePath: "src/components/ui/badge.tsx",
-    allowedImporters: ["src/components/shared/label-badge.tsx"],
-    replacement: "@/components/shared/label-badge",
+    modulePath: "src/frontend/components/ui/badge.tsx",
+    allowedImporters: ["src/frontend/components/shared/label-badge.tsx"],
+    replacement: "@/frontend/components/shared/label-badge",
   },
 ];
 
@@ -84,8 +84,8 @@ for (const file of frontendFiles) {
 
   for (const specifier of imports) {
     if (
-      specifier.startsWith("@/modules/") ||
-      specifier.startsWith("src/modules/")
+      specifier.startsWith("@/backend/modules/") ||
+      specifier.startsWith("src/backend/modules/")
     ) {
       violations.push(`${file}: frontend must not import modules (${specifier})`);
     }

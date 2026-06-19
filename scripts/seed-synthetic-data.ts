@@ -10,36 +10,36 @@ import {
   InMemoryEventBus,
   InMemoryQueryBus,
   NoOpTelemetry,
-} from "@/modules/shared";
-import { createActivityContextsModule } from "@/modules/activity-context";
-import { createCVLibraryE2EModule } from "@/modules/cv-library/cv-library.e2e.module";
+} from "@/backend/modules/shared";
+import { createActivityContextsModule } from "@/backend/modules/activity-context";
+import { createCVLibraryE2EModule } from "@/backend/modules/cv-library/cv-library.e2e.module";
 import {
   createCVAnalysisModule,
   GetCVAnalysisByIdQuery,
   GetCVAnalysisByIdQueryHandler,
-} from "@/modules/cv-analysis";
+} from "@/backend/modules/cv-analysis";
 import {
   createJobMatchAnalysisModule,
   GetJobMatchAnalysisByIdQuery,
   GetJobMatchAnalysisByIdQueryHandler,
-} from "@/modules/job-match-analysis";
+} from "@/backend/modules/job-match-analysis";
 import {
   createJobAnalysisChatModule,
   registerJobAnalysisChatQueries,
-} from "@/modules/job-analysis-chat";
-import { createFeedbackNotesModule } from "@/modules/feedback-notes";
-import { createReceivedFeedbackModule } from "@/modules/received-feedback";
-import { createWorkJournalModule } from "@/modules/work-journal";
-import { createCommitmentsModule } from "@/modules/commitments";
-import { createSelectionProcessModule } from "@/modules/selection-process";
-import { CVDocumentFixture } from "@/modules/cv-library/test-helpers/cv-document.fixture";
-import { CVAnalysisFixture } from "@/modules/cv-analysis/test-helpers/cv-analysis.fixture";
-import { JobMatchAnalysisFixture } from "@/modules/job-match-analysis/test-helpers/job-match-analysis.fixture";
-import { FeedbackFixture } from "@/modules/feedback-notes/test-helpers/feedback.fixture";
-import { ReceivedFeedbackFixture } from "@/modules/received-feedback/test-helpers/received-feedback.fixture";
-import { WorkJournalEntryFixture } from "@/modules/work-journal/test-helpers/work-journal-entry.fixture";
-import { CommitmentFixture } from "@/modules/commitments/test-helpers/commitment.fixture";
-import { SelectionProcessFixture } from "@/modules/selection-process/test-helpers/selection-process.fixture";
+} from "@/backend/modules/job-analysis-chat";
+import { createFeedbackNotesModule } from "@/backend/modules/feedback-notes";
+import { createReceivedFeedbackModule } from "@/backend/modules/received-feedback";
+import { createWorkJournalModule } from "@/backend/modules/work-journal";
+import { createCommitmentsModule } from "@/backend/modules/commitments";
+import { createSelectionProcessModule } from "@/backend/modules/selection-process";
+import { CVDocumentFixture } from "@/backend/modules/cv-library/test-helpers/cv-document.fixture";
+import { CVAnalysisFixture } from "@/backend/modules/cv-analysis/test-helpers/cv-analysis.fixture";
+import { JobMatchAnalysisFixture } from "@/backend/modules/job-match-analysis/test-helpers/job-match-analysis.fixture";
+import { FeedbackFixture } from "@/backend/modules/feedback-notes/test-helpers/feedback.fixture";
+import { ReceivedFeedbackFixture } from "@/backend/modules/received-feedback/test-helpers/received-feedback.fixture";
+import { WorkJournalEntryFixture } from "@/backend/modules/work-journal/test-helpers/work-journal-entry.fixture";
+import { CommitmentFixture } from "@/backend/modules/commitments/test-helpers/commitment.fixture";
+import { SelectionProcessFixture } from "@/backend/modules/selection-process/test-helpers/selection-process.fixture";
 
 // ---------------------------------------------------------------------------
 // Config

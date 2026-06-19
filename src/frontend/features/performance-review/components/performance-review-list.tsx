@@ -2,9 +2,9 @@
 
 import { Briefcase, CalendarDays, ClipboardCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { FeatureSidebarPanel } from "@/components/shared/feature-sidebar-panel";
-import { LabelBadge } from "@/components/shared/label-badge";
-import { SidebarListItem } from "@/components/shared/sidebar-list-item";
+import { FeatureSidebarPanel } from "@/frontend/components/shared/feature-sidebar-panel";
+import { LabelBadge } from "@/frontend/components/shared/label-badge";
+import { SidebarListItem } from "@/frontend/components/shared/sidebar-list-item";
 import { PerformanceReviewSidebarSkeleton } from "./performance-review-skeleton";
 import type {
   ActivityContext,

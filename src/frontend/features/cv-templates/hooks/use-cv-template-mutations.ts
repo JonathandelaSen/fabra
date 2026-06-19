@@ -5,7 +5,7 @@ import { getErrorMessage } from "@/lib/errors";
 import {
   cvLibraryQueryKeys,
   type CVDocumentListItem,
-} from "@/features/cv-library";
+} from "@/frontend/features/cv-library";
 import {
   createCVTemplateVersion,
   type CreateCVTemplateVersionResponse,

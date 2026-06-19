@@ -3,13 +3,13 @@ import { NextRequest } from "next/server";
 import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { cvAnalysisModule } from "@/lib/container";
-import { presentCVAnalysis } from "@/modules/cv-analysis";
+import { presentCVAnalysis } from "@/backend/modules/cv-analysis";
 import { parseScoreCVAnalysisRequest } from "./validation";
 import {
   toCVAnalysisDetailResponse,
   type ScoreCVAnalysisResponse,
 } from "./responses";
-import { ok, errorResponse, notFound } from "@/modules/shared";
+import { ok, errorResponse, notFound } from "@/backend/modules/shared";
 import { createRequestId } from "@/lib/observability";
 
 export const maxDuration = 60;

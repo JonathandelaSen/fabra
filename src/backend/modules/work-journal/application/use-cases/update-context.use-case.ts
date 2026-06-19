@@ -1,4 +1,4 @@
-import { UserId, type EventBus } from "@/modules/shared";
+import { UserId, type EventBus } from "@/backend/modules/shared";
 import type { WorkJournalContext } from "../../domain/entities/journal-context.entity";
 import type { WorkJournalContextRepository } from "../../domain/repositories/work-journal-context.repository";
 import { ContextNotFoundError } from "../../domain/errors/context-not-found.error";

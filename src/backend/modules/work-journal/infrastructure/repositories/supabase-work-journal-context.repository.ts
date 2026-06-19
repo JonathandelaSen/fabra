@@ -1,5 +1,5 @@
-import { BoundSupabaseRepository } from "@/modules/shared";
-import { Timestamp, UserId } from "@/modules/shared";
+import { BoundSupabaseRepository } from "@/backend/modules/shared";
+import { Timestamp, UserId } from "@/backend/modules/shared";
 import {
   WorkJournalContext,
   type WorkJournalContextPrimitives,

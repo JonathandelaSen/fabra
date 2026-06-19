@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EntityId, UserId } from "@/modules/shared";
+import { EntityId, UserId } from "@/backend/modules/shared";
 import { Commitment } from "./commitment.entity";
 
 describe("Commitment", () => {
