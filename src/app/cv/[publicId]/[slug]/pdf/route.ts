@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCVTemplate, type CVTemplateId, type CVTemplateLocale } from "@/lib/cv-templates";
-import { renderTemplatePDF } from "@/lib/cv-template-pdf";
 import { getErrorMessage } from "@/lib/errors";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { cvLibraryModule } from "@/lib/container";
@@ -34,11 +33,12 @@ export async function GET(
     const locale = template.locales.includes(cv.template_locale as CVTemplateLocale)
       ? (cv.template_locale as CVTemplateLocale)
       : "es";
-    const pdf = await renderTemplatePDF({
+    const rendered = await cvLibraryModule.renderCVTemplatePdf.execute({
       profile: cv.profile,
       templateId: template.templateId as CVTemplateId,
       locale,
     });
+    const pdf = rendered.toPrimitives();
     const filename = `${cv.name.replace(/[^a-zA-Z0-9_-]/g, "_")}.pdf`;
 
     return new NextResponse(new Uint8Array(pdf), {

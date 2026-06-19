@@ -3,7 +3,7 @@ import { createHash } from "crypto";
 import fs from "fs";
 import path from "path";
 import { getPDFInlineMarkdownStyles, renderTemplatePDF } from "./cv-template-pdf";
-import type { StandardCVProfile } from "./cv-profile";
+import type { StandardCVProfile } from "@/lib/cv-profile";
 
 const markdownProfile: StandardCVProfile = {
   basics: {

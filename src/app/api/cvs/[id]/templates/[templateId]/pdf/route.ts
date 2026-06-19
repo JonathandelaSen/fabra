@@ -7,7 +7,6 @@ import {
   type CVTemplateId,
   type CVTemplateLocale,
 } from "@/lib/cv-templates";
-import { renderTemplatePDF } from "@/lib/cv-template-pdf";
 import { cvLibraryModule } from "@/lib/container";
 import { presentCVDocument, presentCVStructuredProfile } from "@/backend/modules/cv-library";
 import { parseTemplatePdfRequest } from "./validation";
@@ -52,11 +51,12 @@ export async function GET(
       ? (requestedLocale as CVTemplateLocale)
       : "es";
 
-    const pdf = await renderTemplatePDF({
+    const rendered = await cvLibraryModule.renderCVTemplatePdf.execute({
       profile: structured.profile,
       templateId: template.templateId as CVTemplateId,
       locale,
     });
+    const pdf = rendered.toPrimitives();
 
     const filename = `${cv.name.replace(/[^a-zA-Z0-9_-]/g, "_")}-${template.templateId}.pdf`;
 

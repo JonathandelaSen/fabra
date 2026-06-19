@@ -16,6 +16,7 @@ import { GetCVStructuredProfileUseCase } from "./application/use-cases/get-cv-st
 import { GetPublishedCVDocumentUseCase } from "./application/use-cases/get-published-cv-document.use-case";
 import { ListCVDocumentsUseCase } from "./application/use-cases/list-cv-documents.use-case";
 import { PrepareCVAnalysisInputUseCase } from "./application/use-cases/prepare-cv-analysis-input.use-case";
+import { RenderCVTemplatePdfUseCase } from "./application/use-cases/render-cv-template-pdf.use-case";
 import { PrepareCVEditorCopyPasteUseCase } from "./application/use-cases/prepare-cv-editor-copy-paste.use-case";
 import { PrepareCVProfileStructureCopyPasteUseCase } from "./application/use-cases/prepare-cv-profile-structure-copy-paste.use-case";
 import { PreviewCVEditorCopyPasteUseCase } from "./application/use-cases/preview-cv-editor-copy-paste.use-case";
@@ -86,6 +87,7 @@ function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
   return {
     listCVDocuments: new ListCVDocumentsUseCase({ documentRepo }),
     getCVDocument: new GetCVDocumentUseCase({ documentRepo }),
+    renderCVTemplatePdf: new RenderCVTemplatePdfUseCase({ templateRenderer }),
     createJsonResumeCVDocument: new CreateJsonResumeCVDocumentUseCase({
       documentRepo,
       pdfStorage,

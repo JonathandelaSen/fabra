@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { getCVTemplate, type CVTemplateId, type CVTemplateLocale } from "@/lib/cv-templates";
-import { renderTemplatePDF } from "@/lib/cv-template-pdf";
 import { cvLibraryModule } from "@/lib/container";
 import { presentCVDocument } from "@/backend/modules/cv-library";
 import { parseTemplatePdfRequest } from "./validation";
@@ -35,11 +34,12 @@ export async function GET(
       throw notFound("Template not found", ErrorCode.TEMPLATE_NOT_FOUND);
     }
 
-    const pdf = await renderTemplatePDF({
+    const rendered = await cvLibraryModule.renderCVTemplatePdf.execute({
       profile: cv.profile,
       templateId: template.templateId as CVTemplateId,
       locale: (cv.template_locale ?? "es") as CVTemplateLocale,
     });
+    const pdf = rendered.toPrimitives();
 
     const filename = `${cv.name.replace(/[^a-zA-Z0-9_-]/g, "_")}.pdf`;
     const parsed = parseTemplatePdfRequest(req.nextUrl.searchParams);
