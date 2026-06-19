@@ -8,6 +8,9 @@ import { AlertBanner, ALERT_BANNER_TONES } from "@/components/shared/alert-banne
 import type { StoredAIProvider } from "@/lib/browser-preferences";
 
 interface CVEditorAIPanelProps {
+  textareaRef?: React.Ref<HTMLTextAreaElement>;
+  launcherOpen?: boolean;
+  onLauncherOpenChange?: (open: boolean) => void;
   editInstruction: string;
   setEditInstruction: (value: string) => void;
   editingProfile: boolean;
@@ -23,6 +26,9 @@ interface CVEditorAIPanelProps {
 }
 
 export function CVEditorAIPanel({
+  textareaRef,
+  launcherOpen,
+  onLauncherOpenChange,
   editInstruction,
   setEditInstruction,
   editingProfile,
@@ -57,6 +63,7 @@ export function CVEditorAIPanel({
 
       <div className="space-y-4">
         <textarea
+          ref={textareaRef}
           value={editInstruction}
           onChange={(e) => setEditInstruction(e.target.value)}
           placeholder={t("aiPlaceholder")}
@@ -64,6 +71,8 @@ export function CVEditorAIPanel({
         />
 
         <AIActionLauncher
+          open={launcherOpen}
+          onOpenChange={onLauncherOpenChange}
           actionLabel={t("aiEditorAction")}
           loading={editingProfile}
           disabled={!editInstruction.trim()}

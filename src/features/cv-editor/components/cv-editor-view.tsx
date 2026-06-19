@@ -235,7 +235,7 @@ export default function CVEditorView({
         <SheetContent
           side="right"
           closeLabel={t("closeEditorPanel")}
-          className="!w-[min(92dvw,480px)] gap-0 border-line bg-panel-base/95 p-0 backdrop-blur-xl md:hidden"
+          className="!w-full sm:!w-[480px] gap-0 border-line bg-panel-base/95 p-0 backdrop-blur-xl md:hidden"
         >
           <SheetTitle className="sr-only">{t("editorPanelTitle")}</SheetTitle>
           <CVEditorSidePanel {...sidePanelProps} displayMode="mobile" />

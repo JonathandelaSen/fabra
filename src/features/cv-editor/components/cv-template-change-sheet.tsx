@@ -21,6 +21,7 @@ import {
   type CVTemplateLocale,
 } from "@/lib/cv-templates";
 import { cn } from "@/lib/utils";
+import { CVTemplatePreview } from "@/features/cv-templates";
 
 interface CVTemplateChangeSheetProps {
   activeTemplateId: CVTemplateId;
@@ -69,7 +70,7 @@ export function CVTemplateChangeSheet({
       <SheetContent
         side="right"
         closeLabel={t("close")}
-        className="!w-[min(92dvw,560px)] gap-0 border-line bg-panel-base p-0 sm:max-w-none"
+        className="!w-full sm:!w-[800px] gap-0 border-line bg-panel-base p-0 sm:max-w-none"
       >
         <SheetHeader className="border-b border-line px-5 py-4">
           <SheetTitle className="text-base text-text-main">
@@ -80,8 +81,8 @@ export function CVTemplateChangeSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5">
-          <div className="grid gap-3 sm:grid-cols-2">
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 scrollbar-thin">
+          <div className="grid grid-cols-1 gap-6">
             {CV_TEMPLATES.map((template) => {
               const isCurrent = template.templateId === activeTemplateId;
               const isSelected = template.templateId === selectedTemplateId;
@@ -92,34 +93,61 @@ export function CVTemplateChangeSheet({
                   disabled={isCurrent || changing}
                   onClick={() => setSelectedTemplateId(template.templateId)}
                   className={cn(
-                    "flex min-h-28 flex-col justify-between rounded-lg border p-3 text-left transition-colors",
+                    "flex flex-col rounded-xl border p-3.5 text-left transition-all duration-200 group relative",
                     isCurrent
-                      ? "cursor-not-allowed border-line bg-panel-hover text-text-faint"
-                      : "border-line bg-panel-subtle text-text-muted hover:border-line-default hover:bg-panel-hover",
+                      ? "cursor-not-allowed border-line bg-panel-hover text-text-faint opacity-80"
+                      : "border-line bg-panel-subtle text-text-muted hover:border-line-strong hover:bg-panel-hover hover:shadow-md hover:-translate-y-0.5",
                     isSelected &&
-                      "border-template-language-border bg-template-language-soft text-template-language-text",
+                      "border-template-language-border bg-template-language-soft/20 text-template-language-text ring-2 ring-template-language-border/30",
                   )}
                 >
-                  <div className="flex items-start justify-between gap-3">
+                  {/* Visual Preview Container */}
+                  <div className="w-full aspect-[794/1123] overflow-hidden rounded-lg border border-line/60 bg-white/95 shadow-sm transition-all duration-200 group-hover:border-line-strong group-hover:shadow-md mb-3 relative">
+                    <svg
+                      className="w-full h-full object-contain"
+                      viewBox="0 0 794 1123"
+                      preserveAspectRatio="xMidYMid meet"
+                    >
+                      <foreignObject width="794" height="1123">
+                        <div className="w-[794px] h-[1123px] text-left select-none pointer-events-none origin-top-left scale-[1.0] bg-white">
+                          <CVTemplatePreview
+                            profile={template.fixtureProfile}
+                            templateId={template.templateId}
+                            locale={selectedLocale}
+                          />
+                        </div>
+                      </foreignObject>
+                    </svg>
+                  </div>
+
+                  {/* Template Info */}
+                  <div className="flex flex-col justify-between flex-1 w-full px-1">
                     <div>
-                      <div className="text-sm font-semibold text-text-main">
-                        {template.name}
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-sm font-bold text-text-main group-hover:text-text-main transition-colors">
+                          {template.name}
+                        </span>
+                        {isSelected ? (
+                          <span className="flex h-5.5 w-5.5 items-center justify-center rounded-full bg-template-language-border text-white shadow-sm">
+                            <Check className="h-3.5 w-3.5 stroke-[3]" />
+                          </span>
+                        ) : (
+                          <LayoutTemplate className="h-4 w-4 shrink-0 opacity-40 group-hover:opacity-70 transition-opacity" />
+                        )}
                       </div>
-                      <p className="mt-1 line-clamp-2 text-xs leading-5">
+                      <p className="mt-1.5 text-xs leading-relaxed text-text-muted group-hover:text-text-soft transition-colors">
                         {template.description}
                       </p>
                     </div>
-                    {isSelected ? (
-                      <Check className="h-4 w-4 shrink-0" />
-                    ) : (
-                      <LayoutTemplate className="h-4 w-4 shrink-0 opacity-60" />
+
+                    {isCurrent && (
+                      <div className="mt-3 flex items-center gap-1.5">
+                        <span className="inline-flex items-center rounded-md bg-panel-hover px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-text-muted border border-line/40">
+                          {t("current")}
+                        </span>
+                      </div>
                     )}
                   </div>
-                  {isCurrent && (
-                    <span className="mt-3 text-[10px] font-semibold uppercase text-text-faint">
-                      {t("current")}
-                    </span>
-                  )}
                 </button>
               );
             })}

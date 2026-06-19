@@ -1044,6 +1044,8 @@ export const messages = {
         title: "Recommendations",
         empty: "No analysis for this CV",
         analyzeNow: "Analyze now",
+        applyPrefix: "Apply this recommendation:",
+        applyAction: "Apply with AI",
       },
       publicPage: {
         title: "Public page",
@@ -2792,6 +2794,8 @@ export const messages = {
         title: "Recomendaciones",
         empty: "No hay análisis para este CV",
         analyzeNow: "Analizar ahora",
+        applyPrefix: "Aplica esta recomendación:",
+        applyAction: "Aplicar con IA",
       },
       publicPage: {
         title: "Página pública",

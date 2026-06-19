@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Lightbulb } from "lucide-react";
+import { Lightbulb, Sparkles } from "lucide-react";
 import { IconTextButton } from "@/components/shared/action-buttons";
 
 function safeParseArray(value: string | null | undefined): string[] {
@@ -24,11 +24,13 @@ export interface RecommendationAnalysis {
 interface CVEditorRecommendationsProps {
   recommendationAnalysis: RecommendationAnalysis | null;
   onStartAnalysis: () => void;
+  onApplyRecommendation: (recommendation: string) => void;
 }
 
 export function CVEditorRecommendations({
   recommendationAnalysis,
   onStartAnalysis,
+  onApplyRecommendation,
 }: CVEditorRecommendationsProps) {
   const t = useTranslations("cvEditor");
 
@@ -56,10 +58,20 @@ export function CVEditorRecommendations({
             .map((imp, i) => (
               <div
                 key={i}
-                className="flex gap-3 text-xs leading-relaxed text-text-muted"
+                className="group flex gap-3 text-xs leading-relaxed text-text-muted"
               >
                 <div className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-recommendation/40" />
-                <p>{imp}</p>
+                <div className="min-w-0 flex-1 space-y-1.5">
+                  <p>{imp}</p>
+                  <button
+                    type="button"
+                    onClick={() => onApplyRecommendation(imp)}
+                    className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-medium text-recommendation-text transition-opacity hover:bg-recommendation-soft focus:outline-none sm:opacity-0 sm:focus:opacity-100 sm:group-hover:opacity-100"
+                  >
+                    <Sparkles className="h-3 w-3" />
+                    {t("recommendations.applyAction")}
+                  </button>
+                </div>
               </div>
             ))}
           {safeParseArray(recommendationAnalysis.missing_keywords)

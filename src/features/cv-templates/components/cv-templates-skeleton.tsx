@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function CVTemplatesSkeleton() {
   return (
-    <div className="grid h-full w-full gap-6 lg:grid-cols-[320px_1fr]">
+    <div className="grid h-full w-full gap-6 lg:grid-cols-[800px_1fr]">
       <BasicPanel className="space-y-3 p-4">
         <div className="mb-4">
           <Skeleton className="h-6 w-32 rounded-md" />

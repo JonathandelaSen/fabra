@@ -32,6 +32,8 @@ export interface AIActionLauncherProps {
   };
   loading?: boolean;
   disabled?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export default function AIActionLauncher({
@@ -40,8 +42,12 @@ export default function AIActionLauncher({
   copyPaste,
   loading = false,
   disabled = false,
+  open: controlledOpen,
+  onOpenChange,
 }: AIActionLauncherProps) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = onOpenChange ?? setInternalOpen;
 
   const handleClose = () => {
     setOpen(false);

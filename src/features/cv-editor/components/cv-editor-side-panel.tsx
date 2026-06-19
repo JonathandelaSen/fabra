@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { KeyRound, PenLine, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -96,6 +97,21 @@ export function CVEditorSidePanel({
   onUpdateLocale,
 }: CVEditorSidePanelProps) {
   const t = useTranslations("cvEditor");
+  const aiTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const [launcherOpen, setLauncherOpen] = useState(false);
+
+  const handleApplyRecommendation = (recommendation: string) => {
+    onSetEditorTab("ai");
+    onSetEditInstruction(`${t("recommendations.applyPrefix")} "${recommendation}"`);
+    requestAnimationFrame(() => {
+      aiTextareaRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (displayMode === "desktop") {
+        setLauncherOpen(true);
+      } else {
+        aiTextareaRef.current?.focus();
+      }
+    });
+  };
 
   return (
     <motion.aside
@@ -134,6 +150,9 @@ export function CVEditorSidePanel({
 
           {editorTab === "ai" && (
             <CVEditorAIPanel
+              textareaRef={aiTextareaRef}
+              launcherOpen={launcherOpen}
+              onLauncherOpenChange={setLauncherOpen}
               editInstruction={editInstruction}
               setEditInstruction={onSetEditInstruction}
               editingProfile={editingProfile}
@@ -149,7 +168,7 @@ export function CVEditorSidePanel({
             />
           )}
 
-          <CVEditorRecommendations recommendationAnalysis={recommendationAnalysis} onStartAnalysis={onStartAnalysis} />
+          <CVEditorRecommendations recommendationAnalysis={recommendationAnalysis} onStartAnalysis={onStartAnalysis} onApplyRecommendation={handleApplyRecommendation} />
           <CVEditorPublicSection
             publicEnabled={currentVersion.publicEnabled}
             publicId={currentVersion.publicId}

@@ -156,10 +156,12 @@ export default function CVTemplatesView({
       ) : (
         <FeatureTwoPaneLayout
           mobileDetailActive={templateIdFromPath ? true : false}
+          columnsClassName="lg:grid-cols-[800px_minmax(0,1fr)]"
           sidebar={
             <CVTemplatesSidebar
               templates={CV_TEMPLATES}
               selectedId={selectedTemplateId}
+              locale={locale}
               onSelect={handleSelectTemplate}
             />
           }
