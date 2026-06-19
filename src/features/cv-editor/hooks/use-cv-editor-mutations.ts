@@ -2,6 +2,7 @@
 
 import { useCallback, useState, type RefObject } from "react";
 import { useTranslations } from "next-intl";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   normalizeStandardCVProfile,
   type StandardCVProfile,
@@ -9,12 +10,14 @@ import {
 import type { CVTemplateLocale } from "@/lib/cv-templates";
 import { getErrorMessage } from "@/lib/errors";
 import {
+  cvLibraryQueryKeys,
   useCVDocumentList,
   type CVDocumentListItem,
 } from "@/features/cv-library";
 import type { ApplyCVEditorCopyPasteResponse } from "@/app/api/cvs/[id]/edit/copy-paste/apply/responses";
 import {
   applyInstruction as applyInstructionApi,
+  createTemplateVersion as createTemplateVersionApi,
   saveAsCV as saveAsCVApi,
   updateLocale as updateLocaleApi,
   updatePublicSettings as updatePublicSettingsApi,
@@ -32,7 +35,6 @@ interface UseCVEditorMutationsInput {
   aiProvider: StoredAIProvider;
   aiApiKey: string;
   selectedModel: string;
-  hasAIApiKey: boolean;
   savedProfileJsonRef: RefObject<string | null>;
   setEditedVersion: (v: CVDocumentListItem | null) => void;
   setProfile: (profile: StandardCVProfile, mode: "instant") => void;
@@ -53,7 +55,6 @@ export function useCVEditorMutations({
   aiProvider,
   aiApiKey,
   selectedModel,
-  hasAIApiKey,
   savedProfileJsonRef,
   setEditedVersion,
   setProfile,
@@ -64,11 +65,13 @@ export function useCVEditorMutations({
 }: UseCVEditorMutationsInput) {
   const t = useTranslations("cvEditor");
   const listQuery = useCVDocumentList();
+  const queryClient = useQueryClient();
 
   const [editInstruction, setEditInstruction] = useState("");
   const [editingProfile, setEditingProfile] = useState(false);
   const [savingAsCv, setSavingAsCv] = useState(false);
   const [savingLocale, setSavingLocale] = useState(false);
+  const [changingTemplate, setChangingTemplate] = useState(false);
   const [savingPublicSettings, setSavingPublicSettings] = useState(false);
 
   const applyInstruction = useCallback(
@@ -118,7 +121,6 @@ export function useCVEditorMutations({
       currentVersionId,
       currentProfile,
       editInstruction,
-      hasAIApiKey,
       aiProvider,
       aiApiKey,
       selectedModel,
@@ -197,6 +199,46 @@ export function useCVEditorMutations({
     [currentVersionId, setEditedVersion, reloadPreview, listQuery, setError],
   );
 
+  const changeTemplate = useCallback(
+    async (input: { templateId: string; locale: CVTemplateLocale }) => {
+      if (!currentVersionId || !currentProfile) return null;
+      setChangingTemplate(true);
+      setError(null);
+      try {
+        if (!(await saveProfileToApi(currentProfile))) return null;
+        const result = await createTemplateVersionApi({
+          cvId: currentVersionId,
+          templateId: input.templateId,
+          locale: input.locale,
+        });
+        const version = normalizeCVResponse(result.version);
+        setEditedVersion(version);
+        queryClient.setQueryData<CVDocumentListItem[]>(
+          cvLibraryQueryKeys.list(),
+          (current) => [
+            version,
+            ...(current ?? []).filter((item) => item.id !== version.id),
+          ],
+        );
+        queryClient.setQueryData(cvLibraryQueryKeys.detail(version.id), version);
+        return version;
+      } catch (err: unknown) {
+        setError(getErrorMessage(err));
+        return null;
+      } finally {
+        setChangingTemplate(false);
+      }
+    },
+    [
+      currentVersionId,
+      currentProfile,
+      saveProfileToApi,
+      setEditedVersion,
+      queryClient,
+      setError,
+    ],
+  );
+
   const updatePublicSettings = useCallback(
     async (enabled: boolean, confirmPublicExposure = false) => {
       if (!currentVersionId || !normalizedPublicSlug) return;
@@ -239,10 +281,12 @@ export function useCVEditorMutations({
     editingProfile,
     savingAsCv,
     savingLocale,
+    changingTemplate,
     savingPublicSettings,
     applyInstruction,
     handleCopyPasteApplied,
     saveAsCV,
+    changeTemplate,
     updateLocale,
     updatePublicSettings,
   };

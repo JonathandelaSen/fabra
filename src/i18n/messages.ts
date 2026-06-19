@@ -1065,6 +1065,14 @@ export const messages = {
         changeTemplate: "Change template",
         configureApiKey: "Configure API Key",
       },
+      changeTemplate: {
+        title: "Change template",
+        description: "Create a new version with the current CV content and a different design.",
+        current: "Current",
+        language: "Language",
+        createVersion: "Create version",
+        close: "Close template selector",
+      },
       derivedNotice: "You are editing a derived version. The original file and its extraction remain intact.",
       editorTabs: {
         ai: "AI",
@@ -2804,6 +2812,14 @@ export const messages = {
         design: "Diseño",
         changeTemplate: "Cambiar plantilla",
         configureApiKey: "Configurar API Key",
+      },
+      changeTemplate: {
+        title: "Cambiar plantilla",
+        description: "Crea una nueva versión con el contenido actual del CV y otro diseño.",
+        current: "Actual",
+        language: "Idioma",
+        createVersion: "Crear versión",
+        close: "Cerrar selector de plantillas",
       },
       derivedNotice: "Estás editando una versión derivada. El archivo original y su extracción se mantienen intactos.",
       editorTabs: {

@@ -6,12 +6,11 @@ import { useTranslations } from "next-intl";
 import { AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
-import type { StoredAIProvider } from "@/lib/browser-preferences";
-import { GEMINI_MODELS } from "@/frontend/ai-models";
 import { CVEditorEmptyState } from "./cv-editor-empty-state";
 import { CVEditorHeader } from "./cv-editor-header";
 import { CVEditorModals } from "./cv-editor-modals";
 import { CVEditorSidePanel, type CVEditorSidePanelProps } from "./cv-editor-side-panel";
+import { CVTemplateChangeSheet } from "./cv-template-change-sheet";
 import { useCVEditorMutations } from "../hooks/use-cv-editor-mutations";
 import { useCVEditorRouteState } from "../hooks/use-cv-editor-route-state";
 import { useCVEditorState } from "../hooks/use-cv-editor-state";
@@ -38,17 +37,20 @@ export default function CVEditorView({
 }: CVEditorViewProps) {
   const t = useTranslations("cvEditor");
   const [panelState, setPanelState] = useState({ desktopOpen: true, mobileOpen: false });
-  const [modalState, setModalState] = useState({ saving: false, public: false });
+  const [modalState, setModalState] = useState({
+    saving: false,
+    public: false,
+    copyPaste: false,
+    template: false,
+  });
   const [saveName, setSaveName] = useState("");
   const [publicCopied, setPublicCopied] = useState(false);
   const [editorTab, setEditorTab] = useState<CVEditorTab>("ai");
-  const [copyPasteOpen, setCopyPasteOpen] = useState(false);
   const routeState = useCVEditorRouteState();
 
   const editorState = useCVEditorState(routeState.versionId);
   const {
     templateCvs,
-    aiProvider,
     aiApiKey,
     hasAIApiKey,
     currentVersion,
@@ -87,10 +89,12 @@ export default function CVEditorView({
     editingProfile,
     savingAsCv,
     savingLocale,
+    changingTemplate,
     savingPublicSettings,
     applyInstruction,
     handleCopyPasteApplied,
     saveAsCV,
+    changeTemplate,
     updateLocale,
     updatePublicSettings,
   } = useCVEditorMutations({
@@ -100,7 +104,6 @@ export default function CVEditorView({
     aiProvider: selectedProvider,
     aiApiKey,
     selectedModel,
-    hasAIApiKey,
     savedProfileJsonRef,
     setEditedVersion,
     setProfile,
@@ -160,9 +163,9 @@ export default function CVEditorView({
     onApplyInstruction: () => applyInstruction(),
     onCopyPublicUrl: () => void copyPublicUrl(),
     onManualChange: handleManualChange,
-    onOpenCopyPaste: () => setCopyPasteOpen(true),
+    onOpenCopyPaste: () => setModalState((current) => ({ ...current, copyPaste: true })),
     onOpenSettings,
-    onOpenTemplates,
+    onOpenTemplates: () => setModalState((current) => ({ ...current, template: true })),
     onPublish: () => setModalState((current) => ({ ...current, public: true })),
     onSaveManual: () => void saveProfileToApi(currentProfile),
     onSaveUrl: () => void handleUpdatePublicSettings(true),
@@ -240,7 +243,7 @@ export default function CVEditorView({
       </Sheet>
 
       <CVEditorModals
-        copyPasteOpen={copyPasteOpen}
+        copyPasteOpen={modalState.copyPaste}
         currentVersionId={currentVersion.id}
         editInstruction={editInstruction}
         isPublicModalOpen={modalState.public}
@@ -252,14 +255,29 @@ export default function CVEditorView({
         savingPublicSettings={savingPublicSettings}
         onApplyCopyPaste={(result) => {
           handleCopyPasteApplied(result);
-          setCopyPasteOpen(false);
+          setModalState((current) => ({ ...current, copyPaste: false }));
         }}
-        onCloseCopyPaste={() => setCopyPasteOpen(false)}
+        onCloseCopyPaste={() => setModalState((current) => ({ ...current, copyPaste: false }))}
         onClosePublicModal={() => setModalState((current) => ({ ...current, public: false }))}
         onCloseSavingModal={() => setModalState((current) => ({ ...current, saving: false }))}
         onConfirmPublic={() => void handleUpdatePublicSettings(true, true)}
         onSave={handleSaveAsCV}
         onSaveNameChange={setSaveName}
+      />
+
+      <CVTemplateChangeSheet
+        activeTemplateId={activeTemplate.templateId}
+        changing={changingTemplate}
+        locale={locale}
+        open={modalState.template}
+        onOpenChange={(template) => setModalState((current) => ({ ...current, template }))}
+        onChangeTemplate={(input) => {
+          void changeTemplate(input).then((version) => {
+            if (!version) return;
+            setModalState((current) => ({ ...current, template: false }));
+            routeState.selectVersion(version.id);
+          });
+        }}
       />
     </div>
   );

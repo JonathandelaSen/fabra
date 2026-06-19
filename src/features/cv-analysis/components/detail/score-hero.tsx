@@ -3,7 +3,6 @@
 import { useTranslations } from "next-intl";
 import {
   Cpu,
-  FileSearch,
   FileText,
   ExternalLink,
 } from "lucide-react";
@@ -21,12 +20,6 @@ interface ScoreHeroProps {
   cv: { id: string; name: string; filename: string; type?: string } | null;
   cvId: string | null;
   filename: string;
-}
-
-function getScoreLabelKey(score: number) {
-  if (score >= 80) return "excellent";
-  if (score >= 60) return "improvable";
-  return "needsWork";
 }
 
 export default function ScoreHero({
@@ -61,22 +54,9 @@ export default function ScoreHero({
         />
 
         <div className="flex-1 text-center sm:text-left space-y-2 min-w-0 w-full">
-          <div>
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1">
-              <span
-                className={`text-xs font-semibold px-2 py-0.5 rounded-lg ${colors.bg} ${colors.text} ${colors.border} border`}
-              >
-                {t(getScoreLabelKey(score))}
-              </span>
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-action-soft border border-action-border text-action-text">
-                <FileSearch className="w-3 h-3" />
-                {t("general")}
-              </span>
-            </div>
-            <h3 className="text-xl font-bold text-text-main">
-              {title || t("qualityScore")}
-            </h3>
-          </div>
+          <h3 className="text-xl font-bold text-text-main">
+            {title || t("qualityScore")}
+          </h3>
           <AnalysisMarkdown content={feedback} className="text-base" />
 
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">

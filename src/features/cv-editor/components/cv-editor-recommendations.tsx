@@ -53,7 +53,6 @@ export function CVEditorRecommendations({
       {recommendationAnalysis ? (
         <div className="space-y-3">
           {safeParseArray(recommendationAnalysis.ai_improvements)
-            .slice(0, 3)
             .map((imp, i) => (
               <div
                 key={i}

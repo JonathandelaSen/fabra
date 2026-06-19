@@ -7,6 +7,7 @@ import type { UpdateCVDocumentResponse } from "@/app/api/cvs/responses";
 import type { EditCVProfileResponse } from "@/app/api/cvs/[id]/edit/responses";
 import type { SaveTemplateAsCVResponse } from "@/app/api/cvs/[id]/save-as-cv/responses";
 import type { CVRecommendationsResponse } from "@/app/api/cvs/[id]/recommendations/responses";
+import type { CreateTemplateVersionResponse } from "@/app/api/cvs/[id]/template-version/responses";
 
 async function readJsonResponse<T>(
   res: Response,
@@ -113,6 +114,28 @@ export async function updateLocale({ cvId, locale }: UpdateLocaleInput) {
   return readJsonResponse<UpdateCVDocumentResponse>(
     res,
     "Could not change language.",
+  );
+}
+
+export interface CreateTemplateVersionInput {
+  cvId: string;
+  templateId: string;
+  locale: CVTemplateLocale;
+}
+
+export async function createTemplateVersion({
+  cvId,
+  templateId,
+  locale,
+}: CreateTemplateVersionInput) {
+  const res = await fetch(`/api/cvs/${encodeURIComponent(cvId)}/template-version`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ templateId, locale }),
+  });
+  return readJsonResponse<CreateTemplateVersionResponse>(
+    res,
+    "Could not change template.",
   );
 }
 

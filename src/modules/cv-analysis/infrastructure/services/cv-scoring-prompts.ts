@@ -80,7 +80,7 @@ Do not cluster scores in the 70-85 comfort zone; justify the score with the rubr
 
 Output requirements:
 - ${languageInstruction}
-- "feedback": a comprehensive expert diagnosis. Open with the overall verdict and the strongest asset, then cover the most important weaknesses by rubric dimension. Quote or reference concrete fragments of the CV as evidence. Be direct and specific, like a recruiter giving honest feedback to a candidate they want to help — no generic filler.
+- "feedback": a comprehensive expert diagnosis. Open with the overall verdict and the strongest asset, then cover the most important weaknesses by rubric dimension. Quote or reference concrete fragments of the CV as evidence, but wrap every quoted fragment in single quotes ('like this'), never double quotes, so the JSON stays valid. Be direct and specific, like a recruiter giving honest feedback to a candidate they want to help — no generic filler.
 - "improvements": concrete, prioritized actions, ordered by impact on screening outcomes. Each one must be actionable and specific to THIS CV (e.g., rewrite a particular weak bullet with a suggested before/after, add a missing metric, fix a specific gap), not generic advice like "add keywords".
 - "keywordsFound" and "cvKeywords": the relevant skills, technologies, tools, certifications, and domain terms actually present in the CV.
 
@@ -109,6 +109,7 @@ export function buildCVScoringCopyPastePrompt(input: {
 Copy Paste transport instructions:
 - Return only valid JSON.
 - Do not include Markdown, comments, or explanation outside the JSON object.
+- Inside string values, never use raw double-quote characters. When you quote a fragment of the CV, wrap it in single quotes ('like this'). This is critical: an unescaped double quote inside a string makes the whole response unparseable.
 - Use this exact envelope:
 {
   "workflowId": "cv_analysis.score",

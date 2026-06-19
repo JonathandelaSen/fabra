@@ -14,7 +14,7 @@ import type {
 import { useCVAnalysisCopyPaste } from "../../hooks/use-cv-analysis-copy-paste";
 
 const CV_CORRECTION_INSTRUCTIONS =
-  "Please return only the required JSON envelope. Do not include Markdown or explanation outside JSON. Keep workflowId as cv_analysis.score and schemaVersion as 1.";
+  "Please return only the required JSON envelope. Do not include Markdown or explanation outside JSON. Keep workflowId as cv_analysis.score and schemaVersion as 1. Inside string values, never use raw double-quote characters: when you quote a fragment of the CV, wrap it in single quotes ('like this'), never double quotes. An unescaped double quote inside a string makes the whole response unparseable.";
 
 interface CVScoreCopyPasteModalProps {
   analysisId: string;

@@ -6,6 +6,7 @@ import { instrumentUseCases } from "@/modules/shared";
 import { ApplyCVEditorCopyPasteUseCase } from "./application/use-cases/apply-cv-editor-copy-paste.use-case";
 import { ApplyCVProfileStructureCopyPasteUseCase } from "./application/use-cases/apply-cv-profile-structure-copy-paste.use-case";
 import { CreateTemplateCVDocumentUseCase } from "./application/use-cases/create-template-cv-document.use-case";
+import { CreateTemplateVersionFromTemplateCVUseCase } from "./application/use-cases/create-template-version-from-template-cv.use-case";
 import { CreateJsonResumeCVDocumentUseCase } from "./application/use-cases/create-json-resume-cv-document.use-case";
 import { CreateUploadedCVDocumentUseCase } from "./application/use-cases/create-uploaded-cv-document.use-case";
 import { DeleteCVDocumentUseCase } from "./application/use-cases/delete-cv-document.use-case";
@@ -95,6 +96,11 @@ function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
       eventBus,
     }),
     createTemplateCVDocument,
+    createTemplateVersionFromTemplateCV:
+      new CreateTemplateVersionFromTemplateCVUseCase({
+        documentRepo,
+        createTemplateDocument: createTemplateCVDocument,
+      }),
     updateCVDocumentName: new UpdateCVDocumentNameUseCase({
       documentRepo,
       eventBus,

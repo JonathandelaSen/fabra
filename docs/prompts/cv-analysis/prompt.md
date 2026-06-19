@@ -54,6 +54,7 @@ If `ai_context.additionalContext` is empty, the context block is omitted. When p
 Copy Paste transport instructions:
 - Return only valid JSON.
 - Do not include Markdown, comments, or explanation outside the JSON object.
+- Inside string values, never use raw double-quote characters. When you quote a fragment of the CV, wrap it in single quotes ('like this'). This is critical: an unescaped double quote inside a string makes the whole response unparseable.
 - Use this exact envelope:
 {
   "workflowId": "cv_analysis.score",

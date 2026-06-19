@@ -31,6 +31,11 @@ export interface TemplateCVRequestHttpInput {
   ai: AIRequestConfig | null;
 }
 
+export interface CreateTemplateVersionHttpInput {
+  templateId: string;
+  locale: string;
+}
+
 export interface StructureCVProfileHttpInput extends AIRequestConfig {
   force: boolean;
 }
@@ -123,6 +128,21 @@ export function parseTemplateCVRequest(
       templateId: text(body.templateId),
       locale: text(body.locale) || "es",
       ai: ai?.value ?? null,
+    },
+  };
+}
+
+export function parseCreateTemplateVersionRequest(
+  body: unknown
+): Result<CreateTemplateVersionHttpInput, HttpValidationError> {
+  if (!isRecord(body)) return validationError("Request body must be a JSON object");
+  const templateId = text(body.templateId);
+  if (!templateId) return validationError("Select a template.");
+  return {
+    ok: true,
+    value: {
+      templateId,
+      locale: text(body.locale) || "es",
     },
   };
 }

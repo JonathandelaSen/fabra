@@ -1,0 +1,1 @@
+export { parseCreateTemplateVersionRequest } from "../../validation";
