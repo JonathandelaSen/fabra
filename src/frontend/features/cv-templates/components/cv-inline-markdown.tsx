@@ -1,4 +1,4 @@
-import { parseCVInlineMarkdown } from "@/lib/cv-inline-markdown";
+import { parseCVInlineMarkdown } from "@/shared/cv-inline-markdown";
 
 interface CVInlineMarkdownProps {
   text: string;

@@ -11,7 +11,7 @@ import {
 import type { Style } from "@react-pdf/types";
 import path from "path";
 import { Fragment, type ReactNode } from "react";
-import { parseCVInlineMarkdown } from "@/lib/cv-inline-markdown";
+import { parseCVInlineMarkdown } from "@/shared/cv-inline-markdown";
 import {
   buildExternalLinkHref,
   normalizeContactEmail,
