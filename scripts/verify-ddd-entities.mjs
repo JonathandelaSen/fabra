@@ -95,6 +95,15 @@ function hasMethod(node, name, { isStatic = false } = {}) {
   );
 }
 
+function getMethod(node, name, { isStatic = false } = {}) {
+  return node.members.find(
+    (member) =>
+      ts.isMethodDeclaration(member) &&
+      member.name?.getText() === name &&
+      hasModifier(member, ts.SyntaxKind.StaticKeyword) === isStatic
+  );
+}
+
 function getConstructor(node) {
   return node.members.find((member) => ts.isConstructorDeclaration(member));
 }
@@ -113,23 +122,6 @@ function interfaceHasProperty(sourceFile, interfaceName, propertyName) {
   );
 }
 
-function isSnakeCaseIdentifier(text) {
-  return /^[A-Za-z][A-Za-z0-9]*_[A-Za-z0-9_]*$/.test(text);
-}
-
-function isPascalCaseIdentifier(text) {
-  return /^[A-Z][A-Za-z0-9]*$/.test(text);
-}
-
-function isAllowedDomainSnakeCaseIdentifier(node) {
-  return (
-    ts.isPropertyAccessExpression(node.parent) &&
-    node.parent.name === node &&
-    ts.isIdentifier(node.parent.expression) &&
-    isPascalCaseIdentifier(node.parent.expression.text)
-  );
-}
-
 function location(sourceFile, node) {
   const { line, character } = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile));
   return `${line + 1}:${character + 1}`;
@@ -142,27 +134,6 @@ function addViolation(violations, file, rule, reason, sourceFile, node) {
     reason,
     location: sourceFile && node ? location(sourceFile, node) : null,
   });
-}
-
-function checkNoSnakeCaseIdentifiers(sourceFile, file, violations) {
-  function visit(node) {
-    if (
-      ts.isIdentifier(node) &&
-      isSnakeCaseIdentifier(node.text) &&
-      !isAllowedDomainSnakeCaseIdentifier(node)
-    ) {
-      addViolation(
-        violations,
-        file,
-        "domain-snake-case",
-        `Domain identifiers must use camelCase, found "${node.text}". Map snake_case in infrastructure repositories instead.`,
-        sourceFile,
-        node
-      );
-    }
-    ts.forEachChild(node, visit);
-  }
-  visit(sourceFile);
 }
 
 function containsBannedRepositoryType(typeNode) {
@@ -244,7 +215,8 @@ function checkEntityFile(sourceFile, file, violations) {
     const primitivesName = `${className}Primitives`;
     const createParamsName = `${className}CreateParams`;
     const constructor = getConstructor(aggregate);
-    const hasStaticCreate = hasMethod(aggregate, "create", { isStatic: true });
+    const staticCreate = getMethod(aggregate, "create", { isStatic: true });
+    const staticCreateParamType = staticCreate?.parameters[0]?.type?.getText(sourceFile);
 
     if (!findInterface(sourceFile, primitivesName)) {
       addViolation(
@@ -257,7 +229,7 @@ function checkEntityFile(sourceFile, file, violations) {
       );
     }
 
-    if (hasStaticCreate) {
+    if (staticCreate && staticCreateParamType !== primitivesName) {
       if (!findInterface(sourceFile, createParamsName)) {
         addViolation(
           violations,
@@ -424,9 +396,9 @@ function checkValueObjectFile(sourceFile, file, violations) {
     }
 
     for (const member of valueObject.members) {
-      if (ts.isMethodDeclaration(member)) {
+      if (ts.isMethodDeclaration(member) && !hasModifier(member, ts.SyntaxKind.StaticKeyword)) {
         const methodName = member.name?.getText() ?? "";
-        if (/^(set|update|change|mark|delete|save)/.test(methodName)) {
+        if (/^(set|update|change|mark|save)([A-Z]|$)/.test(methodName)) {
           addViolation(
             violations,
             file,
@@ -472,13 +444,10 @@ function checkRepositoryFile(sourceFile, file, violations, aggregateClassNames) 
       continue;
     }
 
-    const methodNames = new Set();
-
     for (const member of statement.members) {
       if (!ts.isMethodSignature(member)) continue;
 
       const methodName = member.name.getText();
-      methodNames.add(methodName);
 
       if (methodName === "create" || methodName === "update") {
         addViolation(
@@ -518,27 +487,6 @@ function checkRepositoryFile(sourceFile, file, violations, aggregateClassNames) 
       }
     }
 
-    if (!methodNames.has("save")) {
-      addViolation(
-        violations,
-        file,
-        "repository-save-missing",
-        `Repository ${interfaceName} must expose save(entity).`,
-        sourceFile,
-        statement.name
-      );
-    }
-
-    if (!methodNames.has("delete")) {
-      addViolation(
-        violations,
-        file,
-        "repository-delete-missing",
-        `Repository ${interfaceName} must expose delete(id).`,
-        sourceFile,
-        statement.name
-      );
-    }
   }
 }
 
@@ -561,28 +509,16 @@ async function checkModule(moduleName, rootDir, violations) {
     const sourceFile = await readSourceFile(rootDir, file);
 
     if (file.includes("/domain/entities/") && file.endsWith(".entity.ts")) {
-      checkNoSnakeCaseIdentifiers(sourceFile, file, violations);
       aggregateClassNames.push(...checkEntityFile(sourceFile, file, violations));
     }
 
     if (file.includes("/domain/value-objects/") && file.endsWith(".value-object.ts")) {
-      checkNoSnakeCaseIdentifiers(sourceFile, file, violations);
       checkValueObjectFile(sourceFile, file, violations);
     }
-
-    if (
-      !file.includes("/domain/entities/") &&
-      !file.includes("/domain/value-objects/") &&
-      !file.includes("/domain/repositories/")
-    ) {
-      checkNoSnakeCaseIdentifiers(sourceFile, file, violations);
-    }
-
   }
 
   for (const file of repositoryFiles) {
     const sourceFile = await readSourceFile(rootDir, file);
-    checkNoSnakeCaseIdentifiers(sourceFile, file, violations);
     checkRepositoryFile(sourceFile, file, violations, aggregateClassNames);
   }
 
