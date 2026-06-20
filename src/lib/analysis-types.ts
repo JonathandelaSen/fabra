@@ -1,5 +1,5 @@
 import type { StandardCVProfile } from "@/lib/cv-profile";
-import type { ExtractedPdfText } from "@/lib/pdf-extraction";
+import type { ExtractedPdfText } from "@/shared/extracted-pdf-text";
 
 export type AnalysisMode = "general" | "job_match";
 

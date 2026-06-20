@@ -1,10 +1,11 @@
 import { Timestamp, UserId, type EventBus } from "@/backend/modules/shared";
-import type {
-  CVDocument,
-  CVDocumentExtractedTextPrimitives,
-} from "../../domain/entities/cv-document.entity";
+import type { CVDocument } from "../../domain/entities/cv-document.entity";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
+import {
+  CVDocumentExtractedText,
+  type CVDocumentExtractedTextPrimitives,
+} from "../../domain/value-objects/cv-document-extracted-text.value-object";
 
 export interface UpdateCVDocumentExtractionInput {
   id: string;
@@ -29,7 +30,7 @@ export class UpdateCVDocumentExtractionUseCase {
     if (!document) return null;
 
     document.updateExtractedText(
-      input.extractedText,
+      CVDocumentExtractedText.fromPrimitives(input.extractedText),
       Timestamp.fromPrimitives(new Date().toISOString()),
     );
     const saved = await this.deps.documentRepo.save(document);

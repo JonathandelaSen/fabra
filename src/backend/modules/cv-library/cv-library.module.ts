@@ -17,6 +17,7 @@ import { GetPublishedCVDocumentUseCase } from "./application/use-cases/get-publi
 import { ListCVDocumentsUseCase } from "./application/use-cases/list-cv-documents.use-case";
 import { PrepareCVAnalysisInputUseCase } from "./application/use-cases/prepare-cv-analysis-input.use-case";
 import { RenderCVTemplatePdfUseCase } from "./application/use-cases/render-cv-template-pdf.use-case";
+import { ExtractCVUploadTextUseCase } from "./application/use-cases/extract-cv-upload-text.use-case";
 import { PrepareCVEditorCopyPasteUseCase } from "./application/use-cases/prepare-cv-editor-copy-paste.use-case";
 import { PrepareCVProfileStructureCopyPasteUseCase } from "./application/use-cases/prepare-cv-profile-structure-copy-paste.use-case";
 import { PreviewCVEditorCopyPasteUseCase } from "./application/use-cases/preview-cv-editor-copy-paste.use-case";
@@ -33,7 +34,8 @@ import { SupabaseCVPublicNoteRepository } from "./infrastructure/repositories/su
 import { SupabaseCVPublicFeedbackRepository } from "./infrastructure/repositories/supabase-cv-public-feedback.repository";
 import { DeleteCVPublicFeedbackUseCase, ListCVPublicFeedbackUseCase } from "./application/use-cases/manage-cv-public-feedback.use-case";
 import { ListCVPublicNotesUseCase, ListPublishedCVPublicNotesUseCase, ReplaceCVPublicNotesUseCase } from "./application/use-cases/manage-cv-public-notes.use-case";
-import { PdfTextExtractor } from "./infrastructure/services/pdf-text-extractor.service";
+import { PdfTextExtractionService } from "./infrastructure/services/pdf-text-extraction.service";
+import { PdfParsersService } from "./infrastructure/services/pdf-parsers.service";
 import { GeminiCVProfileEditingAIServiceFactory } from "./infrastructure/services/gemini-cv-profile-editing-ai.service";
 import { GeminiCVProfileStructuringAIServiceFactory } from "./infrastructure/services/gemini-cv-profile-structuring-ai.service";
 import { OpenAICVProfileEditingAIServiceFactory } from "./infrastructure/services/openai-cv-profile-editing-ai.service";
@@ -52,7 +54,8 @@ const profileRepo = new SupabaseCVStructuredProfileRepository();
 const publicNoteRepo = new SupabaseCVPublicNoteRepository();
 const publicFeedbackRepo = new SupabaseCVPublicFeedbackRepository();
 const pdfStorage = new SupabaseCVPdfStorage();
-const textExtractor = new PdfTextExtractor();
+const pdfParsers = new PdfParsersService();
+const textExtractor = new PdfTextExtractionService(pdfParsers);
 const templateRenderer = new TemplateCVPdfRenderer();
 const profileStructuringAI = new ProviderCVProfileStructuringAIServiceFactory({
   geminiFactory: new GeminiCVProfileStructuringAIServiceFactory(),
@@ -88,6 +91,7 @@ function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
     listCVDocuments: new ListCVDocumentsUseCase({ documentRepo }),
     getCVDocument: new GetCVDocumentUseCase({ documentRepo }),
     renderCVTemplatePdf: new RenderCVTemplatePdfUseCase({ templateRenderer }),
+    extractCVUploadText: new ExtractCVUploadTextUseCase({ textExtractor }),
     createJsonResumeCVDocument: new CreateJsonResumeCVDocumentUseCase({
       documentRepo,
       pdfStorage,

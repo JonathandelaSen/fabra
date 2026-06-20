@@ -5,9 +5,29 @@ import ts from "typescript";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-// Add module names here only after the whole module domain has been migrated.
-// Example: ["work-journal"]
-export const migratedModules = ["work-journal"];
+// All feature modules are assumed migrated: the DDD checks run over every module
+// discovered under src/backend/modules (excluding cross-cutting shared/test-helpers).
+const nonFeatureModuleDirs = new Set(["shared", "test-helpers"]);
+
+async function listFeatureModules(rootDir) {
+  const modulesDir = path.join(rootDir, "src/backend/modules");
+  let entries;
+  try {
+    entries = await readdir(modulesDir, { withFileTypes: true });
+  } catch (error) {
+    if (error.code === "ENOENT") return [];
+    throw error;
+  }
+  return entries
+    .filter(
+      (entry) =>
+        entry.isDirectory() &&
+        !entry.name.startsWith(".") &&
+        !nonFeatureModuleDirs.has(entry.name)
+    )
+    .map((entry) => entry.name)
+    .sort();
+}
 
 const primitiveTypeKinds = new Set([
   ts.SyntaxKind.AnyKeyword,
@@ -299,6 +319,55 @@ function checkEntityFile(sourceFile, file, violations) {
   return aggregateClasses.map((node) => node.name.text);
 }
 
+function findReturnedObjectLiteral(method) {
+  if (!method?.body) return null;
+  let found = null;
+  const visit = (node) => {
+    if (found) return;
+    if (ts.isReturnStatement(node) && node.expression) {
+      let expr = node.expression;
+      while (ts.isParenthesizedExpression(expr)) expr = expr.expression;
+      if (ts.isObjectLiteralExpression(expr)) {
+        found = expr;
+        return;
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(method.body);
+  return found;
+}
+
+function checkEntityToPrimitivesDelegation(sourceFile, file, aggregate, violations) {
+  const className = aggregate.name.text;
+  const toPrimitives = aggregate.members.find(
+    (member) =>
+      ts.isMethodDeclaration(member) &&
+      member.name?.getText() === "toPrimitives" &&
+      !hasModifier(member, ts.SyntaxKind.StaticKeyword)
+  );
+  if (!toPrimitives) return;
+
+  const objectLiteral = findReturnedObjectLiteral(toPrimitives);
+  if (!objectLiteral) return;
+
+  for (const property of objectLiteral.properties) {
+    if (!ts.isPropertyAssignment(property)) continue;
+    const fieldName = property.name.getText();
+    const valueText = property.initializer.getText(sourceFile);
+    if (!/\.toPrimitives\s*\(/.test(valueText)) {
+      addViolation(
+        violations,
+        file,
+        "entity-field-not-value-object",
+        `Aggregate ${className} field "${fieldName}" is not backed by a value object: toPrimitives() must delegate to a value object's toPrimitives() for every field.`,
+        sourceFile,
+        property
+      );
+    }
+  }
+}
+
 function checkValueObjectFile(sourceFile, file, violations) {
   const valueObjects = sourceFile.statements.filter(
     (statement) =>
@@ -469,7 +538,7 @@ async function readSourceFile(rootDir, relativePath) {
   return parseSource(source, relativePath);
 }
 
-async function checkMigratedModule(moduleName, rootDir, violations) {
+async function checkModule(moduleName, rootDir, violations) {
   const moduleDir = path.join(rootDir, "src/backend/modules", moduleName);
   const files = (await walkFiles(moduleDir))
     .map((filePath) => toPosixRelative(rootDir, filePath))
@@ -530,15 +599,39 @@ async function checkMigratedModule(moduleName, rootDir, violations) {
   }
 }
 
-export async function findDddEntityViolations({
-  rootDir = repoRoot,
-  modules = migratedModules,
-} = {}) {
+async function checkAllEntitiesAreValueObjectBacked(rootDir, violations) {
+  const modulesDir = path.join(rootDir, "src/backend/modules");
+  const files = (await walkFiles(modulesDir))
+    .map((filePath) => toPosixRelative(rootDir, filePath))
+    .filter(
+      (file) => file.includes("/domain/entities/") && file.endsWith(".entity.ts")
+    )
+    .sort();
+
+  for (const file of files) {
+    const sourceFile = await readSourceFile(rootDir, file);
+    const aggregateClasses = sourceFile.statements.filter(
+      (statement) =>
+        ts.isClassDeclaration(statement) &&
+        statement.name &&
+        isExported(statement) &&
+        hasHeritage(statement, "AggregateRoot")
+    );
+    for (const aggregate of aggregateClasses) {
+      checkEntityToPrimitivesDelegation(sourceFile, file, aggregate, violations);
+    }
+  }
+}
+
+export async function findDddEntityViolations({ rootDir = repoRoot } = {}) {
   const violations = [];
 
+  const modules = await listFeatureModules(rootDir);
   for (const moduleName of modules) {
-    await checkMigratedModule(moduleName, rootDir, violations);
+    await checkModule(moduleName, rootDir, violations);
   }
+
+  await checkAllEntitiesAreValueObjectBacked(rootDir, violations);
 
   return violations;
 }
@@ -561,11 +654,6 @@ async function main() {
   if (violations.length > 0) {
     console.error(formatDddEntityViolations(violations));
     process.exitCode = 1;
-    return;
-  }
-
-  if (migratedModules.length === 0) {
-    console.log("DDD entity check passed. No migrated modules configured yet.");
     return;
   }
 

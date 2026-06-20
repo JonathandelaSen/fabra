@@ -4,6 +4,7 @@ import { CVDocument } from "./cv-document.entity";
 import { CVDocumentId } from "../value-objects/cv-document-id.value-object";
 import { CVDocumentName } from "../value-objects/cv-document-name.value-object";
 import { CVDocumentType } from "../value-objects/cv-document-type.value-object";
+import { CVDocumentExtractedText } from "../value-objects/cv-document-extracted-text.value-object";
 
 const now = "2026-05-13T10:00:00.000Z";
 
@@ -23,14 +24,14 @@ function createDocument(overrides: Partial<Parameters<typeof CVDocument.create>[
     sourceTextHash: null,
     aiModel: null,
     profile: null,
-    extractedText: {
+    extractedText: CVDocumentExtractedText.fromPrimitives({
       textPython: "python text",
       textPdfjs: null,
       textNode: null,
       extractErrorPython: null,
       extractErrorPdfjs: null,
       extractErrorNode: null,
-    },
+    }),
     publicSettings: {
       enabled: false,
       publicId: null,
@@ -120,14 +121,14 @@ describe("CVDocument", () => {
   it("records an extracted-text-updated event on updateExtractedText", () => {
     const document = CVDocument.fromPrimitives(createDocument().toPrimitives());
     document.updateExtractedText(
-      {
+      CVDocumentExtractedText.fromPrimitives({
         textPython: "new text",
         textPdfjs: null,
         textNode: null,
         extractErrorPython: null,
         extractErrorPdfjs: null,
         extractErrorNode: null,
-      },
+      }),
       Timestamp.fromPrimitives(now),
     );
 

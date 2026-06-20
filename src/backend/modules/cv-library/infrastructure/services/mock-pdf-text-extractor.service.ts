@@ -1,4 +1,4 @@
-import type { CVDocumentExtractedTextPrimitives } from "../../domain/entities/cv-document.entity";
+import { CVDocumentExtractedText } from "../../domain/value-objects/cv-document-extracted-text.value-object";
 import type {
   CVPdfTextExtractionContext,
   CVPdfTextExtractor,
@@ -8,7 +8,7 @@ export class MockPdfTextExtractor implements CVPdfTextExtractor {
   async extract(
     _buffer: Buffer,
     _context: CVPdfTextExtractionContext,
-  ): Promise<CVDocumentExtractedTextPrimitives> {
+  ): Promise<CVDocumentExtractedText> {
     const mockText = [
       "MOCK EXTRACTED CV TEXT",
       "",
@@ -31,13 +31,13 @@ export class MockPdfTextExtractor implements CVPdfTextExtractor {
       "SKILLS: TypeScript, React, Node.js, PostgreSQL, Docker, AWS",
     ].join("\n");
 
-    return {
+    return CVDocumentExtractedText.fromPrimitives({
       textPython: null,
       textPdfjs: null,
       textNode: mockText,
       extractErrorPython: null,
       extractErrorPdfjs: null,
       extractErrorNode: null,
-    };
+    });
   }
 }

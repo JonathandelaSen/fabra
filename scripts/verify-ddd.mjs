@@ -7,6 +7,7 @@ const checks = [
   ["node", ["scripts/verify-ddd-value-objects.mjs"]],
   ["node", ["scripts/verify-ddd-repository-return-types.mjs"]],
   ["node", ["scripts/verify-ddd-use-cases-return-types.mjs"]],
+  ["node", ["scripts/verify-ddd-services.mjs"]],
   ["node", ["scripts/verify-query-bus.mjs"]],
   ["node", ["scripts/verify-ddd-supabase-repository-tables.mjs"]],
   ["node", ["scripts/verify-ddd-route-imports.mjs"]],

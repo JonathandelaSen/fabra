@@ -4,6 +4,7 @@ import type { CVDocumentRepository } from "../../domain/repositories/cv-document
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
 import { CVDocumentName } from "../../domain/value-objects/cv-document-name.value-object";
 import { CVDocumentType } from "../../domain/value-objects/cv-document-type.value-object";
+import { CVDocumentExtractedText } from "../../domain/value-objects/cv-document-extracted-text.value-object";
 
 export interface CreateTemplateCVDocumentInput {
   userId: string;
@@ -44,14 +45,14 @@ export class CreateTemplateCVDocumentUseCase {
       sourceTextHash: input.sourceTextHash,
       aiModel: input.aiModel,
       profile: input.profile,
-      extractedText: {
+      extractedText: CVDocumentExtractedText.fromPrimitives({
         textPython: null,
         textPdfjs: null,
         textNode: input.textNode ?? null,
         extractErrorPython: null,
         extractErrorPdfjs: null,
         extractErrorNode: null,
-      },
+      }),
       publicSettings: {
         enabled: false,
         publicId: null,

@@ -1,8 +1,9 @@
 import { Counter, LongText, ValueObject } from "@/backend/modules/shared";
-import type {
-  CVDocumentPrimitives,
-  CVDocumentExtractedTextPrimitives,
-} from "../entities/cv-document.entity";
+import type { CVDocumentPrimitives } from "../entities/cv-document.entity";
+import {
+  CVDocumentExtractedText,
+  type CVDocumentExtractedTextPrimitives,
+} from "./cv-document-extracted-text.value-object";
 import {
   CVExtractionDiagnostics,
   type CVExtractionDiagnosticsPrimitives,
@@ -25,7 +26,7 @@ export class CVAnalysisInput extends ValueObject<CVAnalysisInputPrimitives> {
     private readonly filenameValue: LongText,
     private readonly fileSizeValue: Counter | null,
     private readonly pdfStoragePathValue: LongText | null,
-    private readonly extractedTextValue: CVDocumentExtractedTextPrimitives,
+    private readonly extractedTextValue: CVDocumentExtractedText,
     private readonly extractionDiagnosticsValue: CVExtractionDiagnostics
   ) {
     super();
@@ -38,7 +39,7 @@ export class CVAnalysisInput extends ValueObject<CVAnalysisInputPrimitives> {
       LongText.fromPrimitives(primitives.filename),
       primitives.fileSize === null ? null : Counter.fromPrimitives(primitives.fileSize),
       primitives.pdfStoragePath === null ? null : LongText.fromPrimitives(primitives.pdfStoragePath),
-      primitives.extractedText,
+      CVDocumentExtractedText.fromPrimitives(primitives.extractedText),
       CVExtractionDiagnostics.fromPrimitives(primitives.extractionDiagnostics)
     );
   }
@@ -50,7 +51,7 @@ export class CVAnalysisInput extends ValueObject<CVAnalysisInputPrimitives> {
       filename: this.filenameValue.toPrimitives(),
       fileSize: this.fileSizeValue?.toPrimitives() ?? null,
       pdfStoragePath: this.pdfStoragePathValue?.toPrimitives() ?? null,
-      extractedText: this.extractedTextValue,
+      extractedText: this.extractedTextValue.toPrimitives(),
       extractionDiagnostics: this.extractionDiagnosticsValue.toPrimitives(),
     };
   }
@@ -76,7 +77,7 @@ export class CVAnalysisInput extends ValueObject<CVAnalysisInputPrimitives> {
   }
 
   get extractedText(): CVDocumentExtractedTextPrimitives {
-    return this.extractedTextValue;
+    return this.extractedTextValue.toPrimitives();
   }
 
   get extractionDiagnostics(): CVExtractionDiagnosticsPrimitives {

@@ -81,7 +81,7 @@ function extendsSharedBaseVo(node) {
 function hasMethod(node, name, { isStatic = false } = {}) {
   return node.members.some(
     (member) =>
-      ts.isMethodDeclaration(member) &&
+      (ts.isMethodDeclaration(member) || ts.isGetAccessorDeclaration(member)) &&
       member.name?.getText() === name &&
       hasModifier(member, ts.SyntaxKind.StaticKeyword) === isStatic
   );
@@ -309,6 +309,44 @@ function checkPrimitivesInterface(sourceFile, file, statement, violations) {
   }
 }
 
+function capitalize(str) {
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function getEnumKeysFromSourceFile(sourceFile) {
+  const keys = [];
+  for (const statement of sourceFile.statements) {
+    if (ts.isVariableStatement(statement)) {
+      for (const decl of statement.declarationList.declarations) {
+        let init = decl.initializer;
+        if (!init) continue;
+        if (ts.isAsExpression(init)) {
+          init = init.expression;
+        }
+        if (ts.isObjectLiteralExpression(init)) {
+          for (const prop of init.properties) {
+            if (ts.isPropertyAssignment(prop)) {
+              const name = prop.name.getText();
+              const cleanName = name.replace(/^['"]|['"]$/g, '');
+              keys.push(cleanName);
+            }
+          }
+        } else if (ts.isArrayLiteralExpression(init)) {
+          for (const element of init.elements) {
+            if (ts.isStringLiteral(element)) {
+              const val = element.text;
+              const camelVal = val.replace(/[-_]([a-z])/g, (g) => g[1].toUpperCase());
+              keys.push(camelVal);
+            }
+          }
+        }
+      }
+    }
+  }
+  return keys;
+}
+
 function checkValueObjectClass(sourceFile, file, valueObject, violations) {
   const className = valueObject.name.text;
   const inheritsBase = extendsSharedBaseVo(valueObject);
@@ -394,6 +432,37 @@ function checkValueObjectClass(sourceFile, file, valueObject, violations) {
   }
 
   checkCompositeStoresValueObjects(sourceFile, file, valueObject, violations);
+
+  // Enforce semantic constructors and boolean checkers for enum-like VOs
+  const enumKeys = getEnumKeysFromSourceFile(sourceFile);
+  if (enumKeys.length > 0) {
+    for (const key of enumKeys) {
+      const expectedStatic = key;
+      const expectedInstance = `is${capitalize(key)}`;
+
+      if (!hasMethod(valueObject, expectedStatic, { isStatic: true })) {
+        addViolation(
+          violations,
+          file,
+          "value-object-enum-static-constructor-missing",
+          `Enum-like value object ${className} is missing static semantic constructor "${expectedStatic}()" for key "${key}".`,
+          sourceFile,
+          valueObject.name
+        );
+      }
+
+      if (!hasMethod(valueObject, expectedInstance, { isStatic: false })) {
+        addViolation(
+          violations,
+          file,
+          "value-object-enum-boolean-checker-missing",
+          `Enum-like value object ${className} is missing boolean checker method "${expectedInstance}()" for key "${key}".`,
+          sourceFile,
+          valueObject.name
+        );
+      }
+    }
+  }
 }
 
 function checkValueObjectFile(sourceFile, file, violations) {

@@ -2,7 +2,6 @@ import { handleApiError } from "@/app/api/_shared/api-error-handler";
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { createRequestId, hasExtractedText } from "@/lib/observability";
-import { extractPdfText } from "@/lib/pdf-extraction";
 import { cvLibraryModule } from "@/lib/container";
 import { CV_PDFS_BUCKET, presentCVDocument } from "@/backend/modules/cv-library";
 import { parseUploadCVFormData } from "./validation";
@@ -42,19 +41,24 @@ export async function POST(req: NextRequest) {
       throw uploadError;
     }
 
-    const extracted = await extractPdfText(buffer, {
-      userId,
-      cvId,
-      requestId,
-      fileSize: file.size,
-      filename: file.name,
-      pdfStoragePath,
-    });
+    const extracted = (
+      await cvLibraryModule.bindRequest(supabase).extractCVUploadText.execute({
+        buffer,
+        context: {
+          userId,
+          cvId,
+          requestId,
+          fileSize: file.size,
+          filename: file.name,
+          pdfStoragePath,
+        },
+      })
+    ).toPrimitives();
 
     const extractedTexts = [
-      extracted.text_python,
-      extracted.text_pdfjs,
-      extracted.text_node,
+      extracted.textPython,
+      extracted.textPdfjs,
+      extracted.textNode,
     ];
 
     if (!hasExtractedText(extractedTexts)) {
@@ -65,11 +69,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           error:
-            "No se ha podido extraer texto del PDF. Prueba con un PDF con texto seleccionable.",
+            "Could not extract text from the PDF. Please try a PDF with selectable text.",
           errors: {
-            python: extracted.extract_error_python,
-            pdfjs: extracted.extract_error_pdfjs,
-            node: extracted.extract_error_node,
+            python: extracted.extractErrorPython,
+            pdfjs: extracted.extractErrorPdfjs,
+            node: extracted.extractErrorNode,
           },
         },
         { status: 400 }
@@ -85,12 +89,12 @@ export async function POST(req: NextRequest) {
       filename: file.name,
       fileSize: file.size,
       pdfStoragePath,
-      textPython: extracted.text_python,
-      textPdfjs: extracted.text_pdfjs,
-      textNode: extracted.text_node,
-      extractErrorPython: extracted.extract_error_python,
-      extractErrorPdfjs: extracted.extract_error_pdfjs,
-      extractErrorNode: extracted.extract_error_node,
+      textPython: extracted.textPython,
+      textPdfjs: extracted.textPdfjs,
+      textNode: extracted.textNode,
+      extractErrorPython: extracted.extractErrorPython,
+      extractErrorPdfjs: extracted.extractErrorPdfjs,
+      extractErrorNode: extracted.extractErrorNode,
     });
     const cv = presentCVDocument(cvDocument);
 

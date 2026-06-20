@@ -6,6 +6,7 @@ import type {
   CVPdfTextExtractor,
   CVTemplatePdfRenderer,
 } from "../../domain/repositories/cv-analysis-preparation-services";
+import { CVDocumentExtractedText } from "../../domain/value-objects/cv-document-extracted-text.value-object";
 
 function services() {
   return {
@@ -15,14 +16,16 @@ function services() {
       remove: vi.fn(async () => undefined),
     } satisfies CVPdfStorage,
     textExtractor: {
-      extract: vi.fn(async () => ({
-        textPython: "extracted text" as string | null,
-        textPdfjs: null as string | null,
-        textNode: null as string | null,
-        extractErrorPython: null as string | null,
-        extractErrorPdfjs: null as string | null,
-        extractErrorNode: null as string | null,
-      })),
+      extract: vi.fn(async () =>
+        CVDocumentExtractedText.fromPrimitives({
+          textPython: "extracted text",
+          textPdfjs: null,
+          textNode: null,
+          extractErrorPython: null,
+          extractErrorPdfjs: null,
+          extractErrorNode: null,
+        }),
+      ),
     } satisfies CVPdfTextExtractor,
     templateRenderer: {
       render: vi.fn(async () => Buffer.from("template pdf")),
@@ -82,14 +85,16 @@ describe("PrepareCVAnalysisInputUseCase", () => {
       findById: vi.fn(async () => cv),
     });
     const deps = services();
-    deps.textExtractor.extract = vi.fn(async () => ({
-      textPython: "repaired python text",
-      textPdfjs: "repaired pdfjs text",
-      textNode: "repaired node text",
-      extractErrorPython: null,
-      extractErrorPdfjs: null,
-      extractErrorNode: null,
-    }));
+    deps.textExtractor.extract = vi.fn(async () =>
+      CVDocumentExtractedText.fromPrimitives({
+        textPython: "repaired python text",
+        textPdfjs: "repaired pdfjs text",
+        textNode: "repaired node text",
+        extractErrorPython: null,
+        extractErrorPdfjs: null,
+        extractErrorNode: null,
+      }),
+    );
 
     const bus = eventBus();
     const result = await new PrepareCVAnalysisInputUseCase({
@@ -162,14 +167,16 @@ describe("PrepareCVAnalysisInputUseCase", () => {
       findById: vi.fn(async () => cv),
     });
     const deps = services();
-    deps.textExtractor.extract = vi.fn(async () => ({
-      textPython: "repaired python text",
-      textPdfjs: "repaired pdfjs text",
-      textNode: null,
-      extractErrorPython: null,
-      extractErrorPdfjs: null,
-      extractErrorNode: null,
-    }));
+    deps.textExtractor.extract = vi.fn(async () =>
+      CVDocumentExtractedText.fromPrimitives({
+        textPython: "repaired python text",
+        textPdfjs: "repaired pdfjs text",
+        textNode: null,
+        extractErrorPython: null,
+        extractErrorPdfjs: null,
+        extractErrorNode: null,
+      }),
+    );
 
     const bus = eventBus();
     const result = await new PrepareCVAnalysisInputUseCase({

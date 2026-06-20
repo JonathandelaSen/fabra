@@ -1,4 +1,4 @@
-import type { CVDocumentExtractedTextPrimitives } from "../entities/cv-document.entity";
+import type { CVDocumentExtractedText } from "../value-objects/cv-document-extracted-text.value-object";
 import type { StandardCVProfile } from "../cv-profile";
 import type { CVTemplateId, CVTemplateLocale } from "../cv-templates";
 
@@ -15,7 +15,7 @@ export interface CVPdfTextExtractor {
   extract(
     buffer: Buffer,
     context: CVPdfTextExtractionContext,
-  ): Promise<CVDocumentExtractedTextPrimitives>;
+  ): Promise<CVDocumentExtractedText>;
 }
 
 export interface CVPdfStorage {

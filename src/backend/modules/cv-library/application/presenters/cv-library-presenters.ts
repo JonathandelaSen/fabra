@@ -1,5 +1,5 @@
 import type { StandardCVProfile } from "../../domain/cv-profile";
-import type { ExtractedPdfText } from "@/lib/pdf-extraction";
+import type { ExtractedPdfText } from "@/shared/extracted-pdf-text";
 import type { CVDocumentTypePrimitives } from "../../domain/value-objects/cv-document-type.value-object";
 import type {
   CVDocument,

@@ -74,12 +74,17 @@ for (const chunkPath of routeChunks) {
   runtime.c(chunkPath);
 }
 
-const { extractPdfText } = runtime.m(41071).exports;
-const result = await extractPdfText(readFileSync("test.pdf"));
+const { PdfTextExtractionService, PdfParsersService } = runtime.m(41071).exports;
+const result = await new PdfTextExtractionService(new PdfParsersService()).extract(readFileSync("test.pdf"), {
+  userId: "bundle-smoke-test-user",
+  cvId: "bundle-smoke-test-cv",
+  requestId: "bundle-smoke-test-request",
+});
+const primitives = result.toPrimitives();
 
-assert.equal(result.extract_error_pdfjs, null);
+assert.equal(primitives.extractErrorPdfjs, null);
 assert.ok(
-  (result.text_pdfjs?.length ?? 0) > 0,
+  (primitives.textPdfjs?.length ?? 0) > 0,
   "production pdfjs extraction smoke test must extract text"
 );
 

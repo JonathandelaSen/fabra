@@ -5,6 +5,7 @@ import type { CVPdfStorage } from "../../domain/repositories/cv-analysis-prepara
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
 import { CVDocumentName } from "../../domain/value-objects/cv-document-name.value-object";
 import { CVDocumentType } from "../../domain/value-objects/cv-document-type.value-object";
+import { CVDocumentExtractedText } from "../../domain/value-objects/cv-document-extracted-text.value-object";
 import {
   mapJsonResumeToProfile,
   type JsonResumeMapperResult,
@@ -72,14 +73,14 @@ export class CreateJsonResumeCVDocumentUseCase {
       sourceTextHash: null,
       aiModel: null,
       profile,
-      extractedText: {
+      extractedText: CVDocumentExtractedText.fromPrimitives({
         textPython: null,
         textPdfjs: null,
         textNode: null,
         extractErrorPython: null,
         extractErrorPdfjs: null,
         extractErrorNode: null,
-      },
+      }),
       publicSettings: {
         enabled: false,
         publicId: null,

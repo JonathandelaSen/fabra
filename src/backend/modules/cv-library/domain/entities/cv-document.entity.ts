@@ -1,5 +1,7 @@
 import {
   AggregateRoot,
+  Counter,
+  LongText,
   Timestamp,
   UserId,
   type UserId as UserIdType,
@@ -17,23 +19,18 @@ import {
 } from "../value-objects/cv-document-type.value-object";
 import { CVDocumentId } from "../value-objects/cv-document-id.value-object";
 import { CVDocumentName } from "../value-objects/cv-document-name.value-object";
-
-export interface CVDocumentExtractedTextPrimitives {
-  textPython: string | null;
-  textPdfjs: string | null;
-  textNode: string | null;
-  extractErrorPython: string | null;
-  extractErrorPdfjs: string | null;
-  extractErrorNode: string | null;
-}
-
-export interface CVPublicSettingsPrimitives {
-  enabled: boolean;
-  feedbackEnabled?: boolean;
-  publicId: string | null;
-  slug: string | null;
-  publishedAt: string | null;
-}
+import {
+  CVDocumentExtractedText,
+  type CVDocumentExtractedTextPrimitives,
+} from "../value-objects/cv-document-extracted-text.value-object";
+import { CVProfileData } from "../value-objects/cv-profile-data.value-object";
+import {
+  CVPublicSettings,
+  type CVPublicSettingsPrimitives,
+} from "../value-objects/cv-public-settings.value-object";
+import { AIModelName } from "../value-objects/ai-model-name.value-object";
+import { ProfileSchemaVersion } from "../value-objects/profile-schema-version.value-object";
+import { SourceTextHash } from "../value-objects/source-text-hash.value-object";
 
 export interface CVDocumentPrimitives {
   id: string;
@@ -71,7 +68,7 @@ export interface CVDocumentCreateParams {
   sourceTextHash: string | null;
   aiModel: string | null;
   profile: unknown | null;
-  extractedText: CVDocumentExtractedTextPrimitives;
+  extractedText: CVDocumentExtractedText;
   publicSettings: {
     enabled: boolean;
     feedbackEnabled?: boolean;
@@ -88,19 +85,19 @@ export class CVDocument extends AggregateRoot {
     private readonly documentId: CVDocumentId,
     private readonly ownerId: UserIdType,
     private documentName: CVDocumentName,
-    private readonly documentFilename: string | null,
-    private readonly documentFileSize: number | null,
-    private readonly documentPdfStoragePath: string | null,
+    private readonly documentFilename: LongText | null,
+    private readonly documentFileSize: Counter | null,
+    private readonly documentPdfStoragePath: LongText | null,
     private readonly documentType: CVDocumentType,
-    private readonly documentSourceCvId: string | null,
-    private readonly documentTemplateId: string | null,
-    private documentTemplateLocale: string | null,
-    private readonly documentSchemaVersion: string | null,
-    private readonly documentSourceTextHash: string | null,
-    private documentAIModel: string | null,
-    private documentProfile: unknown | null,
-    private documentExtractedText: CVDocumentExtractedTextPrimitives,
-    private documentPublicSettings: CVPublicSettingsPrimitives,
+    private readonly documentSourceCvId: CVDocumentId | null,
+    private readonly documentTemplateId: LongText | null,
+    private documentTemplateLocale: LongText | null,
+    private readonly documentSchemaVersion: ProfileSchemaVersion | null,
+    private readonly documentSourceTextHash: SourceTextHash | null,
+    private documentAIModel: AIModelName | null,
+    private documentProfile: CVProfileData,
+    private documentExtractedText: CVDocumentExtractedText,
+    private documentPublicSettings: CVPublicSettings,
     private readonly documentCreatedAt: Timestamp,
     private documentUpdatedAt: Timestamp,
   ) {
@@ -112,19 +109,22 @@ export class CVDocument extends AggregateRoot {
       params.id,
       params.userId,
       params.name,
-      params.filename,
-      params.fileSize,
-      params.pdfStoragePath,
+      params.filename === null ? null : LongText.fromPrimitives(params.filename),
+      params.fileSize === null ? null : Counter.fromPrimitives(params.fileSize),
+      params.pdfStoragePath === null ? null : LongText.fromPrimitives(params.pdfStoragePath),
       params.type,
-      params.sourceCvId,
-      params.templateId,
-      params.templateLocale,
-      params.schemaVersion,
-      params.sourceTextHash,
-      params.aiModel,
-      params.profile,
+      params.sourceCvId === null ? null : CVDocumentId.fromPrimitives(params.sourceCvId),
+      params.templateId === null ? null : LongText.fromPrimitives(params.templateId),
+      params.templateLocale === null ? null : LongText.fromPrimitives(params.templateLocale),
+      params.schemaVersion === null ? null : ProfileSchemaVersion.fromPrimitives(params.schemaVersion),
+      params.sourceTextHash === null ? null : SourceTextHash.fromPrimitives(params.sourceTextHash),
+      params.aiModel === null ? null : AIModelName.fromPrimitives(params.aiModel),
+      CVProfileData.fromPrimitives(params.profile),
       params.extractedText,
-      { ...params.publicSettings, feedbackEnabled: params.publicSettings.feedbackEnabled ?? false },
+      CVPublicSettings.fromPrimitives({
+        ...params.publicSettings,
+        feedbackEnabled: params.publicSettings.feedbackEnabled ?? false,
+      }),
       params.createdAt,
       params.updatedAt,
     );
@@ -137,19 +137,22 @@ export class CVDocument extends AggregateRoot {
       CVDocumentId.fromPrimitives(primitives.id),
       UserId.fromPrimitives(primitives.userId),
       CVDocumentName.fromPrimitives(primitives.name),
-      primitives.filename,
-      primitives.fileSize,
-      primitives.pdfStoragePath,
+      primitives.filename === null ? null : LongText.fromPrimitives(primitives.filename),
+      primitives.fileSize === null ? null : Counter.fromPrimitives(primitives.fileSize),
+      primitives.pdfStoragePath === null ? null : LongText.fromPrimitives(primitives.pdfStoragePath),
       CVDocumentType.fromPrimitives(primitives.type),
-      primitives.sourceCvId,
-      primitives.templateId,
-      primitives.templateLocale,
-      primitives.schemaVersion,
-      primitives.sourceTextHash,
-      primitives.aiModel,
-      primitives.profile,
-      primitives.extractedText,
-      { ...primitives.publicSettings, feedbackEnabled: primitives.publicSettings.feedbackEnabled ?? false },
+      primitives.sourceCvId === null ? null : CVDocumentId.fromPrimitives(primitives.sourceCvId),
+      primitives.templateId === null ? null : LongText.fromPrimitives(primitives.templateId),
+      primitives.templateLocale === null ? null : LongText.fromPrimitives(primitives.templateLocale),
+      primitives.schemaVersion === null ? null : ProfileSchemaVersion.fromPrimitives(primitives.schemaVersion),
+      primitives.sourceTextHash === null ? null : SourceTextHash.fromPrimitives(primitives.sourceTextHash),
+      primitives.aiModel === null ? null : AIModelName.fromPrimitives(primitives.aiModel),
+      CVProfileData.fromPrimitives(primitives.profile),
+      CVDocumentExtractedText.fromPrimitives(primitives.extractedText),
+      CVPublicSettings.fromPrimitives({
+        ...primitives.publicSettings,
+        feedbackEnabled: primitives.publicSettings.feedbackEnabled ?? false,
+      }),
       Timestamp.fromPrimitives(primitives.createdAt),
       Timestamp.fromPrimitives(primitives.updatedAt),
     );
@@ -171,8 +174,12 @@ export class CVDocument extends AggregateRoot {
     return this.documentType.toPrimitives();
   }
 
+  get typeValue(): CVDocumentType {
+    return this.documentType;
+  }
+
   get pdfStoragePath(): string | null {
-    return this.documentPdfStoragePath;
+    return this.documentPdfStoragePath?.toPrimitives() ?? null;
   }
 
   rename(name: CVDocumentName, updatedAt: Timestamp): void {
@@ -189,17 +196,21 @@ export class CVDocument extends AggregateRoot {
     updatedAt: Timestamp;
   }): void {
     if (input.name) this.documentName = input.name;
-    if (input.profile !== undefined) this.documentProfile = input.profile;
-    if (input.aiModel !== undefined) this.documentAIModel = input.aiModel;
+    if (input.profile !== undefined) {
+      this.documentProfile = CVProfileData.fromPrimitives(input.profile);
+    }
+    if (input.aiModel !== undefined) {
+      this.documentAIModel = AIModelName.fromPrimitives(input.aiModel);
+    }
     if (input.templateLocale !== undefined) {
-      this.documentTemplateLocale = input.templateLocale;
+      this.documentTemplateLocale = LongText.fromPrimitives(input.templateLocale);
     }
     this.documentUpdatedAt = input.updatedAt;
     this.recordDomainEvent(new CVDocumentProfileUpdatedEvent(this.id));
   }
 
   updateExtractedText(
-    extractedText: CVDocumentExtractedTextPrimitives,
+    extractedText: CVDocumentExtractedText,
     updatedAt: Timestamp,
   ): void {
     this.documentExtractedText = extractedText;
@@ -214,13 +225,16 @@ export class CVDocument extends AggregateRoot {
     slug: string | null;
     publishedAt: Timestamp | null;
   }): void {
-    this.documentPublicSettings = {
+    this.documentPublicSettings = CVPublicSettings.fromPrimitives({
       enabled: settings.enabled,
-      feedbackEnabled: settings.feedbackEnabled ?? this.documentPublicSettings.feedbackEnabled ?? false,
+      feedbackEnabled:
+        settings.feedbackEnabled ??
+        this.documentPublicSettings.toPrimitives().feedbackEnabled ??
+        false,
       publicId: settings.publicId,
       slug: settings.slug,
       publishedAt: settings.publishedAt?.toPrimitives() ?? null,
-    };
+    });
     if (settings.enabled) {
       this.recordDomainEvent(new CVDocumentPublishedEvent(this.id, settings.slug));
     } else {
@@ -234,22 +248,22 @@ export class CVDocument extends AggregateRoot {
 
   toPrimitives(): CVDocumentPrimitives {
     return {
-      id: this.id,
-      userId: this.userId,
+      id: this.documentId.toPrimitives(),
+      userId: this.ownerId.toPrimitives(),
       name: this.documentName.toPrimitives(),
-      filename: this.documentFilename,
-      fileSize: this.documentFileSize,
-      pdfStoragePath: this.documentPdfStoragePath,
+      filename: this.documentFilename?.toPrimitives() ?? null,
+      fileSize: this.documentFileSize?.toPrimitives() ?? null,
+      pdfStoragePath: this.documentPdfStoragePath?.toPrimitives() ?? null,
       type: this.documentType.toPrimitives(),
-      sourceCvId: this.documentSourceCvId,
-      templateId: this.documentTemplateId,
-      templateLocale: this.documentTemplateLocale,
-      schemaVersion: this.documentSchemaVersion,
-      sourceTextHash: this.documentSourceTextHash,
-      aiModel: this.documentAIModel,
-      profile: this.documentProfile,
-      extractedText: this.documentExtractedText,
-      publicSettings: this.documentPublicSettings,
+      sourceCvId: this.documentSourceCvId?.toPrimitives() ?? null,
+      templateId: this.documentTemplateId?.toPrimitives() ?? null,
+      templateLocale: this.documentTemplateLocale?.toPrimitives() ?? null,
+      schemaVersion: this.documentSchemaVersion?.toPrimitives() ?? null,
+      sourceTextHash: this.documentSourceTextHash?.toPrimitives() ?? null,
+      aiModel: this.documentAIModel?.toPrimitives() ?? null,
+      profile: this.documentProfile.toPrimitives(),
+      extractedText: this.documentExtractedText.toPrimitives(),
+      publicSettings: this.documentPublicSettings.toPrimitives(),
       createdAt: this.documentCreatedAt.toPrimitives(),
       updatedAt: this.documentUpdatedAt.toPrimitives(),
     };

@@ -12,9 +12,9 @@ import {
 import { CV_PDFS_BUCKET } from "../../domain/services/cv-storage";
 import type {
   CVDocument,
-  CVDocumentExtractedTextPrimitives,
   CVDocumentPrimitives,
 } from "../../domain/entities/cv-document.entity";
+import type { CVDocumentExtractedTextPrimitives } from "../../domain/value-objects/cv-document-extracted-text.value-object";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import type {
   CVPdfStorage,
@@ -58,9 +58,7 @@ export class PrepareCVAnalysisInputUseCase {
     );
     if (!cv) return null;
 
-    const cvType = cv.toPrimitives().type;
-
-    if (cvType === "json_resume") {
+    if (cv.typeValue.isJsonResume()) {
       return this.prepareJsonResumeResult(cv, input);
     }
 
@@ -68,7 +66,7 @@ export class PrepareCVAnalysisInputUseCase {
 
     const cvPrimitives = cv.toPrimitives();
     const templatePdfExtraction =
-      cvPrimitives.type === "template"
+      cv.typeValue.isTemplate()
         ? await this.extractTemplateCVPdf({ ...input, cv: cvPrimitives })
         : null;
     const analysisExtraction =
@@ -286,7 +284,7 @@ export class PrepareCVAnalysisInputUseCase {
       );
 
       return {
-        extracted,
+        extracted: extracted.toPrimitives(),
         filename,
         fileSize: templatePdfBuffer.length,
       };
