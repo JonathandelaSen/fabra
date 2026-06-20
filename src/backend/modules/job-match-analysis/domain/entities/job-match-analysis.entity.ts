@@ -1,5 +1,7 @@
 import {
   AggregateRoot,
+  LongText,
+  StringList,
   Timestamp,
   UserId,
   type UserId as UserIdType,
@@ -7,16 +9,17 @@ import {
 import { JobMatchAnalysisCreatedEvent } from "../events/job-match-analysis-created.event";
 import { JobMatchAnalysisJobUrlUpdatedEvent } from "../events/job-match-analysis-job-url-updated.event";
 import { JobMatchAnalysisScoredEvent } from "../events/job-match-analysis-scored.event";
+import {
+  JobMatchAnalysisExtractedText,
+  type JobMatchAnalysisExtractedTextPrimitives,
+} from "../value-objects/job-match-analysis-extracted-text.value-object";
 import { JobMatchAnalysisId } from "../value-objects/job-match-analysis-id.value-object";
+import { JobMatchAnalysisOptionalCounter } from "../value-objects/job-match-analysis-optional-counter.value-object";
+import { JobMatchAnalysisOptionalText } from "../value-objects/job-match-analysis-optional-text.value-object";
+import { JobMatchAnalysisOptionalTimestamp } from "../value-objects/job-match-analysis-optional-timestamp.value-object";
+import { JobMatchAnalysisSnapshot } from "../value-objects/job-match-analysis-snapshot.value-object";
 
-export interface JobMatchAnalysisExtractedTextPrimitives {
-  textPython: string | null;
-  textPdfjs: string | null;
-  textNode: string | null;
-  extractErrorPython: string | null;
-  extractErrorPdfjs: string | null;
-  extractErrorNode: string | null;
-}
+export type { JobMatchAnalysisExtractedTextPrimitives };
 
 export interface JobMatchAnalysisPrimitives {
   id: string;
@@ -76,28 +79,28 @@ export class JobMatchAnalysis extends AggregateRoot {
   private constructor(
     private readonly analysisId: JobMatchAnalysisId,
     private readonly ownerId: UserIdType,
-    private readonly analysisCvDocumentId: string | null,
-    private readonly analysisCvStructuredProfileId: string | null,
-    private readonly analysisJobOpportunityId: string | null,
-    private readonly analysisTitle: string,
-    private readonly analysisFilename: string,
-    private readonly analysisFileSize: number | null,
-    private readonly analysisPdfStoragePath: string | null,
-    private readonly analysisExtractedText: JobMatchAnalysisExtractedTextPrimitives,
-    private analysisAIModel: string | null,
-    private analysisScore: number | null,
-    private analysisFeedback: string | null,
-    private analysisAIKeywords: string[],
-    private analysisImprovements: string[],
-    private analysisJobSnapshot: unknown | null,
-    private analysisJobKeywords: string[],
-    private analysisCVKeywords: string[],
-    private analysisMatchingKeywords: string[],
-    private analysisMissingKeywords: string[],
-    private analysisAnalyzedAt: string | null,
-    private readonly analysisLegacyAnalysisId: string | null,
+    private readonly analysisCvDocumentId: JobMatchAnalysisOptionalText,
+    private readonly analysisCvStructuredProfileId: JobMatchAnalysisOptionalText,
+    private readonly analysisJobOpportunityId: JobMatchAnalysisOptionalText,
+    private readonly analysisTitle: LongText,
+    private readonly analysisFilename: LongText,
+    private readonly analysisFileSize: JobMatchAnalysisOptionalCounter,
+    private readonly analysisPdfStoragePath: JobMatchAnalysisOptionalText,
+    private readonly analysisExtractedText: JobMatchAnalysisExtractedText,
+    private analysisAIModel: JobMatchAnalysisOptionalText,
+    private analysisScore: JobMatchAnalysisOptionalCounter,
+    private analysisFeedback: JobMatchAnalysisOptionalText,
+    private analysisAIKeywords: StringList,
+    private analysisImprovements: StringList,
+    private analysisJobSnapshot: JobMatchAnalysisSnapshot,
+    private analysisJobKeywords: StringList,
+    private analysisCVKeywords: StringList,
+    private analysisMatchingKeywords: StringList,
+    private analysisMissingKeywords: StringList,
+    private analysisAnalyzedAt: JobMatchAnalysisOptionalTimestamp,
+    private readonly analysisLegacyAnalysisId: JobMatchAnalysisOptionalText,
     private readonly analysisCreatedAt: Timestamp,
-    private analysisUpdatedAt: Timestamp
+    private analysisUpdatedAt: Timestamp,
   ) {
     super();
   }
@@ -106,59 +109,63 @@ export class JobMatchAnalysis extends AggregateRoot {
     const analysis = new JobMatchAnalysis(
       params.id,
       params.userId,
-      params.cvDocumentId,
-      params.cvStructuredProfileId,
-      params.jobOpportunityId,
-      params.title,
-      params.filename,
-      params.fileSize,
-      params.pdfStoragePath,
-      params.extractedText,
-      params.aiModel,
-      params.score,
-      params.feedback,
-      params.aiKeywords,
-      params.improvements,
-      params.jobSnapshot,
-      params.jobKeywords,
-      params.cvKeywords,
-      params.matchingKeywords,
-      params.missingKeywords,
-      params.analyzedAt,
-      params.legacyAnalysisId,
+      JobMatchAnalysisOptionalText.fromPrimitives(params.cvDocumentId),
+      JobMatchAnalysisOptionalText.fromPrimitives(params.cvStructuredProfileId),
+      JobMatchAnalysisOptionalText.fromPrimitives(params.jobOpportunityId),
+      LongText.fromPrimitives(params.title),
+      LongText.fromPrimitives(params.filename),
+      JobMatchAnalysisOptionalCounter.fromPrimitives(params.fileSize),
+      JobMatchAnalysisOptionalText.fromPrimitives(params.pdfStoragePath),
+      JobMatchAnalysisExtractedText.fromPrimitives(params.extractedText),
+      JobMatchAnalysisOptionalText.fromPrimitives(params.aiModel),
+      JobMatchAnalysisOptionalCounter.fromPrimitives(params.score),
+      JobMatchAnalysisOptionalText.fromPrimitives(params.feedback),
+      StringList.fromPrimitives(params.aiKeywords),
+      StringList.fromPrimitives(params.improvements),
+      JobMatchAnalysisSnapshot.fromPrimitives(params.jobSnapshot),
+      StringList.fromPrimitives(params.jobKeywords),
+      StringList.fromPrimitives(params.cvKeywords),
+      StringList.fromPrimitives(params.matchingKeywords),
+      StringList.fromPrimitives(params.missingKeywords),
+      JobMatchAnalysisOptionalTimestamp.fromPrimitives(params.analyzedAt),
+      JobMatchAnalysisOptionalText.fromPrimitives(params.legacyAnalysisId),
       params.createdAt,
-      params.updatedAt
+      params.updatedAt,
     );
     analysis.recordDomainEvent(new JobMatchAnalysisCreatedEvent(analysis.id));
     return analysis;
   }
 
-  static fromPrimitives(primitives: JobMatchAnalysisPrimitives): JobMatchAnalysis {
+  static fromPrimitives(
+    primitives: JobMatchAnalysisPrimitives,
+  ): JobMatchAnalysis {
     return new JobMatchAnalysis(
       JobMatchAnalysisId.fromPrimitives(primitives.id),
       UserId.fromPrimitives(primitives.userId),
-      primitives.cvDocumentId,
-      primitives.cvStructuredProfileId,
-      primitives.jobOpportunityId,
-      primitives.title,
-      primitives.filename,
-      primitives.fileSize,
-      primitives.pdfStoragePath,
-      primitives.extractedText,
-      primitives.aiModel,
-      primitives.score,
-      primitives.feedback,
-      primitives.aiKeywords,
-      primitives.improvements,
-      primitives.jobSnapshot,
-      primitives.jobKeywords,
-      primitives.cvKeywords,
-      primitives.matchingKeywords,
-      primitives.missingKeywords,
-      primitives.analyzedAt,
-      primitives.legacyAnalysisId,
+      JobMatchAnalysisOptionalText.fromPrimitives(primitives.cvDocumentId),
+      JobMatchAnalysisOptionalText.fromPrimitives(
+        primitives.cvStructuredProfileId,
+      ),
+      JobMatchAnalysisOptionalText.fromPrimitives(primitives.jobOpportunityId),
+      LongText.fromPrimitives(primitives.title),
+      LongText.fromPrimitives(primitives.filename),
+      JobMatchAnalysisOptionalCounter.fromPrimitives(primitives.fileSize),
+      JobMatchAnalysisOptionalText.fromPrimitives(primitives.pdfStoragePath),
+      JobMatchAnalysisExtractedText.fromPrimitives(primitives.extractedText),
+      JobMatchAnalysisOptionalText.fromPrimitives(primitives.aiModel),
+      JobMatchAnalysisOptionalCounter.fromPrimitives(primitives.score),
+      JobMatchAnalysisOptionalText.fromPrimitives(primitives.feedback),
+      StringList.fromPrimitives(primitives.aiKeywords),
+      StringList.fromPrimitives(primitives.improvements),
+      JobMatchAnalysisSnapshot.fromPrimitives(primitives.jobSnapshot),
+      StringList.fromPrimitives(primitives.jobKeywords),
+      StringList.fromPrimitives(primitives.cvKeywords),
+      StringList.fromPrimitives(primitives.matchingKeywords),
+      StringList.fromPrimitives(primitives.missingKeywords),
+      JobMatchAnalysisOptionalTimestamp.fromPrimitives(primitives.analyzedAt),
+      JobMatchAnalysisOptionalText.fromPrimitives(primitives.legacyAnalysisId),
       Timestamp.fromPrimitives(primitives.createdAt),
-      Timestamp.fromPrimitives(primitives.updatedAt)
+      Timestamp.fromPrimitives(primitives.updatedAt),
     );
   }
 
@@ -180,55 +187,69 @@ export class JobMatchAnalysis extends AggregateRoot {
     analyzedAt: string;
     updatedAt: string;
   }): void {
-    this.analysisAIModel = input.aiModel;
-    this.analysisScore = input.score;
-    this.analysisFeedback = input.feedback;
-    this.analysisAIKeywords = input.aiKeywords;
-    this.analysisImprovements = input.improvements;
-    this.analysisJobSnapshot = input.jobSnapshot;
-    this.analysisJobKeywords = input.jobKeywords;
-    this.analysisCVKeywords = input.cvKeywords;
-    this.analysisMatchingKeywords = input.matchingKeywords;
-    this.analysisMissingKeywords = input.missingKeywords;
-    this.analysisAnalyzedAt = input.analyzedAt;
+    this.analysisAIModel = JobMatchAnalysisOptionalText.fromPrimitives(
+      input.aiModel,
+    );
+    this.analysisScore = JobMatchAnalysisOptionalCounter.fromPrimitives(
+      input.score,
+    );
+    this.analysisFeedback = JobMatchAnalysisOptionalText.fromPrimitives(
+      input.feedback,
+    );
+    this.analysisAIKeywords = StringList.fromPrimitives(input.aiKeywords);
+    this.analysisImprovements = StringList.fromPrimitives(input.improvements);
+    this.analysisJobSnapshot = JobMatchAnalysisSnapshot.fromPrimitives(
+      input.jobSnapshot,
+    );
+    this.analysisJobKeywords = StringList.fromPrimitives(input.jobKeywords);
+    this.analysisCVKeywords = StringList.fromPrimitives(input.cvKeywords);
+    this.analysisMatchingKeywords = StringList.fromPrimitives(
+      input.matchingKeywords,
+    );
+    this.analysisMissingKeywords = StringList.fromPrimitives(
+      input.missingKeywords,
+    );
+    this.analysisAnalyzedAt = JobMatchAnalysisOptionalTimestamp.fromPrimitives(
+      input.analyzedAt,
+    );
     this.analysisUpdatedAt = Timestamp.fromPrimitives(input.updatedAt);
-    this.recordDomainEvent(new JobMatchAnalysisScoredEvent(this.id, input.score, input.aiModel));
+    this.recordDomainEvent(
+      new JobMatchAnalysisScoredEvent(this.id, input.score, input.aiModel),
+    );
   }
 
   updateJobUrl(jobUrl: string | null, updatedAt: string): void {
-    const snapshot =
-      this.analysisJobSnapshot && typeof this.analysisJobSnapshot === "object"
-        ? { ...(this.analysisJobSnapshot as Record<string, unknown>) }
-        : {};
-    this.analysisJobSnapshot = { ...snapshot, url: jobUrl };
+    this.analysisJobSnapshot = this.analysisJobSnapshot.withJobUrl(jobUrl);
     this.analysisUpdatedAt = Timestamp.fromPrimitives(updatedAt);
-    this.recordDomainEvent(new JobMatchAnalysisJobUrlUpdatedEvent(this.id, jobUrl));
+    this.recordDomainEvent(
+      new JobMatchAnalysisJobUrlUpdatedEvent(this.id, jobUrl),
+    );
   }
 
   toPrimitives(): JobMatchAnalysisPrimitives {
     return {
-      id: this.id,
+      id: this.analysisId.toPrimitives(),
       userId: this.ownerId.toPrimitives(),
-      cvDocumentId: this.analysisCvDocumentId,
-      cvStructuredProfileId: this.analysisCvStructuredProfileId,
-      jobOpportunityId: this.analysisJobOpportunityId,
-      title: this.analysisTitle,
-      filename: this.analysisFilename,
-      fileSize: this.analysisFileSize,
-      pdfStoragePath: this.analysisPdfStoragePath,
-      extractedText: this.analysisExtractedText,
-      aiModel: this.analysisAIModel,
-      score: this.analysisScore,
-      feedback: this.analysisFeedback,
-      aiKeywords: this.analysisAIKeywords,
-      improvements: this.analysisImprovements,
-      jobSnapshot: this.analysisJobSnapshot,
-      jobKeywords: this.analysisJobKeywords,
-      cvKeywords: this.analysisCVKeywords,
-      matchingKeywords: this.analysisMatchingKeywords,
-      missingKeywords: this.analysisMissingKeywords,
-      analyzedAt: this.analysisAnalyzedAt,
-      legacyAnalysisId: this.analysisLegacyAnalysisId,
+      cvDocumentId: this.analysisCvDocumentId.toPrimitives(),
+      cvStructuredProfileId: this.analysisCvStructuredProfileId.toPrimitives(),
+      jobOpportunityId: this.analysisJobOpportunityId.toPrimitives(),
+      title: this.analysisTitle.toPrimitives(),
+      filename: this.analysisFilename.toPrimitives(),
+      fileSize: this.analysisFileSize.toPrimitives(),
+      pdfStoragePath: this.analysisPdfStoragePath.toPrimitives(),
+      extractedText: this.analysisExtractedText.toPrimitives(),
+      aiModel: this.analysisAIModel.toPrimitives(),
+      score: this.analysisScore.toPrimitives(),
+      feedback: this.analysisFeedback.toPrimitives(),
+      aiKeywords: this.analysisAIKeywords.toPrimitives(),
+      improvements: this.analysisImprovements.toPrimitives(),
+      jobSnapshot: this.analysisJobSnapshot.toPrimitives(),
+      jobKeywords: this.analysisJobKeywords.toPrimitives(),
+      cvKeywords: this.analysisCVKeywords.toPrimitives(),
+      matchingKeywords: this.analysisMatchingKeywords.toPrimitives(),
+      missingKeywords: this.analysisMissingKeywords.toPrimitives(),
+      analyzedAt: this.analysisAnalyzedAt.toPrimitives(),
+      legacyAnalysisId: this.analysisLegacyAnalysisId.toPrimitives(),
       createdAt: this.analysisCreatedAt.toPrimitives(),
       updatedAt: this.analysisUpdatedAt.toPrimitives(),
     };
