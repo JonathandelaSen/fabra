@@ -16,7 +16,7 @@ import { GeminiJobMatchScoringAIServiceFactory } from "./infrastructure/services
 import { MockJobMatchScoringAIServiceFactory } from "./infrastructure/services/mock-job-match-scoring-ai.service";
 import { OpenAIJobMatchScoringAIServiceFactory } from "./infrastructure/services/openai-job-match-scoring-ai.service";
 import { ProviderJobMatchScoringAIServiceFactory } from "./infrastructure/services/provider-job-match-scoring-ai-service.factory";
-import { buildJobMatchScoringCopyPastePrompt } from "./infrastructure/services/job-match-scoring-prompts";
+import { buildJobMatchScoringCopyPastePrompt } from "./domain/services/job-match-scoring-prompts";
 import { SupabaseJobMatchAnalysisRepository } from "./infrastructure/repositories/supabase-job-match-analysis.repository";
 
 const repo = new SupabaseJobMatchAnalysisRepository();

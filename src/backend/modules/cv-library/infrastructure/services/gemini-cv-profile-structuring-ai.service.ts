@@ -9,7 +9,7 @@ import type {
   CVProfileStructuringAIService,
   StructuredCVProfileResult,
 } from "../../domain/repositories/cv-profile-ai.service";
-import { SYSTEM_PROMPT } from "./cv-profile-structuring-prompts";
+import { SYSTEM_PROMPT } from "../../domain/services/cv-profile-structuring-prompts";
 
 class GeminiCVProfileStructuringAIService
   implements CVProfileStructuringAIService

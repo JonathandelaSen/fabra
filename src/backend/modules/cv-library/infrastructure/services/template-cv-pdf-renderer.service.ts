@@ -1,4 +1,4 @@
-import { renderTemplatePDF } from "./cv-template-pdf";
+import { renderTemplatePDF } from "../renderers/cv-template-pdf";
 import type { CVTemplatePdfRenderer } from "../../domain/repositories/cv-analysis-preparation-services";
 
 export class TemplateCVPdfRenderer implements CVTemplatePdfRenderer {

@@ -4,7 +4,7 @@ Integrated runs persist the prompt input and full AI interaction lifecycle throu
 
 ## Source files
 
-- Prompt builders and system instructions: `src/modules/work-journal/infrastructure/services/work-journal-prompts.ts`
+- Prompt builders and system instructions: `src/backend/modules/work-journal/domain/services/work-journal-prompts.ts`
 - Model-call controller: `src/modules/work-journal/infrastructure/services/gemini-journal-ai.service.ts`
 - Frontend clipboard prompt copy: `src/features/work-journal/api/work-journal-prompt.ts`
 - Copy Paste text UI: `src/features/work-journal/components/work-journal-copy-paste-panel.tsx`

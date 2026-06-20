@@ -1,4 +1,4 @@
-import type { ReviewSelfAssessmentAIInput } from "../../domain/repositories/review-self-assessment-ai.service";
+import type { ReviewSelfAssessmentAIInput } from "../repositories/review-self-assessment-ai.service";
 
 const REVIEW_TYPE_LABEL: Record<string, string> = {
   performance_review: "performance review",

@@ -2,16 +2,14 @@ import {
   CV_EDITOR_COPY_PASTE_SCHEMA_VERSION,
   CV_EDITOR_COPY_PASTE_WORKFLOW_ID,
 } from "../../domain/services/cv-editor-copy-paste-workflow";
-import { SYSTEM_PROMPT } from "./cv-profile-editing-prompts";
-import type { StandardCVProfile } from "../../domain/cv-profile";
+import { SYSTEM_PROMPT } from "../../domain/services/cv-profile-editing-prompts";
+import { CopyPastePreparation } from "@/backend/modules/shared/domain/value-objects/copy-paste-preparation.value-object";
+import type {
+  BuildCVProfileEditingCopyPastePromptInput,
+  CVProfileEditingCopyPastePromptServicePort,
+} from "../../domain/services/cv-profile-editing-copy-paste-prompt-service";
 
-export function buildCVProfileEditingCopyPastePrompt(input: {
-  profile: StandardCVProfile;
-  instruction: string;
-  templateId?: string | null;
-  locale?: string | null;
-  recommendations?: string[];
-}): string {
+function buildPrompt(input: BuildCVProfileEditingCopyPastePromptInput): string {
   const recommendations = input.recommendations?.length
     ? `\nRelevant recommendations from previous analysis:\n${input.recommendations
         .map((item) => `- ${item}`)
@@ -44,4 +42,21 @@ ${input.instruction}
 
 Structured CV profile JSON:
 ${JSON.stringify(input.profile)}`;
+}
+
+export class CVProfileEditingCopyPastePromptService
+  implements CVProfileEditingCopyPastePromptServicePort
+{
+  prepare(input: BuildCVProfileEditingCopyPastePromptInput): CopyPastePreparation {
+    return CopyPastePreparation.fromPrimitives({
+      workflowId: CV_EDITOR_COPY_PASTE_WORKFLOW_ID,
+      schemaVersion: CV_EDITOR_COPY_PASTE_SCHEMA_VERSION,
+      prompt: buildPrompt(input),
+      expectedResponse: { kind: "json", envelope: true },
+      privacyNotice:
+        "This prompt includes your full CV profile data. Paste it only into external tools you trust.",
+      interactionId: null,
+      attemptId: null,
+    });
+  }
 }

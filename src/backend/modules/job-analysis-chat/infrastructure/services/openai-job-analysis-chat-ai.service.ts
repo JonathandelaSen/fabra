@@ -6,7 +6,7 @@ import {
   OFFER_CHAT_SYSTEM_PROMPT,
   buildOfferChatPrompt,
   type OfferChatHistoryMessage,
-} from "./job-analysis-chat-prompts";
+} from "../../domain/services/job-analysis-chat-prompts";
 import type {
   JobAnalysisChatAIInput,
   JobAnalysisChatAIService,

@@ -3,7 +3,7 @@
 Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
 
 ## Source
-- Prompt source file: `src/modules/cv-library/infrastructure/services/cv-profile-structuring-prompts.ts`
+- Prompt source file: `src/backend/modules/cv-library/domain/services/cv-profile-structuring-prompts.ts`
 - System prompt constant: `SYSTEM_PROMPT`
 - Copy Paste prompt builder: `buildCVProfileStructuringCopyPastePrompt`
 - Use case: `StructureCVProfileWithAIUseCase` in `src/modules/cv-library/application/use-cases/structure-cv-profile-with-ai.use-case.ts`

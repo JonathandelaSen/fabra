@@ -6,7 +6,7 @@ Generates a self-assessment document for a performance review or promotion case,
 
 ## Source
 
-- Integrated prompt source file: `src/modules/performance-review/infrastructure/services/review-self-assessment-prompts.ts`
+- Integrated prompt source file: `src/backend/modules/performance-review/domain/services/review-self-assessment-prompts.ts`
   - System prompt builder: `buildSelfAssessmentSystemPrompt`
   - User prompt builder: `buildSelfAssessmentUserPrompt`
 - Copy Paste prompt builder: `src/modules/performance-review/application/services/review-self-assessment-copy-paste-prompts.ts` (`buildSelfAssessmentCopyPastePrompt`)

@@ -7,7 +7,7 @@ import {
   buildFeedbackNotesFinalPrompt,
   FEEDBACK_NOTES_FINAL_SYSTEM_PROMPT,
 } from "../../domain/services/feedback-notes-prompts";
-import { parseFinalFeedbackAIResponse } from "./feedback-ai-response-parser";
+import { parseFinalFeedbackAIResponse } from "../../domain/services/feedback-ai-response-parser";
 
 export class OllamaFeedbackAIService implements FeedbackAIService {
   constructor(private readonly config: { baseUrl?: string; model: string }) {}

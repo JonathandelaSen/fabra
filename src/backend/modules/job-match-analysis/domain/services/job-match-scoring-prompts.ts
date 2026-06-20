@@ -1,7 +1,7 @@
 import {
   JOB_MATCH_SCORE_COPY_PASTE_SCHEMA_VERSION,
   JOB_MATCH_SCORE_COPY_PASTE_WORKFLOW_ID,
-} from "../../domain/value-objects/job-match-copy-paste-constants";
+} from "../value-objects/job-match-copy-paste-constants";
 
 const RESPONSE_LANGUAGE_NAMES: Record<string, string> = {
   en: "English",

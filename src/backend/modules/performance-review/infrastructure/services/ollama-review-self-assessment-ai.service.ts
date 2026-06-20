@@ -6,7 +6,7 @@ import type {
 import {
   buildSelfAssessmentSystemPrompt,
   buildSelfAssessmentUserPrompt,
-} from "./review-self-assessment-prompts";
+} from "../../domain/services/review-self-assessment-prompts";
 
 export class OllamaReviewSelfAssessmentAIService
   implements ReviewSelfAssessmentAIService

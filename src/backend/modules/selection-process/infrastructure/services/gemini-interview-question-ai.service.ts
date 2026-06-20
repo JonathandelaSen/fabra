@@ -8,7 +8,7 @@ import type {
 import {
   INTERVIEW_QUESTION_SYSTEM_PROMPT,
   buildInterviewQuestionPrompt,
-} from "./interview-question-prompts";
+} from "../../domain/services/interview-question-prompts";
 
 function parseInterviewQuestionAIResponse(rawText: string): string {
   const parsed = JSON.parse(rawText || "{}") as Record<string, unknown>;

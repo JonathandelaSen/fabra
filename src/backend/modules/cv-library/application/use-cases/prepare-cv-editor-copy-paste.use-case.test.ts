@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { CopyPastePreparation } from "@/backend/modules/shared";
 import { PrepareCVEditorCopyPasteUseCase } from "./prepare-cv-editor-copy-paste.use-case";
 
 const mockDocument = {
@@ -24,12 +25,24 @@ const mockDocumentRepo = {
   delete: vi.fn(),
 };
 
-const mockBuildPrompt = vi.fn().mockReturnValue("generated-prompt");
+const mockPromptService = {
+  prepare: vi.fn().mockReturnValue(
+    CopyPastePreparation.fromPrimitives({
+      workflowId: "cv_editor.apply_instruction",
+      schemaVersion: "1",
+      prompt: "generated-prompt",
+      expectedResponse: { kind: "json", envelope: true },
+      privacyNotice: "privacy",
+      interactionId: null,
+      attemptId: null,
+    }),
+  ),
+};
 
 function createUseCase() {
   return new PrepareCVEditorCopyPasteUseCase({
     documentRepo: mockDocumentRepo as never,
-    buildPrompt: mockBuildPrompt,
+    promptService: mockPromptService,
   });
 }
 
@@ -47,7 +60,7 @@ describe("PrepareCVEditorCopyPasteUseCase", () => {
     expect(result!.schemaVersion).toBe("1");
     expect(result!.prompt).toBe("generated-prompt");
     expect(result!.expectedResponse).toEqual({ kind: "json", envelope: true });
-    expect(mockBuildPrompt).toHaveBeenCalledWith(
+    expect(mockPromptService.prepare).toHaveBeenCalledWith(
       expect.objectContaining({
         instruction: "Make it more executive",
         templateId: "compact",

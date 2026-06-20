@@ -1,4 +1,4 @@
-import type { DraftEntryInput } from "../../domain/repositories/journal-ai-service.repository";
+import type { DraftEntryInput } from "../repositories/journal-ai-service.repository";
 
 export const WORK_JOURNAL_ENTRY_SYSTEM_PROMPT = `
 You help users keep a private work journal.

@@ -1,7 +1,7 @@
 # CV Analysis
 
 ## Source
-- Prompt source file: `src/modules/cv-analysis/infrastructure/services/cv-scoring-prompts.ts`
+- Prompt source file: `src/backend/modules/cv-analysis/domain/services/cv-scoring-prompts.ts`
 - Integrated prompt builder: `buildGeneralScoringPrompt`
 - Copy Paste prompt builder: `buildCVScoringCopyPastePrompt`
 - Model controller: `src/modules/cv-analysis/infrastructure/services/gemini-cv-scoring-ai.service.ts`
@@ -13,7 +13,7 @@
 
 ## Current Prompt
 
-The prompt frames the model as an elite recruiter (Big Tech technical recruiting, executive search, ATS implementation, 50,000+ CVs screened) and evaluates the CV against a weighted expert rubric. See `buildGeneralScoringPrompt` in `src/modules/cv-analysis/infrastructure/services/cv-scoring-prompts.ts` for the full literal text.
+The prompt frames the model as an elite recruiter (Big Tech technical recruiting, executive search, ATS implementation, 50,000+ CVs screened) and evaluates the CV against a weighted expert rubric. See `buildGeneralScoringPrompt` in `src/backend/modules/cv-analysis/domain/services/cv-scoring-prompts.ts` for the full literal text.
 
 Rubric dimensions and weights:
 

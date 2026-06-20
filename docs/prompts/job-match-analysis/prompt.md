@@ -3,7 +3,7 @@
 Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
 
 ## Source
-- Prompt source file: `src/modules/job-match-analysis/infrastructure/services/job-match-scoring-prompts.ts`
+- Prompt source file: `src/backend/modules/job-match-analysis/domain/services/job-match-scoring-prompts.ts`
 - Integrated prompt builder: `buildJobMatchScoringPrompt`
 - Copy Paste prompt builder: `buildJobMatchScoringCopyPastePrompt`
 - Model controller: `src/modules/job-match-analysis/infrastructure/services/gemini-job-match-scoring-ai.service.ts`
@@ -15,7 +15,7 @@ Integrated runs persist the prompt input and full AI interaction lifecycle throu
 
 ## Current Prompt
 
-The prompt frames the model as an elite technical recruiter and hiring-committee screener (agency search, in-house Big Tech recruiting, ATS keyword-matching systems, 50,000+ CVs screened against specs) and structures the analysis in three steps. See `buildJobMatchScoringPrompt` in `src/modules/job-match-analysis/infrastructure/services/job-match-scoring-prompts.ts` for the full literal text.
+The prompt frames the model as an elite technical recruiter and hiring-committee screener (agency search, in-house Big Tech recruiting, ATS keyword-matching systems, 50,000+ CVs screened against specs) and structures the analysis in three steps. See `buildJobMatchScoringPrompt` in `src/backend/modules/job-match-analysis/domain/services/job-match-scoring-prompts.ts` for the full literal text.
 
 **Step 1 — Job-posting deconstruction (intake briefing):** separate must-have requirements (explicit "required", years, technologies, certifications, languages, work authorization, location constraints) from nice-to-haves; infer the role's real seniority from scope rather than title; extract structured job data faithfully (never inventing salary, holidays, company, or benefits); surface hidden signals (on-call, travel, equity-heavy comp, scope/title mismatch, red flags) in `notablePoints`.
 

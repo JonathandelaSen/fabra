@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCVProfileStructuringCopyPastePrompt, SYSTEM_PROMPT } from "./cv-profile-structuring-prompts";
+import { buildCVProfileStructuringCopyPastePrompt, SYSTEM_PROMPT } from "../../domain/services/cv-profile-structuring-prompts";
 
 describe("cv profile structuring prompts", () => {
   it("instructs the model to keep contact fields as plain data", () => {

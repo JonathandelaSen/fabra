@@ -8,7 +8,7 @@ import type {
 import {
   buildWorkJournalEntryDraftPrompt,
   WORK_JOURNAL_ENTRY_SYSTEM_PROMPT,
-} from "./work-journal-prompts";
+} from "../../domain/services/work-journal-prompts";
 
 export class GeminiJournalAIService implements JournalAIService {
   constructor(private readonly config: { apiKey: string; model: string }) {}

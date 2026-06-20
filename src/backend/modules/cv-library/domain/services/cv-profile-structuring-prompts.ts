@@ -1,7 +1,7 @@
 import {
   CV_PROFILE_COPY_PASTE_SCHEMA_VERSION,
   CV_PROFILE_COPY_PASTE_WORKFLOW_ID,
-} from "../../domain/services/cv-profile-copy-paste-workflow";
+} from "./cv-profile-copy-paste-workflow";
 
 export const SYSTEM_PROMPT = `You are a precise CV data extraction engine.
 

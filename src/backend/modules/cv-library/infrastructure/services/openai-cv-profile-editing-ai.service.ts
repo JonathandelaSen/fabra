@@ -3,7 +3,7 @@ import { badRequest } from "@/backend/modules/shared";
 import { ErrorCode } from "@/shared/error-codes";
 import type { StandardCVProfile } from "../../domain/cv-profile";
 import type { CVProfileEditingAIService } from "../../domain/repositories/cv-profile-ai.service";
-import { SYSTEM_PROMPT } from "./cv-profile-editing-prompts";
+import { SYSTEM_PROMPT } from "../../domain/services/cv-profile-editing-prompts";
 import { parseEditedCVProfile, type AICVEditInput } from "./gemini-cv-profile-editing-ai.service";
 
 class OpenAICVProfileEditingAIService implements CVProfileEditingAIService {

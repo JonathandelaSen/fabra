@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   OFFER_CHAT_SYSTEM_PROMPT,
   buildOfferChatPrompt,
-} from "./job-analysis-chat-prompts";
+} from "../../domain/services/job-analysis-chat-prompts";
 
 describe("job analysis chat prompts", () => {
   it("defines evidence hierarchy and actionable coaching behavior", () => {

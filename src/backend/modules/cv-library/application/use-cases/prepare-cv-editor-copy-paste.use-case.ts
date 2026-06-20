@@ -1,11 +1,8 @@
 import { badRequest, CopyPastePreparation, UserId } from "@/backend/modules/shared";
-import type { StandardCVProfile } from "../../domain/cv-profile";
 import { ErrorCode } from "@/shared/error-codes";
+import type { StandardCVProfile } from "../../domain/cv-profile";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
-import {
-  CV_EDITOR_COPY_PASTE_SCHEMA_VERSION,
-  CV_EDITOR_COPY_PASTE_WORKFLOW_ID,
-} from "../../domain/services/cv-editor-copy-paste-workflow";
+import type { CVProfileEditingCopyPastePromptServicePort } from "../../domain/services/cv-profile-editing-copy-paste-prompt-service";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
 
 export interface PrepareCVEditorCopyPasteInput {
@@ -21,13 +18,7 @@ export class PrepareCVEditorCopyPasteUseCase {
   constructor(
     private readonly deps: {
       documentRepo: CVDocumentRepository;
-      buildPrompt: (input: {
-        profile: StandardCVProfile;
-        instruction: string;
-        templateId?: string | null;
-        locale?: string | null;
-        recommendations?: string[];
-      }) => string;
+      promptService: CVProfileEditingCopyPastePromptServicePort;
     },
   ) {}
 
@@ -48,23 +39,12 @@ export class PrepareCVEditorCopyPasteUseCase {
       throw badRequest("CV has no profile to edit", ErrorCode.CV_NO_PROFILE);
     }
 
-    const prompt = this.deps.buildPrompt({
+    return this.deps.promptService.prepare({
       profile: primitives.profile as StandardCVProfile,
       instruction: input.instruction,
       templateId: input.templateId ?? primitives.templateId,
       locale: input.locale ?? primitives.templateLocale,
       recommendations: input.recommendations,
-    });
-
-    return CopyPastePreparation.fromPrimitives({
-      workflowId: CV_EDITOR_COPY_PASTE_WORKFLOW_ID,
-      schemaVersion: CV_EDITOR_COPY_PASTE_SCHEMA_VERSION,
-      prompt,
-      expectedResponse: { kind: "json", envelope: true },
-      privacyNotice:
-        "This prompt includes your full CV profile data. Paste it only into external tools you trust.",
-      interactionId: null,
-      attemptId: null,
     });
   }
 }

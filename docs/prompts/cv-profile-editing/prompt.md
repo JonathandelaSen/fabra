@@ -3,12 +3,12 @@
 Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
 
 ## Source
-- Prompt source file: `src/modules/cv-library/infrastructure/services/cv-profile-editing-prompts.ts`
-- Copy Paste prompt builder: `src/modules/cv-library/infrastructure/services/cv-profile-editing-copy-paste-prompts.ts`
+- Prompt source file: `src/backend/modules/cv-library/domain/services/cv-profile-editing-prompts.ts`
+- Copy Paste prompt service: `src/backend/modules/cv-library/infrastructure/services/cv-profile-editing-copy-paste-prompt.service.ts`
 - System prompt constant: `SYSTEM_PROMPT`
-- Use case (integrated): `EditCVProfileWithAIUseCase` in `src/modules/cv-library/application/use-cases/edit-cv-profile-with-ai.use-case.ts`
+- Use case (integrated): `EditCVProfileWithAIUseCase` in `src/backend/modules/cv-library/application/use-cases/edit-cv-profile-with-ai.use-case.ts`
 - Use cases (copy paste): `PrepareCVEditorCopyPasteUseCase`, `PreviewCVEditorCopyPasteUseCase`, `ApplyCVEditorCopyPasteUseCase`
-- Model controller: provider-aware `ProviderCVProfileEditingAIServiceFactory` selects mock or Gemini and delegates Gemini calls to `src/modules/cv-library/infrastructure/services/gemini-cv-profile-editing-ai.service.ts`
+- Model controller: provider-aware `ProviderCVProfileEditingAIServiceFactory` selects mock or Gemini and delegates Gemini calls to `src/backend/modules/cv-library/infrastructure/services/gemini-cv-profile-editing-ai.service.ts`
 - Response parser: `parseEditedCVProfile` (integrated), `validateCVProfileCopyPasteResult` (copy paste)
 
 ## Current Prompt
@@ -60,7 +60,7 @@ Copy Paste transport rules additionally require:
   - structured CV profile JSON
 - System instruction data: editing safety rules and output contract.
 - The integrated controller always restores the original `presentation` object after parsing.
-- The Copy Paste prompt builder (`buildCVProfileEditingCopyPastePrompt`) includes the system prompt, envelope instructions, template context, recommendations, instruction, and full profile JSON in a single prompt string.
+- The Copy Paste prompt service (`CVProfileEditingCopyPastePromptService`) includes the system prompt, envelope instructions, template context, recommendations, instruction, and full profile JSON in a single prompt string.
 - Narrative fields may contain limited inline Markdown that is stored as plain strings and rendered by the manual editor preview/public CV/PDF surfaces. Non-narrative fields remain plain text.
 
 ## Runtime Flow
@@ -82,4 +82,4 @@ Copy Paste transport rules additionally require:
 The preview step compares the current profile against the edited profile section by section (basics, summary, experience, education, skills, etc.) and reports which sections changed. A warning is shown when more than 5 sections changed (large rewrite).
 
 ## Maintenance
-When `SYSTEM_PROMPT`, `EditCVProfileWithAIUseCase`, `buildCVProfileEditingCopyPastePrompt`, recommendations handling, narrative Markdown rules, or presentation preservation changes, update this document in the same change.
+When `SYSTEM_PROMPT`, `EditCVProfileWithAIUseCase`, `CVProfileEditingCopyPastePromptService`, recommendations handling, narrative Markdown rules, or presentation preservation changes, update this document in the same change.

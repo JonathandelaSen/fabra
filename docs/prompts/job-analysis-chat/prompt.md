@@ -3,7 +3,7 @@
 Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
 
 ## Source
-- Prompt source file: `src/modules/job-analysis-chat/infrastructure/services/job-analysis-chat-prompts.ts`
+- Prompt source file: `src/backend/modules/job-analysis-chat/domain/services/job-analysis-chat-prompts.ts`
 - Shared coaching instructions: `src/modules/job-analysis-chat/domain/services/job-analysis-chat-coaching-instructions.ts` (`OFFER_CHAT_COACHING_INSTRUCTIONS`)
 - System prompt constant: `OFFER_CHAT_SYSTEM_PROMPT`
 - Prompt builder: `buildOfferChatPrompt`

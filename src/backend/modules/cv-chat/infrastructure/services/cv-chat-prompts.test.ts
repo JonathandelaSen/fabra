@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCVChatPrompt } from "./cv-chat-prompts";
+import { buildCVChatPrompt } from "../../domain/services/cv-chat-prompts";
 
 describe("buildCVChatPrompt", () => {
   it("uses the current CV and recent conversation without offer context", () => {

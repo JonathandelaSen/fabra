@@ -11,7 +11,7 @@ import { PrepareCVScoreCopyPasteUseCase } from "./application/use-cases/prepare-
 import { PreviewCVScoreCopyPasteUseCase } from "./application/use-cases/preview-cv-score-copy-paste.use-case";
 import { ScoreCVAnalysisUseCase } from "./application/use-cases/score-cv-analysis.use-case";
 import { UpdateCVAnalysisAIResultUseCase } from "./application/use-cases/update-cv-analysis-ai-result.use-case";
-import { buildCVScoringCopyPastePrompt, buildGeneralScoringPrompt } from "./infrastructure/services/cv-scoring-prompts";
+import { buildCVScoringCopyPastePrompt, buildGeneralScoringPrompt } from "./domain/services/cv-scoring-prompts";
 import { GeminiCVScoringAIServiceFactory } from "./infrastructure/services/gemini-cv-scoring-ai.service";
 import { MockCVScoringAIServiceFactory } from "./infrastructure/services/mock-cv-scoring-ai.service";
 import { OpenAICVScoringAIServiceFactory } from "./infrastructure/services/openai-cv-scoring-ai.service";

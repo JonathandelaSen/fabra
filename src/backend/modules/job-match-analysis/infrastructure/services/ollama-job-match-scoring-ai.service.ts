@@ -4,7 +4,7 @@ import type {
   JobMatchScoringAIResult,
   JobMatchScoringAIService,
 } from "../../domain/repositories/job-match-scoring-ai.service";
-import { buildJobMatchScoringPrompt } from "./job-match-scoring-prompts";
+import { buildJobMatchScoringPrompt } from "../../domain/services/job-match-scoring-prompts";
 
 function cleanArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];

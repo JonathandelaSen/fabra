@@ -1,6 +1,6 @@
 import { Ollama } from "ollama";
 import type { CVRecord } from "@/lib/analysis-types";
-import { CV_CHAT_SYSTEM_PROMPT, buildCVChatPrompt, type CVChatHistoryMessage } from "./cv-chat-prompts";
+import { CV_CHAT_SYSTEM_PROMPT, buildCVChatPrompt, type CVChatHistoryMessage } from "../../domain/services/cv-chat-prompts";
 import type {
   CVChatAIInput,
   CVChatAIService,

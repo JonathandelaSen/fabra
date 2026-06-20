@@ -6,7 +6,7 @@ import type {
 import {
   buildWorkJournalEntryDraftPrompt,
   WORK_JOURNAL_ENTRY_SYSTEM_PROMPT,
-} from "./work-journal-prompts";
+} from "../../domain/services/work-journal-prompts";
 
 export class OllamaJournalAIService implements JournalAIService {
   constructor(private readonly config: { baseUrl?: string; model: string }) {}

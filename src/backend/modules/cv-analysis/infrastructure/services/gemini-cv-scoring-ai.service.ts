@@ -6,7 +6,7 @@ import type {
   CVScoringAIResult,
   CVScoringAIService,
 } from "../../domain/repositories/cv-scoring-ai.service";
-import { buildGeneralScoringPrompt } from "./cv-scoring-prompts";
+import { buildGeneralScoringPrompt } from "../../domain/services/cv-scoring-prompts";
 
 function cleanArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];

@@ -3,7 +3,7 @@
 Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
 
 ## Source
-- Prompt source file: `src/modules/selection-process/infrastructure/services/interview-question-prompts.ts`
+- Prompt source file: `src/backend/modules/selection-process/domain/services/interview-question-prompts.ts`
 - System prompt constant: `INTERVIEW_QUESTION_SYSTEM_PROMPT`
 - Prompt builder: `buildInterviewQuestionPrompt`
 - Copy Paste prompt builder: `buildInterviewQuestionCopyPastePrompt` in `src/modules/selection-process/application/services/interview-question-copy-paste-prompts.ts`
@@ -11,7 +11,7 @@ Integrated runs persist the prompt input and full AI interaction lifecycle throu
 
 ## Current Prompt
 
-The system prompt frames the model as an elite interview coach (former Big Tech hiring manager and bar-raiser, thousands of interviews on both sides of the table) and structures answer generation in three steps. See `INTERVIEW_QUESTION_SYSTEM_PROMPT` in `src/modules/selection-process/infrastructure/services/interview-question-prompts.ts` for the full literal text.
+The system prompt frames the model as an elite interview coach (former Big Tech hiring manager and bar-raiser, thousands of interviews on both sides of the table) and structures answer generation in three steps. See `INTERVIEW_QUESTION_SYSTEM_PROMPT` in `src/backend/modules/selection-process/domain/services/interview-question-prompts.ts` for the full literal text.
 
 **Step 1 — Question diagnosis:** identify the competency or signal the interviewer is really evaluating (ownership, conflict handling, judgement under ambiguity, culture fit, motivation, technical depth), then classify the question type and apply the matching framework:
 

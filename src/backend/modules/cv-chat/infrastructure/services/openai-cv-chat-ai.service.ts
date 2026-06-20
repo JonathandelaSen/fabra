@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import type { CVRecord } from "@/lib/analysis-types";
 import { ErrorCode } from "@/shared/error-codes";
 import { badRequest } from "@/backend/modules/shared";
-import { CV_CHAT_SYSTEM_PROMPT, buildCVChatPrompt, type CVChatHistoryMessage } from "./cv-chat-prompts";
+import { CV_CHAT_SYSTEM_PROMPT, buildCVChatPrompt, type CVChatHistoryMessage } from "../../domain/services/cv-chat-prompts";
 import type {
   CVChatAIInput,
   CVChatAIService,

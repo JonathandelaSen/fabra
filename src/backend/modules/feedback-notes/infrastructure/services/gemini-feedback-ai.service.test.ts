@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseFinalFeedbackAIResponse } from "./feedback-ai-response-parser";
+import { parseFinalFeedbackAIResponse } from "../../domain/services/feedback-ai-response-parser";
 
 describe("GeminiFeedbackAIService.parseFinalAIResponse", () => {
   it("extracts final feedback from JSON", () => {

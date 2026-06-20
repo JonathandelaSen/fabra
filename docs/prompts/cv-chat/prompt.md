@@ -6,7 +6,7 @@ The CV chat answers questions about one CV document. It receives the structured 
 
 ## Source
 
-- Prompt builder: `src/modules/cv-chat/infrastructure/services/cv-chat-prompts.ts`
+- Prompt builder: `src/backend/modules/cv-chat/domain/services/cv-chat-prompts.ts`
 - Coaching instructions: `src/modules/cv-chat/domain/services/cv-chat-coaching-instructions.ts`
 - Model controllers: `src/modules/cv-chat/infrastructure/services/*-cv-chat-ai.service.ts`
 

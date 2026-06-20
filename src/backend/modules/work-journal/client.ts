@@ -1,1 +1,1 @@
-export { buildWorkJournalEntryDraftPrompt } from "./infrastructure/services/work-journal-prompts";
+export { buildWorkJournalEntryDraftPrompt } from "./domain/services/work-journal-prompts";

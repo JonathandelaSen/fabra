@@ -46,8 +46,8 @@ import { ProviderCVProfileEditingAIServiceFactory } from "./infrastructure/servi
 import { ProviderCVProfileStructuringAIServiceFactory } from "./infrastructure/services/provider-cv-profile-structuring-ai-service.factory";
 import { SupabaseCVPdfStorage } from "./infrastructure/services/supabase-cv-pdf-storage.service";
 import { TemplateCVPdfRenderer } from "./infrastructure/services/template-cv-pdf-renderer.service";
-import { buildCVProfileEditingCopyPastePrompt } from "./infrastructure/services/cv-profile-editing-copy-paste-prompts";
-import { buildCVProfileStructuringCopyPastePrompt } from "./infrastructure/services/cv-profile-structuring-prompts";
+import { CVProfileEditingCopyPastePromptService } from "./infrastructure/services/cv-profile-editing-copy-paste-prompt.service";
+import { buildCVProfileStructuringCopyPastePrompt } from "./domain/services/cv-profile-structuring-prompts";
 
 const documentRepo = new SupabaseCVDocumentRepository();
 const profileRepo = new SupabaseCVStructuredProfileRepository();
@@ -69,6 +69,7 @@ const profileEditingAI = new ProviderCVProfileEditingAIServiceFactory({
   mockFactory: new MockCVProfileEditingAIServiceFactory(),
   ollamaFactory: new OllamaCVProfileEditingAIServiceFactory(),
 });
+const profileEditingCopyPastePrompt = new CVProfileEditingCopyPastePromptService();
 
 function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
   const prepareCVAnalysisInput = new PrepareCVAnalysisInputUseCase({
@@ -147,7 +148,7 @@ function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
     upsertCVStructuredProfile,
     prepareCVEditorCopyPaste: new PrepareCVEditorCopyPasteUseCase({
       documentRepo,
-      buildPrompt: buildCVProfileEditingCopyPastePrompt,
+      promptService: profileEditingCopyPastePrompt,
     }),
     previewCVEditorCopyPaste: new PreviewCVEditorCopyPasteUseCase({
       documentRepo,

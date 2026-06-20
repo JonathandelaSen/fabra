@@ -9,7 +9,7 @@ import type { CVTemplateId, CVTemplateLocale } from "../../domain/cv-templates";
 import type {
   CVProfileEditingAIService,
 } from "../../domain/repositories/cv-profile-ai.service";
-import { SYSTEM_PROMPT } from "./cv-profile-editing-prompts";
+import { SYSTEM_PROMPT } from "../../domain/services/cv-profile-editing-prompts";
 
 export interface AICVEditInput {
   apiKey: string;
