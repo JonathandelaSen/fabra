@@ -117,6 +117,19 @@ function isSnakeCaseIdentifier(text) {
   return /^[A-Za-z][A-Za-z0-9]*_[A-Za-z0-9_]*$/.test(text);
 }
 
+function isPascalCaseIdentifier(text) {
+  return /^[A-Z][A-Za-z0-9]*$/.test(text);
+}
+
+function isAllowedDomainSnakeCaseIdentifier(node) {
+  return (
+    ts.isPropertyAccessExpression(node.parent) &&
+    node.parent.name === node &&
+    ts.isIdentifier(node.parent.expression) &&
+    isPascalCaseIdentifier(node.parent.expression.text)
+  );
+}
+
 function location(sourceFile, node) {
   const { line, character } = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile));
   return `${line + 1}:${character + 1}`;
@@ -133,7 +146,11 @@ function addViolation(violations, file, rule, reason, sourceFile, node) {
 
 function checkNoSnakeCaseIdentifiers(sourceFile, file, violations) {
   function visit(node) {
-    if (ts.isIdentifier(node) && isSnakeCaseIdentifier(node.text)) {
+    if (
+      ts.isIdentifier(node) &&
+      isSnakeCaseIdentifier(node.text) &&
+      !isAllowedDomainSnakeCaseIdentifier(node)
+    ) {
       addViolation(
         violations,
         file,
