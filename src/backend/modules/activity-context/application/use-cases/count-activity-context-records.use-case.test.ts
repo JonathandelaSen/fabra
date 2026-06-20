@@ -4,7 +4,7 @@ import { CountActivityContextRecordsUseCase } from "./count-activity-context-rec
 
 describe("CountActivityContextRecordsUseCase", () => {
   it("delegates to the repository", async () => {
-    const repo = { countAssignedRecords: vi.fn(async () => 3) };
+    const repo = { countAssignedRecords: vi.fn(async () => Counter.fromPrimitives(3)) };
     const result = await new CountActivityContextRecordsUseCase({
       activityContextRepo: repo as never,
     }).execute({ id: "ctx-1", userId: "user-1" });

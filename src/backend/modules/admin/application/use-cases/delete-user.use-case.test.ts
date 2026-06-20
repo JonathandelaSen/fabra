@@ -12,6 +12,8 @@ describe("DeleteUserUseCase", () => {
     const useCase = new DeleteUserUseCase({ userRepo: mockRepo });
     await useCase.execute({ userId: "some-user-id" });
 
-    expect(mockRepo.delete).toHaveBeenCalledWith("some-user-id");
+    expect(mockRepo.delete).toHaveBeenCalledWith(
+      expect.objectContaining({ value: "some-user-id" })
+    );
   });
 });

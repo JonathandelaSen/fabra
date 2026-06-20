@@ -2,6 +2,7 @@ import { UserId } from "@/backend/modules/shared";
 import type { CVDataRepository } from "../../domain/repositories/cv-data.repository";
 import type { ActivityContextRepository } from "../../domain/repositories/activity-context.repository";
 import type { ActivityContextSuggestion } from "../../domain/value-objects/activity-context-suggestion.value-object";
+import { ActivityContextHiddenSuggestion } from "../../domain/value-objects/activity-context-hidden-suggestion.value-object";
 import {
   activityContextSuggestionKey,
   suggestActivityContextsFromCVs,
@@ -20,7 +21,7 @@ export class ListActivityContextSuggestionsUseCase {
     const [cvs, contexts, hidden] = await Promise.all([
       this.deps.cvDataRepo.listCVs(userId),
       this.deps.activityContextRepo.search(ownerId),
-      this.deps.activityContextRepo.listHiddenSuggestionKeys(ownerId),
+      this.deps.activityContextRepo.listHiddenSuggestions(ownerId),
     ]);
     const existing = new Set(
       contexts.map((context) =>
@@ -30,7 +31,11 @@ export class ListActivityContextSuggestionsUseCase {
 
     return suggestActivityContextsFromCVs(cvs).filter((suggestion) => {
       const key = activityContextSuggestionKey(suggestion.type, suggestion.name);
-      return !existing.has(key) && !hidden.has(key);
+      const hiddenSuggestion = ActivityContextHiddenSuggestion.fromPrimitives({
+        type: suggestion.type,
+        name: suggestion.name,
+      });
+      return !existing.has(key) && !hidden.has(hiddenSuggestion);
     });
   }
 }

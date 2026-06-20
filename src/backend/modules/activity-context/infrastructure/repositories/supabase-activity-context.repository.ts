@@ -1,7 +1,9 @@
 import { BoundSupabaseRepository, Counter, EntityId, UserId } from "@/backend/modules/shared";
 import { ActivityContext, type ActivityContextPrimitives, type ActivityContextStatus, type ActivityContextType } from "../../domain/entities/activity-context.entity";
 import type { ActivityContextRepository } from "../../domain/repositories/activity-context.repository";
-import { activityContextSuggestionKey } from "../../domain/services/suggest-activity-contexts.service";
+import { ActivityContextHiddenSuggestion } from "../../domain/value-objects/activity-context-hidden-suggestion.value-object";
+import { ActivityContextHiddenSuggestions } from "../../domain/value-objects/activity-context-hidden-suggestions.value-object";
+import { ActivityContextRecordReassignment } from "../../domain/value-objects/activity-context-record-reassignment.value-object";
 
 interface ActivityContextRow {
   id: string;
@@ -85,56 +87,52 @@ export class SupabaseActivityContextRepository extends BoundSupabaseRepository i
     return rowToContext(data as ActivityContextRow);
   }
 
-  async reassignRecordsToDefault(input: {
-    userId: UserId;
-    sourceContextId: EntityId;
-    defaultContextId: EntityId;
-  }): Promise<Counter> {
+  async reassignRecordsToDefault(
+    reassignment: ActivityContextRecordReassignment
+  ): Promise<Counter> {
     const { data, error } = await this.client.rpc("reassign_activity_context_records", {
-      p_user_id: input.userId.toPrimitives(),
-      p_source_context_id: input.sourceContextId.toPrimitives(),
-      p_default_context_id: input.defaultContextId.toPrimitives(),
+      p_user_id: reassignment.userId.toPrimitives(),
+      p_source_context_id: reassignment.sourceContextId.toPrimitives(),
+      p_default_context_id: reassignment.defaultContextId.toPrimitives(),
     });
     if (error) throw error;
     return Counter.fromPrimitives(Number(data ?? 0));
   }
 
-  async countAssignedRecords(id: EntityId, userId: UserId): Promise<number> {
+  async countAssignedRecords(id: EntityId, userId: UserId): Promise<Counter> {
     const { data, error } = await this.client.rpc("count_activity_context_records", {
       p_user_id: userId.toPrimitives(),
       p_context_id: id.toPrimitives(),
     });
     if (error) throw error;
-    return Number(data ?? 0);
+    return Counter.fromPrimitives(Number(data ?? 0));
   }
 
-  async listHiddenSuggestionKeys(userId: UserId): Promise<Set<string>> {
+  async listHiddenSuggestions(userId: UserId): Promise<ActivityContextHiddenSuggestions> {
     const { data, error } = await this.client
       .from("work_journal_hidden_context_suggestions")
       .select("type, name_key")
       .eq("user_id", userId.toPrimitives());
     if (error) throw error;
-    return new Set(
-      (data ?? []).map((item) =>
-        activityContextSuggestionKey(
-          item.type as ActivityContextType,
-          item.name_key as string
-        )
-      )
-    );
+    return ActivityContextHiddenSuggestions.fromPrimitives({
+      suggestions: (data ?? []).map((item) => ({
+        type: item.type as ActivityContextType,
+        name: item.name_key as string,
+      })),
+    });
   }
 
   async hideSuggestion(
     userId: UserId,
-    input: { type: string; name: string }
+    suggestion: ActivityContextHiddenSuggestion
   ): Promise<void> {
     const { error } = await this.client
       .from("work_journal_hidden_context_suggestions")
       .upsert(
         {
           user_id: userId.toPrimitives(),
-          type: input.type,
-          name_key: input.name.trim().toLowerCase().replace(/\s+/g, " "),
+          type: suggestion.type,
+          name_key: suggestion.nameKey(),
         },
         { onConflict: "user_id,type,name_key" }
       );

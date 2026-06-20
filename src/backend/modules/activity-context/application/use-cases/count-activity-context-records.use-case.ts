@@ -9,6 +9,6 @@ export class CountActivityContextRecordsUseCase {
       EntityId.fromPrimitives(input.id),
       UserId.fromPrimitives(input.userId),
     );
-    return Counter.fromPrimitives(count);
+    return count;
   }
 }

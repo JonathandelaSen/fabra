@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { UserId } from "@/backend/modules/shared";
 import { createTestUser } from "@/backend/modules/test-helpers/setup";
 import { SupabaseUserRepository } from "./supabase-user.repository";
 
@@ -51,7 +52,7 @@ describe("SupabaseUserRepository", () => {
     });
     expect(searchBefore.total).toBe(1);
 
-    await repo.delete(user.id);
+    await repo.delete(UserId.fromPrimitives(user.id));
 
     const searchAfter = await repo.search({
       search: user.email,
@@ -61,4 +62,3 @@ describe("SupabaseUserRepository", () => {
     expect(searchAfter.total).toBe(0);
   });
 });
-

@@ -3,6 +3,7 @@ import { ActivityContextNotFoundError } from "../../domain/errors/activity-conte
 import { DefaultActivityContextDeleteError } from "../../domain/errors/default-activity-context-delete.error";
 import { DefaultActivityContextMissingError } from "../../domain/errors/default-activity-context-missing.error";
 import type { ActivityContextRepository } from "../../domain/repositories/activity-context.repository";
+import { ActivityContextRecordReassignment } from "../../domain/value-objects/activity-context-record-reassignment.value-object";
 
 export class DeleteActivityContextUseCase {
   constructor(
@@ -21,11 +22,13 @@ export class DeleteActivityContextUseCase {
 
     const defaultContext = await this.deps.activityContextRepo.findDefault(userId);
     if (!defaultContext) throw new DefaultActivityContextMissingError();
-    const reassignedRecords = await this.deps.activityContextRepo.reassignRecordsToDefault({
-      userId,
-      sourceContextId: id,
-      defaultContextId: EntityId.fromPrimitives(defaultContext.id),
-    });
+    const reassignedRecords = await this.deps.activityContextRepo.reassignRecordsToDefault(
+      ActivityContextRecordReassignment.fromPrimitives({
+        userId: userId.toPrimitives(),
+        sourceContextId: id.toPrimitives(),
+        defaultContextId: defaultContext.id,
+      })
+    );
     context.delete();
     await this.deps.activityContextRepo.delete(id, userId);
 

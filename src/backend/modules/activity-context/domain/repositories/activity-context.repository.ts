@@ -1,5 +1,8 @@
 import type { Counter, EntityId, UserId } from "@/backend/modules/shared";
 import type { ActivityContext } from "../entities/activity-context.entity";
+import type { ActivityContextHiddenSuggestion } from "../value-objects/activity-context-hidden-suggestion.value-object";
+import type { ActivityContextHiddenSuggestions } from "../value-objects/activity-context-hidden-suggestions.value-object";
+import type { ActivityContextRecordReassignment } from "../value-objects/activity-context-record-reassignment.value-object";
 
 export interface ActivityContextRepository {
   search(userId: UserId): Promise<ActivityContext[]>;
@@ -7,12 +10,8 @@ export interface ActivityContextRepository {
   findDefault(userId: UserId): Promise<ActivityContext | null>;
   save(context: ActivityContext): Promise<ActivityContext>;
   delete(id: EntityId, userId: UserId): Promise<void>;
-  listHiddenSuggestionKeys(userId: UserId): Promise<Set<string>>;
-  hideSuggestion(userId: UserId, input: { type: string; name: string }): Promise<void>;
-  reassignRecordsToDefault(input: {
-    userId: UserId;
-    sourceContextId: EntityId;
-    defaultContextId: EntityId;
-  }): Promise<Counter>;
-  countAssignedRecords(id: EntityId, userId: UserId): Promise<number>;
+  listHiddenSuggestions(userId: UserId): Promise<ActivityContextHiddenSuggestions>;
+  hideSuggestion(userId: UserId, suggestion: ActivityContextHiddenSuggestion): Promise<void>;
+  reassignRecordsToDefault(reassignment: ActivityContextRecordReassignment): Promise<Counter>;
+  countAssignedRecords(id: EntityId, userId: UserId): Promise<Counter>;
 }

@@ -1,3 +1,4 @@
+import type { UserId } from "@/backend/modules/shared";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { User } from "../../domain/entities/user.entity";
 import type {
@@ -51,31 +52,31 @@ export class SupabaseUserRepository implements UserRepository {
     return UserSearchResult.create(users, filtered.length);
   }
 
-  async delete(userId: string): Promise<void> {
+  async delete(userId: UserId): Promise<void> {
     const admin = createAdminClient();
     const bucketName = "cv-pdfs";
+    const userIdValue = userId.toPrimitives();
 
     const { data: files, error: listError } = await admin.storage
       .from(bucketName)
-      .list(userId);
+      .list(userIdValue);
 
     if (listError) {
-      console.error(`Error listing storage files for user ${userId}:`, listError);
+      console.error(`Error listing storage files for user ${userIdValue}:`, listError);
     } else if (files && files.length > 0) {
-      const filesToDelete = files.map((file) => `${userId}/${file.name}`);
+      const filesToDelete = files.map((file) => `${userIdValue}/${file.name}`);
       const { error: removeError } = await admin.storage
         .from(bucketName)
         .remove(filesToDelete);
 
       if (removeError) {
-        console.error(`Error removing storage files for user ${userId}:`, removeError);
+        console.error(`Error removing storage files for user ${userIdValue}:`, removeError);
       }
     }
 
-    const { error: deleteUserError } = await admin.auth.admin.deleteUser(userId);
+    const { error: deleteUserError } = await admin.auth.admin.deleteUser(userIdValue);
     if (deleteUserError) {
       throw deleteUserError;
     }
   }
 }
-

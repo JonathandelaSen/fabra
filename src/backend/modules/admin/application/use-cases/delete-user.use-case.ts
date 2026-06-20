@@ -1,3 +1,4 @@
+import { UserId } from "@/backend/modules/shared";
 import type { UserRepository } from "../../domain/repositories/user.repository";
 
 export interface DeleteUserInput {
@@ -12,6 +13,6 @@ export class DeleteUserUseCase {
   ) {}
 
   async execute(input: DeleteUserInput): Promise<void> {
-    await this.deps.userRepo.delete(input.userId);
+    await this.deps.userRepo.delete(UserId.fromPrimitives(input.userId));
   }
 }

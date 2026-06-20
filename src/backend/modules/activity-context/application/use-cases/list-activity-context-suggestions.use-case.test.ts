@@ -1,4 +1,5 @@
 import { ActivityContext } from "../../domain/entities/activity-context.entity";
+import { ActivityContextHiddenSuggestions } from "../../domain/value-objects/activity-context-hidden-suggestions.value-object";
 import { ListActivityContextSuggestionsUseCase } from "./list-activity-context-suggestions.use-case";
 import { describe, expect, it, vi } from "vitest";
 
@@ -17,7 +18,11 @@ describe("ListActivityContextSuggestionsUseCase", () => {
           updatedAt: "2026-01-01T00:00:00.000Z",
         }),
       ]),
-      listHiddenSuggestionKeys: vi.fn().mockResolvedValue(new Set(["project:hidden project"])),
+      listHiddenSuggestions: vi.fn().mockResolvedValue(
+        ActivityContextHiddenSuggestions.fromPrimitives({
+          suggestions: [{ type: "project", name: "Hidden Project" }],
+        })
+      ),
     };
     const cvDataRepo = {
       listCVs: vi.fn().mockResolvedValue([

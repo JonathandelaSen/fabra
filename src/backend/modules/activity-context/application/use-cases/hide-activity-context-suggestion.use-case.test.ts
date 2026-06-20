@@ -21,7 +21,10 @@ describe("HideActivityContextSuggestionUseCase", () => {
     expect(repo.hideSuggestion).toHaveBeenCalledOnce();
     expect(repo.hideSuggestion).toHaveBeenCalledWith(
       expect.objectContaining({ value: "user-1" }),
-      { type: "employment", name: "Acme" }
+      expect.objectContaining({
+        suggestionName: expect.objectContaining({ value: "Acme" }),
+        suggestionType: expect.objectContaining({ value: "employment" }),
+      })
     );
   });
 });

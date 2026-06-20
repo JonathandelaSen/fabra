@@ -50,5 +50,12 @@ describe("DeleteActivityContextUseCase", () => {
     expect(publishedEvents[0].toPrimitives()).toEqual({
       contextId: "ctx-1",
     });
+    expect(repo.reassignRecordsToDefault).toHaveBeenCalledWith(
+      expect.objectContaining({
+        reassignmentUserId: expect.objectContaining({ value: "user-1" }),
+        reassignmentSourceContextId: expect.objectContaining({ value: "ctx-1" }),
+        reassignmentDefaultContextId: expect.objectContaining({ value: "ctx-general" }),
+      })
+    );
   });
 });
