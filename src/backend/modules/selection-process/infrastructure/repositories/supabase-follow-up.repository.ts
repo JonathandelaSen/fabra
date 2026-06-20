@@ -1,6 +1,7 @@
 import { BoundSupabaseRepository, type UserId } from "@/backend/modules/shared";
 import { FollowUp } from "../../domain/entities/follow-up.entity";
 import type { FollowUpRepository } from "../../domain/repositories/follow-up.repository";
+import type { SourceJobMatchAnalysisId } from "../../domain/value-objects/source-job-match-analysis-id.value-object";
 
 import { type OfferStatus } from "@/lib/analysis-types";
 
@@ -53,13 +54,14 @@ export class SupabaseFollowUpRepository
   implements FollowUpRepository
 {
   async findBySourceJobMatchAnalysisId(
-    analysisId: string,
+    analysisId: SourceJobMatchAnalysisId,
     userId: UserId,
   ): Promise<FollowUp | null> {
+    const analysisIdValue = analysisId.toPrimitives();
     const { data, error } = await this.client
       .from("follow_ups")
       .select("*")
-      .eq("source_job_match_analysis_id", analysisId)
+      .eq("source_job_match_analysis_id", analysisIdValue)
       .eq("user_id", userId.toPrimitives())
       .maybeSingle();
 
@@ -69,7 +71,7 @@ export class SupabaseFollowUpRepository
     const { data: analysis, error: analysisError } = await this.client
       .from("job_match_analyses")
       .select("id, user_id, title, job_snapshot, created_at, updated_at")
-      .eq("id", analysisId)
+      .eq("id", analysisIdValue)
       .eq("user_id", userId.toPrimitives())
       .maybeSingle();
 

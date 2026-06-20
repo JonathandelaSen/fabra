@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { createTestUser, getSupabaseClient } from "@/backend/modules/test-helpers/setup";
+import { UserId } from "@/backend/modules/shared";
 import { activityContextsModule } from "@/lib/container";
 import { Feedback } from "../../domain/entities/feedback.entity";
+import { FeedbackId } from "../../domain/value-objects/feedback-id.value-object";
 import { SupabaseFeedbackRepository } from "./supabase-feedback.repository";
 
 const repo = new SupabaseFeedbackRepository();
@@ -55,7 +57,10 @@ describe("SupabaseFeedbackRepository", () => {
       })
     );
 
-    const result = await repo.list({ userId: user.id, status: "active" });
+    const result = await repo.list({
+      userId: UserId.fromPrimitives(user.id),
+      status: "active",
+    });
 
     expect(result.map((feedback) => feedback.id)).toEqual([active.id]);
     expect(result[0].toPrimitives().activity_context_id).toBe(context.id);
@@ -84,13 +89,18 @@ describe("SupabaseFeedbackRepository", () => {
     await repo.save(feedback);
 
     await expect(
-      repo.findById(feedback.id, user.id).then((item) => item?.toPrimitives())
+      repo.findById(
+        FeedbackId.fromPrimitives(feedback.id),
+        UserId.fromPrimitives(user.id),
+      ).then((item) => item?.toPrimitives())
     ).resolves.toMatchObject({
       final_feedback: "Final text",
       activity_context_id: context.id,
     });
 
-    await repo.delete(feedback.id, user.id);
-    await expect(repo.findById(feedback.id, user.id)).resolves.toBeNull();
+    const feedbackId = FeedbackId.fromPrimitives(feedback.id);
+    const userId = UserId.fromPrimitives(user.id);
+    await repo.delete(feedbackId, userId);
+    await expect(repo.findById(feedbackId, userId)).resolves.toBeNull();
   });
 });

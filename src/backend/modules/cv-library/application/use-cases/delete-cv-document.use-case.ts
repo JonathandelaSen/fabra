@@ -7,6 +7,7 @@ import { UserId, type EventBus, type QueryBus } from "@/backend/modules/shared";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
 import { CVDeletionOutcome } from "../../domain/value-objects/cv-deletion-outcome.value-object";
+import { CVPdfStoragePath } from "../../domain/value-objects/cv-pdf-storage-path.value-object";
 
 export interface DeleteCVDocumentInput {
   id: string;
@@ -50,7 +51,9 @@ export class DeleteCVDocumentUseCase {
     }
 
     if (document.pdfStoragePath) {
-      await this.deps.documentRepo.deleteStoredPdf(document.pdfStoragePath);
+      await this.deps.documentRepo.deleteStoredPdf(
+        CVPdfStoragePath.fromPrimitives(document.pdfStoragePath),
+      );
     }
     document.delete();
     await this.deps.documentRepo.delete(id, userId);

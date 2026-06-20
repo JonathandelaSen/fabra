@@ -2,6 +2,7 @@ import { Timestamp, UserId, type EventBus } from "@/backend/modules/shared";
 import type { FollowUp } from "../../domain/entities/follow-up.entity";
 import type { FollowUpRepository } from "../../domain/repositories/follow-up.repository";
 import { FollowUpStatus } from "../../domain/value-objects/follow-up-status.value-object";
+import { SourceJobMatchAnalysisId } from "../../domain/value-objects/source-job-match-analysis-id.value-object";
 
 export interface UpdateFollowUpByAnalysisInput {
   analysisId: string;
@@ -23,7 +24,7 @@ export class UpdateFollowUpByAnalysisUseCase {
   async execute(input: UpdateFollowUpByAnalysisInput): Promise<FollowUp | null> {
     const userId = UserId.fromPrimitives(input.userId);
     const followUp = await this.deps.followUpRepo.findBySourceJobMatchAnalysisId(
-      input.analysisId,
+      SourceJobMatchAnalysisId.fromPrimitives(input.analysisId),
       userId
     );
     if (!followUp) return null;

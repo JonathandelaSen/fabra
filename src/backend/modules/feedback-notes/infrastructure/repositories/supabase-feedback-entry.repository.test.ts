@@ -2,6 +2,9 @@ import { describe, expect, it } from "vitest";
 import { createTestUser } from "@/backend/modules/test-helpers/setup";
 import { createDefaultContext, createFeedbackFixture } from "../../test-helpers";
 import { FeedbackEntry } from "../../domain/entities/feedback-entry.entity";
+import { UserId } from "@/backend/modules/shared";
+import { FeedbackEntryId } from "../../domain/value-objects/feedback-entry-id.value-object";
+import { FeedbackId } from "../../domain/value-objects/feedback-id.value-object";
 import { SupabaseFeedbackEntryRepository } from "./supabase-feedback-entry.repository";
 import { getSupabaseClient } from "@/backend/modules/test-helpers/setup";
 
@@ -33,7 +36,10 @@ describe("SupabaseFeedbackEntryRepository", () => {
     );
 
     await expect(
-      repo.listByFeedback(feedback.id, user.id).then((entries) =>
+      repo.listByFeedback(
+        FeedbackId.fromPrimitives(feedback.id),
+        UserId.fromPrimitives(user.id),
+      ).then((entries) =>
         entries.map((entry) => entry.id)
       )
     ).resolves.toEqual([first.id, second.id]);
@@ -56,10 +62,15 @@ describe("SupabaseFeedbackEntryRepository", () => {
     await repo.save(entry);
 
     await expect(
-      repo.findById(entry.id, user.id).then((item) => item?.toPrimitives())
+      repo.findById(
+        FeedbackEntryId.fromPrimitives(entry.id),
+        UserId.fromPrimitives(user.id),
+      ).then((item) => item?.toPrimitives())
     ).resolves.toMatchObject({ content: "Updated" });
 
-    await repo.delete(entry.id, user.id);
-    await expect(repo.findById(entry.id, user.id)).resolves.toBeNull();
+    const entryId = FeedbackEntryId.fromPrimitives(entry.id);
+    const userId = UserId.fromPrimitives(user.id);
+    await repo.delete(entryId, userId);
+    await expect(repo.findById(entryId, userId)).resolves.toBeNull();
   });
 });

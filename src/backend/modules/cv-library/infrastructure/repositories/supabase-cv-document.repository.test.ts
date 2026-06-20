@@ -8,6 +8,7 @@ import {
 import { UserId } from "@/backend/modules/shared";
 import { CVDocument } from "../../domain/entities/cv-document.entity";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
+import { CVPublicId } from "../../domain/value-objects/cv-public-id.value-object";
 import { SupabaseCVDocumentRepository } from "./supabase-cv-document.repository";
 
 const supabase = getSupabaseClient();
@@ -99,7 +100,9 @@ describe("SupabaseCVDocumentRepository", () => {
         public_slug: "ada-cv",
       })
       .eq("id", cv.id);
-    const published = await repo.findPublishedByPublicId(publicId);
+    const published = await repo.findPublishedByPublicId(
+      CVPublicId.fromPrimitives(publicId),
+    );
     expect(published?.id).toBe(cv.id);
   });
 });

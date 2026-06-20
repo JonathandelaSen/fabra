@@ -6,6 +6,8 @@ import type {
   CVDocumentSearchCriteria,
 } from "../../domain/repositories/cv-document.repository";
 import type { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
+import type { CVPdfStoragePath } from "../../domain/value-objects/cv-pdf-storage-path.value-object";
+import type { CVPublicId } from "../../domain/value-objects/cv-public-id.value-object";
 import type { UserId } from "@/backend/modules/shared";
 
 import type { CVDocumentTypePrimitives } from "../../domain/value-objects/cv-document-type.value-object";
@@ -137,11 +139,11 @@ export class SupabaseCVDocumentRepository
     return data ? rowToDocument(data as CVDocumentRow) : null;
   }
 
-  async findPublishedByPublicId(publicId: string): Promise<CVDocument | null> {
+  async findPublishedByPublicId(publicId: CVPublicId): Promise<CVDocument | null> {
     const { data, error } = await this.client
       .from("cvs")
       .select("*")
-      .eq("public_id", publicId)
+      .eq("public_id", publicId.toPrimitives())
       .eq("public_enabled", true)
       .eq("type", "template")
       .maybeSingle();
@@ -171,10 +173,10 @@ export class SupabaseCVDocumentRepository
     if (error) throw error;
   }
 
-  async deleteStoredPdf(path: string): Promise<void> {
+  async deleteStoredPdf(path: CVPdfStoragePath): Promise<void> {
     const { error } = await this.client.storage
       .from(CV_PDFS_BUCKET)
-      .remove([path]);
+      .remove([path.toPrimitives()]);
     if (error) throw error;
   }
 

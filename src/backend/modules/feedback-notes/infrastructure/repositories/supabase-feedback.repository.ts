@@ -7,6 +7,8 @@ import type {
   FeedbackRepository,
   FeedbackSearchCriteria,
 } from "../../domain/repositories/feedback.repository";
+import type { FeedbackId } from "../../domain/value-objects/feedback-id.value-object";
+import type { UserId } from "@/backend/modules/shared";
 
 interface FeedbackRow {
   id: string;
@@ -59,7 +61,7 @@ export class SupabaseFeedbackRepository extends BoundSupabaseRepository implemen
     let query = this.client
       .from("feedback_notes_feedbacks")
       .select("*, activity_contexts(name)")
-      .eq("user_id", criteria.userId)
+      .eq("user_id", criteria.userId.toPrimitives())
       .order("updated_at", { ascending: false });
 
     if (criteria.status && criteria.status !== "all") {
@@ -71,12 +73,12 @@ export class SupabaseFeedbackRepository extends BoundSupabaseRepository implemen
     return ((data ?? []) as FeedbackRow[]).map(rowToFeedback);
   }
 
-  async findById(id: string, userId: string): Promise<Feedback | null> {
+  async findById(id: FeedbackId, userId: UserId): Promise<Feedback | null> {
     const { data, error } = await this.client
       .from("feedback_notes_feedbacks")
       .select("*, activity_contexts(name)")
-      .eq("id", id)
-      .eq("user_id", userId)
+      .eq("id", id.toPrimitives())
+      .eq("user_id", userId.toPrimitives())
       .maybeSingle();
 
     if (error) throw error;
@@ -94,12 +96,12 @@ export class SupabaseFeedbackRepository extends BoundSupabaseRepository implemen
     return rowToFeedback(data as FeedbackRow);
   }
 
-  async delete(id: string, userId: string): Promise<void> {
+  async delete(id: FeedbackId, userId: UserId): Promise<void> {
     const { error } = await this.client
       .from("feedback_notes_feedbacks")
       .delete()
-      .eq("id", id)
-      .eq("user_id", userId);
+      .eq("id", id.toPrimitives())
+      .eq("user_id", userId.toPrimitives());
 
     if (error) throw error;
   }

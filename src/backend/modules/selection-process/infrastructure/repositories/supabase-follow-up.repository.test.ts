@@ -7,6 +7,7 @@ import {
   testLabel,
 } from "@/backend/modules/test-helpers/setup";
 import { UserId } from "@/backend/modules/shared";
+import { SourceJobMatchAnalysisId } from "../../domain/value-objects/source-job-match-analysis-id.value-object";
 import { SupabaseFollowUpRepository } from "./supabase-follow-up.repository";
 
 const supabase = getSupabaseClient();
@@ -33,7 +34,7 @@ describe("SupabaseFollowUpRepository", () => {
     });
 
     const found = await repo.findBySourceJobMatchAnalysisId(
-      analysis.id,
+      SourceJobMatchAnalysisId.fromPrimitives(analysis.id),
       UserId.fromPrimitives(user.id),
     );
 

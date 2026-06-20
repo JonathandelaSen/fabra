@@ -1,5 +1,6 @@
-import { type EventBus } from "@/backend/modules/shared";
+import { UserId, type EventBus } from "@/backend/modules/shared";
 import { FeedbackEntry } from "../../domain/entities/feedback-entry.entity";
+import { FeedbackId } from "../../domain/value-objects/feedback-id.value-object";
 import { FeedbackClosedError } from "../../domain/errors/feedback-closed.error";
 import { FeedbackNotFoundError } from "../../domain/errors/feedback-not-found.error";
 import type { FeedbackEntryRepository } from "../../domain/repositories/feedback-entry.repository";
@@ -22,8 +23,8 @@ export class CreateEntryUseCase {
 
   async execute(input: CreateEntryInput): Promise<FeedbackEntry> {
     const feedback = await this.deps.feedbackRepo.findById(
-      input.feedback_id,
-      input.user_id
+      FeedbackId.fromPrimitives(input.feedback_id),
+      UserId.fromPrimitives(input.user_id)
     );
     if (!feedback) throw new FeedbackNotFoundError(input.feedback_id);
     if (!feedback.isActive()) throw new FeedbackClosedError(input.feedback_id);

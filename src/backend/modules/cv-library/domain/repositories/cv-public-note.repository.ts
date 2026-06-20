@@ -1,12 +1,14 @@
+import type { UserId } from "@/backend/modules/shared";
 import type { CVPublicNote } from "../entities/cv-public-note.entity";
+import type { CVDocumentId } from "../value-objects/cv-document-id.value-object";
 
 export interface ReplaceCVPublicNotesInput {
-  cvId: string;
-  userId: string;
+  cvId: CVDocumentId;
+  userId: UserId;
   notes: CVPublicNote[];
 }
 export interface CVPublicNoteRepository {
-  listForOwner(cvId: string, userId: string): Promise<CVPublicNote[]>;
-  listForPublishedCV(cvId: string): Promise<CVPublicNote[]>;
+  listForOwner(cvId: CVDocumentId, userId: UserId): Promise<CVPublicNote[]>;
+  listForPublishedCV(cvId: CVDocumentId): Promise<CVPublicNote[]>;
   replaceForOwner(input: ReplaceCVPublicNotesInput): Promise<CVPublicNote[]>;
 }

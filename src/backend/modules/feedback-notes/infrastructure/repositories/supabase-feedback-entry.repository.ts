@@ -4,6 +4,9 @@ import {
   type FeedbackEntryPrimitives,
 } from "../../domain/entities/feedback-entry.entity";
 import type { FeedbackEntryRepository } from "../../domain/repositories/feedback-entry.repository";
+import type { FeedbackEntryId } from "../../domain/value-objects/feedback-entry-id.value-object";
+import type { FeedbackId } from "../../domain/value-objects/feedback-id.value-object";
+import type { UserId } from "@/backend/modules/shared";
 
 type FeedbackEntryRow = FeedbackEntryPrimitives;
 
@@ -13,24 +16,24 @@ function rowToEntry(row: FeedbackEntryRow): FeedbackEntry {
 
 export class SupabaseFeedbackEntryRepository extends BoundSupabaseRepository implements FeedbackEntryRepository {
 
-  async listByFeedback(feedbackId: string, userId: string): Promise<FeedbackEntry[]> {
+  async listByFeedback(feedbackId: FeedbackId, userId: UserId): Promise<FeedbackEntry[]> {
     const { data, error } = await this.client
       .from("feedback_notes_entries")
       .select("*")
-      .eq("feedback_id", feedbackId)
-      .eq("user_id", userId)
+      .eq("feedback_id", feedbackId.toPrimitives())
+      .eq("user_id", userId.toPrimitives())
       .order("created_at", { ascending: true });
 
     if (error) throw error;
     return ((data ?? []) as FeedbackEntryRow[]).map(rowToEntry);
   }
 
-  async findById(id: string, userId: string): Promise<FeedbackEntry | null> {
+  async findById(id: FeedbackEntryId, userId: UserId): Promise<FeedbackEntry | null> {
     const { data, error } = await this.client
       .from("feedback_notes_entries")
       .select("*")
-      .eq("id", id)
-      .eq("user_id", userId)
+      .eq("id", id.toPrimitives())
+      .eq("user_id", userId.toPrimitives())
       .maybeSingle();
 
     if (error) throw error;
@@ -48,12 +51,12 @@ export class SupabaseFeedbackEntryRepository extends BoundSupabaseRepository imp
     return rowToEntry(data as FeedbackEntryRow);
   }
 
-  async delete(id: string, userId: string): Promise<void> {
+  async delete(id: FeedbackEntryId, userId: UserId): Promise<void> {
     const { error } = await this.client
       .from("feedback_notes_entries")
       .delete()
-      .eq("id", id)
-      .eq("user_id", userId);
+      .eq("id", id.toPrimitives())
+      .eq("user_id", userId.toPrimitives());
 
     if (error) throw error;
   }

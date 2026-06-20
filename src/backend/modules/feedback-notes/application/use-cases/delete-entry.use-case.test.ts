@@ -1,11 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { createTestUser } from "@/backend/modules/test-helpers/setup";
+import { UserId } from "@/backend/modules/shared";
 import {
   createDefaultContext,
   createEntryFixture,
   createFeedbackFixture,
   makeFeedbackDeps,
 } from "../../test-helpers";
+import { FeedbackEntryId } from "../../domain/value-objects/feedback-entry-id.value-object";
 import { DeleteEntryUseCase } from "./delete-entry.use-case";
 
 describe("DeleteEntryUseCase", () => {
@@ -21,7 +23,12 @@ describe("DeleteEntryUseCase", () => {
       entry.id
     );
 
-    await expect(entryRepo.findById(entry.id, user.id)).resolves.toBeNull();
+    await expect(
+      entryRepo.findById(
+        FeedbackEntryId.fromPrimitives(entry.id),
+        UserId.fromPrimitives(user.id),
+      ),
+    ).resolves.toBeNull();
 
     expect(eventBus.publish).toHaveBeenCalledTimes(1);
     const publishedEvents = eventBus.publish.mock.calls[0][0];

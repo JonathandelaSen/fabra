@@ -1,7 +1,8 @@
-import { type EventBus } from "@/backend/modules/shared";
+import { UserId, type EventBus } from "@/backend/modules/shared";
 import { FeedbackNotFoundError } from "../../domain/errors/feedback-not-found.error";
 import type { FeedbackRepository } from "../../domain/repositories/feedback.repository";
 import { Feedback } from "../../domain/entities/feedback.entity";
+import { FeedbackId } from "../../domain/value-objects/feedback-id.value-object";
 
 export class CloseFeedbackUseCase {
   constructor(
@@ -12,7 +13,10 @@ export class CloseFeedbackUseCase {
   ) {}
 
   async execute(userId: string, feedbackId: string): Promise<Feedback> {
-    const feedback = await this.deps.feedbackRepo.findById(feedbackId, userId);
+    const feedback = await this.deps.feedbackRepo.findById(
+      FeedbackId.fromPrimitives(feedbackId),
+      UserId.fromPrimitives(userId),
+    );
     if (!feedback) throw new FeedbackNotFoundError(feedbackId);
     feedback.close(new Date().toISOString());
     const saved = await this.deps.feedbackRepo.save(feedback);

@@ -1,4 +1,4 @@
-import { AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext, publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt, type EventBus } from "@/backend/modules/shared";
+import { AIEntityType, AIModule, AIOperation, UserId, createIntegratedAIInteractionContext, publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt, type EventBus } from "@/backend/modules/shared";
 import type { AIProvider } from "@/backend/modules/shared";
 import { FeedbackClosedError } from "../../domain/errors/feedback-closed.error";
 import { FeedbackEntriesRequiredError } from "../../domain/errors/feedback-entries-required.error";
@@ -7,6 +7,7 @@ import type { FeedbackAIServiceFactory } from "../../domain/repositories/feedbac
 import type { FeedbackEntryRepository } from "../../domain/repositories/feedback-entry.repository";
 import type { FeedbackRepository } from "../../domain/repositories/feedback.repository";
 import { Feedback } from "../../domain/entities/feedback.entity";
+import { FeedbackId } from "../../domain/value-objects/feedback-id.value-object";
 
 export class GenerateFinalFeedbackUseCase {
   constructor(
@@ -23,10 +24,12 @@ export class GenerateFinalFeedbackUseCase {
     feedbackId: string,
     aiConfig: { provider: AIProvider; apiKey?: string; baseUrl?: string; model: string },
   ): Promise<Feedback> {
-    const feedback = await this.deps.feedbackRepo.findById(feedbackId, userId);
+    const userIdVo = UserId.fromPrimitives(userId);
+    const feedbackIdVo = FeedbackId.fromPrimitives(feedbackId);
+    const feedback = await this.deps.feedbackRepo.findById(feedbackIdVo, userIdVo);
     if (!feedback) throw new FeedbackNotFoundError(feedbackId);
     if (!feedback.isActive()) throw new FeedbackClosedError(feedbackId);
-    const entries = await this.deps.entryRepo.listByFeedback(feedbackId, userId);
+    const entries = await this.deps.entryRepo.listByFeedback(feedbackIdVo, userIdVo);
     if (entries.length === 0) throw new FeedbackEntriesRequiredError(feedbackId);
 
     const feedbackPrimitives = feedback.toPrimitives();
