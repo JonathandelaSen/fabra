@@ -8,6 +8,7 @@ import {
 } from "../../test-helpers";
 import { FeedbackEntriesRequiredError } from "../../domain/errors/feedback-entries-required.error";
 import { GenerateFinalFeedbackUseCase } from "./generate-final-feedback.use-case";
+import { FinalFeedbackText } from "../../domain/value-objects/final-feedback-text.value-object";
 
 describe("GenerateFinalFeedbackUseCase", () => {
   it("generates and stores final feedback from all entries", async () => {
@@ -18,7 +19,9 @@ describe("GenerateFinalFeedbackUseCase", () => {
     await createEntryFixture(user.id, feedback.id, "First note");
     await createEntryFixture(user.id, feedback.id, "Second note");
     const aiService = {
-      generateFinalFeedback: vi.fn(async () => "Generated feedback"),
+      generateFinalFeedback: vi.fn(async () =>
+        FinalFeedbackText.fromPrimitives("Generated feedback"),
+      ),
     };
 
     const updated = await new GenerateFinalFeedbackUseCase({

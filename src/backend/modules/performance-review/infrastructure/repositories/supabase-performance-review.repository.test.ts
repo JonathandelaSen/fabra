@@ -50,6 +50,6 @@ describe("SupabasePerformanceReviewRepository", () => {
       PerformanceReviewId.fromPrimitives(saved.id),
       UserId.fromPrimitives(user.id),
     );
-    expect(deleted).toBe(true);
+    expect(deleted.toPrimitives()).toBe(true);
   });
 });

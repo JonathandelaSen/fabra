@@ -12,9 +12,9 @@ export interface CreateTemplateCVDocumentInput {
   name: string;
   templateId: string;
   templateLocale: string;
-  schemaVersion: string;
-  sourceTextHash: string;
-  aiModel: string;
+  schemaVersion: string | null;
+  sourceTextHash: string | null;
+  aiModel: string | null;
   profile: unknown;
   filename?: string | null;
   textNode?: string | null;

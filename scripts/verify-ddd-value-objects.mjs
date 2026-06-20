@@ -239,7 +239,7 @@ function isValueObjectFieldType(typeNode, decls) {
       return (typeNode.typeArguments ?? []).every((arg) => isValueObjectFieldType(arg, decls));
     }
     if (name.endsWith("Primitives")) {
-      return !decls.interfaces.has(name) && !decls.aliases.has(name);
+      return false;
     }
     return true;
   }
@@ -288,6 +288,114 @@ function checkCompositeStoresValueObjects(sourceFile, file, valueObject, violati
         sourceFile,
         field.node
       );
+    }
+  }
+}
+
+function expressionUsesToPrimitives(node) {
+  let found = false;
+  const visit = (current) => {
+    if (found) return;
+    if (
+      ts.isCallExpression(current) &&
+      ts.isPropertyAccessExpression(current.expression) &&
+      current.expression.name.getText() === "toPrimitives"
+    ) {
+      found = true;
+      return;
+    }
+    current.forEachChild(visit);
+  };
+  visit(node);
+  return found;
+}
+
+function getComposingGetterNames(valueObject) {
+  const names = new Set();
+  for (const member of valueObject.members) {
+    if (
+      ts.isGetAccessorDeclaration(member) &&
+      member.body &&
+      expressionUsesToPrimitives(member.body)
+    ) {
+      names.add(member.name?.getText() ?? "");
+    }
+  }
+  return names;
+}
+
+function referencesComposingGetter(valueNode, composingGetters) {
+  if (
+    ts.isPropertyAccessExpression(valueNode) &&
+    valueNode.expression.kind === ts.SyntaxKind.ThisKeyword
+  ) {
+    return composingGetters.has(valueNode.name.getText());
+  }
+  if (ts.isConditionalExpression(valueNode)) {
+    return (
+      referencesComposingGetter(valueNode.whenTrue, composingGetters) ||
+      referencesComposingGetter(valueNode.whenFalse, composingGetters)
+    );
+  }
+  return false;
+}
+
+function findToPrimitivesMethod(valueObject) {
+  return valueObject.members.find(
+    (member) =>
+      ts.isMethodDeclaration(member) &&
+      member.name?.getText() === "toPrimitives" &&
+      !hasModifier(member, ts.SyntaxKind.StaticKeyword)
+  );
+}
+
+function checkToPrimitivesComposes(sourceFile, file, valueObject, violations) {
+  const typeArgument = getValueObjectTypeArgument(valueObject);
+  if (!typeArgument) return;
+  const decls = collectTypeDeclarations(sourceFile);
+  if (isPrimitiveLikeTypeNode(typeArgument, decls)) return;
+
+  const method = findToPrimitivesMethod(valueObject);
+  if (!method || !method.body) return;
+
+  const returnStatement = method.body.statements.find((statement) =>
+    ts.isReturnStatement(statement)
+  );
+  if (!returnStatement || !returnStatement.expression) return;
+
+  const className = valueObject.name.text;
+  const expression = returnStatement.expression;
+  const composingGetters = getComposingGetterNames(valueObject);
+
+  if (ts.isObjectLiteralExpression(expression)) {
+    for (const property of expression.properties) {
+      let valueNode = null;
+      let label = "";
+      if (ts.isPropertyAssignment(property)) {
+        valueNode = property.initializer;
+        label = property.name.getText();
+      } else if (ts.isSpreadAssignment(property)) {
+        valueNode = property.expression;
+        label = `...${property.expression.getText()}`;
+      } else if (ts.isShorthandPropertyAssignment(property)) {
+        valueNode = property.name;
+        label = property.name.getText();
+      }
+
+      const composed =
+        valueNode &&
+        (expressionUsesToPrimitives(valueNode) ||
+          referencesComposingGetter(valueNode, composingGetters));
+      if (!composed) {
+        addViolation(
+          violations,
+          file,
+          "value-object-to-primitives-field-not-composed",
+          `Composite value object ${className}.toPrimitives() returns field "${label}" without calling .toPrimitives() on an inner value object. Each field must be produced by its inner VO's toPrimitives() (see docs/architecture/value-objects.md).`,
+          sourceFile,
+          property
+        );
+      }
     }
   }
 }
@@ -432,6 +540,7 @@ function checkValueObjectClass(sourceFile, file, valueObject, violations) {
   }
 
   checkCompositeStoresValueObjects(sourceFile, file, valueObject, violations);
+  checkToPrimitivesComposes(sourceFile, file, valueObject, violations);
 
   // Enforce semantic constructors and boolean checkers for enum-like VOs
   const enumKeys = getEnumKeysFromSourceFile(sourceFile);

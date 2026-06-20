@@ -51,6 +51,6 @@ export class EditCVProfileWithAIUseCase {
       execute: () => service.edit(aiInput),
     });
     await publishAIInteractionApplied(this.deps.eventBus, context);
-    return result;
+    return result.toPrimitives();
   }
 }

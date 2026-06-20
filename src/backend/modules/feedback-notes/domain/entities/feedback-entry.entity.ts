@@ -12,7 +12,7 @@ export interface FeedbackEntryPrimitives {
   updated_at: string;
 }
 
-export interface CreateFeedbackEntryParams {
+export interface FeedbackEntryCreateParams {
   id: string;
   user_id: string;
   feedback_id: string;
@@ -25,7 +25,7 @@ export class FeedbackEntry extends AggregateRoot {
     super();
   }
 
-  static create(params: CreateFeedbackEntryParams): FeedbackEntry {
+  static create(params: FeedbackEntryCreateParams): FeedbackEntry {
     const entry = new FeedbackEntry({
       id: params.id,
       user_id: params.user_id,

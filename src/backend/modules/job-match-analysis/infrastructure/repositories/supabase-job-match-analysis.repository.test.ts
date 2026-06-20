@@ -5,7 +5,7 @@ import {
   getSupabaseClient,
   testLabel,
 } from "@/backend/modules/test-helpers/setup";
-import { UserId } from "@/backend/modules/shared";
+import { ExecutionResult, UserId } from "@/backend/modules/shared";
 import { JobMatchAnalysis } from "../../domain/entities/job-match-analysis.entity";
 import { JobMatchAnalysisId } from "../../domain/value-objects/job-match-analysis-id.value-object";
 import { SupabaseJobMatchAnalysisRepository } from "./supabase-job-match-analysis.repository";
@@ -77,6 +77,6 @@ describe("SupabaseJobMatchAnalysisRepository", () => {
         JobMatchAnalysisId.fromPrimitives(id),
         UserId.fromPrimitives(user.id),
       ),
-    ).resolves.toBe(true);
+    ).resolves.toEqual(ExecutionResult.ok());
   });
 });

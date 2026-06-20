@@ -6,12 +6,15 @@ import {
 import type { JournalAIService } from "../../domain/repositories/journal-ai-service.repository";
 import { DraftEntryUseCase } from "./draft-entry.use-case";
 import { WorkJournalDraft } from "../../domain/value-objects/work-journal-draft.value-object";
+import { WorkJournalFinalText } from "../../domain/value-objects/work-journal-final-text.value-object";
 
 describe("DraftEntryUseCase", () => {
   it("passes provided context and draft data to the AI service", async () => {
     const user = await createTestUser("wj-draft-entry");
     const aiService: JournalAIService = {
-      draftEntry: vi.fn(async () => "Drafted final text"),
+      draftEntry: vi.fn(async () =>
+        WorkJournalFinalText.fromPrimitives("Drafted final text"),
+      ),
     };
     const useCase = new DraftEntryUseCase({
       aiFactory: { create: vi.fn(() => aiService) },

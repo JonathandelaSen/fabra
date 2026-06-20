@@ -1,6 +1,8 @@
 import type { StandardCVProfile } from "../cv-profile";
 import type { CVTemplateId, CVTemplateLocale } from "../cv-templates";
 import type { AIProvider } from "@/backend/modules/shared";
+import type { StructuredCVProfileData } from "../value-objects/structured-cv-profile-data.value-object";
+import type { EditedCVProfile } from "../value-objects/edited-cv-profile.value-object";
 
 export interface StructuredCVProfileResult {
   schemaVersion: string;
@@ -8,7 +10,7 @@ export interface StructuredCVProfileResult {
 }
 
 export interface CVProfileStructuringAIService {
-  structure(input: { text: string }): Promise<StructuredCVProfileResult>;
+  structure(input: { text: string }): Promise<StructuredCVProfileData>;
 }
 
 export interface CVProfileStructuringAIServiceFactory {
@@ -27,7 +29,7 @@ export interface CVProfileEditingAIService {
     templateId?: CVTemplateId;
     locale?: CVTemplateLocale;
     recommendations?: string[];
-  }): Promise<StandardCVProfile>;
+  }): Promise<EditedCVProfile>;
 }
 
 export interface CVProfileEditingAIServiceFactory {

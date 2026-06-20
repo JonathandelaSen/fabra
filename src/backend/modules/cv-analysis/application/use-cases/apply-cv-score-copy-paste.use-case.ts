@@ -10,7 +10,7 @@ import {
 } from "@/backend/modules/shared";
 import { CVAnalysis } from "../../domain/entities/cv-analysis.entity";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
-import type { CVScoringAIResult } from "../../domain/repositories/cv-scoring-ai.service";
+import type { CVScoringAIResultPrimitives } from "../../domain/repositories/cv-scoring-ai.service";
 import { CVAnalysisId } from "../../domain/value-objects/cv-analysis-id.value-object";
 import { ASSISTANCE_MODE } from "@/backend/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
 import {
@@ -23,7 +23,7 @@ import {
 export interface ApplyCVScoreCopyPasteInput {
   id: string;
   userId: string;
-  parsedResult: CVScoringAIResult;
+  parsedResult: CVScoringAIResultPrimitives;
   interactionId?: string;
   attemptId?: string;
 }

@@ -3,19 +3,21 @@ import type { Analysis, CVRecord } from "@/lib/analysis-types";
 import { ErrorCode } from "@/shared/error-codes";
 import { badRequest } from "@/backend/modules/shared";
 import {
-  OFFER_CHAT_SYSTEM_PROMPT,
-  buildOfferChatPrompt,
+  JobAnalysisChatPromptService,
   type OfferChatHistoryMessage,
-} from "../../domain/services/job-analysis-chat-prompts";
+} from "../../domain/services/job-analysis-chat-prompt.service";
+
+const promptService = new JobAnalysisChatPromptService();
 import type {
   JobAnalysisChatAIInput,
   JobAnalysisChatAIService,
 } from "../../domain/repositories/job-analysis-chat-ai-service.repository";
+import { JobAnalysisChatContent } from "../../domain/value-objects/job-analysis-chat-content.value-object";
 
 export class OpenAIJobAnalysisChatAIService implements JobAnalysisChatAIService {
   constructor(private readonly config: { apiKey: string; model: string }) {}
 
-  async generateAnswer(input: JobAnalysisChatAIInput): Promise<string> {
+  async generateAnswer(input: JobAnalysisChatAIInput): Promise<JobAnalysisChatContent> {
     const promptInput = {
       message: input.message,
       analysis: input.context.analysis as Analysis,
@@ -31,8 +33,8 @@ export class OpenAIJobAnalysisChatAIService implements JobAnalysisChatAIService 
     const response = await openai.chat.completions.create({
       model: this.config.model,
       messages: [
-        { role: "system", content: OFFER_CHAT_SYSTEM_PROMPT },
-        { role: "user", content: buildOfferChatPrompt(promptInput) },
+        { role: "system", content: promptService.systemInstruction() },
+        { role: "user", content: promptService.build(promptInput) },
       ],
       response_format: { type: "json_object" },
     });
@@ -40,7 +42,7 @@ export class OpenAIJobAnalysisChatAIService implements JobAnalysisChatAIService 
     return this.parseResponse(response.choices[0]?.message.content || "{}");
   }
 
-  private parseResponse(rawText: string): string {
+  private parseResponse(rawText: string): JobAnalysisChatContent {
     const parsed = JSON.parse(rawText || "{}") as Record<string, unknown>;
     const answer =
       typeof parsed.answer === "string" ? parsed.answer.trim() : "";
@@ -49,7 +51,7 @@ export class OpenAIJobAnalysisChatAIService implements JobAnalysisChatAIService 
       throw new Error("The AI could not generate an answer with this context.");
     }
 
-    return answer;
+    return JobAnalysisChatContent.fromPrimitives(answer);
   }
 }
 

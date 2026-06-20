@@ -2,11 +2,12 @@ import type {
   ReviewSelfAssessmentAIInput,
   ReviewSelfAssessmentAIService,
 } from "../../domain/repositories/review-self-assessment-ai.service";
+import { SelfAssessmentContent } from "../../domain/value-objects/self-assessment-content.value-object";
 
 class MockReviewSelfAssessmentAIService
   implements ReviewSelfAssessmentAIService
 {
-  async generate(input: ReviewSelfAssessmentAIInput): Promise<string> {
+  async generate(input: ReviewSelfAssessmentAIInput): Promise<SelfAssessmentContent> {
     const lines = [
       `# Self-assessment (mock) — ${input.title}`,
       "",
@@ -24,7 +25,7 @@ class MockReviewSelfAssessmentAIService
         lines.push(`- ${item.content} — source: ${item.source}${date}.`);
       }
     }
-    return lines.join("\n");
+    return SelfAssessmentContent.fromPrimitives(lines.join("\n"));
   }
 }
 

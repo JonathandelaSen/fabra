@@ -5,6 +5,8 @@ describe("CV public feedback use cases", () => {
     const repo = { listForOwner: vi.fn(async () => []), deleteForOwner: vi.fn(async () => undefined) };
     await expect(new ListCVPublicFeedbackUseCase(repo).execute({ cvId: "cv", userId: "user" })).resolves.toEqual([]);
     await new DeleteCVPublicFeedbackUseCase(repo).execute({ id: "feedback", userId: "user" });
-    expect(repo.deleteForOwner).toHaveBeenCalledWith("feedback", "user");
+    const [id, userId] = repo.deleteForOwner.mock.calls[0];
+    expect(id.toPrimitives()).toBe("feedback");
+    expect(userId.toPrimitives()).toBe("user");
   });
 });

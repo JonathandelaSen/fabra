@@ -1,6 +1,7 @@
 import type { ChatMessagePrimitives } from "../entities/chat-message.entity";
 import type { AIProvider } from "@/backend/modules/shared";
 import type { JobAnalysisChatContext } from "../value-objects/job-analysis-chat-context.value-object";
+import type { JobAnalysisChatContent } from "../value-objects/job-analysis-chat-content.value-object";
 
 export interface JobAnalysisChatAIInput {
   message: string;
@@ -9,7 +10,7 @@ export interface JobAnalysisChatAIInput {
 }
 
 export interface JobAnalysisChatAIService {
-  generateAnswer(input: JobAnalysisChatAIInput): Promise<string>;
+  generateAnswer(input: JobAnalysisChatAIInput): Promise<JobAnalysisChatContent>;
 }
 
 export interface JobAnalysisChatAIServiceFactory {

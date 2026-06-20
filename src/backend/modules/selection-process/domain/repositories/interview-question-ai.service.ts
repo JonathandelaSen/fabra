@@ -1,5 +1,6 @@
 import type { Analysis, CVRecord } from "@/lib/analysis-types";
 import type { AIProvider } from "@/backend/modules/shared";
+import type { InterviewAnswer } from "../value-objects/interview-answer.value-object";
 
 export interface InterviewQuestionAIInput {
   question: string;
@@ -12,8 +13,7 @@ export interface InterviewQuestionAIInput {
 }
 
 export interface InterviewQuestionAIService {
-  generateAnswer(input: InterviewQuestionAIInput): Promise<string>;
-  editAnswer(input: InterviewQuestionAIInput): Promise<string>;
+  generate(input: InterviewQuestionAIInput): Promise<InterviewAnswer>;
 }
 
 export interface InterviewQuestionAIServiceFactory {

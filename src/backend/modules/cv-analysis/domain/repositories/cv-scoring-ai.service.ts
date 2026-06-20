@@ -1,4 +1,5 @@
 import type { AIProvider } from "@/backend/modules/shared";
+import type { CVScoringAIResult } from "../value-objects/cv-scoring-ai-result.value-object";
 
 export interface CVScoringAIResultPrimitives {
   score: number;
@@ -6,8 +7,6 @@ export interface CVScoringAIResultPrimitives {
   keywords: string[];
   improvements: string[];
 }
-
-export interface CVScoringAIResult extends CVScoringAIResultPrimitives {}
 
 export interface CVScoringAIInput {
   text: string;

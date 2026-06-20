@@ -14,8 +14,8 @@ import { SupabaseCVStructuredProfileRepository } from "./infrastructure/reposito
 import { MockPdfTextExtractor } from "./infrastructure/services/mock-pdf-text-extractor.service";
 import { MockCVProfileStructuringAIServiceFactory } from "./infrastructure/services/mock-cv-profile-structuring-ai.service";
 import { ProviderCVProfileStructuringAIServiceFactory } from "./infrastructure/services/provider-cv-profile-structuring-ai-service.factory";
-import { SupabaseCVPdfStorage } from "./infrastructure/services/supabase-cv-pdf-storage.service";
-import { TemplateCVPdfRenderer } from "./infrastructure/services/template-cv-pdf-renderer.service";
+import { SupabaseCVPdfStorage } from "./infrastructure/storage/supabase-cv-pdf-storage";
+import { TemplateCVPdfRenderer } from "./infrastructure/renderers/template-cv-pdf-renderer";
 
 const documentRepo = new SupabaseCVDocumentRepository();
 const profileRepo = new SupabaseCVStructuredProfileRepository();

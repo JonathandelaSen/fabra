@@ -7,7 +7,10 @@ import type { CVTemplateId, CVTemplateLocale } from "../../domain/cv-templates";
 import type {
   CVProfileEditingAIService,
 } from "../../domain/repositories/cv-profile-ai.service";
-import { SYSTEM_PROMPT } from "../../domain/services/cv-profile-editing-prompts";
+import { EditedCVProfile } from "../../domain/value-objects/edited-cv-profile.value-object";
+import { CVProfileEditingPromptService } from "../../domain/services/cv-profile-editing-prompt.service";
+
+const promptService = new CVProfileEditingPromptService();
 
 export interface AICVEditInput {
   baseUrl?: string;
@@ -42,7 +45,7 @@ class OllamaCVProfileEditingAIService implements CVProfileEditingAIService {
 
   async edit(
     input: Omit<AICVEditInput, "baseUrl" | "model">,
-  ): Promise<StandardCVProfile> {
+  ): Promise<EditedCVProfile> {
     const recommendations = input.recommendations?.length
       ? `\nRelevant recommendations from previous analysis:\n${input.recommendations
           .map((item) => `- ${item}`)
@@ -54,14 +57,14 @@ class OllamaCVProfileEditingAIService implements CVProfileEditingAIService {
       stream: false,
       model: this.config.model,
       prompt: `Instruction:\n${input.instruction}\n\nTemplate context:\n${input.templateId ?? "unknown"} / ${input.locale ?? "es"}${recommendations}\n\nStructured CV profile JSON:\n${JSON.stringify(input.profile)}`,
-      system: SYSTEM_PROMPT,
+      system: promptService.build(),
       format: "json",
     });
 
-    return {
+    return EditedCVProfile.fromPrimitives({
       ...parseEditedCVProfile(response.response || "{}"),
       presentation: input.profile.presentation,
-    };
+    });
   }
 }
 

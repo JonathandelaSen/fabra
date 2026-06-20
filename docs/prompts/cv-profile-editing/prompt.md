@@ -3,9 +3,9 @@
 Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
 
 ## Source
-- Prompt source file: `src/backend/modules/cv-library/domain/services/cv-profile-editing-prompts.ts`
+- Prompt source file: `src/backend/modules/cv-library/domain/services/cv-profile-editing.prompt.ts`
 - Copy Paste prompt service: `src/backend/modules/cv-library/infrastructure/services/cv-profile-editing-copy-paste-prompt.service.ts`
-- System prompt constant: `SYSTEM_PROMPT`
+- System prompt constant: `CVProfileEditingPromptService.build()`
 - Use case (integrated): `EditCVProfileWithAIUseCase` in `src/backend/modules/cv-library/application/use-cases/edit-cv-profile-with-ai.use-case.ts`
 - Use cases (copy paste): `PrepareCVEditorCopyPasteUseCase`, `PreviewCVEditorCopyPasteUseCase`, `ApplyCVEditorCopyPasteUseCase`
 - Model controller: provider-aware `ProviderCVProfileEditingAIServiceFactory` selects mock or Gemini and delegates Gemini calls to `src/backend/modules/cv-library/infrastructure/services/gemini-cv-profile-editing-ai.service.ts`
@@ -68,7 +68,7 @@ Copy Paste transport rules additionally require:
 ### Integrated mode
 1. `EditCVProfileWithAIUseCase` creates the configured provider-selected editing service for the request.
 2. The service builds a user message from the instruction, template context, recommendations, and profile JSON.
-3. The selected provider receives the fixed `SYSTEM_PROMPT` as `systemInstruction`.
+3. The selected provider receives the fixed `CVProfileEditingPromptService.build()` as `systemInstruction`.
 4. `parseEditedCVProfile` normalizes and validates the returned profile.
 5. The original presentation metadata is preserved before returning.
 
@@ -82,4 +82,4 @@ Copy Paste transport rules additionally require:
 The preview step compares the current profile against the edited profile section by section (basics, summary, experience, education, skills, etc.) and reports which sections changed. A warning is shown when more than 5 sections changed (large rewrite).
 
 ## Maintenance
-When `SYSTEM_PROMPT`, `EditCVProfileWithAIUseCase`, `CVProfileEditingCopyPastePromptService`, recommendations handling, narrative Markdown rules, or presentation preservation changes, update this document in the same change.
+When `CVProfileEditingPromptService.build()`, `EditCVProfileWithAIUseCase`, `CVProfileEditingCopyPastePromptService`, recommendations handling, narrative Markdown rules, or presentation preservation changes, update this document in the same change.

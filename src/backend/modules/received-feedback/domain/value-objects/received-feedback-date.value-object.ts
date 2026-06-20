@@ -1,12 +1,21 @@
-import { IsoDate } from "@/backend/modules/shared";
+import { IsoDate, ValueObject } from "@/backend/modules/shared";
 
-export class ReceivedFeedbackDate extends IsoDate {
-  private constructor(value: string, today: string) {
-    super(value, "Received feedback date");
-    if (value > today) throw new Error("Received feedback date cannot be in the future.");
+export class ReceivedFeedbackDate extends ValueObject<string> {
+  private constructor(private readonly value: string) {
+    super();
   }
 
-  static fromPrimitives(value: string, today = new Date().toISOString().slice(0, 10)): ReceivedFeedbackDate {
-    return new ReceivedFeedbackDate(value, today);
+  static fromPrimitives(
+    value: string,
+    today = new Date().toISOString().slice(0, 10),
+  ): ReceivedFeedbackDate {
+    IsoDate.fromPrimitives(value);
+    if (value > today)
+      throw new Error("Received feedback date cannot be in the future.");
+    return new ReceivedFeedbackDate(value);
+  }
+
+  toPrimitives(): string {
+    return this.value;
   }
 }

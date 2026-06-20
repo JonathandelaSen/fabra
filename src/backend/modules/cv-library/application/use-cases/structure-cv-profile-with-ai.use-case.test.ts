@@ -4,6 +4,7 @@ import type {
   CVProfileStructuringAIService,
   CVProfileStructuringAIServiceFactory,
 } from "../../domain/repositories/cv-profile-ai.service";
+import { StructuredCVProfileData } from "../../domain/value-objects/structured-cv-profile-data.value-object";
 
 describe("StructureCVProfileWithAIUseCase", () => {
   it("creates a configured AI service and structures the provided text", async () => {
@@ -14,10 +15,10 @@ describe("StructureCVProfileWithAIUseCase", () => {
         return {
           async structure(input) {
             calls.push(input);
-            return {
+            return StructuredCVProfileData.fromPrimitives({
               schemaVersion: "cv-profile.v1",
               profile: { basics: { name: "Ada" } },
-            };
+            });
           },
         };
       },

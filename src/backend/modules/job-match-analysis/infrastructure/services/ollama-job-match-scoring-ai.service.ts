@@ -4,7 +4,10 @@ import type {
   JobMatchScoringAIResult,
   JobMatchScoringAIService,
 } from "../../domain/repositories/job-match-scoring-ai.service";
-import { buildJobMatchScoringPrompt } from "../../domain/services/job-match-scoring-prompts";
+import { JobMatchScoringAIResultVO } from "../../domain/value-objects/job-match-scoring-ai-result.value-object";
+import { JobMatchScoringPromptService } from "../../domain/services/job-match-scoring-prompt.service";
+
+const promptService = new JobMatchScoringPromptService();
 
 function cleanArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
@@ -54,21 +57,21 @@ function parseResult(rawText: string): JobMatchScoringAIResult {
 class OllamaJobMatchScoringAIService implements JobMatchScoringAIService {
   constructor(private readonly config: { baseUrl?: string; model: string }) {}
 
-  async score(input: JobMatchScoringAIInput): Promise<JobMatchScoringAIResult> {
+  async score(input: JobMatchScoringAIInput): Promise<JobMatchScoringAIResultVO> {
     const ollama = new Ollama({ host: this.config.baseUrl || "http://localhost:11434" });
     const response = await ollama.generate({
       model: this.config.model,
       prompt: input.text,
-      system: buildJobMatchScoringPrompt(
-        input.jobDescription,
-        input.jobUrl,
-        input.language,
-      ),
+      system: promptService.build({
+          jobDescription: input.jobDescription,
+          jobUrl: input.jobUrl,
+          language: input.language,
+        }),
       format: "json",
       stream: false,
     });
 
-    return parseResult(response.response || "{}");
+    return JobMatchScoringAIResultVO.fromPrimitives(parseResult(response.response || "{}"));
   }
 }
 

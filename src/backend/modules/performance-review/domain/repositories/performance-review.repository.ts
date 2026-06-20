@@ -1,4 +1,5 @@
 import type { UserId } from "@/backend/modules/shared";
+import type { ExecutionResult } from "@/backend/modules/shared";
 import type { PerformanceReview } from "../entities/performance-review.entity";
 import type { PerformanceReviewId } from "../value-objects/performance-review-id.value-object";
 
@@ -13,5 +14,5 @@ export interface PerformanceReviewRepository {
     userId: UserId,
   ): Promise<PerformanceReview | null>;
   save(review: PerformanceReview): Promise<PerformanceReview>;
-  delete(id: PerformanceReviewId, userId: UserId): Promise<boolean>;
+  delete(id: PerformanceReviewId, userId: UserId): Promise<ExecutionResult>;
 }

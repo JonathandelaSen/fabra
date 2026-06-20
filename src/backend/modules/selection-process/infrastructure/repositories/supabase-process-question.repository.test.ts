@@ -6,7 +6,7 @@ import {
   getSupabaseClient,
   testLabel,
 } from "@/backend/modules/test-helpers/setup";
-import { UserId } from "@/backend/modules/shared";
+import { ExecutionResult, UserId } from "@/backend/modules/shared";
 import { ProcessQuestion } from "../../domain/entities/process-question.entity";
 import { ProcessQuestionId } from "../../domain/value-objects/process-question-id.value-object";
 import { SupabaseProcessQuestionRepository } from "./supabase-process-question.repository";
@@ -87,6 +87,6 @@ describe("SupabaseProcessQuestionRepository", () => {
         ProcessQuestionId.fromPrimitives(id),
         UserId.fromPrimitives(user.id),
       ),
-    ).resolves.toBe(true);
+    ).resolves.toEqual(ExecutionResult.ok());
   });
 });

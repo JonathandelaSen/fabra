@@ -6,7 +6,10 @@ import type {
   JobMatchScoringAIResult,
   JobMatchScoringAIService,
 } from "../../domain/repositories/job-match-scoring-ai.service";
-import { buildJobMatchScoringPrompt } from "../../domain/services/job-match-scoring-prompts";
+import { JobMatchScoringAIResultVO } from "../../domain/value-objects/job-match-scoring-ai-result.value-object";
+import { JobMatchScoringPromptService } from "../../domain/services/job-match-scoring-prompt.service";
+
+const promptService = new JobMatchScoringPromptService();
 
 function cleanArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
@@ -56,25 +59,25 @@ function parseResult(rawText: string): JobMatchScoringAIResult {
 class OpenAIJobMatchScoringAIService implements JobMatchScoringAIService {
   constructor(private readonly config: { apiKey: string; model: string }) {}
 
-  async score(input: JobMatchScoringAIInput): Promise<JobMatchScoringAIResult> {
+  async score(input: JobMatchScoringAIInput): Promise<JobMatchScoringAIResultVO> {
     const openai = new OpenAI({ apiKey: this.config.apiKey });
     const response = await openai.chat.completions.create({
       model: this.config.model,
       messages: [
         {
           role: "system",
-          content: buildJobMatchScoringPrompt(
-            input.jobDescription,
-            input.jobUrl,
-            input.language,
-          ),
+          content: promptService.build({
+          jobDescription: input.jobDescription,
+          jobUrl: input.jobUrl,
+          language: input.language,
+        }),
         },
         { role: "user", content: input.text },
       ],
       response_format: { type: "json_object" },
     });
 
-    return parseResult(response.choices[0]?.message.content || "{}");
+    return JobMatchScoringAIResultVO.fromPrimitives(parseResult(response.choices[0]?.message.content || "{}"));
   }
 }
 

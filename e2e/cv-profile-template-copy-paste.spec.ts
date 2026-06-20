@@ -54,7 +54,6 @@ test("user can create a template CV profile with Copy Paste", async ({
     page.getByRole("heading", { name: "Linea" }).first(),
   ).toBeVisible();
 
-  await page.getByPlaceholder(tTemplates.searchCv).fill("template-copy-paste");
   await page.getByRole("button", { name: /template-copy-paste/ }).click();
 
   await page.getByRole("button", { name: tTemplates.createVersion }).click();
@@ -100,7 +99,6 @@ test("Copy Paste prepares prompt for a stored CV without previous extraction", a
   await page.goto("/templates");
   await page.context().grantPermissions(["clipboard-write"]);
   await page.getByRole("button", { name: "Linea" }).first().click();
-  await page.getByPlaceholder(tTemplates.searchCv).fill(cv.name);
   await page.getByRole("button", { name: cv.name }).click();
 
   await page.getByRole("button", { name: tTemplates.createVersion }).click();

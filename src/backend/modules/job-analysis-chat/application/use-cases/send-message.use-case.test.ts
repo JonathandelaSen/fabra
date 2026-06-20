@@ -83,7 +83,7 @@ describe("SendMessageUseCase", () => {
       delete: vi.fn(),
     };
     const aiService: JobAnalysisChatAIService = {
-      generateAnswer: vi.fn(async () => "Respuesta IA"),
+      generateAnswer: vi.fn(async () => JobAnalysisChatContent.fromPrimitives("Respuesta IA")),
     };
     const eventBus = {
       publish: vi.fn().mockResolvedValue(undefined),
@@ -148,7 +148,7 @@ describe("SendMessageUseCase", () => {
       },
     });
     const aiService: JobAnalysisChatAIService = {
-      generateAnswer: vi.fn(async () => "Respuesta IA"),
+      generateAnswer: vi.fn(async () => JobAnalysisChatContent.fromPrimitives("Respuesta IA")),
     };
 
     await expect(

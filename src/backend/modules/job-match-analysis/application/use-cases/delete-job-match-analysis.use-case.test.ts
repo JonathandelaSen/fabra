@@ -9,7 +9,7 @@ describe("DeleteJobMatchAnalysisUseCase", () => {
       search: vi.fn(),
       findById: vi.fn(),
       save: vi.fn(),
-      delete: vi.fn(async () => true),
+      delete: vi.fn(async () => ExecutionResult.ok()),
     } satisfies JobMatchAnalysisRepository;
 
     const result = await new DeleteJobMatchAnalysisUseCase({ repo }).execute({

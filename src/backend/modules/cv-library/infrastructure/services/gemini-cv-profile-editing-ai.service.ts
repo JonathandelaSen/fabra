@@ -9,7 +9,10 @@ import type { CVTemplateId, CVTemplateLocale } from "../../domain/cv-templates";
 import type {
   CVProfileEditingAIService,
 } from "../../domain/repositories/cv-profile-ai.service";
-import { SYSTEM_PROMPT } from "../../domain/services/cv-profile-editing-prompts";
+import { EditedCVProfile } from "../../domain/value-objects/edited-cv-profile.value-object";
+import { CVProfileEditingPromptService } from "../../domain/services/cv-profile-editing-prompt.service";
+
+const promptService = new CVProfileEditingPromptService();
 
 export interface AICVEditInput {
   apiKey: string;
@@ -44,7 +47,7 @@ class GeminiCVProfileEditingAIService implements CVProfileEditingAIService {
 
   async edit(
     input: Omit<AICVEditInput, "apiKey" | "model">,
-  ): Promise<StandardCVProfile> {
+  ): Promise<EditedCVProfile> {
     const googleAI = new GoogleGenAI({ apiKey: this.config.apiKey });
     const recommendations = input.recommendations?.length
       ? `\nRelevant recommendations from previous analysis:\n${input.recommendations
@@ -65,15 +68,15 @@ class GeminiCVProfileEditingAIService implements CVProfileEditingAIService {
         },
       ],
       config: {
-        systemInstruction: SYSTEM_PROMPT,
+        systemInstruction: promptService.build(),
         responseMimeType: "application/json",
       },
     });
 
-    return {
+    return EditedCVProfile.fromPrimitives({
       ...parseEditedCVProfile(response.text || "{}"),
       presentation: input.profile.presentation,
-    };
+    });
   }
 }
 

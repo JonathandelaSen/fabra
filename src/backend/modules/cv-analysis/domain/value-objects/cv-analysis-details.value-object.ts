@@ -1,23 +1,8 @@
 import { ValueObject } from "@/backend/modules/shared";
 import type { CVAnalysisExtractedTextPrimitives } from "../entities/cv-analysis.entity";
+import type { CVAnalysisDetailsPrimitives } from "./cv-analysis-details.primitives";
 
-export interface CVAnalysisDetailsPrimitives {
-  cvDocumentId: string | null;
-  cvStructuredProfileId: string | null;
-  title: string;
-  filename: string;
-  fileSize: number | null;
-  pdfStoragePath: string | null;
-  extractedText: CVAnalysisExtractedTextPrimitives;
-  aiModel: string | null;
-  score: number | null;
-  feedback: string | null;
-  keywords: string[];
-  improvements: string[];
-  aiContext: unknown | null;
-  analyzedAt: string | null;
-  legacyAnalysisId: string | null;
-}
+export type { CVAnalysisDetailsPrimitives } from "./cv-analysis-details.primitives";
 
 export class CVAnalysisDetails extends ValueObject<CVAnalysisDetailsPrimitives> {
   private constructor(private readonly value: CVAnalysisDetailsPrimitives) {

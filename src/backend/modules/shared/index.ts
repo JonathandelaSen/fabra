@@ -15,6 +15,7 @@ export { type CopyPasteExpectedResponsePrimitives } from "./domain/value-objects
 export { IsoDate } from "./domain/value-objects/iso-date.value-object";
 export { OptionalIsoDate } from "./domain/value-objects/optional-iso-date.value-object";
 export { Timestamp } from "./domain/value-objects/timestamp.value-object";
+export { OptionalTimestamp } from "./domain/value-objects/optional-timestamp.value-object";
 export { UserId } from "./domain/value-objects/user-id.value-object";
 export { ValueObject } from "./domain/value-objects/value-object";
 export { Counter } from "./domain/value-objects/counter.value-object";

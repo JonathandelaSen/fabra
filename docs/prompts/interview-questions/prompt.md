@@ -3,15 +3,15 @@
 Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
 
 ## Source
-- Prompt source file: `src/backend/modules/selection-process/domain/services/interview-question-prompts.ts`
-- System prompt constant: `INTERVIEW_QUESTION_SYSTEM_PROMPT`
-- Prompt builder: `buildInterviewQuestionPrompt`
-- Copy Paste prompt builder: `buildInterviewQuestionCopyPastePrompt` in `src/modules/selection-process/application/services/interview-question-copy-paste-prompts.ts`
+- Prompt source file: `src/backend/modules/selection-process/domain/services/interview-question.prompt.ts`
+- System prompt constant: `InterviewQuestionPromptService.systemInstruction()`
+- Prompt builder: `InterviewQuestionPromptService.build`
+- Copy Paste prompt builder: `InterviewQuestionPromptService.buildForClipboard` in `src/backend/modules/selection-process/domain/services/interview-question-prompt.service.ts`
 - Model controller: `src/modules/selection-process/infrastructure/services/gemini-interview-question-ai.service.ts`
 
 ## Current Prompt
 
-The system prompt frames the model as an elite interview coach (former Big Tech hiring manager and bar-raiser, thousands of interviews on both sides of the table) and structures answer generation in three steps. See `INTERVIEW_QUESTION_SYSTEM_PROMPT` in `src/backend/modules/selection-process/domain/services/interview-question-prompts.ts` for the full literal text.
+The system prompt frames the model as an elite interview coach (former Big Tech hiring manager and bar-raiser, thousands of interviews on both sides of the table) and structures answer generation in three steps. See `InterviewQuestionPromptService.systemInstruction()` in `src/backend/modules/selection-process/domain/services/interview-question.prompt.ts` for the full literal text.
 
 **Step 1 — Question diagnosis:** identify the competency or signal the interviewer is really evaluating (ownership, conflict handling, judgement under ambiguity, culture fit, motivation, technical depth), then classify the question type and apply the matching framework:
 
@@ -31,7 +31,7 @@ The system prompt frames the model as an elite interview coach (former Big Tech 
 
 The JSON contract is unchanged: `{ "answer": "<final answer>" }`.
 
-The user message is built by `buildInterviewQuestionPrompt` with:
+The user message is built by `InterviewQuestionPromptService.build` with:
 
 ```text
 Interview question:
@@ -86,7 +86,7 @@ Create the best possible answer using only the information above.
 
 ## Copy Paste Prompt
 
-`buildInterviewQuestionCopyPastePrompt` embeds the same elite-coach system text (Step 1 diagnosis, Step 2 spoken-word writing, Step 3 honesty guardrails, and the question-language rule) as a single prompt for external chat tools, plus the same context sections (question, factual context, current answer, edit instruction, linked CV, linked posting, offer metadata). Differences from the integrated prompt:
+`InterviewQuestionPromptService.buildForClipboard` embeds the same elite-coach system text (Step 1 diagnosis, Step 2 spoken-word writing, Step 3 honesty guardrails, and the question-language rule) as a single prompt for external chat tools, plus the same context sections (question, factual context, current answer, edit instruction, linked CV, linked posting, offer metadata). Differences from the integrated prompt:
 
 - Includes a privacy note warning the user that the prompt may contain CV, offer, and interview data.
 - When factual context is insufficient, it asks the model to say what is missing instead of returning an empty answer.
@@ -95,4 +95,4 @@ Create the best possible answer using only the information above.
 Both prompts must stay semantically aligned: same coaching frameworks, same honesty rules, same language rule.
 
 ## Maintenance
-When `INTERVIEW_QUESTION_SYSTEM_PROMPT`, `buildInterviewQuestionPrompt`, `buildInterviewQuestionCopyPastePrompt`, linked context, or response parsing changes, update this document in the same change.
+When `InterviewQuestionPromptService.systemInstruction()`, `InterviewQuestionPromptService.build`, `InterviewQuestionPromptService.buildForClipboard`, linked context, or response parsing changes, update this document in the same change.

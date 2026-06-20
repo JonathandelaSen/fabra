@@ -41,6 +41,6 @@ export class DraftEntryUseCase {
     });
     await publishAIInteractionApplied(this.deps.eventBus, context);
 
-    return WorkJournalDraft.fromPrimitives(finalText);
+    return WorkJournalDraft.fromPrimitives(finalText.toPrimitives());
   }
 }

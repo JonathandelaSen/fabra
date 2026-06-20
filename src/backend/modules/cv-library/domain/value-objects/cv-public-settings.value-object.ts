@@ -1,4 +1,4 @@
-import { BooleanFlag, LongText, OptionalIsoDate, ValueObject } from "@/backend/modules/shared";
+import { BooleanFlag, LongText, OptionalTimestamp, ValueObject } from "@/backend/modules/shared";
 
 export interface CVPublicSettingsPrimitives {
   enabled: boolean;
@@ -14,7 +14,7 @@ export class CVPublicSettings extends ValueObject<CVPublicSettingsPrimitives> {
     private readonly feedbackEnabledValue: BooleanFlag,
     private readonly publicIdValue: LongText | null,
     private readonly slugValue: LongText | null,
-    private readonly publishedAtValue: OptionalIsoDate,
+    private readonly publishedAtValue: OptionalTimestamp,
   ) {
     super();
   }
@@ -27,7 +27,7 @@ export class CVPublicSettings extends ValueObject<CVPublicSettingsPrimitives> {
       BooleanFlag.fromPrimitives(primitives.feedbackEnabled ?? false),
       primitives.publicId === null ? null : LongText.fromPrimitives(primitives.publicId),
       primitives.slug === null ? null : LongText.fromPrimitives(primitives.slug),
-      OptionalIsoDate.fromPrimitives(primitives.publishedAt),
+      OptionalTimestamp.fromPrimitives(primitives.publishedAt),
     );
   }
 

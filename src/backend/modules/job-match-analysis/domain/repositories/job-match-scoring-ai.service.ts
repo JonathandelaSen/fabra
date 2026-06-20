@@ -21,8 +21,10 @@ export interface JobMatchScoringAIInput {
   language?: string | null;
 }
 
+import type { JobMatchScoringAIResultVO } from "../value-objects/job-match-scoring-ai-result.value-object";
+
 export interface JobMatchScoringAIService {
-  score(input: JobMatchScoringAIInput): Promise<JobMatchScoringAIResult>;
+  score(input: JobMatchScoringAIInput): Promise<JobMatchScoringAIResultVO>;
 }
 
 export interface JobMatchScoringAIServiceFactory {

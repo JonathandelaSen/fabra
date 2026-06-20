@@ -2,16 +2,19 @@ import OpenAI from "openai";
 import type { CVRecord } from "@/lib/analysis-types";
 import { ErrorCode } from "@/shared/error-codes";
 import { badRequest } from "@/backend/modules/shared";
-import { CV_CHAT_SYSTEM_PROMPT, buildCVChatPrompt, type CVChatHistoryMessage } from "../../domain/services/cv-chat-prompts";
+import { CVChatPromptService, type CVChatHistoryMessage } from "../../domain/services/cv-chat-prompt.service";
+
+const promptService = new CVChatPromptService();
 import type {
   CVChatAIInput,
   CVChatAIService,
 } from "../../domain/repositories/cv-chat-ai-service.repository";
+import { CVChatContent } from "../../domain/value-objects/cv-chat-content.value-object";
 
 export class OpenAICVChatAIService implements CVChatAIService {
   constructor(private readonly config: { apiKey: string; model: string }) {}
 
-  async generateAnswer(input: CVChatAIInput): Promise<string> {
+  async generateAnswer(input: CVChatAIInput): Promise<CVChatContent> {
     const promptInput = {
       message: input.message,
       cv: input.context.cv as CVRecord | null,
@@ -26,8 +29,8 @@ export class OpenAICVChatAIService implements CVChatAIService {
     const response = await openai.chat.completions.create({
       model: this.config.model,
       messages: [
-        { role: "system", content: CV_CHAT_SYSTEM_PROMPT },
-        { role: "user", content: buildCVChatPrompt(promptInput) },
+        { role: "system", content: promptService.systemInstruction() },
+        { role: "user", content: promptService.build(promptInput) },
       ],
       response_format: { type: "json_object" },
     });
@@ -35,7 +38,7 @@ export class OpenAICVChatAIService implements CVChatAIService {
     return this.parseResponse(response.choices[0]?.message.content || "{}");
   }
 
-  private parseResponse(rawText: string): string {
+  private parseResponse(rawText: string): CVChatContent {
     const parsed = JSON.parse(rawText || "{}") as Record<string, unknown>;
     const answer =
       typeof parsed.answer === "string" ? parsed.answer.trim() : "";
@@ -44,7 +47,7 @@ export class OpenAICVChatAIService implements CVChatAIService {
       throw new Error("The AI could not generate an answer with this context.");
     }
 
-    return answer;
+    return CVChatContent.fromPrimitives(answer);
   }
 }
 

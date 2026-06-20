@@ -1,9 +1,9 @@
 # CV Analysis
 
 ## Source
-- Prompt source file: `src/backend/modules/cv-analysis/domain/services/cv-scoring-prompts.ts`
-- Integrated prompt builder: `buildGeneralScoringPrompt`
-- Copy Paste prompt builder: `buildCVScoringCopyPastePrompt`
+- Prompt source file: `src/backend/modules/cv-analysis/domain/services/cv-scoring.prompt.ts`
+- Integrated prompt builder: `CVScoringPromptService.build`
+- Copy Paste prompt builder: `CVScoringPromptService.buildForClipboard`
 - Model controller: `src/modules/cv-analysis/infrastructure/services/gemini-cv-scoring-ai.service.ts`
 - Route: `POST /api/cv-analyses/[id]/score`
 - Copy Paste routes:
@@ -13,7 +13,7 @@
 
 ## Current Prompt
 
-The prompt frames the model as an elite recruiter (Big Tech technical recruiting, executive search, ATS implementation, 50,000+ CVs screened) and evaluates the CV against a weighted expert rubric. See `buildGeneralScoringPrompt` in `src/backend/modules/cv-analysis/domain/services/cv-scoring-prompts.ts` for the full literal text.
+The prompt frames the model as an elite recruiter (Big Tech technical recruiting, executive search, ATS implementation, 50,000+ CVs screened) and evaluates the CV against a weighted expert rubric. See `CVScoringPromptService.build` in `src/backend/modules/cv-analysis/domain/services/cv-scoring.prompt.ts` for the full literal text.
 
 Rubric dimensions and weights:
 
@@ -48,7 +48,7 @@ If `ai_context.additionalContext` is empty, the context block is omitted. When p
 
 ## Current Copy Paste Prompt
 
-`buildCVScoringCopyPastePrompt` reuses the same semantic CV scoring task as `buildGeneralScoringPrompt`, then adds transport instructions for external chat usage:
+`CVScoringPromptService.buildForClipboard` reuses the same semantic CV scoring task as `CVScoringPromptService.build`, then adds transport instructions for external chat usage:
 
 ```text
 Copy Paste transport instructions:
@@ -84,7 +84,7 @@ The Copy Paste parser accepts pure JSON or one fenced `json` block, but the prom
 1. `POST /api/cv-analyses/[id]/score` validates the authenticated request and scoring payload.
 2. `ScoreCVAnalysisUseCase` loads the analysis owned by the current user.
 3. `ScoreCVAnalysisUseCase` creates an AI interaction and attempt ID, publishes infrastructure events for the prepared prompt and sent request, and calls the provider-aware AI service.
-4. The provider service builds this prompt with `buildGeneralScoringPrompt` and sends the extracted CV text as the user message.
+4. The provider service builds this prompt with `CVScoringPromptService.build` and sends the extracted CV text as the user message.
 5. The parsed JSON result produces a validated-response infrastructure event before it is applied to the analysis.
 6. The JSON result is persisted on `cv_analyses`, the domain event is published, and an applied infrastructure event completes the interaction.
 7. Provider failures publish an `ai_runtime.failed` infrastructure event before being rethrown.
@@ -114,4 +114,4 @@ The Copy Paste parser accepts pure JSON or one fenced `json` block, but the prom
 Validation rejects responses for another workflow, unsupported schema versions, missing result objects, scores outside `0..100`, missing feedback, and non-string list items.
 
 ## Maintenance
-Integrated and Copy Paste prompts must stay semantically aligned: same scoring criteria, same data meaning, and same persisted result shape. When `buildGeneralScoringPrompt`, `buildCVScoringCopyPastePrompt`, expected JSON output, model input data, Copy Paste envelope validation, or scoring controller behavior changes, update this document in the same change.
+Integrated and Copy Paste prompts must stay semantically aligned: same scoring criteria, same data meaning, and same persisted result shape. When `CVScoringPromptService.build`, `CVScoringPromptService.buildForClipboard`, expected JSON output, model input data, Copy Paste envelope validation, or scoring controller behavior changes, update this document in the same change.

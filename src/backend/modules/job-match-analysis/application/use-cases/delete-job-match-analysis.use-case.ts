@@ -6,10 +6,9 @@ export class DeleteJobMatchAnalysisUseCase {
   constructor(private readonly deps: { repo: JobMatchAnalysisRepository }) {}
 
   async execute(input: { id: string; userId: string }): Promise<ExecutionResult> {
-    const deleted = await this.deps.repo.delete(
+    return this.deps.repo.delete(
       JobMatchAnalysisId.fromPrimitives(input.id),
       UserId.fromPrimitives(input.userId),
     );
-    return ExecutionResult.fromPrimitives(deleted);
   }
 }

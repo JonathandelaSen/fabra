@@ -6,7 +6,10 @@ import type {
   JobMatchScoringAIResult,
   JobMatchScoringAIService,
 } from "../../domain/repositories/job-match-scoring-ai.service";
-import { buildJobMatchScoringPrompt } from "../../domain/services/job-match-scoring-prompts";
+import { JobMatchScoringAIResultVO } from "../../domain/value-objects/job-match-scoring-ai-result.value-object";
+import { JobMatchScoringPromptService } from "../../domain/services/job-match-scoring-prompt.service";
+
+const promptService = new JobMatchScoringPromptService();
 
 function cleanArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
@@ -56,22 +59,22 @@ function parseResult(rawText: string): JobMatchScoringAIResult {
 class GeminiJobMatchScoringAIService implements JobMatchScoringAIService {
   constructor(private readonly config: { apiKey: string; model: string }) {}
 
-  async score(input: JobMatchScoringAIInput): Promise<JobMatchScoringAIResult> {
+  async score(input: JobMatchScoringAIInput): Promise<JobMatchScoringAIResultVO> {
     const googleAI = new GoogleGenAI({ apiKey: this.config.apiKey });
     const response = await googleAI.models.generateContent({
       model: this.config.model,
       contents: [{ role: "user", parts: [{ text: input.text }] }],
       config: {
-        systemInstruction: buildJobMatchScoringPrompt(
-          input.jobDescription,
-          input.jobUrl,
-          input.language,
-        ),
+        systemInstruction: promptService.build({
+          jobDescription: input.jobDescription,
+          jobUrl: input.jobUrl,
+          language: input.language,
+        }),
         responseMimeType: "application/json",
       },
     });
 
-    return parseResult(response.text || "{}");
+    return JobMatchScoringAIResultVO.fromPrimitives(parseResult(response.text || "{}"));
   }
 }
 

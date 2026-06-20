@@ -6,10 +6,10 @@ Generates a self-assessment document for a performance review or promotion case,
 
 ## Source
 
-- Integrated prompt source file: `src/backend/modules/performance-review/domain/services/review-self-assessment-prompts.ts`
-  - System prompt builder: `buildSelfAssessmentSystemPrompt`
-  - User prompt builder: `buildSelfAssessmentUserPrompt`
-- Copy Paste prompt builder: `src/modules/performance-review/application/services/review-self-assessment-copy-paste-prompts.ts` (`buildSelfAssessmentCopyPastePrompt`)
+- Integrated prompt source file: `src/backend/modules/performance-review/domain/services/review-self-assessment.prompt.ts`
+  - System prompt builder: `ReviewSelfAssessmentPromptService.systemInstruction`
+  - User prompt builder: `ReviewSelfAssessmentPromptService.build`
+- Copy Paste prompt builder: `src/backend/modules/performance-review/domain/services/review-self-assessment-prompt.service.ts` (`ReviewSelfAssessmentPromptService.buildForClipboard`)
 - AI input builder (curated evidence shape): `src/modules/performance-review/application/services/build-self-assessment-input.ts`
 - AI services (controllers):
   - `src/modules/performance-review/infrastructure/services/gemini-review-self-assessment-ai.service.ts`
@@ -35,7 +35,7 @@ System instruction:
 You are an assistant that helps an employed professional write a self-assessment document for an upcoming performance review or promotion case. Group achievements by theme. Every claim must cite the supporting evidence by referencing its source and date. Be concise, factual, and first-person. Do not invent achievements that are not backed by the provided evidence. Give highlighted evidence greater prominence in the document while still using the rest of the curated evidence where relevant.
 ```
 
-User message (built by `buildSelfAssessmentUserPrompt`):
+User message (built by `ReviewSelfAssessmentPromptService.build`):
 
 ```text
 Title: {title}

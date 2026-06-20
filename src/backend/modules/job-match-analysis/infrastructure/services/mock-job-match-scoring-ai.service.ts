@@ -3,6 +3,7 @@ import type {
   JobMatchScoringAIResult,
   JobMatchScoringAIService,
 } from "../../domain/repositories/job-match-scoring-ai.service";
+import { JobMatchScoringAIResultVO } from "../../domain/value-objects/job-match-scoring-ai-result.value-object";
 
 const MATCH_PROFILES = [
   {
@@ -151,14 +152,14 @@ function scoreForProfile(profile: JobMatchScoringAIResult, hash: number): number
 }
 
 class MockJobMatchScoringAIService implements JobMatchScoringAIService {
-  async score(input: JobMatchScoringAIInput): Promise<JobMatchScoringAIResult> {
+  async score(input: JobMatchScoringAIInput): Promise<JobMatchScoringAIResultVO> {
     const hash = hashInput(input);
     const profile = pickProfile(hash);
-    return {
+    return JobMatchScoringAIResultVO.fromPrimitives({
       ...profile,
       score: scoreForProfile(profile, hash),
       feedback: `${profile.feedback} Compared against ${input.text.length} CV characters.`,
-    };
+    });
   }
 }
 

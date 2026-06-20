@@ -10,10 +10,9 @@ export class DeleteCVAnalysisUseCase {
   ) {}
 
   async execute(input: { id: string; userId: string }): Promise<ExecutionResult> {
-    const deleted = await this.deps.repo.delete(
+    return this.deps.repo.delete(
       CVAnalysisId.fromPrimitives(input.id),
       UserId.fromPrimitives(input.userId),
     );
-    return ExecutionResult.fromPrimitives(deleted);
   }
 }

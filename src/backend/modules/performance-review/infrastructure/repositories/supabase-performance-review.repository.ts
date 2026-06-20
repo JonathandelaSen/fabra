@@ -1,4 +1,4 @@
-import { BoundSupabaseRepository, type UserId } from "@/backend/modules/shared";
+import { BoundSupabaseRepository, ExecutionResult, type UserId } from "@/backend/modules/shared";
 import { PerformanceReview } from "../../domain/entities/performance-review.entity";
 import type {
   PerformanceReviewRepository,
@@ -109,7 +109,7 @@ export class SupabasePerformanceReviewRepository
     return rowToReview(data as PerformanceReviewRow);
   }
 
-  async delete(id: PerformanceReviewId, userId: UserId): Promise<boolean> {
+  async delete(id: PerformanceReviewId, userId: UserId): Promise<ExecutionResult> {
     const { error, count } = await this.client
       .from("performance_reviews")
       .delete({ count: "exact" })
@@ -117,6 +117,6 @@ export class SupabasePerformanceReviewRepository
       .eq("user_id", userId.toPrimitives());
 
     if (error) throw error;
-    return (count ?? 0) > 0;
+    return ExecutionResult.fromPrimitives((count ?? 0) > 0);
   }
 }

@@ -3,7 +3,9 @@ import { PerformanceReviewNotFoundError } from "../../domain/errors/performance-
 import type { PerformanceReviewRepository } from "../../domain/repositories/performance-review.repository";
 import type { ReviewEvidenceItemRepository } from "../../domain/repositories/review-evidence-item.repository";
 import { PerformanceReviewId } from "../../domain/value-objects/performance-review-id.value-object";
-import { buildSelfAssessmentCopyPastePrompt } from "../services/review-self-assessment-copy-paste-prompts";
+import { ReviewSelfAssessmentPromptService } from "../../domain/services/review-self-assessment-prompt.service";
+
+const promptService = new ReviewSelfAssessmentPromptService();
 import { buildReviewSelfAssessmentAIInput } from "../services/build-self-assessment-input";
 
 export const SELF_ASSESSMENT_WORKFLOW_ID = "performance_review.self_assessment";
@@ -33,7 +35,7 @@ export class PrepareSelfAssessmentCopyPasteUseCase {
     const items = await this.deps.itemRepo.search({ userId, reviewId });
     const aiInput = buildReviewSelfAssessmentAIInput(review, items);
 
-    const prompt = buildSelfAssessmentCopyPastePrompt(aiInput, {
+    const prompt = promptService.buildForClipboard(aiInput, {
       workflowId: SELF_ASSESSMENT_WORKFLOW_ID,
       schemaVersion: SELF_ASSESSMENT_SCHEMA_VERSION,
     });

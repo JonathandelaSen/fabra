@@ -17,7 +17,7 @@ import {
 import {
   validateCopyPasteEnvelope,
 } from "@/backend/modules/shared/application/assisted-workflows/copy-paste-json-envelope";
-import type { CVScoringAIResult } from "../../domain/repositories/cv-scoring-ai.service";
+import type { CVScoringAIResultPrimitives } from "../../domain/repositories/cv-scoring-ai.service";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 import { CVAnalysisId } from "../../domain/value-objects/cv-analysis-id.value-object";
 import {

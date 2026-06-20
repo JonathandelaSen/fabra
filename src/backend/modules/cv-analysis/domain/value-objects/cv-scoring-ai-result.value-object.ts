@@ -1,7 +1,7 @@
 import { Counter, LongText, StringList, ValueObject } from "@/backend/modules/shared";
 import type { CVScoringAIResultPrimitives } from "../repositories/cv-scoring-ai.service";
 
-export class CVScoringAIResultVO extends ValueObject<CVScoringAIResultPrimitives> {
+export class CVScoringAIResult extends ValueObject<CVScoringAIResultPrimitives> {
   private constructor(
     private readonly scoreValue: Counter,
     private readonly feedbackValue: LongText,
@@ -11,8 +11,8 @@ export class CVScoringAIResultVO extends ValueObject<CVScoringAIResultPrimitives
     super();
   }
 
-  static fromPrimitives(primitives: CVScoringAIResultPrimitives): CVScoringAIResultVO {
-    return new CVScoringAIResultVO(
+  static fromPrimitives(primitives: CVScoringAIResultPrimitives): CVScoringAIResult {
+    return new CVScoringAIResult(
       Counter.fromPrimitives(primitives.score),
       LongText.fromPrimitives(primitives.feedback),
       StringList.fromPrimitives(primitives.keywords),

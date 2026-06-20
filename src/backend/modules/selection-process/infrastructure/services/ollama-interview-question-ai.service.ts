@@ -3,10 +3,10 @@ import type {
   InterviewQuestionAIInput,
   InterviewQuestionAIService,
 } from "../../domain/repositories/interview-question-ai.service";
-import {
-  INTERVIEW_QUESTION_SYSTEM_PROMPT,
-  buildInterviewQuestionPrompt,
-} from "../../domain/services/interview-question-prompts";
+import { InterviewAnswer } from "../../domain/value-objects/interview-answer.value-object";
+import { InterviewQuestionPromptService } from "../../domain/services/interview-question-prompt.service";
+
+const promptService = new InterviewQuestionPromptService();
 
 function parseInterviewQuestionAIResponse(rawText: string): string {
   const parsed = JSON.parse(rawText || "{}") as Record<string, unknown>;
@@ -29,8 +29,8 @@ async function runInterviewQuestionModel(
   const response = await ollama.generate({
     stream: false,
     model: config.model,
-    prompt: buildInterviewQuestionPrompt(input),
-    system: INTERVIEW_QUESTION_SYSTEM_PROMPT,
+    prompt: promptService.build(input),
+    system: promptService.systemInstruction(),
     format: "json",
   });
 
@@ -42,12 +42,10 @@ export class OllamaInterviewQuestionAIService
 {
   constructor(private readonly config: { baseUrl?: string; model: string }) {}
 
-  async generateAnswer(input: InterviewQuestionAIInput): Promise<string> {
-    return runInterviewQuestionModel(this.config, input);
-  }
-
-  async editAnswer(input: InterviewQuestionAIInput): Promise<string> {
-    return runInterviewQuestionModel(this.config, input);
+  async generate(input: InterviewQuestionAIInput): Promise<InterviewAnswer> {
+    return InterviewAnswer.fromPrimitives(
+      await runInterviewQuestionModel(this.config, input),
+    );
   }
 }
 

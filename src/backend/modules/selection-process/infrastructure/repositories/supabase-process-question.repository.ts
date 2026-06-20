@@ -1,5 +1,5 @@
 import { ProcessQuestionReadModel, type ProcessQuestionRelatedCVPrimitives, type ProcessQuestionRelatedAnalysisPrimitives } from "../../domain/value-objects/process-question-read-model.value-object";
-import { BoundSupabaseRepository, type UserId } from "@/backend/modules/shared";
+import { BoundSupabaseRepository, ExecutionResult, type UserId } from "@/backend/modules/shared";
 import { ProcessQuestion } from "../../domain/entities/process-question.entity";
 import type {
   ProcessQuestionRepository,
@@ -159,7 +159,7 @@ export class SupabaseProcessQuestionRepository
     return rowToReadModel(data as ProcessQuestionRow);
   }
 
-  async delete(id: ProcessQuestionId, userId: UserId): Promise<boolean> {
+  async delete(id: ProcessQuestionId, userId: UserId): Promise<ExecutionResult> {
     const { error, count } = await this.client
       .from("process_questions")
       .delete({ count: "exact" })
@@ -167,6 +167,6 @@ export class SupabaseProcessQuestionRepository
       .eq("user_id", userId.toPrimitives());
 
     if (error) throw error;
-    return (count ?? 0) > 0;
+    return ExecutionResult.fromPrimitives((count ?? 0) > 0);
   }
 }

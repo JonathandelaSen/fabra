@@ -83,11 +83,13 @@ export class ScoreCVAnalysisUseCase {
     let result;
     const startedAt = Date.now();
     try {
-      result = await aiService.score({
-        text,
-        additionalContext: input.additionalContext,
-        language: input.language,
-      });
+      result = (
+        await aiService.score({
+          text,
+          additionalContext: input.additionalContext,
+          language: input.language,
+        })
+      ).toPrimitives();
       await this.deps.eventBus.publish([
         new AIInteractionResponseReceivedEvent({
           context,

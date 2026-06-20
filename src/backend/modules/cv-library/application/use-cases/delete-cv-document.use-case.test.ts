@@ -58,7 +58,9 @@ describe("DeleteCVDocumentUseCase", () => {
     }).execute({ id: "cv-1", userId: "user-1" });
 
     expect(result.status.isDeleted()).toBe(true);
-    expect(repo.deleteStoredPdf).toHaveBeenCalledWith("user-1/cv-1.pdf");
+    expect(repo.deleteStoredPdf.mock.calls[0][0].toPrimitives()).toBe(
+      "user-1/cv-1.pdf",
+    );
     expect(repo.delete).toHaveBeenCalledOnce();
     expect(eventBus.publish).toHaveBeenCalledOnce();
     const publishedEvents = eventBus.publish.mock.calls[0][0];

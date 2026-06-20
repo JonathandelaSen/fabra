@@ -59,11 +59,13 @@ export class ScoreJobMatchAnalysisUseCase {
       operation: AIOperation.ScoreJobMatch, entityType: AIEntityType.JobMatchAnalysis,
       entityId: input.id, provider: input.provider, model: input.model,
     });
-    const result = await runTrackedAIInteraction({
-      eventBus: this.deps.eventBus, context: interactionContext,
-      prompt: serializeAIInteractionPrompt(aiInput),
-      execute: () => aiService.score(aiInput),
-    });
+    const result = (
+      await runTrackedAIInteraction({
+        eventBus: this.deps.eventBus, context: interactionContext,
+        prompt: serializeAIInteractionPrompt(aiInput),
+        execute: () => aiService.score(aiInput),
+      })
+    ).toPrimitives();
 
     const now = new Date().toISOString();
     current.applyAIResult({

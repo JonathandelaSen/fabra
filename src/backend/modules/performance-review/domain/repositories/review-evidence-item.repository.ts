@@ -1,4 +1,5 @@
 import type { UserId } from "@/backend/modules/shared";
+import type { ExecutionResult } from "@/backend/modules/shared";
 import type { ReviewEvidenceItem } from "../entities/review-evidence-item.entity";
 import type { PerformanceReviewId } from "../value-objects/performance-review-id.value-object";
 import type { ReviewEvidenceItemId } from "../value-objects/review-evidence-item-id.value-object";
@@ -17,5 +18,5 @@ export interface ReviewEvidenceItemRepository {
     userId: UserId,
   ): Promise<ReviewEvidenceItem | null>;
   save(item: ReviewEvidenceItem): Promise<ReviewEvidenceItem>;
-  delete(id: ReviewEvidenceItemId, userId: UserId): Promise<boolean>;
+  delete(id: ReviewEvidenceItemId, userId: UserId): Promise<ExecutionResult>;
 }

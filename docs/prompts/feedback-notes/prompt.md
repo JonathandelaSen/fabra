@@ -4,7 +4,7 @@ Integrated runs persist the prompt input and full AI interaction lifecycle throu
 
 ## Current Prompt
 
-System prompt source: `src/backend/modules/feedback-notes/domain/services/feedback-notes-prompts.ts`
+System prompt source: `src/backend/modules/feedback-notes/domain/services/feedback-notes-final.prompt.ts`
 
 The system prompt tells the model to turn private raw feedback notes into useful peer feedback, write in the same language as the notes, use only the provided notes, avoid invented facts, preserve uncertainty, and return JSON only.
 
@@ -17,7 +17,7 @@ The user prompt includes:
 
 ## Source Files
 
-- Prompt builder: `src/backend/modules/feedback-notes/domain/services/feedback-notes-prompts.ts`
+- Prompt builder: `src/backend/modules/feedback-notes/domain/services/feedback-notes-final.prompt.ts`
 - Clipboard prompt builder: `src/features/feedback-notes/api/feedback-notes-api.ts`
 - AI service (model calls + response parsing): `src/modules/feedback-notes/infrastructure/services/gemini-feedback-ai.service.ts`
 - Generate use case: `src/modules/feedback-notes/application/use-cases/generate-final-feedback.use-case.ts`
@@ -46,4 +46,4 @@ Source files:
 
 ## Maintenance Notes
 
-Keep the model prompt text and prompt builders in `src/backend/modules/feedback-notes/domain/services/feedback-notes-prompts.ts`. Keep Gemini SDK calls and response parsing in `src/modules/feedback-notes/infrastructure/services/gemini-feedback-ai.service.ts`. Keep the frontend clipboard prompt (`buildFeedbackNotesFinalPrompt`) in sync with the model prompt's grounding rules. When changing the prompt, input data, response shape, copy-paste behavior, or generate controller behavior, update this document in the same change.
+Keep the model prompt text and prompt builders in `src/backend/modules/feedback-notes/domain/services/feedback-notes-final.prompt.ts`. Keep Gemini SDK calls and response parsing in `src/modules/feedback-notes/infrastructure/services/gemini-feedback-ai.service.ts`. Keep the frontend clipboard prompt (`buildFeedbackNotesFinalPrompt`) in sync with the model prompt's grounding rules. When changing the prompt, input data, response shape, copy-paste behavior, or generate controller behavior, update this document in the same change.

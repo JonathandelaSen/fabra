@@ -1,8 +1,9 @@
 import type {
   CVScoringAIInput,
-  CVScoringAIResult,
+  CVScoringAIResultPrimitives,
   CVScoringAIService,
 } from "../../domain/repositories/cv-scoring-ai.service";
+import { CVScoringAIResult } from "../../domain/value-objects/cv-scoring-ai-result.value-object";
 
 const SCORE_PROFILES = [
   {
@@ -89,7 +90,7 @@ const SCORE_PROFILES = [
       "Add measurable delivery signals such as latency, uptime, cost, or user impact.",
     ],
   },
-] satisfies CVScoringAIResult[];
+] satisfies CVScoringAIResultPrimitives[];
 
 function hashInput(input: CVScoringAIInput): number {
   const seed = `${input.text}|${input.additionalContext ?? ""}`;
@@ -99,11 +100,11 @@ function hashInput(input: CVScoringAIInput): number {
   );
 }
 
-function pickProfile(hash: number): CVScoringAIResult {
+function pickProfile(hash: number): CVScoringAIResultPrimitives {
   return SCORE_PROFILES[hash % SCORE_PROFILES.length];
 }
 
-function scoreForProfile(profile: CVScoringAIResult, hash: number): number {
+function scoreForProfile(profile: CVScoringAIResultPrimitives, hash: number): number {
   if (profile.score >= 90) return 88 + (hash % 9);
   if (profile.score >= 80) return 78 + (hash % 10);
   if (profile.score >= 75) return 70 + (hash % 9);
@@ -114,11 +115,11 @@ class MockCVScoringAIService implements CVScoringAIService {
   async score(input: CVScoringAIInput): Promise<CVScoringAIResult> {
     const hash = hashInput(input);
     const profile = pickProfile(hash);
-    return {
+    return CVScoringAIResult.fromPrimitives({
       ...profile,
       score: scoreForProfile(profile, hash),
       feedback: `${profile.feedback} Source length: ${input.text.length} characters.`,
-    };
+    });
   }
 }
 

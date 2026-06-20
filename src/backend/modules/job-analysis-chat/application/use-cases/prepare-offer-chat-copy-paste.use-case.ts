@@ -10,7 +10,9 @@ import type { ConversationRepository } from "../../domain/repositories/conversat
 import type { JobAnalysisChatContext } from "../../domain/value-objects/job-analysis-chat-context.value-object";
 import { JobAnalysisChatConversationId } from "../../domain/value-objects/job-analysis-chat-conversation-id.value-object";
 import { GetJobAnalysisChatContextQuery } from "../queries/get-job-analysis-chat-context.query";
-import { buildOfferChatCopyPastePrompt } from "../services/offer-chat-copy-paste-prompts";
+import { JobAnalysisChatPromptService } from "../../domain/services/job-analysis-chat-prompt.service";
+
+const promptService = new JobAnalysisChatPromptService();
 
 export interface PrepareOfferChatCopyPasteInput {
   userId: string;
@@ -55,7 +57,7 @@ export class PrepareOfferChatCopyPasteUseCase {
       userId: ownerId,
       conversationId,
     });
-    const prompt = buildOfferChatCopyPastePrompt({
+    const prompt = promptService.buildForClipboard({
       message: input.message,
       context,
       history: history.map((message) => message.toPrimitives()),

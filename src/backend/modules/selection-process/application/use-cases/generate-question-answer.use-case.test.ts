@@ -5,13 +5,13 @@ import {
   eventBus,
 } from "./selection-process-test-helpers.test";
 import type { InterviewQuestionAIService } from "../../domain/repositories/interview-question-ai.service";
+import { InterviewAnswer } from "../../domain/value-objects/interview-answer.value-object";
 
 function aiService(
   overrides: Partial<InterviewQuestionAIService> = {},
 ): InterviewQuestionAIService {
   return {
-    generateAnswer: vi.fn(async () => "Generated answer"),
-    editAnswer: vi.fn(async () => "Edited answer"),
+    generate: vi.fn(async () => InterviewAnswer.fromPrimitives("Generated answer")),
     ...overrides,
   };
 }
@@ -34,7 +34,7 @@ describe("GenerateQuestionAnswerUseCase", () => {
       context: "My context",
     });
 
-    expect(ai.generateAnswer).toHaveBeenCalledOnce();
+    expect(ai.generate).toHaveBeenCalledOnce();
     expect(result?.question.toPrimitives()).toMatchObject({
       answer: "Generated answer",
       aiModel: "gemini-test",

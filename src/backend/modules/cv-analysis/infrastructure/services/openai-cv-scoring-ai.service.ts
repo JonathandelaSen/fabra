@@ -3,17 +3,20 @@ import { badRequest } from "@/backend/modules/shared";
 import { ErrorCode } from "@/shared/error-codes";
 import type {
   CVScoringAIInput,
-  CVScoringAIResult,
+  CVScoringAIResultPrimitives,
   CVScoringAIService,
 } from "../../domain/repositories/cv-scoring-ai.service";
-import { buildGeneralScoringPrompt } from "../../domain/services/cv-scoring-prompts";
+import { CVScoringAIResult } from "../../domain/value-objects/cv-scoring-ai-result.value-object";
+import { CVScoringPromptService } from "../../domain/services/cv-scoring-prompt.service";
+
+const promptService = new CVScoringPromptService();
 
 function cleanArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
   return value.filter((item): item is string => typeof item === "string");
 }
 
-function parseResult(rawText: string): CVScoringAIResult {
+function parseResult(rawText: string): CVScoringAIResultPrimitives {
   const parsed = JSON.parse(rawText || "{}") as Record<string, unknown>;
   const keywordsFound = cleanArray(parsed.keywordsFound);
   const cvKeywords = cleanArray(parsed.cvKeywords);
@@ -39,17 +42,17 @@ class OpenAICVScoringAIService implements CVScoringAIService {
       messages: [
         {
           role: "system",
-          content: buildGeneralScoringPrompt(
-            input.additionalContext,
-            input.language,
-          ),
+          content: promptService.build({
+          additionalContext: input.additionalContext,
+          language: input.language,
+        }),
         },
         { role: "user", content: input.text },
       ],
       response_format: { type: "json_object" },
     });
 
-    return parseResult(response.choices[0]?.message.content || "{}");
+    return CVScoringAIResult.fromPrimitives(parseResult(response.choices[0]?.message.content || "{}"));
   }
 }
 

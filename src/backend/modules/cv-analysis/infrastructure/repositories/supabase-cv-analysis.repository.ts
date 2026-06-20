@@ -1,4 +1,4 @@
-import { BoundSupabaseRepository, type UserId } from "@/backend/modules/shared";
+import { BoundSupabaseRepository, ExecutionResult, type UserId } from "@/backend/modules/shared";
 import { CVAnalysis } from "../../domain/entities/cv-analysis.entity";
 import type { CVAnalysisRepository } from "../../domain/repositories/cv-analysis.repository";
 import type { CVAnalysisId } from "../../domain/value-objects/cv-analysis-id.value-object";
@@ -126,13 +126,13 @@ export class SupabaseCVAnalysisRepository
     return rowToAnalysis(data as CVAnalysisRow);
   }
 
-  async delete(id: CVAnalysisId, userId: UserId): Promise<boolean> {
+  async delete(id: CVAnalysisId, userId: UserId): Promise<ExecutionResult> {
     const { count, error } = await this.client
       .from("cv_analyses")
       .delete({ count: "exact" })
       .eq("id", id.toPrimitives())
       .eq("user_id", userId.toPrimitives());
     if (error) throw error;
-    return (count ?? 0) > 0;
+    return ExecutionResult.fromPrimitives((count ?? 0) > 0);
   }
 }

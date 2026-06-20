@@ -1,4 +1,4 @@
-import { BoundSupabaseRepository, type UserId } from "@/backend/modules/shared";
+import { BoundSupabaseRepository, ExecutionResult, type UserId } from "@/backend/modules/shared";
 import { JobMatchAnalysis } from "../../domain/entities/job-match-analysis.entity";
 import type { JobMatchAnalysisRepository } from "../../domain/repositories/job-match-analysis.repository";
 import type { JobMatchAnalysisId } from "../../domain/value-objects/job-match-analysis-id.value-object";
@@ -144,13 +144,13 @@ export class SupabaseJobMatchAnalysisRepository
     return rowToAnalysis(data as JobMatchAnalysisRow);
   }
 
-  async delete(id: JobMatchAnalysisId, userId: UserId): Promise<boolean> {
+  async delete(id: JobMatchAnalysisId, userId: UserId): Promise<ExecutionResult> {
     const { count, error } = await this.client
       .from("job_match_analyses")
       .delete({ count: "exact" })
       .eq("id", id.toPrimitives())
       .eq("user_id", userId.toPrimitives());
     if (error) throw error;
-    return (count ?? 0) > 0;
+    return ExecutionResult.fromPrimitives((count ?? 0) > 0);
   }
 }

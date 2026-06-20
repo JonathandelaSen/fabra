@@ -44,10 +44,11 @@ import { MockCVProfileStructuringAIServiceFactory } from "./infrastructure/servi
 import { OpenAICVProfileStructuringAIServiceFactory } from "./infrastructure/services/openai-cv-profile-structuring-ai.service";
 import { ProviderCVProfileEditingAIServiceFactory } from "./infrastructure/services/provider-cv-profile-editing-ai-service.factory";
 import { ProviderCVProfileStructuringAIServiceFactory } from "./infrastructure/services/provider-cv-profile-structuring-ai-service.factory";
-import { SupabaseCVPdfStorage } from "./infrastructure/services/supabase-cv-pdf-storage.service";
-import { TemplateCVPdfRenderer } from "./infrastructure/services/template-cv-pdf-renderer.service";
+import { SupabaseCVPdfStorage } from "./infrastructure/storage/supabase-cv-pdf-storage";
+import { TemplateCVPdfRenderer } from "./infrastructure/renderers/template-cv-pdf-renderer";
 import { CVProfileEditingCopyPastePromptService } from "./infrastructure/services/cv-profile-editing-copy-paste-prompt.service";
-import { buildCVProfileStructuringCopyPastePrompt } from "./domain/services/cv-profile-structuring-prompts";
+import { CVProfileEditingPromptService } from "./domain/services/cv-profile-editing-prompt.service";
+import { CVProfileStructuringPromptService } from "./domain/services/cv-profile-structuring-prompt.service";
 
 const documentRepo = new SupabaseCVDocumentRepository();
 const profileRepo = new SupabaseCVStructuredProfileRepository();
@@ -57,6 +58,7 @@ const pdfStorage = new SupabaseCVPdfStorage();
 const pdfParsers = new PdfParsersService();
 const textExtractor = new PdfTextExtractionService(pdfParsers);
 const templateRenderer = new TemplateCVPdfRenderer();
+const cvProfileStructuringPromptService = new CVProfileStructuringPromptService();
 const profileStructuringAI = new ProviderCVProfileStructuringAIServiceFactory({
   geminiFactory: new GeminiCVProfileStructuringAIServiceFactory(),
   openaiFactory: new OpenAICVProfileStructuringAIServiceFactory(),
@@ -69,7 +71,9 @@ const profileEditingAI = new ProviderCVProfileEditingAIServiceFactory({
   mockFactory: new MockCVProfileEditingAIServiceFactory(),
   ollamaFactory: new OllamaCVProfileEditingAIServiceFactory(),
 });
-const profileEditingCopyPastePrompt = new CVProfileEditingCopyPastePromptService();
+const profileEditingCopyPastePrompt = new CVProfileEditingCopyPastePromptService(
+  new CVProfileEditingPromptService(),
+);
 
 function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
   const prepareCVAnalysisInput = new PrepareCVAnalysisInputUseCase({
@@ -164,7 +168,8 @@ function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
       new PrepareCVProfileStructureCopyPasteUseCase({
         documentRepo,
         prepareAnalysisInput: prepareCVAnalysisInput,
-        buildPrompt: buildCVProfileStructuringCopyPastePrompt,
+        buildPrompt: (input) =>
+          cvProfileStructuringPromptService.buildForClipboard(input),
       }),
     previewCVProfileStructureCopyPaste:
       new PreviewCVProfileStructureCopyPasteUseCase({

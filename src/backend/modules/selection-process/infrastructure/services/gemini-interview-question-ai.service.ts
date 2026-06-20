@@ -5,10 +5,10 @@ import type {
   InterviewQuestionAIInput,
   InterviewQuestionAIService,
 } from "../../domain/repositories/interview-question-ai.service";
-import {
-  INTERVIEW_QUESTION_SYSTEM_PROMPT,
-  buildInterviewQuestionPrompt,
-} from "../../domain/services/interview-question-prompts";
+import { InterviewAnswer } from "../../domain/value-objects/interview-answer.value-object";
+import { InterviewQuestionPromptService } from "../../domain/services/interview-question-prompt.service";
+
+const promptService = new InterviewQuestionPromptService();
 
 function parseInterviewQuestionAIResponse(rawText: string): string {
   const parsed = JSON.parse(rawText || "{}") as Record<string, unknown>;
@@ -33,11 +33,11 @@ async function runInterviewQuestionModel(
     contents: [
       {
         role: "user",
-        parts: [{ text: buildInterviewQuestionPrompt(input) }],
+        parts: [{ text: promptService.build(input) }],
       },
     ],
     config: {
-      systemInstruction: INTERVIEW_QUESTION_SYSTEM_PROMPT,
+      systemInstruction: promptService.systemInstruction(),
       responseMimeType: "application/json",
     },
   });
@@ -50,12 +50,10 @@ export class GeminiInterviewQuestionAIService
 {
   constructor(private readonly config: { apiKey: string; model: string }) {}
 
-  async generateAnswer(input: InterviewQuestionAIInput): Promise<string> {
-    return runInterviewQuestionModel(this.config, input);
-  }
-
-  async editAnswer(input: InterviewQuestionAIInput): Promise<string> {
-    return runInterviewQuestionModel(this.config, input);
+  async generate(input: InterviewQuestionAIInput): Promise<InterviewAnswer> {
+    return InterviewAnswer.fromPrimitives(
+      await runInterviewQuestionModel(this.config, input),
+    );
   }
 }
 

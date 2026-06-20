@@ -1,15 +1,18 @@
 import { Ollama } from "ollama";
 import type { CVRecord } from "@/lib/analysis-types";
-import { CV_CHAT_SYSTEM_PROMPT, buildCVChatPrompt, type CVChatHistoryMessage } from "../../domain/services/cv-chat-prompts";
+import { CVChatPromptService, type CVChatHistoryMessage } from "../../domain/services/cv-chat-prompt.service";
+
+const promptService = new CVChatPromptService();
 import type {
   CVChatAIInput,
   CVChatAIService,
 } from "../../domain/repositories/cv-chat-ai-service.repository";
+import { CVChatContent } from "../../domain/value-objects/cv-chat-content.value-object";
 
 export class OllamaCVChatAIService implements CVChatAIService {
   constructor(private readonly config: { baseUrl?: string; model: string }) {}
 
-  async generateAnswer(input: CVChatAIInput): Promise<string> {
+  async generateAnswer(input: CVChatAIInput): Promise<CVChatContent> {
     const promptInput = {
       message: input.message,
       cv: input.context.cv as CVRecord | null,
@@ -24,15 +27,15 @@ export class OllamaCVChatAIService implements CVChatAIService {
     const response = await ollama.generate({
       stream: false,
       model: this.config.model,
-      prompt: buildCVChatPrompt(promptInput),
-      system: CV_CHAT_SYSTEM_PROMPT,
+      prompt: promptService.build(promptInput),
+      system: promptService.systemInstruction(),
       format: "json",
     });
 
     return this.parseResponse(response.response || "{}");
   }
 
-  private parseResponse(rawText: string): string {
+  private parseResponse(rawText: string): CVChatContent {
     const parsed = JSON.parse(rawText || "{}") as Record<string, unknown>;
     const answer =
       typeof parsed.answer === "string" ? parsed.answer.trim() : "";
@@ -41,7 +44,7 @@ export class OllamaCVChatAIService implements CVChatAIService {
       throw new Error("The AI could not generate an answer with this context.");
     }
 
-    return answer;
+    return CVChatContent.fromPrimitives(answer);
   }
 }
 

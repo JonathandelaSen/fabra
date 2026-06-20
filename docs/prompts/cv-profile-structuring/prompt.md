@@ -3,9 +3,9 @@
 Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
 
 ## Source
-- Prompt source file: `src/backend/modules/cv-library/domain/services/cv-profile-structuring-prompts.ts`
-- System prompt constant: `SYSTEM_PROMPT`
-- Copy Paste prompt builder: `buildCVProfileStructuringCopyPastePrompt`
+- Prompt source file: `src/backend/modules/cv-library/domain/services/cv-profile-structuring.prompt.ts`
+- System prompt constant: `CVProfileStructuringPromptService.build()`
+- Copy Paste prompt builder: `CVProfileStructuringPromptService.buildForClipboard`
 - Use case: `StructureCVProfileWithAIUseCase` in `src/modules/cv-library/application/use-cases/structure-cv-profile-with-ai.use-case.ts`
 - Copy Paste use cases: `PrepareCVProfileStructureCopyPasteUseCase`, `PreviewCVProfileStructureCopyPasteUseCase`, and `ApplyCVProfileStructureCopyPasteUseCase` in `src/modules/cv-library/application/use-cases/`
 - Model controller: provider-aware `ProviderCVProfileStructuringAIServiceFactory` selects mock or Gemini and delegates Gemini calls to `src/modules/cv-library/infrastructure/services/gemini-cv-profile-structuring-ai.service.ts`
@@ -47,7 +47,7 @@ JSON format:
 ```
 
 ## Copy Paste Prompt
-`buildCVProfileStructuringCopyPastePrompt` reuses the same extraction task as `SYSTEM_PROMPT`, then adds external-chat transport instructions. The external response must be pure JSON with this envelope:
+`CVProfileStructuringPromptService.buildForClipboard` reuses the same extraction task as `CVProfileStructuringPromptService.build()`, then adds external-chat transport instructions. The external response must be pure JSON with this envelope:
 
 ```json
 {
@@ -88,4 +88,4 @@ The Copy Paste flow does not call a real AI provider. The user copies the prompt
 3. `apply` revalidates the parsed profile, upserts the structured profile with `aiModel: "external-chat"`, and, when launched from template creation, creates the editable template CV version through the normal template document flow.
 
 ## Maintenance
-When `SYSTEM_PROMPT`, `buildCVProfileStructuringCopyPastePrompt`, the standard CV profile schema, the Copy Paste envelope, template/locale input context, preview/apply behavior, or `CV_PROFILE_SCHEMA_VERSION` changes, update this document in the same change.
+When `CVProfileStructuringPromptService.build()`, `CVProfileStructuringPromptService.buildForClipboard`, the standard CV profile schema, the Copy Paste envelope, template/locale input context, preview/apply behavior, or `CV_PROFILE_SCHEMA_VERSION` changes, update this document in the same change.

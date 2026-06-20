@@ -54,7 +54,7 @@ export class GenerateFinalFeedbackUseCase {
       prompt: serializeAIInteractionPrompt(aiInput),
       execute: () => aiService.generateFinalFeedback(aiInput),
     });
-    feedback.updateFinalFeedback(finalFeedback);
+    feedback.updateFinalFeedback(finalFeedback.toPrimitives());
     const saved = await this.deps.feedbackRepo.save(feedback);
 
     const events = feedback.pullDomainEvents();

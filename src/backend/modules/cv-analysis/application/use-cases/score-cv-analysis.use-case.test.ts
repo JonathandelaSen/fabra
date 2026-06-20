@@ -5,6 +5,7 @@ import type {
   CVScoringAIServiceFactory,
   CVScoringAIService,
 } from "../../domain/repositories/cv-scoring-ai.service";
+import { CVScoringAIResult } from "../../domain/value-objects/cv-scoring-ai-result.value-object";
 import { ScoreCVAnalysisUseCase } from "./score-cv-analysis.use-case";
 
 function makeAnalysis(overrides?: Partial<ReturnType<CVAnalysis["toPrimitives"]>>) {
@@ -46,7 +47,7 @@ function makeMockAIServiceFactory(result = {
   improvements: ["add metrics"],
 }): CVScoringAIServiceFactory {
   const service: CVScoringAIService = {
-    score: vi.fn(async () => result),
+    score: vi.fn(async () => CVScoringAIResult.fromPrimitives(result)),
   };
   return { create: vi.fn(() => service) };
 }

@@ -43,6 +43,6 @@ export class StructureCVProfileWithAIUseCase {
       execute: () => service.structure({ text: input.text }),
     });
     await publishAIInteractionApplied(this.deps.eventBus, context);
-    return StructuredCVProfileData.fromPrimitives(result);
+    return result;
   }
 }

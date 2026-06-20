@@ -5,7 +5,7 @@ import {
   getSupabaseClient,
   testLabel,
 } from "@/backend/modules/test-helpers/setup";
-import { UserId } from "@/backend/modules/shared";
+import { ExecutionResult, UserId } from "@/backend/modules/shared";
 import { CVAnalysis } from "../../domain/entities/cv-analysis.entity";
 import { CVAnalysisId } from "../../domain/value-objects/cv-analysis-id.value-object";
 import { SupabaseCVAnalysisRepository } from "./supabase-cv-analysis.repository";
@@ -72,6 +72,6 @@ describe("SupabaseCVAnalysisRepository", () => {
         CVAnalysisId.fromPrimitives(id),
         UserId.fromPrimitives(user.id),
       ),
-    ).resolves.toBe(true);
+    ).resolves.toEqual(ExecutionResult.ok());
   });
 });

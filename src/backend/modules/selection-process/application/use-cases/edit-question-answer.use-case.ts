@@ -70,12 +70,12 @@ export class EditQuestionAnswerUseCase {
     const answer = await runTrackedAIInteraction({
       eventBus: this.deps.eventBus, context: interactionContext,
       prompt: serializeAIInteractionPrompt(aiInput),
-      execute: () => aiService.editAnswer(aiInput),
+      execute: () => aiService.generate(aiInput),
     });
 
     existing.question.update({
       context: input.context,
-      answer,
+      answer: answer.toPrimitives(),
       aiModel: input.model,
       aiGeneratedAt: new Date().toISOString(),
       updatedAt: Timestamp.fromPrimitives(new Date().toISOString()),

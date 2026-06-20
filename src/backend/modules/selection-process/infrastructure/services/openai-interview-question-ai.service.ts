@@ -5,10 +5,10 @@ import type {
   InterviewQuestionAIInput,
   InterviewQuestionAIService,
 } from "../../domain/repositories/interview-question-ai.service";
-import {
-  INTERVIEW_QUESTION_SYSTEM_PROMPT,
-  buildInterviewQuestionPrompt,
-} from "../../domain/services/interview-question-prompts";
+import { InterviewAnswer } from "../../domain/value-objects/interview-answer.value-object";
+import { InterviewQuestionPromptService } from "../../domain/services/interview-question-prompt.service";
+
+const promptService = new InterviewQuestionPromptService();
 
 function parseInterviewQuestionAIResponse(rawText: string): string {
   const parsed = JSON.parse(rawText || "{}") as Record<string, unknown>;
@@ -31,8 +31,8 @@ async function runInterviewQuestionModel(
   const response = await openai.chat.completions.create({
     model: config.model,
     messages: [
-      { role: "system", content: INTERVIEW_QUESTION_SYSTEM_PROMPT },
-      { role: "user", content: buildInterviewQuestionPrompt(input) },
+      { role: "system", content: promptService.systemInstruction() },
+      { role: "user", content: promptService.build(input) },
     ],
     response_format: { type: "json_object" },
   });
@@ -45,12 +45,10 @@ export class OpenAIInterviewQuestionAIService
 {
   constructor(private readonly config: { apiKey: string; model: string }) {}
 
-  async generateAnswer(input: InterviewQuestionAIInput): Promise<string> {
-    return runInterviewQuestionModel(this.config, input);
-  }
-
-  async editAnswer(input: InterviewQuestionAIInput): Promise<string> {
-    return runInterviewQuestionModel(this.config, input);
+  async generate(input: InterviewQuestionAIInput): Promise<InterviewAnswer> {
+    return InterviewAnswer.fromPrimitives(
+      await runInterviewQuestionModel(this.config, input),
+    );
   }
 }
 

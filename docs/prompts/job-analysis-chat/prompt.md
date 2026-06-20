@@ -3,11 +3,11 @@
 Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
 
 ## Source
-- Prompt source file: `src/backend/modules/job-analysis-chat/domain/services/job-analysis-chat-prompts.ts`
+- Prompt source file: `src/backend/modules/job-analysis-chat/domain/services/job-analysis-chat.prompt.ts`
 - Shared coaching instructions: `src/modules/job-analysis-chat/domain/services/job-analysis-chat-coaching-instructions.ts` (`OFFER_CHAT_COACHING_INSTRUCTIONS`)
-- System prompt constant: `OFFER_CHAT_SYSTEM_PROMPT`
-- Prompt builder: `buildOfferChatPrompt`
-- Copy Paste prompt builder: `src/modules/job-analysis-chat/application/services/offer-chat-copy-paste-prompts.ts`
+- System prompt constant: `JobAnalysisChatPromptService.systemInstruction()`
+- Prompt builder: `JobAnalysisChatPromptService.build`
+- Copy Paste prompt builder: `src/backend/modules/job-analysis-chat/domain/services/job-analysis-chat-prompt.service.ts`
 - AI service (controller): `src/modules/job-analysis-chat/infrastructure/services/gemini-job-analysis-chat-ai.service.ts`
 - API route: `src/app/api/job-match-analyses/[id]/chat/route.ts`
 - Copy Paste routes:
@@ -30,7 +30,7 @@ The prompt then defines:
 - integrated JSON output: `{ "answer": "<final assistant answer>" }`
 ```
 
-See `OFFER_CHAT_COACHING_INSTRUCTIONS` in the shared prompt-only domain service and `OFFER_CHAT_SYSTEM_PROMPT` in the integrated prompt source for the complete current text. The user message is built by `buildOfferChatPrompt` with this structure:
+See `OFFER_CHAT_COACHING_INSTRUCTIONS` in the shared prompt-only domain service and `JobAnalysisChatPromptService.systemInstruction()` in the integrated prompt source for the complete current text. The user message is built by `JobAnalysisChatPromptService.build` with this structure:
 
 ```text
 LATEST USER QUESTION:
@@ -74,7 +74,7 @@ Answer the latest user question now. Use only the supplied context for claims ab
 ## Runtime Flow
 1. `POST /api/job-match-analyses/[id]/chat` validates ownership, `job_match` mode, message, provider, model, and API key when required.
 2. The user message is persisted with role `user`.
-3. `generateOfferChatAnswer` sends `OFFER_CHAT_SYSTEM_PROMPT` plus the built user prompt.
+3. `generateOfferChatAnswer` sends `JobAnalysisChatPromptService.systemInstruction()` plus the built user prompt.
 4. The AI answer is persisted with role `assistant`.
 5. `GET /api/job-match-analyses/[id]/chat` returns the persisted history for the chat tab.
 
@@ -98,4 +98,4 @@ The Copy Paste prompt includes:
 - a privacy notice reminding the user to use trusted external tools
 
 ## Maintenance
-When `OFFER_CHAT_SYSTEM_PROMPT`, `buildOfferChatPrompt`, `buildOfferChatCopyPastePrompt`, chat persistence, model metadata, or the context sent from either chat route changes, update this document in the same change. Keep integrated and Copy Paste semantics aligned unless a difference is documented here.
+When `JobAnalysisChatPromptService.systemInstruction()`, `JobAnalysisChatPromptService.build`, `JobAnalysisChatPromptService.buildForClipboard`, chat persistence, model metadata, or the context sent from either chat route changes, update this document in the same change. Keep integrated and Copy Paste semantics aligned unless a difference is documented here.

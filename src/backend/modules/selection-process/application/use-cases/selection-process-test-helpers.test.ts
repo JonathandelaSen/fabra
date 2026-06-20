@@ -1,5 +1,6 @@
 import { ProcessQuestionReadModel, type ProcessQuestionRelatedCVPrimitives, type ProcessQuestionRelatedAnalysisPrimitives } from "../../domain/value-objects/process-question-read-model.value-object";
 import { describe, expect, it, vi } from "vitest";
+import { ExecutionResult } from "@/backend/modules/shared";
 
 import { ProcessQuestion } from "../../domain/entities/process-question.entity";
 import type {
@@ -57,7 +58,7 @@ export function processQuestionRepo(
     search: vi.fn(async () => [readModel()]),
     findById: vi.fn(async () => readModel()),
     save: vi.fn(async (question: ProcessQuestion) => readModel({ question: question.toPrimitives() })),
-    delete: vi.fn(async () => true),
+    delete: vi.fn(async () => ExecutionResult.ok()),
     ...overrides,
   } satisfies ProcessQuestionRepository;
 }

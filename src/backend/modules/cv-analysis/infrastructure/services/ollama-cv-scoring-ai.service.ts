@@ -1,17 +1,20 @@
 import { Ollama } from "ollama";
 import type {
   CVScoringAIInput,
-  CVScoringAIResult,
+  CVScoringAIResultPrimitives,
   CVScoringAIService,
 } from "../../domain/repositories/cv-scoring-ai.service";
-import { buildGeneralScoringPrompt } from "../../domain/services/cv-scoring-prompts";
+import { CVScoringAIResult } from "../../domain/value-objects/cv-scoring-ai-result.value-object";
+import { CVScoringPromptService } from "../../domain/services/cv-scoring-prompt.service";
+
+const promptService = new CVScoringPromptService();
 
 function cleanArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
   return value.filter((item): item is string => typeof item === "string");
 }
 
-function parseResult(rawText: string): CVScoringAIResult {
+function parseResult(rawText: string): CVScoringAIResultPrimitives {
   const parsed = JSON.parse(rawText || "{}") as Record<string, unknown>;
   const keywordsFound = cleanArray(parsed.keywordsFound);
   const cvKeywords = cleanArray(parsed.cvKeywords);
@@ -36,11 +39,14 @@ class OllamaCVScoringAIService implements CVScoringAIService {
       stream: false,
       model: this.config.model,
       prompt: input.text,
-      system: buildGeneralScoringPrompt(input.additionalContext, input.language),
+      system: promptService.build({
+          additionalContext: input.additionalContext,
+          language: input.language,
+        }),
       format: "json",
     });
 
-    return parseResult(response.response || "{}");
+    return CVScoringAIResult.fromPrimitives(parseResult(response.response || "{}"));
   }
 }
 

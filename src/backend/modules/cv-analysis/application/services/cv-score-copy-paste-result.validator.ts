@@ -1,5 +1,5 @@
 import { badRequest } from "@/backend/modules/shared";
-import type { CVScoringAIResult } from "../../domain/repositories/cv-scoring-ai.service";
+import type { CVScoringAIResultPrimitives } from "../../domain/repositories/cv-scoring-ai.service";
 import { ErrorCode } from "@/shared/error-codes";
 
 export const CV_SCORE_COPY_PASTE_WORKFLOW_ID = "cv_analysis.score" as const;
@@ -19,7 +19,7 @@ function readStringArray(value: unknown, field: string): string[] {
 
 export function validateCVScoreCopyPasteResult(
   input: unknown,
-): CVScoringAIResult {
+): CVScoringAIResultPrimitives {
   if (!isRecord(input)) {
     throw badRequest("The analysis result must be a JSON object.", ErrorCode.COPY_PASTE_INVALID_RESULT);
   }

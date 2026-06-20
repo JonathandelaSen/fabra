@@ -1,4 +1,5 @@
 import type { UserId } from "@/backend/modules/shared";
+import type { ExecutionResult } from "@/backend/modules/shared";
 import type { ProcessQuestion } from "../entities/process-question.entity";
 import type { ProcessQuestionId } from "../value-objects/process-question-id.value-object";
 import type { ProcessQuestionReadModel } from "../value-objects/process-question-read-model.value-object";
@@ -18,5 +19,5 @@ export interface ProcessQuestionRepository {
     userId: UserId
   ): Promise<ProcessQuestionReadModel | null>;
   save(question: ProcessQuestion): Promise<ProcessQuestionReadModel>;
-  delete(id: ProcessQuestionId, userId: UserId): Promise<boolean>;
+  delete(id: ProcessQuestionId, userId: UserId): Promise<ExecutionResult>;
 }

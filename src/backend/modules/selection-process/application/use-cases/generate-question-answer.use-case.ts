@@ -69,12 +69,12 @@ export class GenerateQuestionAnswerUseCase {
     const answer = await runTrackedAIInteraction({
       eventBus: this.deps.eventBus, context: interactionContext,
       prompt: serializeAIInteractionPrompt(aiInput),
-      execute: () => aiService.generateAnswer(aiInput),
+      execute: () => aiService.generate(aiInput),
     });
 
     existing.question.update({
       context: input.context,
-      answer,
+      answer: answer.toPrimitives(),
       legacyCvId: input.legacyCvId,
       sourceJobMatchAnalysisId: input.sourceJobMatchAnalysisId,
       aiModel: input.model,

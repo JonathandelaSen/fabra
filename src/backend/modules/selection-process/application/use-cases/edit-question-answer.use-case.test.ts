@@ -7,13 +7,13 @@ import {
   eventBus,
 } from "./selection-process-test-helpers.test";
 import type { InterviewQuestionAIService } from "../../domain/repositories/interview-question-ai.service";
+import { InterviewAnswer } from "../../domain/value-objects/interview-answer.value-object";
 
 function aiService(
   overrides: Partial<InterviewQuestionAIService> = {},
 ): InterviewQuestionAIService {
   return {
-    generateAnswer: vi.fn(async () => "Generated answer"),
-    editAnswer: vi.fn(async () => "Edited answer"),
+    generate: vi.fn(async () => InterviewAnswer.fromPrimitives("Edited answer")),
     ...overrides,
   };
 }
@@ -40,8 +40,8 @@ describe("EditQuestionAnswerUseCase", () => {
       instruction: "Make it shorter",
     });
 
-    expect(ai.editAnswer).toHaveBeenCalledOnce();
-    expect(ai.editAnswer).toHaveBeenCalledWith(
+    expect(ai.generate).toHaveBeenCalledOnce();
+    expect(ai.generate).toHaveBeenCalledWith(
       expect.objectContaining({
         currentAnswer: "Old answer",
         instruction: "Make it shorter",

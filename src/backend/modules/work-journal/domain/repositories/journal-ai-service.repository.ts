@@ -1,4 +1,5 @@
 import type { WorkJournalContext } from "../entities/journal-context.entity";
+import type { WorkJournalFinalText } from "../value-objects/work-journal-final-text.value-object";
 import type { AIProvider } from "@/backend/modules/shared";
 
 export interface DraftEntryInput {
@@ -10,7 +11,7 @@ export interface DraftEntryInput {
 }
 
 export interface JournalAIService {
-  draftEntry(input: DraftEntryInput): Promise<string>;
+  draftEntry(input: DraftEntryInput): Promise<WorkJournalFinalText>;
 }
 
 export interface JournalAIServiceFactory {

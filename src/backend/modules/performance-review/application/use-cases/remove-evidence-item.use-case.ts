@@ -22,7 +22,7 @@ export class RemoveEvidenceItemUseCase {
     if (!existing) return ExecutionResult.fail();
 
     existing.delete();
-    const deleted = await this.deps.itemRepo.delete(itemId, userId);
+    const deleted = (await this.deps.itemRepo.delete(itemId, userId)).toPrimitives();
     if (deleted) await this.deps.eventBus.publish(existing.pullDomainEvents());
     return ExecutionResult.fromPrimitives(deleted);
   }

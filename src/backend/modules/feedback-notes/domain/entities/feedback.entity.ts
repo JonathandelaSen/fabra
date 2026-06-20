@@ -26,7 +26,7 @@ export interface FeedbackPrimitives {
   updated_at: string;
 }
 
-export interface CreateFeedbackParams {
+export interface FeedbackCreateParams {
   id: string;
   user_id: string;
   activity_context_id: string;
@@ -40,7 +40,7 @@ export class Feedback extends AggregateRoot {
     super();
   }
 
-  static create(params: CreateFeedbackParams): Feedback {
+  static create(params: FeedbackCreateParams): Feedback {
     const feedback = new Feedback({
       id: params.id,
       user_id: params.user_id,

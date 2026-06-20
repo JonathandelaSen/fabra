@@ -22,7 +22,7 @@ export class DeleteProcessQuestionUseCase {
     if (!existing) return ExecutionResult.fail();
 
     existing.question.delete();
-    const deleted = await this.deps.questionRepo.delete(questionId, userId);
+    const deleted = (await this.deps.questionRepo.delete(questionId, userId)).toPrimitives();
 
     if (deleted) {
       const events = existing.question.pullDomainEvents();

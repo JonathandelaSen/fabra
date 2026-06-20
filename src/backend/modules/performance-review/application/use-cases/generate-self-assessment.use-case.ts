@@ -53,7 +53,7 @@ export class GenerateSelfAssessmentUseCase {
 
     const now = Timestamp.fromPrimitives(new Date().toISOString());
     review.attachSelfAssessment({
-      content,
+      content: content.toPrimitives(),
       mode: SelfAssessmentMode.fromPrimitives("integrated"),
       generatedAt: now,
       updatedAt: now,

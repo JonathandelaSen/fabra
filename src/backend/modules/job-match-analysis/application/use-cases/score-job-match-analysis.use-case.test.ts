@@ -5,6 +5,7 @@ import type {
   JobMatchScoringAIServiceFactory,
   JobMatchScoringAIService,
 } from "../../domain/repositories/job-match-scoring-ai.service";
+import { JobMatchScoringAIResultVO } from "../../domain/value-objects/job-match-scoring-ai-result.value-object";
 import { ScoreJobMatchAnalysisUseCase } from "./score-job-match-analysis.use-case";
 
 function makeAnalysis(
@@ -60,7 +61,7 @@ function makeMockAIServiceFactory(
   },
 ): JobMatchScoringAIServiceFactory {
   const service: JobMatchScoringAIService = {
-    score: vi.fn(async () => result),
+    score: vi.fn(async () => JobMatchScoringAIResultVO.fromPrimitives(result)),
   };
   return { create: vi.fn(() => service) };
 }

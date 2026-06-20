@@ -3,7 +3,10 @@ import { badRequest } from "@/backend/modules/shared";
 import { ErrorCode } from "@/shared/error-codes";
 import type { StandardCVProfile } from "../../domain/cv-profile";
 import type { CVProfileEditingAIService } from "../../domain/repositories/cv-profile-ai.service";
-import { SYSTEM_PROMPT } from "../../domain/services/cv-profile-editing-prompts";
+import { EditedCVProfile } from "../../domain/value-objects/edited-cv-profile.value-object";
+import { CVProfileEditingPromptService } from "../../domain/services/cv-profile-editing-prompt.service";
+
+const promptService = new CVProfileEditingPromptService();
 import { parseEditedCVProfile, type AICVEditInput } from "./gemini-cv-profile-editing-ai.service";
 
 class OpenAICVProfileEditingAIService implements CVProfileEditingAIService {
@@ -11,7 +14,7 @@ class OpenAICVProfileEditingAIService implements CVProfileEditingAIService {
 
   async edit(
     input: Omit<AICVEditInput, "apiKey" | "model">,
-  ): Promise<StandardCVProfile> {
+  ): Promise<EditedCVProfile> {
     const openai = new OpenAI({ apiKey: this.config.apiKey });
     const recommendations = input.recommendations?.length
       ? `\nRelevant recommendations from previous analysis:\n${input.recommendations
@@ -24,16 +27,16 @@ class OpenAICVProfileEditingAIService implements CVProfileEditingAIService {
     const response = await openai.chat.completions.create({
       model: this.config.model,
       messages: [
-        { role: "system", content: SYSTEM_PROMPT },
+        { role: "system", content: promptService.build() },
         { role: "user", content: userText },
       ],
       response_format: { type: "json_object" },
     });
 
-    return {
+    return EditedCVProfile.fromPrimitives({
       ...parseEditedCVProfile(response.choices[0]?.message.content || "{}"),
       presentation: input.profile.presentation,
-    };
+    });
   }
 }
 

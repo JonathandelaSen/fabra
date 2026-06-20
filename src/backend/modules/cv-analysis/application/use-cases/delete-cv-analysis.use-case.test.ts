@@ -9,7 +9,7 @@ describe("DeleteCVAnalysisUseCase", () => {
       search: vi.fn(),
       findById: vi.fn(),
       save: vi.fn(),
-      delete: vi.fn(async () => true),
+      delete: vi.fn(async () => ExecutionResult.ok()),
     } satisfies CVAnalysisRepository;
 
     const result = await new DeleteCVAnalysisUseCase({ repo }).execute({

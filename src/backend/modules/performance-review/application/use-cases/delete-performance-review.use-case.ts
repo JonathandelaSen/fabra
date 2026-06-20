@@ -22,7 +22,7 @@ export class DeletePerformanceReviewUseCase {
     if (!existing) return ExecutionResult.fail();
 
     existing.delete();
-    const deleted = await this.deps.reviewRepo.delete(reviewId, userId);
+    const deleted = (await this.deps.reviewRepo.delete(reviewId, userId)).toPrimitives();
     if (deleted) await this.deps.eventBus.publish(existing.pullDomainEvents());
     return ExecutionResult.fromPrimitives(deleted);
   }

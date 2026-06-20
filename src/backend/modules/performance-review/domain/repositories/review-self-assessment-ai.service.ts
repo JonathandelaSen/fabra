@@ -1,4 +1,5 @@
 import type { AIProvider } from "@/backend/modules/shared";
+import type { SelfAssessmentContent } from "../value-objects/self-assessment-content.value-object";
 
 export interface ReviewSelfAssessmentEvidenceInput {
   source: string;
@@ -16,7 +17,7 @@ export interface ReviewSelfAssessmentAIInput {
 }
 
 export interface ReviewSelfAssessmentAIService {
-  generate(input: ReviewSelfAssessmentAIInput): Promise<string>;
+  generate(input: ReviewSelfAssessmentAIInput): Promise<SelfAssessmentContent>;
 }
 
 export interface ReviewSelfAssessmentAIServiceFactory {

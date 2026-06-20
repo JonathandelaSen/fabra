@@ -3,9 +3,9 @@
 Integrated runs persist the prompt input and full AI interaction lifecycle through the shared `ai-interactions` event subscriber.
 
 ## Source
-- Prompt source file: `src/backend/modules/job-match-analysis/domain/services/job-match-scoring-prompts.ts`
-- Integrated prompt builder: `buildJobMatchScoringPrompt`
-- Copy Paste prompt builder: `buildJobMatchScoringCopyPastePrompt`
+- Prompt source file: `src/backend/modules/job-match-analysis/domain/services/job-match-scoring.prompt.ts`
+- Integrated prompt builder: `JobMatchScoringPromptService.build`
+- Copy Paste prompt builder: `JobMatchScoringPromptService.buildForClipboard`
 - Model controller: `src/modules/job-match-analysis/infrastructure/services/gemini-job-match-scoring-ai.service.ts`
 - Integrated route: `POST /api/job-match-analyses/[id]/score`
 - Copy Paste routes:
@@ -15,7 +15,7 @@ Integrated runs persist the prompt input and full AI interaction lifecycle throu
 
 ## Current Prompt
 
-The prompt frames the model as an elite technical recruiter and hiring-committee screener (agency search, in-house Big Tech recruiting, ATS keyword-matching systems, 50,000+ CVs screened against specs) and structures the analysis in three steps. See `buildJobMatchScoringPrompt` in `src/backend/modules/job-match-analysis/domain/services/job-match-scoring-prompts.ts` for the full literal text.
+The prompt frames the model as an elite technical recruiter and hiring-committee screener (agency search, in-house Big Tech recruiting, ATS keyword-matching systems, 50,000+ CVs screened against specs) and structures the analysis in three steps. See `JobMatchScoringPromptService.build` in `src/backend/modules/job-match-analysis/domain/services/job-match-scoring.prompt.ts` for the full literal text.
 
 **Step 1 — Job-posting deconstruction (intake briefing):** separate must-have requirements (explicit "required", years, technologies, certifications, languages, work authorization, location constraints) from nice-to-haves; infer the role's real seniority from scope rather than title; extract structured job data faithfully (never inventing salary, holidays, company, or benefits); surface hidden signals (on-call, travel, equity-heavy comp, scope/title mismatch, red flags) in `notablePoints`.
 
@@ -73,7 +73,7 @@ If `job_url` is empty, the URL block is omitted.
 ## Runtime Flow
 1. `POST /api/job-match-analyses/[id]/score` validates the authenticated request and scoring payload.
 2. `ScoreJobMatchAnalysisUseCase` loads the job-match analysis owned by the current user.
-3. `GeminiJobMatchScoringAIService` builds this prompt with `buildJobMatchScoringPrompt` and sends the extracted CV text as the user message.
+3. `GeminiJobMatchScoringAIService` builds this prompt with `JobMatchScoringPromptService.build` and sends the extracted CV text as the user message.
 4. The result is persisted on `job_match_analyses` and later powers offer tabs, tracking, interview questions, and offer chat.
 
 ## Copy Paste Workflow
@@ -88,7 +88,7 @@ If `job_url` is empty, the URL block is omitted.
 ```
 
 ### Copy Paste Prompt
-`buildJobMatchScoringCopyPastePrompt` reuses the integrated system prompt from `buildJobMatchScoringPrompt` and appends:
+`JobMatchScoringPromptService.buildForClipboard` reuses the integrated system prompt from `JobMatchScoringPromptService.build` and appends:
 - JSON-only transport instructions
 - Envelope shape with `workflowId` and `schemaVersion`
 - Expected `result` schema
@@ -117,4 +117,4 @@ Non-blocking warning: "This prompt may include CV data and context you entered."
 - Extra fields are preserved
 
 ## Maintenance
-When `buildJobMatchScoringPrompt`, `buildJobMatchScoringCopyPastePrompt`, their output JSON shapes, or the offer fields sent to the model change, update this document in the same change. Integrated and Copy Paste prompt semantics must stay aligned.
+When `JobMatchScoringPromptService.build`, `JobMatchScoringPromptService.buildForClipboard`, their output JSON shapes, or the offer fields sent to the model change, update this document in the same change. Integrated and Copy Paste prompt semantics must stay aligned.

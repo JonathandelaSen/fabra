@@ -3,28 +3,28 @@ import type {
   DraftEntryInput,
   JournalAIService,
 } from "../../domain/repositories/journal-ai-service.repository";
-import {
-  buildWorkJournalEntryDraftPrompt,
-  WORK_JOURNAL_ENTRY_SYSTEM_PROMPT,
-} from "../../domain/services/work-journal-prompts";
+import { WorkJournalFinalText } from "../../domain/value-objects/work-journal-final-text.value-object";
+import { WorkJournalEntryPromptService } from "../../domain/services/work-journal-entry-prompt.service";
+
+const promptService = new WorkJournalEntryPromptService();
 
 export class OllamaJournalAIService implements JournalAIService {
   constructor(private readonly config: { baseUrl?: string; model: string }) {}
 
-  async draftEntry(input: DraftEntryInput): Promise<string> {
+  async draftEntry(input: DraftEntryInput): Promise<WorkJournalFinalText> {
     const ollama = new Ollama({ host: this.config.baseUrl || "http://localhost:11434" });
     const response = await ollama.generate({
       stream: false,
       model: this.config.model,
-      prompt: buildWorkJournalEntryDraftPrompt(input),
-      system: WORK_JOURNAL_ENTRY_SYSTEM_PROMPT,
+      prompt: promptService.build(input),
+      system: promptService.systemInstruction(),
       format: "json",
     });
 
     return this.parseResponse(response.response || "{}");
   }
 
-  private parseResponse(rawText: string): string {
+  private parseResponse(rawText: string): WorkJournalFinalText {
     const parsed = JSON.parse(rawText || "{}") as Record<string, unknown>;
     const finalText =
       typeof parsed.final_text === "string" && parsed.final_text.trim()
@@ -33,7 +33,7 @@ export class OllamaJournalAIService implements JournalAIService {
     if (!finalText) {
       throw new Error("The AI could not draft the entry with these notes.");
     }
-    return finalText;
+    return WorkJournalFinalText.fromPrimitives(finalText);
   }
 }
 

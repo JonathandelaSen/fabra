@@ -3,7 +3,9 @@ import { CopyPastePreparation, UserId } from "@/backend/modules/shared";
 import type { ProcessQuestionRepository } from "../../domain/repositories/process-question.repository";
 import { ProcessQuestionId } from "../../domain/value-objects/process-question-id.value-object";
 import type { CopyPastePrepareMode } from "../selection-process-copy-paste.constants";
-import { buildInterviewQuestionCopyPastePrompt } from "../services/interview-question-copy-paste-prompts";
+import { InterviewQuestionPromptService } from "../../domain/services/interview-question-prompt.service";
+
+const promptService = new InterviewQuestionPromptService();
 
 export interface PrepareQuestionAnswerCopyPasteInput {
   id: string;
@@ -33,7 +35,7 @@ export class PrepareQuestionAnswerCopyPasteUseCase {
 
     const primitives = readModel.question.toPrimitives();
 
-    const prompt = buildInterviewQuestionCopyPastePrompt({
+    const prompt = promptService.buildForClipboard({
       question: primitives.question,
       context: primitives.context ?? "",
       currentAnswer: input.mode === "edit" ? primitives.answer : null,

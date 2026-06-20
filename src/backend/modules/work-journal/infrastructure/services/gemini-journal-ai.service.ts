@@ -5,26 +5,26 @@ import type {
   DraftEntryInput,
   JournalAIService,
 } from "../../domain/repositories/journal-ai-service.repository";
-import {
-  buildWorkJournalEntryDraftPrompt,
-  WORK_JOURNAL_ENTRY_SYSTEM_PROMPT,
-} from "../../domain/services/work-journal-prompts";
+import { WorkJournalFinalText } from "../../domain/value-objects/work-journal-final-text.value-object";
+import { WorkJournalEntryPromptService } from "../../domain/services/work-journal-entry-prompt.service";
+
+const promptService = new WorkJournalEntryPromptService();
 
 export class GeminiJournalAIService implements JournalAIService {
   constructor(private readonly config: { apiKey: string; model: string }) {}
 
-  async draftEntry(input: DraftEntryInput): Promise<string> {
+  async draftEntry(input: DraftEntryInput): Promise<WorkJournalFinalText> {
     const googleAI = new GoogleGenAI({ apiKey: this.config.apiKey });
     const response = await googleAI.models.generateContent({
       model: this.config.model,
       contents: [
         {
           role: "user",
-          parts: [{ text: buildWorkJournalEntryDraftPrompt(input) }],
+          parts: [{ text: promptService.build(input) }],
         },
       ],
       config: {
-        systemInstruction: WORK_JOURNAL_ENTRY_SYSTEM_PROMPT,
+        systemInstruction: promptService.systemInstruction(),
         responseMimeType: "application/json",
       },
     });
@@ -32,7 +32,7 @@ export class GeminiJournalAIService implements JournalAIService {
     return this.parseResponse(response.text || "{}");
   }
 
-  private parseResponse(rawText: string): string {
+  private parseResponse(rawText: string): WorkJournalFinalText {
     const parsed = JSON.parse(rawText || "{}") as Record<string, unknown>;
     const finalText =
       typeof parsed.final_text === "string" && parsed.final_text.trim()
@@ -41,7 +41,7 @@ export class GeminiJournalAIService implements JournalAIService {
     if (!finalText) {
       throw new Error("The AI could not draft the entry with these notes.");
     }
-    return finalText;
+    return WorkJournalFinalText.fromPrimitives(finalText);
   }
 }
 

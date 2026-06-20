@@ -93,7 +93,7 @@ export class SendMessageUseCase {
       operation: AIOperation.GenerateChatAnswer, entityType: AIEntityType.AnalysisConversation,
       entityId: input.conversationId, provider: input.provider, model: input.model,
     });
-    let answer: string;
+    let answer: JobAnalysisChatContent;
     try {
       const aiService = this.deps.aiFactory.create({
         provider: input.provider,
@@ -121,7 +121,7 @@ export class SendMessageUseCase {
         userId: ownerId,
         analysisReference,
         conversationId,
-        content: JobAnalysisChatContent.fromPrimitives(answer),
+        content: answer,
         model: input.model,
         metadata: { requestId: input.requestId },
         createdAt: Timestamp.fromPrimitives(new Date().toISOString()),

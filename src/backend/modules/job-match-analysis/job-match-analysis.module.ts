@@ -16,10 +16,11 @@ import { GeminiJobMatchScoringAIServiceFactory } from "./infrastructure/services
 import { MockJobMatchScoringAIServiceFactory } from "./infrastructure/services/mock-job-match-scoring-ai.service";
 import { OpenAIJobMatchScoringAIServiceFactory } from "./infrastructure/services/openai-job-match-scoring-ai.service";
 import { ProviderJobMatchScoringAIServiceFactory } from "./infrastructure/services/provider-job-match-scoring-ai-service.factory";
-import { buildJobMatchScoringCopyPastePrompt } from "./domain/services/job-match-scoring-prompts";
+import { JobMatchScoringPromptService } from "./domain/services/job-match-scoring-prompt.service";
 import { SupabaseJobMatchAnalysisRepository } from "./infrastructure/repositories/supabase-job-match-analysis.repository";
 
 const repo = new SupabaseJobMatchAnalysisRepository();
+const scoringPromptService = new JobMatchScoringPromptService();
 const aiServiceFactory = new ProviderJobMatchScoringAIServiceFactory({
   geminiFactory: new GeminiJobMatchScoringAIServiceFactory(),
   openaiFactory: new OpenAIJobMatchScoringAIServiceFactory(),
@@ -50,7 +51,7 @@ function createUseCases(eventBus: EventBus) {
     deleteJobMatchAnalysis: new DeleteJobMatchAnalysisUseCase({ repo }),
     prepareJobMatchScoreCopyPaste: new PrepareJobMatchScoreCopyPasteUseCase({
       repo,
-      buildPrompt: buildJobMatchScoringCopyPastePrompt,
+      buildPrompt: (input) => scoringPromptService.buildForClipboard(input),
     }),
     previewJobMatchScoreCopyPaste: new PreviewJobMatchScoreCopyPasteUseCase({
       repo,

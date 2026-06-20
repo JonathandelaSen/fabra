@@ -3,32 +3,32 @@ import type {
   ReviewSelfAssessmentAIInput,
   ReviewSelfAssessmentAIService,
 } from "../../domain/repositories/review-self-assessment-ai.service";
-import {
-  buildSelfAssessmentSystemPrompt,
-  buildSelfAssessmentUserPrompt,
-} from "../../domain/services/review-self-assessment-prompts";
+import { SelfAssessmentContent } from "../../domain/value-objects/self-assessment-content.value-object";
+import { ReviewSelfAssessmentPromptService } from "../../domain/services/review-self-assessment-prompt.service";
+
+const promptService = new ReviewSelfAssessmentPromptService();
 
 export class OllamaReviewSelfAssessmentAIService
   implements ReviewSelfAssessmentAIService
 {
   constructor(private readonly config: { baseUrl?: string; model: string }) {}
 
-  async generate(input: ReviewSelfAssessmentAIInput): Promise<string> {
+  async generate(input: ReviewSelfAssessmentAIInput): Promise<SelfAssessmentContent> {
     const ollama = new Ollama({
       host: this.config.baseUrl || "http://localhost:11434",
     });
     const response = await ollama.generate({
       stream: false,
       model: this.config.model,
-      prompt: buildSelfAssessmentUserPrompt(input),
-      system: buildSelfAssessmentSystemPrompt(),
+      prompt: promptService.build(input),
+      system: promptService.systemInstruction(),
     });
 
     const content = (response.response || "").trim();
     if (!content) {
       throw new Error("The AI could not generate the self-assessment.");
     }
-    return content;
+    return SelfAssessmentContent.fromPrimitives(content);
   }
 }
 

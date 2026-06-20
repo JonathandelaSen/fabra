@@ -176,7 +176,7 @@ function normalizeTextIds(texts: string[], value: unknown): string[] {
   return texts.map((text, index) => normalizeId(ids[index], { text, index }));
 }
 
-const withDefined = <T extends Record<string, unknown>>(value: T): T => {
+export const dropEmpty = <T extends Record<string, unknown>>(value: T): T => {
   for (const key of Object.keys(value)) {
     if (
       value[key] === undefined ||
@@ -190,7 +190,7 @@ const withDefined = <T extends Record<string, unknown>>(value: T): T => {
 
 function normalizeDateRange(value: unknown): StandardCVDateRange | undefined {
   const raw = asRecord(value);
-  const dates = withDefined({
+  const dates = dropEmpty({
     start: asString(raw.start),
     end: asString(raw.end),
     current: asBoolean(raw.current),
@@ -212,7 +212,7 @@ function normalizeBasics(value: unknown): StandardCVBasics {
         .filter((item): item is StandardCVLink => item !== null)
     : [];
 
-  return withDefined({
+  return dropEmpty({
     name: asString(raw.name),
     headline: asString(raw.headline),
     email: normalizeContactEmail(asString(raw.email)),
@@ -225,7 +225,7 @@ function normalizeBasics(value: unknown): StandardCVBasics {
 function normalizeExperience(value: unknown, index = 0): StandardCVExperience {
   const raw = asRecord(value);
   const bullets = asStringArray(raw.bullets);
-  return withDefined({
+  return dropEmpty({
     id: normalizeId(raw.id, { raw, index }),
     company: asString(raw.company),
     role: asString(raw.role),
@@ -239,7 +239,7 @@ function normalizeExperience(value: unknown, index = 0): StandardCVExperience {
 function normalizeEducation(value: unknown, index = 0): StandardCVEducation {
   const raw = asRecord(value);
   const details = asStringArray(raw.details);
-  return withDefined({
+  return dropEmpty({
     id: normalizeId(raw.id, { raw, index }),
     institution: asString(raw.institution),
     degree: asString(raw.degree),
@@ -253,7 +253,7 @@ function normalizeEducation(value: unknown, index = 0): StandardCVEducation {
 
 function normalizeSkillGroup(value: unknown, index = 0): StandardCVSkillGroup {
   const raw = asRecord(value);
-  return withDefined({
+  return dropEmpty({
     id: normalizeId(raw.id, { raw, index }),
     name: asString(raw.name),
     items: asStringArray(raw.items),
@@ -262,7 +262,7 @@ function normalizeSkillGroup(value: unknown, index = 0): StandardCVSkillGroup {
 
 function normalizeLanguage(value: unknown, index = 0): StandardCVLanguage {
   const raw = asRecord(value);
-  return withDefined({
+  return dropEmpty({
     id: normalizeId(raw.id, { raw, index }),
     name: asString(raw.name),
     level: asString(raw.level),
@@ -272,7 +272,7 @@ function normalizeLanguage(value: unknown, index = 0): StandardCVLanguage {
 function normalizeNamedItem(value: unknown, index = 0): StandardCVNamedItem {
   const raw = asRecord(value);
   const bullets = asStringArray(raw.bullets);
-  return withDefined({
+  return dropEmpty({
     id: normalizeId(raw.id, { raw, index }),
     name: asString(raw.name),
     issuer: asString(raw.issuer),
@@ -293,7 +293,7 @@ function normalizeHiddenSections(value: unknown): CVRenderableSectionId[] | unde
 
 function normalizePresentation(value: unknown): StandardCVPresentation | undefined {
   const raw = asRecord(value);
-  const presentation = withDefined({
+  const presentation = dropEmpty({
     sectionTitles: normalizeSectionTitles(raw.sectionTitles),
     sectionOrder:
       raw.sectionOrder === undefined

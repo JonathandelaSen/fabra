@@ -5,10 +5,10 @@ import type {
   FeedbackAIService,
   GenerateFinalFeedbackInput,
 } from "../../domain/repositories/feedback-ai-service.repository";
-import {
-  buildFeedbackNotesFinalPrompt,
-  FEEDBACK_NOTES_FINAL_SYSTEM_PROMPT,
-} from "../../domain/services/feedback-notes-prompts";
+import { FinalFeedbackText } from "../../domain/value-objects/final-feedback-text.value-object";
+import { FeedbackNotesFinalPromptService } from "../../domain/services/feedback-notes-final-prompt.service";
+
+const promptService = new FeedbackNotesFinalPromptService();
 import { parseFinalFeedbackAIResponse } from "../../domain/services/feedback-ai-response-parser";
 
 export class GeminiFeedbackAIService implements FeedbackAIService {
@@ -16,23 +16,23 @@ export class GeminiFeedbackAIService implements FeedbackAIService {
 
   async generateFinalFeedback(
     input: GenerateFinalFeedbackInput
-  ): Promise<string> {
+  ): Promise<FinalFeedbackText> {
     const googleAI = new GoogleGenAI({ apiKey: this.config.apiKey });
     const response = await googleAI.models.generateContent({
       model: this.config.model,
       contents: [
         {
           role: "user",
-          parts: [{ text: buildFeedbackNotesFinalPrompt(input) }],
+          parts: [{ text: promptService.build(input) }],
         },
       ],
       config: {
-        systemInstruction: FEEDBACK_NOTES_FINAL_SYSTEM_PROMPT,
+        systemInstruction: promptService.systemInstruction(),
         responseMimeType: "application/json",
       },
     });
 
-    return parseFinalFeedbackAIResponse(response.text || "{}");
+    return FinalFeedbackText.fromPrimitives(parseFinalFeedbackAIResponse(response.text || "{}"));
   }
 }
 
