@@ -1,4 +1,4 @@
-import { AggregateRoot, EntityId, UserId } from "@/backend/modules/shared";
+import { AggregateRoot, EntityId, Timestamp, UserId } from "@/backend/modules/shared";
 import { ReceivedFeedbackCreatedEvent } from "../events/received-feedback-created.event";
 import { ReceivedFeedbackDeletedEvent } from "../events/received-feedback-deleted.event";
 import { ReceivedFeedbackUpdatedEvent } from "../events/received-feedback-updated.event";
@@ -138,13 +138,13 @@ export class ReceivedFeedback extends AggregateRoot {
     return {
       id: this.feedbackId.toPrimitives(),
       userId: this.feedbackUserId.toPrimitives(),
-      activityContextId: this.activityContextId,
+      activityContextId: this.feedbackActivityContextId.toPrimitives(),
       receivedDate: this.feedbackReceivedDate.toPrimitives(),
       giverName: this.feedbackGiverName.toPrimitives(),
       feedbackText: this.feedbackTextValue.toPrimitives(),
       userNote: this.feedbackUserNote.toPrimitives(),
-      createdAt: this.feedbackCreatedAt,
-      updatedAt: this.feedbackUpdatedAt,
+      createdAt: Timestamp.fromPrimitives(this.feedbackCreatedAt).toPrimitives(),
+      updatedAt: Timestamp.fromPrimitives(this.feedbackUpdatedAt).toPrimitives(),
     };
   }
 }

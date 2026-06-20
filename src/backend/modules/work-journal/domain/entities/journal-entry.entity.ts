@@ -164,9 +164,9 @@ export class WorkJournalEntry extends AggregateRoot {
 
   toPrimitives(): WorkJournalEntryPrimitives {
     return {
-      id: this.id,
-      userId: this.userId,
-      contextId: this.contextId,
+      id: this.entryId.toPrimitives(),
+      userId: this.ownerId.toPrimitives(),
+      contextId: this.entryContextId.toPrimitives(),
       dateStart: this.entryDateStart.toPrimitives(),
       dateEnd: this.entryDateEnd.toPrimitives(),
       topic: this.entryTopic.toPrimitives(),

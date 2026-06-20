@@ -1,5 +1,8 @@
 import {
   AggregateRoot,
+  BooleanFlag,
+  Counter,
+  EntityId,
   Timestamp,
   UserId,
   type UserId as UserIdType,
@@ -143,14 +146,16 @@ export class ReviewEvidenceItem extends AggregateRoot {
 
   toPrimitives(): ReviewEvidenceItemPrimitives {
     return {
-      id: this.id,
+      id: this.itemId.toPrimitives(),
       userId: this.ownerId.toPrimitives(),
-      reviewId: this.reviewId,
+      reviewId: this.itemReviewId.toPrimitives(),
       source: this.itemSource.toPrimitives(),
-      sourceId: this.itemSourceId,
+      sourceId: this.itemSourceId
+        ? EntityId.fromPrimitives(this.itemSourceId).toPrimitives()
+        : null,
       content: this.itemContent.toPrimitives(),
-      highlighted: this.itemHighlighted,
-      position: this.itemPosition,
+      highlighted: BooleanFlag.fromPrimitives(this.itemHighlighted).toPrimitives(),
+      position: Counter.fromPrimitives(this.itemPosition).toPrimitives(),
       createdAt: this.itemCreatedAt.toPrimitives(),
       updatedAt: this.itemUpdatedAt.toPrimitives(),
     };

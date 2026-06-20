@@ -1,5 +1,8 @@
 import {
   AggregateRoot,
+  EntityId,
+  LongText,
+  StringList,
   Timestamp,
   UserId,
   type UserId as UserIdType,
@@ -131,22 +134,42 @@ export class JobOpportunity extends AggregateRoot {
 
   toPrimitives(): JobOpportunityPrimitives {
     return {
-      id: this.id,
-      userId: this.userId,
-      title: this.opportunityTitle,
-      company: this.opportunityCompany,
-      location: this.opportunityLocation,
-      remote: this.opportunityRemote,
-      salary: this.opportunitySalary,
-      seniority: this.opportunitySeniority,
-      contractType: this.opportunityContractType,
-      benefits: this.opportunityBenefits,
-      requirements: this.opportunityRequirements,
-      responsibilities: this.opportunityResponsibilities,
-      notablePoints: this.opportunityNotablePoints,
-      description: this.opportunityDescription,
-      url: this.opportunityUrl,
-      sourceJobMatchAnalysisId: this.opportunitySourceJobMatchAnalysisId,
+      id: this.opportunityId.toPrimitives(),
+      userId: this.ownerId.toPrimitives(),
+      title: this.opportunityTitle
+        ? LongText.fromPrimitives(this.opportunityTitle).toPrimitives()
+        : null,
+      company: this.opportunityCompany
+        ? LongText.fromPrimitives(this.opportunityCompany).toPrimitives()
+        : null,
+      location: this.opportunityLocation
+        ? LongText.fromPrimitives(this.opportunityLocation).toPrimitives()
+        : null,
+      remote: this.opportunityRemote
+        ? LongText.fromPrimitives(this.opportunityRemote).toPrimitives()
+        : null,
+      salary: this.opportunitySalary
+        ? LongText.fromPrimitives(this.opportunitySalary).toPrimitives()
+        : null,
+      seniority: this.opportunitySeniority
+        ? LongText.fromPrimitives(this.opportunitySeniority).toPrimitives()
+        : null,
+      contractType: this.opportunityContractType
+        ? LongText.fromPrimitives(this.opportunityContractType).toPrimitives()
+        : null,
+      benefits: StringList.fromPrimitives(this.opportunityBenefits).toPrimitives(),
+      requirements: StringList.fromPrimitives(this.opportunityRequirements).toPrimitives(),
+      responsibilities: StringList.fromPrimitives(this.opportunityResponsibilities).toPrimitives(),
+      notablePoints: StringList.fromPrimitives(this.opportunityNotablePoints).toPrimitives(),
+      description: this.opportunityDescription
+        ? LongText.fromPrimitives(this.opportunityDescription).toPrimitives()
+        : null,
+      url: this.opportunityUrl
+        ? LongText.fromPrimitives(this.opportunityUrl).toPrimitives()
+        : null,
+      sourceJobMatchAnalysisId: this.opportunitySourceJobMatchAnalysisId
+        ? EntityId.fromPrimitives(this.opportunitySourceJobMatchAnalysisId).toPrimitives()
+        : null,
       createdAt: this.opportunityCreatedAt.toPrimitives(),
       updatedAt: this.opportunityUpdatedAt.toPrimitives(),
     };

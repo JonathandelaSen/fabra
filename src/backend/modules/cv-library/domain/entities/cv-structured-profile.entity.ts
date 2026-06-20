@@ -7,6 +7,7 @@ import {
 import { CVStructuredProfileCreatedEvent } from "../events/cv-structured-profile-created.event";
 import { AIModelName } from "../value-objects/ai-model-name.value-object";
 import { CVDocumentId } from "../value-objects/cv-document-id.value-object";
+import { CVProfileData } from "../value-objects/cv-profile-data.value-object";
 import { CVStructuredProfileId } from "../value-objects/cv-structured-profile-id.value-object";
 import { ProfileSchemaVersion } from "../value-objects/profile-schema-version.value-object";
 import { SourceTextHash } from "../value-objects/source-text-hash.value-object";
@@ -98,13 +99,13 @@ export class CVStructuredProfile extends AggregateRoot {
 
   toPrimitives(): CVStructuredProfilePrimitives {
     return {
-      id: this.id,
-      userId: this.userId,
-      cvDocumentId: this.cvDocumentId,
+      id: this.profileId.toPrimitives(),
+      userId: this.ownerId.toPrimitives(),
+      cvDocumentId: this.documentId.toPrimitives(),
       schemaVersion: this.profileSchemaVersion.toPrimitives(),
       sourceTextHash: this.profileSourceTextHash.toPrimitives(),
       aiModel: this.profileAIModel.toPrimitives(),
-      profile: this.profileData,
+      profile: CVProfileData.fromPrimitives(this.profileData).toPrimitives(),
       createdAt: this.profileCreatedAt.toPrimitives(),
       updatedAt: this.profileUpdatedAt.toPrimitives(),
     };

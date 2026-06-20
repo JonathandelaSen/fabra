@@ -1,5 +1,7 @@
 import {
   AggregateRoot,
+  EntityId,
+  LongText,
   Timestamp,
   UserId,
   type UserId as UserIdType,
@@ -115,14 +117,22 @@ export class FollowUp extends AggregateRoot {
 
   toPrimitives(): FollowUpPrimitives {
     return {
-      id: this.id,
+      id: this.followUpId.toPrimitives(),
       userId: this.ownerId.toPrimitives(),
       jobOpportunityId: this.opportunityId.toPrimitives(),
       status: this.followUpStatus.toPrimitives(),
-      notes: this.followUpNotes,
-      nextAction: this.followUpNextAction,
-      nextActionAt: this.followUpNextActionAt,
-      sourceJobMatchAnalysisId: this.followUpSourceJobMatchAnalysisId,
+      notes: this.followUpNotes
+        ? LongText.fromPrimitives(this.followUpNotes).toPrimitives()
+        : null,
+      nextAction: this.followUpNextAction
+        ? LongText.fromPrimitives(this.followUpNextAction).toPrimitives()
+        : null,
+      nextActionAt: this.followUpNextActionAt
+        ? Timestamp.fromPrimitives(this.followUpNextActionAt).toPrimitives()
+        : null,
+      sourceJobMatchAnalysisId: this.followUpSourceJobMatchAnalysisId
+        ? EntityId.fromPrimitives(this.followUpSourceJobMatchAnalysisId).toPrimitives()
+        : null,
       createdAt: this.followUpCreatedAt.toPrimitives(),
       updatedAt: this.followUpUpdatedAt.toPrimitives(),
     };

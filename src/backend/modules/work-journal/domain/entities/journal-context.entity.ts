@@ -155,13 +155,13 @@ export class WorkJournalContext extends AggregateRoot {
 
   toPrimitives(): WorkJournalContextPrimitives {
     return {
-      id: this.id,
-      userId: this.userId,
-      type: this.type,
-      name: this.name,
-      roleOrLabel: this.roleOrLabel,
-      status: this.status,
-      isDefault: this.isDefault,
+      id: this.contextId.toPrimitives(),
+      userId: this.ownerId.toPrimitives(),
+      type: this.contextType.toPrimitives(),
+      name: this.contextName.toPrimitives(),
+      roleOrLabel: this.contextRoleOrLabel.toPrimitives(),
+      status: this.contextStatus.toPrimitives(),
+      isDefault: this.contextIsDefault.toPrimitives(),
       createdFromCv: this.contextCreatedFromCv.toPrimitives(),
       createdAt: this.contextCreatedAt.toPrimitives(),
       updatedAt: this.contextUpdatedAt.toPrimitives(),

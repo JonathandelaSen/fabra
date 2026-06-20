@@ -1,5 +1,7 @@
 import {
   AggregateRoot,
+  EntityId,
+  LongText,
   Timestamp,
   UserId,
   type UserId as UserIdType,
@@ -183,18 +185,32 @@ export class ProcessQuestion extends AggregateRoot {
 
   toPrimitives(): ProcessQuestionPrimitives {
     return {
-      id: this.id,
+      id: this.processQuestionId.toPrimitives(),
       userId: this.ownerId.toPrimitives(),
       jobOpportunityId:
         this.processQuestionJobOpportunityId?.toPrimitives() ?? null,
       question: this.processQuestionText.toPrimitives(),
-      context: this.processQuestionContext,
-      answer: this.processQuestionAnswer,
-      aiModel: this.processQuestionAIModel,
-      aiGeneratedAt: this.processQuestionAIGeneratedAt,
-      sourceJobMatchAnalysisId: this.processQuestionSourceJobMatchAnalysisId,
-      legacyInterviewQuestionId: this.processQuestionLegacyInterviewQuestionId,
-      legacyCvId: this.processQuestionLegacyCvId,
+      context: this.processQuestionContext
+        ? LongText.fromPrimitives(this.processQuestionContext).toPrimitives()
+        : null,
+      answer: this.processQuestionAnswer
+        ? LongText.fromPrimitives(this.processQuestionAnswer).toPrimitives()
+        : null,
+      aiModel: this.processQuestionAIModel
+        ? LongText.fromPrimitives(this.processQuestionAIModel).toPrimitives()
+        : null,
+      aiGeneratedAt: this.processQuestionAIGeneratedAt
+        ? Timestamp.fromPrimitives(this.processQuestionAIGeneratedAt).toPrimitives()
+        : null,
+      sourceJobMatchAnalysisId: this.processQuestionSourceJobMatchAnalysisId
+        ? EntityId.fromPrimitives(this.processQuestionSourceJobMatchAnalysisId).toPrimitives()
+        : null,
+      legacyInterviewQuestionId: this.processQuestionLegacyInterviewQuestionId
+        ? EntityId.fromPrimitives(this.processQuestionLegacyInterviewQuestionId).toPrimitives()
+        : null,
+      legacyCvId: this.processQuestionLegacyCvId
+        ? EntityId.fromPrimitives(this.processQuestionLegacyCvId).toPrimitives()
+        : null,
       createdAt: this.processQuestionCreatedAt.toPrimitives(),
       updatedAt: this.processQuestionUpdatedAt.toPrimitives(),
     };

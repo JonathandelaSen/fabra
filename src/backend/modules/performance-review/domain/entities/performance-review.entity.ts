@@ -2,6 +2,7 @@ import {
   AggregateRoot,
   EntityId,
   IsoDate,
+  LongText,
   Timestamp,
   UserId,
   type UserId as UserIdType,
@@ -202,8 +203,8 @@ export class PerformanceReview extends AggregateRoot {
 
   toPrimitives(): PerformanceReviewPrimitives {
     return {
-      id: this.id,
-      userId: this.userId,
+      id: this.reviewId.toPrimitives(),
+      userId: this.ownerId.toPrimitives(),
       activityContextId:
         this.reviewActivityContextId?.toPrimitives() ?? null,
       title: this.reviewTitle.toPrimitives(),
@@ -212,7 +213,9 @@ export class PerformanceReview extends AggregateRoot {
       periodStart: this.reviewPeriodStart.toPrimitives(),
       periodEnd: this.reviewPeriodEnd.toPrimitives(),
       status: this.reviewStatus.toPrimitives(),
-      selfAssessmentContent: this.reviewSelfAssessmentContent,
+      selfAssessmentContent: this.reviewSelfAssessmentContent
+        ? LongText.fromPrimitives(this.reviewSelfAssessmentContent).toPrimitives()
+        : null,
       selfAssessmentGeneratedAt:
         this.reviewSelfAssessmentGeneratedAt?.toPrimitives() ?? null,
       selfAssessmentMode: this.reviewSelfAssessmentMode?.toPrimitives() ?? null,
