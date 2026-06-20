@@ -23,8 +23,20 @@ export class WorkJournalContextStatus extends ValueObject<ContextStatus> {
     return new WorkJournalContextStatus(value);
   }
 
+  static active(): WorkJournalContextStatus {
+    return new WorkJournalContextStatus(workJournalContextStatuses.active);
+  }
+
+  static archived(): WorkJournalContextStatus {
+    return new WorkJournalContextStatus(workJournalContextStatuses.archived);
+  }
+
   isActive(): boolean {
     return this.value === workJournalContextStatuses.active;
+  }
+
+  isArchived(): boolean {
+    return this.value === workJournalContextStatuses.archived;
   }
 
   toPrimitives(): ContextStatus {

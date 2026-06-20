@@ -20,6 +20,22 @@ export class ProcessQuestionCVKind extends ValueObject<ProcessQuestionCVType> {
     return new ProcessQuestionCVKind(value as ProcessQuestionCVType);
   }
 
+  static uploaded(): ProcessQuestionCVKind {
+    return new ProcessQuestionCVKind(processQuestionCVTypes.uploaded);
+  }
+
+  static template(): ProcessQuestionCVKind {
+    return new ProcessQuestionCVKind(processQuestionCVTypes.template);
+  }
+
+  isUploaded(): boolean {
+    return this.value === processQuestionCVTypes.uploaded;
+  }
+
+  isTemplate(): boolean {
+    return this.value === processQuestionCVTypes.template;
+  }
+
   toPrimitives(): ProcessQuestionCVType {
     return this.value;
   }

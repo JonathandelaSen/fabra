@@ -32,6 +32,14 @@ export class CVChatRole extends ValueObject<CVChatRolePrimitives> {
     return new CVChatRole(cvChatRoles.assistant);
   }
 
+  isUser(): boolean {
+    return this.value === cvChatRoles.user;
+  }
+
+  isAssistant(): boolean {
+    return this.value === cvChatRoles.assistant;
+  }
+
   toPrimitives(): CVChatRolePrimitives {
     return this.value;
   }

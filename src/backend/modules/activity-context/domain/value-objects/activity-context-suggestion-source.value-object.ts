@@ -19,6 +19,14 @@ export class ActivityContextSuggestionSource extends ValueObject<ActivityContext
     return new ActivityContextSuggestionSource(value);
   }
 
+  static cv(): ActivityContextSuggestionSource {
+    return new ActivityContextSuggestionSource(activityContextSuggestionSources.cv);
+  }
+
+  isCv(): boolean {
+    return this.value === activityContextSuggestionSources.cv;
+  }
+
   toPrimitives(): ActivityContextSuggestionSourceValue {
     return this.value;
   }

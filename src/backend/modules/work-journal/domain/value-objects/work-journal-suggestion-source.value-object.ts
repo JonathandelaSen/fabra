@@ -19,6 +19,14 @@ export class WorkJournalSuggestionSource extends ValueObject<SuggestionSource> {
     return new WorkJournalSuggestionSource(value);
   }
 
+  static cv(): WorkJournalSuggestionSource {
+    return new WorkJournalSuggestionSource(workJournalSuggestionSources.cv);
+  }
+
+  isCv(): boolean {
+    return this.value === workJournalSuggestionSources.cv;
+  }
+
   toPrimitives(): SuggestionSource {
     return this.value;
   }

@@ -20,6 +20,22 @@ export class ProcessQuestionAnalysisModeVO extends ValueObject<ProcessQuestionAn
     return new ProcessQuestionAnalysisModeVO(value as ProcessQuestionAnalysisMode);
   }
 
+  static general(): ProcessQuestionAnalysisModeVO {
+    return new ProcessQuestionAnalysisModeVO(processQuestionAnalysisModes.general);
+  }
+
+  static jobMatch(): ProcessQuestionAnalysisModeVO {
+    return new ProcessQuestionAnalysisModeVO(processQuestionAnalysisModes.jobMatch);
+  }
+
+  isGeneral(): boolean {
+    return this.value === processQuestionAnalysisModes.general;
+  }
+
+  isJobMatch(): boolean {
+    return this.value === processQuestionAnalysisModes.jobMatch;
+  }
+
   toPrimitives(): ProcessQuestionAnalysisMode {
     return this.value;
   }

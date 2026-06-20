@@ -23,6 +23,22 @@ export class WorkJournalInputMode extends ValueObject<EntryInputMode> {
     return new WorkJournalInputMode(value);
   }
 
+  static manual(): WorkJournalInputMode {
+    return new WorkJournalInputMode(workJournalEntryInputModes.manual);
+  }
+
+  static aiAssisted(): WorkJournalInputMode {
+    return new WorkJournalInputMode(workJournalEntryInputModes.aiAssisted);
+  }
+
+  isManual(): boolean {
+    return this.value === workJournalEntryInputModes.manual;
+  }
+
+  isAiAssisted(): boolean {
+    return this.value === workJournalEntryInputModes.aiAssisted;
+  }
+
   toPrimitives(): EntryInputMode {
     return this.value;
   }

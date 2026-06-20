@@ -25,6 +25,22 @@ export class ReviewType extends ValueObject<ReviewTypeValue> {
     return new ReviewType(value as ReviewTypeValue);
   }
 
+  static performanceReview(): ReviewType {
+    return new ReviewType(REVIEW_TYPE.performanceReview);
+  }
+
+  static promotionCase(): ReviewType {
+    return new ReviewType(REVIEW_TYPE.promotionCase);
+  }
+
+  isPerformanceReview(): boolean {
+    return this.value === REVIEW_TYPE.performanceReview;
+  }
+
+  isPromotionCase(): boolean {
+    return this.value === REVIEW_TYPE.promotionCase;
+  }
+
   toPrimitives(): ReviewTypeValue {
     return this.value;
   }

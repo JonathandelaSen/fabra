@@ -32,6 +32,14 @@ export class JobAnalysisChatRole extends ValueObject<JobAnalysisChatRolePrimitiv
     return new JobAnalysisChatRole(jobAnalysisChatRoles.assistant);
   }
 
+  isUser(): boolean {
+    return this.value === jobAnalysisChatRoles.user;
+  }
+
+  isAssistant(): boolean {
+    return this.value === jobAnalysisChatRoles.assistant;
+  }
+
   toPrimitives(): JobAnalysisChatRolePrimitives {
     return this.value;
   }

@@ -25,6 +25,22 @@ export class AnalysisReferenceKind extends ValueObject<AnalysisReferenceType> {
     return new AnalysisReferenceKind(value as AnalysisReferenceType);
   }
 
+  static jobMatchAnalysis(): AnalysisReferenceKind {
+    return new AnalysisReferenceKind(analysisReferenceTypes.jobMatchAnalysis);
+  }
+
+  static cvAnalysis(): AnalysisReferenceKind {
+    return new AnalysisReferenceKind(analysisReferenceTypes.cvAnalysis);
+  }
+
+  isJobMatchAnalysis(): boolean {
+    return this.value === analysisReferenceTypes.jobMatchAnalysis;
+  }
+
+  isCvAnalysis(): boolean {
+    return this.value === analysisReferenceTypes.cvAnalysis;
+  }
+
   toPrimitives(): AnalysisReferenceType {
     return this.value;
   }

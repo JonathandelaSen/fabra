@@ -22,6 +22,38 @@ export class WorkJournalContextType extends ValueObject<ContextType> {
     return new WorkJournalContextType(value as ContextType);
   }
 
+  static employment(): WorkJournalContextType {
+    return new WorkJournalContextType(workJournalContextTypes.employment);
+  }
+
+  static project(): WorkJournalContextType {
+    return new WorkJournalContextType(workJournalContextTypes.project);
+  }
+
+  static personal(): WorkJournalContextType {
+    return new WorkJournalContextType(workJournalContextTypes.personal);
+  }
+
+  static other(): WorkJournalContextType {
+    return new WorkJournalContextType(workJournalContextTypes.other);
+  }
+
+  isEmployment(): boolean {
+    return this.value === workJournalContextTypes.employment;
+  }
+
+  isProject(): boolean {
+    return this.value === workJournalContextTypes.project;
+  }
+
+  isPersonal(): boolean {
+    return this.value === workJournalContextTypes.personal;
+  }
+
+  isOther(): boolean {
+    return this.value === workJournalContextTypes.other;
+  }
+
   toPrimitives(): ContextType {
     return this.value;
   }

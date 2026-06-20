@@ -16,6 +16,22 @@ export class CopyPasteResponseKind extends ValueObject<CopyPasteResponseKindValu
     return new CopyPasteResponseKind(value as CopyPasteResponseKindValue);
   }
 
+  static json(): CopyPasteResponseKind {
+    return new CopyPasteResponseKind("json");
+  }
+
+  static plainText(): CopyPasteResponseKind {
+    return new CopyPasteResponseKind("plain_text");
+  }
+
+  isJson(): boolean {
+    return this.value === "json";
+  }
+
+  isPlainText(): boolean {
+    return this.value === "plain_text";
+  }
+
   toPrimitives(): CopyPasteResponseKindValue {
     return this.value;
   }

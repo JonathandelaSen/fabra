@@ -27,6 +27,30 @@ export class ReviewStatus extends ValueObject<ReviewStatusValue> {
     return new ReviewStatus(value as ReviewStatusValue);
   }
 
+  static draft(): ReviewStatus {
+    return new ReviewStatus(REVIEW_STATUS.draft);
+  }
+
+  static prepared(): ReviewStatus {
+    return new ReviewStatus(REVIEW_STATUS.prepared);
+  }
+
+  static completed(): ReviewStatus {
+    return new ReviewStatus(REVIEW_STATUS.completed);
+  }
+
+  isDraft(): boolean {
+    return this.value === REVIEW_STATUS.draft;
+  }
+
+  isPrepared(): boolean {
+    return this.value === REVIEW_STATUS.prepared;
+  }
+
+  isCompleted(): boolean {
+    return this.value === REVIEW_STATUS.completed;
+  }
+
   toPrimitives(): ReviewStatusValue {
     return this.value;
   }

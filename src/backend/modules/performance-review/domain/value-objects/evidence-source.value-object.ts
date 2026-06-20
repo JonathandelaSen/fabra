@@ -29,6 +29,38 @@ export class EvidenceSource extends ValueObject<EvidenceSourceValue> {
     return new EvidenceSource(value as EvidenceSourceValue);
   }
 
+  static journalEntry(): EvidenceSource {
+    return new EvidenceSource(EVIDENCE_SOURCE.journalEntry);
+  }
+
+  static receivedFeedback(): EvidenceSource {
+    return new EvidenceSource(EVIDENCE_SOURCE.receivedFeedback);
+  }
+
+  static commitment(): EvidenceSource {
+    return new EvidenceSource(EVIDENCE_SOURCE.commitment);
+  }
+
+  static custom(): EvidenceSource {
+    return new EvidenceSource(EVIDENCE_SOURCE.custom);
+  }
+
+  isJournalEntry(): boolean {
+    return this.value === EVIDENCE_SOURCE.journalEntry;
+  }
+
+  isReceivedFeedback(): boolean {
+    return this.value === EVIDENCE_SOURCE.receivedFeedback;
+  }
+
+  isCommitment(): boolean {
+    return this.value === EVIDENCE_SOURCE.commitment;
+  }
+
+  isCustom(): boolean {
+    return this.value === EVIDENCE_SOURCE.custom;
+  }
+
   toPrimitives(): EvidenceSourceValue {
     return this.value;
   }
