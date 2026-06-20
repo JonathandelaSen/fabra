@@ -92,8 +92,8 @@ export class Conversation extends AggregateRoot {
 
   toPrimitives(): ConversationPrimitives {
     return {
-      id: this.id,
-      userId: this.userId,
+      id: this.conversationId.toPrimitives(),
+      userId: this.ownerId.toPrimitives(),
       analysisReference: this.conversationAnalysisReference.toPrimitives(),
       title: this.conversationTitle.toPrimitives(),
       createdAt: this.conversationCreatedAt.toPrimitives(),

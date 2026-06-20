@@ -8,6 +8,8 @@ import { ChatMessageCreatedEvent } from "../events/chat-message-created.event";
 import { CVChatContent } from "../value-objects/cv-chat-content.value-object";
 import { CVChatConversationId } from "../value-objects/cv-chat-conversation-id.value-object";
 import { CVChatMessageId } from "../value-objects/cv-chat-message-id.value-object";
+import { CVChatMetadata } from "../value-objects/cv-chat-metadata.value-object";
+import { CVChatModel } from "../value-objects/cv-chat-model.value-object";
 import {
   CVChatRole,
   type CVChatRolePrimitives,
@@ -51,8 +53,8 @@ export class ChatMessage extends AggregateRoot {
     private readonly messageConversationId: CVChatConversationId,
     private readonly messageRole: CVChatRole,
     private readonly messageContent: CVChatContent,
-    private readonly messageModel: string | null,
-    private readonly messageMetadata: Record<string, unknown> | null,
+    private readonly messageModel: CVChatModel,
+    private readonly messageMetadata: CVChatMetadata,
     private readonly messageCreatedAt: Timestamp,
   ) {
     super();
@@ -66,8 +68,8 @@ export class ChatMessage extends AggregateRoot {
       params.conversationId,
       CVChatRole.user(),
       params.content,
-      null,
-      null,
+      CVChatModel.fromPrimitives(null),
+      CVChatMetadata.fromPrimitives(null),
       params.createdAt,
     );
     message.recordCreatedEvent();
@@ -84,8 +86,8 @@ export class ChatMessage extends AggregateRoot {
       params.conversationId,
       CVChatRole.assistant(),
       params.content,
-      params.model,
-      params.metadata,
+      CVChatModel.fromPrimitives(params.model),
+      CVChatMetadata.fromPrimitives(params.metadata),
       params.createdAt,
     );
     message.recordCreatedEvent();
@@ -106,8 +108,8 @@ export class ChatMessage extends AggregateRoot {
       CVChatConversationId.fromPrimitives(primitives.conversationId),
       CVChatRole.fromPrimitives(primitives.role),
       CVChatContent.fromPrimitives(primitives.content),
-      primitives.model,
-      primitives.metadata,
+      CVChatModel.fromPrimitives(primitives.model),
+      CVChatMetadata.fromPrimitives(primitives.metadata),
       Timestamp.fromPrimitives(primitives.createdAt),
     );
   }
@@ -126,14 +128,14 @@ export class ChatMessage extends AggregateRoot {
 
   toPrimitives(): ChatMessagePrimitives {
     return {
-      id: this.id,
-      userId: this.userId,
+      id: this.messageId.toPrimitives(),
+      userId: this.ownerId.toPrimitives(),
       cvDocumentReference: this.messageCVDocumentReference.toPrimitives(),
-      conversationId: this.conversationId,
+      conversationId: this.messageConversationId.toPrimitives(),
       role: this.messageRole.toPrimitives(),
       content: this.messageContent.toPrimitives(),
-      model: this.messageModel,
-      metadata: this.messageMetadata ? { ...this.messageMetadata } : null,
+      model: this.messageModel.toPrimitives(),
+      metadata: this.messageMetadata.toPrimitives(),
       createdAt: this.messageCreatedAt.toPrimitives(),
     };
   }

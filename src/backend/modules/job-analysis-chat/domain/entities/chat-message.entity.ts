@@ -8,6 +8,8 @@ import { ChatMessageCreatedEvent } from "../events/chat-message-created.event";
 import { JobAnalysisChatContent } from "../value-objects/job-analysis-chat-content.value-object";
 import { JobAnalysisChatConversationId } from "../value-objects/job-analysis-chat-conversation-id.value-object";
 import { JobAnalysisChatMessageId } from "../value-objects/job-analysis-chat-message-id.value-object";
+import { JobAnalysisChatMetadata } from "../value-objects/job-analysis-chat-metadata.value-object";
+import { JobAnalysisChatModel } from "../value-objects/job-analysis-chat-model.value-object";
 import {
   JobAnalysisChatRole,
   type JobAnalysisChatRolePrimitives,
@@ -51,8 +53,8 @@ export class ChatMessage extends AggregateRoot {
     private readonly messageConversationId: JobAnalysisChatConversationId,
     private readonly messageRole: JobAnalysisChatRole,
     private readonly messageContent: JobAnalysisChatContent,
-    private readonly messageModel: string | null,
-    private readonly messageMetadata: Record<string, unknown> | null,
+    private readonly messageModel: JobAnalysisChatModel,
+    private readonly messageMetadata: JobAnalysisChatMetadata,
     private readonly messageCreatedAt: Timestamp,
   ) {
     super();
@@ -66,8 +68,8 @@ export class ChatMessage extends AggregateRoot {
       params.conversationId,
       JobAnalysisChatRole.user(),
       params.content,
-      null,
-      null,
+      JobAnalysisChatModel.fromPrimitives(null),
+      JobAnalysisChatMetadata.fromPrimitives(null),
       params.createdAt,
     );
     message.recordCreatedEvent();
@@ -84,8 +86,8 @@ export class ChatMessage extends AggregateRoot {
       params.conversationId,
       JobAnalysisChatRole.assistant(),
       params.content,
-      params.model,
-      params.metadata,
+      JobAnalysisChatModel.fromPrimitives(params.model),
+      JobAnalysisChatMetadata.fromPrimitives(params.metadata),
       params.createdAt,
     );
     message.recordCreatedEvent();
@@ -106,8 +108,8 @@ export class ChatMessage extends AggregateRoot {
       JobAnalysisChatConversationId.fromPrimitives(primitives.conversationId),
       JobAnalysisChatRole.fromPrimitives(primitives.role),
       JobAnalysisChatContent.fromPrimitives(primitives.content),
-      primitives.model,
-      primitives.metadata,
+      JobAnalysisChatModel.fromPrimitives(primitives.model),
+      JobAnalysisChatMetadata.fromPrimitives(primitives.metadata),
       Timestamp.fromPrimitives(primitives.createdAt),
     );
   }
@@ -126,14 +128,14 @@ export class ChatMessage extends AggregateRoot {
 
   toPrimitives(): ChatMessagePrimitives {
     return {
-      id: this.id,
-      userId: this.userId,
+      id: this.messageId.toPrimitives(),
+      userId: this.ownerId.toPrimitives(),
       analysisReference: this.messageAnalysisReference.toPrimitives(),
-      conversationId: this.conversationId,
+      conversationId: this.messageConversationId.toPrimitives(),
       role: this.messageRole.toPrimitives(),
       content: this.messageContent.toPrimitives(),
-      model: this.messageModel,
-      metadata: this.messageMetadata ? { ...this.messageMetadata } : null,
+      model: this.messageModel.toPrimitives(),
+      metadata: this.messageMetadata.toPrimitives(),
       createdAt: this.messageCreatedAt.toPrimitives(),
     };
   }
