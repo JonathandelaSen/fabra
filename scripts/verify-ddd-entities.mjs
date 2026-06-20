@@ -244,6 +244,7 @@ function checkEntityFile(sourceFile, file, violations) {
     const primitivesName = `${className}Primitives`;
     const createParamsName = `${className}CreateParams`;
     const constructor = getConstructor(aggregate);
+    const hasStaticCreate = hasMethod(aggregate, "create", { isStatic: true });
 
     if (!findInterface(sourceFile, primitivesName)) {
       addViolation(
@@ -256,35 +257,26 @@ function checkEntityFile(sourceFile, file, violations) {
       );
     }
 
-    if (!findInterface(sourceFile, createParamsName)) {
-      addViolation(
-        violations,
-        file,
-        "entity-create-params-missing",
-        `Aggregate ${className} must export interface ${createParamsName}.`,
-        sourceFile,
-        aggregate.name
-      );
-    } else if (!interfaceHasProperty(sourceFile, createParamsName, "id")) {
-      addViolation(
-        violations,
-        file,
-        "entity-id-missing",
-        `Aggregate ${className} create params must include an id value object.`,
-        sourceFile,
-        aggregate.name
-      );
-    }
-
-    if (!hasMethod(aggregate, "create", { isStatic: true })) {
-      addViolation(
-        violations,
-        file,
-        "entity-create-missing",
-        `Aggregate ${className} must define static create(params).`,
-        sourceFile,
-        aggregate.name
-      );
+    if (hasStaticCreate) {
+      if (!findInterface(sourceFile, createParamsName)) {
+        addViolation(
+          violations,
+          file,
+          "entity-create-params-missing",
+          `Aggregate ${className} must export interface ${createParamsName}.`,
+          sourceFile,
+          aggregate.name
+        );
+      } else if (!interfaceHasProperty(sourceFile, createParamsName, "id")) {
+        addViolation(
+          violations,
+          file,
+          "entity-id-missing",
+          `Aggregate ${className} create params must include an id value object.`,
+          sourceFile,
+          aggregate.name
+        );
+      }
     }
 
     if (!hasMethod(aggregate, "fromPrimitives", { isStatic: true })) {
