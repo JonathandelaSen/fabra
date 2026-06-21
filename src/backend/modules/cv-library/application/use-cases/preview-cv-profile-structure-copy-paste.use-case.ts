@@ -1,7 +1,7 @@
 import { UserId } from "@/backend/modules/shared";
 import { extractCopyPasteJson } from "@/backend/modules/shared/application/assisted-workflows/copy-paste-json-parser";
 import { validateCopyPasteEnvelope } from "@/backend/modules/shared/application/assisted-workflows/copy-paste-json-envelope";
-import type { StandardCVProfile } from "../../domain/cv-profile";
+import type { CVProfilePrimitives } from "../../domain/value-objects/cv-profile.value-object";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import {
   CV_PROFILE_COPY_PASTE_SCHEMA_VERSION,
@@ -74,7 +74,7 @@ export class PreviewCVProfileStructureCopyPasteUseCase {
   }
 }
 
-function getMissingImportantFields(profile: StandardCVProfile): string[] {
+function getMissingImportantFields(profile: CVProfilePrimitives): string[] {
   return IMPORTANT_FIELDS.filter((field) => {
     if (field === "basics.name") return !profile.basics?.name;
     if (field === "basics.email") return !profile.basics?.email;
@@ -84,7 +84,7 @@ function getMissingImportantFields(profile: StandardCVProfile): string[] {
   });
 }
 
-function countDetectedSections(profile: StandardCVProfile): number {
+function countDetectedSections(profile: CVProfilePrimitives): number {
   return [
     profile.basics && Object.keys(profile.basics).length > 0,
     profile.summary,

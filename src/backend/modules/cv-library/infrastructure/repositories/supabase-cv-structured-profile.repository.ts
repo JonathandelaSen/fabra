@@ -1,4 +1,4 @@
-import { normalizeStandardCVProfile } from "../../domain/cv-profile";
+import type { CVProfilePrimitives } from "../../domain/value-objects/cv-profile.value-object";
 import { BoundSupabaseRepository, type UserId } from "@/backend/modules/shared";
 import { CVStructuredProfile } from "../../domain/entities/cv-structured-profile.entity";
 import type { CVStructuredProfileRepository } from "../../domain/repositories/cv-structured-profile.repository";
@@ -17,6 +17,12 @@ interface CVStructuredProfileRow {
   updated_at: string;
 }
 
+function mapCVProfileJsonColumnToPrimitives(
+  profile: unknown,
+): CVProfilePrimitives {
+  return profile as CVProfilePrimitives;
+}
+
 function rowToProfile(row: CVStructuredProfileRow): CVStructuredProfile {
   return CVStructuredProfile.fromPrimitives({
     id: row.id,
@@ -25,7 +31,7 @@ function rowToProfile(row: CVStructuredProfileRow): CVStructuredProfile {
     schemaVersion: row.schema_version,
     sourceTextHash: row.source_text_hash,
     aiModel: row.ai_model,
-    profile: normalizeStandardCVProfile(row.profile),
+    profile: mapCVProfileJsonColumnToPrimitives(row.profile),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   });
@@ -53,7 +59,7 @@ export class SupabaseCVStructuredProfileRepository
   async findByDocumentId(
     cvDocumentId: CVDocumentId,
     userId: UserId,
-    schemaVersion: ProfileSchemaVersion
+    schemaVersion: ProfileSchemaVersion,
   ): Promise<CVStructuredProfile | null> {
     const { data, error } = await this.client
       .from("cv_structured_profiles")

@@ -1,7 +1,7 @@
-import type { StandardCVProfile } from "@/backend/modules/cv-library";
+import type { CVProfilePrimitives } from "@/backend/modules/cv-library";
 
 export interface PreviewCVEditorCopyPasteResponse {
-  parsedResult: StandardCVProfile;
+  parsedResult: CVProfilePrimitives;
   preview: {
     basicsName: string | null;
     sectionsCount: number;

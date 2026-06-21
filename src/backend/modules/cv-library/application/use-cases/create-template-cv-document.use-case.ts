@@ -1,4 +1,5 @@
 import { Timestamp, UserId, type EventBus } from "@/backend/modules/shared";
+import type { CVProfilePrimitives } from "../../domain/value-objects/cv-profile.value-object";
 import { CVDocument } from "../../domain/entities/cv-document.entity";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
@@ -15,7 +16,7 @@ export interface CreateTemplateCVDocumentInput {
   schemaVersion: string | null;
   sourceTextHash: string | null;
   aiModel: string | null;
-  profile: unknown;
+  profile: CVProfilePrimitives;
   filename?: string | null;
   textNode?: string | null;
 }
@@ -25,7 +26,7 @@ export class CreateTemplateCVDocumentUseCase {
     private readonly deps: {
       documentRepo: CVDocumentRepository;
       eventBus: EventBus;
-    }
+    },
   ) {}
 
   async execute(input: CreateTemplateCVDocumentInput): Promise<CVDocument> {

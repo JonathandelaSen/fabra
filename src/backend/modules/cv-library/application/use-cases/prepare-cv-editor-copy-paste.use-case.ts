@@ -1,6 +1,10 @@
-import { badRequest, CopyPastePreparation, UserId } from "@/backend/modules/shared";
+import {
+  badRequest,
+  CopyPastePreparation,
+  UserId,
+} from "@/backend/modules/shared";
 import { ErrorCode } from "@/shared/error-codes";
-import type { StandardCVProfile } from "../../domain/cv-profile";
+import type { CVProfilePrimitives } from "../../domain/value-objects/cv-profile.value-object";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import type { CVProfileEditingCopyPastePromptServicePort } from "../../domain/services/cv-profile-editing-copy-paste-prompt-service";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
@@ -33,14 +37,17 @@ export class PrepareCVEditorCopyPasteUseCase {
 
     const primitives = document.toPrimitives();
     if (primitives.type !== "template") {
-      throw badRequest("Only template CVs support editing", ErrorCode.ONLY_TEMPLATE_CVS_EDITABLE);
+      throw badRequest(
+        "Only template CVs support editing",
+        ErrorCode.ONLY_TEMPLATE_CVS_EDITABLE,
+      );
     }
     if (!primitives.profile) {
       throw badRequest("CV has no profile to edit", ErrorCode.CV_NO_PROFILE);
     }
 
     return this.deps.promptService.prepare({
-      profile: primitives.profile as StandardCVProfile,
+      profile: primitives.profile as CVProfilePrimitives,
       instruction: input.instruction,
       templateId: input.templateId ?? primitives.templateId,
       locale: input.locale ?? primitives.templateLocale,

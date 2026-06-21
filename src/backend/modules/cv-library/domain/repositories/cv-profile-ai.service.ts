@@ -1,12 +1,14 @@
-import type { StandardCVProfile } from "../cv-profile";
+import type {
+  CVProfile,
+  CVProfilePrimitives,
+} from "../value-objects/cv-profile.value-object";
 import type { CVTemplateId, CVTemplateLocale } from "../cv-templates";
 import type { AIProvider } from "@/backend/modules/shared";
 import type { StructuredCVProfileData } from "../value-objects/structured-cv-profile-data.value-object";
-import type { EditedCVProfile } from "../value-objects/edited-cv-profile.value-object";
 
 export interface StructuredCVProfileResult {
   schemaVersion: string;
-  profile: StandardCVProfile;
+  profile: CVProfilePrimitives;
 }
 
 export interface CVProfileStructuringAIService {
@@ -24,12 +26,12 @@ export interface CVProfileStructuringAIServiceFactory {
 
 export interface CVProfileEditingAIService {
   edit(input: {
-    profile: StandardCVProfile;
+    profile: CVProfilePrimitives;
     instruction: string;
     templateId?: CVTemplateId;
     locale?: CVTemplateLocale;
     recommendations?: string[];
-  }): Promise<EditedCVProfile>;
+  }): Promise<CVProfile>;
 }
 
 export interface CVProfileEditingAIServiceFactory {

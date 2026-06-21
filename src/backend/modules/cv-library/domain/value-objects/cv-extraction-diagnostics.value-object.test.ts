@@ -13,7 +13,9 @@ describe("CVExtractionDiagnostics", () => {
       pdfjsError: false,
       nodeError: true,
     };
-    expect(CVExtractionDiagnostics.fromPrimitives(primitives).toPrimitives()).toEqual(primitives);
+    expect(
+      CVExtractionDiagnostics.fromPrimitives(primitives).toPrimitives(),
+    ).toEqual(primitives);
   });
 
   it("supports null filename and fileSize", () => {
@@ -27,6 +29,8 @@ describe("CVExtractionDiagnostics", () => {
       pdfjsError: true,
       nodeError: true,
     };
-    expect(CVExtractionDiagnostics.fromPrimitives(primitives).toPrimitives()).toEqual(primitives);
+    expect(
+      CVExtractionDiagnostics.fromPrimitives(primitives).toPrimitives(),
+    ).toEqual(primitives);
   });
 });

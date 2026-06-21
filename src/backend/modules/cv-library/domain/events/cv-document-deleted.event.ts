@@ -1,6 +1,8 @@
 import type { DomainEvent } from "@/backend/modules/shared";
 
-export class CVDocumentDeletedEvent implements DomainEvent<{ documentId: string }> {
+export class CVDocumentDeletedEvent implements DomainEvent<{
+  documentId: string;
+}> {
   readonly eventName = "cv_document_deleted";
   readonly occurredAt = new Date();
 

@@ -1,4 +1,4 @@
-import type { StandardCVProfile } from "@/backend/modules/cv-library";
+import type { CVProfilePrimitives } from "@/backend/modules/cv-library";
 import type { AnalysisSummary } from "@/lib/analysis-types";
 import { ErrorCode, type ErrorResponseBody } from "@/shared/error-codes";
 import { CV_DOCUMENT_TYPES } from "@/shared/cv-library/constants";
@@ -15,7 +15,7 @@ export interface CVDocumentSummaryResponse {
   sourceCvId: string | null;
   templateId: string | null;
   templateLocale: string | null;
-  profile: StandardCVProfile | null;
+  profile: CVProfilePrimitives | null;
   publicEnabled: boolean;
   publicFeedbackEnabled: boolean;
   publicId: string | null;
@@ -64,7 +64,7 @@ interface LegacyCVDocumentSummary {
   source_cv_id: string | null;
   template_id: string | null;
   template_locale: string | null;
-  profile: StandardCVProfile | null;
+  profile: CVProfilePrimitives | null;
   public_enabled: boolean;
   public_feedback_enabled?: boolean;
   public_id: string | null;

@@ -1,4 +1,4 @@
-import type { StandardCVProfile } from "../../domain/cv-profile";
+import type { CVProfilePrimitives } from "../../domain/value-objects/cv-profile.value-object";
 import type { ExtractedPdfText } from "@/shared/extracted-pdf-text";
 import type { CVDocumentTypePrimitives } from "../../domain/value-objects/cv-document-type.value-object";
 import type {
@@ -24,7 +24,7 @@ export interface CVDocumentResponse extends ExtractedPdfText {
   schema_version: string | null;
   source_text_hash: string | null;
   ai_model: string | null;
-  profile: StandardCVProfile | null;
+  profile: CVProfilePrimitives | null;
   public_enabled: boolean;
   public_feedback_enabled: boolean;
   public_id: string | null;
@@ -43,7 +43,7 @@ export interface CVDocumentSummaryResponse {
   source_cv_id: string | null;
   template_id: string | null;
   template_locale: string | null;
-  profile: StandardCVProfile | null;
+  profile: CVProfilePrimitives | null;
   public_enabled: boolean;
   public_feedback_enabled: boolean;
   public_id: string | null;
@@ -60,7 +60,7 @@ export interface CVStructuredProfileResponse {
   schema_version: string;
   source_text_hash: string;
   ai_model: string;
-  profile: StandardCVProfile;
+  profile: CVProfilePrimitives;
   created_at: string;
   updated_at: string;
 }
@@ -85,7 +85,7 @@ export function presentCVDocument(document: CVDocument): CVDocumentResponse {
     schema_version: primitives.schemaVersion,
     source_text_hash: primitives.sourceTextHash,
     ai_model: primitives.aiModel,
-    profile: primitives.profile as StandardCVProfile | null,
+    profile: primitives.profile,
     public_enabled: primitives.publicSettings.enabled,
     public_feedback_enabled: primitives.publicSettings.feedbackEnabled ?? false,
     public_id: primitives.publicSettings.publicId,
@@ -103,7 +103,7 @@ export function presentCVDocument(document: CVDocument): CVDocumentResponse {
 }
 
 export function presentCVDocumentSummary(
-  document: CVDocument
+  document: CVDocument,
 ): CVDocumentSummaryResponse {
   const primitives = documentPrimitives(document);
   return {
@@ -115,7 +115,7 @@ export function presentCVDocumentSummary(
     source_cv_id: primitives.sourceCvId,
     template_id: primitives.templateId,
     template_locale: primitives.templateLocale,
-    profile: primitives.profile as StandardCVProfile | null,
+    profile: primitives.profile,
     public_enabled: primitives.publicSettings.enabled,
     public_feedback_enabled: primitives.publicSettings.feedbackEnabled ?? false,
     public_id: primitives.publicSettings.publicId,
@@ -127,13 +127,13 @@ export function presentCVDocumentSummary(
 }
 
 export function presentCVDocuments(
-  documents: CVDocument[]
+  documents: CVDocument[],
 ): CVDocumentSummaryResponse[] {
   return documents.map(presentCVDocumentSummary);
 }
 
 export function presentCVStructuredProfile(
-  profile: CVStructuredProfile
+  profile: CVStructuredProfile,
 ): CVStructuredProfileResponse {
   const primitives: CVStructuredProfilePrimitives = profile.toPrimitives();
   return {
@@ -143,7 +143,7 @@ export function presentCVStructuredProfile(
     schema_version: primitives.schemaVersion,
     source_text_hash: primitives.sourceTextHash,
     ai_model: primitives.aiModel,
-    profile: primitives.profile as StandardCVProfile,
+    profile: primitives.profile,
     created_at: primitives.createdAt,
     updated_at: primitives.updatedAt,
   };

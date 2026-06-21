@@ -1,4 +1,4 @@
-import type { StandardCVProfile } from "@/lib/cv-profile";
+import type { CVProfilePrimitives } from "@/lib/cv-profile";
 import type { ExtractedPdfText } from "@/shared/extracted-pdf-text";
 
 export type AnalysisMode = "general" | "job_match";
@@ -61,7 +61,7 @@ export interface CVRecord extends ExtractedPdfText {
   schema_version: string | null;
   source_text_hash: string | null;
   ai_model: string | null;
-  profile: StandardCVProfile | null;
+  profile: CVProfilePrimitives | null;
   public_enabled: boolean;
   public_id: string | null;
   public_slug: string | null;

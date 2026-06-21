@@ -7,7 +7,10 @@ import {
 import { CVStructuredProfileCreatedEvent } from "../events/cv-structured-profile-created.event";
 import { AIModelName } from "../value-objects/ai-model-name.value-object";
 import { CVDocumentId } from "../value-objects/cv-document-id.value-object";
-import { CVProfileData } from "../value-objects/cv-profile-data.value-object";
+import {
+  CVProfile,
+  type CVProfilePrimitives,
+} from "../value-objects/cv-profile.value-object";
 import { CVStructuredProfileId } from "../value-objects/cv-structured-profile-id.value-object";
 import { ProfileSchemaVersion } from "../value-objects/profile-schema-version.value-object";
 import { SourceTextHash } from "../value-objects/source-text-hash.value-object";
@@ -19,7 +22,7 @@ export interface CVStructuredProfilePrimitives {
   schemaVersion: string;
   sourceTextHash: string;
   aiModel: string;
-  profile: unknown;
+  profile: CVProfilePrimitives;
   createdAt: string;
   updatedAt: string;
 }
@@ -31,7 +34,7 @@ export interface CVStructuredProfileCreateParams {
   schemaVersion: ProfileSchemaVersion;
   sourceTextHash: SourceTextHash;
   aiModel: AIModelName;
-  profile: unknown;
+  profile: CVProfilePrimitives;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -44,9 +47,9 @@ export class CVStructuredProfile extends AggregateRoot {
     private readonly profileSchemaVersion: ProfileSchemaVersion,
     private readonly profileSourceTextHash: SourceTextHash,
     private readonly profileAIModel: AIModelName,
-    private readonly profileData: unknown,
+    private readonly profile: CVProfile,
     private readonly profileCreatedAt: Timestamp,
-    private readonly profileUpdatedAt: Timestamp
+    private readonly profileUpdatedAt: Timestamp,
   ) {
     super();
   }
@@ -59,18 +62,18 @@ export class CVStructuredProfile extends AggregateRoot {
       params.schemaVersion,
       params.sourceTextHash,
       params.aiModel,
-      params.profile,
+      CVProfile.fromPrimitives(params.profile),
       params.createdAt,
-      params.updatedAt
+      params.updatedAt,
     );
     profile.recordDomainEvent(
-      new CVStructuredProfileCreatedEvent(profile.id, profile.cvDocumentId)
+      new CVStructuredProfileCreatedEvent(profile.id, profile.cvDocumentId),
     );
     return profile;
   }
 
   static fromPrimitives(
-    primitives: CVStructuredProfilePrimitives
+    primitives: CVStructuredProfilePrimitives,
   ): CVStructuredProfile {
     return new CVStructuredProfile(
       CVStructuredProfileId.fromPrimitives(primitives.id),
@@ -79,9 +82,9 @@ export class CVStructuredProfile extends AggregateRoot {
       ProfileSchemaVersion.fromPrimitives(primitives.schemaVersion),
       SourceTextHash.fromPrimitives(primitives.sourceTextHash),
       AIModelName.fromPrimitives(primitives.aiModel),
-      primitives.profile,
+      CVProfile.fromPrimitives(primitives.profile),
       Timestamp.fromPrimitives(primitives.createdAt),
-      Timestamp.fromPrimitives(primitives.updatedAt)
+      Timestamp.fromPrimitives(primitives.updatedAt),
     );
   }
 
@@ -105,7 +108,7 @@ export class CVStructuredProfile extends AggregateRoot {
       schemaVersion: this.profileSchemaVersion.toPrimitives(),
       sourceTextHash: this.profileSourceTextHash.toPrimitives(),
       aiModel: this.profileAIModel.toPrimitives(),
-      profile: CVProfileData.fromPrimitives(this.profileData).toPrimitives(),
+      profile: this.profile.toPrimitives(),
       createdAt: this.profileCreatedAt.toPrimitives(),
       updatedAt: this.profileUpdatedAt.toPrimitives(),
     };

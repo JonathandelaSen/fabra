@@ -36,13 +36,15 @@ describe("CreateJsonResumeCVDocumentUseCase", () => {
 
     const primitives = document.toPrimitives();
     expect(primitives.type).toBe("json_resume");
-    expect(primitives.profile).toMatchObject({ basics: { name: "Jane Smith" } });
+    expect(primitives.profile).toMatchObject({
+      basics: { name: "Jane Smith" },
+    });
     expect(primitives.schemaVersion).toBe("cv-profile.v1");
     expect(primitives.filename).toBe("my-resume.json");
     expect(warnings).toHaveLength(0);
 
     expect(storage.upload).toHaveBeenCalledWith(
-      expect.objectContaining({ contentType: "application/json" })
+      expect.objectContaining({ contentType: "application/json" }),
     );
     expect(repo.save).toHaveBeenCalledOnce();
     expect(eventBus.publish).toHaveBeenCalledOnce();
@@ -79,7 +81,7 @@ describe("CreateJsonResumeCVDocumentUseCase", () => {
     });
 
     await expect(
-      useCase.execute({ userId: "user-1", jsonContent: "not json" })
+      useCase.execute({ userId: "user-1", jsonContent: "not json" }),
     ).rejects.toThrow(JsonResumeValidationError);
   });
 
@@ -92,7 +94,10 @@ describe("CreateJsonResumeCVDocumentUseCase", () => {
     });
 
     await expect(
-      useCase.execute({ userId: "user-1", jsonContent: JSON.stringify({ basics: {} }) })
+      useCase.execute({
+        userId: "user-1",
+        jsonContent: JSON.stringify({ basics: {} }),
+      }),
     ).rejects.toThrow(JsonResumeValidationError);
   });
 

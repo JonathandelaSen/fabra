@@ -4,7 +4,9 @@ import { UpdateCVDocumentPublicSettingsUseCase } from "./update-cv-document-publ
 
 describe("UpdateCVDocumentPublicSettingsUseCase", () => {
   it("updates public settings for template documents and publishes domain events", async () => {
-    const repo = documentRepo({ findById: async () => document({ type: "template" }) });
+    const repo = documentRepo({
+      findById: async () => document({ type: "template" }),
+    });
     const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
     const result = await new UpdateCVDocumentPublicSettingsUseCase({
       documentRepo: repo,

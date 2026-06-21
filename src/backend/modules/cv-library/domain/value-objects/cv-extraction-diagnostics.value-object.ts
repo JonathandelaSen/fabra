@@ -1,4 +1,9 @@
-import { BooleanFlag, Counter, LongText, ValueObject } from "@/backend/modules/shared";
+import {
+  BooleanFlag,
+  Counter,
+  LongText,
+  ValueObject,
+} from "@/backend/modules/shared";
 
 export interface CVExtractionDiagnosticsPrimitives {
   filename: string | null;
@@ -20,23 +25,27 @@ export class CVExtractionDiagnostics extends ValueObject<CVExtractionDiagnostics
     private readonly nodeLengthValue: Counter,
     private readonly pythonErrorValue: BooleanFlag,
     private readonly pdfjsErrorValue: BooleanFlag,
-    private readonly nodeErrorValue: BooleanFlag
+    private readonly nodeErrorValue: BooleanFlag,
   ) {
     super();
   }
 
   static fromPrimitives(
-    primitives: CVExtractionDiagnosticsPrimitives
+    primitives: CVExtractionDiagnosticsPrimitives,
   ): CVExtractionDiagnostics {
     return new CVExtractionDiagnostics(
-      primitives.filename === null ? null : LongText.fromPrimitives(primitives.filename),
-      primitives.fileSize === null ? null : Counter.fromPrimitives(primitives.fileSize),
+      primitives.filename === null
+        ? null
+        : LongText.fromPrimitives(primitives.filename),
+      primitives.fileSize === null
+        ? null
+        : Counter.fromPrimitives(primitives.fileSize),
       Counter.fromPrimitives(primitives.pythonLength),
       Counter.fromPrimitives(primitives.pdfjsLength),
       Counter.fromPrimitives(primitives.nodeLength),
       BooleanFlag.fromPrimitives(primitives.pythonError),
       BooleanFlag.fromPrimitives(primitives.pdfjsError),
-      BooleanFlag.fromPrimitives(primitives.nodeError)
+      BooleanFlag.fromPrimitives(primitives.nodeError),
     );
   }
 

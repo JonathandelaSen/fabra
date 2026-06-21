@@ -1,5 +1,15 @@
-import { AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext, publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt, type AIProvider, type EventBus } from "@/backend/modules/shared";
-import type { StandardCVProfile } from "../../domain/cv-profile";
+import {
+  AIEntityType,
+  AIModule,
+  AIOperation,
+  createIntegratedAIInteractionContext,
+  publishAIInteractionApplied,
+  runTrackedAIInteraction,
+  serializeAIInteractionPrompt,
+  type AIProvider,
+  type EventBus,
+} from "@/backend/modules/shared";
+import type { CVProfilePrimitives } from "../../domain/value-objects/cv-profile.value-object";
 import type { CVProfileStructuringAIServiceFactory } from "../../domain/repositories/cv-profile-ai.service";
 
 export interface StructureCVProfileWithAIInput {
@@ -33,12 +43,17 @@ export class StructureCVProfileWithAIUseCase {
     });
 
     const context = createIntegratedAIInteractionContext({
-      userId: input.userId, module: AIModule.CVLibrary, operation: AIOperation.StructureCV,
-      entityType: AIEntityType.CVDocument, entityId: input.documentId,
-      provider: input.provider, model: input.model,
+      userId: input.userId,
+      module: AIModule.CVLibrary,
+      operation: AIOperation.StructureCV,
+      entityType: AIEntityType.CVDocument,
+      entityId: input.documentId,
+      provider: input.provider,
+      model: input.model,
     });
     const result = await runTrackedAIInteraction({
-      eventBus: this.deps.eventBus, context,
+      eventBus: this.deps.eventBus,
+      context,
       prompt: serializeAIInteractionPrompt({ text: input.text }),
       execute: () => service.structure({ text: input.text }),
     });

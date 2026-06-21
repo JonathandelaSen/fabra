@@ -1,6 +1,12 @@
 import { ValueObject } from "@/backend/modules/shared";
-import { CVDocument, type CVDocumentPrimitives } from "../entities/cv-document.entity";
-import { CVStructuredProfile, type CVStructuredProfilePrimitives } from "../entities/cv-structured-profile.entity";
+import {
+  CVDocument,
+  type CVDocumentPrimitives,
+} from "../entities/cv-document.entity";
+import {
+  CVStructuredProfile,
+  type CVStructuredProfilePrimitives,
+} from "../entities/cv-structured-profile.entity";
 
 export interface StructuredCVProfileAndVersionPrimitives {
   profile: CVStructuredProfilePrimitives;
@@ -10,24 +16,24 @@ export interface StructuredCVProfileAndVersionPrimitives {
 export class StructuredCVProfileAndVersion extends ValueObject<StructuredCVProfileAndVersionPrimitives> {
   private constructor(
     private readonly profileEntity: CVStructuredProfile,
-    private readonly versionEntity: CVDocument | null
+    private readonly versionEntity: CVDocument | null,
   ) {
     super();
   }
 
   static create(
     profile: CVStructuredProfile,
-    version: CVDocument | null
+    version: CVDocument | null,
   ): StructuredCVProfileAndVersion {
     return new StructuredCVProfileAndVersion(profile, version);
   }
 
   static fromPrimitives(
-    primitives: StructuredCVProfileAndVersionPrimitives
+    primitives: StructuredCVProfileAndVersionPrimitives,
   ): StructuredCVProfileAndVersion {
     return new StructuredCVProfileAndVersion(
       CVStructuredProfile.fromPrimitives(primitives.profile),
-      primitives.version ? CVDocument.fromPrimitives(primitives.version) : null
+      primitives.version ? CVDocument.fromPrimitives(primitives.version) : null,
     );
   }
 

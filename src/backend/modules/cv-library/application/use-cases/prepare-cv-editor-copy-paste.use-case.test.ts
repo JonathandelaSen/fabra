@@ -82,7 +82,10 @@ describe("PrepareCVEditorCopyPasteUseCase", () => {
 
   it("throws when CV is not a template", async () => {
     mockDocumentRepo.findById.mockResolvedValueOnce({
-      toPrimitives: () => ({ ...mockDocument.toPrimitives(), type: "uploaded" }),
+      toPrimitives: () => ({
+        ...mockDocument.toPrimitives(),
+        type: "uploaded",
+      }),
     });
     const useCase = createUseCase();
     await expect(

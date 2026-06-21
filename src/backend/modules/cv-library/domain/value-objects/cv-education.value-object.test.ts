@@ -11,7 +11,9 @@ describe("CVEducation", () => {
       details: ["Thesis"],
       detailIds: ["d-1"],
     };
-    expect(CVEducation.fromPrimitives(primitives).toPrimitives()).toEqual(primitives);
+    expect(CVEducation.fromPrimitives(primitives).toPrimitives()).toEqual(
+      primitives,
+    );
   });
 
   it("omits empty detail arrays", () => {

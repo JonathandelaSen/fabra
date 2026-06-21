@@ -1,5 +1,15 @@
-import { AIEntityType, AIModule, AIOperation, createIntegratedAIInteractionContext, publishAIInteractionApplied, runTrackedAIInteraction, serializeAIInteractionPrompt, type AIProvider, type EventBus } from "@/backend/modules/shared";
-import type { StandardCVProfile } from "../../domain/cv-profile";
+import {
+  AIEntityType,
+  AIModule,
+  AIOperation,
+  createIntegratedAIInteractionContext,
+  publishAIInteractionApplied,
+  runTrackedAIInteraction,
+  serializeAIInteractionPrompt,
+  type AIProvider,
+  type EventBus,
+} from "@/backend/modules/shared";
+import type { CVProfilePrimitives } from "../../domain/value-objects/cv-profile.value-object";
 import type { CVTemplateId, CVTemplateLocale } from "../../domain/cv-templates";
 import type { CVProfileEditingAIServiceFactory } from "../../domain/repositories/cv-profile-ai.service";
 
@@ -8,7 +18,7 @@ export interface EditCVProfileWithAIInput {
   apiKey?: string;
   baseUrl?: string;
   model: string;
-  profile: StandardCVProfile;
+  profile: CVProfilePrimitives;
   instruction: string;
   templateId?: CVTemplateId;
   locale?: CVTemplateLocale;
@@ -25,7 +35,7 @@ export class EditCVProfileWithAIUseCase {
     },
   ) {}
 
-  async execute(input: EditCVProfileWithAIInput): Promise<StandardCVProfile> {
+  async execute(input: EditCVProfileWithAIInput): Promise<CVProfilePrimitives> {
     const service = this.deps.aiFactory.create({
       provider: input.provider,
       apiKey: input.apiKey,
@@ -41,12 +51,17 @@ export class EditCVProfileWithAIUseCase {
       recommendations: input.recommendations,
     };
     const context = createIntegratedAIInteractionContext({
-      userId: input.userId, module: AIModule.CVLibrary, operation: AIOperation.EditCV,
-      entityType: AIEntityType.CVDocument, entityId: input.documentId,
-      provider: input.provider, model: input.model,
+      userId: input.userId,
+      module: AIModule.CVLibrary,
+      operation: AIOperation.EditCV,
+      entityType: AIEntityType.CVDocument,
+      entityId: input.documentId,
+      provider: input.provider,
+      model: input.model,
     });
     const result = await runTrackedAIInteraction({
-      eventBus: this.deps.eventBus, context,
+      eventBus: this.deps.eventBus,
+      context,
       prompt: serializeAIInteractionPrompt(aiInput),
       execute: () => service.edit(aiInput),
     });

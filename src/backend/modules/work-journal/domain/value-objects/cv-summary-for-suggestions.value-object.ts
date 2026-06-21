@@ -1,17 +1,20 @@
 import { LongText, ValueObject } from "@/backend/modules/shared";
-import type { StandardCVProfile } from "@/lib/cv-profile";
+import {
+  CVProfile,
+  type CVProfilePrimitives,
+} from "@/backend/modules/cv-library";
 
 export interface CVSummaryForSuggestionsPrimitives {
   name?: string;
   filename?: string | null;
   type: string;
-  profile: unknown;
+  profile: CVProfilePrimitives | null;
 }
 
 export class CVSummaryForSuggestions extends ValueObject<CVSummaryForSuggestionsPrimitives> {
   private constructor(
     private readonly typeText: LongText,
-    public readonly profile: StandardCVProfile | null,
+    private readonly profileValue: CVProfile | null,
     private readonly nameText?: LongText,
     private readonly filenameText?: LongText | null
   ) {
@@ -21,7 +24,7 @@ export class CVSummaryForSuggestions extends ValueObject<CVSummaryForSuggestions
   static fromPrimitives(primitives: CVSummaryForSuggestionsPrimitives): CVSummaryForSuggestions {
     return new CVSummaryForSuggestions(
       LongText.fromPrimitives(primitives.type),
-      (primitives.profile as StandardCVProfile | null) ?? null,
+      primitives.profile === null ? null : CVProfile.fromPrimitives(primitives.profile),
       primitives.name === undefined ? undefined : LongText.fromPrimitives(primitives.name),
       primitives.filename === undefined || primitives.filename === null
         ? primitives.filename
@@ -46,9 +49,13 @@ export class CVSummaryForSuggestions extends ValueObject<CVSummaryForSuggestions
   toPrimitives(): CVSummaryForSuggestionsPrimitives {
     return {
       type: this.typeText.toPrimitives(),
-      profile: this.profile,
+      profile: this.profileValue?.toPrimitives() ?? null,
       name: this.name,
       filename: this.filename,
     };
+  }
+
+  get profile(): CVProfilePrimitives | null {
+    return this.profileValue?.toPrimitives() ?? null;
   }
 }

@@ -16,6 +16,15 @@ describe("CVProfileEditPreview", () => {
       warnings: ["warning-1"],
     };
     const vo = CVProfileEditPreview.fromPrimitives(primitives);
-    expect(vo.toPrimitives()).toEqual(primitives);
+    expect(vo.toPrimitives()).toMatchObject({
+      parsedResult: {
+        basics: { name: "Ada Lovelace" },
+        experience: [],
+        education: [],
+        skills: [],
+      },
+      preview: primitives.preview,
+      warnings: primitives.warnings,
+    });
   });
 });

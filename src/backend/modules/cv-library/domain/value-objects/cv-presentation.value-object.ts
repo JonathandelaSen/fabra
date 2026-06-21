@@ -1,9 +1,26 @@
 import { LongText, StringList, ValueObject } from "@/backend/modules/shared";
-import { dropEmpty, type StandardCVPresentation } from "../cv-profile";
 import type { CVRenderableSectionId } from "../cv-templates";
 import { CVSectionTitles } from "./cv-section-titles.value-object";
 
-export type CVPresentationPrimitives = StandardCVPresentation;
+export interface CVPresentationPrimitives {
+  sectionTitles?: Record<string, string>;
+  sectionOrder?: string[];
+  accentColor?: string;
+  tagsColor?: string;
+  hiddenSections?: string[];
+}
+
+const dropEmpty = <T extends Record<string, unknown>>(value: T): T => {
+  for (const key of Object.keys(value)) {
+    if (
+      value[key] === undefined ||
+      (Array.isArray(value[key]) && value[key].length === 0)
+    ) {
+      delete value[key];
+    }
+  }
+  return value;
+};
 
 export class CVPresentation extends ValueObject<CVPresentationPrimitives> {
   private constructor(
@@ -16,9 +33,7 @@ export class CVPresentation extends ValueObject<CVPresentationPrimitives> {
     super();
   }
 
-  static fromPrimitives(
-    primitives: CVPresentationPrimitives,
-  ): CVPresentation {
+  static fromPrimitives(primitives: CVPresentationPrimitives): CVPresentation {
     const text = (value: string | undefined) =>
       value === undefined ? undefined : LongText.fromPrimitives(value);
     return new CVPresentation(
@@ -39,11 +54,9 @@ export class CVPresentation extends ValueObject<CVPresentationPrimitives> {
   toPrimitives(): CVPresentationPrimitives {
     return dropEmpty({
       sectionTitles: this.sectionTitles?.toPrimitives(),
-      sectionOrder: this.sectionOrder?.toPrimitives() as
-        | CVRenderableSectionId[]
-        | undefined,
+      sectionOrder: this.sectionOrder?.toPrimitives() as string[] | undefined,
       hiddenSections: this.hiddenSections?.toPrimitives() as
-        | CVRenderableSectionId[]
+        | string[]
         | undefined,
       accentColor: this.accentColor?.toPrimitives(),
       tagsColor: this.tagsColor?.toPrimitives(),

@@ -4,7 +4,9 @@ import { CVSectionTitles } from "./cv-section-titles.value-object";
 describe("CVSectionTitles", () => {
   it("round-trips section title overrides", () => {
     const primitives = { experience: "Trayectoria", education: "Formación" };
-    expect(CVSectionTitles.fromPrimitives(primitives).toPrimitives()).toEqual(primitives);
+    expect(CVSectionTitles.fromPrimitives(primitives).toPrimitives()).toEqual(
+      primitives,
+    );
   });
 
   it("does not expose the original reference", () => {

@@ -1,6 +1,8 @@
 import type { DomainEvent } from "@/backend/modules/shared";
 
-export class CVDocumentUnpublishedEvent implements DomainEvent<{ documentId: string }> {
+export class CVDocumentUnpublishedEvent implements DomainEvent<{
+  documentId: string;
+}> {
   readonly eventName = "cv_document_unpublished";
   readonly occurredAt = new Date();
 

@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { buildExternalLinkHref, type StandardCVProfile } from "@/lib/cv-profile";
+import { buildExternalLinkHref, type CVProfilePrimitives } from "@/lib/cv-profile";
 import {
   getOrderedRenderableSections,
   getResolvedAccentColor,
@@ -19,7 +19,7 @@ import { CVInlineMarkdown } from "./cv-inline-markdown";
 export type CVTemplatePreviewScale = "card" | "full";
 
 interface CVTemplatePreviewProps {
-  profile: StandardCVProfile;
+  profile: CVProfilePrimitives;
   templateId: CVTemplateId;
   locale: CVTemplateLocale;
   scale?: CVTemplatePreviewScale;

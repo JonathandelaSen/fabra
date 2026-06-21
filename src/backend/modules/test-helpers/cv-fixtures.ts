@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {
-  normalizeStandardCVProfile,
-  type StandardCVProfile,
+  CVProfile,
+  type CVProfilePrimitives,
 } from "@/lib/cv-profile";
 import type { ExtractedPdfText } from "@/shared/extracted-pdf-text";
 import { cvDocumentTypes, type CVDocumentTypePrimitives } from "@/backend/modules/cv-library/domain/value-objects/cv-document-type.value-object";
@@ -25,7 +25,7 @@ export interface TestCVRecord extends ExtractedPdfText {
   schema_version: string | null;
   source_text_hash: string | null;
   ai_model: string | null;
-  profile: StandardCVProfile | null;
+  profile: CVProfilePrimitives | null;
   public_enabled: boolean;
   public_id: string | null;
   public_slug: string | null;
@@ -48,7 +48,7 @@ export interface CreateTestCVInput extends Partial<ExtractedPdfText> {
   schema_version?: string | null;
   source_text_hash?: string | null;
   ai_model?: string | null;
-  profile?: StandardCVProfile | null;
+  profile?: CVProfilePrimitives | null;
 }
 
 export async function createTestCV(
@@ -85,6 +85,6 @@ export async function createTestCV(
   if (error) throw error;
   return {
     ...(data as Omit<TestCVRecord, "profile">),
-    profile: data.profile ? normalizeStandardCVProfile(data.profile) : null,
+    profile: data.profile ? CVProfile.fromPrimitives(data.profile).toPrimitives() : null,
   };
 }

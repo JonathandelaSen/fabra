@@ -1,7 +1,22 @@
 import { LongText, ValueObject } from "@/backend/modules/shared";
-import { dropEmpty, type StandardCVLanguage } from "../cv-profile";
 
-export type CVLanguagePrimitives = StandardCVLanguage;
+export interface CVLanguagePrimitives {
+  id?: string;
+  name?: string;
+  level?: string;
+}
+
+const dropEmpty = <T extends Record<string, unknown>>(value: T): T => {
+  for (const key of Object.keys(value)) {
+    if (
+      value[key] === undefined ||
+      (Array.isArray(value[key]) && value[key].length === 0)
+    ) {
+      delete value[key];
+    }
+  }
+  return value;
+};
 
 export class CVLanguage extends ValueObject<CVLanguagePrimitives> {
   private constructor(

@@ -1,4 +1,5 @@
 import { Timestamp, UserId, type EventBus } from "@/backend/modules/shared";
+import type { CVProfilePrimitives } from "../../domain/value-objects/cv-profile.value-object";
 import type { CVDocument } from "../../domain/entities/cv-document.entity";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import { CVDocumentId } from "../../domain/value-objects/cv-document-id.value-object";
@@ -8,7 +9,7 @@ export interface UpdateTemplateCVDocumentProfileInput {
   id: string;
   userId: string;
   name?: string;
-  profile?: unknown;
+  profile?: CVProfilePrimitives;
   aiModel?: string;
   templateLocale?: string;
 }
@@ -18,11 +19,11 @@ export class UpdateTemplateCVDocumentProfileUseCase {
     private readonly deps: {
       documentRepo: CVDocumentRepository;
       eventBus: EventBus;
-    }
+    },
   ) {}
 
   async execute(
-    input: UpdateTemplateCVDocumentProfileInput
+    input: UpdateTemplateCVDocumentProfileInput,
   ): Promise<CVDocument | null> {
     const id = CVDocumentId.fromPrimitives(input.id);
     const userId = UserId.fromPrimitives(input.userId);

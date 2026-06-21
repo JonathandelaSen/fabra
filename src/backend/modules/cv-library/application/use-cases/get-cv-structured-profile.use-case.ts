@@ -13,18 +13,18 @@ export interface GetCVStructuredProfileInput {
 
 export class GetCVStructuredProfileUseCase {
   constructor(
-    private readonly deps: { profileRepo: CVStructuredProfileRepository }
+    private readonly deps: { profileRepo: CVStructuredProfileRepository },
   ) {}
 
   async execute(
-    input: GetCVStructuredProfileInput
+    input: GetCVStructuredProfileInput,
   ): Promise<CVStructuredProfile | null> {
     return this.deps.profileRepo.findByDocumentId(
       CVDocumentId.fromPrimitives(input.cvDocumentId),
       UserId.fromPrimitives(input.userId),
       ProfileSchemaVersion.fromPrimitives(
-        input.schemaVersion ?? CV_PROFILE_SCHEMA_VERSION
-      )
+        input.schemaVersion ?? CV_PROFILE_SCHEMA_VERSION,
+      ),
     );
   }
 }

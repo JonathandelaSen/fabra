@@ -1,9 +1,9 @@
-import { buildExternalLinkHref, type StandardCVNamedItem } from "@/lib/cv-profile";
+import { buildExternalLinkHref, type CVNamedItemPrimitives } from "@/lib/cv-profile";
 import { CVInlineMarkdown } from "./cv-inline-markdown";
 import { hasItems } from "./cv-template-preview";
 
 interface CVTemplatePreviewNamedItemProps {
-  item: StandardCVNamedItem;
+  item: CVNamedItemPrimitives;
 }
 
 export function CVTemplatePreviewNamedItem({

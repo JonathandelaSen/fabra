@@ -8,7 +8,9 @@ import { CVDocumentExtractedText } from "../value-objects/cv-document-extracted-
 
 const now = "2026-05-13T10:00:00.000Z";
 
-function createDocument(overrides: Partial<Parameters<typeof CVDocument.create>[0]> = {}) {
+function createDocument(
+  overrides: Partial<Parameters<typeof CVDocument.create>[0]> = {},
+) {
   return CVDocument.create({
     id: CVDocumentId.fromPrimitives("cv-1"),
     userId: UserId.fromPrimitives("user-1"),
@@ -59,7 +61,10 @@ describe("CVDocument", () => {
 
   it("hydrates from primitives and renames the document", () => {
     const document = CVDocument.fromPrimitives(createDocument().toPrimitives());
-    document.rename(CVDocumentName.fromPrimitives("Updated CV"), Timestamp.fromPrimitives("2026-05-13T11:00:00.000Z"));
+    document.rename(
+      CVDocumentName.fromPrimitives("Updated CV"),
+      Timestamp.fromPrimitives("2026-05-13T11:00:00.000Z"),
+    );
 
     expect(document.toPrimitives()).toMatchObject({
       name: "Updated CV",
@@ -68,7 +73,9 @@ describe("CVDocument", () => {
   });
 
   it("enables public settings with a published timestamp", () => {
-    const document = createDocument({ type: CVDocumentType.fromPrimitives("template") });
+    const document = createDocument({
+      type: CVDocumentType.fromPrimitives("template"),
+    });
     document.updatePublicSettings({
       enabled: true,
       publicId: "pub-1",
@@ -88,7 +95,10 @@ describe("CVDocument", () => {
   it("records a created event with the document type", () => {
     const events = createDocument().pullDomainEvents();
     expect(events.map((e) => e.eventName)).toEqual(["cv_document_created"]);
-    expect(events[0].toPrimitives()).toEqual({ documentId: "cv-1", type: "uploaded" });
+    expect(events[0].toPrimitives()).toEqual({
+      documentId: "cv-1",
+      type: "uploaded",
+    });
   });
 
   it("does not record events when hydrated from primitives", () => {
@@ -98,7 +108,10 @@ describe("CVDocument", () => {
 
   it("records a renamed event on rename", () => {
     const document = CVDocument.fromPrimitives(createDocument().toPrimitives());
-    document.rename(CVDocumentName.fromPrimitives("Updated CV"), Timestamp.fromPrimitives(now));
+    document.rename(
+      CVDocumentName.fromPrimitives("Updated CV"),
+      Timestamp.fromPrimitives(now),
+    );
 
     const events = document.pullDomainEvents();
     expect(events.map((e) => e.eventName)).toEqual(["cv_document_renamed"]);
@@ -148,7 +161,10 @@ describe("CVDocument", () => {
 
     const events = document.pullDomainEvents();
     expect(events.map((e) => e.eventName)).toEqual(["cv_document_published"]);
-    expect(events[0].toPrimitives()).toEqual({ documentId: "cv-1", slug: "senior-cv" });
+    expect(events[0].toPrimitives()).toEqual({
+      documentId: "cv-1",
+      slug: "senior-cv",
+    });
   });
 
   it("records an unpublished event when public settings are disabled", () => {

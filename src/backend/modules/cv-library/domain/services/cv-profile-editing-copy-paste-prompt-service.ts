@@ -1,8 +1,8 @@
 import type { CopyPastePreparation } from "@/backend/modules/shared";
-import type { StandardCVProfile } from "../cv-profile";
+import type { CVProfilePrimitives } from "../value-objects/cv-profile.value-object";
 
 export interface BuildCVProfileEditingCopyPastePromptInput {
-  profile: StandardCVProfile;
+  profile: CVProfilePrimitives;
   instruction: string;
   templateId?: string | null;
   locale?: string | null;
@@ -10,5 +10,7 @@ export interface BuildCVProfileEditingCopyPastePromptInput {
 }
 
 export interface CVProfileEditingCopyPastePromptServicePort {
-  prepare(input: BuildCVProfileEditingCopyPastePromptInput): CopyPastePreparation;
+  prepare(
+    input: BuildCVProfileEditingCopyPastePromptInput,
+  ): CopyPastePreparation;
 }

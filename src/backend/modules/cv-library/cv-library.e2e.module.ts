@@ -50,7 +50,8 @@ function createE2EUseCases(_queryBus: QueryBus, eventBus: EventBus) {
       eventBus,
     }),
     structureCVProfileWithAI: new StructureCVProfileWithAIUseCase({
-      aiFactory: profileStructuringAI, eventBus,
+      aiFactory: profileStructuringAI,
+      eventBus,
     }),
     upsertCVStructuredProfile: new UpsertCVStructuredProfileUseCase({
       profileRepo,

@@ -1,12 +1,13 @@
+import type { CVProfilePrimitives } from "../../domain/value-objects/cv-profile.value-object";
 import { createRequestId } from "@/lib/observability";
 import { ASSISTANCE_MODE } from "@/backend/modules/shared/application/assisted-workflows/copy-paste-workflow.types";
 import { ErrorCode } from "@/shared/error-codes";
 import { badRequest, UserId } from "@/backend/modules/shared";
+import { getCVSourceTextHash } from "../../domain/cv-profile";
 import {
-  getCVSourceTextHash,
-  type StandardCVProfile,
-} from "../../domain/cv-profile";
-import { getCVTemplate, type CVTemplateLocale } from "../../domain/cv-templates";
+  getCVTemplate,
+  type CVTemplateLocale,
+} from "../../domain/cv-templates";
 import type { CVDocument } from "../../domain/entities/cv-document.entity";
 import type { CVStructuredProfile } from "../../domain/entities/cv-structured-profile.entity";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
@@ -60,7 +61,10 @@ export class ApplyCVProfileStructureCopyPasteUseCase {
     });
     const text = prepared?.analysisText ?? null;
     if (!text) {
-      throw badRequest("No extracted text available for this CV", ErrorCode.CV_NO_EXTRACTED_TEXT);
+      throw badRequest(
+        "No extracted text available for this CV",
+        ErrorCode.CV_NO_EXTRACTED_TEXT,
+      );
     }
 
     const structured = validateCVProfileCopyPasteResult(input.parsedResult);
@@ -90,7 +94,7 @@ export class ApplyCVProfileStructureCopyPasteUseCase {
   private async createTemplateVersion(input: {
     input: ApplyCVProfileStructureCopyPasteInput;
     sourceName: string;
-    profile: StandardCVProfile;
+    profile: CVProfilePrimitives;
     schemaVersion: string;
     sourceTextHash: string;
   }): Promise<CVDocument> {

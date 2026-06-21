@@ -32,8 +32,15 @@ import { SupabaseCVDocumentRepository } from "./infrastructure/repositories/supa
 import { SupabaseCVStructuredProfileRepository } from "./infrastructure/repositories/supabase-cv-structured-profile.repository";
 import { SupabaseCVPublicNoteRepository } from "./infrastructure/repositories/supabase-cv-public-note.repository";
 import { SupabaseCVPublicFeedbackRepository } from "./infrastructure/repositories/supabase-cv-public-feedback.repository";
-import { DeleteCVPublicFeedbackUseCase, ListCVPublicFeedbackUseCase } from "./application/use-cases/manage-cv-public-feedback.use-case";
-import { ListCVPublicNotesUseCase, ListPublishedCVPublicNotesUseCase, ReplaceCVPublicNotesUseCase } from "./application/use-cases/manage-cv-public-notes.use-case";
+import {
+  DeleteCVPublicFeedbackUseCase,
+  ListCVPublicFeedbackUseCase,
+} from "./application/use-cases/manage-cv-public-feedback.use-case";
+import {
+  ListCVPublicNotesUseCase,
+  ListPublishedCVPublicNotesUseCase,
+  ReplaceCVPublicNotesUseCase,
+} from "./application/use-cases/manage-cv-public-notes.use-case";
 import { PdfTextExtractionService } from "./infrastructure/services/pdf-text-extraction.service";
 import { PdfParsersService } from "./infrastructure/services/pdf-parsers.service";
 import { GeminiCVProfileEditingAIServiceFactory } from "./infrastructure/services/gemini-cv-profile-editing-ai.service";
@@ -58,7 +65,8 @@ const pdfStorage = new SupabaseCVPdfStorage();
 const pdfParsers = new PdfParsersService();
 const textExtractor = new PdfTextExtractionService(pdfParsers);
 const templateRenderer = new TemplateCVPdfRenderer();
-const cvProfileStructuringPromptService = new CVProfileStructuringPromptService();
+const cvProfileStructuringPromptService =
+  new CVProfileStructuringPromptService();
 const profileStructuringAI = new ProviderCVProfileStructuringAIServiceFactory({
   geminiFactory: new GeminiCVProfileStructuringAIServiceFactory(),
   openaiFactory: new OpenAICVProfileStructuringAIServiceFactory(),
@@ -71,9 +79,10 @@ const profileEditingAI = new ProviderCVProfileEditingAIServiceFactory({
   mockFactory: new MockCVProfileEditingAIServiceFactory(),
   ollamaFactory: new OllamaCVProfileEditingAIServiceFactory(),
 });
-const profileEditingCopyPastePrompt = new CVProfileEditingCopyPastePromptService(
-  new CVProfileEditingPromptService(),
-);
+const profileEditingCopyPastePrompt =
+  new CVProfileEditingCopyPastePromptService(
+    new CVProfileEditingPromptService(),
+  );
 
 function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
   const prepareCVAnalysisInput = new PrepareCVAnalysisInputUseCase({
@@ -138,16 +147,22 @@ function createUseCases(queryBus: QueryBus, eventBus: EventBus) {
     }),
     getPublishedCVDocument: new GetPublishedCVDocumentUseCase({ documentRepo }),
     listCVPublicNotes: new ListCVPublicNotesUseCase(publicNoteRepo),
-    listPublishedCVPublicNotes: new ListPublishedCVPublicNotesUseCase(publicNoteRepo),
+    listPublishedCVPublicNotes: new ListPublishedCVPublicNotesUseCase(
+      publicNoteRepo,
+    ),
     replaceCVPublicNotes: new ReplaceCVPublicNotesUseCase(publicNoteRepo),
     listCVPublicFeedback: new ListCVPublicFeedbackUseCase(publicFeedbackRepo),
-    deleteCVPublicFeedback: new DeleteCVPublicFeedbackUseCase(publicFeedbackRepo),
+    deleteCVPublicFeedback: new DeleteCVPublicFeedbackUseCase(
+      publicFeedbackRepo,
+    ),
     getCVStructuredProfile: new GetCVStructuredProfileUseCase({ profileRepo }),
     structureCVProfileWithAI: new StructureCVProfileWithAIUseCase({
-      aiFactory: profileStructuringAI, eventBus,
+      aiFactory: profileStructuringAI,
+      eventBus,
     }),
     editCVProfileWithAI: new EditCVProfileWithAIUseCase({
-      aiFactory: profileEditingAI, eventBus,
+      aiFactory: profileEditingAI,
+      eventBus,
     }),
     upsertCVStructuredProfile,
     prepareCVEditorCopyPaste: new PrepareCVEditorCopyPasteUseCase({
@@ -194,7 +209,11 @@ export function createCVLibraryModule(
   telemetry: Telemetry,
   eventBus: EventBus,
 ): CVLibraryModule {
-  const useCases = instrumentUseCases("cv-library", createUseCases(queryBus, eventBus), telemetry);
+  const useCases = instrumentUseCases(
+    "cv-library",
+    createUseCases(queryBus, eventBus),
+    telemetry,
+  );
   return {
     ...useCases,
     bindRequest(client: SupabaseClient) {

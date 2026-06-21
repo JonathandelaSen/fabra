@@ -17,11 +17,11 @@ export class UpdateCVDocumentPublicSettingsUseCase {
     private readonly deps: {
       documentRepo: CVDocumentRepository;
       eventBus: EventBus;
-    }
+    },
   ) {}
 
   async execute(
-    input: UpdateCVDocumentPublicSettingsInput
+    input: UpdateCVDocumentPublicSettingsInput,
   ): Promise<CVDocument | null> {
     const id = CVDocumentId.fromPrimitives(input.id);
     const userId = UserId.fromPrimitives(input.userId);

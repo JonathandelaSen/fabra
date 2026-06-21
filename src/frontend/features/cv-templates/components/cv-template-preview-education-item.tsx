@@ -1,9 +1,9 @@
-import type { StandardCVEducation } from "@/lib/cv-profile";
+import type { CVEducationPrimitives } from "@/lib/cv-profile";
 import { CVInlineMarkdown } from "./cv-inline-markdown";
 import { dateRange, hasItems } from "./cv-template-preview";
 
 interface CVTemplatePreviewEducationItemProps {
-  item: StandardCVEducation;
+  item: CVEducationPrimitives;
 }
 
 export function CVTemplatePreviewEducationItem({

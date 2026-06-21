@@ -13,9 +13,7 @@ import type { OpenAICVProfileStructuringAIServiceFactory } from "./openai-cv-pro
 import type { MockCVProfileStructuringAIServiceFactory } from "./mock-cv-profile-structuring-ai.service";
 import type { OllamaCVProfileStructuringAIServiceFactory } from "./ollama-cv-profile-structuring-ai.service";
 
-export class ProviderCVProfileStructuringAIServiceFactory
-  implements CVProfileStructuringAIServiceFactory
-{
+export class ProviderCVProfileStructuringAIServiceFactory implements CVProfileStructuringAIServiceFactory {
   constructor(
     private readonly deps: {
       geminiFactory: GeminiCVProfileStructuringAIServiceFactory;
@@ -36,7 +34,11 @@ export class ProviderCVProfileStructuringAIServiceFactory
       [AI_PROVIDER.MOCK]: () => this.deps.mockFactory.create(),
     };
     const createService = factories[config.provider];
-    if (!createService) throw badRequest("Unsupported AI provider for structuring CVs.", ErrorCode.AI_PROVIDER_UNSUPPORTED);
+    if (!createService)
+      throw badRequest(
+        "Unsupported AI provider for structuring CVs.",
+        ErrorCode.AI_PROVIDER_UNSUPPORTED,
+      );
     return createService();
   }
 }

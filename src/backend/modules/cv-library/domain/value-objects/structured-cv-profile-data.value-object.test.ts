@@ -10,7 +10,15 @@ describe("StructuredCVProfileData", () => {
       },
     };
     const vo = StructuredCVProfileData.fromPrimitives(primitives);
-    expect(vo.toPrimitives()).toEqual(primitives);
+    expect(vo.toPrimitives()).toMatchObject({
+      schemaVersion: "cv-profile.v1",
+      profile: {
+        basics: { name: "Ada Lovelace" },
+        experience: [],
+        education: [],
+        skills: [],
+      },
+    });
     expect(vo.schemaVersion).toBe("cv-profile.v1");
   });
 });

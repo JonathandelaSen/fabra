@@ -12,7 +12,9 @@ export interface ExtractCVUploadTextInput {
 export class ExtractCVUploadTextUseCase {
   constructor(private readonly deps: { textExtractor: CVPdfTextExtractor }) {}
 
-  async execute(input: ExtractCVUploadTextInput): Promise<CVDocumentExtractedText> {
+  async execute(
+    input: ExtractCVUploadTextInput,
+  ): Promise<CVDocumentExtractedText> {
     return this.deps.textExtractor.extract(input.buffer, input.context);
   }
 }

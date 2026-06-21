@@ -11,12 +11,16 @@ describe("CVExperience", () => {
       bullets: ["Shipped X"],
       bulletIds: ["b-1"],
     };
-    expect(CVExperience.fromPrimitives(primitives).toPrimitives()).toEqual(primitives);
+    expect(CVExperience.fromPrimitives(primitives).toPrimitives()).toEqual(
+      primitives,
+    );
   });
 
   it("omits empty bullet arrays", () => {
-    expect(CVExperience.fromPrimitives({ id: "exp-2" }).toPrimitives()).toEqual({
-      id: "exp-2",
-    });
+    expect(CVExperience.fromPrimitives({ id: "exp-2" }).toPrimitives()).toEqual(
+      {
+        id: "exp-2",
+      },
+    );
   });
 });

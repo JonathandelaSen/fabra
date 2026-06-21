@@ -27,7 +27,11 @@ export class CVDocumentType extends ValueObject<CVDocumentTypePrimitives> {
   }
 
   static fromPrimitives(value: string): CVDocumentType {
-    if (!Object.values(cvDocumentTypes).includes(value as CVDocumentTypePrimitives)) {
+    if (
+      !Object.values(cvDocumentTypes).includes(
+        value as CVDocumentTypePrimitives,
+      )
+    ) {
       throw new Error("Invalid CV document type");
     }
     return new CVDocumentType(value as CVDocumentTypePrimitives);

@@ -7,7 +7,9 @@ import type { CVStructuredProfileRepository } from "../../domain/repositories/cv
 
 export const now = "2026-05-13T10:00:00.000Z";
 
-export function documentPrimitives(overrides: Partial<ReturnType<CVDocument["toPrimitives"]>> = {}) {
+export function documentPrimitives(
+  overrides: Partial<ReturnType<CVDocument["toPrimitives"]>> = {},
+) {
   return {
     id: "cv-1",
     userId: "user-1",
@@ -43,11 +45,15 @@ export function documentPrimitives(overrides: Partial<ReturnType<CVDocument["toP
   };
 }
 
-export function document(overrides: Partial<ReturnType<CVDocument["toPrimitives"]>> = {}) {
+export function document(
+  overrides: Partial<ReturnType<CVDocument["toPrimitives"]>> = {},
+) {
   return CVDocument.fromPrimitives(documentPrimitives(overrides));
 }
 
-export function profile(overrides: Partial<ReturnType<CVStructuredProfile["toPrimitives"]>> = {}) {
+export function profile(
+  overrides: Partial<ReturnType<CVStructuredProfile["toPrimitives"]>> = {},
+) {
   return CVStructuredProfile.fromPrimitives({
     id: "profile-1",
     userId: "user-1",
@@ -75,7 +81,7 @@ export function documentRepo(overrides: Partial<CVDocumentRepository> = {}) {
 }
 
 export function structuredProfileRepo(
-  overrides: Partial<CVStructuredProfileRepository> = {}
+  overrides: Partial<CVStructuredProfileRepository> = {},
 ) {
   return {
     findByDocumentId: vi.fn(async () => profile()),

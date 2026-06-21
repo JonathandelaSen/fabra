@@ -1,19 +1,19 @@
 "use client";
 
-import type { StandardCVSkillGroup } from "@/lib/cv-profile";
+import type { CVSkillGroupPrimitives } from "@/lib/cv-profile";
 import { Plus, Trash2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 const inputClass = "w-full rounded-xl border border-line bg-panel-hover px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none";
 
 interface Props {
-  items: StandardCVSkillGroup[];
-  onChange: (items: StandardCVSkillGroup[]) => void;
+  items: CVSkillGroupPrimitives[];
+  onChange: (items: CVSkillGroupPrimitives[]) => void;
 }
 
 export function SectionSkills({ items, onChange }: Props) {
   const t = useTranslations("cvEditor.manual.skills");
-  const updateGroup = (index: number, group: StandardCVSkillGroup) => {
+  const updateGroup = (index: number, group: CVSkillGroupPrimitives) => {
     const next = [...items];
     next[index] = group;
     onChange(next);

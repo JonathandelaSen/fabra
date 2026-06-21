@@ -42,7 +42,10 @@ export class PrepareCVProfileStructureCopyPasteUseCase {
 
     const text = prepared.analysisText;
     if (!text) {
-      throw badRequest("No extracted text available for this CV", ErrorCode.CV_NO_EXTRACTED_TEXT);
+      throw badRequest(
+        "No extracted text available for this CV",
+        ErrorCode.CV_NO_EXTRACTED_TEXT,
+      );
     }
 
     const prompt = this.deps.buildPrompt({

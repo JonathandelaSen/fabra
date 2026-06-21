@@ -60,8 +60,8 @@ describe("StructuredCVProfileAndVersion", () => {
     expect(result.version).toBe(cv);
 
     const primitives = result.toPrimitives();
-    expect(primitives.profile).toEqual(mockProfilePrimitives);
-    expect(primitives.version).toEqual(mockCvPrimitives);
+    expect(primitives.profile).toEqual(profile.toPrimitives());
+    expect(primitives.version).toEqual(cv.toPrimitives());
 
     const restored = StructuredCVProfileAndVersion.fromPrimitives(primitives);
     expect(restored.toPrimitives()).toEqual(primitives);
@@ -75,7 +75,7 @@ describe("StructuredCVProfileAndVersion", () => {
     expect(result.version).toBeNull();
 
     const primitives = result.toPrimitives();
-    expect(primitives.profile).toEqual(mockProfilePrimitives);
+    expect(primitives.profile).toEqual(profile.toPrimitives());
     expect(primitives.version).toBeNull();
   });
 });

@@ -22,21 +22,25 @@ export class CVProfileStructureCopyPastePreview extends ValueObject<CVProfileStr
     private readonly missingImportantFieldsValue: StringList,
     private readonly templateLocaleValue: LongText | null,
     private readonly completenessValue: Counter,
-    private readonly originLabelValue: CopyPasteOriginLabel
+    private readonly originLabelValue: CopyPasteOriginLabel,
   ) {
     super();
   }
 
   static fromPrimitives(
-    primitives: CVProfileStructureCopyPastePreviewPrimitives
+    primitives: CVProfileStructureCopyPastePreviewPrimitives,
   ): CVProfileStructureCopyPastePreview {
     return new CVProfileStructureCopyPastePreview(
-      primitives.basicsName === null ? null : LongText.fromPrimitives(primitives.basicsName),
+      primitives.basicsName === null
+        ? null
+        : LongText.fromPrimitives(primitives.basicsName),
       Counter.fromPrimitives(primitives.sectionsCount),
       StringList.fromPrimitives(primitives.missingImportantFields),
-      primitives.templateLocale === null ? null : LongText.fromPrimitives(primitives.templateLocale),
+      primitives.templateLocale === null
+        ? null
+        : LongText.fromPrimitives(primitives.templateLocale),
       Counter.fromPrimitives(primitives.completeness),
-      CopyPasteOriginLabel.fromPrimitives(primitives.originLabel)
+      CopyPasteOriginLabel.fromPrimitives(primitives.originLabel),
     );
   }
 

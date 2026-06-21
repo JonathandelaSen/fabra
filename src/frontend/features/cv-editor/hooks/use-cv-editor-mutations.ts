@@ -4,8 +4,7 @@ import { useCallback, useState, type RefObject } from "react";
 import { useTranslations } from "next-intl";
 import { useQueryClient } from "@tanstack/react-query";
 import {
-  normalizeStandardCVProfile,
-  type StandardCVProfile,
+  type CVProfilePrimitives,
 } from "@/lib/cv-profile";
 import type { CVTemplateLocale } from "@/lib/cv-templates";
 import { getErrorMessage } from "@/lib/errors";
@@ -30,22 +29,22 @@ import {
 
 interface UseCVEditorMutationsInput {
   currentVersionId: string | null;
-  currentProfile: StandardCVProfile | null;
+  currentProfile: CVProfilePrimitives | null;
   normalizedPublicSlug: string;
   aiProvider: StoredAIProvider;
   aiApiKey: string;
   selectedModel: string;
   savedProfileJsonRef: RefObject<string | null>;
   setEditedVersion: (v: CVDocumentListItem | null) => void;
-  setProfile: (profile: StandardCVProfile, mode: "instant") => void;
-  saveProfileToApi: (profile: StandardCVProfile | null) => Promise<boolean>;
+  setProfile: (profile: CVProfilePrimitives, mode: "instant") => void;
+  saveProfileToApi: (profile: CVProfilePrimitives | null) => Promise<boolean>;
   reloadPreview: () => void;
   setError: (error: string | null) => void;
   setPublicSlugDraft: (draft: { cvId: string | null; value: string }) => void;
 }
 
-function serializeProfile(profile: StandardCVProfile | null | undefined) {
-  return JSON.stringify(profile ? normalizeStandardCVProfile(profile) : null);
+function serializeProfile(profile: CVProfilePrimitives | null | undefined) {
+  return JSON.stringify(profile ?? null);
 }
 
 export function useCVEditorMutations({

@@ -1,5 +1,4 @@
-import type { StandardCVProfile } from "@/lib/cv-profile";
-import { normalizeStandardCVProfile } from "@/lib/cv-profile";
+import type { CVProfilePrimitives } from "@/lib/cv-profile";
 import type { CVRecommendationAnalysis } from "@/lib/analysis-types";
 import type { CVTemplateLocale } from "@/lib/cv-templates";
 import type { CVDocumentListItem } from "@/frontend/features/cv-library";
@@ -46,15 +45,14 @@ export function normalizeCVResponse(data: any): CVDocumentListItem {
 
 export interface SaveProfileInput {
   cvId: string;
-  profile: StandardCVProfile;
+  profile: CVProfilePrimitives;
 }
 
 export async function saveProfile({ cvId, profile }: SaveProfileInput) {
-  const normalized = normalizeStandardCVProfile(profile);
   const res = await fetch(`/api/cvs/${encodeURIComponent(cvId)}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ profile: normalized }),
+    body: JSON.stringify({ profile }),
   });
   return readJsonResponse<UpdateCVDocumentResponse>(
     res,

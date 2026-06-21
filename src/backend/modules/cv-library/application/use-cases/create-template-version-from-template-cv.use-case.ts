@@ -21,10 +21,15 @@ function stripTrailingTemplateName(name: string): string {
   const knownNames = new Set(
     CV_TEMPLATES.map((template) => template.name.toLowerCase()),
   );
-  const parts = name.split("·").map((part) => part.trim()).filter(Boolean);
+  const parts = name
+    .split("·")
+    .map((part) => part.trim())
+    .filter(Boolean);
   if (parts.length <= 1) return name.trim();
   const last = parts[parts.length - 1]?.toLowerCase();
-  return last && knownNames.has(last) ? parts.slice(0, -1).join(" · ") : name.trim();
+  return last && knownNames.has(last)
+    ? parts.slice(0, -1).join(" · ")
+    : name.trim();
 }
 
 export class CreateTemplateVersionFromTemplateCVUseCase {
@@ -65,7 +70,7 @@ export class CreateTemplateVersionFromTemplateCVUseCase {
     const requestedLocale = input.templateLocale as CVTemplateLocale;
     const selectedLocale = template.locales.includes(requestedLocale)
       ? requestedLocale
-      : (primitives.templateLocale as CVTemplateLocale | null) ?? "es";
+      : ((primitives.templateLocale as CVTemplateLocale | null) ?? "es");
     const baseName = stripTrailingTemplateName(primitives.name);
 
     return this.deps.createTemplateDocument.execute({

@@ -1,7 +1,28 @@
 import { LongText, StringList, ValueObject } from "@/backend/modules/shared";
-import { dropEmpty, type StandardCVNamedItem } from "../cv-profile";
 
-export type CVNamedItemPrimitives = StandardCVNamedItem;
+export interface CVNamedItemPrimitives {
+  id?: string;
+  name?: string;
+  issuer?: string;
+  organization?: string;
+  date?: string;
+  url?: string;
+  description?: string;
+  bullets?: string[];
+  bulletIds?: string[];
+}
+
+const dropEmpty = <T extends Record<string, unknown>>(value: T): T => {
+  for (const key of Object.keys(value)) {
+    if (
+      value[key] === undefined ||
+      (Array.isArray(value[key]) && value[key].length === 0)
+    ) {
+      delete value[key];
+    }
+  }
+  return value;
+};
 
 export class CVNamedItem extends ValueObject<CVNamedItemPrimitives> {
   private constructor(

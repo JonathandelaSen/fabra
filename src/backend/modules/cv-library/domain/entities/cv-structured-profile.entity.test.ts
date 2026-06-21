@@ -48,8 +48,13 @@ describe("CVStructuredProfile", () => {
     });
 
     const events = structured.pullDomainEvents();
-    expect(events.map((e) => e.eventName)).toEqual(["cv_structured_profile_created"]);
-    expect(events[0].toPrimitives()).toEqual({ profileId: "profile-1", cvDocumentId: "cv-1" });
+    expect(events.map((e) => e.eventName)).toEqual([
+      "cv_structured_profile_created",
+    ]);
+    expect(events[0].toPrimitives()).toEqual({
+      profileId: "profile-1",
+      cvDocumentId: "cv-1",
+    });
   });
 
   it("hydrates from primitives", () => {

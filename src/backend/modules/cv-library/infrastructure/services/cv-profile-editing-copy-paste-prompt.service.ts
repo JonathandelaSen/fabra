@@ -9,14 +9,12 @@ import type {
   CVProfileEditingCopyPastePromptServicePort,
 } from "../../domain/services/cv-profile-editing-copy-paste-prompt-service";
 
-export class CVProfileEditingCopyPastePromptService
-  implements CVProfileEditingCopyPastePromptServicePort
-{
-  constructor(
-    private readonly promptService: CVProfileEditingPromptService,
-  ) {}
+export class CVProfileEditingCopyPastePromptService implements CVProfileEditingCopyPastePromptServicePort {
+  constructor(private readonly promptService: CVProfileEditingPromptService) {}
 
-  prepare(input: BuildCVProfileEditingCopyPastePromptInput): CopyPastePreparation {
+  prepare(
+    input: BuildCVProfileEditingCopyPastePromptInput,
+  ): CopyPastePreparation {
     return CopyPastePreparation.fromPrimitives({
       workflowId: CV_EDITOR_COPY_PASTE_WORKFLOW_ID,
       schemaVersion: CV_EDITOR_COPY_PASTE_SCHEMA_VERSION,

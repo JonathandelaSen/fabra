@@ -1,15 +1,18 @@
 import { LongText, ValueObject } from "@/backend/modules/shared";
-import type { StandardCVProfile } from "@/lib/cv-profile";
+import {
+  CVProfile,
+  type CVProfilePrimitives,
+} from "@/backend/modules/cv-library";
 
 export interface CVSummaryForActivityContextSuggestionsPrimitives {
   type: string;
-  profile: unknown;
+  profile: CVProfilePrimitives | null;
 }
 
 export class CVSummaryForActivityContextSuggestions extends ValueObject<CVSummaryForActivityContextSuggestionsPrimitives> {
   private constructor(
     private readonly typeText: LongText,
-    public readonly profile: StandardCVProfile | null
+    private readonly profileValue: CVProfile | null,
   ) {
     super();
   }
@@ -17,7 +20,7 @@ export class CVSummaryForActivityContextSuggestions extends ValueObject<CVSummar
   static fromPrimitives(primitives: CVSummaryForActivityContextSuggestionsPrimitives): CVSummaryForActivityContextSuggestions {
     return new CVSummaryForActivityContextSuggestions(
       LongText.fromPrimitives(primitives.type),
-      (primitives.profile as StandardCVProfile | null) ?? null
+      primitives.profile === null ? null : CVProfile.fromPrimitives(primitives.profile),
     );
   }
 
@@ -28,7 +31,11 @@ export class CVSummaryForActivityContextSuggestions extends ValueObject<CVSummar
   toPrimitives(): CVSummaryForActivityContextSuggestionsPrimitives {
     return {
       type: this.typeText.toPrimitives(),
-      profile: this.profile,
+      profile: this.profileValue?.toPrimitives() ?? null,
     };
+  }
+
+  get profile(): CVProfilePrimitives | null {
+    return this.profileValue?.toPrimitives() ?? null;
   }
 }

@@ -20,7 +20,7 @@ export class DeleteCVDocumentUseCase {
       documentRepo: CVDocumentRepository;
       queryBus: QueryBus;
       eventBus: EventBus;
-    }
+    },
   ) {}
 
   async execute(input: DeleteCVDocumentInput): Promise<CVDeletionOutcome> {

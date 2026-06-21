@@ -26,7 +26,7 @@ export class CreateUploadedCVDocumentUseCase {
     private readonly deps: {
       documentRepo: CVDocumentRepository;
       eventBus: EventBus;
-    }
+    },
   ) {}
 
   async execute(input: CreateUploadedCVDocumentInput): Promise<CVDocument> {

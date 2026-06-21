@@ -1,7 +1,7 @@
 import { UserId } from "@/backend/modules/shared";
 import { extractCopyPasteJson } from "@/backend/modules/shared/application/assisted-workflows/copy-paste-json-parser";
 import { validateCopyPasteEnvelope } from "@/backend/modules/shared/application/assisted-workflows/copy-paste-json-envelope";
-import type { StandardCVProfile } from "../../domain/cv-profile";
+import type { CVProfilePrimitives } from "../../domain/value-objects/cv-profile.value-object";
 import type { CVDocumentRepository } from "../../domain/repositories/cv-document.repository";
 import {
   CV_EDITOR_COPY_PASTE_SCHEMA_VERSION,
@@ -42,8 +42,11 @@ export class PreviewCVEditorCopyPasteUseCase {
     const editedProfile = parsed.profile;
 
     const primitives = document.toPrimitives();
-    const currentProfile = (primitives.profile ?? {}) as StandardCVProfile;
-    const changedSections = detectChangedSections(currentProfile, editedProfile);
+    const currentProfile = (primitives.profile ?? {}) as CVProfilePrimitives;
+    const changedSections = detectChangedSections(
+      currentProfile,
+      editedProfile,
+    );
     const warnings: string[] = [];
     if (changedSections.length > 5) {
       warnings.push("Large rewrite detected — many sections were changed.");
@@ -78,8 +81,8 @@ const SECTION_KEYS = [
 ] as const;
 
 function detectChangedSections(
-  current: StandardCVProfile,
-  edited: StandardCVProfile,
+  current: CVProfilePrimitives,
+  edited: CVProfilePrimitives,
 ): string[] {
   return SECTION_KEYS.filter((key) => {
     const a = JSON.stringify(current[key] ?? null);
@@ -88,7 +91,7 @@ function detectChangedSections(
   });
 }
 
-function countDetectedSections(profile: StandardCVProfile): number {
+function countDetectedSections(profile: CVProfilePrimitives): number {
   return [
     profile.basics && Object.keys(profile.basics).length > 0,
     profile.summary,

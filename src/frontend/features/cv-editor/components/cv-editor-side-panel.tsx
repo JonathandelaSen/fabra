@@ -6,7 +6,7 @@ import { KeyRound, PenLine, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/frontend/components/shared/action-buttons";
 import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
-import type { StandardCVProfile } from "@/lib/cv-profile";
+import type { CVProfilePrimitives } from "@/lib/cv-profile";
 import type { CVTemplateId, CVTemplateLocale } from "@/lib/cv-templates";
 import { cn } from "@/frontend/utils/utils";
 import { ManualEditor } from "./cv-manual-editor/manual-editor";
@@ -20,7 +20,7 @@ import type { CVEditorTab, CVSaveState, CVEditorDisplayMode } from "../types";
 export interface CVEditorSidePanelProps {
   displayMode?: CVEditorDisplayMode;
   activeTemplateId: CVTemplateId;
-  currentProfile: StandardCVProfile | null;
+  currentProfile: CVProfilePrimitives | null;
   currentVersion: { id: string; publicEnabled: boolean; publicFeedbackEnabled: boolean; publicId: string | null };
   editInstruction: string;
   editingProfile: boolean;
@@ -40,7 +40,7 @@ export interface CVEditorSidePanelProps {
   selectedModel: string;
   onApplyInstruction: () => void;
   onCopyPublicUrl: () => void;
-  onManualChange: (updater: (prev: StandardCVProfile) => StandardCVProfile) => void;
+  onManualChange: (updater: (prev: CVProfilePrimitives) => CVProfilePrimitives) => void;
   onOpenCopyPaste: () => void;
   onOpenSettings: () => void;
   onOpenTemplates: () => void;

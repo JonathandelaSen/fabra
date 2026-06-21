@@ -105,7 +105,9 @@ Extract this CV text:
 ${input.text}`;
   }
 
-  private templateContext(input: CVProfileStructuringCopyPastePromptInput): string {
+  private templateContext(
+    input: CVProfileStructuringCopyPastePromptInput,
+  ): string {
     return input.templateId || input.locale
       ? `\nTemplate context:\n- Template id: ${input.templateId ?? "unknown"}\n- Template locale: ${input.locale ?? "es"}\n`
       : "";

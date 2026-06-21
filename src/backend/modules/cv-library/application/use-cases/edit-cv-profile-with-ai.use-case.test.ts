@@ -4,13 +4,15 @@ import type {
   CVProfileEditingAIService,
   CVProfileEditingAIServiceFactory,
 } from "../../domain/repositories/cv-profile-ai.service";
-import type { StandardCVProfile } from "../../domain/cv-profile";
-import { EditedCVProfile } from "../../domain/value-objects/edited-cv-profile.value-object";
+import {
+  CVProfile,
+  type CVProfilePrimitives,
+} from "../../domain/value-objects/cv-profile.value-object";
 
 describe("EditCVProfileWithAIUseCase", () => {
   it("creates a configured AI service and forwards the editing input", async () => {
     const calls: unknown[] = [];
-    const original: StandardCVProfile = {
+    const original: CVProfilePrimitives = {
       basics: { name: "Ada" },
       presentation: { accentColor: "#111111" },
     };
@@ -20,7 +22,7 @@ describe("EditCVProfileWithAIUseCase", () => {
         return {
           async edit(input) {
             calls.push(input);
-            return EditedCVProfile.fromPrimitives({
+            return CVProfile.fromPrimitives({
               ...input.profile,
               summary: "Edited",
             });

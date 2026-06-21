@@ -1,3 +1,4 @@
+import type { CVProfilePrimitives } from "../../domain/value-objects/cv-profile.value-object";
 import { Timestamp, UserId, type EventBus } from "@/backend/modules/shared";
 import { CV_PROFILE_SCHEMA_VERSION } from "../../domain/cv-profile";
 import { CVStructuredProfile } from "../../domain/entities/cv-structured-profile.entity";
@@ -14,7 +15,7 @@ export interface UpsertCVStructuredProfileInput {
   schemaVersion?: string;
   sourceTextHash: string;
   aiModel: string;
-  profile: unknown;
+  profile: CVProfilePrimitives;
 }
 
 export class UpsertCVStructuredProfileUseCase {
@@ -22,27 +23,35 @@ export class UpsertCVStructuredProfileUseCase {
     private readonly deps: {
       profileRepo: CVStructuredProfileRepository;
       eventBus: EventBus;
-    }
+    },
   ) {}
 
-  async execute(input: UpsertCVStructuredProfileInput): Promise<CVStructuredProfile> {
+  async execute(
+    input: UpsertCVStructuredProfileInput,
+  ): Promise<CVStructuredProfile> {
     const now = new Date().toISOString();
     const existing = await this.deps.profileRepo.findByDocumentId(
       CVDocumentId.fromPrimitives(input.cvDocumentId),
       UserId.fromPrimitives(input.userId),
-      ProfileSchemaVersion.fromPrimitives(input.schemaVersion ?? CV_PROFILE_SCHEMA_VERSION)
+      ProfileSchemaVersion.fromPrimitives(
+        input.schemaVersion ?? CV_PROFILE_SCHEMA_VERSION,
+      ),
     );
     const structured = CVStructuredProfile.create({
-      id: CVStructuredProfileId.fromPrimitives(existing?.id ?? crypto.randomUUID()),
+      id: CVStructuredProfileId.fromPrimitives(
+        existing?.id ?? crypto.randomUUID(),
+      ),
       userId: UserId.fromPrimitives(input.userId),
       cvDocumentId: CVDocumentId.fromPrimitives(input.cvDocumentId),
       schemaVersion: ProfileSchemaVersion.fromPrimitives(
-        input.schemaVersion ?? CV_PROFILE_SCHEMA_VERSION
+        input.schemaVersion ?? CV_PROFILE_SCHEMA_VERSION,
       ),
       sourceTextHash: SourceTextHash.fromPrimitives(input.sourceTextHash),
       aiModel: AIModelName.fromPrimitives(input.aiModel),
       profile: input.profile,
-      createdAt: Timestamp.fromPrimitives(existing?.toPrimitives().createdAt ?? now),
+      createdAt: Timestamp.fromPrimitives(
+        existing?.toPrimitives().createdAt ?? now,
+      ),
       updatedAt: Timestamp.fromPrimitives(now),
     });
 

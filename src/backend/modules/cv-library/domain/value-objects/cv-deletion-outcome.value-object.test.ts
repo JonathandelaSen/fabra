@@ -42,8 +42,8 @@ describe("CVDeletionOutcome", () => {
   it("round-trips through primitives", () => {
     const primitives = { status: "in_use" as const, analyses: [analysis] };
 
-    expect(
-      CVDeletionOutcome.fromPrimitives(primitives).toPrimitives()
-    ).toEqual(primitives);
+    expect(CVDeletionOutcome.fromPrimitives(primitives).toPrimitives()).toEqual(
+      primitives,
+    );
   });
 });

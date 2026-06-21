@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
-import { documentRepo, structuredProfileRepo } from "./cv-library-test-helpers.test";
+import {
+  documentRepo,
+  structuredProfileRepo,
+} from "./cv-library-test-helpers.test";
 import { CreateTemplateCVDocumentUseCase } from "./create-template-cv-document.use-case";
 import { UpsertCVStructuredProfileUseCase } from "./upsert-cv-structured-profile.use-case";
 import { ApplyCVProfileStructureCopyPasteUseCase } from "./apply-cv-profile-structure-copy-paste.use-case";

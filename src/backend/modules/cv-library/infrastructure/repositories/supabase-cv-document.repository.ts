@@ -1,5 +1,5 @@
 import { BoundSupabaseRepository } from "@/backend/modules/shared";
-import { normalizeStandardCVProfile } from "../../domain/cv-profile";
+import type { CVProfilePrimitives } from "../../domain/value-objects/cv-profile.value-object";
 import { CVDocument } from "../../domain/entities/cv-document.entity";
 import type {
   CVDocumentRepository,
@@ -43,6 +43,12 @@ interface CVDocumentRow {
   updated_at: string;
 }
 
+function mapCVProfileJsonColumnToPrimitives(
+  profile: unknown,
+): CVProfilePrimitives {
+  return profile as CVProfilePrimitives;
+}
+
 function rowToDocument(row: CVDocumentRow): CVDocument {
   return CVDocument.fromPrimitives({
     id: row.id,
@@ -58,7 +64,9 @@ function rowToDocument(row: CVDocumentRow): CVDocument {
     schemaVersion: row.schema_version,
     sourceTextHash: row.source_text_hash,
     aiModel: row.ai_model,
-    profile: row.profile ? normalizeStandardCVProfile(row.profile) : null,
+    profile: row.profile
+      ? mapCVProfileJsonColumnToPrimitives(row.profile)
+      : null,
     extractedText: {
       textPython: row.text_python,
       textPdfjs: row.text_pdfjs,
@@ -139,7 +147,9 @@ export class SupabaseCVDocumentRepository
     return data ? rowToDocument(data as CVDocumentRow) : null;
   }
 
-  async findPublishedByPublicId(publicId: CVPublicId): Promise<CVDocument | null> {
+  async findPublishedByPublicId(
+    publicId: CVPublicId,
+  ): Promise<CVDocument | null> {
     const { data, error } = await this.client
       .from("cvs")
       .select("*")
@@ -179,5 +189,4 @@ export class SupabaseCVDocumentRepository
       .remove([path.toPrimitives()]);
     if (error) throw error;
   }
-
 }

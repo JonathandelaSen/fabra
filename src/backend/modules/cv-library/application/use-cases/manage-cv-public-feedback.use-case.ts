@@ -6,19 +6,22 @@ import { CVPublicFeedbackId } from "../../domain/value-objects/cv-public-feedbac
 
 export class ListCVPublicFeedbackUseCase {
   constructor(private readonly repo: CVPublicFeedbackRepository) {}
-  execute(input: { cvId: string; userId: string }): Promise<CVPublicFeedback[]> { 
+  execute(input: {
+    cvId: string;
+    userId: string;
+  }): Promise<CVPublicFeedback[]> {
     return this.repo.listForOwner(
       CVDocumentId.fromPrimitives(input.cvId),
       UserId.fromPrimitives(input.userId),
-    ); 
+    );
   }
 }
 export class DeleteCVPublicFeedbackUseCase {
   constructor(private readonly repo: CVPublicFeedbackRepository) {}
-  execute(input: { id: string; userId: string }): Promise<void> { 
+  execute(input: { id: string; userId: string }): Promise<void> {
     return this.repo.deleteForOwner(
       CVPublicFeedbackId.fromPrimitives(input.id),
       UserId.fromPrimitives(input.userId),
-    ); 
+    );
   }
 }

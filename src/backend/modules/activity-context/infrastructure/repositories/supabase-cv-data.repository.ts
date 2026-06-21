@@ -1,7 +1,13 @@
-import { normalizeStandardCVProfile } from "@/lib/cv-profile";
 import { BoundSupabaseRepository } from "@/backend/modules/shared";
+import type { CVProfilePrimitives } from "@/backend/modules/cv-library";
 import { CVSummaryForActivityContextSuggestions } from "../../domain/value-objects/cv-summary-for-activity-context-suggestions.value-object";
 import type { CVDataRepository } from "../../domain/repositories/cv-data.repository";
+
+function mapCVProfileJsonColumnToPrimitives(
+  profile: unknown,
+): CVProfilePrimitives {
+  return profile as CVProfilePrimitives;
+}
 
 export class SupabaseCVDataRepository
   extends BoundSupabaseRepository
@@ -41,7 +47,7 @@ export class SupabaseCVDataRepository
       const profile = row.profile ?? structuredByCvId.get(row.id as string) ?? null;
       return CVSummaryForActivityContextSuggestions.fromPrimitives({
         type: row.type as string,
-        profile: profile ? normalizeStandardCVProfile(profile) : null,
+        profile: profile ? mapCVProfileJsonColumnToPrimitives(profile) : null,
       });
     });
   }

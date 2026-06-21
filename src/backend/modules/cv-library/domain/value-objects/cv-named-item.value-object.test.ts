@@ -13,11 +13,15 @@ describe("CVNamedItem", () => {
       bullets: ["Scored 950"],
       bulletIds: ["nb-1"],
     };
-    expect(CVNamedItem.fromPrimitives(primitives).toPrimitives()).toEqual(primitives);
+    expect(CVNamedItem.fromPrimitives(primitives).toPrimitives()).toEqual(
+      primitives,
+    );
   });
 
   it("omits absent fields and empty arrays", () => {
-    expect(CVNamedItem.fromPrimitives({ name: "Award" }).toPrimitives()).toEqual({
+    expect(
+      CVNamedItem.fromPrimitives({ name: "Award" }).toPrimitives(),
+    ).toEqual({
       name: "Award",
     });
   });

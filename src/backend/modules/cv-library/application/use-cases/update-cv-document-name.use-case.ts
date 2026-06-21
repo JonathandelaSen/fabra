@@ -15,7 +15,7 @@ export class UpdateCVDocumentNameUseCase {
     private readonly deps: {
       documentRepo: CVDocumentRepository;
       eventBus: EventBus;
-    }
+    },
   ) {}
 
   async execute(input: UpdateCVDocumentNameInput): Promise<CVDocument | null> {
@@ -26,7 +26,7 @@ export class UpdateCVDocumentNameUseCase {
 
     document.rename(
       CVDocumentName.fromPrimitives(input.name),
-      Timestamp.fromPrimitives(new Date().toISOString())
+      Timestamp.fromPrimitives(new Date().toISOString()),
     );
     const saved = await this.deps.documentRepo.save(document);
 

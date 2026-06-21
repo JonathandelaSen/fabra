@@ -28,11 +28,11 @@ export class CreateJsonResumeCVDocumentUseCase {
       documentRepo: CVDocumentRepository;
       pdfStorage: CVPdfStorage;
       eventBus: EventBus;
-    }
+    },
   ) {}
 
   async execute(
-    input: CreateJsonResumeCVDocumentInput
+    input: CreateJsonResumeCVDocumentInput,
   ): Promise<ImportedCVDocument> {
     let parsed: unknown;
     try {

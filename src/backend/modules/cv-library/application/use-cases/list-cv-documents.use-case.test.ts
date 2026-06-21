@@ -5,7 +5,9 @@ import { ListCVDocumentsUseCase } from "./list-cv-documents.use-case";
 describe("ListCVDocumentsUseCase", () => {
   it("lists documents for a user", async () => {
     const repo = documentRepo();
-    const result = await new ListCVDocumentsUseCase({ documentRepo: repo }).execute({
+    const result = await new ListCVDocumentsUseCase({
+      documentRepo: repo,
+    }).execute({
       userId: "user-1",
     });
 

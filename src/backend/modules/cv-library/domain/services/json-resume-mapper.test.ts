@@ -58,19 +58,47 @@ const FULL_RESUME = {
     { language: "Spanish", fluency: "Intermediate" },
   ],
   certificates: [
-    { name: "AWS Solutions Architect", issuer: "Amazon", date: "2022-05-01", url: "https://aws.cert" },
+    {
+      name: "AWS Solutions Architect",
+      issuer: "Amazon",
+      date: "2022-05-01",
+      url: "https://aws.cert",
+    },
   ],
   projects: [
-    { name: "OpenLib", description: "Open source library", highlights: ["1k stars"], url: "https://openlib.dev", startDate: "2021-01-01" },
+    {
+      name: "OpenLib",
+      description: "Open source library",
+      highlights: ["1k stars"],
+      url: "https://openlib.dev",
+      startDate: "2021-01-01",
+    },
   ],
   volunteer: [
-    { organization: "Code.org", position: "Mentor", summary: "Teaching kids to code", highlights: ["50 students"], startDate: "2019-01-01" },
+    {
+      organization: "Code.org",
+      position: "Mentor",
+      summary: "Teaching kids to code",
+      highlights: ["50 students"],
+      startDate: "2019-01-01",
+    },
   ],
   awards: [
-    { title: "Best Hack", awarder: "HackConf", date: "2020-11-01", summary: "Won first place" },
+    {
+      title: "Best Hack",
+      awarder: "HackConf",
+      date: "2020-11-01",
+      summary: "Won first place",
+    },
   ],
   publications: [
-    { name: "Scaling Node.js", publisher: "O'Reilly", releaseDate: "2023-03-01", url: "https://oreilly.com/scaling", summary: "Book on scaling" },
+    {
+      name: "Scaling Node.js",
+      publisher: "O'Reilly",
+      releaseDate: "2023-03-01",
+      url: "https://oreilly.com/scaling",
+      summary: "Book on scaling",
+    },
   ],
   interests: [{ name: "Rock climbing" }],
   references: [{ name: "Bob", reference: "Great developer" }],
@@ -79,27 +107,39 @@ const FULL_RESUME = {
 describe("mapJsonResumeToProfile", () => {
   describe("validation", () => {
     it("throws on null input", () => {
-      expect(() => mapJsonResumeToProfile(null)).toThrow(JsonResumeValidationError);
+      expect(() => mapJsonResumeToProfile(null)).toThrow(
+        JsonResumeValidationError,
+      );
     });
 
     it("throws on array input", () => {
-      expect(() => mapJsonResumeToProfile([])).toThrow(JsonResumeValidationError);
+      expect(() => mapJsonResumeToProfile([])).toThrow(
+        JsonResumeValidationError,
+      );
     });
 
     it("throws on string input", () => {
-      expect(() => mapJsonResumeToProfile("hello")).toThrow(JsonResumeValidationError);
+      expect(() => mapJsonResumeToProfile("hello")).toThrow(
+        JsonResumeValidationError,
+      );
     });
 
     it("throws when basics.name is missing", () => {
-      expect(() => mapJsonResumeToProfile({ basics: {} })).toThrow(JsonResumeValidationError);
+      expect(() => mapJsonResumeToProfile({ basics: {} })).toThrow(
+        JsonResumeValidationError,
+      );
     });
 
     it("throws when basics is missing entirely", () => {
-      expect(() => mapJsonResumeToProfile({})).toThrow(JsonResumeValidationError);
+      expect(() => mapJsonResumeToProfile({})).toThrow(
+        JsonResumeValidationError,
+      );
     });
 
     it("throws when basics.name is empty string", () => {
-      expect(() => mapJsonResumeToProfile({ basics: { name: "  " } })).toThrow(JsonResumeValidationError);
+      expect(() => mapJsonResumeToProfile({ basics: { name: "  " } })).toThrow(
+        JsonResumeValidationError,
+      );
     });
   });
 
@@ -122,13 +162,21 @@ describe("mapJsonResumeToProfile", () => {
       expect(profile.basics?.phone).toBe("+1-555-0100");
       expect(profile.basics?.location).toBe("San Francisco, CA, US");
       expect(profile.basics?.links).toHaveLength(3);
-      expect(profile.basics?.links?.[0]).toEqual({ url: "https://jane.dev", label: "Website" });
-      expect(profile.basics?.links?.[1]).toEqual({ url: "https://linkedin.com/in/jane", label: "LinkedIn" });
+      expect(profile.basics?.links?.[0]).toEqual({
+        url: "https://jane.dev",
+        label: "Website",
+      });
+      expect(profile.basics?.links?.[1]).toEqual({
+        url: "https://linkedin.com/in/jane",
+        label: "LinkedIn",
+      });
     });
 
     it("maps summary from basics.summary", () => {
       const { profile } = mapJsonResumeToProfile(FULL_RESUME);
-      expect(profile.summary).toBe("Experienced developer with 10 years in web technologies.");
+      expect(profile.summary).toBe(
+        "Experienced developer with 10 years in web technologies.",
+      );
     });
 
     it("maps work to experience", () => {
@@ -159,43 +207,66 @@ describe("mapJsonResumeToProfile", () => {
     it("maps skills", () => {
       const { profile } = mapJsonResumeToProfile(FULL_RESUME);
       expect(profile.skills).toHaveLength(2);
-      expect(profile.skills?.[0]).toMatchObject({ name: "Frontend", items: ["React", "TypeScript", "CSS"] });
+      expect(profile.skills?.[0]).toMatchObject({
+        name: "Frontend",
+        items: ["React", "TypeScript", "CSS"],
+      });
     });
 
     it("maps languages", () => {
       const { profile } = mapJsonResumeToProfile(FULL_RESUME);
       expect(profile.languages).toHaveLength(2);
-      expect(profile.languages?.[0]).toMatchObject({ name: "English", level: "Native" });
+      expect(profile.languages?.[0]).toMatchObject({
+        name: "English",
+        level: "Native",
+      });
     });
 
     it("maps certificates to certifications", () => {
       const { profile } = mapJsonResumeToProfile(FULL_RESUME);
       expect(profile.certifications).toHaveLength(1);
-      expect(profile.certifications?.[0]).toMatchObject({ name: "AWS Solutions Architect", issuer: "Amazon" });
+      expect(profile.certifications?.[0]).toMatchObject({
+        name: "AWS Solutions Architect",
+        issuer: "Amazon",
+      });
     });
 
     it("maps projects", () => {
       const { profile } = mapJsonResumeToProfile(FULL_RESUME);
       expect(profile.projects).toHaveLength(1);
-      expect(profile.projects?.[0]).toMatchObject({ name: "OpenLib", description: "Open source library", bullets: ["1k stars"] });
+      expect(profile.projects?.[0]).toMatchObject({
+        name: "OpenLib",
+        description: "Open source library",
+        bullets: ["1k stars"],
+      });
     });
 
     it("maps volunteer to volunteering", () => {
       const { profile } = mapJsonResumeToProfile(FULL_RESUME);
       expect(profile.volunteering).toHaveLength(1);
-      expect(profile.volunteering?.[0]).toMatchObject({ name: "Mentor", organization: "Code.org" });
+      expect(profile.volunteering?.[0]).toMatchObject({
+        name: "Mentor",
+        organization: "Code.org",
+      });
     });
 
     it("maps awards", () => {
       const { profile } = mapJsonResumeToProfile(FULL_RESUME);
       expect(profile.awards).toHaveLength(1);
-      expect(profile.awards?.[0]).toMatchObject({ name: "Best Hack", issuer: "HackConf" });
+      expect(profile.awards?.[0]).toMatchObject({
+        name: "Best Hack",
+        issuer: "HackConf",
+      });
     });
 
     it("maps publications", () => {
       const { profile } = mapJsonResumeToProfile(FULL_RESUME);
       expect(profile.publications).toHaveLength(1);
-      expect(profile.publications?.[0]).toMatchObject({ name: "Scaling Node.js", issuer: "O'Reilly", url: "https://oreilly.com/scaling" });
+      expect(profile.publications?.[0]).toMatchObject({
+        name: "Scaling Node.js",
+        issuer: "O'Reilly",
+        url: "https://oreilly.com/scaling",
+      });
     });
 
     it("ignores interests and references", () => {
@@ -212,7 +283,11 @@ describe("mapJsonResumeToProfile", () => {
 
   describe("extra fields are ignored gracefully", () => {
     it("handles unknown top-level keys", () => {
-      const resume = { ...MINIMAL_RESUME, meta: { version: "v1.0.0" }, customField: true };
+      const resume = {
+        ...MINIMAL_RESUME,
+        meta: { version: "v1.0.0" },
+        customField: true,
+      };
       const { profile } = mapJsonResumeToProfile(resume);
       expect(profile.basics?.name).toBe("John Doe");
     });

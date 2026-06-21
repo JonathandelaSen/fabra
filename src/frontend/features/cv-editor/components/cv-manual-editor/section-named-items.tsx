@@ -1,6 +1,6 @@
 "use client";
 
-import type { StandardCVNamedItem } from "@/lib/cv-profile";
+import type { CVNamedItemPrimitives } from "@/lib/cv-profile";
 import { ArraySectionWrapper } from "./array-section-wrapper";
 import { EditableBulletList } from "./editable-bullet-list";
 import { useTranslations } from "next-intl";
@@ -11,12 +11,12 @@ const labelClass = "text-[11px] font-medium text-text-muted uppercase tracking-w
 const URL_PLACEHOLDER = "https://...";
 
 interface Props {
-  items: StandardCVNamedItem[];
-  onChange: (items: StandardCVNamedItem[]) => void;
+  items: CVNamedItemPrimitives[];
+  onChange: (items: CVNamedItemPrimitives[]) => void;
   sectionLabel: string;
 }
 
-function NamedItemFields({ item, update }: { item: StandardCVNamedItem; update: (v: StandardCVNamedItem) => void }) {
+function NamedItemFields({ item, update }: { item: CVNamedItemPrimitives; update: (v: CVNamedItemPrimitives) => void }) {
   const t = useTranslations("cvEditor.manual.named");
   const set = (key: string, value: unknown) => update({ ...item, [key]: value });
 

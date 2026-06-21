@@ -14,7 +14,7 @@ export class GetCVDocumentUseCase {
   async execute(input: GetCVDocumentInput): Promise<CVDocument | null> {
     return this.deps.documentRepo.findById(
       CVDocumentId.fromPrimitives(input.id),
-      UserId.fromPrimitives(input.userId)
+      UserId.fromPrimitives(input.userId),
     );
   }
 }

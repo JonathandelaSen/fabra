@@ -1,13 +1,10 @@
 import { Ollama } from "ollama";
 import {
-  normalizeStandardCVProfile,
-  type StandardCVProfile,
-} from "../../domain/cv-profile";
+  CVProfile,
+  type CVProfilePrimitives,
+} from "../../domain/value-objects/cv-profile.value-object";
 import type { CVTemplateId, CVTemplateLocale } from "../../domain/cv-templates";
-import type {
-  CVProfileEditingAIService,
-} from "../../domain/repositories/cv-profile-ai.service";
-import { EditedCVProfile } from "../../domain/value-objects/edited-cv-profile.value-object";
+import type { CVProfileEditingAIService } from "../../domain/repositories/cv-profile-ai.service";
 import { CVProfileEditingPromptService } from "../../domain/services/cv-profile-editing-prompt.service";
 
 const promptService = new CVProfileEditingPromptService();
@@ -15,16 +12,16 @@ const promptService = new CVProfileEditingPromptService();
 export interface AICVEditInput {
   baseUrl?: string;
   model: string;
-  profile: StandardCVProfile;
+  profile: CVProfilePrimitives;
   instruction: string;
   templateId?: CVTemplateId;
   locale?: CVTemplateLocale;
   recommendations?: string[];
 }
 
-export function parseEditedCVProfile(rawText: string): StandardCVProfile {
+export function parseEditedCVProfile(rawText: string): CVProfilePrimitives {
   const parsed = JSON.parse(rawText || "{}") as unknown;
-  const normalized = normalizeStandardCVProfile(parsed);
+  const normalized = mapAIProfileResponseToPrimitives(parsed);
   const hasContent =
     Boolean(normalized.summary) ||
     Object.keys(normalized.basics ?? {}).length > 0 ||
@@ -40,19 +37,27 @@ export function parseEditedCVProfile(rawText: string): StandardCVProfile {
   return normalized;
 }
 
+function mapAIProfileResponseToPrimitives(
+  response: unknown,
+): CVProfilePrimitives {
+  return response as CVProfilePrimitives;
+}
+
 class OllamaCVProfileEditingAIService implements CVProfileEditingAIService {
   constructor(private readonly config: { baseUrl?: string; model: string }) {}
 
   async edit(
     input: Omit<AICVEditInput, "baseUrl" | "model">,
-  ): Promise<EditedCVProfile> {
+  ): Promise<CVProfile> {
     const recommendations = input.recommendations?.length
       ? `\nRelevant recommendations from previous analysis:\n${input.recommendations
           .map((item) => `- ${item}`)
           .join("\n")}`
       : "";
 
-    const ollama = new Ollama({ host: this.config.baseUrl || "http://localhost:11434" });
+    const ollama = new Ollama({
+      host: this.config.baseUrl || "http://localhost:11434",
+    });
     const response = await ollama.generate({
       stream: false,
       model: this.config.model,
@@ -61,7 +66,7 @@ class OllamaCVProfileEditingAIService implements CVProfileEditingAIService {
       format: "json",
     });
 
-    return EditedCVProfile.fromPrimitives({
+    return CVProfile.fromPrimitives({
       ...parseEditedCVProfile(response.response || "{}"),
       presentation: input.profile.presentation,
     });
@@ -69,7 +74,10 @@ class OllamaCVProfileEditingAIService implements CVProfileEditingAIService {
 }
 
 export class OllamaCVProfileEditingAIServiceFactory {
-  create(config: { baseUrl?: string; model: string }): CVProfileEditingAIService {
+  create(config: {
+    baseUrl?: string;
+    model: string;
+  }): CVProfileEditingAIService {
     return new OllamaCVProfileEditingAIService(config);
   }
 }

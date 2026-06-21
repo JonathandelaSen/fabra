@@ -15,10 +15,10 @@ import { parseCVInlineMarkdown } from "@/shared/cv-inline-markdown";
 import {
   buildExternalLinkHref,
   normalizeContactEmail,
-  type StandardCVEducation,
-  type StandardCVExperience,
-  type StandardCVNamedItem,
-  type StandardCVProfile,
+  type CVEducationPrimitives,
+  type CVExperiencePrimitives,
+  type CVNamedItemPrimitives,
+  type CVProfilePrimitives,
 } from "@/lib/cv-profile";
 import {
   getCVTemplate,
@@ -211,7 +211,12 @@ const compactStyles = StyleSheet.create({
     marginRight: 6,
     overflow: "hidden",
   },
-  tagsContainer: { flexDirection: "row", flexWrap: "wrap", marginTop: 6, marginBottom: 6 },
+  tagsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 6,
+    marginBottom: 6,
+  },
   link: { color: "#2d2d2d", textDecoration: "none" },
 });
 
@@ -586,7 +591,11 @@ function getStyles(templateId: CVTemplateId) {
 
 const hasItems = <T,>(items?: T[]) => Array.isArray(items) && items.length > 0;
 
-function dateRange(dates?: { start?: string; end?: string; current?: boolean }) {
+function dateRange(dates?: {
+  start?: string;
+  end?: string;
+  current?: boolean;
+}) {
   if (!dates?.start && !dates?.end) return "";
   if (dates.current) {
     return [dates.start, dates.end || "Present"].filter(Boolean).join(" - ");
@@ -624,7 +633,13 @@ function Section({
   );
 }
 
-function BulletList({ items, s }: { items?: string[]; s: ReturnType<typeof getStyles> }) {
+function BulletList({
+  items,
+  s,
+}: {
+  items?: string[];
+  s: ReturnType<typeof getStyles>;
+}) {
   if (!hasItems(items)) return null;
   return (
     <View style={{ marginTop: 2 }}>
@@ -695,13 +710,25 @@ function FormattedPDFText({
     <Text style={style}>
       {tokens.map((token, index) => {
         if (token.type === "strong") {
-          return <Text key={index} style={strongStyle}>{token.text}</Text>;
+          return (
+            <Text key={index} style={strongStyle}>
+              {token.text}
+            </Text>
+          );
         }
         if (token.type === "emphasis") {
-          return <Text key={index} style={emphasisStyle}>{token.text}</Text>;
+          return (
+            <Text key={index} style={emphasisStyle}>
+              {token.text}
+            </Text>
+          );
         }
         if (token.type === "strongEmphasis") {
-          return <Text key={index} style={strongEmphasisStyle}>{token.text}</Text>;
+          return (
+            <Text key={index} style={strongEmphasisStyle}>
+              {token.text}
+            </Text>
+          );
         }
         if (token.type === "link") {
           return (
@@ -721,7 +748,7 @@ function ExperiencePDF({
   s,
   companyFirst,
 }: {
-  item: StandardCVExperience;
+  item: CVExperiencePrimitives;
   s: ReturnType<typeof getStyles>;
   companyFirst?: boolean;
 }) {
@@ -730,7 +757,9 @@ function ExperiencePDF({
       <View style={s.itemHead} wrap={false}>
         <View style={s.itemHeadMain}>
           <Text style={s.itemTitle}>
-            {companyFirst ? (item.company || item.role) : (item.role || item.company)}
+            {companyFirst
+              ? item.company || item.role
+              : item.role || item.company}
           </Text>
           <Text style={s.itemMeta}>
             {companyFirst
@@ -745,7 +774,13 @@ function ExperiencePDF({
   );
 }
 
-function EducationPDF({ item, s }: { item: StandardCVEducation; s: ReturnType<typeof getStyles> }) {
+function EducationPDF({
+  item,
+  s,
+}: {
+  item: CVEducationPrimitives;
+  s: ReturnType<typeof getStyles>;
+}) {
   return (
     <View style={s.item}>
       <View style={s.itemHead} wrap={false}>
@@ -764,7 +799,13 @@ function EducationPDF({ item, s }: { item: StandardCVEducation; s: ReturnType<ty
   );
 }
 
-function NamedPDF({ item, s }: { item: StandardCVNamedItem; s: ReturnType<typeof getStyles> }) {
+function NamedPDF({
+  item,
+  s,
+}: {
+  item: CVNamedItemPrimitives;
+  s: ReturnType<typeof getStyles>;
+}) {
   const metaParts = [item.issuer, item.organization].filter(Boolean);
   return (
     <View style={s.item}>
@@ -783,7 +824,9 @@ function NamedPDF({ item, s }: { item: StandardCVNamedItem; s: ReturnType<typeof
         </View>
         <Text style={s.itemDate}>{item.date}</Text>
       </View>
-      {item.description && <FormattedPDFText text={item.description} style={s.summary} s={s} />}
+      {item.description && (
+        <FormattedPDFText text={item.description} style={s.summary} s={s} />
+      )}
       <BulletList items={item.bullets} s={s} />
     </View>
   );
@@ -794,7 +837,7 @@ function CVTemplateDocument({
   templateId,
   locale,
 }: {
-  profile: StandardCVProfile;
+  profile: CVProfilePrimitives;
   templateId: CVTemplateId;
   locale: CVTemplateLocale;
 }) {
@@ -836,7 +879,12 @@ function CVTemplateDocument({
       return (
         <Section key={section} title={title} s={s} accentColor={accentColor}>
           {profile.experience?.map((item, index) => (
-            <ExperiencePDF key={index} item={item} s={s} companyFirst={isModern} />
+            <ExperiencePDF
+              key={index}
+              item={item}
+              s={s}
+              companyFirst={isModern}
+            />
           ))}
         </Section>
       );
@@ -895,7 +943,17 @@ function CVTemplateDocument({
           ) : (
             <View style={s.tagsContainer}>
               {profile.technicalSkills?.map((skill, index) => (
-                <Text key={index} style={tagsColor ? [s.tag, { backgroundColor: tagsColor, color: "#ffffff" }] : s.tag}>
+                <Text
+                  key={index}
+                  style={
+                    tagsColor
+                      ? [
+                          s.tag,
+                          { backgroundColor: tagsColor, color: "#ffffff" },
+                        ]
+                      : s.tag
+                  }
+                >
                   {skill}
                 </Text>
               ))}
@@ -910,7 +968,14 @@ function CVTemplateDocument({
         <Section key={section} title={title} s={s} accentColor={accentColor}>
           <View style={s.tagsContainer}>
             {profile.languages?.map((language, index) => (
-              <Text key={index} style={tagsColor ? [s.tag, { backgroundColor: tagsColor, color: "#ffffff" }] : s.tag}>
+              <Text
+                key={index}
+                style={
+                  tagsColor
+                    ? [s.tag, { backgroundColor: tagsColor, color: "#ffffff" }]
+                    : s.tag
+                }
+              >
                 {[language.name, language.level].filter(Boolean).join(" · ")}
               </Text>
             ))}
@@ -962,10 +1027,13 @@ function CVTemplateDocument({
     return null;
   };
 
-
   return (
     <Document
-      title={basics.name ? `${basics.name} ${documentVariant} CV` : `${documentVariant} CV`}
+      title={
+        basics.name
+          ? `${basics.name} ${documentVariant} CV`
+          : `${documentVariant} CV`
+      }
       author={basics.name}
       language={locale}
     >
@@ -983,7 +1051,13 @@ function CVTemplateDocument({
           <View style={s.headerIdentity}>
             <Text style={s.name}>{basics.name || "Untitled CV"}</Text>
             {basics.headline && (
-              <Text style={isModern || isFilo ? [s.headline, { color: accentColor }] : s.headline}>
+              <Text
+                style={
+                  isModern || isFilo
+                    ? [s.headline, { color: accentColor }]
+                    : s.headline
+                }
+              >
                 {basics.headline}
               </Text>
             )}
@@ -1011,15 +1085,17 @@ function CVTemplateDocument({
                     {email}
                   </Link>
                 )}
-                {[basics.phone, basics.location]
-                  .filter(Boolean)
-                  .map((item) => (
-                    <Text key={item} style={s.contactLine}>
-                      {item}
-                    </Text>
-                  ))}
+                {[basics.phone, basics.location].filter(Boolean).map((item) => (
+                  <Text key={item} style={s.contactLine}>
+                    {item}
+                  </Text>
+                ))}
                 {basics.links?.map((link) => (
-                  <Link key={link.url} src={buildExternalLinkHref(link.url)} style={[s.contactLine, s.link]}>
+                  <Link
+                    key={link.url}
+                    src={buildExternalLinkHref(link.url)}
+                    style={[s.contactLine, s.link]}
+                  >
                     {link.label || link.url}
                   </Link>
                 ))}
@@ -1031,7 +1107,10 @@ function CVTemplateDocument({
         {/* Body */}
         <View style={s.body}>
           {getOrderedRenderableSections(profile)
-            .filter((section) => !profile.presentation?.hiddenSections?.includes(section))
+            .filter(
+              (section) =>
+                !profile.presentation?.hiddenSections?.includes(section),
+            )
             .map(renderSection)}
         </View>
       </Page>
@@ -1040,7 +1119,7 @@ function CVTemplateDocument({
 }
 
 export async function renderTemplatePDF(input: {
-  profile: StandardCVProfile;
+  profile: CVProfilePrimitives;
   templateId: CVTemplateId;
   locale: CVTemplateLocale;
 }): Promise<Buffer> {
@@ -1049,6 +1128,6 @@ export async function renderTemplatePDF(input: {
       profile={input.profile}
       templateId={input.templateId}
       locale={input.locale}
-    />
+    />,
   );
 }

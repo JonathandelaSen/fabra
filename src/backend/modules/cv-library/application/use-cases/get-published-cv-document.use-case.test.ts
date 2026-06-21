@@ -5,7 +5,9 @@ import { GetPublishedCVDocumentUseCase } from "./get-published-cv-document.use-c
 describe("GetPublishedCVDocumentUseCase", () => {
   it("gets a published document by public id", async () => {
     const repo = documentRepo();
-    const result = await new GetPublishedCVDocumentUseCase({ documentRepo: repo }).execute({
+    const result = await new GetPublishedCVDocumentUseCase({
+      documentRepo: repo,
+    }).execute({
       publicId: "pub-1",
     });
 

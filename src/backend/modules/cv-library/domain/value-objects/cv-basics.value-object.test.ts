@@ -9,7 +9,9 @@ describe("CVBasics", () => {
       email: "ada@x.dev",
       links: [{ label: "Site", url: "https://ada.dev" }],
     };
-    expect(CVBasics.fromPrimitives(primitives).toPrimitives()).toEqual(primitives);
+    expect(CVBasics.fromPrimitives(primitives).toPrimitives()).toEqual(
+      primitives,
+    );
   });
 
   it("produces an empty object when no fields are present", () => {

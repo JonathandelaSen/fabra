@@ -1,34 +1,34 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import type { StandardCVProfile } from "@/lib/cv-profile";
+import type { CVProfilePrimitives } from "@/lib/cv-profile";
 
-type ProfileUpdater = (prev: StandardCVProfile) => StandardCVProfile;
+type ProfileUpdater = (prev: CVProfilePrimitives) => CVProfilePrimitives;
 type ProfileHistorySource = "manual" | "instant";
 
 const MAX_HISTORY_ITEMS = 50;
 const MANUAL_HISTORY_GROUP_MS = 900;
 
 interface ProfileHistoryState {
-  past: StandardCVProfile[];
-  present: StandardCVProfile | null;
-  future: StandardCVProfile[];
+  past: CVProfilePrimitives[];
+  present: CVProfilePrimitives | null;
+  future: CVProfilePrimitives[];
   lastManualChangeAt: number;
 }
 
-function cloneProfile(profile: StandardCVProfile): StandardCVProfile {
+function cloneProfile(profile: CVProfilePrimitives): CVProfilePrimitives {
   return structuredClone(profile);
 }
 
-function serializeProfile(profile: StandardCVProfile | null): string {
+function serializeProfile(profile: CVProfilePrimitives | null): string {
   return JSON.stringify(profile);
 }
 
-function toProfile(value: StandardCVProfile | null | undefined) {
+function toProfile(value: CVProfilePrimitives | null | undefined) {
   return value ? cloneProfile(value) : null;
 }
 
-export function useProfileHistory(initialProfile: StandardCVProfile | null | undefined) {
+export function useProfileHistory(initialProfile: CVProfilePrimitives | null | undefined) {
   const [state, setState] = useState<ProfileHistoryState>(() => ({
     past: [],
     present: toProfile(initialProfile),
@@ -36,7 +36,7 @@ export function useProfileHistory(initialProfile: StandardCVProfile | null | und
     lastManualChangeAt: 0,
   }));
 
-  const reset = useCallback((profile: StandardCVProfile | null | undefined) => {
+  const reset = useCallback((profile: CVProfilePrimitives | null | undefined) => {
     setState({
       past: [],
       present: toProfile(profile),
@@ -46,7 +46,7 @@ export function useProfileHistory(initialProfile: StandardCVProfile | null | und
   }, []);
 
   const setProfile = useCallback((
-    updater: StandardCVProfile | ProfileUpdater,
+    updater: CVProfilePrimitives | ProfileUpdater,
     source: ProfileHistorySource = "manual"
   ) => {
     setState((current) => {

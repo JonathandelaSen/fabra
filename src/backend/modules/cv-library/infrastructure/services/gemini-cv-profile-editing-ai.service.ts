@@ -2,14 +2,11 @@ import { GoogleGenAI } from "@google/genai";
 import { badRequest } from "@/backend/modules/shared";
 import { ErrorCode } from "@/shared/error-codes";
 import {
-  normalizeStandardCVProfile,
-  type StandardCVProfile,
-} from "../../domain/cv-profile";
+  CVProfile,
+  type CVProfilePrimitives,
+} from "../../domain/value-objects/cv-profile.value-object";
 import type { CVTemplateId, CVTemplateLocale } from "../../domain/cv-templates";
-import type {
-  CVProfileEditingAIService,
-} from "../../domain/repositories/cv-profile-ai.service";
-import { EditedCVProfile } from "../../domain/value-objects/edited-cv-profile.value-object";
+import type { CVProfileEditingAIService } from "../../domain/repositories/cv-profile-ai.service";
 import { CVProfileEditingPromptService } from "../../domain/services/cv-profile-editing-prompt.service";
 
 const promptService = new CVProfileEditingPromptService();
@@ -17,16 +14,16 @@ const promptService = new CVProfileEditingPromptService();
 export interface AICVEditInput {
   apiKey: string;
   model: string;
-  profile: StandardCVProfile;
+  profile: CVProfilePrimitives;
   instruction: string;
   templateId?: CVTemplateId;
   locale?: CVTemplateLocale;
   recommendations?: string[];
 }
 
-export function parseEditedCVProfile(rawText: string): StandardCVProfile {
+export function parseEditedCVProfile(rawText: string): CVProfilePrimitives {
   const parsed = JSON.parse(rawText || "{}") as unknown;
-  const normalized = normalizeStandardCVProfile(parsed);
+  const normalized = mapAIProfileResponseToPrimitives(parsed);
   const hasContent =
     Boolean(normalized.summary) ||
     Object.keys(normalized.basics ?? {}).length > 0 ||
@@ -42,12 +39,18 @@ export function parseEditedCVProfile(rawText: string): StandardCVProfile {
   return normalized;
 }
 
+function mapAIProfileResponseToPrimitives(
+  response: unknown,
+): CVProfilePrimitives {
+  return response as CVProfilePrimitives;
+}
+
 class GeminiCVProfileEditingAIService implements CVProfileEditingAIService {
   constructor(private readonly config: { apiKey: string; model: string }) {}
 
   async edit(
     input: Omit<AICVEditInput, "apiKey" | "model">,
-  ): Promise<EditedCVProfile> {
+  ): Promise<CVProfile> {
     const googleAI = new GoogleGenAI({ apiKey: this.config.apiKey });
     const recommendations = input.recommendations?.length
       ? `\nRelevant recommendations from previous analysis:\n${input.recommendations
@@ -73,17 +76,23 @@ class GeminiCVProfileEditingAIService implements CVProfileEditingAIService {
       },
     });
 
-    return EditedCVProfile.fromPrimitives({
+    return CVProfile.fromPrimitives({
       ...parseEditedCVProfile(response.text || "{}"),
       presentation: input.profile.presentation,
     });
   }
 }
 
-export class GeminiCVProfileEditingAIServiceFactory
-{
-  create(config: { apiKey?: string; model: string }): CVProfileEditingAIService {
-    if (!config.apiKey) throw badRequest("API key is required for Gemini.", ErrorCode.AI_API_KEY_REQUIRED);
+export class GeminiCVProfileEditingAIServiceFactory {
+  create(config: {
+    apiKey?: string;
+    model: string;
+  }): CVProfileEditingAIService {
+    if (!config.apiKey)
+      throw badRequest(
+        "API key is required for Gemini.",
+        ErrorCode.AI_API_KEY_REQUIRED,
+      );
     return new GeminiCVProfileEditingAIService({
       apiKey: config.apiKey,
       model: config.model,

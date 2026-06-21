@@ -10,7 +10,9 @@ describe("CVPublicSettings", () => {
       slug: "my-cv",
       publishedAt: "2026-06-20T10:00:00.000Z",
     };
-    expect(CVPublicSettings.fromPrimitives(primitives).toPrimitives()).toEqual(primitives);
+    expect(CVPublicSettings.fromPrimitives(primitives).toPrimitives()).toEqual(
+      primitives,
+    );
   });
 
   it("defaults feedbackEnabled to false when absent", () => {

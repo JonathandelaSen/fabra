@@ -35,7 +35,8 @@ export class PdfParsersService implements PdfParsers {
     if (!PdfParsersService.pdfjsModule) {
       await this.ensurePdfjsCanvasPolyfills();
       await import("pdfjs-dist/legacy/build/pdf.worker.mjs");
-      PdfParsersService.pdfjsModule = await import("pdfjs-dist/legacy/build/pdf.mjs");
+      PdfParsersService.pdfjsModule =
+        await import("pdfjs-dist/legacy/build/pdf.mjs");
     }
 
     return PdfParsersService.pdfjsModule;
@@ -62,7 +63,8 @@ export class PdfParsersService implements PdfParsers {
     let extractErrorPdfjs: string | null = null;
 
     try {
-      const plainTextScannerResult = await this.extractWithPlainTextScanner(buffer);
+      const plainTextScannerResult =
+        await this.extractWithPlainTextScanner(buffer);
       textNode = plainTextScannerResult.text;
     } catch (error: unknown) {
       extractErrorNode = getErrorMessage(error);
@@ -97,7 +99,11 @@ export class PdfParsersService implements PdfParsers {
 
     const pageTexts: string[] = [];
 
-    for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber += 1) {
+    for (
+      let pageNumber = 1;
+      pageNumber <= pdfDocument.numPages;
+      pageNumber += 1
+    ) {
       const page = await pdfDocument.getPage(pageNumber);
       const textContent = await page.getTextContent({
         includeMarkedContent: false,
@@ -139,7 +145,11 @@ export class PdfParsersService implements PdfParsers {
 
     const pageTexts: string[] = [];
 
-    for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber += 1) {
+    for (
+      let pageNumber = 1;
+      pageNumber <= pdfDocument.numPages;
+      pageNumber += 1
+    ) {
       const page = await pdfDocument.getPage(pageNumber);
       const textContent = await page.getTextContent();
       const pageText = textContent.items

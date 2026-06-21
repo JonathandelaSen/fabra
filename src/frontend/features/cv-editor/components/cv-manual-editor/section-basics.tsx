@@ -1,12 +1,12 @@
 "use client";
 
-import type { StandardCVBasics, StandardCVLink } from "@/lib/cv-profile";
+import type { CVBasicsPrimitives, CVLinkPrimitives } from "@/lib/cv-profile";
 import { Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 interface SectionBasicsProps {
-  basics: StandardCVBasics;
-  onChange: (basics: StandardCVBasics) => void;
+  basics: CVBasicsPrimitives;
+  onChange: (basics: CVBasicsPrimitives) => void;
 }
 
 const inputBaseClass = "rounded-xl border border-line bg-panel-hover px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none";
@@ -17,9 +17,9 @@ const URL_PLACEHOLDER = "https://...";
 
 export function SectionBasics({ basics, onChange }: SectionBasicsProps) {
   const t = useTranslations("cvEditor.manual.basics");
-  const set = (key: keyof StandardCVBasics, value: string) => onChange({ ...basics, [key]: value });
+  const set = (key: keyof CVBasicsPrimitives, value: string) => onChange({ ...basics, [key]: value });
 
-  const updateLink = (index: number, field: keyof StandardCVLink, value: string) => {
+  const updateLink = (index: number, field: keyof CVLinkPrimitives, value: string) => {
     const links = [...(basics.links ?? [])];
     links[index] = { ...links[index], [field]: value };
     onChange({ ...basics, links });

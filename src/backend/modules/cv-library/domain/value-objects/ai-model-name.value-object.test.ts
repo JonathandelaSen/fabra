@@ -3,7 +3,9 @@ import { AIModelName } from "./ai-model-name.value-object";
 
 describe("AIModelName", () => {
   it("round-trips a model name", () => {
-    expect(AIModelName.fromPrimitives("gemini-3.1-pro-preview").toPrimitives()).toBe("gemini-3.1-pro-preview");
+    expect(
+      AIModelName.fromPrimitives("gemini-3.1-pro-preview").toPrimitives(),
+    ).toBe("gemini-3.1-pro-preview");
   });
 
   it("allows an empty model for legacy records", () => {

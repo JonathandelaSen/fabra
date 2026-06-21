@@ -24,7 +24,10 @@ describe("CreateUploadedCVDocumentUseCase", () => {
       extractErrorNode: null,
     });
 
-    expect(result.toPrimitives()).toMatchObject({ id: "cv-1", type: "uploaded" });
+    expect(result.toPrimitives()).toMatchObject({
+      id: "cv-1",
+      type: "uploaded",
+    });
     expect(repo.save).toHaveBeenCalledOnce();
     expect(eventBus.publish).toHaveBeenCalledOnce();
     const publishedEvents = eventBus.publish.mock.calls[0][0];

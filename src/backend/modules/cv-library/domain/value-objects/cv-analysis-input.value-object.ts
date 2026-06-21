@@ -27,20 +27,28 @@ export class CVAnalysisInput extends ValueObject<CVAnalysisInputPrimitives> {
     private readonly fileSizeValue: Counter | null,
     private readonly pdfStoragePathValue: LongText | null,
     private readonly extractedTextValue: CVDocumentExtractedText,
-    private readonly extractionDiagnosticsValue: CVExtractionDiagnostics
+    private readonly extractionDiagnosticsValue: CVExtractionDiagnostics,
   ) {
     super();
   }
 
-  static fromPrimitives(primitives: CVAnalysisInputPrimitives): CVAnalysisInput {
+  static fromPrimitives(
+    primitives: CVAnalysisInputPrimitives,
+  ): CVAnalysisInput {
     return new CVAnalysisInput(
       primitives.cv,
-      primitives.analysisText === null ? null : LongText.fromPrimitives(primitives.analysisText),
+      primitives.analysisText === null
+        ? null
+        : LongText.fromPrimitives(primitives.analysisText),
       LongText.fromPrimitives(primitives.filename),
-      primitives.fileSize === null ? null : Counter.fromPrimitives(primitives.fileSize),
-      primitives.pdfStoragePath === null ? null : LongText.fromPrimitives(primitives.pdfStoragePath),
+      primitives.fileSize === null
+        ? null
+        : Counter.fromPrimitives(primitives.fileSize),
+      primitives.pdfStoragePath === null
+        ? null
+        : LongText.fromPrimitives(primitives.pdfStoragePath),
       CVDocumentExtractedText.fromPrimitives(primitives.extractedText),
-      CVExtractionDiagnostics.fromPrimitives(primitives.extractionDiagnostics)
+      CVExtractionDiagnostics.fromPrimitives(primitives.extractionDiagnostics),
     );
   }
 

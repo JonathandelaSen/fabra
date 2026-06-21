@@ -1,33 +1,33 @@
 import { ValueObject } from "@/backend/modules/shared";
-import type { StandardCVProfilePrimitives } from "../cv-profile";
+import { CVProfile, type CVProfilePrimitives } from "./cv-profile.value-object";
 import { ProfileSchemaVersion } from "./profile-schema-version.value-object";
 
 export interface StructuredCVProfileDataPrimitives {
   schemaVersion: string;
-  profile: StandardCVProfilePrimitives;
+  profile: CVProfilePrimitives;
 }
 
 export class StructuredCVProfileData extends ValueObject<StructuredCVProfileDataPrimitives> {
   private constructor(
     private readonly schemaVersionVo: ProfileSchemaVersion,
-    private readonly profilePrims: StandardCVProfilePrimitives
+    private readonly profileVo: CVProfile,
   ) {
     super();
   }
 
   static fromPrimitives(
-    primitives: StructuredCVProfileDataPrimitives
+    primitives: StructuredCVProfileDataPrimitives,
   ): StructuredCVProfileData {
     return new StructuredCVProfileData(
       ProfileSchemaVersion.fromPrimitives(primitives.schemaVersion),
-      primitives.profile
+      CVProfile.fromPrimitives(primitives.profile),
     );
   }
 
   toPrimitives(): StructuredCVProfileDataPrimitives {
     return {
       schemaVersion: this.schemaVersionVo.toPrimitives(),
-      profile: this.profilePrims,
+      profile: this.profileVo.toPrimitives(),
     };
   }
 
@@ -35,7 +35,7 @@ export class StructuredCVProfileData extends ValueObject<StructuredCVProfileData
     return this.schemaVersionVo.toPrimitives();
   }
 
-  get profile(): StandardCVProfilePrimitives {
-    return this.profilePrims;
+  get profile(): CVProfilePrimitives {
+    return this.profileVo.toPrimitives();
   }
 }

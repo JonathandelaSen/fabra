@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Accordion } from "@/frontend/components/ui/accordion";
 import { Briefcase, Code, GraduationCap, Languages, User, FileText, Wrench, Award, FolderOpen, Heart, Trophy, BookOpen } from "lucide-react";
-import type { StandardCVProfile } from "@/lib/cv-profile";
+import type { CVProfilePrimitives } from "@/lib/cv-profile";
 import {
   getOrderedRenderableSections,
   getTemplateAccentColor,
@@ -25,7 +25,7 @@ import { ManualEditorSectionItem } from "./manual-editor-section-item";
 import { ManualEditorBasicsItem } from "./manual-editor-basics-item";
 import { ManualEditorHeader } from "./manual-editor-header";
 import type { CVSaveState } from "../../types";
-interface ManualEditorProps { profile: StandardCVProfile; templateId: CVTemplateId; locale: CVTemplateLocale; saveState: CVSaveState; onChange: (updater: (prev: StandardCVProfile) => StandardCVProfile) => void; onSave: () => void; }
+interface ManualEditorProps { profile: CVProfilePrimitives; templateId: CVTemplateId; locale: CVTemplateLocale; saveState: CVSaveState; onChange: (updater: (prev: CVProfilePrimitives) => CVProfilePrimitives) => void; onSave: () => void; }
 
 export function ManualEditor({
   profile,
@@ -65,11 +65,11 @@ export function ManualEditor({
     setVisualSectionOrder(nextOrder);
   };
 
-  const changeProfile = useCallback((updater: (prev: StandardCVProfile) => StandardCVProfile) => {
+  const changeProfile = useCallback((updater: (prev: CVProfilePrimitives) => CVProfilePrimitives) => {
     onChange(updater);
   }, [onChange]);
 
-  const applyPresentation = useCallback((updater: (prev: NonNullable<StandardCVProfile["presentation"]>) => StandardCVProfile["presentation"]) => {
+  const applyPresentation = useCallback((updater: (prev: NonNullable<CVProfilePrimitives["presentation"]>) => CVProfilePrimitives["presentation"]) => {
     changeProfile((prev) => {
       const nextPresentation = updater(prev.presentation ?? {});
       return { ...prev, presentation: nextPresentation };

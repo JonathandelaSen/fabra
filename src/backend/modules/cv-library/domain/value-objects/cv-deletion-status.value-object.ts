@@ -10,9 +10,7 @@ export type CVDeletionStatusPrimitives =
   (typeof cvDeletionStatuses)[keyof typeof cvDeletionStatuses];
 
 export class CVDeletionStatus extends ValueObject<CVDeletionStatusPrimitives> {
-  private constructor(
-    private readonly value: CVDeletionStatusPrimitives
-  ) {
+  private constructor(private readonly value: CVDeletionStatusPrimitives) {
     super();
   }
 

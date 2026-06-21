@@ -1,4 +1,9 @@
-import { BooleanFlag, LongText, OptionalTimestamp, ValueObject } from "@/backend/modules/shared";
+import {
+  BooleanFlag,
+  LongText,
+  OptionalTimestamp,
+  ValueObject,
+} from "@/backend/modules/shared";
 
 export interface CVPublicSettingsPrimitives {
   enabled: boolean;
@@ -25,8 +30,12 @@ export class CVPublicSettings extends ValueObject<CVPublicSettingsPrimitives> {
     return new CVPublicSettings(
       BooleanFlag.fromPrimitives(primitives.enabled),
       BooleanFlag.fromPrimitives(primitives.feedbackEnabled ?? false),
-      primitives.publicId === null ? null : LongText.fromPrimitives(primitives.publicId),
-      primitives.slug === null ? null : LongText.fromPrimitives(primitives.slug),
+      primitives.publicId === null
+        ? null
+        : LongText.fromPrimitives(primitives.publicId),
+      primitives.slug === null
+        ? null
+        : LongText.fromPrimitives(primitives.slug),
       OptionalTimestamp.fromPrimitives(primitives.publishedAt),
     );
   }

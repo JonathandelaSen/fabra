@@ -1,19 +1,19 @@
 "use client";
 
-import type { StandardCVLanguage } from "@/lib/cv-profile";
+import type { CVLanguagePrimitives } from "@/lib/cv-profile";
 import { Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 const inputClass = "w-full rounded-xl border border-line bg-panel-hover px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-accent-teal-border focus:outline-none";
 
 interface Props {
-  items: StandardCVLanguage[];
-  onChange: (items: StandardCVLanguage[]) => void;
+  items: CVLanguagePrimitives[];
+  onChange: (items: CVLanguagePrimitives[]) => void;
 }
 
 export function SectionLanguages({ items, onChange }: Props) {
   const t = useTranslations("cvEditor.manual.languages");
-  const update = (index: number, lang: StandardCVLanguage) => {
+  const update = (index: number, lang: CVLanguagePrimitives) => {
     const next = [...items];
     next[index] = lang;
     onChange(next);

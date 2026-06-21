@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { CV_TYPE, type AnalysisMode, type AnalysisSummary } from "@/lib/analysis-types";
 import type { InterviewQuestionResponse } from "@/app/api/interview-questions/responses";
 import type { CVDocumentListItem } from "../../api/cv-library-api";
-import type { StandardCVProfile } from "@/lib/cv-profile";
+import type { CVProfilePrimitives } from "@/lib/cv-profile";
 import { CVLibraryDetailHeader } from "./cv-library-detail-header";
 import { CVLibraryDetailSummary } from "./cv-library-detail-summary";
 import { CVLibraryDetailPreview } from "./cv-library-detail-preview";
@@ -119,7 +119,7 @@ export function CVLibraryDetail({
 
             {selected.type === CV_TYPE.JSON_RESUME ? (
               <CVLibraryJsonPreview
-                profile={selected.profile as StandardCVProfile | null}
+                profile={selected.profile as CVProfilePrimitives | null}
               />
             ) : (
               <CVLibraryDetailPreview

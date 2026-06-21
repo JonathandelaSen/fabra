@@ -2,8 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getCVTemplate, type CVTemplateLocale } from "@/lib/cv-templates";
 import {
-  normalizeStandardCVProfile,
-  type StandardCVProfile,
+  type CVProfilePrimitives,
 } from "@/lib/cv-profile";
 import {
   getStoredAIApiKey,
@@ -24,8 +23,8 @@ import { getErrorMessage } from "@/lib/errors";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/utils/ai-models";
 import type { CVSaveState } from "../types";
 
-function serializeProfile(profile: StandardCVProfile | null | undefined) {
-  return JSON.stringify(profile ? normalizeStandardCVProfile(profile) : null);
+function serializeProfile(profile: CVProfilePrimitives | null | undefined) {
+  return JSON.stringify(profile ?? null);
 }
 
 export function useCVEditorState(activeVersionId: string | null) {
@@ -112,10 +111,9 @@ export function useCVEditorState(activeVersionId: string | null) {
   }, [currentProfileJson, currentVersion?.id, currentVersion?.profile, resetProfileHistory]);
 
   const saveProfileToApi = useCallback(
-    async (profile: StandardCVProfile | null) => {
+    async (profile: CVProfilePrimitives | null) => {
       if (!currentVersionIdForSave || !profile) return false;
-      const normalized = normalizeStandardCVProfile(profile);
-      const json = JSON.stringify(normalized);
+      const json = JSON.stringify(profile);
       if (json === savedProfileJsonRef.current) return true;
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
       setSaveState("saving");
@@ -164,7 +162,7 @@ export function useCVEditorState(activeVersionId: string | null) {
   }, [canRedo, canUndo, redo, undo]);
 
   const handleManualChange = useCallback(
-    (updater: (prev: StandardCVProfile) => StandardCVProfile) => {
+    (updater: (prev: CVProfilePrimitives) => CVProfilePrimitives) => {
       setProfile(updater, "manual");
     },
     [setProfile],

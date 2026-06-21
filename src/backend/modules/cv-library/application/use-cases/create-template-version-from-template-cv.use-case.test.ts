@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { document, documentRepo, eventBus } from "./cv-library-test-helpers.test";
+import {
+  document,
+  documentRepo,
+  eventBus,
+} from "./cv-library-test-helpers.test";
 import { CreateTemplateCVDocumentUseCase } from "./create-template-cv-document.use-case";
 import { CreateTemplateVersionFromTemplateCVUseCase } from "./create-template-version-from-template-cv.use-case";
 

@@ -3,14 +3,14 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Code, FileJson, FileText } from "lucide-react";
-import type { StandardCVProfile } from "@/lib/cv-profile";
+import type { CVProfilePrimitives } from "@/lib/cv-profile";
 import { ProfileSection } from "./cv-library-profile-section";
 import { SyntaxHighlightedJson } from "./syntax-highlighted-json";
 
 type ViewMode = "formatted" | "raw";
 
 interface CVLibraryJsonPreviewProps {
-  profile: StandardCVProfile | null;
+  profile: CVProfilePrimitives | null;
 }
 
 export function CVLibraryJsonPreview({ profile }: CVLibraryJsonPreviewProps) {
@@ -68,7 +68,7 @@ function FormattedProfile({
   profile,
   t,
 }: {
-  profile: StandardCVProfile;
+  profile: CVProfilePrimitives;
   t: ReturnType<typeof useTranslations<"jsonResumeImport.preview">>;
 }) {
   return (

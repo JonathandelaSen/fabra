@@ -2,10 +2,13 @@ import { describe, expect, it } from "vitest";
 import { createHash } from "crypto";
 import fs from "fs";
 import path from "path";
-import { getPDFInlineMarkdownStyles, renderTemplatePDF } from "./cv-template-pdf";
-import type { StandardCVProfile } from "@/lib/cv-profile";
+import {
+  getPDFInlineMarkdownStyles,
+  renderTemplatePDF,
+} from "./cv-template-pdf";
+import type { CVProfilePrimitives } from "@/lib/cv-profile";
 
-const markdownProfile: StandardCVProfile = {
+const markdownProfile: CVProfilePrimitives = {
   basics: {
     name: "Markdown Candidate",
     headline: "Product Engineer",
@@ -34,7 +37,9 @@ const markdownProfile: StandardCVProfile = {
     {
       name: "Formatting System",
       description: "Built ***safe inline formatting*** for CV templates.",
-      bullets: ["Supports **bold**, *italic*, and [links](https://example.com)."],
+      bullets: [
+        "Supports **bold**, *italic*, and [links](https://example.com).",
+      ],
     },
   ],
 };
@@ -51,7 +56,9 @@ function fontIncludesName(buffer: Buffer, value: string) {
 
 describe("renderTemplatePDF", () => {
   it("assigns explicit font families to italic and bold italic inline PDF segments", () => {
-    expect(getPDFInlineMarkdownStyles({ fontFamily: "InterPDF", fontSize: 9 })).toMatchObject({
+    expect(
+      getPDFInlineMarkdownStyles({ fontFamily: "InterPDF", fontSize: 9 }),
+    ).toMatchObject({
       strongStyle: { fontFamily: "InterPDFSemiBold", fontWeight: 600 },
       emphasisStyle: { fontFamily: "InterPDF", fontStyle: "italic" },
       strongEmphasisStyle: {
@@ -61,7 +68,9 @@ describe("renderTemplatePDF", () => {
       },
     });
 
-    expect(getPDFInlineMarkdownStyles({ fontFamily: "GaramondPDF", fontSize: 10 })).toMatchObject({
+    expect(
+      getPDFInlineMarkdownStyles({ fontFamily: "GaramondPDF", fontSize: 10 }),
+    ).toMatchObject({
       strongStyle: { fontFamily: "GaramondPDFBold", fontWeight: 600 },
       emphasisStyle: { fontFamily: "GaramondPDF", fontStyle: "italic" },
       strongEmphasisStyle: {
@@ -89,7 +98,9 @@ describe("renderTemplatePDF", () => {
         .update(fs.readFileSync(regularPath))
         .digest("hex");
       const italicBuffer = fs.readFileSync(italicPath);
-      const italicHash = createHash("sha256").update(italicBuffer).digest("hex");
+      const italicHash = createHash("sha256")
+        .update(italicBuffer)
+        .digest("hex");
 
       expect(italicHash).not.toBe(regularHash);
       expect(fontIncludesName(italicBuffer, "Italic")).toBe(true);

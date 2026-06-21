@@ -1,18 +1,15 @@
 import { describe, expect, it, vi } from "vitest";
-import {
-  ListCVAnalysisUsageByDocumentQuery,
-} from "@/backend/modules/cv-analysis";
+import { ListCVAnalysisUsageByDocumentQuery } from "@/backend/modules/cv-analysis";
 import { ListJobMatchAnalysisUsageByDocumentQuery } from "@/backend/modules/job-match-analysis";
 import type { Query, QueryBus } from "@/backend/modules/shared";
 import { documentRepo } from "./cv-library-test-helpers.test";
 import { DeleteCVDocumentUseCase } from "./delete-cv-document.use-case";
 
-function queryBus(
-  results: Record<string, unknown> = {},
-) {
+function queryBus(results: Record<string, unknown> = {}) {
   return {
-    execute: async <TResult>(query: Query<unknown, TResult>): Promise<TResult> =>
-      (results[query.queryName] ?? []) as TResult,
+    execute: async <TResult>(
+      query: Query<unknown, TResult>,
+    ): Promise<TResult> => (results[query.queryName] ?? []) as TResult,
   } satisfies QueryBus;
 }
 
@@ -75,7 +72,9 @@ describe("DeleteCVDocumentUseCase", () => {
     const executed: string[] = [];
     const repo = documentRepo();
     const bus = {
-      execute: async <TResult>(query: Query<unknown, TResult>): Promise<TResult> => {
+      execute: async <TResult>(
+        query: Query<unknown, TResult>,
+      ): Promise<TResult> => {
         executed.push(query.queryName);
         return [] as unknown as TResult;
       },

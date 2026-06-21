@@ -12,13 +12,21 @@ export interface CVPublicFeedbackPrimitives {
 }
 
 export class CVPublicFeedback extends AggregateRoot {
-  private constructor(private readonly values: CVPublicFeedbackPrimitives) { super(); }
+  private constructor(private readonly values: CVPublicFeedbackPrimitives) {
+    super();
+  }
   static fromPrimitives(values: CVPublicFeedbackPrimitives) {
     CVDocumentId.fromPrimitives(values.cvId);
     UserId.fromPrimitives(values.userId);
     Timestamp.fromPrimitives(values.createdAt);
-    if (!values.feedbackText.trim()) throw new Error("Public CV feedback text is required");
-    return new CVPublicFeedback({ ...values, feedbackText: values.feedbackText.trim() });
+    if (!values.feedbackText.trim())
+      throw new Error("Public CV feedback text is required");
+    return new CVPublicFeedback({
+      ...values,
+      feedbackText: values.feedbackText.trim(),
+    });
   }
-  toPrimitives(): CVPublicFeedbackPrimitives { return { ...this.values }; }
+  toPrimitives(): CVPublicFeedbackPrimitives {
+    return { ...this.values };
+  }
 }

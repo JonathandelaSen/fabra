@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { document, documentRepo, eventBus } from "./cv-library-test-helpers.test";
+import {
+  document,
+  documentRepo,
+  eventBus,
+} from "./cv-library-test-helpers.test";
 import { PrepareCVAnalysisInputUseCase } from "./prepare-cv-analysis-input.use-case";
 import type {
   CVPdfStorage,
@@ -157,8 +161,7 @@ describe("PrepareCVAnalysisInputUseCase", () => {
         textPython: null,
         textPdfjs: "stored pdfjs text",
         textNode: null,
-        extractErrorPython:
-          "Supabase storage credentials are not configured.",
+        extractErrorPython: "Supabase storage credentials are not configured.",
         extractErrorPdfjs: null,
         extractErrorNode: null,
       },
@@ -238,7 +241,9 @@ describe("PrepareCVAnalysisInputUseCase", () => {
     expect(result?.analysisText).toBe("extracted text");
     expect(result?.extractedText.textPython).toBe("extracted text");
     expect(bus.publish).toHaveBeenCalledWith([
-      expect.objectContaining({ eventName: "cv_document_extracted_text_updated" }),
+      expect.objectContaining({
+        eventName: "cv_document_extracted_text_updated",
+      }),
     ]);
   });
 
@@ -253,7 +258,7 @@ describe("PrepareCVAnalysisInputUseCase", () => {
           templateId: "compact",
           templateLocale: "es",
           profile: {
-            basics: { fullName: "Ada Lovelace" },
+            basics: { name: "Ada Lovelace" },
             experience: [],
             education: [],
             skills: [],
@@ -309,10 +314,18 @@ describe("PrepareCVAnalysisInputUseCase", () => {
         document({
           type: "json_resume",
           profile: {
-            basics: { name: "Abraham Mokhtari", headline: "Full Engineer", email: "abraham@gmail.com" },
+            basics: {
+              name: "Abraham Mokhtari",
+              headline: "Full Engineer",
+              email: "abraham@gmail.com",
+            },
             summary: "Software developer with experience.",
             experience: [
-              { company: "Javelin Group", role: "Senior Engineer", bullets: ["Led team"] },
+              {
+                company: "Javelin Group",
+                role: "Senior Engineer",
+                bullets: ["Led team"],
+              },
             ],
           },
           pdfStoragePath: "user-1/cv-1.json",
@@ -342,7 +355,9 @@ describe("PrepareCVAnalysisInputUseCase", () => {
     });
 
     expect(result?.analysisText).toContain("Abraham Mokhtari");
-    expect(result?.analysisText).toContain("Software developer with experience.");
+    expect(result?.analysisText).toContain(
+      "Software developer with experience.",
+    );
     expect(result?.analysisText).toContain("Javelin Group");
     expect(deps.pdfStorage.download).not.toHaveBeenCalled();
     expect(deps.textExtractor.extract).not.toHaveBeenCalled();

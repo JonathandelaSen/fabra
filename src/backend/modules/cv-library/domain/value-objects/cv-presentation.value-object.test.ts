@@ -1,17 +1,19 @@
 import { describe, expect, it } from "vitest";
 import { CVPresentation } from "./cv-presentation.value-object";
-import type { StandardCVPresentation } from "../cv-profile";
+import type { CVPresentationPrimitives } from "./cv-presentation.value-object";
 
 describe("CVPresentation", () => {
   it("round-trips presentation settings", () => {
-    const primitives: StandardCVPresentation = {
+    const primitives: CVPresentationPrimitives = {
       sectionTitles: { experience: "Trayectoria" },
       sectionOrder: ["experience", "education"],
       accentColor: "#112233",
       tagsColor: "#445566",
       hiddenSections: ["awards"],
     };
-    expect(CVPresentation.fromPrimitives(primitives).toPrimitives()).toEqual(primitives);
+    expect(CVPresentation.fromPrimitives(primitives).toPrimitives()).toEqual(
+      primitives,
+    );
   });
 
   it("omits absent fields", () => {

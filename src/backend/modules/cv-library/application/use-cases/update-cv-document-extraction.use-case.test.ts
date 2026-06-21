@@ -36,7 +36,9 @@ describe("UpdateCVDocumentExtractionUseCase", () => {
     expect(eventBus.publish).toHaveBeenCalledOnce();
     const publishedEvents = eventBus.publish.mock.calls[0][0];
     expect(publishedEvents).toHaveLength(1);
-    expect(publishedEvents[0].eventName).toBe("cv_document_extracted_text_updated");
+    expect(publishedEvents[0].eventName).toBe(
+      "cv_document_extracted_text_updated",
+    );
     expect(publishedEvents[0].toPrimitives()).toEqual({
       documentId: "cv-1",
     });

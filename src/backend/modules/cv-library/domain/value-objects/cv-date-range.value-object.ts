@@ -1,7 +1,22 @@
 import { BooleanFlag, LongText, ValueObject } from "@/backend/modules/shared";
-import { dropEmpty, type StandardCVDateRange } from "../cv-profile";
 
-export type CVDateRangePrimitives = StandardCVDateRange;
+export interface CVDateRangePrimitives {
+  start?: string;
+  end?: string;
+  current?: boolean;
+}
+
+const dropEmpty = <T extends Record<string, unknown>>(value: T): T => {
+  for (const key of Object.keys(value)) {
+    if (
+      value[key] === undefined ||
+      (Array.isArray(value[key]) && value[key].length === 0)
+    ) {
+      delete value[key];
+    }
+  }
+  return value;
+};
 
 export class CVDateRange extends ValueObject<CVDateRangePrimitives> {
   private constructor(

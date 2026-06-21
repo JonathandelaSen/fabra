@@ -1,5 +1,5 @@
 import type { CVDocumentExtractedText } from "../value-objects/cv-document-extracted-text.value-object";
-import type { StandardCVProfile } from "../cv-profile";
+import type { CVProfilePrimitives } from "../value-objects/cv-profile.value-object";
 import type { CVTemplateId, CVTemplateLocale } from "../cv-templates";
 
 export interface CVPdfTextExtractionContext {
@@ -31,7 +31,7 @@ export interface CVPdfStorage {
 
 export interface CVTemplatePdfRenderer {
   render(input: {
-    profile: StandardCVProfile;
+    profile: CVProfilePrimitives;
     templateId: CVTemplateId;
     locale: CVTemplateLocale;
   }): Promise<Buffer>;

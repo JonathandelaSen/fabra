@@ -7,6 +7,8 @@ describe("CVDocumentId", () => {
   });
 
   it("rejects blank ids", () => {
-    expect(() => CVDocumentId.fromPrimitives(" ")).toThrow("CV document id is required");
+    expect(() => CVDocumentId.fromPrimitives(" ")).toThrow(
+      "CV document id is required",
+    );
   });
 });

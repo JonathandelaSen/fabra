@@ -18,17 +18,21 @@ export class CVEditorCopyPastePreview extends ValueObject<CVEditorCopyPastePrevi
     private readonly basicsNameValue: LongText | null,
     private readonly sectionsCountValue: Counter,
     private readonly changedSectionsValue: StringList,
-    private readonly originLabelValue: CopyPasteOriginLabel
+    private readonly originLabelValue: CopyPasteOriginLabel,
   ) {
     super();
   }
 
-  static fromPrimitives(primitives: CVEditorCopyPastePreviewPrimitives): CVEditorCopyPastePreview {
+  static fromPrimitives(
+    primitives: CVEditorCopyPastePreviewPrimitives,
+  ): CVEditorCopyPastePreview {
     return new CVEditorCopyPastePreview(
-      primitives.basicsName === null ? null : LongText.fromPrimitives(primitives.basicsName),
+      primitives.basicsName === null
+        ? null
+        : LongText.fromPrimitives(primitives.basicsName),
       Counter.fromPrimitives(primitives.sectionsCount),
       StringList.fromPrimitives(primitives.changedSections),
-      CopyPasteOriginLabel.fromPrimitives(primitives.originLabel)
+      CopyPasteOriginLabel.fromPrimitives(primitives.originLabel),
     );
   }
 

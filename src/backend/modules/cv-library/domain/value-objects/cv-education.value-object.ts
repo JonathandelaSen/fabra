@@ -1,8 +1,31 @@
 import { LongText, StringList, ValueObject } from "@/backend/modules/shared";
-import { dropEmpty, type StandardCVEducation } from "../cv-profile";
-import { CVDateRange } from "./cv-date-range.value-object";
+import {
+  CVDateRange,
+  type CVDateRangePrimitives,
+} from "./cv-date-range.value-object";
 
-export type CVEducationPrimitives = StandardCVEducation;
+export interface CVEducationPrimitives {
+  id?: string;
+  institution?: string;
+  degree?: string;
+  field?: string;
+  location?: string;
+  dates?: CVDateRangePrimitives;
+  details?: string[];
+  detailIds?: string[];
+}
+
+const dropEmpty = <T extends Record<string, unknown>>(value: T): T => {
+  for (const key of Object.keys(value)) {
+    if (
+      value[key] === undefined ||
+      (Array.isArray(value[key]) && value[key].length === 0)
+    ) {
+      delete value[key];
+    }
+  }
+  return value;
+};
 
 export class CVEducation extends ValueObject<CVEducationPrimitives> {
   private constructor(

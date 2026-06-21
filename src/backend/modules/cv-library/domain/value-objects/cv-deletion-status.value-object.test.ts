@@ -26,14 +26,14 @@ describe("CVDeletionStatus", () => {
   });
 
   it("round-trips through primitives", () => {
-    expect(
-      CVDeletionStatus.fromPrimitives("in_use").toPrimitives()
-    ).toBe("in_use");
+    expect(CVDeletionStatus.fromPrimitives("in_use").toPrimitives()).toBe(
+      "in_use",
+    );
   });
 
   it("rejects an invalid status", () => {
     expect(() => CVDeletionStatus.fromPrimitives("nope")).toThrow(
-      "Invalid delete CV document status"
+      "Invalid delete CV document status",
     );
   });
 });

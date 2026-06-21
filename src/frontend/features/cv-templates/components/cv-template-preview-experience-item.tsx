@@ -1,9 +1,9 @@
-import type { StandardCVExperience } from "@/lib/cv-profile";
+import type { CVExperiencePrimitives } from "@/lib/cv-profile";
 import { CVInlineMarkdown } from "./cv-inline-markdown";
 import { dateRange, hasItems } from "./cv-template-preview";
 
 interface CVTemplatePreviewExperienceItemProps {
-  item: StandardCVExperience;
+  item: CVExperiencePrimitives;
   companyFirst?: boolean;
 }
 

@@ -4,7 +4,9 @@ import { UpdateTemplateCVDocumentProfileUseCase } from "./update-template-cv-doc
 
 describe("UpdateTemplateCVDocumentProfileUseCase", () => {
   it("updates profile data only for template documents and publishes domain events", async () => {
-    const repo = documentRepo({ findById: async () => document({ type: "template" }) });
+    const repo = documentRepo({
+      findById: async () => document({ type: "template" }),
+    });
     const eventBus = { publish: vi.fn().mockResolvedValue(undefined) };
     const result = await new UpdateTemplateCVDocumentProfileUseCase({
       documentRepo: repo,

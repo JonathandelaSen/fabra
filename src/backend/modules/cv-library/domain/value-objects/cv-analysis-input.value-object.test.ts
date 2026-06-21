@@ -64,7 +64,9 @@ describe("CVAnalysisInput", () => {
     expect(result.fileSize).toBe(12345);
     expect(result.pdfStoragePath).toBe("user-1/cv-1.pdf");
     expect(result.extractedText).toEqual(mockCvPrimitives.extractedText);
-    expect(result.extractionDiagnostics).toEqual(mockResultPrimitives.extractionDiagnostics);
+    expect(result.extractionDiagnostics).toEqual(
+      mockResultPrimitives.extractionDiagnostics,
+    );
   });
 
   it("round-trips through toPrimitives", () => {

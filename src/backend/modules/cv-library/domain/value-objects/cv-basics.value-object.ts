@@ -1,8 +1,26 @@
 import { LongText, ValueObject } from "@/backend/modules/shared";
-import { dropEmpty, type StandardCVBasics } from "../cv-profile";
-import { CVLink } from "./cv-link.value-object";
+import { CVLink, type CVLinkPrimitives } from "./cv-link.value-object";
 
-export type CVBasicsPrimitives = StandardCVBasics;
+export interface CVBasicsPrimitives {
+  name?: string;
+  headline?: string;
+  email?: string;
+  phone?: string;
+  location?: string;
+  links?: CVLinkPrimitives[];
+}
+
+const dropEmpty = <T extends Record<string, unknown>>(value: T): T => {
+  for (const key of Object.keys(value)) {
+    if (
+      value[key] === undefined ||
+      (Array.isArray(value[key]) && value[key].length === 0)
+    ) {
+      delete value[key];
+    }
+  }
+  return value;
+};
 
 export class CVBasics extends ValueObject<CVBasicsPrimitives> {
   private constructor(

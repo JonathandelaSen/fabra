@@ -1,6 +1,6 @@
 "use client";
 
-import type { StandardCVExperience } from "@/lib/cv-profile";
+import type { CVExperiencePrimitives } from "@/lib/cv-profile";
 import { ArraySectionWrapper } from "./array-section-wrapper";
 import { EditableBulletList } from "./editable-bullet-list";
 import { useTranslations } from "next-intl";
@@ -11,11 +11,11 @@ const ROLE_PLACEHOLDER = "Software Engineer";
 const COMPANY_PLACEHOLDER = "Edpuzzle";
 
 interface Props {
-  items: StandardCVExperience[];
-  onChange: (items: StandardCVExperience[]) => void;
+  items: CVExperiencePrimitives[];
+  onChange: (items: CVExperiencePrimitives[]) => void;
 }
 
-function ExperienceFields({ item, update }: { item: StandardCVExperience; update: (v: StandardCVExperience) => void }) {
+function ExperienceFields({ item, update }: { item: CVExperiencePrimitives; update: (v: CVExperiencePrimitives) => void }) {
   const t = useTranslations("cvEditor.manual.experience");
   const set = (key: string, value: unknown) => update({ ...item, [key]: value });
   const setDate = (key: string, value: unknown) => update({ ...item, dates: { ...item.dates, [key]: value } });

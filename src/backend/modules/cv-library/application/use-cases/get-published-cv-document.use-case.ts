@@ -9,7 +9,9 @@ export interface GetPublishedCVDocumentInput {
 export class GetPublishedCVDocumentUseCase {
   constructor(private readonly deps: { documentRepo: CVDocumentRepository }) {}
 
-  async execute(input: GetPublishedCVDocumentInput): Promise<CVDocument | null> {
+  async execute(
+    input: GetPublishedCVDocumentInput,
+  ): Promise<CVDocument | null> {
     return this.deps.documentRepo.findPublishedByPublicId(
       CVPublicId.fromPrimitives(input.publicId),
     );

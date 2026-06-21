@@ -32,5 +32,8 @@ export function buildPublicCVPath(publicId: string, slug: string) {
 export function generatePublicCVId() {
   const bytes = new Uint8Array(PUBLIC_CV_ID_LENGTH);
   crypto.getRandomValues(bytes);
-  return Array.from(bytes, (byte) => PUBLIC_ID_ALPHABET[byte % PUBLIC_ID_ALPHABET.length]).join("");
+  return Array.from(
+    bytes,
+    (byte) => PUBLIC_ID_ALPHABET[byte % PUBLIC_ID_ALPHABET.length],
+  ).join("");
 }

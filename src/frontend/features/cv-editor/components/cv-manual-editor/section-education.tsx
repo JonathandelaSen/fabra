@@ -1,6 +1,6 @@
 "use client";
 
-import type { StandardCVEducation } from "@/lib/cv-profile";
+import type { CVEducationPrimitives } from "@/lib/cv-profile";
 import { ArraySectionWrapper } from "./array-section-wrapper";
 import { EditableBulletList } from "./editable-bullet-list";
 import { useTranslations } from "next-intl";
@@ -9,11 +9,11 @@ const inputClass = "w-full rounded-xl border border-line bg-panel-hover px-3 py-
 const labelClass = "text-[11px] font-medium text-text-muted uppercase tracking-wider";
 
 interface Props {
-  items: StandardCVEducation[];
-  onChange: (items: StandardCVEducation[]) => void;
+  items: CVEducationPrimitives[];
+  onChange: (items: CVEducationPrimitives[]) => void;
 }
 
-function EducationFields({ item, update }: { item: StandardCVEducation; update: (v: StandardCVEducation) => void }) {
+function EducationFields({ item, update }: { item: CVEducationPrimitives; update: (v: CVEducationPrimitives) => void }) {
   const t = useTranslations("cvEditor.manual.education");
   const set = (key: string, value: unknown) => update({ ...item, [key]: value });
   const setDate = (key: string, value: unknown) => update({ ...item, dates: { ...item.dates, [key]: value } });

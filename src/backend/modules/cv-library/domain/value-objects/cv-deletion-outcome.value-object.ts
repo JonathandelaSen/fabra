@@ -12,7 +12,7 @@ import {
 } from "./cv-deletion-status.value-object";
 
 function hydrateAnalysisSummary(
-  primitives: AnalysisSummaryPrimitives
+  primitives: AnalysisSummaryPrimitives,
 ): AnalysisSummary {
   const analysisMode: AnalysisMode =
     primitives.analysis_mode === "job_match" ? "job_match" : "general";
@@ -36,7 +36,7 @@ export interface CVDeletionOutcomePrimitives {
 export class CVDeletionOutcome extends ValueObject<CVDeletionOutcomePrimitives> {
   private constructor(
     private readonly statusValue: CVDeletionStatus,
-    private readonly analysesValue: AnalysisSummary[]
+    private readonly analysesValue: AnalysisSummary[],
   ) {
     super();
   }
@@ -54,11 +54,11 @@ export class CVDeletionOutcome extends ValueObject<CVDeletionOutcomePrimitives> 
   }
 
   static fromPrimitives(
-    primitives: CVDeletionOutcomePrimitives
+    primitives: CVDeletionOutcomePrimitives,
   ): CVDeletionOutcome {
     return new CVDeletionOutcome(
       CVDeletionStatus.fromPrimitives(primitives.status),
-      primitives.analyses.map(hydrateAnalysisSummary)
+      primitives.analyses.map(hydrateAnalysisSummary),
     );
   }
 

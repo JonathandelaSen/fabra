@@ -3,13 +3,21 @@ import { CVDocumentType } from "./cv-document-type.value-object";
 
 describe("CVDocumentType", () => {
   it("accepts uploaded, template, and jsonResume document types", () => {
-    expect(CVDocumentType.fromPrimitives("uploaded").toPrimitives()).toBe("uploaded");
-    expect(CVDocumentType.fromPrimitives("template").toPrimitives()).toBe("template");
-    expect(CVDocumentType.fromPrimitives("json_resume").toPrimitives()).toBe("json_resume");
+    expect(CVDocumentType.fromPrimitives("uploaded").toPrimitives()).toBe(
+      "uploaded",
+    );
+    expect(CVDocumentType.fromPrimitives("template").toPrimitives()).toBe(
+      "template",
+    );
+    expect(CVDocumentType.fromPrimitives("json_resume").toPrimitives()).toBe(
+      "json_resume",
+    );
   });
 
   it("rejects unknown document types", () => {
-    expect(() => CVDocumentType.fromPrimitives("other")).toThrow("Invalid CV document type");
+    expect(() => CVDocumentType.fromPrimitives("other")).toThrow(
+      "Invalid CV document type",
+    );
   });
 
   it("constructs and checks uploaded types", () => {

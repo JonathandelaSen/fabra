@@ -1,4 +1,4 @@
-import type { StandardCVProfile } from "./cv-profile";
+import type { CVProfilePrimitives } from "./value-objects/cv-profile.value-object";
 
 export const cvTemplateIds = {
   compact: "compact",
@@ -12,8 +12,7 @@ export const cvTemplateLocales = {
   en: "en",
 } as const;
 
-export type CVTemplateId =
-  (typeof cvTemplateIds)[keyof typeof cvTemplateIds];
+export type CVTemplateId = (typeof cvTemplateIds)[keyof typeof cvTemplateIds];
 export type CVTemplateLocale =
   (typeof cvTemplateLocales)[keyof typeof cvTemplateLocales];
 
@@ -35,10 +34,10 @@ export type CVRenderableSectionId = (typeof cvRenderableSectionIds)[number];
 
 export interface CVPresentationInput {
   presentation?: {
-    sectionTitles?: Partial<Record<CVRenderableSectionId, string>>;
-    sectionOrder?: CVRenderableSectionId[];
+    sectionTitles?: Record<string, string>;
+    sectionOrder?: string[];
     accentColor?: string;
-    hiddenSections?: CVRenderableSectionId[];
+    hiddenSections?: string[];
   };
 }
 
@@ -46,9 +45,9 @@ export interface CVTemplateDefinition {
   templateId: CVTemplateId;
   name: string;
   description: string;
-  supportedSections: Array<keyof StandardCVProfile>;
+  supportedSections: Array<keyof CVProfilePrimitives>;
   locales: CVTemplateLocale[];
-  fixtureProfile: StandardCVProfile;
+  fixtureProfile: CVProfilePrimitives;
 }
 
 export const CV_RENDERABLE_SECTIONS: CVRenderableSectionId[] = [
@@ -111,7 +110,7 @@ const TEMPLATE_ACCENT_COLORS: Record<CVTemplateId, string> = {
 };
 
 export function isRenderableSectionId(
-  value: unknown
+  value: unknown,
 ): value is CVRenderableSectionId {
   return (
     typeof value === "string" &&
@@ -125,13 +124,13 @@ export function normalizeSectionOrder(value: unknown): CVRenderableSectionId[] {
     : [];
   const unique = Array.from(new Set(ordered));
   const missing = DEFAULT_SECTION_ORDER.filter(
-    (section) => !unique.includes(section)
+    (section) => !unique.includes(section),
   );
   return [...unique, ...missing];
 }
 
 export function normalizeSectionTitles(
-  value: unknown
+  value: unknown,
 ): Partial<Record<CVRenderableSectionId, string>> | undefined {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return undefined;
@@ -159,7 +158,7 @@ export function getTemplateAccentColor(templateId: CVTemplateId): string {
 
 export function getResolvedAccentColor(
   profile: CVPresentationInput | null | undefined,
-  templateId: CVTemplateId
+  templateId: CVTemplateId,
 ): string {
   return (
     normalizeAccentColor(profile?.presentation?.accentColor) ??
@@ -168,7 +167,7 @@ export function getResolvedAccentColor(
 }
 
 export function getOrderedRenderableSections(
-  profile: CVPresentationInput | null | undefined
+  profile: CVPresentationInput | null | undefined,
 ): CVRenderableSectionId[] {
   return normalizeSectionOrder(profile?.presentation?.sectionOrder);
 }
@@ -176,7 +175,7 @@ export function getOrderedRenderableSections(
 export function getSectionTitle(
   section: CVRenderableSectionId,
   locale: string,
-  profile?: CVPresentationInput | null
+  profile?: CVPresentationInput | null,
 ): string {
   const customTitle = profile?.presentation?.sectionTitles?.[section]?.trim();
   if (customTitle) return customTitle;
@@ -184,7 +183,7 @@ export function getSectionTitle(
   return labels[section];
 }
 
-const loremProfile: StandardCVProfile = {
+const loremProfile: CVProfilePrimitives = {
   basics: {
     name: "Alex Morgan",
     headline: "Senior Product Designer",
@@ -255,12 +254,13 @@ const loremProfile: StandardCVProfile = {
     {
       name: "UX Mentor",
       organization: "ADPList",
-      description: "Mentoring junior designers transitioning into product roles.",
+      description:
+        "Mentoring junior designers transitioning into product roles.",
     },
   ],
 };
 
-const ALL_SECTIONS: Array<keyof StandardCVProfile> = [
+const ALL_SECTIONS: Array<keyof CVProfilePrimitives> = [
   "basics",
   ...CV_RENDERABLE_SECTIONS,
 ];
@@ -305,7 +305,9 @@ export const CV_TEMPLATES: CVTemplateDefinition[] = [
 ];
 
 export function getCVTemplate(templateId: string): CVTemplateDefinition | null {
-  return CV_TEMPLATES.find((template) => template.templateId === templateId) ?? null;
+  return (
+    CV_TEMPLATES.find((template) => template.templateId === templateId) ?? null
+  );
 }
 
 export function getSectionLabels(locale: string) {

@@ -1,9 +1,6 @@
+import type { CVProfilePrimitives } from "../../domain/value-objects/cv-profile.value-object";
 import { hasExtractedText, sanitizeErrorMessage } from "@/lib/observability";
-import {
-  getBestCVText,
-  profileToPlainText,
-  type StandardCVProfile,
-} from "../../domain/cv-profile";
+import { getBestCVText, profileToPlainText } from "../../domain/cv-profile";
 import {
   getCVTemplate,
   type CVTemplateId,
@@ -65,10 +62,9 @@ export class PrepareCVAnalysisInputUseCase {
     cv = await this.ensureUploadedCVExtraction({ ...input, cv });
 
     const cvPrimitives = cv.toPrimitives();
-    const templatePdfExtraction =
-      cv.typeValue.isTemplate()
-        ? await this.extractTemplateCVPdf({ ...input, cv: cvPrimitives })
-        : null;
+    const templatePdfExtraction = cv.typeValue.isTemplate()
+      ? await this.extractTemplateCVPdf({ ...input, cv: cvPrimitives })
+      : null;
     const analysisExtraction =
       templatePdfExtraction?.extracted ?? cvPrimitives.extractedText;
     const analysisText = getBestCVText({
@@ -79,8 +75,6 @@ export class PrepareCVAnalysisInputUseCase {
     const responseExtraction = analysisText
       ? this.clearParserErrors(analysisExtraction)
       : analysisExtraction;
-
-
 
     return CVAnalysisInput.fromPrimitives({
       cv: cvPrimitives,
@@ -119,7 +113,7 @@ export class PrepareCVAnalysisInputUseCase {
   ): Promise<CVAnalysisInput> {
     const primitives = cv.toPrimitives();
     const analysisText = profileToPlainText(
-      primitives.profile as StandardCVProfile | null,
+      primitives.profile as CVProfilePrimitives | null,
     );
     const emptyExtraction: CVDocumentExtractedTextPrimitives = {
       textPython: null,
@@ -129,8 +123,6 @@ export class PrepareCVAnalysisInputUseCase {
       extractErrorPdfjs: null,
       extractErrorNode: null,
     };
-
-
 
     return CVAnalysisInput.fromPrimitives({
       cv: primitives,
@@ -208,17 +200,19 @@ export class PrepareCVAnalysisInputUseCase {
   ): boolean {
     return Boolean(
       extracted.extractErrorPython ||
-        extracted.extractErrorPdfjs ||
-        extracted.extractErrorNode,
+      extracted.extractErrorPdfjs ||
+      extracted.extractErrorNode,
     );
   }
 
   private hasAllParserText(
     extracted: CVDocumentExtractedTextPrimitives,
   ): boolean {
-    return hasExtractedText([extracted.textPython]) &&
+    return (
+      hasExtractedText([extracted.textPython]) &&
       hasExtractedText([extracted.textPdfjs]) &&
-      hasExtractedText([extracted.textNode]);
+      hasExtractedText([extracted.textNode])
+    );
   }
 
   private getTemplateAnalysisFilename(cv: CVDocumentPrimitives) {
@@ -244,18 +238,14 @@ export class PrepareCVAnalysisInputUseCase {
     const filename = this.getTemplateAnalysisFilename(input.cv);
     const renderStartedAt = performance.now();
 
-
     const templatePdfBuffer = await this.deps.templateRenderer.render({
-      profile: input.cv.profile as StandardCVProfile,
+      profile: input.cv.profile as CVProfilePrimitives,
       templateId: template.templateId as CVTemplateId,
       locale: (input.cv.templateLocale ?? "es") as CVTemplateLocale,
     });
 
-
-
     const pdfStoragePath = `${input.userId}/${input.cv.id}-${input.requestId}-template.pdf`;
     const storageStartedAt = performance.now();
-
 
     try {
       await this.deps.pdfStorage.upload({
@@ -267,8 +257,6 @@ export class PrepareCVAnalysisInputUseCase {
     } catch (error: unknown) {
       throw error;
     }
-
-
 
     try {
       const extracted = await this.deps.textExtractor.extract(

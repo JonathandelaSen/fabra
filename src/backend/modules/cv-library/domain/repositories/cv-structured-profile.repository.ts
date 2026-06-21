@@ -7,7 +7,7 @@ export interface CVStructuredProfileRepository {
   findByDocumentId(
     cvDocumentId: CVDocumentId,
     userId: UserId,
-    schemaVersion: ProfileSchemaVersion
+    schemaVersion: ProfileSchemaVersion,
   ): Promise<CVStructuredProfile | null>;
   save(profile: CVStructuredProfile): Promise<CVStructuredProfile>;
 }
