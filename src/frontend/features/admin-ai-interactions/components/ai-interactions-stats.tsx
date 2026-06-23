@@ -22,21 +22,21 @@ export function AIInteractionsStats({
   const t = useTranslations("admin.aiInteractions");
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 mb-5 shrink-0">
-      <div className="flex flex-col gap-1 rounded-xl border border-border/50 bg-card/60 p-4 shadow-sm backdrop-blur-xs">
+    <div className="grid shrink-0 grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="flex min-h-16 flex-col justify-between rounded-lg border border-border/50 bg-card/70 p-2.5 shadow-xs">
         <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
           {t("metricsVisible")}
         </span>
-        <span className="text-2xl font-bold font-mono text-text-main">
+        <span className="text-xl font-bold font-mono text-text-main">
           {visibleRuns}
         </span>
       </div>
       
-      <div className="flex flex-col gap-1 rounded-xl border border-border/50 bg-card/60 p-4 shadow-sm backdrop-blur-xs">
+      <div className="flex min-h-16 flex-col justify-between rounded-lg border border-border/50 bg-card/70 p-2.5 shadow-xs">
         <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
           {t("metricsErrorRate")}
         </span>
-        <span className="text-2xl font-bold font-mono text-danger-text">
+        <span className="text-xl font-bold font-mono text-danger-text">
           {errorPercent}%
         </span>
         <span className="text-[10px] text-text-muted">
@@ -44,29 +44,29 @@ export function AIInteractionsStats({
         </span>
       </div>
 
-      <div className="flex flex-col gap-1 rounded-xl border border-border/50 bg-card/60 p-4 shadow-sm backdrop-blur-xs">
+      <div className="flex min-h-16 flex-col justify-between rounded-lg border border-border/50 bg-card/70 p-2.5 shadow-xs">
         <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
           {t("metricsModels")}
         </span>
-        <span className="text-2xl font-bold font-mono text-text-main">
+        <span className="text-xl font-bold font-mono text-text-main">
           {modelsCount}
         </span>
       </div>
 
-      <div className="flex flex-col gap-1 rounded-xl border border-border/50 bg-card/60 p-4 shadow-sm backdrop-blur-xs">
+      <div className="flex min-h-16 flex-col justify-between rounded-lg border border-border/50 bg-card/70 p-2.5 shadow-xs">
         <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
           {t("metricsAvgLatency")}
         </span>
-        <span className="text-2xl font-bold font-mono text-text-main">
+        <span className="text-xl font-bold font-mono text-text-main">
           {avgLatency}
         </span>
       </div>
 
-      <div className="flex flex-col gap-1 rounded-xl border border-border/50 bg-card/60 p-4 shadow-sm backdrop-blur-xs col-span-2 sm:col-span-1">
+      <div className="col-span-2 flex min-h-16 flex-col justify-between rounded-lg border border-border/50 bg-card/70 p-2.5 shadow-xs sm:col-span-1">
         <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
           {t("metricsReviewed")}
         </span>
-        <span className="text-2xl font-bold font-mono text-text-main">
+        <span className="text-xl font-bold font-mono text-text-main">
           {reviewedCount}
         </span>
         <span className="text-[10px] text-text-muted">

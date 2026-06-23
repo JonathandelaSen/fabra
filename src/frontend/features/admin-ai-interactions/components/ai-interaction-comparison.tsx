@@ -18,6 +18,7 @@ import { ComparisonColumn } from "./comparison-column";
 import { JSONTreeViewer } from "./json-tree-viewer";
 import { parseJSONResponse } from "./parse-json-response";
 import { ReviewFeedbackCard } from "./review-feedback-card";
+import { EvalCaseCaptureCard } from "./eval-case-capture-card";
 
 type Interaction = ListAdminAIInteractionsResponse[number];
 
@@ -100,28 +101,15 @@ function DetailedInteractionView({ interaction }: { interaction: Interaction }) 
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-6 pb-4 flex flex-wrap gap-2 items-center">
-          <span className="text-xs font-semibold text-text-muted font-mono bg-panel-control/40 border border-line-strong/30 rounded-lg px-2.5 py-1">
-            {interaction.provider}
-          </span>
-          {interaction.model && (
-            <span className="text-xs font-semibold text-text-muted font-mono bg-panel-control/40 border border-line-strong/30 rounded-lg px-2.5 py-1">
-              {interaction.model}
-            </span>
-          )}
-          {latestEventName && (
-            <span
-              className="text-xs font-semibold text-text-muted font-mono bg-panel-control/40 border border-line-strong/30 rounded-lg px-2.5 py-1"
-              title={interaction.eventNames.join("\n")}
-            >
-              {t("eventName")}: {latestEventName}
-            </span>
-          )}
-          <span className="text-xs font-semibold text-text-muted font-mono bg-panel-control/40 border border-line-strong/30 rounded-lg px-2.5 py-1 ml-auto">
-            UUID: {interaction.interactionId}
-          </span>
+        <CardContent className="grid gap-2 p-4 sm:grid-cols-2 xl:grid-cols-4">
+          <CopyableField label={t("filterProvider")} value={interaction.provider} />
+          <CopyableField label={t("filterModel")} value={interaction.model || "N/A"} />
+          <CopyableField label={t("eventName")} value={latestEventName ?? "N/A"} />
+          <CopyableField label="UUID" value={interaction.interactionId} />
         </CardContent>
       </Card>
+
+      <EvalCaseCaptureCard key={`${interaction.interactionId}-eval`} interaction={interaction} />
 
       <div className="flex min-w-0 flex-col gap-6">
         <div className="flex flex-col gap-4 min-w-0">

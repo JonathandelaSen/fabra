@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1",
+  "resultId": "cfffe594-775f-4c56-a913-5d480f3a1234",
+  "caseId": "cfcb8b93-2397-451c-a59a-2e24c1c738bd",
+  "runId": "6aab359c-184a-4555-8bc3-21038f27d761",
+  "updatedAt": "2026-06-23T01:00:00.000Z",
+  "score": 4,
+  "comment": "Good expected baseline: it recognizes the strong backend match but does not ignore the missing Node.js/TypeScript must-have.",
+  "tags": [
+    "good_calibration",
+    "must_have_gap_detected",
+    "useful_improvements"
+  ]
+}

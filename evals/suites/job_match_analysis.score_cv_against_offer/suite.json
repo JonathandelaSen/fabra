@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1",
+  "suiteId": "f025be06-3017-4f10-aa4f-91bb2557028e",
+  "actionId": "f025be06-3017-4f10-aa4f-91bb2557028e",
+  "name": "Job match scoring",
+  "description": "Synthetic cases for evaluating how well Fabra scores a CV against a job description.",
+  "caseIds": [
+    "cfcb8b93-2397-451c-a59a-2e24c1c738bd"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1",
+  "suiteId": "cv_analysis.score_cv",
+  "actionId": "cv_analysis.score_cv",
+  "name": "cv_analysis.score_cv",
+  "description": "Captured cases for cv_analysis.score_cv.",
+  "caseIds": [
+    "73226e82-fc58-414f-9761-6b413da440cb"
+  ]
+}

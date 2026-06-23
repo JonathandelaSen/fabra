@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1",
+  "runId": "6aab359c-184a-4555-8bc3-21038f27d761",
+  "name": "Manual seed baseline for job match scoring",
+  "actionId": "f025be06-3017-4f10-aa4f-91bb2557028e",
+  "producer": "eval-studio",
+  "createdAt": "2026-06-23T01:00:00.000Z",
+  "caseIds": [
+    "cfcb8b93-2397-451c-a59a-2e24c1c738bd"
+  ],
+  "runtime": {
+    "provider": "mock",
+    "model": "mock-evaluator",
+    "temperature": null
+  },
+  "executionMode": "manual_baseline",
+  "notes": "Seed run created so Eval Studio can validate workspace scanning, result review, annotations, and comparisons before Fabra has an admin capture flow.",
+  "suiteId": "f025be06-3017-4f10-aa4f-91bb2557028e"
+}

@@ -48,7 +48,7 @@ export function QueryControlsPanel({
 
   return (
     <Card className="border-border/60 shadow-xs shrink-0">
-      <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
+      <CardHeader className="flex flex-row items-center justify-between p-2.5 pb-1.5">
         <span className="text-xs font-bold uppercase tracking-wider text-text-soft flex items-center gap-1.5">
           <Terminal className="h-3.5 w-3.5 text-primary" />
           {t("queryControls")}
@@ -59,7 +59,7 @@ export function QueryControlsPanel({
           </span>
         )}
       </CardHeader>
-      <CardContent className="p-4 pt-1 flex flex-col gap-3">
+      <CardContent className="flex flex-col gap-2 p-2.5 pt-1">
         <div>
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted opacity-60" />
@@ -67,7 +67,7 @@ export function QueryControlsPanel({
               value={search} 
               onChange={(event) => setSearch(event.target.value)} 
               placeholder={t("filterPlaceholder")} 
-              className="pl-9 text-xs h-8.5 rounded-lg"
+              className="h-8 rounded-lg pl-9 text-xs"
             />
           </div>
         </div>
@@ -75,7 +75,7 @@ export function QueryControlsPanel({
         <div className="grid grid-cols-2 gap-2">
           <div>
             <label className="text-[9px] font-bold text-text-muted uppercase tracking-wider mb-1 block">{t("filterProvider")}</label>
-            <Select value={providerFilter} onChange={(e) => setProviderFilter(e.target.value)} className="h-8.5 text-xs">
+            <Select value={providerFilter} onChange={(e) => setProviderFilter(e.target.value)} className="h-8 text-xs">
               <option value="all">{t("filterAll")}</option>
               {filterOptions.providers.map(p => (
                 <option key={p} value={p}>{p}</option>
@@ -84,7 +84,7 @@ export function QueryControlsPanel({
           </div>
           <div>
             <label className="text-[9px] font-bold text-text-muted uppercase tracking-wider mb-1 block">{t("filterStatus")}</label>
-            <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="h-8.5 text-xs">
+            <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="h-8 text-xs">
               <option value="all">{t("filterAll")}</option>
               <option value="validated">{t("statusValidated")}</option>
               <option value="applied">{t("statusApplied")}</option>
@@ -97,7 +97,7 @@ export function QueryControlsPanel({
         <div className="grid grid-cols-2 gap-2">
           <div>
             <label className="text-[9px] font-bold text-text-muted uppercase tracking-wider mb-1 block">{t("filterModule")}</label>
-            <Select value={moduleFilter} onChange={(e) => setModuleFilter(e.target.value)} className="h-8.5 text-xs">
+            <Select value={moduleFilter} onChange={(e) => setModuleFilter(e.target.value)} className="h-8 text-xs">
               <option value="all">{t("filterAll")}</option>
               {filterOptions.modules.map(m => (
                 <option key={m} value={m}>{m}</option>
@@ -106,7 +106,7 @@ export function QueryControlsPanel({
           </div>
           <div>
             <label className="text-[9px] font-bold text-text-muted uppercase tracking-wider mb-1 block">{t("sortOrder")}</label>
-            <Select value={sortOrder} onChange={(e) => setSortOrder(e.target.value as any)} className="h-8.5 text-xs">
+            <Select value={sortOrder} onChange={(e) => setSortOrder(e.target.value as AIInteractionsSortOrder)} className="h-8 text-xs">
               <option value="newest">{t("sortNewest")}</option>
               <option value="oldest">{t("sortOldest")}</option>
             </Select>
@@ -115,7 +115,7 @@ export function QueryControlsPanel({
 
         <div>
           <label className="text-[9px] font-bold text-text-muted uppercase tracking-wider mb-1 block">{t("filterModel")}</label>
-          <Select value={modelFilter} onChange={(e) => setModelFilter(e.target.value)} className="h-8.5 text-xs">
+          <Select value={modelFilter} onChange={(e) => setModelFilter(e.target.value)} className="h-8 text-xs">
             <option value="all">{t("filterAll")}</option>
             {filterOptions.models.map(m => (
               <option key={m} value={m}>{m}</option>

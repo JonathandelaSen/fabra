@@ -6,7 +6,7 @@ import { LabelBadge } from "@/frontend/components/shared/label-badge";
 import { Button } from "@/frontend/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
 import { useTranslations } from "next-intl";
-import { Clock } from "lucide-react";
+import { CheckCircle2, Clock, FileJson2, MessageSquareText } from "lucide-react";
 
 type Interaction = ListAdminAIInteractionsResponse[number];
 
@@ -34,26 +34,31 @@ export function AIInteractionCard({
 
   const durationSec = interaction.durationMs ? `${(interaction.durationMs / 1000).toFixed(2)}s` : null;
   const latestEventName = interaction.eventNames.at(-1);
+  const parsedScore = typeof interaction.parsedResult === "object" &&
+    interaction.parsedResult !== null &&
+    "score" in interaction.parsedResult
+    ? String((interaction.parsedResult as { score?: unknown }).score)
+    : null;
 
   return (
     <Card
       onClick={onClick}
-      className={`cursor-pointer transition-all hover:bg-panel-hover hover:shadow-sm border-2 ${
+      className={`group cursor-pointer border-2 transition-all hover:bg-panel-hover hover:shadow-sm ${
         active
-          ? "border-primary bg-panel-selected/40 shadow-sm"
-          : "border-border/60"
+          ? "border-primary bg-panel-selected/60 shadow-sm ring-2 ring-primary/10"
+          : "border-border/60 bg-card/70"
       }`}
     >
-      <CardHeader className="p-4 pb-2">
+      <CardHeader className="p-3.5 pb-2">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold block mb-1">
               {interaction.module}
             </span>
-            <CardTitle className="text-sm font-semibold truncate text-text-main">
+            <CardTitle className="text-sm font-semibold leading-snug text-text-main line-clamp-2">
               {interaction.operation}
             </CardTitle>
-            <p className="truncate text-[10px] text-text-muted mt-0.5 font-mono">
+            <p className="truncate text-[10px] text-text-muted mt-1 font-mono">
               ID: {interaction.entityId.substring(0, 8)}...
             </p>
           </div>
@@ -71,7 +76,8 @@ export function AIInteractionCard({
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="p-4 pt-0 flex flex-wrap gap-1.5 items-center">
+      <CardContent className="p-3.5 pt-0">
+        <div className="flex flex-wrap gap-1.5 items-center">
         <LabelBadge className="text-[9px] py-0.5 px-1.5">{interaction.provider}</LabelBadge>
         {interaction.model && (
           <LabelBadge className="text-[9px] py-0.5 px-1.5 max-w-[120px] truncate" title={interaction.model}>
@@ -92,6 +98,40 @@ export function AIInteractionCard({
             {durationSec}
           </span>
         )}
+        </div>
+
+        <div className="mt-2.5 grid grid-cols-4 gap-1.5 text-[9px] font-semibold text-text-muted">
+          <span
+            className={`inline-flex items-center justify-center gap-1 rounded-md border px-1.5 py-1 ${
+              interaction.prompt ? "border-info-border/60 bg-info-soft/20 text-info-text" : "border-border/60 bg-panel-subtle"
+            }`}
+            title={t("prompt")}
+          >
+            <MessageSquareText className="h-3 w-3" />
+            {interaction.prompt ? t("capturedShort") : t("missingShort")}
+          </span>
+          <span
+            className={`inline-flex items-center justify-center gap-1 rounded-md border px-1.5 py-1 ${
+              interaction.parsedResult ? "border-success-border/60 bg-success-soft/20 text-success-text" : "border-border/60 bg-panel-subtle"
+            }`}
+            title={t("parsedResult")}
+          >
+            <FileJson2 className="h-3 w-3" />
+            {parsedScore ?? (interaction.parsedResult ? t("jsonShort") : t("missingShort"))}
+          </span>
+          <span
+            className={`inline-flex items-center justify-center gap-1 rounded-md border px-1.5 py-1 ${
+              interaction.review ? "border-success-border/60 bg-success-soft/20 text-success-text" : "border-border/60 bg-panel-subtle"
+            }`}
+            title={t("reviewFeedback")}
+          >
+            <CheckCircle2 className="h-3 w-3" />
+            {interaction.review ? interaction.review.rating : t("unreviewedShort")}
+          </span>
+          <span className="inline-flex items-center justify-center rounded-md border border-border/60 bg-panel-subtle px-1.5 py-1 font-mono">
+            {interaction.eventNames.length}
+          </span>
+        </div>
       </CardContent>
     </Card>
   );

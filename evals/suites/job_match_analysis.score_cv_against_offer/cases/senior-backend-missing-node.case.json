@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "1",
+  "caseId": "cfcb8b93-2397-451c-a59a-2e24c1c738bd",
+  "actionId": "f025be06-3017-4f10-aa4f-91bb2557028e",
+  "name": "Senior backend missing explicit Node.js requirement",
+  "note": "The CV is strong for backend/platform work but does not show Node.js production experience. A good result should recognize transferable backend strength while penalizing the explicit Node.js must-have.",
+  "createdAt": "2026-06-23T01:00:00.000Z",
+  "createdBy": {
+    "source": "fabra",
+    "userRole": "admin"
+  },
+  "input": {
+    "cvText": "Marina Torres\nSenior Backend Engineer\nMadrid, Spain\n\nSummary\nSenior backend engineer with 9 years of experience building distributed systems, internal platforms, and data-intensive APIs. Strong experience with Python, Go, PostgreSQL, Kafka, Kubernetes, AWS, observability, and high-availability services. Has led small backend squads and mentored engineers.\n\nExperience\nPrincipal Backend Engineer, Northstar Logistics, 2021-2026\n- Led the redesign of shipment tracking APIs handling 18M events per day using Go, PostgreSQL, Kafka, and Kubernetes.\n- Reduced p95 API latency from 850ms to 210ms through query optimization, caching, and async processing.\n- Owned incident response, SLO dashboards, and deployment pipelines for a 12-service logistics platform on AWS.\n- Mentored 4 engineers and coordinated architecture reviews with product and data teams.\n\nBackend Engineer, Ledgerflow, 2017-2021\n- Built Python/FastAPI services for payment reconciliation and fraud review workflows.\n- Designed PostgreSQL schemas and background processing jobs for finance operations.\n- Integrated third-party APIs and improved test coverage across backend services.\n\nSkills\nPython, Go, FastAPI, PostgreSQL, Kafka, Redis, Kubernetes, Docker, AWS, Terraform, Prometheus, Grafana, distributed systems, API design, mentoring.\n\nEducation\nBSc Computer Science, Universidad Politecnica de Madrid.",
+    "jobDescription": "Senior Node.js Backend Engineer\nAcme Commerce is hiring a Senior Backend Engineer to join our checkout platform team.\n\nRequirements\n- 6+ years of backend engineering experience.\n- Strong production experience with Node.js and TypeScript is required.\n- Experience designing REST APIs and event-driven services.\n- PostgreSQL or similar relational database experience.\n- Experience with AWS, Docker, and Kubernetes.\n- Ability to mentor engineers and lead technical design discussions.\n- English professional working proficiency.\n\nNice to have\n- E-commerce or payments experience.\n- Kafka or similar streaming technology.\n- Observability experience with metrics and tracing.\n\nResponsibilities\n- Own services in the checkout and payments platform.\n- Improve reliability, latency, and developer experience.\n- Collaborate with product managers and frontend engineers.\n\nLocation\nRemote within Spain.\n\nCompensation\nEUR 75,000 - 90,000.",
+    "jobUrl": "https://example.com/jobs/senior-node-backend-engineer",
+    "language": "en"
+  },
+  "promptTemplate": {
+    "format": "messages",
+    "templateId": "f025be06-3017-4f10-aa4f-91bb2557028e.fabra-current.v1",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an elite technical recruiter and hiring-committee screener. Compare the extracted text from a PDF resume against a specific job posting. Deconstruct must-have and nice-to-have requirements, evaluate evidence strength, calibrate the final score from 0 to 100, and respond only with valid JSON using Fabra's job match schema. Write feedback, improvements, and notable points in {{languageName}}. Keep extracted job-posting fields faithful to the posting's own wording and language.\n\nThe job description is:\n---\n{{jobDescription}}\n---\n\nThe source URL provided by the user is: {{jobUrl}}"
+      },
+      {
+        "role": "user",
+        "content": "Analyze this extracted CV text:\n{{cvText}}"
+      }
+    ]
+  },
+  "promptVariables": {
+    "language": "en",
+    "languageName": "English",
+    "cvText": "Marina Torres\nSenior Backend Engineer\nMadrid, Spain\n\nSummary\nSenior backend engineer with 9 years of experience building distributed systems, internal platforms, and data-intensive APIs. Strong experience with Python, Go, PostgreSQL, Kafka, Kubernetes, AWS, observability, and high-availability services. Has led small backend squads and mentored engineers.\n\nExperience\nPrincipal Backend Engineer, Northstar Logistics, 2021-2026\n- Led the redesign of shipment tracking APIs handling 18M events per day using Go, PostgreSQL, Kafka, and Kubernetes.\n- Reduced p95 API latency from 850ms to 210ms through query optimization, caching, and async processing.\n- Owned incident response, SLO dashboards, and deployment pipelines for a 12-service logistics platform on AWS.\n- Mentored 4 engineers and coordinated architecture reviews with product and data teams.\n\nBackend Engineer, Ledgerflow, 2017-2021\n- Built Python/FastAPI services for payment reconciliation and fraud review workflows.\n- Designed PostgreSQL schemas and background processing jobs for finance operations.\n- Integrated third-party APIs and improved test coverage across backend services.\n\nSkills\nPython, Go, FastAPI, PostgreSQL, Kafka, Redis, Kubernetes, Docker, AWS, Terraform, Prometheus, Grafana, distributed systems, API design, mentoring.\n\nEducation\nBSc Computer Science, Universidad Politecnica de Madrid.",
+    "jobDescription": "Senior Node.js Backend Engineer\nAcme Commerce is hiring a Senior Backend Engineer to join our checkout platform team.\n\nRequirements\n- 6+ years of backend engineering experience.\n- Strong production experience with Node.js and TypeScript is required.\n- Experience designing REST APIs and event-driven services.\n- PostgreSQL or similar relational database experience.\n- Experience with AWS, Docker, and Kubernetes.\n- Ability to mentor engineers and lead technical design discussions.\n- English professional working proficiency.\n\nNice to have\n- E-commerce or payments experience.\n- Kafka or similar streaming technology.\n- Observability experience with metrics and tracing.\n\nResponsibilities\n- Own services in the checkout and payments platform.\n- Improve reliability, latency, and developer experience.\n- Collaborate with product managers and frontend engineers.\n\nLocation\nRemote within Spain.\n\nCompensation\nEUR 75,000 - 90,000.",
+    "jobUrl": "https://example.com/jobs/senior-node-backend-engineer"
+  },
+  "renderedPrompt": {
+    "format": "messages",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an elite technical recruiter and hiring-committee screener. Compare the extracted text from a PDF resume against a specific job posting. Deconstruct must-have and nice-to-have requirements, evaluate evidence strength, calibrate the final score from 0 to 100, and respond only with valid JSON using Fabra's job match schema. Write feedback, improvements, and notable points in English. Keep extracted job-posting fields faithful to the posting's own wording and language.\n\nThe job description is:\n---\nSenior Node.js Backend Engineer\nAcme Commerce is hiring a Senior Backend Engineer to join our checkout platform team.\n\nRequirements\n- 6+ years of backend engineering experience.\n- Strong production experience with Node.js and TypeScript is required.\n- Experience designing REST APIs and event-driven services.\n- PostgreSQL or similar relational database experience.\n- Experience with AWS, Docker, and Kubernetes.\n- Ability to mentor engineers and lead technical design discussions.\n- English professional working proficiency.\n\nNice to have\n- E-commerce or payments experience.\n- Kafka or similar streaming technology.\n- Observability experience with metrics and tracing.\n\nResponsibilities\n- Own services in the checkout and payments platform.\n- Improve reliability, latency, and developer experience.\n- Collaborate with product managers and frontend engineers.\n\nLocation\nRemote within Spain.\n\nCompensation\nEUR 75,000 - 90,000.\n---\n\nThe source URL provided by the user is: https://example.com/jobs/senior-node-backend-engineer"
+      },
+      {
+        "role": "user",
+        "content": "Analyze this extracted CV text:\nMarina Torres\nSenior Backend Engineer\nMadrid, Spain\n\nSummary\nSenior backend engineer with 9 years of experience building distributed systems, internal platforms, and data-intensive APIs. Strong experience with Python, Go, PostgreSQL, Kafka, Kubernetes, AWS, observability, and high-availability services. Has led small backend squads and mentored engineers.\n\nExperience\nPrincipal Backend Engineer, Northstar Logistics, 2021-2026\n- Led the redesign of shipment tracking APIs handling 18M events per day using Go, PostgreSQL, Kafka, and Kubernetes.\n- Reduced p95 API latency from 850ms to 210ms through query optimization, caching, and async processing.\n- Owned incident response, SLO dashboards, and deployment pipelines for a 12-service logistics platform on AWS.\n- Mentored 4 engineers and coordinated architecture reviews with product and data teams.\n\nBackend Engineer, Ledgerflow, 2017-2021\n- Built Python/FastAPI services for payment reconciliation and fraud review workflows.\n- Designed PostgreSQL schemas and background processing jobs for finance operations.\n- Integrated third-party APIs and improved test coverage across backend services.\n\nSkills\nPython, Go, FastAPI, PostgreSQL, Kafka, Redis, Kubernetes, Docker, AWS, Terraform, Prometheus, Grafana, distributed systems, API design, mentoring.\n\nEducation\nBSc Computer Science, Universidad Politecnica de Madrid."
+      }
+    ]
+  },
+  "runtime": {
+    "provider": "mock",
+    "model": "mock-evaluator",
+    "temperature": null
+  },
+  "expectedOutput": {
+    "kind": "json",
+    "schemaRef": "fabra://job_match_analysis/score_response/v1"
+  },
+  "source": {
+    "app": "fabra",
+    "route": null,
+    "entityRefs": {}
+  }
+}

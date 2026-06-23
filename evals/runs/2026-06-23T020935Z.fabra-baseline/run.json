@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1",
+  "runId": "2026-06-23T020935Z.fabra-baseline",
+  "name": "Fabra baseline capture",
+  "actionId": "cv_analysis.score_cv",
+  "producer": "fabra",
+  "createdAt": "2026-06-23T02:09:35.292Z",
+  "caseIds": [
+    "73226e82-fc58-414f-9761-6b413da440cb"
+  ],
+  "runtime": {
+    "provider": "external_chat",
+    "model": null,
+    "temperature": null
+  },
+  "executionMode": "fabra_baseline_capture",
+  "notes": "Created while saving case from Fabra admin UI."
+}

@@ -1,0 +1,147 @@
+{
+  "schemaVersion": "1",
+  "resultId": "cfffe594-775f-4c56-a913-5d480f3a1234",
+  "caseId": "cfcb8b93-2397-451c-a59a-2e24c1c738bd",
+  "runId": "6aab359c-184a-4555-8bc3-21038f27d761",
+  "producer": "eval-studio",
+  "createdAt": "2026-06-23T01:00:00.000Z",
+  "runtime": {
+    "provider": "mock",
+    "model": "mock-evaluator",
+    "temperature": null
+  },
+  "promptVariables": {
+    "language": "en",
+    "languageName": "English",
+    "cvText": "Marina Torres\nSenior Backend Engineer\nMadrid, Spain\n\nSummary\nSenior backend engineer with 9 years of experience building distributed systems, internal platforms, and data-intensive APIs. Strong experience with Python, Go, PostgreSQL, Kafka, Kubernetes, AWS, observability, and high-availability services. Has led small backend squads and mentored engineers.\n\nExperience\nPrincipal Backend Engineer, Northstar Logistics, 2021-2026\n- Led the redesign of shipment tracking APIs handling 18M events per day using Go, PostgreSQL, Kafka, and Kubernetes.\n- Reduced p95 API latency from 850ms to 210ms through query optimization, caching, and async processing.\n- Owned incident response, SLO dashboards, and deployment pipelines for a 12-service logistics platform on AWS.\n- Mentored 4 engineers and coordinated architecture reviews with product and data teams.\n\nBackend Engineer, Ledgerflow, 2017-2021\n- Built Python/FastAPI services for payment reconciliation and fraud review workflows.\n- Designed PostgreSQL schemas and background processing jobs for finance operations.\n- Integrated third-party APIs and improved test coverage across backend services.\n\nSkills\nPython, Go, FastAPI, PostgreSQL, Kafka, Redis, Kubernetes, Docker, AWS, Terraform, Prometheus, Grafana, distributed systems, API design, mentoring.\n\nEducation\nBSc Computer Science, Universidad Politecnica de Madrid.",
+    "jobDescription": "Senior Node.js Backend Engineer\nAcme Commerce is hiring a Senior Backend Engineer to join our checkout platform team.\n\nRequirements\n- 6+ years of backend engineering experience.\n- Strong production experience with Node.js and TypeScript is required.\n- Experience designing REST APIs and event-driven services.\n- PostgreSQL or similar relational database experience.\n- Experience with AWS, Docker, and Kubernetes.\n- Ability to mentor engineers and lead technical design discussions.\n- English professional working proficiency.\n\nNice to have\n- E-commerce or payments experience.\n- Kafka or similar streaming technology.\n- Observability experience with metrics and tracing.\n\nResponsibilities\n- Own services in the checkout and payments platform.\n- Improve reliability, latency, and developer experience.\n- Collaborate with product managers and frontend engineers.\n\nLocation\nRemote within Spain.\n\nCompensation\nEUR 75,000 - 90,000.",
+    "jobUrl": "https://example.com/jobs/senior-node-backend-engineer"
+  },
+  "renderedPrompt": {
+    "format": "messages",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an elite technical recruiter and hiring-committee screener. Compare the extracted text from a PDF resume against a specific job posting. Deconstruct must-have and nice-to-have requirements, evaluate evidence strength, calibrate the final score from 0 to 100, and respond only with valid JSON using Fabra's job match schema. Write feedback, improvements, and notable points in English. Keep extracted job-posting fields faithful to the posting's own wording and language.\n\nThe job description is:\n---\nSenior Node.js Backend Engineer\nAcme Commerce is hiring a Senior Backend Engineer to join our checkout platform team.\n\nRequirements\n- 6+ years of backend engineering experience.\n- Strong production experience with Node.js and TypeScript is required.\n- Experience designing REST APIs and event-driven services.\n- PostgreSQL or similar relational database experience.\n- Experience with AWS, Docker, and Kubernetes.\n- Ability to mentor engineers and lead technical design discussions.\n- English professional working proficiency.\n\nNice to have\n- E-commerce or payments experience.\n- Kafka or similar streaming technology.\n- Observability experience with metrics and tracing.\n\nResponsibilities\n- Own services in the checkout and payments platform.\n- Improve reliability, latency, and developer experience.\n- Collaborate with product managers and frontend engineers.\n\nLocation\nRemote within Spain.\n\nCompensation\nEUR 75,000 - 90,000.\n---\n\nThe source URL provided by the user is: https://example.com/jobs/senior-node-backend-engineer"
+      },
+      {
+        "role": "user",
+        "content": "Analyze this extracted CV text:\nMarina Torres\nSenior Backend Engineer\nMadrid, Spain\n\nSummary\nSenior backend engineer with 9 years of experience building distributed systems, internal platforms, and data-intensive APIs. Strong experience with Python, Go, PostgreSQL, Kafka, Kubernetes, AWS, observability, and high-availability services. Has led small backend squads and mentored engineers.\n\nExperience\nPrincipal Backend Engineer, Northstar Logistics, 2021-2026\n- Led the redesign of shipment tracking APIs handling 18M events per day using Go, PostgreSQL, Kafka, and Kubernetes.\n- Reduced p95 API latency from 850ms to 210ms through query optimization, caching, and async processing.\n- Owned incident response, SLO dashboards, and deployment pipelines for a 12-service logistics platform on AWS.\n- Mentored 4 engineers and coordinated architecture reviews with product and data teams.\n\nBackend Engineer, Ledgerflow, 2017-2021\n- Built Python/FastAPI services for payment reconciliation and fraud review workflows.\n- Designed PostgreSQL schemas and background processing jobs for finance operations.\n- Integrated third-party APIs and improved test coverage across backend services.\n\nSkills\nPython, Go, FastAPI, PostgreSQL, Kafka, Redis, Kubernetes, Docker, AWS, Terraform, Prometheus, Grafana, distributed systems, API design, mentoring.\n\nEducation\nBSc Computer Science, Universidad Politecnica de Madrid."
+      }
+    ]
+  },
+  "rawOutput": "{\n  \"score\": 61,\n  \"feedback\": \"This CV is a plausible but risky screen for the role. Marina has strong senior backend evidence, especially in distributed systems, PostgreSQL, Kafka, Kubernetes, AWS, reliability, latency improvement, and mentoring. However, the posting explicitly requires strong production experience with Node.js and TypeScript, and the CV shows no Node.js or TypeScript evidence. Because that is a true must-have, the score should remain capped around the low 60s despite strong general backend alignment.\",\n  \"keywordsFound\": [\"backend engineering\", \"REST APIs\", \"event-driven services\", \"PostgreSQL\", \"AWS\", \"Docker\", \"Kubernetes\", \"mentoring\", \"Kafka\", \"observability\"],\n  \"jobKeywords\": [\"Node.js\", \"TypeScript\", \"backend engineering\", \"REST APIs\", \"event-driven services\", \"PostgreSQL\", \"AWS\", \"Docker\", \"Kubernetes\", \"mentoring\", \"English\", \"e-commerce\", \"payments\", \"Kafka\", \"observability\"],\n  \"cvKeywords\": [\"Python\", \"Go\", \"FastAPI\", \"PostgreSQL\", \"Kafka\", \"Redis\", \"Kubernetes\", \"Docker\", \"AWS\", \"Terraform\", \"Prometheus\", \"Grafana\", \"distributed systems\", \"API design\", \"mentoring\"],\n  \"matchingKeywords\": [\"backend engineering\", \"REST APIs\", \"event-driven services\", \"PostgreSQL\", \"AWS\", \"Docker\", \"Kubernetes\", \"mentoring\", \"Kafka\", \"observability\"],\n  \"missingKeywords\": [\"Node.js\", \"TypeScript\", \"e-commerce\", \"checkout platform\", \"English professional working proficiency\"],\n  \"improvements\": [\"Add any truthful Node.js or TypeScript production experience if it exists; without it, this CV will likely fail the must-have screen.\", \"Reword API and event-driven systems experience using the posting's exact terms: REST APIs, event-driven services, checkout/payments platform where truthful.\", \"Surface payments experience from Ledgerflow more prominently because the role values checkout and payments context.\", \"Mention English working proficiency if true.\", \"Keep the strongest reliability and latency metrics because they map well to the platform responsibilities.\"],\n  \"jobKeyData\": {\n    \"title\": \"Senior Node.js Backend Engineer\",\n    \"company\": \"Acme Commerce\",\n    \"location\": \"Remote within Spain\",\n    \"remote\": \"Remote within Spain\",\n    \"salary\": \"EUR 75,000 - 90,000\",\n    \"seniority\": \"Senior\",\n    \"contractType\": null,\n    \"benefits\": [],\n    \"requirements\": [\"6+ years of backend engineering experience\", \"Strong production experience with Node.js and TypeScript is required\", \"Experience designing REST APIs and event-driven services\", \"PostgreSQL or similar relational database experience\", \"Experience with AWS, Docker, and Kubernetes\", \"Ability to mentor engineers and lead technical design discussions\", \"English professional working proficiency\"],\n    \"responsibilities\": [\"Own services in the checkout and payments platform\", \"Improve reliability, latency, and developer experience\", \"Collaborate with product managers and frontend engineers\"],\n    \"notablePoints\": [\"The explicit Node.js and TypeScript requirement is the decisive gap.\", \"The CV has strong platform reliability evidence that fits the role responsibilities.\", \"Payments experience appears in the CV and should be emphasized for this job.\"]\n  }\n}",
+  "parsedOutput": {
+    "score": 61,
+    "feedback": "This CV is a plausible but risky screen for the role. Marina has strong senior backend evidence, especially in distributed systems, PostgreSQL, Kafka, Kubernetes, AWS, reliability, latency improvement, and mentoring. However, the posting explicitly requires strong production experience with Node.js and TypeScript, and the CV shows no Node.js or TypeScript evidence. Because that is a true must-have, the score should remain capped around the low 60s despite strong general backend alignment.",
+    "keywordsFound": [
+      "backend engineering",
+      "REST APIs",
+      "event-driven services",
+      "PostgreSQL",
+      "AWS",
+      "Docker",
+      "Kubernetes",
+      "mentoring",
+      "Kafka",
+      "observability"
+    ],
+    "jobKeywords": [
+      "Node.js",
+      "TypeScript",
+      "backend engineering",
+      "REST APIs",
+      "event-driven services",
+      "PostgreSQL",
+      "AWS",
+      "Docker",
+      "Kubernetes",
+      "mentoring",
+      "English",
+      "e-commerce",
+      "payments",
+      "Kafka",
+      "observability"
+    ],
+    "cvKeywords": [
+      "Python",
+      "Go",
+      "FastAPI",
+      "PostgreSQL",
+      "Kafka",
+      "Redis",
+      "Kubernetes",
+      "Docker",
+      "AWS",
+      "Terraform",
+      "Prometheus",
+      "Grafana",
+      "distributed systems",
+      "API design",
+      "mentoring"
+    ],
+    "matchingKeywords": [
+      "backend engineering",
+      "REST APIs",
+      "event-driven services",
+      "PostgreSQL",
+      "AWS",
+      "Docker",
+      "Kubernetes",
+      "mentoring",
+      "Kafka",
+      "observability"
+    ],
+    "missingKeywords": [
+      "Node.js",
+      "TypeScript",
+      "e-commerce",
+      "checkout platform",
+      "English professional working proficiency"
+    ],
+    "improvements": [
+      "Add any truthful Node.js or TypeScript production experience if it exists; without it, this CV will likely fail the must-have screen.",
+      "Reword API and event-driven systems experience using the posting's exact terms: REST APIs, event-driven services, checkout/payments platform where truthful.",
+      "Surface payments experience from Ledgerflow more prominently because the role values checkout and payments context.",
+      "Mention English working proficiency if true.",
+      "Keep the strongest reliability and latency metrics because they map well to the platform responsibilities."
+    ],
+    "jobKeyData": {
+      "title": "Senior Node.js Backend Engineer",
+      "company": "Acme Commerce",
+      "location": "Remote within Spain",
+      "remote": "Remote within Spain",
+      "salary": "EUR 75,000 - 90,000",
+      "seniority": "Senior",
+      "contractType": null,
+      "benefits": [],
+      "requirements": [
+        "6+ years of backend engineering experience",
+        "Strong production experience with Node.js and TypeScript is required",
+        "Experience designing REST APIs and event-driven services",
+        "PostgreSQL or similar relational database experience",
+        "Experience with AWS, Docker, and Kubernetes",
+        "Ability to mentor engineers and lead technical design discussions",
+        "English professional working proficiency"
+      ],
+      "responsibilities": [
+        "Own services in the checkout and payments platform",
+        "Improve reliability, latency, and developer experience",
+        "Collaborate with product managers and frontend engineers"
+      ],
+      "notablePoints": [
+        "The explicit Node.js and TypeScript requirement is the decisive gap.",
+        "The CV has strong platform reliability evidence that fits the role responsibilities.",
+        "Payments experience appears in the CV and should be emphasized for this job."
+      ]
+    }
+  },
+  "status": "completed",
+  "error": null,
+  "usage": {
+    "inputTokens": null,
+    "outputTokens": null,
+    "costUsd": null
+  },
+  "latencyMs": null
+}

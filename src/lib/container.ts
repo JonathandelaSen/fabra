@@ -45,6 +45,7 @@ import {
 } from "@/backend/modules/work-journal";
 import { telemetry } from "@/lib/telemetry";
 import { createAIInteractionsModule } from "@/backend/modules/ai-interactions";
+import { createEvalArtifactsModule } from "@/backend/modules/eval-artifacts";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const eventBus = new InMemoryEventBus(telemetry);
@@ -57,6 +58,7 @@ export const activityContextsModule = createActivityContextsModule(
   eventBus,
 );
 export const adminModule = createAdminModule(telemetry);
+export const evalArtifactsModule = createEvalArtifactsModule();
 export const cvAnalysisModule = createCVAnalysisModule(telemetry, eventBus);
 export const cvLibraryModule = createCVLibraryModule(
   queryBus,

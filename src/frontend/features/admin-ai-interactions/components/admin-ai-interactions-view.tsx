@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
 import { Button } from "@/frontend/components/ui/button";
 import { useAdminAIInteractions } from "../hooks/use-admin-ai-interactions";
@@ -77,20 +77,15 @@ export function AdminAIInteractionsView() {
     return result;
   }, [query.data, search, providerFilter, statusFilter, modelFilter, moduleFilter, sortOrder]);
 
-  useEffect(() => {
-    if (filteredInteractions.length > 0) {
-      const exists = filteredInteractions.some((item) => item.interactionId === activeId);
-      if (!exists) {
-        setActiveId(filteredInteractions[0].interactionId);
-      }
-    } else {
-      setActiveId(null);
-    }
+  const effectiveActiveId = useMemo(() => {
+    if (filteredInteractions.length === 0) return null;
+    const exists = filteredInteractions.some((item) => item.interactionId === activeId);
+    return exists ? activeId : filteredInteractions[0].interactionId;
   }, [filteredInteractions, activeId]);
 
   const activeInteraction = useMemo(() => {
-    return filteredInteractions.find((item) => item.interactionId === activeId) || null;
-  }, [filteredInteractions, activeId]);
+    return filteredInteractions.find((item) => item.interactionId === effectiveActiveId) || null;
+  }, [filteredInteractions, effectiveActiveId]);
 
   const comparedInteractions = useMemo(() => {
     return filteredInteractions.filter((item) => compareIds.includes(item.interactionId));
@@ -176,17 +171,19 @@ export function AdminAIInteractionsView() {
       bodyContentClassName="flex min-h-0 max-w-none w-full flex-col"
       bodyClassName="overflow-hidden flex flex-col h-full min-h-0"
     >
-      <AIInteractionsStats
-        visibleRuns={filteredInteractions.length}
-        errorPercent={errorStats.percent}
-        errorCount={errorStats.count}
-        modelsCount={modelsCount}
-        avgLatency={avgLatency}
-        reviewedCount={reviewedCount}
-      />
+      <div className="mb-3 shrink-0">
+        <AIInteractionsStats
+          visibleRuns={filteredInteractions.length}
+          errorPercent={errorStats.percent}
+          errorCount={errorStats.count}
+          modelsCount={modelsCount}
+          avgLatency={avgLatency}
+          reviewedCount={reviewedCount}
+        />
+      </div>
 
-      <div className="flex-1 min-h-0 grid gap-5 lg:grid-cols-[330px_minmax(0,1fr)]">
-        <aside className="flex min-h-0 flex-col gap-4">
+      <div className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[370px_minmax(0,1fr)]">
+        <aside className="flex min-h-0 flex-col gap-3">
           <QueryControlsPanel
             search={search}
             setSearch={setSearch}
@@ -214,7 +211,7 @@ export function AdminAIInteractionsView() {
             </span>
           </div>
 
-          <div className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto rounded-lg border border-line bg-panel-subtle/40 p-1.5">
+          <div className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto overscroll-contain rounded-lg border border-line bg-panel-subtle/40 p-1.5 [scrollbar-gutter:stable]">
             {query.isLoading ? (
               <div className="flex h-full min-h-[260px] items-center justify-center text-sm text-text-muted">
                 {t("loading")}
@@ -233,7 +230,7 @@ export function AdminAIInteractionsView() {
                 <AIInteractionCard
                   key={interaction.interactionId}
                   interaction={interaction}
-                  active={activeId === interaction.interactionId}
+                  active={effectiveActiveId === interaction.interactionId}
                   selected={compareIds.includes(interaction.interactionId)}
                   onClick={() => {
                     setActiveId(interaction.interactionId);
