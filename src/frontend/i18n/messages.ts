@@ -57,6 +57,7 @@ export const messages = {
       AI_API_KEY_INVALID: "The provided API key is incorrect or invalid.",
       COPY_PASTE_INVALID_JSON: "The pasted response is not valid JSON.",
       COPY_PASTE_INVALID_RESULT: "The pasted response doesn't contain a usable result.",
+      OLLAMA_JOB_MATCH_SCORING_PARSE_FAILED: "Failed to parse Ollama job match scoring response.",
     },
     common: {
       appName: "Fabra",
@@ -1824,6 +1825,7 @@ export const messages = {
       AI_API_KEY_INVALID: "La API key proporcionada es incorrecta o no es válida.",
       COPY_PASTE_INVALID_JSON: "La respuesta pegada no es un JSON válido.",
       COPY_PASTE_INVALID_RESULT: "La respuesta pegada no contiene un resultado utilizable.",
+      OLLAMA_JOB_MATCH_SCORING_PARSE_FAILED: "No se pudo procesar la respuesta de puntuación de coincidencia de empleo de Ollama.",
     },
     common: {
       appName: "Fabra",

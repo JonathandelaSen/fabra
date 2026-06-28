@@ -89,6 +89,9 @@ export const ErrorCode = {
   // Copy-paste assisted workflows
   COPY_PASTE_INVALID_JSON: "COPY_PASTE_INVALID_JSON",
   COPY_PASTE_INVALID_RESULT: "COPY_PASTE_INVALID_RESULT",
+
+  // Job match scoring
+  OLLAMA_JOB_MATCH_SCORING_PARSE_FAILED: "OLLAMA_JOB_MATCH_SCORING_PARSE_FAILED",
 } as const;
 
 export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode];

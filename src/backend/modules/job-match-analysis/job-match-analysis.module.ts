@@ -18,17 +18,12 @@ import { OpenAIJobMatchScoringAIServiceFactory } from "./infrastructure/services
 import { ProviderJobMatchScoringAIServiceFactory } from "./infrastructure/services/provider-job-match-scoring-ai-service.factory";
 import { JobMatchScoringPromptService } from "./domain/services/job-match-scoring-prompt.service";
 import { SupabaseJobMatchAnalysisRepository } from "./infrastructure/repositories/supabase-job-match-analysis.repository";
+import type { JobMatchScoringAIServiceFactory } from "./domain/repositories/job-match-scoring-ai.service";
 
 const repo = new SupabaseJobMatchAnalysisRepository();
 const scoringPromptService = new JobMatchScoringPromptService();
-const aiServiceFactory = new ProviderJobMatchScoringAIServiceFactory({
-  geminiFactory: new GeminiJobMatchScoringAIServiceFactory(),
-  openaiFactory: new OpenAIJobMatchScoringAIServiceFactory(),
-  mockFactory: new MockJobMatchScoringAIServiceFactory(),
-  ollamaFactory: new OllamaJobMatchScoringAIServiceFactory(),
-});
 
-function createUseCases(eventBus: EventBus) {
+function createUseCases(eventBus: EventBus, aiServiceFactory: JobMatchScoringAIServiceFactory) {
   return {
     createJobMatchAnalysis: new CreateJobMatchAnalysisUseCase({ repo, eventBus }),
     listJobMatchAnalyses: new ListJobMatchAnalysesUseCase({ repo }),
@@ -68,7 +63,14 @@ export type JobMatchAnalysisModule = ReturnType<typeof createUseCases> & {
 };
 
 export function createJobMatchAnalysisModule(telemetry: Telemetry, eventBus: EventBus): JobMatchAnalysisModule {
-  const useCases = instrumentUseCases("job-match-analysis", createUseCases(eventBus), telemetry);
+  const aiServiceFactory = new ProviderJobMatchScoringAIServiceFactory({
+    geminiFactory: new GeminiJobMatchScoringAIServiceFactory(),
+    openaiFactory: new OpenAIJobMatchScoringAIServiceFactory(),
+    mockFactory: new MockJobMatchScoringAIServiceFactory(),
+    ollamaFactory: new OllamaJobMatchScoringAIServiceFactory(telemetry),
+  });
+
+  const useCases = instrumentUseCases("job-match-analysis", createUseCases(eventBus, aiServiceFactory), telemetry);
   return {
     ...useCases,
     bindRequest(client: SupabaseClient) {

@@ -15,3 +15,5 @@ export {
   type ListJobMatchAnalysisUsageByDocumentResult,
 } from "./application/queries/list-job-match-analysis-usage-by-document.query";
 export { ListJobMatchAnalysisUsageByDocumentQueryHandler } from "./application/queries/list-job-match-analysis-usage-by-document.query-handler";
+export { OllamaJobMatchScoringParseError } from "./domain/errors/ollama-job-match-scoring-parse.error";
+

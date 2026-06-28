@@ -6,6 +6,8 @@ import type {
 } from "../../domain/repositories/job-match-scoring-ai.service";
 import { JobMatchScoringAIResultVO } from "../../domain/value-objects/job-match-scoring-ai-result.value-object";
 import { JobMatchScoringPromptService } from "../../domain/services/job-match-scoring-prompt.service";
+import type { Telemetry } from "@/backend/modules/shared";
+import { OllamaJobMatchScoringParseError } from "../../domain/errors/ollama-job-match-scoring-parse.error";
 
 const promptService = new JobMatchScoringPromptService();
 
@@ -33,8 +35,24 @@ function cleanJobKeyData(value: unknown): unknown | null {
   };
 }
 
-function parseResult(rawText: string): JobMatchScoringAIResult {
-  const parsed = JSON.parse(rawText || "{}") as Record<string, unknown>;
+function parseResult(rawText: string, telemetry: Telemetry): JobMatchScoringAIResult {
+  let parsed: Record<string, unknown>;
+  try {
+    parsed = JSON.parse(rawText || "{}") as Record<string, unknown>;
+  } catch (error) {
+    telemetry.log({
+      level: "error",
+      message: "Failed to parse Ollama job match scoring AI response JSON",
+      attributes: { rawText },
+    });
+    telemetry.captureException(error, {
+      attributes: { rawText },
+    });
+    throw new OllamaJobMatchScoringParseError(
+      error instanceof Error ? error.message : String(error),
+      { rawJson: rawText },
+    );
+  }
   const keywordsFound = cleanArray(parsed.keywordsFound);
   const cvKeywords = cleanArray(parsed.cvKeywords);
 
@@ -55,7 +73,10 @@ function parseResult(rawText: string): JobMatchScoringAIResult {
 }
 
 class OllamaJobMatchScoringAIService implements JobMatchScoringAIService {
-  constructor(private readonly config: { baseUrl?: string; model: string }) {}
+  constructor(
+    private readonly config: { baseUrl?: string; model: string },
+    private readonly telemetry: Telemetry,
+  ) {}
 
   async score(input: JobMatchScoringAIInput): Promise<JobMatchScoringAIResultVO> {
     const ollama = new Ollama({ host: this.config.baseUrl || "http://localhost:11434" });
@@ -71,18 +92,23 @@ class OllamaJobMatchScoringAIService implements JobMatchScoringAIService {
       stream: false,
     });
 
-    return JobMatchScoringAIResultVO.fromPrimitives(parseResult(response.response || "{}"));
+    return JobMatchScoringAIResultVO.fromPrimitives(parseResult(response.response || "{}", this.telemetry));
   }
 }
 
 export class OllamaJobMatchScoringAIServiceFactory {
+  constructor(private readonly telemetry: Telemetry) {}
+
   create(config: {
     baseUrl?: string;
     model: string;
   }): JobMatchScoringAIService {
-    return new OllamaJobMatchScoringAIService({
-      baseUrl: config.baseUrl,
-      model: config.model,
-    });
+    return new OllamaJobMatchScoringAIService(
+      {
+        baseUrl: config.baseUrl,
+        model: config.model,
+      },
+      this.telemetry,
+    );
   }
 }
