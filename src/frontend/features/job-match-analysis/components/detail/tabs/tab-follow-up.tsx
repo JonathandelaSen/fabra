@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { History, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type {
   JobMatchAnalysisTrackingEntryResponse,
   JobMatchAnalysisOfferStatus,
 } from "@/app/api/job-match-analyses/responses";
 import { Button } from "@/frontend/components/ui/button";
+import { cn } from "@/frontend/utils/utils";
 import { LABEL_BADGE_SIZES } from "@/frontend/components/shared/label-badge";
 import { JobMatchAnalysisStatusBadge } from "../../list/job-match-analysis-status-badge";
 import {
@@ -34,6 +35,15 @@ type EditorState =
   | { mode: "edit"; entry: JobMatchAnalysisTrackingEntryResponse }
   | null;
 
+const SHADOW_CLASSES: Record<JobMatchAnalysisOfferStatus, string> = {
+  interesting: "shadow-[var(--ui-status-info-shadow)]",
+  applied: "shadow-[var(--ui-status-action-shadow)]",
+  interview: "shadow-[var(--ui-status-warning-shadow)] animate-pulse",
+  offer: "shadow-[var(--ui-status-success-shadow)]",
+  rejected: "",
+  discarded: "",
+};
+
 export default function TabFollowUp({
   currentStatus,
   entries,
@@ -49,19 +59,17 @@ export default function TabFollowUp({
   return (
     <div className="w-full space-y-5">
       <section className="overflow-clip rounded-2xl border border-line bg-panel-base shadow-sm">
-        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-line bg-panel-raised/60 p-5">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line bg-panel-raised/60 p-5">
           <div className="min-w-0">
-            <div className="flex items-center gap-2 text-text-main">
-              <History className="size-4 text-action-text" aria-hidden="true" />
-              <h4 className="text-sm font-semibold">{t("title")}</h4>
-            </div>
-            <div className="mt-3">
-              <JobMatchAnalysisStatusBadge
-                status={currentStatus}
-                size={LABEL_BADGE_SIZES.SM}
-                className="h-10 text-sm px-4 rounded-lg font-semibold inline-flex items-center justify-center"
-              />
-            </div>
+            <JobMatchAnalysisStatusBadge
+              status={currentStatus}
+              size={LABEL_BADGE_SIZES.SM}
+              className={cn(
+                "h-10 text-sm px-4 rounded-lg font-semibold inline-flex items-center justify-center transition-all duration-300 hover:scale-[1.03]",
+                SHADOW_CLASSES[currentStatus],
+              )}
+              showDot
+            />
           </div>
 
           <Button
