@@ -8,6 +8,7 @@ import type {
   JobMatchAnalysisOfferStatus,
 } from "@/app/api/job-match-analyses/responses";
 import { Button } from "@/frontend/components/ui/button";
+import { LABEL_BADGE_SIZES } from "@/frontend/components/shared/label-badge";
 import { JobMatchAnalysisStatusBadge } from "../../list/job-match-analysis-status-badge";
 import {
   TrackingUpdateForm,
@@ -54,14 +55,12 @@ export default function TabFollowUp({
               <History className="size-4 text-action-text" aria-hidden="true" />
               <h4 className="text-sm font-semibold">{t("title")}</h4>
             </div>
-            <p className="mt-1.5 max-w-xl text-sm leading-5 text-text-muted">
-              {t("description")}
-            </p>
-            <div className="mt-3 flex items-center gap-2">
-              <span className="text-xs font-medium text-text-faint">
-                {t("currentStatus")}
-              </span>
-              <JobMatchAnalysisStatusBadge status={currentStatus} />
+            <div className="mt-3">
+              <JobMatchAnalysisStatusBadge
+                status={currentStatus}
+                size={LABEL_BADGE_SIZES.SM}
+                className="h-10 text-sm px-4 rounded-lg font-semibold inline-flex items-center justify-center"
+              />
             </div>
           </div>
 

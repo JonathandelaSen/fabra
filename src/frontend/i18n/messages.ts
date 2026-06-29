@@ -1643,7 +1643,6 @@ export const messages = {
       },
       tracking: {
         title: "Offer timeline",
-        description: "Keep every update, decision, and next step in context.",
         currentStatus: "Current status",
         newUpdate: "New update",
         newUpdateDescription: "Record progress, add notes, or change the process status.",
@@ -3430,7 +3429,6 @@ export const messages = {
       },
       tracking: {
         title: "Historial de la oferta",
-        description: "Conserva cada actualización, decisión y siguiente paso con su contexto.",
         currentStatus: "Estado actual",
         newUpdate: "Nueva actualización",
         newUpdateDescription: "Registra avances, añade notas o cambia el estado del proceso.",
