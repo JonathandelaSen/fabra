@@ -35,15 +35,6 @@ type EditorState =
   | { mode: "edit"; entry: JobMatchAnalysisTrackingEntryResponse }
   | null;
 
-const SHADOW_CLASSES: Record<JobMatchAnalysisOfferStatus, string> = {
-  interesting: "shadow-[var(--ui-status-info-shadow)]",
-  applied: "shadow-[var(--ui-status-action-shadow)]",
-  interview: "shadow-[var(--ui-status-warning-shadow)] animate-pulse",
-  offer: "shadow-[var(--ui-status-success-shadow)]",
-  rejected: "",
-  discarded: "",
-};
-
 export default function TabFollowUp({
   currentStatus,
   entries,
@@ -66,7 +57,7 @@ export default function TabFollowUp({
               size={LABEL_BADGE_SIZES.SM}
               className={cn(
                 "h-10 text-sm px-4 rounded-lg font-semibold inline-flex items-center justify-center transition-all duration-300 hover:scale-[1.03]",
-                SHADOW_CLASSES[currentStatus],
+                currentStatus === "interview" && "animate-pulse",
               )}
               showDot
             />
