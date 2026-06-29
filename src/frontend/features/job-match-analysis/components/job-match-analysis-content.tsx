@@ -19,6 +19,7 @@ interface JobMatchAnalysisContentProps {
   isLoading: boolean;
   isAnalysisView: boolean;
   hasScore: boolean;
+  isGeneratingAnalysis: boolean;
   analysisTab: AnalysisTab;
   aiApiKey: string;
   hasAIApiKey: boolean;
@@ -52,6 +53,7 @@ export function JobMatchAnalysisContent({
   isLoading,
   isAnalysisView,
   hasScore,
+  isGeneratingAnalysis,
   analysisTab,
   aiApiKey,
   hasAIApiKey,
@@ -115,6 +117,7 @@ export function JobMatchAnalysisContent({
       detail={detail}
       isAnalysisView={isAnalysisView}
       hasScore={hasScore}
+      isGeneratingAnalysis={isGeneratingAnalysis}
       analysisTab={analysisTab}
       aiApiKey={aiApiKey}
       hasAIApiKey={hasAIApiKey}

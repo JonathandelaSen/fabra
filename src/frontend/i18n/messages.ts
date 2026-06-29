@@ -700,6 +700,12 @@ export const messages = {
         analysisTab: "AI analysis",
         empty: "No analysis to show",
       },
+      generating: {
+        title: "Your analysis is being generated",
+        description: "We're comparing your CV with the job offer. This can take a moment.",
+        backgroundHint: "You don't need to wait here. You can review the offer information and extraction while we finish.",
+        viewExtraction: "View offer information",
+      },
       cvLibrary: {
         associatedAnalyses: "Associated analyses",
         noSavedCvs: "There are no saved CVs yet.",
@@ -2465,6 +2471,12 @@ export const messages = {
         extractionTab: "Extracción",
         analysisTab: "Análisis IA",
         empty: "No hay análisis para mostrar",
+      },
+      generating: {
+        title: "Tu análisis se está generando",
+        description: "Estamos comparando tu CV con la oferta de trabajo. Puede tardar unos instantes.",
+        backgroundHint: "No necesitas esperar aquí. Puedes revisar la información de la oferta y la extracción mientras terminamos.",
+        viewExtraction: "Ver información de la oferta",
       },
       cvLibrary: {
         associatedAnalyses: "Análisis asociados",

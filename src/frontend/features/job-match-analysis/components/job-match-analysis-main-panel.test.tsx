@@ -18,6 +18,18 @@ vi.mock("./extraction/pending-job-match-analysis-view", () => ({
   PendingJobMatchAnalysisView: () => <div data-testid="pending-analysis-view" />,
 }));
 
+vi.mock("./detail/job-match-analysis-generating-state", () => ({
+  JobMatchAnalysisGeneratingState: ({
+    onViewExtraction,
+  }: {
+    onViewExtraction: () => void;
+  }) => (
+    <button data-testid="generating-analysis-view" onClick={onViewExtraction}>
+      View extraction
+    </button>
+  ),
+}));
+
 const detail = {
   id: "analysis-id",
 } as JobMatchAnalysisDetailResponse;
@@ -31,6 +43,7 @@ describe("JobMatchAnalysisMainPanel", () => {
         detail={detail}
         isAnalysisView={true}
         hasScore={false}
+        isGeneratingAnalysis={false}
         analysisTab="summary"
         aiApiKey=""
         hasAIApiKey={false}
@@ -50,6 +63,42 @@ describe("JobMatchAnalysisMainPanel", () => {
     expect(screen.queryByTestId("extraction-view")).not.toBeInTheDocument();
   });
 
+  it("shows a generating state and lets the user move to extraction", async () => {
+    const user = userEvent.setup();
+    const onViewModeChange = vi.fn();
+
+    renderWithProviders(
+      <JobMatchAnalysisMainPanel
+        detail={detail}
+        isAnalysisView={true}
+        hasScore={false}
+        isGeneratingAnalysis={true}
+        analysisTab="summary"
+        aiApiKey=""
+        hasAIApiKey={false}
+        filteredInterviewQuestions={[]}
+        onCopyPasteApplied={vi.fn()}
+        onOpenQuestions={vi.fn()}
+        onOpenSettings={vi.fn()}
+        onScore={noopAsync}
+        onTabChange={vi.fn()}
+        onViewModeChange={onViewModeChange}
+        onUpdateUrl={noopAsync}
+        onUpdateTracking={noopAsync}
+      />,
+    );
+
+    expect(screen.getByTestId("generating-analysis-view")).toBeInTheDocument();
+    expect(screen.queryByTestId("pending-analysis-view")).not.toBeInTheDocument();
+
+    await user.click(screen.getByTestId("generating-analysis-view"));
+
+    expect(onViewModeChange).toHaveBeenCalledWith("extraction");
+    await waitFor(() => {
+      expect(screen.getByTestId("extraction-view")).toBeInTheDocument();
+    });
+  });
+
   it("switches tabs immediately while route navigation is pending", async () => {
     const user = userEvent.setup();
 
@@ -58,6 +107,7 @@ describe("JobMatchAnalysisMainPanel", () => {
         detail={detail}
         isAnalysisView={true}
         hasScore={true}
+        isGeneratingAnalysis={false}
         analysisTab="summary"
         aiApiKey=""
         hasAIApiKey={false}

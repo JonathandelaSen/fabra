@@ -41,9 +41,7 @@ export function useNewJobMatchFlowActions({
   };
 
   const createJobMatch = async (input: NewJobMatchInput) => {
-    const analysis = await mutations.createAnalysis.mutateAsync(input);
-    replaceAnalysis(analysis.id);
-    return analysis;
+    return mutations.createAnalysis.mutateAsync(input);
   };
 
   const runNewIntegratedAnalysis = async (
@@ -58,6 +56,7 @@ export function useNewJobMatchFlowActions({
         jobUrl: input.jobUrl,
         model: input.model,
       });
+      goToAnalysisById(analysis.id, "summary");
       const aiConfig = getAIRequestConfigForProvider(
         input.provider,
         aiApiKey,
@@ -75,7 +74,6 @@ export function useNewJobMatchFlowActions({
           jobUrl: input.jobUrl,
         },
       });
-      goToAnalysisById(analysis.id, "summary");
     } catch (error: unknown) {
       setNewFlowError(getErrorMessage(error));
     }
@@ -85,6 +83,7 @@ export function useNewJobMatchFlowActions({
     setNewFlowError(null);
     try {
       const analysis = await createJobMatch(input);
+      replaceAnalysis(analysis.id);
       setPendingCopyPasteAnalysis(analysis);
     } catch (error: unknown) {
       setNewFlowError(getErrorMessage(error));

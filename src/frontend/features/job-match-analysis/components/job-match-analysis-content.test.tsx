@@ -14,6 +14,7 @@ describe("JobMatchAnalysisContent", () => {
         isLoading={true}
         isAnalysisView={true}
         hasScore={false}
+        isGeneratingAnalysis={false}
         analysisTab="summary"
         aiApiKey=""
         hasAIApiKey={false}

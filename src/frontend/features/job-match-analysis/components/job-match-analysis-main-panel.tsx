@@ -11,6 +11,7 @@ import type { InterviewQuestionSummary, JobMatchAnalysisDetailResponse, JobMatch
 import { JOB_MATCH_VIEW_MODES } from "../constants";
 import type { AnalysisTab } from "../hooks/use-job-match-analysis-route-state";
 import JobMatchAnalysisDetail from "./detail/job-match-analysis-detail";
+import { JobMatchAnalysisGeneratingState } from "./detail/job-match-analysis-generating-state";
 import JobMatchExtractionView from "./extraction/job-match-extraction-view";
 import { PendingJobMatchAnalysisView } from "./extraction/pending-job-match-analysis-view";
 import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
@@ -19,6 +20,7 @@ interface JobMatchAnalysisMainPanelProps {
   detail: JobMatchAnalysisDetailResponse;
   isAnalysisView: boolean;
   hasScore: boolean;
+  isGeneratingAnalysis: boolean;
   analysisTab: AnalysisTab;
   aiApiKey: string;
   hasAIApiKey: boolean;
@@ -48,6 +50,7 @@ export function JobMatchAnalysisMainPanel({
   detail,
   isAnalysisView,
   hasScore,
+  isGeneratingAnalysis,
   analysisTab,
   aiApiKey,
   hasAIApiKey,
@@ -111,6 +114,21 @@ export function JobMatchAnalysisMainPanel({
               onOpenSettings={onOpenSettings}
               onCopyPasteApplied={onCopyPasteApplied}
               hideAnalysisSelector={true}
+            />
+          </motion.div>
+        ) : isGeneratingAnalysis ? (
+          <motion.div
+            key="generating-analysis-view"
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.15 }}
+            className="flex flex-col"
+          >
+            <JobMatchAnalysisGeneratingState
+              onViewExtraction={() =>
+                handleViewModeChange(JOB_MATCH_VIEW_MODES.extraction)
+              }
             />
           </motion.div>
         ) : hasScore ? (

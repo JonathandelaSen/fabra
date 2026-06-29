@@ -230,6 +230,9 @@ export default function JobMatchAnalysisView({
   );
 
   const hasScore = detail?.aiScore !== null && detail?.aiScore !== undefined;
+  const isGeneratingAnalysis =
+    mutations.scoreAnalysis.isPending &&
+    mutations.scoreAnalysis.variables?.id === detail?.id;
   const exportAnalysis = useJobMatchAnalysisExport({ analysis: detail });
   const shouldShowAnalysisView = shouldShowJobMatchAnalysisView({
     hasScore,
@@ -252,6 +255,7 @@ export default function JobMatchAnalysisView({
       })}
       isAnalysisView={shouldShowAnalysisView}
       hasScore={hasScore}
+      isGeneratingAnalysis={isGeneratingAnalysis}
       analysisTab={analysisTab}
       aiApiKey={aiApiKey}
       hasAIApiKey={hasAIApiKey}
