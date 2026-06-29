@@ -4,7 +4,6 @@ import { useTranslations } from "next-intl";
 import { JobMatchAnalysisDetailSkeleton } from "./detail/job-match-analysis-detail-skeleton";
 import { FeatureDetailTabBar } from "@/frontend/components/shared/feature-detail-tab-bar";
 import { FileText, Sparkles, Briefcase, Plus } from "lucide-react";
-import type { OfferStatus } from "@/lib/analysis-types";
 import type { JobMatchAnalysisDetailResponse, JobMatchViewMode, InterviewQuestionSummary } from "../types";
 import type { AnalysisTab } from "../hooks/use-job-match-analysis-route-state";
 import { JOB_MATCH_VIEW_MODES } from "../constants";
@@ -12,6 +11,10 @@ import { JobMatchAnalysisMainPanel } from "./job-match-analysis-main-panel";
 import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
 import { IconTextButton, ICON_TEXT_BUTTON_TONES } from "@/frontend/components/shared/action-buttons";
 import { FeatureEmptyState } from "@/frontend/components/shared/feature-empty-state";
+import type {
+  CreateFollowUpEntryInput,
+  FollowUpEntryInput,
+} from "../api/job-match-analysis-api";
 
 interface JobMatchAnalysisContentProps {
   analysisId: string | null;
@@ -37,12 +40,10 @@ interface JobMatchAnalysisContentProps {
   onViewModeChange: (tab: JobMatchViewMode) => void;
   onInterviewQuestionCreated?: () => void;
   onUpdateUrl: (url: string) => Promise<void>;
-  onUpdateTracking: (updates: {
-    offerStatus: OfferStatus;
-    offerNotes: string;
-    offerNextAction: string;
-    offerNextActionAt: string;
-  }) => Promise<void>;
+  isSavingTracking: boolean;
+  onCreateTrackingEntry: (input: CreateFollowUpEntryInput) => Promise<void>;
+  onUpdateTrackingEntry: (entryId: string, input: FollowUpEntryInput) => Promise<void>;
+  onDeleteTrackingEntry: (entryId: string) => Promise<void>;
   onCreate?: () => void;
   analysesCount?: number;
 }
@@ -66,7 +67,10 @@ export function JobMatchAnalysisContent({
   onViewModeChange,
   onInterviewQuestionCreated,
   onUpdateUrl,
-  onUpdateTracking,
+  isSavingTracking,
+  onCreateTrackingEntry,
+  onUpdateTrackingEntry,
+  onDeleteTrackingEntry,
   onCreate,
   analysesCount = 0,
 }: JobMatchAnalysisContentProps) {
@@ -130,7 +134,10 @@ export function JobMatchAnalysisContent({
       onViewModeChange={onViewModeChange}
       onInterviewQuestionCreated={onInterviewQuestionCreated}
       onUpdateUrl={onUpdateUrl}
-      onUpdateTracking={onUpdateTracking}
+      isSavingTracking={isSavingTracking}
+      onCreateTrackingEntry={onCreateTrackingEntry}
+      onUpdateTrackingEntry={onUpdateTrackingEntry}
+      onDeleteTrackingEntry={onDeleteTrackingEntry}
     />
   );
 }

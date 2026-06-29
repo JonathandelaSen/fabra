@@ -232,6 +232,7 @@ Aggregates:
 
 - `JobOpportunity`
 - `FollowUp`
+- `FollowUpEntry`
 - `ProcessQuestion`
 
 #### `JobOpportunity`
@@ -257,14 +258,30 @@ Represents the user's operational tracking for a job opportunity.
 
 Responsibilities:
 
-- Store status, notes, next action, next action date.
-- Track the user's process state for a `JobOpportunity`.
+- Store the current status for a `JobOpportunity`.
+- Own the stable identity of the opportunity's tracking timeline.
+
+#### `FollowUpEntry`
+
+Represents one persistent update in a follow-up timeline.
+
+Responsibilities:
+
+- Capture the status and occurrence date for that point in the process.
+- Optionally capture a title, notes, next action, and next-action date.
+- Preserve historical updates when the current status changes.
+- Allow historical entries to be edited or deleted without changing the current status.
 
 Important decisions:
 
 - The aggregate name is `FollowUp`.
 - It belongs inside `selection-process`.
 - It is 1:1 per user and `JobOpportunity`.
+- A `FollowUp` has an appendable timeline of `FollowUpEntry` records.
+- Creating an entry may explicitly update the current status; inserting a historical entry may leave it unchanged.
+- Kanban status changes create a minimal entry automatically.
+- Editing or deleting an entry never changes the current status.
+- `nextAction` is historical free text, not a task with its own lifecycle.
 - It primarily references `JobOpportunity`.
 - It may keep a source/origin reference to a migrated `JobMatchAnalysis` for traceability.
 - It replaces the current offer tracking fields on legacy `analyses`: `offer_status`, `offer_notes`, `offer_next_action`, `offer_next_action_at`.

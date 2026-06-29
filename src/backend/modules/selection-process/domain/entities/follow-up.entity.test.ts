@@ -96,6 +96,28 @@ describe("FollowUp", () => {
     expect(followUp.pullDomainEvents().map((e) => e.eventName)).toEqual(["follow_up_updated"]);
   });
 
+  it("changes only the current status for timeline-based tracking", () => {
+    const followUp = buildFollowUp("interesting");
+    followUp.pullDomainEvents();
+
+    followUp.changeStatus(
+      FollowUpStatus.fromPrimitives("interview"),
+      Timestamp.fromPrimitives("2026-06-29T11:00:00.000Z"),
+    );
+
+    expect(followUp.toPrimitives()).toMatchObject({
+      status: "interview",
+      notes: null,
+      nextAction: null,
+      nextActionAt: null,
+      updatedAt: "2026-06-29T11:00:00.000Z",
+    });
+    expect(followUp.pullDomainEvents().map((event) => event.eventName)).toEqual([
+      "follow_up_updated",
+      "follow_up_status_changed",
+    ]);
+  });
+
   it("does not record events when hydrated from primitives", () => {
     const hydrated = FollowUp.fromPrimitives(buildFollowUp().toPrimitives());
     expect(hydrated.pullDomainEvents()).toEqual([]);

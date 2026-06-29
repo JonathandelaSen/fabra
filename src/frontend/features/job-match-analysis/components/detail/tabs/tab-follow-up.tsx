@@ -1,131 +1,134 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { CalendarClock, Loader2, Check } from "lucide-react";
+import { useState } from "react";
+import { History, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { OFFER_STATUSES, type OfferStatus } from "@/lib/analysis-types";
+import type {
+  JobMatchAnalysisTrackingEntryResponse,
+  JobMatchAnalysisOfferStatus,
+} from "@/app/api/job-match-analyses/responses";
+import { Button } from "@/frontend/components/ui/button";
+import { JobMatchAnalysisStatusBadge } from "../../list/job-match-analysis-status-badge";
+import {
+  TrackingUpdateForm,
+  type CreateFollowUpEntryFields,
+  type FollowUpEntryFields,
+} from "../tracking/tracking-update-form";
+import { TrackingTimeline } from "../tracking/tracking-timeline";
 
 interface TabFollowUpProps {
-  offerStatus: OfferStatus;
-  onOfferStatusChange: (status: OfferStatus) => void;
-  offerNotes: string;
-  onOfferNotesChange: (notes: string) => void;
-  offerNextAction: string;
-  onOfferNextActionChange: (action: string) => void;
-  offerNextActionAt: string;
-  onOfferNextActionAtChange: (date: string) => void;
-  isSavingTracking: boolean;
-  onSaveTracking: () => void;
+  currentStatus: JobMatchAnalysisOfferStatus;
+  entries: JobMatchAnalysisTrackingEntryResponse[];
+  isSaving: boolean;
+  onCreateEntry: (input: CreateFollowUpEntryFields) => Promise<void>;
+  onUpdateEntry: (
+    entryId: string,
+    input: FollowUpEntryFields,
+  ) => Promise<void>;
+  onDeleteEntry: (entryId: string) => Promise<void>;
 }
 
+type EditorState =
+  | { mode: "create" }
+  | { mode: "edit"; entry: JobMatchAnalysisTrackingEntryResponse }
+  | null;
+
 export default function TabFollowUp({
-  offerStatus,
-  onOfferStatusChange,
-  offerNotes,
-  onOfferNotesChange,
-  offerNextAction,
-  onOfferNextActionChange,
-  offerNextActionAt,
-  onOfferNextActionAtChange,
-  isSavingTracking,
-  onSaveTracking,
+  currentStatus,
+  entries,
+  isSaving,
+  onCreateEntry,
+  onUpdateEntry,
+  onDeleteEntry,
 }: TabFollowUpProps) {
   const t = useTranslations("analysisDetail.tracking");
-  const common = useTranslations("common.actions");
-  const navigation = useTranslations("navigation");
+  const alerts = useTranslations("analysisDetail.alerts");
+  const [editor, setEditor] = useState<EditorState>(null);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.1 }}
-    >
-      <section className="rounded-2xl border border-success-border bg-success/[0.025] p-5 max-w-2xl">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-success-border bg-success/10 text-success-text">
-              <CalendarClock className="h-4 w-4" />
+    <div className="w-full space-y-5">
+      <section className="overflow-clip rounded-2xl border border-line bg-panel-base shadow-sm">
+        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-line bg-panel-raised/60 p-5">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 text-text-main">
+              <History className="size-4 text-action-text" aria-hidden="true" />
+              <h4 className="text-sm font-semibold">{t("title")}</h4>
             </div>
-            <div>
-              <h4 className="text-sm font-semibold text-success-text">
-                {t("title")}
-              </h4>
-              <p className="text-xs text-text-muted">{t("description")}</p>
+            <p className="mt-1.5 max-w-xl text-sm leading-5 text-text-muted">
+              {t("description")}
+            </p>
+            <div className="mt-3 flex items-center gap-2">
+              <span className="text-xs font-medium text-text-faint">
+                {t("currentStatus")}
+              </span>
+              <JobMatchAnalysisStatusBadge status={currentStatus} />
             </div>
           </div>
-          <button
-            onClick={onSaveTracking}
-            disabled={isSavingTracking}
-            className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-success-border bg-success/10 px-3 text-xs font-semibold text-success-text transition-colors hover:bg-success/20 disabled:opacity-50"
+
+          <Button
+            type="button"
+            size="lg"
+            onClick={() => setEditor({ mode: "create" })}
+            disabled={isSaving || editor?.mode === "create"}
+            className="min-h-10"
           >
-            {isSavingTracking ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <Check className="h-3.5 w-3.5" />
-            )}
-            {isSavingTracking ? common("saving") : common("save")}
-          </button>
+            <Plus aria-hidden="true" />
+            {t("newUpdate")}
+          </Button>
         </div>
-        <div className="grid gap-3">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <label className="space-y-1.5">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-text-faint">
-                {t("status")}
-              </span>
-              <select
-                value={offerStatus}
-                onChange={(event) =>
-                  onOfferStatusChange(event.target.value as OfferStatus)
+
+        {editor && (
+          <div className="border-b border-line bg-panel-subtle p-4 sm:p-5">
+            <p className="mb-3 text-sm text-text-muted">
+              {t("newUpdateDescription")}
+            </p>
+            <TrackingUpdateForm
+              key={editor.mode === "edit" ? editor.entry.id : "create"}
+              currentStatus={currentStatus}
+              entry={editor.mode === "edit" ? editor.entry : undefined}
+              isSaving={isSaving}
+              onCancel={() => setEditor(null)}
+              onSubmit={async (value) => {
+                try {
+                  if (editor.mode === "edit") {
+                    await onUpdateEntry(
+                      editor.entry.id,
+                      value as FollowUpEntryFields,
+                    );
+                  } else {
+                    await onCreateEntry(value as CreateFollowUpEntryFields);
+                  }
+                  setEditor(null);
+                } catch (error) {
+                  console.error(error);
+                  alert(alerts("saveTrackingFailed"));
                 }
-                className="h-10 w-full rounded-lg border border-line bg-field px-3 text-sm text-text-main focus:border-success-border focus:outline-none focus:ring-1 focus:ring-success-border"
-              >
-                {OFFER_STATUSES.map((status) => (
-                  <option key={status} value={status}>
-                    {navigation(`offerStatuses.${status}`)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="space-y-1.5">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-text-faint">
-                {t("date")}
-              </span>
-              <input
-                type="datetime-local"
-                value={offerNextActionAt}
-                onChange={(event) =>
-                  onOfferNextActionAtChange(event.target.value)
-                }
-                className="h-10 w-full rounded-lg border border-line bg-field px-3 text-sm text-text-main focus:border-success-border focus:outline-none focus:ring-1 focus:ring-success-border"
-              />
-            </label>
+              }}
+            />
           </div>
-          <label className="space-y-1.5">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-text-faint">
-              {t("nextAction")}
+        )}
+
+        <div className="p-4 sm:p-5">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h5 className="text-xs font-semibold uppercase tracking-wide text-text-faint">
+              {t("history")}
+            </h5>
+            <span className="text-xs text-text-muted">
+              {t("historyCount", { count: entries.length })}
             </span>
-            <input
-              type="text"
-              value={offerNextAction}
-              onChange={(event) => onOfferNextActionChange(event.target.value)}
-              placeholder={t("nextActionPlaceholder")}
-              className="h-10 w-full rounded-lg border border-line bg-field px-3 text-sm text-text-main placeholder:text-text-faint focus:border-success-border focus:outline-none focus:ring-1 focus:ring-success-border"
-            />
-          </label>
-          <label className="space-y-1.5">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-text-faint">
-              {t("note")}
-            </span>
-            <textarea
-              value={offerNotes}
-              onChange={(event) => onOfferNotesChange(event.target.value)}
-              placeholder={t("notePlaceholder")}
-              rows={7}
-              className="w-full resize-none rounded-lg border border-line bg-field px-3 py-2 text-sm text-text-main placeholder:text-text-faint focus:border-success-border focus:outline-none focus:ring-1 focus:ring-success-border"
-            />
-          </label>
+          </div>
+          <TrackingTimeline
+            entries={entries}
+            onEdit={(entry) => setEditor({ mode: "edit", entry })}
+            onDelete={(entry) => {
+              void onDeleteEntry(entry.id).catch((error) => {
+                console.error(error);
+                alert(alerts("saveTrackingFailed"));
+              });
+            }}
+          />
         </div>
       </section>
-    </motion.div>
+    </div>
   );
 }

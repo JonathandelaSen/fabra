@@ -22,6 +22,7 @@ const tableOwners = new Map(
     feedback_notes_entries: "feedback-notes",
     feedback_notes_feedbacks: "feedback-notes",
     follow_ups: "selection-process",
+    follow_up_entries: "selection-process",
     job_match_analyses: "job-match-analysis",
     job_opportunities: "selection-process",
     performance_reviews: "performance-review",

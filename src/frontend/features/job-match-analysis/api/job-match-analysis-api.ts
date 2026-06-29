@@ -22,6 +22,11 @@ import type {
   OfferChatConversationMutationResponse,
   SendOfferChatMessageResponse,
 } from "@/app/api/job-match-analyses/[id]/chat/responses";
+import type {
+  CreateFollowUpEntryResponse,
+  DeleteFollowUpEntryResponse,
+  UpdateFollowUpEntryResponse,
+} from "@/app/api/job-match-analyses/[id]/tracking/responses";
 import type { PrepareOfferChatCopyPasteResponse } from "@/app/api/job-match-analyses/[id]/chat/copy-paste/prepare/responses";
 import type { ApplyOfferChatCopyPasteResponse } from "@/app/api/job-match-analyses/[id]/chat/copy-paste/apply/responses";
 import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
@@ -50,9 +55,19 @@ export interface ScoreJobMatchAnalysisInput {
 export interface UpdateJobMatchAnalysisInput {
   jobUrl?: string | null;
   offerStatus?: JobMatchAnalysisOfferStatus;
-  offerNotes?: string | null;
-  offerNextAction?: string | null;
-  offerNextActionAt?: string | null;
+}
+
+export interface FollowUpEntryInput {
+  status: JobMatchAnalysisOfferStatus;
+  title: string | null;
+  notes: string | null;
+  nextAction: string | null;
+  nextActionAt: string | null;
+  occurredAt: string;
+}
+
+export interface CreateFollowUpEntryInput extends FollowUpEntryInput {
+  updateCurrentStatus: boolean;
 }
 
 export interface CreateLinkedInterviewQuestionInput {
@@ -193,12 +208,6 @@ export async function updateJobMatchAnalysis({
   if (updates.jobUrl !== undefined) body.job_url = updates.jobUrl;
   if (updates.offerStatus !== undefined)
     body.offer_status = updates.offerStatus;
-  if (updates.offerNotes !== undefined) body.offer_notes = updates.offerNotes;
-  if (updates.offerNextAction !== undefined)
-    body.offer_next_action = updates.offerNextAction;
-  if (updates.offerNextActionAt !== undefined)
-    body.offer_next_action_at = updates.offerNextActionAt;
-
   const res = await fetch(`/api/job-match-analyses/${encodeURIComponent(id)}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -207,6 +216,67 @@ export async function updateJobMatchAnalysis({
   return readJsonResponse<UpdateJobMatchAnalysisResponse>(
     res,
     "Could not update job match analysis.",
+  );
+}
+
+export async function createFollowUpEntry({
+  analysisId,
+  input,
+}: {
+  analysisId: string;
+  input: CreateFollowUpEntryInput;
+}) {
+  const res = await fetch(
+    `/api/job-match-analyses/${encodeURIComponent(analysisId)}/tracking`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    },
+  );
+  return readJsonResponse<CreateFollowUpEntryResponse>(
+    res,
+    "Could not create tracking update.",
+  );
+}
+
+export async function updateFollowUpEntry({
+  analysisId,
+  entryId,
+  input,
+}: {
+  analysisId: string;
+  entryId: string;
+  input: FollowUpEntryInput;
+}) {
+  const res = await fetch(
+    `/api/job-match-analyses/${encodeURIComponent(analysisId)}/tracking/${encodeURIComponent(entryId)}`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    },
+  );
+  return readJsonResponse<UpdateFollowUpEntryResponse>(
+    res,
+    "Could not update tracking entry.",
+  );
+}
+
+export async function deleteFollowUpEntry({
+  analysisId,
+  entryId,
+}: {
+  analysisId: string;
+  entryId: string;
+}) {
+  const res = await fetch(
+    `/api/job-match-analyses/${encodeURIComponent(analysisId)}/tracking/${encodeURIComponent(entryId)}`,
+    { method: "DELETE" },
+  );
+  return readJsonResponse<DeleteFollowUpEntryResponse>(
+    res,
+    "Could not delete tracking entry.",
   );
 }
 

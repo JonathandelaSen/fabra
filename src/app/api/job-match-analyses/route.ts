@@ -3,26 +3,30 @@ import { NextRequest } from "next/server";
 import { ErrorCode } from "@/shared/error-codes";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { createRequestId } from "@/lib/observability";
-import { cvLibraryModule, jobMatchAnalysisModule } from "@/lib/container";
+import {
+  cvLibraryModule,
+  jobMatchAnalysisModule,
+  selectionProcessModule,
+} from "@/lib/container";
 import {
   presentJobMatchAnalysis,
   presentJobMatchAnalysisSummary,
 } from "@/backend/modules/job-match-analysis";
+import { presentFollowUpEntry } from "@/backend/modules/selection-process";
 import { parseCreateJobMatchAnalysisRequest } from "./validation";
 import {
   toJobMatchAnalysisSummaryResponse,
   toJobMatchAnalysisDetailResponse,
-  type JobMatchAnalysisOfferStatus,
 } from "./responses";
-import { ok, errorResponse, notFound, badRequest } from "@/backend/modules/shared";
+import {
+  ok,
+  created,
+  errorResponse,
+  notFound,
+  badRequest,
+} from "@/backend/modules/shared";
 
 const ROUTE_SOURCE = "api_job_match_analyses";
-
-interface FollowUpTrackingRow {
-  source_job_match_analysis_id: string;
-  status: JobMatchAnalysisOfferStatus;
-  next_action_at: string | null;
-}
 
 export async function GET() {
   try {
@@ -30,27 +34,29 @@ export async function GET() {
     if (!authContext.ok) return authContext.response;
     const { supabase, user } = authContext;
 
-    const analyses = await jobMatchAnalysisModule
-      .bindRequest(supabase)
-      .listJobMatchAnalyses.execute({ userId: user.id });
+    jobMatchAnalysisModule.bindRequest(supabase);
+    selectionProcessModule.bindRequest(supabase);
+    const analyses = await jobMatchAnalysisModule.listJobMatchAnalyses.execute({
+      userId: user.id,
+    });
     const response = analyses.map((a) =>
       toJobMatchAnalysisSummaryResponse(presentJobMatchAnalysisSummary(a)),
     );
     const analysisIds = response.map((analysis) => analysis.id);
 
     if (analysisIds.length > 0) {
-      const { data, error } = await supabase
-        .from("follow_ups")
-        .select("source_job_match_analysis_id, status, next_action_at")
-        .eq("user_id", user.id)
-        .in("source_job_match_analysis_id", analysisIds);
-
-      if (error) throw error;
-
+      const tracking =
+        await selectionProcessModule.listFollowUpTrackingByAnalyses.execute({
+          analysisIds,
+          userId: user.id,
+        });
       const trackingByAnalysisId = new Map(
-        ((data ?? []) as FollowUpTrackingRow[])
-          .filter((row) => row.source_job_match_analysis_id)
-          .map((row) => [row.source_job_match_analysis_id, row]),
+        tracking.flatMap((item) => {
+          const primitives = item.followUp.toPrimitives();
+          return primitives.sourceJobMatchAnalysisId
+            ? [[primitives.sourceJobMatchAnalysisId, item] as const]
+            : [];
+        }),
       );
 
       return ok(
@@ -59,8 +65,9 @@ export async function GET() {
           return tracking
             ? {
                 ...analysis,
-                offerStatus: tracking.status,
-                offerNextActionAt: tracking.next_action_at,
+                offerStatus: tracking.followUp.toPrimitives().status,
+                offerNextActionAt:
+                  tracking.entries[0]?.toPrimitives().nextActionAt ?? null,
               }
             : analysis;
         }),
@@ -88,14 +95,16 @@ export async function POST(req: NextRequest) {
     }
     const { cvId, title, jobDescription, jobUrl, model } = parsed.value;
 
-    const prepared = await cvLibraryModule
-      .bindRequest(supabase)
-      .prepareCVAnalysisInput.execute({
-        userId: user.id,
-        cvId,
-        requestId,
-        source: ROUTE_SOURCE,
-      });
+    cvLibraryModule.bindRequest(supabase);
+    jobMatchAnalysisModule.bindRequest(supabase);
+    selectionProcessModule.bindRequest(supabase);
+
+    const prepared = await cvLibraryModule.prepareCVAnalysisInput.execute({
+      userId: user.id,
+      cvId,
+      requestId,
+      source: ROUTE_SOURCE,
+    });
     if (!prepared) {
       throw notFound("CV not found", ErrorCode.CV_NOT_FOUND);
     }
@@ -105,25 +114,45 @@ export async function POST(req: NextRequest) {
     }
 
     const analysisLegacy = presentJobMatchAnalysis(
-      await jobMatchAnalysisModule
-        .bindRequest(supabase)
-        .createJobMatchAnalysis.execute({
-          id: crypto.randomUUID(),
-          userId: user.id,
-          cvDocumentId: prepared.cv.id,
-          title,
-          filename: prepared.filename,
-          fileSize: prepared.fileSize,
-          pdfStoragePath: prepared.pdfStoragePath,
-          extractedText: prepared.extractedText,
-          aiModel: model,
-          jobDescription,
-          jobUrl,
-        }),
+      await jobMatchAnalysisModule.createJobMatchAnalysis.execute({
+        id: crypto.randomUUID(),
+        userId: user.id,
+        cvDocumentId: prepared.cv.id,
+        title,
+        filename: prepared.filename,
+        fileSize: prepared.fileSize,
+        pdfStoragePath: prepared.pdfStoragePath,
+        extractedText: prepared.extractedText,
+        aiModel: model,
+        jobDescription,
+        jobUrl,
+      }),
     );
     const analysis = toJobMatchAnalysisDetailResponse(analysisLegacy);
+    const initialEntry =
+      await selectionProcessModule.createFollowUpEntryByAnalysis.execute({
+        analysisId: analysis.id,
+        userId: user.id,
+        status: "interesting",
+        occurredAt: analysis.createdAt,
+        updateCurrentStatus: false,
+      });
+    if (!initialEntry) {
+      throw notFound("Could not create offer tracking");
+    }
+    const presentedInitialEntry = presentFollowUpEntry(initialEntry);
 
-    return ok(analysis);
+    return created({
+      ...analysis,
+      offerStatus: "interesting",
+      offerNotes: null,
+      offerNextAction: null,
+      offerNextActionAt: null,
+      tracking: {
+        currentStatus: "interesting",
+        entries: [presentedInitialEntry],
+      },
+    });
   } catch (error: unknown) {
     return handleApiError(error);
   }

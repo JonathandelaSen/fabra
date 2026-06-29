@@ -30,9 +30,6 @@ export interface UpdateJobMatchAnalysisHttpInput {
   allowedUpdates: { job_url?: string | null };
   followUpUpdates: {
     status?: OfferStatus;
-    notes?: string | null;
-    nextAction?: string | null;
-    nextActionAt?: string | null;
   };
   includesOfferTracking: boolean;
 }
@@ -53,13 +50,6 @@ function optionalText(value: unknown) {
   if (value === null) return null;
   if (typeof value !== "string") return undefined;
   return value.trim() || null;
-}
-
-function optionalDate(value: unknown) {
-  const normalized = optionalText(value);
-  if (normalized === null || normalized === undefined) return normalized;
-  const parsed = new Date(normalized);
-  return Number.isNaN(parsed.getTime()) ? undefined : parsed.toISOString();
 }
 
 export function parseCreateJobMatchAnalysisRequest(
@@ -108,27 +98,7 @@ export function parseUpdateJobMatchAnalysisRequest(
     }
     followUpUpdates.status = body.offer_status as OfferStatus;
   }
-  if (body.offer_notes !== undefined) {
-    const offerNotes = optionalText(body.offer_notes);
-    if (offerNotes === undefined) return validationError("Invalid offer notes");
-    followUpUpdates.notes = offerNotes;
-  }
-  if (body.offer_next_action !== undefined) {
-    const nextAction = optionalText(body.offer_next_action);
-    if (nextAction === undefined) return validationError("Invalid offer next action");
-    followUpUpdates.nextAction = nextAction;
-  }
-  if (body.offer_next_action_at !== undefined) {
-    const nextActionAt = optionalDate(body.offer_next_action_at);
-    if (nextActionAt === undefined) return validationError("Invalid offer next action date");
-    followUpUpdates.nextActionAt = nextActionAt;
-  }
-
-  const includesOfferTracking =
-    followUpUpdates.status !== undefined ||
-    followUpUpdates.notes !== undefined ||
-    followUpUpdates.nextAction !== undefined ||
-    followUpUpdates.nextActionAt !== undefined;
+  const includesOfferTracking = followUpUpdates.status !== undefined;
   if (Object.keys(allowedUpdates).length === 0 && !includesOfferTracking) {
     return validationError("No valid fields to update");
   }

@@ -6,7 +6,6 @@ import { useIsDesktopLayout } from "@/frontend/components/shared/use-is-desktop-
 import { FileText, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { FeatureDetailTabBar } from "@/frontend/components/shared/feature-detail-tab-bar";
-import type { OfferStatus } from "@/lib/analysis-types";
 import type { InterviewQuestionSummary, JobMatchAnalysisDetailResponse, JobMatchViewMode } from "../types";
 import { JOB_MATCH_VIEW_MODES } from "../constants";
 import type { AnalysisTab } from "../hooks/use-job-match-analysis-route-state";
@@ -15,6 +14,10 @@ import { JobMatchAnalysisGeneratingState } from "./detail/job-match-analysis-gen
 import JobMatchExtractionView from "./extraction/job-match-extraction-view";
 import { PendingJobMatchAnalysisView } from "./extraction/pending-job-match-analysis-view";
 import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
+import type {
+  CreateFollowUpEntryInput,
+  FollowUpEntryInput,
+} from "../api/job-match-analysis-api";
 
 interface JobMatchAnalysisMainPanelProps {
   detail: JobMatchAnalysisDetailResponse;
@@ -38,12 +41,10 @@ interface JobMatchAnalysisMainPanelProps {
   onViewModeChange: (tab: JobMatchViewMode) => void;
   onInterviewQuestionCreated?: () => void;
   onUpdateUrl: (url: string) => Promise<void>;
-  onUpdateTracking: (updates: {
-    offerStatus: OfferStatus;
-    offerNotes: string;
-    offerNextAction: string;
-    offerNextActionAt: string;
-  }) => Promise<void>;
+  isSavingTracking: boolean;
+  onCreateTrackingEntry: (input: CreateFollowUpEntryInput) => Promise<void>;
+  onUpdateTrackingEntry: (entryId: string, input: FollowUpEntryInput) => Promise<void>;
+  onDeleteTrackingEntry: (entryId: string) => Promise<void>;
 }
 
 export function JobMatchAnalysisMainPanel({
@@ -63,7 +64,10 @@ export function JobMatchAnalysisMainPanel({
   onViewModeChange,
   onInterviewQuestionCreated,
   onUpdateUrl,
-  onUpdateTracking,
+  isSavingTracking,
+  onCreateTrackingEntry,
+  onUpdateTrackingEntry,
+  onDeleteTrackingEntry,
 }: JobMatchAnalysisMainPanelProps) {
   const t = useTranslations("analysisFlow.appShell");
   const [prevId, setPrevId] = useState(detail.id);
@@ -150,7 +154,10 @@ export function JobMatchAnalysisMainPanel({
               onInterviewQuestionCreated={onInterviewQuestionCreated}
               onOpenQuestions={onOpenQuestions}
               onUpdateUrl={onUpdateUrl}
-              onUpdateTracking={onUpdateTracking}
+              isSavingTracking={isSavingTracking}
+              onCreateTrackingEntry={onCreateTrackingEntry}
+              onUpdateTrackingEntry={onUpdateTrackingEntry}
+              onDeleteTrackingEntry={onDeleteTrackingEntry}
             />
           </motion.div>
         ) : (

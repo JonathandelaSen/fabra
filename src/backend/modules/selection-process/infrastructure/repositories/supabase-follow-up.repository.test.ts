@@ -33,11 +33,16 @@ describe("SupabaseFollowUpRepository", () => {
       filename: "cv.pdf",
     });
 
+    const ensured = await repo.ensureBySourceJobMatchAnalysisId(
+      SourceJobMatchAnalysisId.fromPrimitives(analysis.id),
+      UserId.fromPrimitives(user.id),
+    );
     const found = await repo.findBySourceJobMatchAnalysisId(
       SourceJobMatchAnalysisId.fromPrimitives(analysis.id),
       UserId.fromPrimitives(user.id),
     );
 
+    expect(ensured?.id).toBe(found?.id);
     expect(found?.toPrimitives()).toMatchObject({
       sourceJobMatchAnalysisId: analysis.id,
       status: "interesting",
@@ -57,5 +62,11 @@ describe("SupabaseFollowUpRepository", () => {
     });
     const saved = await repo.save(found!);
     expect(saved.toPrimitives().status).toBe("applied");
+
+    const searched = await repo.searchBySourceJobMatchAnalysisIds(
+      [SourceJobMatchAnalysisId.fromPrimitives(analysis.id)],
+      UserId.fromPrimitives(user.id),
+    );
+    expect(searched.map((item) => item.id)).toContain(saved.id);
   });
 });

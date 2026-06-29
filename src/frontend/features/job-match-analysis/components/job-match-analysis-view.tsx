@@ -8,7 +8,7 @@ import type { InterviewQuestionSummary } from "../types";
 import { FeatureScreenShell } from "@/frontend/components/shared/feature-screen-shell";
 import { useIsDesktopLayout } from "@/frontend/components/shared/use-is-desktop-layout";
 import { useJobMatchAnalysisList, useJobMatchAnalysisDetail, useJobMatchAnalysisCVOptions } from "../hooks/use-job-match-analysis-queries";
-import { useJobMatchAnalysisMutations } from "../hooks/use-job-match-analysis-mutations";
+import { useJobMatchTrackingActions } from "../hooks/use-job-match-tracking-actions";
 import { shouldShowJobMatchAnalysisView, useJobMatchAnalysisRouteState } from "../hooks/use-job-match-analysis-route-state";
 import { JOB_MATCH_DETAIL_TABS, JOB_MATCH_VIEW_MODES, JOB_MATCH_ROUTE_VIEWS, JOB_MATCH_ROUTE_MODES } from "../constants";
 import { useJobMatchCopyPasteApplied } from "../hooks/use-job-match-copy-paste-applied";
@@ -70,7 +70,8 @@ export default function JobMatchAnalysisView({
   } = routeState;
   const listQuery = useJobMatchAnalysisList();
   const cvOptionsQuery = useJobMatchAnalysisCVOptions();
-  const mutations = useJobMatchAnalysisMutations();
+  const trackingActions = useJobMatchTrackingActions(analysisId);
+  const { mutations } = trackingActions;
   const [searchQuery, setSearchQuery] = useState("");
   const immediateSelection = useImmediateAnalysisSelection(analysisId);
   const {
@@ -178,21 +179,6 @@ export default function JobMatchAnalysisView({
     });
   };
 
-  const persistTracking = async (
-    updates: { offerStatus: OfferStatus; offerNotes: string; offerNextAction: string; offerNextActionAt: string },
-  ) => {
-    if (!analysisId) return;
-    await mutations.updateAnalysis.mutateAsync({
-      id: analysisId,
-      updates: {
-        offerStatus: updates.offerStatus,
-        offerNotes: updates.offerNotes,
-        offerNextAction: updates.offerNextAction,
-        offerNextActionAt: updates.offerNextActionAt || null,
-      },
-    });
-  };
-
   const runScore = async (
     input: { jobDescription: string; jobUrl: string; provider: StoredAIProvider; model: string },
   ) => {
@@ -269,7 +255,10 @@ export default function JobMatchAnalysisView({
         tab === JOB_MATCH_VIEW_MODES.analysis ? goToAnalysis() : goToExtraction()
       }
       onUpdateUrl={persistUrl}
-      onUpdateTracking={persistTracking}
+      isSavingTracking={trackingActions.isSaving}
+      onCreateTrackingEntry={trackingActions.createEntry}
+      onUpdateTrackingEntry={trackingActions.updateEntry}
+      onDeleteTrackingEntry={trackingActions.deleteEntry}
       onInterviewQuestionCreated={onInterviewQuestionCreated}
       onCreate={goToNew}
     />

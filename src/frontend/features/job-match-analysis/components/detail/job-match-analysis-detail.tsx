@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { DEFAULT_GEMINI_MODEL } from "@/frontend/utils/ai-models";
@@ -18,6 +18,10 @@ import TabOfferChat from "./tabs/tab-offer-chat";
 import { useQuickInterviewQuestion } from "../../hooks/use-quick-interview-question";
 import { DETAIL_TABS, JobMatchDetailTabsList } from "./job-match-detail-tabs-list";
 import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
+import type {
+  CreateFollowUpEntryInput,
+  FollowUpEntryInput,
+} from "../../api/job-match-analysis-api";
 interface JobMatchAnalysisDetailProps {
   analysis: JobMatchAnalysisDetailType;
   aiProvider?: StoredAIProvider;
@@ -30,12 +34,13 @@ interface JobMatchAnalysisDetailProps {
   onInterviewQuestionCreated?: () => void;
   onOpenQuestions?: () => void;
   onUpdateUrl: (url: string) => Promise<void>;
-  onUpdateTracking: (updates: {
-    offerStatus: OfferStatus;
-    offerNotes: string;
-    offerNextAction: string;
-    offerNextActionAt: string;
-  }) => Promise<void>;
+  isSavingTracking: boolean;
+  onCreateTrackingEntry: (input: CreateFollowUpEntryInput) => Promise<void>;
+  onUpdateTrackingEntry: (
+    entryId: string,
+    input: FollowUpEntryInput,
+  ) => Promise<void>;
+  onDeleteTrackingEntry: (entryId: string) => Promise<void>;
 }
 
 function safeParseArray(value: string | null): string[] {
@@ -58,14 +63,6 @@ function safeParseJobKeyData(value: string | null): JobKeyData | null {
   }
 }
 
-function toDateTimeLocalValue(value: string | null) {
-  if (!value) return "";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  const offsetMs = date.getTimezoneOffset() * 60 * 1000;
-  return new Date(date.getTime() - offsetMs).toISOString().slice(0, 16);
-}
-
 export default function JobMatchAnalysisDetail({
   analysis,
   aiProvider = "gemini",
@@ -78,23 +75,17 @@ export default function JobMatchAnalysisDetail({
   onInterviewQuestionCreated,
   onOpenQuestions,
   onUpdateUrl,
-  onUpdateTracking,
+  isSavingTracking,
+  onCreateTrackingEntry,
+  onUpdateTrackingEntry,
+  onDeleteTrackingEntry,
 }: JobMatchAnalysisDetailProps) {
   const t = useTranslations("analysisDetail");
-  const [localTab, setLocalTab] = useState(activeTab);
-
-  useEffect(() => {
-    setLocalTab(activeTab);
-  }, [activeTab]);
-
   const [isSavingUrl, setIsSavingUrl] = useState(false);
-  const [tracking, setTracking] = useState({
-    status: analysis.offerStatus ?? ("interesting" as OfferStatus),
-    notes: analysis.offerNotes ?? "",
-    nextAction: analysis.offerNextAction ?? "",
-    nextActionAt: toDateTimeLocalValue(analysis.offerNextActionAt),
-  });
-  const [isSavingTracking, setIsSavingTracking] = useState(false);
+  const currentStatus =
+    analysis.tracking?.currentStatus ??
+    analysis.offerStatus ??
+    ("interesting" as OfferStatus);
   const quickInterviewQuestion = useQuickInterviewQuestion({
     analysisId: analysis.id,
     cvId: analysis.cvId ?? null,
@@ -123,23 +114,6 @@ export default function JobMatchAnalysisDetail({
     }
   };
 
-  const handleSaveTracking = async () => {
-    setIsSavingTracking(true);
-    try {
-      await onUpdateTracking({
-        offerStatus: tracking.status,
-        offerNotes: tracking.notes,
-        offerNextAction: tracking.nextAction,
-        offerNextActionAt: tracking.nextActionAt,
-      });
-    } catch (err) {
-      console.error(err);
-      alert(t("alerts.saveTrackingFailed"));
-    } finally {
-      setIsSavingTracking(false);
-    }
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -162,15 +136,14 @@ export default function JobMatchAnalysisDetail({
             filename={analysis.filename}
             onSaveUrl={handleSaveUrl}
             isSavingUrl={isSavingUrl}
-            offerStatus={tracking.status}
+            offerStatus={currentStatus}
             onTabChange={onTabChange}
           />
 
           <Tabs
-            value={localTab}
+            value={activeTab}
             onValueChange={(val) => {
               const nextTab = val as DetailTab;
-              setLocalTab(nextTab);
               onTabChange?.(nextTab);
             }}
             className="w-full"
@@ -225,24 +198,12 @@ export default function JobMatchAnalysisDetail({
 
               <TabsContent value={DETAIL_TABS.tracking}>
                 <TabFollowUp
-                  offerStatus={tracking.status}
-                  onOfferStatusChange={(status) =>
-                    setTracking((prev) => ({ ...prev, status }))
-                  }
-                  offerNotes={tracking.notes}
-                  onOfferNotesChange={(notes) =>
-                    setTracking((prev) => ({ ...prev, notes }))
-                  }
-                  offerNextAction={tracking.nextAction}
-                  onOfferNextActionChange={(nextAction) =>
-                    setTracking((prev) => ({ ...prev, nextAction }))
-                  }
-                  offerNextActionAt={tracking.nextActionAt}
-                  onOfferNextActionAtChange={(nextActionAt) =>
-                    setTracking((prev) => ({ ...prev, nextActionAt }))
-                  }
-                  isSavingTracking={isSavingTracking}
-                  onSaveTracking={handleSaveTracking}
+                  currentStatus={currentStatus}
+                  entries={analysis.tracking?.entries ?? []}
+                  isSaving={isSavingTracking}
+                  onCreateEntry={onCreateTrackingEntry}
+                  onUpdateEntry={onUpdateTrackingEntry}
+                  onDeleteEntry={onDeleteTrackingEntry}
                 />
               </TabsContent>
             </div>

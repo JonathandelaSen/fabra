@@ -1,0 +1,1 @@
+export { parseUpdateFollowUpEntryRequest } from "../validation";

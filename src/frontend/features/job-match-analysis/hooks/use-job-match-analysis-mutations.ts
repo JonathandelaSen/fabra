@@ -13,6 +13,9 @@ import {
   deleteJobMatchAnalysis,
   scoreJobMatchAnalysis,
   updateJobMatchAnalysis,
+  createFollowUpEntry,
+  updateFollowUpEntry,
+  deleteFollowUpEntry,
   uploadCVForJobMatch,
 } from "../api/job-match-analysis-api";
 import { jobMatchAnalysisQueryKeys } from "../api/job-match-analysis-query-keys";
@@ -200,6 +203,36 @@ export function useJobMatchAnalysisMutations() {
                 : item
             ) ?? current
         );
+      },
+    }),
+
+    createTrackingEntry: useMutation({
+      mutationFn: createFollowUpEntry,
+      onSuccess: (_entry, variables) => {
+        void queryClient.invalidateQueries({
+          queryKey: jobMatchAnalysisQueryKeys.detail(variables.analysisId),
+        });
+        void queryClient.invalidateQueries({ queryKey: listKey });
+      },
+    }),
+
+    updateTrackingEntry: useMutation({
+      mutationFn: updateFollowUpEntry,
+      onSuccess: (_entry, variables) => {
+        void queryClient.invalidateQueries({
+          queryKey: jobMatchAnalysisQueryKeys.detail(variables.analysisId),
+        });
+        void queryClient.invalidateQueries({ queryKey: listKey });
+      },
+    }),
+
+    deleteTrackingEntry: useMutation({
+      mutationFn: deleteFollowUpEntry,
+      onSuccess: (_result, variables) => {
+        void queryClient.invalidateQueries({
+          queryKey: jobMatchAnalysisQueryKeys.detail(variables.analysisId),
+        });
+        void queryClient.invalidateQueries({ queryKey: listKey });
       },
     }),
 

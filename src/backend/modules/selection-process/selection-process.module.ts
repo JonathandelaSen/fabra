@@ -7,10 +7,15 @@ import { EditQuestionAnswerUseCase } from "./application/use-cases/edit-question
 import { GenerateQuestionAnswerUseCase } from "./application/use-cases/generate-question-answer.use-case";
 import { GetProcessQuestionUseCase } from "./application/use-cases/get-process-question.use-case";
 import { ListProcessQuestionsUseCase } from "./application/use-cases/list-process-questions.use-case";
-import { UpdateFollowUpByAnalysisUseCase } from "./application/use-cases/update-follow-up-by-analysis.use-case";
+import { CreateFollowUpEntryByAnalysisUseCase } from "./application/use-cases/create-follow-up-entry-by-analysis.use-case";
+import { DeleteFollowUpEntryByAnalysisUseCase } from "./application/use-cases/delete-follow-up-entry-by-analysis.use-case";
+import { GetFollowUpTrackingByAnalysisUseCase } from "./application/use-cases/get-follow-up-tracking-by-analysis.use-case";
+import { ListFollowUpTrackingByAnalysesUseCase } from "./application/use-cases/list-follow-up-tracking-by-analyses.use-case";
+import { UpdateFollowUpEntryByAnalysisUseCase } from "./application/use-cases/update-follow-up-entry-by-analysis.use-case";
 import { PrepareQuestionAnswerCopyPasteUseCase } from "./application/use-cases/prepare-question-answer-copy-paste.use-case";
 import { UpdateProcessQuestionUseCase } from "./application/use-cases/update-process-question.use-case";
 import { SupabaseFollowUpRepository } from "./infrastructure/repositories/supabase-follow-up.repository";
+import { SupabaseFollowUpEntryRepository } from "./infrastructure/repositories/supabase-follow-up-entry.repository";
 import { SupabaseProcessQuestionRepository } from "./infrastructure/repositories/supabase-process-question.repository";
 import { GeminiInterviewQuestionAIServiceFactory } from "./infrastructure/services/gemini-interview-question-ai.service";
 import { MockInterviewQuestionAIServiceFactory } from "./infrastructure/services/mock-interview-question-ai.service";
@@ -19,6 +24,7 @@ import { ProviderInterviewQuestionAIServiceFactory } from "./infrastructure/serv
 
 const questionRepo = new SupabaseProcessQuestionRepository();
 const followUpRepo = new SupabaseFollowUpRepository();
+const followUpEntryRepo = new SupabaseFollowUpEntryRepository();
 const aiFactory = new ProviderInterviewQuestionAIServiceFactory({
   geminiFactory: new GeminiInterviewQuestionAIServiceFactory(),
   openaiFactory: new OpenAIInterviewQuestionAIServiceFactory(),
@@ -48,9 +54,27 @@ function createUseCases(eventBus: EventBus) {
       aiFactory,
       eventBus,
     }),
-    updateFollowUpByAnalysis: new UpdateFollowUpByAnalysisUseCase({
+    createFollowUpEntryByAnalysis: new CreateFollowUpEntryByAnalysisUseCase({
       followUpRepo,
+      entryRepo: followUpEntryRepo,
       eventBus,
+    }),
+    getFollowUpTrackingByAnalysis: new GetFollowUpTrackingByAnalysisUseCase({
+      followUpRepo,
+      entryRepo: followUpEntryRepo,
+    }),
+    listFollowUpTrackingByAnalyses: new ListFollowUpTrackingByAnalysesUseCase({
+      followUpRepo,
+      entryRepo: followUpEntryRepo,
+    }),
+    updateFollowUpEntryByAnalysis: new UpdateFollowUpEntryByAnalysisUseCase({
+      followUpRepo,
+      entryRepo: followUpEntryRepo,
+      eventBus,
+    }),
+    deleteFollowUpEntryByAnalysis: new DeleteFollowUpEntryByAnalysisUseCase({
+      followUpRepo,
+      entryRepo: followUpEntryRepo,
     }),
     deleteProcessQuestion: new DeleteProcessQuestionUseCase({
       questionRepo,
@@ -73,6 +97,7 @@ export function createSelectionProcessModule(telemetry: Telemetry, eventBus: Eve
     bindRequest(client: SupabaseClient) {
       questionRepo.bindRequest(client);
       followUpRepo.bindRequest(client);
+      followUpEntryRepo.bindRequest(client);
       return this;
     },
   };

@@ -27,7 +27,10 @@ describe("JobMatchAnalysisContent", () => {
         onViewModeChange={vi.fn()}
         onInterviewQuestionCreated={vi.fn()}
         onUpdateUrl={noopAsync}
-        onUpdateTracking={noopAsync}
+        isSavingTracking={false}
+        onCreateTrackingEntry={noopAsync}
+        onUpdateTrackingEntry={noopAsync}
+        onDeleteTrackingEntry={noopAsync}
       />,
     );
 

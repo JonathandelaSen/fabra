@@ -53,7 +53,40 @@ export class SupabaseFollowUpRepository
   extends BoundSupabaseRepository
   implements FollowUpRepository
 {
+  async searchBySourceJobMatchAnalysisIds(
+    analysisIds: SourceJobMatchAnalysisId[],
+    userId: UserId,
+  ): Promise<FollowUp[]> {
+    if (analysisIds.length === 0) return [];
+    const { data, error } = await this.client
+      .from("follow_ups")
+      .select("*")
+      .eq("user_id", userId.toPrimitives())
+      .in(
+        "source_job_match_analysis_id",
+        analysisIds.map((id) => id.toPrimitives()),
+      );
+
+    if (error) throw error;
+    return ((data ?? []) as FollowUpRow[]).map(rowToFollowUp);
+  }
+
   async findBySourceJobMatchAnalysisId(
+    analysisId: SourceJobMatchAnalysisId,
+    userId: UserId,
+  ): Promise<FollowUp | null> {
+    const { data, error } = await this.client
+      .from("follow_ups")
+      .select("*")
+      .eq("source_job_match_analysis_id", analysisId.toPrimitives())
+      .eq("user_id", userId.toPrimitives())
+      .maybeSingle();
+
+    if (error) throw error;
+    return data ? rowToFollowUp(data as FollowUpRow) : null;
+  }
+
+  async ensureBySourceJobMatchAnalysisId(
     analysisId: SourceJobMatchAnalysisId,
     userId: UserId,
   ): Promise<FollowUp | null> {

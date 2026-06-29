@@ -111,6 +111,20 @@ export class FollowUp extends AggregateRoot {
     }
   }
 
+  changeStatus(status: FollowUpStatus, updatedAt: Timestamp): void {
+    const previousStatus = this.followUpStatus.toPrimitives();
+    const newStatus = status.toPrimitives();
+    this.followUpStatus = status;
+    this.followUpUpdatedAt = updatedAt;
+
+    this.recordDomainEvent(new FollowUpUpdatedEvent(this.id));
+    if (previousStatus !== newStatus) {
+      this.recordDomainEvent(
+        new FollowUpStatusChangedEvent(this.id, previousStatus, newStatus),
+      );
+    }
+  }
+
   get id(): string {
     return this.followUpId.toPrimitives();
   }

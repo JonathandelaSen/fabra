@@ -55,7 +55,10 @@ describe("JobMatchAnalysisMainPanel", () => {
         onTabChange={vi.fn()}
         onViewModeChange={vi.fn()}
         onUpdateUrl={noopAsync}
-        onUpdateTracking={noopAsync}
+        isSavingTracking={false}
+        onCreateTrackingEntry={noopAsync}
+        onUpdateTrackingEntry={noopAsync}
+        onDeleteTrackingEntry={noopAsync}
       />,
     );
 
@@ -84,7 +87,10 @@ describe("JobMatchAnalysisMainPanel", () => {
         onTabChange={vi.fn()}
         onViewModeChange={onViewModeChange}
         onUpdateUrl={noopAsync}
-        onUpdateTracking={noopAsync}
+        isSavingTracking={false}
+        onCreateTrackingEntry={noopAsync}
+        onUpdateTrackingEntry={noopAsync}
+        onDeleteTrackingEntry={noopAsync}
       />,
     );
 
@@ -119,7 +125,10 @@ describe("JobMatchAnalysisMainPanel", () => {
         onTabChange={vi.fn()}
         onViewModeChange={vi.fn()}
         onUpdateUrl={noopAsync}
-        onUpdateTracking={noopAsync}
+        isSavingTracking={false}
+        onCreateTrackingEntry={noopAsync}
+        onUpdateTrackingEntry={noopAsync}
+        onDeleteTrackingEntry={noopAsync}
       />,
     );
 

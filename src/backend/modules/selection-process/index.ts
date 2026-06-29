@@ -10,3 +10,9 @@ export {
 export type { GenerateQuestionAnswerInput } from "./application/use-cases/generate-question-answer.use-case";
 export type { EditQuestionAnswerInput } from "./application/use-cases/edit-question-answer.use-case";
 export type { CopyPastePrepareMode } from "./application/selection-process-copy-paste.constants";
+export {
+  presentFollowUpEntry,
+  presentFollowUpTracking,
+  type FollowUpEntryResponse,
+  type FollowUpTrackingResponse,
+} from "./application/presenters/follow-up-presenters";

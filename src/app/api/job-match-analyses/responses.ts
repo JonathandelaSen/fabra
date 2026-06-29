@@ -36,6 +36,7 @@ export interface JobMatchAnalysisDetailResponse {
   offerNotes: string | null;
   offerNextAction: string | null;
   offerNextActionAt: string | null;
+  tracking: JobMatchAnalysisTrackingResponse | null;
   aiScore: number | null;
   aiFeedback: string | null;
   aiKeywords: string | null;
@@ -58,6 +59,23 @@ export interface JobMatchAnalysisDetailResponse {
     filename: string | null;
     type?: string;
   } | null;
+}
+
+export interface JobMatchAnalysisTrackingEntryResponse {
+  id: string;
+  status: JobMatchAnalysisOfferStatus;
+  title: string | null;
+  notes: string | null;
+  nextAction: string | null;
+  nextActionAt: string | null;
+  occurredAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface JobMatchAnalysisTrackingResponse {
+  currentStatus: JobMatchAnalysisOfferStatus;
+  entries: JobMatchAnalysisTrackingEntryResponse[];
 }
 
 export type ListJobMatchAnalysesResponse = JobMatchAnalysisSummaryResponse[];
@@ -151,6 +169,7 @@ export function toJobMatchAnalysisDetailResponse(
     offerNotes: input.offer_notes,
     offerNextAction: input.offer_next_action,
     offerNextActionAt: input.offer_next_action_at,
+    tracking: null,
     aiScore: input.ai_score,
     aiFeedback: input.ai_feedback,
     aiKeywords: input.ai_keywords,

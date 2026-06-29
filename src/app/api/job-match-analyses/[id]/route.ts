@@ -7,18 +7,20 @@ import {
   selectionProcessModule,
 } from "@/lib/container";
 import { presentJobMatchAnalysis } from "@/backend/modules/job-match-analysis";
+import { presentFollowUpTracking } from "@/backend/modules/selection-process";
 import { parseUpdateJobMatchAnalysisRequest } from "./validation";
-import {
-  toJobMatchAnalysisDetailResponse,
-  type JobMatchAnalysisOfferStatus,
-} from "./responses";
+import { toJobMatchAnalysisDetailResponse } from "./responses";
 import { ok, errorResponse, notFound } from "@/backend/modules/shared";
 
-interface FollowUpTrackingRow {
-  status: JobMatchAnalysisOfferStatus;
-  notes: string | null;
-  next_action: string | null;
-  next_action_at: string | null;
+function latestCreatedEntry<T extends { createdAt: string }>(
+  entries: T[],
+): T | null {
+  return entries.reduce<T | null>((latest, entry) => {
+    if (!latest) return entry;
+    return Date.parse(entry.createdAt) > Date.parse(latest.createdAt)
+      ? entry
+      : latest;
+  }, null);
 }
 
 export async function GET(
@@ -31,9 +33,13 @@ export async function GET(
     const { supabase, user } = authContext;
 
     const { id } = await params;
-    const analysis = await jobMatchAnalysisModule
-      .bindRequest(supabase)
-      .getJobMatchAnalysisById.execute({ id, userId: user.id });
+    jobMatchAnalysisModule.bindRequest(supabase);
+    selectionProcessModule.bindRequest(supabase);
+    const analysis =
+      await jobMatchAnalysisModule.getJobMatchAnalysisById.execute({
+        id,
+        userId: user.id,
+      });
     if (!analysis) {
       throw notFound("Job match analysis not found", ErrorCode.JOB_MATCH_ANALYSIS_NOT_FOUND);
     }
@@ -41,24 +47,27 @@ export async function GET(
     const response = toJobMatchAnalysisDetailResponse(
       presentJobMatchAnalysis(analysis),
     );
-    const { data, error } = await supabase
-      .from("follow_ups")
-      .select("status, notes, next_action, next_action_at")
-      .eq("source_job_match_analysis_id", id)
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (error) throw error;
-    const tracking = data as FollowUpTrackingRow | null;
+    const tracking =
+      await selectionProcessModule.getFollowUpTrackingByAnalysis.execute({
+        analysisId: id,
+        userId: user.id,
+      });
+    const presentedTracking = tracking
+      ? presentFollowUpTracking(tracking)
+      : null;
+    const latestEntry = presentedTracking
+      ? latestCreatedEntry(presentedTracking.entries)
+      : null;
 
     return ok(
-      tracking
+      presentedTracking
         ? {
             ...response,
-            offerStatus: tracking.status,
-            offerNotes: tracking.notes,
-            offerNextAction: tracking.next_action,
-            offerNextActionAt: tracking.next_action_at,
+            offerStatus: presentedTracking.currentStatus,
+            offerNotes: latestEntry?.notes ?? null,
+            offerNextAction: latestEntry?.nextAction ?? null,
+            offerNextActionAt: latestEntry?.nextActionAt ?? null,
+            tracking: presentedTracking,
           }
         : response,
     );
@@ -106,51 +115,60 @@ export async function PATCH(
     }
     const { allowedUpdates, followUpUpdates, includesOfferTracking } = parsed.value;
 
+    jobMatchAnalysisModule.bindRequest(supabase);
+    selectionProcessModule.bindRequest(supabase);
+
     if (includesOfferTracking) {
-      const followUp = await selectionProcessModule
-        .bindRequest(supabase)
-        .updateFollowUpByAnalysis.execute({
+      const entry =
+        await selectionProcessModule.createFollowUpEntryByAnalysis.execute({
           analysisId: id,
           userId: user.id,
-          ...followUpUpdates,
+          status: followUpUpdates.status!,
+          occurredAt: new Date().toISOString(),
+          updateCurrentStatus: true,
         });
-      if (!followUp) {
+      if (!entry) {
         throw notFound("Analysis not found or update failed", ErrorCode.ANALYSIS_NOT_FOUND);
       }
     }
 
     const entity =
       Object.keys(allowedUpdates).length > 0
-        ? await jobMatchAnalysisModule
-            .bindRequest(supabase)
-            .updateJobMatchAnalysisJobUrl.execute({
+        ? await jobMatchAnalysisModule.updateJobMatchAnalysisJobUrl.execute({
               id,
               userId: user.id,
               jobUrl: allowedUpdates.job_url ?? null,
             })
-        : await jobMatchAnalysisModule
-            .bindRequest(supabase)
-            .getJobMatchAnalysisById.execute({ id, userId: user.id });
+        : await jobMatchAnalysisModule.getJobMatchAnalysisById.execute({
+            id,
+            userId: user.id,
+          });
 
     if (!entity) {
       throw notFound("Analysis not found or update failed", ErrorCode.ANALYSIS_NOT_FOUND);
     }
 
-    const response = toJobMatchAnalysisDetailResponse(presentJobMatchAnalysis(entity));
+    const response = toJobMatchAnalysisDetailResponse(
+      presentJobMatchAnalysis(entity),
+    );
+    const tracking =
+      await selectionProcessModule.getFollowUpTrackingByAnalysis.execute({
+        analysisId: id,
+        userId: user.id,
+      });
+    const presentedTracking = tracking
+      ? presentFollowUpTracking(tracking)
+      : null;
+    const latestEntry = presentedTracking
+      ? latestCreatedEntry(presentedTracking.entries)
+      : null;
     return ok({
       ...response,
-      ...(followUpUpdates.status !== undefined
-        ? { offerStatus: followUpUpdates.status }
-        : {}),
-      ...(followUpUpdates.notes !== undefined
-        ? { offerNotes: followUpUpdates.notes }
-        : {}),
-      ...(followUpUpdates.nextAction !== undefined
-        ? { offerNextAction: followUpUpdates.nextAction }
-        : {}),
-      ...(followUpUpdates.nextActionAt !== undefined
-        ? { offerNextActionAt: followUpUpdates.nextActionAt }
-        : {}),
+      offerStatus: presentedTracking?.currentStatus ?? response.offerStatus,
+      offerNotes: latestEntry?.notes ?? null,
+      offerNextAction: latestEntry?.nextAction ?? null,
+      offerNextActionAt: latestEntry?.nextActionAt ?? null,
+      tracking: presentedTracking,
     });
   } catch (error: unknown) {
     return handleApiError(error);
