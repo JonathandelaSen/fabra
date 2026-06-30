@@ -62,6 +62,7 @@ describe("PrepareOfferChatCopyPasteUseCase", () => {
           },
           cv: { name: "CV principal" },
           cvText: "React experience",
+          people: [],
         };
       },
     });
@@ -98,5 +99,6 @@ describe("PrepareOfferChatCopyPasteUseCase", () => {
     expect(result.prompt).toContain("Como explico mi experiencia?");
     expect(result.prompt).toContain("React and TypeScript role");
     expect(result.prompt).toContain("Respuesta previa");
+    expect(result.privacyNotice).toContain("people data");
   });
 });

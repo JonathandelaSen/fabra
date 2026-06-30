@@ -14,9 +14,15 @@ import { ListFollowUpTrackingByAnalysesUseCase } from "./application/use-cases/l
 import { UpdateFollowUpEntryByAnalysisUseCase } from "./application/use-cases/update-follow-up-entry-by-analysis.use-case";
 import { PrepareQuestionAnswerCopyPasteUseCase } from "./application/use-cases/prepare-question-answer-copy-paste.use-case";
 import { UpdateProcessQuestionUseCase } from "./application/use-cases/update-process-question.use-case";
+import { CreateOpportunityPersonByAnalysisUseCase } from "./application/use-cases/create-opportunity-person-by-analysis.use-case";
+import { DeleteOpportunityPersonByAnalysisUseCase } from "./application/use-cases/delete-opportunity-person-by-analysis.use-case";
+import { ListOpportunityPeopleByAnalysisUseCase } from "./application/use-cases/list-opportunity-people-by-analysis.use-case";
+import { ListOpportunityPeopleForChatUseCase } from "./application/use-cases/list-opportunity-people-for-chat.use-case";
+import { UpdateOpportunityPersonByAnalysisUseCase } from "./application/use-cases/update-opportunity-person-by-analysis.use-case";
 import { SupabaseFollowUpRepository } from "./infrastructure/repositories/supabase-follow-up.repository";
 import { SupabaseFollowUpEntryRepository } from "./infrastructure/repositories/supabase-follow-up-entry.repository";
 import { SupabaseProcessQuestionRepository } from "./infrastructure/repositories/supabase-process-question.repository";
+import { SupabaseOpportunityPersonRepository } from "./infrastructure/repositories/supabase-opportunity-person.repository";
 import { GeminiInterviewQuestionAIServiceFactory } from "./infrastructure/services/gemini-interview-question-ai.service";
 import { MockInterviewQuestionAIServiceFactory } from "./infrastructure/services/mock-interview-question-ai.service";
 import { OpenAIInterviewQuestionAIServiceFactory } from "./infrastructure/services/openai-interview-question-ai.service";
@@ -25,6 +31,7 @@ import { ProviderInterviewQuestionAIServiceFactory } from "./infrastructure/serv
 const questionRepo = new SupabaseProcessQuestionRepository();
 const followUpRepo = new SupabaseFollowUpRepository();
 const followUpEntryRepo = new SupabaseFollowUpEntryRepository();
+const opportunityPersonRepo = new SupabaseOpportunityPersonRepository();
 const aiFactory = new ProviderInterviewQuestionAIServiceFactory({
   geminiFactory: new GeminiInterviewQuestionAIServiceFactory(),
   openaiFactory: new OpenAIInterviewQuestionAIServiceFactory(),
@@ -33,6 +40,11 @@ const aiFactory = new ProviderInterviewQuestionAIServiceFactory({
 });
 
 function createUseCases(eventBus: EventBus) {
+  const listOpportunityPeopleByAnalysis =
+    new ListOpportunityPeopleByAnalysisUseCase({
+      followUpRepo,
+      personRepo: opportunityPersonRepo,
+    });
   return {
     listProcessQuestions: new ListProcessQuestionsUseCase({ questionRepo }),
     getProcessQuestion: new GetProcessQuestionUseCase({ questionRepo }),
@@ -83,6 +95,28 @@ function createUseCases(eventBus: EventBus) {
     prepareQuestionAnswerCopyPaste: new PrepareQuestionAnswerCopyPasteUseCase({
       questionRepo,
     }),
+    listOpportunityPeopleByAnalysis,
+    listOpportunityPeopleForChat: new ListOpportunityPeopleForChatUseCase(
+      listOpportunityPeopleByAnalysis,
+    ),
+    createOpportunityPersonByAnalysis:
+      new CreateOpportunityPersonByAnalysisUseCase({
+        followUpRepo,
+        personRepo: opportunityPersonRepo,
+        eventBus,
+      }),
+    updateOpportunityPersonByAnalysis:
+      new UpdateOpportunityPersonByAnalysisUseCase({
+        followUpRepo,
+        personRepo: opportunityPersonRepo,
+        eventBus,
+      }),
+    deleteOpportunityPersonByAnalysis:
+      new DeleteOpportunityPersonByAnalysisUseCase({
+        followUpRepo,
+        personRepo: opportunityPersonRepo,
+        eventBus,
+      }),
   };
 }
 
@@ -98,6 +132,7 @@ export function createSelectionProcessModule(telemetry: Telemetry, eventBus: Eve
       questionRepo.bindRequest(client);
       followUpRepo.bindRequest(client);
       followUpEntryRepo.bindRequest(client);
+      opportunityPersonRepo.bindRequest(client);
       return this;
     },
   };

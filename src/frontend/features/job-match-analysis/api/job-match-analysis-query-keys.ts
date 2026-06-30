@@ -5,4 +5,6 @@ export const jobMatchAnalysisQueryKeys = {
   details: () => [...jobMatchAnalysisQueryKeys.all, "detail"] as const,
   detail: (id: string | null) =>
     [...jobMatchAnalysisQueryKeys.details(), id] as const,
+  people: (id: string) =>
+    [...jobMatchAnalysisQueryKeys.detail(id), "people"] as const,
 };

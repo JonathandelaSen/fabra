@@ -5,6 +5,10 @@ import type { QueryBus } from "@/backend/modules/shared";
 import type { SupabaseAware } from "@/backend/modules/shared/infrastructure/supabase-aware";
 import { GetCVAnalysisByIdQuery } from "@/backend/modules/cv-analysis";
 import { GetJobMatchAnalysisByIdQuery } from "@/backend/modules/job-match-analysis";
+import {
+  ListOpportunityPeopleForChatQuery,
+  type OpportunityPersonChatContextPrimitives,
+} from "@/backend/modules/selection-process";
 import { JobAnalysisChatContext } from "../../domain/value-objects/job-analysis-chat-context.value-object";
 import type { JobAnalysisChatContextReader } from "../../domain/repositories/job-analysis-chat-context.repository";
 
@@ -26,14 +30,26 @@ export class JobAnalysisChatContextRepository
     const analysis = await this.getAnalysis(input.analysisId, input.userId);
     if (!analysis) return null;
 
-    const { data: cv, error } = analysis.cv_id
-      ? await this.client
+    const cvPromise = analysis.cv_id
+      ? this.client
           .from("cvs")
           .select("*")
           .eq("id", analysis.cv_id)
           .eq("user_id", input.userId)
           .maybeSingle()
-      : { data: null, error: null };
+      : Promise.resolve({ data: null, error: null });
+    const peoplePromise = this.queryBus.execute<
+      OpportunityPersonChatContextPrimitives[]
+    >(
+      new ListOpportunityPeopleForChatQuery({
+        analysisId: input.analysisId,
+        userId: input.userId,
+      }),
+    );
+    const [{ data: cv, error }, people] = await Promise.all([
+      cvPromise,
+      peoplePromise,
+    ]);
     if (error) throw error;
 
     return JobAnalysisChatContext.fromPrimitives({
@@ -43,6 +59,7 @@ export class JobAnalysisChatContextRepository
       analysis,
       cv,
       cvText: getBestCVText(analysis),
+      people,
     });
   }
 

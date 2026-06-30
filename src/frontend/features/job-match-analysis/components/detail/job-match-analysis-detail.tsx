@@ -15,6 +15,7 @@ import TabOffer from "./tabs/tab-offer";
 import TabInterview from "./tabs/tab-interview";
 import TabFollowUp from "./tabs/tab-follow-up";
 import TabOfferChat from "./tabs/tab-offer-chat";
+import { TabPeople } from "./people/tab-people";
 import { useQuickInterviewQuestion } from "../../hooks/use-quick-interview-question";
 import { DETAIL_TABS, JobMatchDetailTabsList } from "./job-match-detail-tabs-list";
 import type { StoredAIProvider } from "@/frontend/utils/browser-preferences";
@@ -82,6 +83,10 @@ export default function JobMatchAnalysisDetail({
 }: JobMatchAnalysisDetailProps) {
   const t = useTranslations("analysisDetail");
   const [isSavingUrl, setIsSavingUrl] = useState(false);
+  const [chatDraftRequest, setChatDraftRequest] = useState<{
+    id: number;
+    text: string;
+  } | null>(null);
   const currentStatus =
     analysis.tracking?.currentStatus ??
     analysis.offerStatus ??
@@ -112,6 +117,13 @@ export default function JobMatchAnalysisDetail({
     } finally {
       setIsSavingUrl(false);
     }
+  };
+  const prepareConversation = (name: string) => {
+    setChatDraftRequest((current) => ({
+      id: (current?.id ?? 0) + 1,
+      text: t("people.preparePrompt", { name }),
+    }));
+    onTabChange?.(DETAIL_TABS.chat);
   };
 
   return (
@@ -188,11 +200,20 @@ export default function JobMatchAnalysisDetail({
 
               <TabsContent value={DETAIL_TABS.chat}>
                 <TabOfferChat
+                  key={chatDraftRequest?.id ?? 0}
                   analysisId={analysis.id}
                   aiProvider={aiProvider ?? "gemini"}
                   aiApiKey={aiApiKey}
                   aiModel={aiModel ?? DEFAULT_GEMINI_MODEL}
                   hasAIApiKey={hasAIApiKey}
+                  draftRequest={chatDraftRequest}
+                />
+              </TabsContent>
+
+              <TabsContent value={DETAIL_TABS.people}>
+                <TabPeople
+                  analysisId={analysis.id}
+                  onPrepareConversation={prepareConversation}
                 />
               </TabsContent>
 

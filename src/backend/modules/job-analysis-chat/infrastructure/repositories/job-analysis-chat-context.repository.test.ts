@@ -18,6 +18,7 @@ import {
   testLabel,
 } from "@/backend/modules/test-helpers/setup";
 import { JobAnalysisChatContextRepository } from "./job-analysis-chat-context.repository";
+import { ListOpportunityPeopleForChatQuery } from "@/backend/modules/selection-process";
 
 const supabase = getSupabaseClient();
 
@@ -35,6 +36,11 @@ queryBus.register(
   GetCVAnalysisByIdQuery.queryName,
   new GetCVAnalysisByIdQueryHandler(cvAnalysisModule.getCVAnalysisById),
 );
+queryBus.register(ListOpportunityPeopleForChatQuery.queryName, {
+  async handle() {
+    return [];
+  },
+});
 queryBus.register(
   GetJobMatchAnalysisByIdQuery.queryName,
   new GetJobMatchAnalysisByIdQueryHandler(
@@ -115,6 +121,7 @@ describe("JobAnalysisChatContextRepository", () => {
       cvId: cv.id,
       analysisMode: "job_match",
       cvText: "Analysis text",
+      people: [],
     });
   });
 });

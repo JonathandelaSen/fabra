@@ -25,6 +25,7 @@ export class OllamaJobAnalysisChatAIService implements JobAnalysisChatAIService 
         role: message.role,
         content: message.content,
       })) satisfies OfferChatHistoryMessage[],
+      people: input.context.people,
     };
 
     const ollama = new Ollama({ host: this.config.baseUrl || "http://localhost:11434" });

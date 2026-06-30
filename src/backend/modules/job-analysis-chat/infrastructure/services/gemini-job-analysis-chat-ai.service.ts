@@ -27,6 +27,7 @@ export class GeminiJobAnalysisChatAIService implements JobAnalysisChatAIService 
         role: message.role,
         content: message.content,
       })) satisfies OfferChatHistoryMessage[],
+      people: input.context.people,
     };
 
     const googleAI = new GoogleGenAI({ apiKey: this.config.apiKey });

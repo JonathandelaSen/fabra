@@ -69,7 +69,7 @@ export class PrepareOfferChatCopyPasteUseCase {
       prompt,
       expectedResponse: { kind: "plain_text", envelope: null },
       privacyNotice:
-        "This prompt may include CV, offer, and analysis data. Paste it only into external AI tools you trust.",
+        "This prompt may include CV, offer, analysis, and people data. Paste it only into external AI tools you trust.",
       interactionId: null,
       attemptId: null,
     });

@@ -10,6 +10,16 @@ describe("JobAnalysisChatContext", () => {
       analysis: {},
       cv: {},
       cvText: null,
+      people: [
+        {
+          name: "Marta García",
+          role: "hiring_manager",
+          jobTitle: "Engineering Manager",
+          organization: "Acme",
+          links: [{ url: "https://example.com/marta", label: "Profile" }],
+          notes: "Owns platform reliability.",
+        },
+      ],
     };
     const vo = JobAnalysisChatContext.fromPrimitives(primitives);
     expect(vo.toPrimitives()).toEqual(primitives);

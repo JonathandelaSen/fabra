@@ -1,8 +1,61 @@
 import { faker } from "@faker-js/faker";
 import crypto from "node:crypto";
+import type { OpportunityPersonProfileInput } from "../application/opportunity-person-input";
 import type { CreateProcessQuestionInput } from "../application/use-cases/create-process-question.use-case";
 
 export class SelectionProcessFixture {
+  static createOpportunityPersonProfiles(
+    organization: string,
+  ): OpportunityPersonProfileInput[] {
+    const recruiterName = faker.person.fullName();
+    const managerName = faker.person.fullName();
+    const interviewerName = faker.person.fullName();
+
+    return [
+      {
+        name: recruiterName,
+        role: "external_recruiter",
+        jobTitle: "Senior Talent Partner",
+        organization: "Northstar Talent",
+        email: faker.internet.email({ firstName: recruiterName }),
+        phone: faker.phone.number(),
+        links: [
+          {
+            url: `https://www.linkedin.com/in/${faker.helpers.slugify(recruiterName).toLowerCase()}`,
+            label: "LinkedIn",
+          },
+        ],
+        notes: "Made the initial introduction and shared context about the hiring process.",
+      },
+      {
+        name: managerName,
+        role: "hiring_manager",
+        jobTitle: "Engineering Manager",
+        organization,
+        links: [
+          {
+            url: `https://www.linkedin.com/in/${faker.helpers.slugify(managerName).toLowerCase()}`,
+            label: "LinkedIn",
+          },
+        ],
+        notes: "Owns the role and is likely to focus on scope, impact, and team collaboration.",
+      },
+      {
+        name: interviewerName,
+        role: "technical_interviewer",
+        jobTitle: "Staff Software Engineer",
+        organization,
+        links: [
+          {
+            url: `https://github.com/${faker.internet.username().toLowerCase()}`,
+            label: "GitHub",
+          },
+        ],
+        notes: "Expected to take part in the technical interview and discuss engineering trade-offs.",
+      },
+    ];
+  }
+
   static createProcessQuestionInput(
     overrides: Partial<CreateProcessQuestionInput> = {},
   ): CreateProcessQuestionInput {

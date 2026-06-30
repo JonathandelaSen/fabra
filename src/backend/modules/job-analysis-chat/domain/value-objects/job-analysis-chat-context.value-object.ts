@@ -8,6 +8,16 @@ export interface JobAnalysisChatContextPrimitives {
   analysis: unknown;
   cv: unknown;
   cvText: string | null;
+  people: JobAnalysisChatPersonPrimitives[];
+}
+
+export interface JobAnalysisChatPersonPrimitives {
+  name: string;
+  role: string;
+  jobTitle: string | null;
+  organization: string | null;
+  links: Array<{ url: string; label: string | null }>;
+  notes: string | null;
 }
 
 export class JobAnalysisChatContext extends ValueObject<JobAnalysisChatContextPrimitives> {
@@ -17,7 +27,8 @@ export class JobAnalysisChatContext extends ValueObject<JobAnalysisChatContextPr
     private readonly analysisModeValue: LongText,
     private readonly analysisSnapshot: JobAnalysisChatSnapshot,
     private readonly cvSnapshot: JobAnalysisChatSnapshot,
-    private readonly cvTextValue: LongText | null
+    private readonly cvTextValue: LongText | null,
+    private readonly peopleSnapshot: JobAnalysisChatSnapshot,
   ) {
     super();
   }
@@ -29,7 +40,8 @@ export class JobAnalysisChatContext extends ValueObject<JobAnalysisChatContextPr
       LongText.fromPrimitives(primitives.analysisMode),
       JobAnalysisChatSnapshot.fromPrimitives(primitives.analysis),
       JobAnalysisChatSnapshot.fromPrimitives(primitives.cv),
-      primitives.cvText === null ? null : LongText.fromPrimitives(primitives.cvText)
+      primitives.cvText === null ? null : LongText.fromPrimitives(primitives.cvText),
+      JobAnalysisChatSnapshot.fromPrimitives(primitives.people),
     );
   }
 
@@ -57,6 +69,10 @@ export class JobAnalysisChatContext extends ValueObject<JobAnalysisChatContextPr
     return this.cvTextValue?.toPrimitives() ?? null;
   }
 
+  get people(): JobAnalysisChatPersonPrimitives[] {
+    return this.peopleSnapshot.toPrimitives() as JobAnalysisChatPersonPrimitives[];
+  }
+
   toPrimitives(): JobAnalysisChatContextPrimitives {
     return {
       analysisId: this.analysisIdValue.toPrimitives(),
@@ -65,6 +81,7 @@ export class JobAnalysisChatContext extends ValueObject<JobAnalysisChatContextPr
       analysis: this.analysisSnapshot.toPrimitives(),
       cv: this.cvSnapshot.toPrimitives(),
       cvText: this.cvTextValue?.toPrimitives() ?? null,
+      people: this.people,
     };
   }
 }

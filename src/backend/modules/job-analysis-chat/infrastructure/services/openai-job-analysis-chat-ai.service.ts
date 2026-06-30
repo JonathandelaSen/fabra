@@ -27,6 +27,7 @@ export class OpenAIJobAnalysisChatAIService implements JobAnalysisChatAIService 
         role: message.role,
         content: message.content,
       })) satisfies OfferChatHistoryMessage[],
+      people: input.context.people,
     };
 
     const openai = new OpenAI({ apiKey: this.config.apiKey });

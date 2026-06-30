@@ -252,6 +252,7 @@ async function main() {
     "review_evidence_items",
     "performance_reviews",
     "process_questions",
+    "opportunity_people",
     "follow_ups",
     "job_match_analyses",
     "job_opportunities",
@@ -431,6 +432,7 @@ async function main() {
   let totalMatches = 0;
   let totalFollowUps = 0;
   let totalQuestions = 0;
+  let totalPeople = 0;
 
   let totalChats = 0;
 
@@ -579,6 +581,26 @@ async function main() {
       await selectionProcessModule.createProcessQuestion.execute(qInput);
       totalQuestions++;
     }
+
+    if (matchIds[0]) {
+      const personProfiles =
+        SelectionProcessFixture.createOpportunityPersonProfiles(
+          oppRow.company,
+        );
+      for (const profile of personProfiles) {
+        const created =
+          await selectionProcessModule.createOpportunityPersonByAnalysis.execute({
+            userId,
+            analysisId: matchIds[0],
+            ...profile,
+          });
+        if (!created) {
+          console.error("Error creating opportunity person");
+          process.exit(1);
+        }
+        totalPeople++;
+      }
+    }
   }
 
   const { data: seededMatches, error: seededMatchesErr } = await adminClient
@@ -677,7 +699,7 @@ async function main() {
     totalChats++;
   }
 
-  log(`  ${totalMatches} matches, ${totalFollowUps} follow-ups, ${totalQuestions} questions, ${totalChats} chats`);
+  log(`  ${totalMatches} matches, ${totalFollowUps} follow-ups, ${totalQuestions} questions, ${totalPeople} people, ${totalChats} chats`);
 
   // -----------------------------------------------------------------------
   // 7. Feedback Notes + Received Feedback

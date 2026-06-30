@@ -20,6 +20,11 @@ export { UserId } from "./domain/value-objects/user-id.value-object";
 export { ValueObject } from "./domain/value-objects/value-object";
 export { Counter } from "./domain/value-objects/counter.value-object";
 export { LongText } from "./domain/value-objects/long-text.value-object";
+export { Url } from "./domain/value-objects/url.value-object";
+export {
+  Link,
+  type LinkPrimitives,
+} from "./domain/value-objects/link.value-object";
 export { StringList } from "./domain/value-objects/string-list.value-object";
 export { BooleanFlag } from "./domain/value-objects/boolean-flag.value-object";
 export {

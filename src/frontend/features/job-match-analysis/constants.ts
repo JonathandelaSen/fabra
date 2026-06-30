@@ -2,6 +2,7 @@ export const JOB_MATCH_DETAIL_TABS = {
   summary: "summary",
   offer: "offer",
   questions: "questions",
+  people: "people",
   chat: "chat",
   tracking: "tracking",
 } as const;

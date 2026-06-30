@@ -18,6 +18,7 @@ interface TabOfferChatProps {
   aiApiKey: string;
   aiModel: string;
   hasAIApiKey: boolean;
+  draftRequest?: { id: number; text: string } | null;
 }
 
 export default function TabOfferChat({
@@ -26,6 +27,7 @@ export default function TabOfferChat({
   aiApiKey,
   aiModel,
   hasAIApiKey,
+  draftRequest = null,
 }: TabOfferChatProps) {
   const { locale } = useInterfaceLanguage();
   const timeLocale = locale === "es" ? "es-ES" : "en-US";
@@ -41,8 +43,8 @@ export default function TabOfferChat({
     aiProvider,
     aiApiKey,
     aiModel,
-    hasAIApiKey,
     focusComposer,
+    draftRequest,
   });
 
   useEffect(() => {

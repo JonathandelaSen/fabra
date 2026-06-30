@@ -449,3 +449,4 @@ Do **not** use the real AI provider API keys to perform actual AI analysis durin
 Refer to the documents in [docs/how-tos/](docs/how-tos/) for step-by-step guides on common development tasks in this codebase:
 
 - [How to create a domain error](docs/how-tos/how-to-create-a-domain-error.md)
+- [How to create an API route](docs/how-tos/how-to-create-an-api-route.md)

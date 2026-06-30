@@ -1,6 +1,6 @@
 "use client";
 
-import { Briefcase, CalendarClock, MessageCircle, MessageSquareQuote, Sparkles } from "lucide-react";
+import { Briefcase, CalendarClock, MessageCircle, MessageSquareQuote, Sparkles, UsersRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { TabsList, TabsTrigger } from "@/frontend/components/ui/tabs";
 import { JOB_MATCH_DETAIL_TABS } from "../../constants";
@@ -24,6 +24,10 @@ export function JobMatchDetailTabsList() {
         <TabsTrigger value={DETAIL_TABS.questions} className="gap-2 px-5 py-2 text-sm font-semibold transition-all data-active:bg-panel-active data-active:text-text-main data-active:shadow-[var(--ui-active-tab-shadow)]">
           <MessageSquareQuote className="size-4" />
           {t("tabs.questions")}
+        </TabsTrigger>
+        <TabsTrigger value={DETAIL_TABS.people} className="gap-2 px-5 py-2 text-sm font-semibold transition-all data-active:bg-panel-active data-active:text-text-main data-active:shadow-[var(--ui-active-tab-shadow)]">
+          <UsersRound className="size-4" />
+          {t("tabs.people")}
         </TabsTrigger>
         <TabsTrigger value={DETAIL_TABS.chat} className="gap-2 px-5 py-2 text-sm font-semibold transition-all data-active:bg-panel-active data-active:text-text-main data-active:shadow-[var(--ui-active-tab-shadow)]">
           <MessageCircle className="size-4" />

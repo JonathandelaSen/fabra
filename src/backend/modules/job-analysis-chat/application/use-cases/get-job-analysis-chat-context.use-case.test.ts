@@ -11,6 +11,7 @@ describe("GetJobAnalysisChatContextUseCase", () => {
       analysis: {},
       cv: {},
       cvText: "CV text",
+      people: [],
     });
     const reader = { findByAnalysisId: vi.fn(async () => context) };
 

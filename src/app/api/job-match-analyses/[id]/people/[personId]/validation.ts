@@ -1,0 +1,1 @@
+export { parseOpportunityPersonRequest } from "../validation";

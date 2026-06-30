@@ -25,12 +25,25 @@ describe("JobAnalysisChatPromptService", () => {
       analysis,
       cvText: "React engineer",
       history: [{ role: "assistant", content: "Earlier note" }],
+      people: [
+        {
+          name: "Marta García",
+          role: "hiring_manager",
+          jobTitle: "Engineering Manager",
+          organization: "Acme",
+          links: [{ url: "https://example.com/marta", label: "Profile" }],
+          notes: "Owns platform reliability.",
+        },
+      ],
     });
 
     expect(prompt).toContain("LATEST USER QUESTION");
     expect(prompt).toContain("Build distributed systems");
     expect(prompt).toContain("Senior Engineer");
     expect(prompt).toContain("Earlier note");
+    expect(prompt).toContain("PEOPLE IN THIS HIRING PROCESS");
+    expect(prompt).toContain("Marta García");
+    expect(prompt).toContain("Owns platform reliability.");
   });
 
   it("renders a plain-text copy-paste prompt from context", () => {
@@ -38,6 +51,16 @@ describe("JobAnalysisChatPromptService", () => {
       cv: { name: "My CV", type: "template", profile: { basics: {} } },
       analysis: { title: "Senior Engineer", job_description: "Build systems" },
       cvText: "React engineer",
+      people: [
+        {
+          name: "Marta García",
+          role: "hiring_manager",
+          jobTitle: null,
+          organization: "Acme",
+          links: [],
+          notes: "Ask about the platform roadmap.",
+        },
+      ],
     } as unknown as JobAnalysisChatContext;
 
     const prompt = service.buildForClipboard({
@@ -49,5 +72,8 @@ describe("JobAnalysisChatPromptService", () => {
     expect(prompt).toContain("Do not wrap it in JSON");
     expect(prompt).toContain("Build systems");
     expect(prompt).toContain("My CV");
+    expect(prompt).toContain("Marta García");
+    expect(prompt).toContain("Ask about the platform roadmap.");
+    expect(prompt).toContain("CV, offer, analysis, and people data");
   });
 });

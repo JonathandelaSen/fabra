@@ -37,7 +37,11 @@ import {
   ListReceivedFeedbackInRangeQuery,
   ListReceivedFeedbackInRangeQueryHandler,
 } from "@/backend/modules/received-feedback";
-import { createSelectionProcessModule } from "@/backend/modules/selection-process";
+import {
+  createSelectionProcessModule,
+  ListOpportunityPeopleForChatQuery,
+  ListOpportunityPeopleForChatQueryHandler,
+} from "@/backend/modules/selection-process";
 import {
   createWorkJournalModule,
   ListJournalEntriesInRangeQuery,
@@ -81,6 +85,12 @@ export const receivedFeedbackModule = createReceivedFeedbackModule(
 export const selectionProcessModule = createSelectionProcessModule(
   telemetry,
   eventBus,
+);
+queryBus.register(
+  ListOpportunityPeopleForChatQuery.queryName,
+  new ListOpportunityPeopleForChatQueryHandler(
+    selectionProcessModule.listOpportunityPeopleForChat,
+  ),
 );
 export const workJournalModule = createWorkJournalModule(telemetry, eventBus);
 export const performanceReviewModule = createPerformanceReviewModule(
@@ -150,6 +160,7 @@ const originalBind = _jobAnalysisChatModule.bindRequest.bind(_jobAnalysisChatMod
 _jobAnalysisChatModule.bindRequest = (client) => {
   cvAnalysisModule.bindRequest(client);
   jobMatchAnalysisModule.bindRequest(client);
+  selectionProcessModule.bindRequest(client);
   return originalBind(client);
 };
 export const jobAnalysisChatModule = _jobAnalysisChatModule;

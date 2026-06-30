@@ -25,8 +25,8 @@ interface UseJobMatchOfferChatParams {
   aiProvider: StoredAIProvider;
   aiApiKey: string;
   aiModel: string;
-  hasAIApiKey: boolean;
   focusComposer: () => void;
+  draftRequest?: { id: number; text: string } | null;
 }
 
 export function useJobMatchOfferChat({
@@ -34,8 +34,8 @@ export function useJobMatchOfferChat({
   aiProvider,
   aiApiKey,
   aiModel,
-  hasAIApiKey,
   focusComposer,
+  draftRequest = null,
 }: UseJobMatchOfferChatParams) {
   const t = useTranslations("analysisDetail.chat");
   const [conversations, setConversations] = useState<
@@ -45,7 +45,7 @@ export function useJobMatchOfferChat({
     string | null
   >(null);
   const [messages, setMessages] = useState<JobAnalysisChatMessage[]>([]);
-  const [draft, setDraft] = useState("");
+  const [draft, setDraft] = useState(() => draftRequest?.text ?? "");
   const [provider, setProvider] = useState<StoredAIProvider>("gemini");
   const [model, setModel] = useState<string>(DEFAULT_GEMINI_MODEL);
   const [isLoadingConversations, setIsLoadingConversations] = useState(true);
@@ -57,6 +57,12 @@ export function useJobMatchOfferChat({
   const [isPreparingCopyPaste, setIsPreparingCopyPaste] = useState(false);
   const [isApplyingCopyPaste, setIsApplyingCopyPaste] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const draftRequestId = draftRequest?.id;
+  useEffect(() => {
+    if (draftRequestId === undefined) return;
+    focusComposer();
+  }, [draftRequestId, focusComposer]);
 
   const loadConversations = useCallback(async () => {
     setIsLoadingConversations(true);
@@ -227,11 +233,11 @@ export function useJobMatchOfferChat({
     [
       aiApiKey,
       aiModel,
+      aiProvider,
       provider,
       analysisId,
       draft,
       ensureConversation,
-      hasAIApiKey,
       isSending,
       model,
       t,
