@@ -6,6 +6,7 @@ const checks = [
   ["node", ["scripts/verify-ddd-entities.mjs"]],
   ["node", ["scripts/verify-ddd-value-objects.mjs"]],
   ["node", ["scripts/verify-ddd-domain-errors.mjs"]],
+  ["node", ["scripts/verify-ddd-errors-in-vos-and-entities.mjs"]],
   ["node", ["scripts/verify-ddd-repository-return-types.mjs"]],
   ["node", ["scripts/verify-ddd-use-cases-return-types.mjs"]],
   ["node", ["scripts/verify-ddd-services.mjs"]],
