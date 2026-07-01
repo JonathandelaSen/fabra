@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { JobMatchAnalysisOptionalTimestamp } from "./job-match-analysis-optional-timestamp.value-object";
+import { JobMatchAnalysisOptionalTimestamp, InvalidJobMatchAnalysisTimestampError } from "./job-match-analysis-optional-timestamp.value-object";
 
 describe("JobMatchAnalysisOptionalTimestamp", () => {
   it("round-trips timestamps and null", () => {
@@ -15,7 +15,7 @@ describe("JobMatchAnalysisOptionalTimestamp", () => {
 
   it("rejects blank timestamps when present", () => {
     expect(() => JobMatchAnalysisOptionalTimestamp.fromPrimitives(" ")).toThrow(
-      "Job match analysis timestamp cannot be empty when present.",
+      InvalidJobMatchAnalysisTimestampError,
     );
   });
 });

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { InvalidEntityIdError } from "@/backend/modules/shared";
 import { JobMatchAnalysisId } from "./job-match-analysis-id.value-object";
 
 describe("JobMatchAnalysisId", () => {
@@ -7,6 +8,6 @@ describe("JobMatchAnalysisId", () => {
   });
 
   it("rejects blank ids", () => {
-    expect(() => JobMatchAnalysisId.fromPrimitives(" ")).toThrow("Job match analysis id is required");
+    expect(() => JobMatchAnalysisId.fromPrimitives(" ")).toThrow(InvalidEntityIdError);
   });
 });

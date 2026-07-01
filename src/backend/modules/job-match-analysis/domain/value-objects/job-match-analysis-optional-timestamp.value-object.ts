@@ -1,4 +1,12 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
+
+export class InvalidJobMatchAnalysisTimestampError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.INVALID_JOB_MATCH_ANALYSIS_TIMESTAMP, "Job match analysis timestamp cannot be empty when present.", { value });
+    this.name = "InvalidJobMatchAnalysisTimestampError";
+  }
+}
 
 export class JobMatchAnalysisOptionalTimestamp extends ValueObject<
   string | null
@@ -6,9 +14,7 @@ export class JobMatchAnalysisOptionalTimestamp extends ValueObject<
   private constructor(private readonly value: string | null) {
     super();
     if (value !== null && !value.trim()) {
-      throw new Error(
-        "Job match analysis timestamp cannot be empty when present.",
-      );
+      throw new InvalidJobMatchAnalysisTimestampError(value);
     }
   }
 

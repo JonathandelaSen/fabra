@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ReviewType } from "./review-type.value-object";
+import { ReviewType, InvalidReviewTypeError } from "./review-type.value-object";
 
 describe("ReviewType", () => {
   it("accepts known types", () => {
@@ -9,6 +9,6 @@ describe("ReviewType", () => {
   });
 
   it("rejects unknown types", () => {
-    expect(() => ReviewType.fromPrimitives("bogus")).toThrow();
+    expect(() => ReviewType.fromPrimitives("bogus")).toThrow(InvalidReviewTypeError);
   });
 });

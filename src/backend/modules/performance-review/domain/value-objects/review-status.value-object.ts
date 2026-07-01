@@ -15,6 +15,13 @@ export const REVIEW_STATUSES = [
 
 export type ReviewStatusValue = (typeof REVIEW_STATUSES)[number];
 
+export class InvalidReviewStatusError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.INVALID_REVIEW_STATUS, `Invalid review status: ${value}`, { value });
+    this.name = "InvalidReviewStatusError";
+  }
+}
+
 export class ReviewStatus extends ValueObject<ReviewStatusValue> {
   private constructor(private readonly value: ReviewStatusValue) {
     super();
@@ -22,7 +29,7 @@ export class ReviewStatus extends ValueObject<ReviewStatusValue> {
 
   static fromPrimitives(value: string): ReviewStatus {
     if (!REVIEW_STATUSES.includes(value as ReviewStatusValue)) {
-      throw new DomainError(ErrorCode.VALIDATION_FAILED, `Invalid review status: ${value}`);
+      throw new InvalidReviewStatusError(value);
     }
     return new ReviewStatus(value as ReviewStatusValue);
   }

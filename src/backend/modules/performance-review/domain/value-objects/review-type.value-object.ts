@@ -13,6 +13,13 @@ export const REVIEW_TYPES = [
 
 export type ReviewTypeValue = (typeof REVIEW_TYPES)[number];
 
+export class InvalidReviewTypeError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.INVALID_REVIEW_TYPE, `Invalid review type: ${value}`, { value });
+    this.name = "InvalidReviewTypeError";
+  }
+}
+
 export class ReviewType extends ValueObject<ReviewTypeValue> {
   private constructor(private readonly value: ReviewTypeValue) {
     super();
@@ -20,7 +27,7 @@ export class ReviewType extends ValueObject<ReviewTypeValue> {
 
   static fromPrimitives(value: string): ReviewType {
     if (!REVIEW_TYPES.includes(value as ReviewTypeValue)) {
-      throw new DomainError(ErrorCode.VALIDATION_FAILED, `Invalid review type: ${value}`);
+      throw new InvalidReviewTypeError(value);
     }
     return new ReviewType(value as ReviewTypeValue);
   }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { SelfAssessmentContent } from "./self-assessment-content.value-object";
+import { SelfAssessmentContent, InvalidSelfAssessmentContentError } from "./self-assessment-content.value-object";
 
 describe("SelfAssessmentContent", () => {
   it("round-trips its primitive value", () => {
@@ -8,6 +8,6 @@ describe("SelfAssessmentContent", () => {
   });
 
   it("rejects empty values", () => {
-    expect(() => SelfAssessmentContent.fromPrimitives("  ")).toThrow();
+    expect(() => SelfAssessmentContent.fromPrimitives("  ")).toThrow(InvalidSelfAssessmentContentError);
   });
 });

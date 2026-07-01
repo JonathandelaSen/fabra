@@ -1,6 +1,13 @@
 import { ErrorCode } from "@/shared/error-codes";
 import { DomainError, ValueObject } from "@/backend/modules/shared";
 
+export class InvalidReviewTitleError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.INVALID_REVIEW_TITLE, "Review title cannot be empty.", { value });
+    this.name = "InvalidReviewTitleError";
+  }
+}
+
 export class ReviewTitle extends ValueObject<string> {
   private constructor(private readonly value: string) {
     super();
@@ -8,7 +15,7 @@ export class ReviewTitle extends ValueObject<string> {
 
   static fromPrimitives(value: string): ReviewTitle {
     const trimmed = value.trim();
-    if (!trimmed) throw new DomainError(ErrorCode.VALIDATION_FAILED, "Review title cannot be empty.");
+    if (!trimmed) throw new InvalidReviewTitleError(value);
     return new ReviewTitle(trimmed);
   }
 

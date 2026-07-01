@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EvidenceSource } from "./evidence-source.value-object";
+import { EvidenceSource, InvalidEvidenceSourceError } from "./evidence-source.value-object";
 
 describe("EvidenceSource", () => {
   it("accepts known sources", () => {
@@ -9,6 +9,6 @@ describe("EvidenceSource", () => {
   });
 
   it("rejects unknown sources", () => {
-    expect(() => EvidenceSource.fromPrimitives("bogus")).toThrow();
+    expect(() => EvidenceSource.fromPrimitives("bogus")).toThrow(InvalidEvidenceSourceError);
   });
 });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { JobMatchAnalysisOptionalCounter } from "./job-match-analysis-optional-counter.value-object";
+import { JobMatchAnalysisOptionalCounter, InvalidJobMatchAnalysisCounterError } from "./job-match-analysis-optional-counter.value-object";
 
 describe("JobMatchAnalysisOptionalCounter", () => {
   it("round-trips counts and null", () => {
@@ -13,7 +13,7 @@ describe("JobMatchAnalysisOptionalCounter", () => {
 
   it("rejects negative counts", () => {
     expect(() => JobMatchAnalysisOptionalCounter.fromPrimitives(-1)).toThrow(
-      "Job match analysis counter cannot be negative.",
+      InvalidJobMatchAnalysisCounterError,
     );
   });
 });

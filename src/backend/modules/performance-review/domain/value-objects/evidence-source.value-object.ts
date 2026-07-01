@@ -17,6 +17,13 @@ export const EVIDENCE_SOURCES = [
 
 export type EvidenceSourceValue = (typeof EVIDENCE_SOURCES)[number];
 
+export class InvalidEvidenceSourceError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.INVALID_EVIDENCE_SOURCE, `Invalid evidence source: ${value}`, { value });
+    this.name = "InvalidEvidenceSourceError";
+  }
+}
+
 export class EvidenceSource extends ValueObject<EvidenceSourceValue> {
   private constructor(private readonly value: EvidenceSourceValue) {
     super();
@@ -24,7 +31,7 @@ export class EvidenceSource extends ValueObject<EvidenceSourceValue> {
 
   static fromPrimitives(value: string): EvidenceSource {
     if (!EVIDENCE_SOURCES.includes(value as EvidenceSourceValue)) {
-      throw new DomainError(ErrorCode.VALIDATION_FAILED, `Invalid evidence source: ${value}`);
+      throw new InvalidEvidenceSourceError(value);
     }
     return new EvidenceSource(value as EvidenceSourceValue);
   }
