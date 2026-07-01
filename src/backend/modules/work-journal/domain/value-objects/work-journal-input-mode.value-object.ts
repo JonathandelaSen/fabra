@@ -1,4 +1,5 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 
 export const workJournalEntryInputModes = {
   manual: "manual",
@@ -7,6 +8,13 @@ export const workJournalEntryInputModes = {
 
 export type EntryInputMode =
   (typeof workJournalEntryInputModes)[keyof typeof workJournalEntryInputModes];
+
+class InvalidInputModeError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.WORK_JOURNAL_INVALID_INPUT_MODE, `Invalid work journal input mode: ${value}`, { value });
+    this.name = "InvalidInputModeError";
+  }
+}
 
 export class WorkJournalInputMode extends ValueObject<EntryInputMode> {
   private constructor(private readonly value: EntryInputMode) {
@@ -18,7 +26,7 @@ export class WorkJournalInputMode extends ValueObject<EntryInputMode> {
       value !== workJournalEntryInputModes.manual &&
       value !== workJournalEntryInputModes.aiAssisted
     ) {
-      throw new Error(`Invalid work journal input mode: ${value}`);
+      throw new InvalidInputModeError(value);
     }
     return new WorkJournalInputMode(value);
   }

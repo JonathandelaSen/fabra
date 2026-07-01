@@ -1,4 +1,5 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 
 export const workJournalContextTypes = {
   employment: "employment",
@@ -10,6 +11,13 @@ export const workJournalContextTypes = {
 export type ContextType =
   (typeof workJournalContextTypes)[keyof typeof workJournalContextTypes];
 
+class InvalidContextTypeError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.WORK_JOURNAL_INVALID_CONTEXT_TYPE, `Invalid work journal context type: ${value}`, { value });
+    this.name = "InvalidContextTypeError";
+  }
+}
+
 export class WorkJournalContextType extends ValueObject<ContextType> {
   private constructor(private readonly value: ContextType) {
     super();
@@ -17,7 +25,7 @@ export class WorkJournalContextType extends ValueObject<ContextType> {
 
   static fromPrimitives(value: string): WorkJournalContextType {
     if (!Object.values(workJournalContextTypes).includes(value as ContextType)) {
-      throw new Error(`Invalid work journal context type: ${value}`);
+      throw new InvalidContextTypeError(value);
     }
     return new WorkJournalContextType(value as ContextType);
   }
