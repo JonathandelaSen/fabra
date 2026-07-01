@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CVChatRole } from "./cv-chat-role.value-object";
+import { CVChatRole, InvalidCVChatRoleError } from "./cv-chat-role.value-object";
 
 describe("CVChatRole", () => {
   it("accepts user and assistant roles", () => {
@@ -11,7 +11,7 @@ describe("CVChatRole", () => {
 
   it("rejects unsupported roles", () => {
     expect(() => CVChatRole.fromPrimitives("system")).toThrow(
-      "Analysis chat role must be user or assistant",
+      InvalidCVChatRoleError,
     );
   });
 });

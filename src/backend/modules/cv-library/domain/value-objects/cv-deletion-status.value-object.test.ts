@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CVDeletionStatus } from "./cv-deletion-status.value-object";
+import { CVDeletionStatus, InvalidCVDeletionStatusError } from "./cv-deletion-status.value-object";
 
 describe("CVDeletionStatus", () => {
   it("builds a deleted status", () => {
@@ -33,7 +33,7 @@ describe("CVDeletionStatus", () => {
 
   it("rejects an invalid status", () => {
     expect(() => CVDeletionStatus.fromPrimitives("nope")).toThrow(
-      "Invalid delete CV document status",
+      InvalidCVDeletionStatusError,
     );
   });
 });

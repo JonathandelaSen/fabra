@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CVChatContent } from "./cv-chat-content.value-object";
+import { CVChatContent, InvalidCVChatContentError } from "./cv-chat-content.value-object";
 
 describe("CVChatContent", () => {
   it("trims and round-trips content", () => {
@@ -10,7 +10,7 @@ describe("CVChatContent", () => {
 
   it("rejects blank content", () => {
     expect(() => CVChatContent.fromPrimitives(" ")).toThrow(
-      "Analysis chat content cannot be empty",
+      InvalidCVChatContentError,
     );
   });
 });

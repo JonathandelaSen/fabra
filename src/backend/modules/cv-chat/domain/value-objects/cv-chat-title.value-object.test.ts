@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CVChatTitle } from "./cv-chat-title.value-object";
+import { CVChatTitle, InvalidCVChatTitleError } from "./cv-chat-title.value-object";
 
 describe("CVChatTitle", () => {
   it("trims a valid title", () => {
@@ -10,7 +10,7 @@ describe("CVChatTitle", () => {
 
   it("rejects blank titles", () => {
     expect(() => CVChatTitle.fromPrimitives(" ")).toThrow(
-      "Analysis chat title cannot be empty",
+      InvalidCVChatTitleError,
     );
   });
 });

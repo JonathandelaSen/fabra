@@ -141,13 +141,19 @@ function normalizeText(value: string | null, max: number): string | null {
   return normalized;
 }
 
+import {
+  CommitmentInvalidDateError,
+  CommitmentTargetDateBeforeStartDateError,
+  CommitmentInvalidPropertyError,
+} from "../errors/commitment-validation.errors";
+
 function validateDateRange(startDate: string, targetDate: string | null): void {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) throw new Error("Invalid start date.");
-  if (targetDate !== null && !/^\d{4}-\d{2}-\d{2}$/.test(targetDate)) throw new Error("Invalid target date.");
-  if (targetDate !== null && targetDate < startDate) throw new Error("Target date cannot be before start date.");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) throw new CommitmentInvalidDateError("Invalid start date.");
+  if (targetDate !== null && !/^\d{4}-\d{2}-\d{2}$/.test(targetDate)) throw new CommitmentInvalidDateError("Invalid target date.");
+  if (targetDate !== null && targetDate < startDate) throw new CommitmentTargetDateBeforeStartDateError();
 }
 
 function assertOneOf<T extends string>(value: T, allowed: readonly T[], label: string): T {
-  if (!allowed.includes(value)) throw new Error(`Invalid ${label}.`);
+  if (!allowed.includes(value)) throw new CommitmentInvalidPropertyError(`Invalid ${label}.`);
   return value;
 }

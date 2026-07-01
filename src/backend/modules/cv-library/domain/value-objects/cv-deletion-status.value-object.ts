@@ -1,4 +1,5 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 
 export const cvDeletionStatuses = {
   deleted: "deleted",
@@ -8,6 +9,13 @@ export const cvDeletionStatuses = {
 
 export type CVDeletionStatusPrimitives =
   (typeof cvDeletionStatuses)[keyof typeof cvDeletionStatuses];
+
+export class InvalidCVDeletionStatusError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.INVALID_CV_DELETION_STATUS, "Invalid delete CV document status", { value });
+    this.name = "InvalidCVDeletionStatusError";
+  }
+}
 
 export class CVDeletionStatus extends ValueObject<CVDeletionStatusPrimitives> {
   private constructor(private readonly value: CVDeletionStatusPrimitives) {
@@ -32,7 +40,7 @@ export class CVDeletionStatus extends ValueObject<CVDeletionStatusPrimitives> {
       value !== cvDeletionStatuses.inUse &&
       value !== cvDeletionStatuses.notFound
     ) {
-      throw new Error("Invalid delete CV document status");
+      throw new InvalidCVDeletionStatusError(value);
     }
     return new CVDeletionStatus(value);
   }

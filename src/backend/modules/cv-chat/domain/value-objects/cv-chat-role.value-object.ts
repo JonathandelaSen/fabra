@@ -1,4 +1,5 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 
 export const cvChatRoles = {
   user: "user",
@@ -7,6 +8,13 @@ export const cvChatRoles = {
 
 export type CVChatRolePrimitives =
   (typeof cvChatRoles)[keyof typeof cvChatRoles];
+
+export class InvalidCVChatRoleError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.INVALID_CV_CHAT_ROLE, "Analysis chat role must be user or assistant.", { value });
+    this.name = "InvalidCVChatRoleError";
+  }
+}
 
 export class CVChatRole extends ValueObject<CVChatRolePrimitives> {
   private constructor(private readonly value: CVChatRolePrimitives) {
@@ -18,7 +26,7 @@ export class CVChatRole extends ValueObject<CVChatRolePrimitives> {
       value !== cvChatRoles.user &&
       value !== cvChatRoles.assistant
     ) {
-      throw new Error("Analysis chat role must be user or assistant.");
+      throw new InvalidCVChatRoleError(value);
     }
 
     return new CVChatRole(value);

@@ -1,5 +1,6 @@
 import { AggregateRoot, Timestamp, UserId } from "@/backend/modules/shared";
 import { CVDocumentId } from "../value-objects/cv-document-id.value-object";
+import { PublicCVNoteBodyRequiredError } from "../errors/public-cv-note-body-required.error";
 
 export const cvPublicNoteAnchorTypes = {
   presentation: "presentation",
@@ -31,7 +32,7 @@ export class CVPublicNote extends AggregateRoot {
     UserId.fromPrimitives(values.userId);
     Timestamp.fromPrimitives(values.createdAt);
     Timestamp.fromPrimitives(values.updatedAt);
-    if (!values.body.trim()) throw new Error("CV public note body is required");
+    if (!values.body.trim()) throw new PublicCVNoteBodyRequiredError();
     return new CVPublicNote({ ...values, body: values.body.trim() });
   }
   toPrimitives(): CVPublicNotePrimitives {

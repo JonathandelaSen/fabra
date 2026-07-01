@@ -1,5 +1,6 @@
 import { AggregateRoot, Timestamp, UserId } from "@/backend/modules/shared";
 import { CVDocumentId } from "../value-objects/cv-document-id.value-object";
+import { PublicCVFeedbackRequiredError } from "../errors/public-cv-feedback-required.error";
 
 export interface CVPublicFeedbackPrimitives {
   id: string;
@@ -20,7 +21,7 @@ export class CVPublicFeedback extends AggregateRoot {
     UserId.fromPrimitives(values.userId);
     Timestamp.fromPrimitives(values.createdAt);
     if (!values.feedbackText.trim())
-      throw new Error("Public CV feedback text is required");
+      throw new PublicCVFeedbackRequiredError();
     return new CVPublicFeedback({
       ...values,
       feedbackText: values.feedbackText.trim(),

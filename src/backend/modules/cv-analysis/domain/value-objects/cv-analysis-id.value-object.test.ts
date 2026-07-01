@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { InvalidEntityIdError } from "@/backend/modules/shared";
 import { CVAnalysisId } from "./cv-analysis-id.value-object";
 
 describe("CVAnalysisId", () => {
@@ -7,6 +8,6 @@ describe("CVAnalysisId", () => {
   });
 
   it("rejects blank ids", () => {
-    expect(() => CVAnalysisId.fromPrimitives(" ")).toThrow("CV analysis id is required");
+    expect(() => CVAnalysisId.fromPrimitives(" ")).toThrow(InvalidEntityIdError);
   });
 });
