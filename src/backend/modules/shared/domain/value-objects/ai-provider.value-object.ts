@@ -11,9 +11,16 @@ export function isAIProvider(value: unknown): value is AIProvider {
   return typeof value === "string" && AI_PROVIDERS.includes(value as AIProvider);
 }
 
+class UnsupportedAIProviderError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.AI_PROVIDER_UNSUPPORTED, "Unsupported AI provider.", { value });
+    this.name = "UnsupportedAIProviderError";
+  }
+}
+
 export function parseAIProvider(value: unknown): AIProvider {
   if (isAIProvider(value)) return value;
-  throw new DomainError(ErrorCode.AI_PROVIDER_UNSUPPORTED, "Unsupported AI provider.");
+  throw new UnsupportedAIProviderError(String(value));
 }
 
 export class AIProviderValue extends ValueObject<AIProvider> {
