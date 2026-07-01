@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ProfileSchemaVersion } from "./profile-schema-version.value-object";
+import { ProfileSchemaVersion, InvalidProfileSchemaVersionError } from "./profile-schema-version.value-object";
 
 describe("ProfileSchemaVersion", () => {
   it("round-trips a schema version", () => {
@@ -10,7 +10,7 @@ describe("ProfileSchemaVersion", () => {
 
   it("rejects blank versions", () => {
     expect(() => ProfileSchemaVersion.fromPrimitives(" ")).toThrow(
-      "Profile schema version is required",
+      InvalidProfileSchemaVersionError,
     );
   });
 });

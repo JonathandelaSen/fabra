@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CVPdfStoragePath } from "./cv-pdf-storage-path.value-object";
+import { CVPdfStoragePath, InvalidCVPdfStoragePathError } from "./cv-pdf-storage-path.value-object";
 
 describe("CVPdfStoragePath", () => {
   it("round-trips primitives", () => {
@@ -9,6 +9,8 @@ describe("CVPdfStoragePath", () => {
   });
 
   it("rejects blank values", () => {
-    expect(() => CVPdfStoragePath.fromPrimitives(" ")).toThrow("empty");
+    expect(() => CVPdfStoragePath.fromPrimitives(" ")).toThrow(
+      InvalidCVPdfStoragePathError,
+    );
   });
 });

@@ -1,4 +1,5 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 
 export const cvDocumentTypes = {
   uploaded: "uploaded",
@@ -8,6 +9,13 @@ export const cvDocumentTypes = {
 
 export type CVDocumentTypePrimitives =
   (typeof cvDocumentTypes)[keyof typeof cvDocumentTypes];
+
+export class InvalidCVDocumentTypeError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.INVALID_CV_DOCUMENT_TYPE, "Invalid CV document type", { value });
+    this.name = "InvalidCVDocumentTypeError";
+  }
+}
 
 export class CVDocumentType extends ValueObject<CVDocumentTypePrimitives> {
   private constructor(private readonly value: CVDocumentTypePrimitives) {
@@ -32,7 +40,7 @@ export class CVDocumentType extends ValueObject<CVDocumentTypePrimitives> {
         value as CVDocumentTypePrimitives,
       )
     ) {
-      throw new Error("Invalid CV document type");
+      throw new InvalidCVDocumentTypeError(value);
     }
     return new CVDocumentType(value as CVDocumentTypePrimitives);
   }

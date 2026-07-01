@@ -1,4 +1,5 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 
 export const jobAnalysisChatRoles = {
   user: "user",
@@ -7,6 +8,13 @@ export const jobAnalysisChatRoles = {
 
 export type JobAnalysisChatRolePrimitives =
   (typeof jobAnalysisChatRoles)[keyof typeof jobAnalysisChatRoles];
+
+export class InvalidJobAnalysisChatRoleError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.INVALID_JOB_ANALYSIS_CHAT_ROLE, "Analysis chat role must be user or assistant.", { value });
+    this.name = "InvalidJobAnalysisChatRoleError";
+  }
+}
 
 export class JobAnalysisChatRole extends ValueObject<JobAnalysisChatRolePrimitives> {
   private constructor(private readonly value: JobAnalysisChatRolePrimitives) {
@@ -18,7 +26,7 @@ export class JobAnalysisChatRole extends ValueObject<JobAnalysisChatRolePrimitiv
       value !== jobAnalysisChatRoles.user &&
       value !== jobAnalysisChatRoles.assistant
     ) {
-      throw new Error("Analysis chat role must be user or assistant.");
+      throw new InvalidJobAnalysisChatRoleError(value);
     }
 
     return new JobAnalysisChatRole(value);

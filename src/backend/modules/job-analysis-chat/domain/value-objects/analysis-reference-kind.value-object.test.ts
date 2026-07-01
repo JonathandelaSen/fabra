@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { AnalysisReferenceKind } from "./analysis-reference-kind.value-object";
+import { AnalysisReferenceKind, InvalidAnalysisReferenceKindError } from "./analysis-reference-kind.value-object";
 
 describe("AnalysisReferenceKind", () => {
   it("round-trips supported types", () => {
@@ -8,6 +8,6 @@ describe("AnalysisReferenceKind", () => {
   });
 
   it("rejects unsupported types", () => {
-    expect(() => AnalysisReferenceKind.fromPrimitives("other")).toThrow();
+    expect(() => AnalysisReferenceKind.fromPrimitives("other")).toThrow(InvalidAnalysisReferenceKindError);
   });
 });

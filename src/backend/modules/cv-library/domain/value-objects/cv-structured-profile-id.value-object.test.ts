@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { InvalidEntityIdError } from "@/backend/modules/shared";
 import { CVStructuredProfileId } from "./cv-structured-profile-id.value-object";
 
 describe("CVStructuredProfileId", () => {
@@ -10,7 +11,7 @@ describe("CVStructuredProfileId", () => {
 
   it("rejects blank ids", () => {
     expect(() => CVStructuredProfileId.fromPrimitives(" ")).toThrow(
-      "CV structured profile id is required",
+      InvalidEntityIdError,
     );
   });
 });

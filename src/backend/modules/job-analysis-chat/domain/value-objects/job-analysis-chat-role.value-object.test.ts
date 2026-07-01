@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { JobAnalysisChatRole } from "./job-analysis-chat-role.value-object";
+import { JobAnalysisChatRole, InvalidJobAnalysisChatRoleError } from "./job-analysis-chat-role.value-object";
 
 describe("JobAnalysisChatRole", () => {
   it("accepts user and assistant roles", () => {
@@ -11,7 +11,7 @@ describe("JobAnalysisChatRole", () => {
 
   it("rejects unsupported roles", () => {
     expect(() => JobAnalysisChatRole.fromPrimitives("system")).toThrow(
-      "Analysis chat role must be user or assistant",
+      InvalidJobAnalysisChatRoleError,
     );
   });
 });

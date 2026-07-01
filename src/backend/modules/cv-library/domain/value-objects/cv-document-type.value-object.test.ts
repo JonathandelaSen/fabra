@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CVDocumentType } from "./cv-document-type.value-object";
+import { CVDocumentType, InvalidCVDocumentTypeError } from "./cv-document-type.value-object";
 
 describe("CVDocumentType", () => {
   it("accepts uploaded, template, and jsonResume document types", () => {
@@ -16,7 +16,7 @@ describe("CVDocumentType", () => {
 
   it("rejects unknown document types", () => {
     expect(() => CVDocumentType.fromPrimitives("other")).toThrow(
-      "Invalid CV document type",
+      InvalidCVDocumentTypeError,
     );
   });
 

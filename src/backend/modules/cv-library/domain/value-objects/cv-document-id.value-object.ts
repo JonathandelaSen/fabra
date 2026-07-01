@@ -1,16 +1,11 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { EntityId } from "@/backend/modules/shared";
 
-export class CVDocumentId extends ValueObject<string> {
-  private constructor(private readonly value: string) {
-    super();
-    if (!value.trim()) throw new Error("CV document id is required");
+export class CVDocumentId extends EntityId {
+  private constructor(value: string) {
+    super(value, "CV document id");
   }
 
-  static fromPrimitives(value: string): CVDocumentId {
+  static override fromPrimitives(value: string): CVDocumentId {
     return new CVDocumentId(value);
-  }
-
-  toPrimitives(): string {
-    return this.value;
   }
 }

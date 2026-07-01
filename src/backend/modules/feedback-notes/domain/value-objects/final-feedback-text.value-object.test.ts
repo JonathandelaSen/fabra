@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FinalFeedbackText } from "./final-feedback-text.value-object";
+import { FinalFeedbackText, InvalidFinalFeedbackTextError } from "./final-feedback-text.value-object";
 
 describe("FinalFeedbackText", () => {
   it("round-trips its primitive value", () => {
@@ -8,6 +8,6 @@ describe("FinalFeedbackText", () => {
   });
 
   it("rejects empty values", () => {
-    expect(() => FinalFeedbackText.fromPrimitives("   ")).toThrow();
+    expect(() => FinalFeedbackText.fromPrimitives("   ")).toThrow(InvalidFinalFeedbackTextError);
   });
 });

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { InvalidEntityIdError } from "@/backend/modules/shared";
 import { CVDocumentId } from "./cv-document-id.value-object";
 
 describe("CVDocumentId", () => {
@@ -8,7 +9,7 @@ describe("CVDocumentId", () => {
 
   it("rejects blank ids", () => {
     expect(() => CVDocumentId.fromPrimitives(" ")).toThrow(
-      "CV document id is required",
+      InvalidEntityIdError,
     );
   });
 });

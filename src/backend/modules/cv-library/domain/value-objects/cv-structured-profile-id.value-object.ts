@@ -1,16 +1,11 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { EntityId } from "@/backend/modules/shared";
 
-export class CVStructuredProfileId extends ValueObject<string> {
-  private constructor(private readonly value: string) {
-    super();
-    if (!value.trim()) throw new Error("CV structured profile id is required");
+export class CVStructuredProfileId extends EntityId {
+  private constructor(value: string) {
+    super(value, "CV structured profile id");
   }
 
-  static fromPrimitives(value: string): CVStructuredProfileId {
+  static override fromPrimitives(value: string): CVStructuredProfileId {
     return new CVStructuredProfileId(value);
-  }
-
-  toPrimitives(): string {
-    return this.value;
   }
 }
