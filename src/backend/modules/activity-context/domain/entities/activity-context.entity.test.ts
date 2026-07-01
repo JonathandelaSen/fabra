@@ -1,6 +1,7 @@
 import { EntityId, UserId } from "@/backend/modules/shared";
 import { describe, expect, it } from "vitest";
 import { ActivityContext } from "./activity-context.entity";
+import { InvalidActivityContextNameError } from "../errors/invalid-activity-context-name.error";
 
 describe("ActivityContext", () => {
   it("creates and serializes an activity context", () => {
@@ -85,5 +86,16 @@ describe("ActivityContext", () => {
 
     expect(events.map((e) => e.eventName)).toEqual(["activity_context_deleted"]);
     expect(events[0].toPrimitives()).toEqual({ contextId: "ctx-1" });
+  });
+
+  it("rejects an empty name with a specific domain error", () => {
+    expect(() => ActivityContext.create({
+      id: EntityId.fromPrimitives("ctx-1"),
+      userId: UserId.fromPrimitives("user-1"),
+      type: "project",
+      name: "   ",
+      createdAt: "2026-05-15T00:00:00.000Z",
+      updatedAt: "2026-05-15T00:00:00.000Z",
+    })).toThrow(InvalidActivityContextNameError);
   });
 });

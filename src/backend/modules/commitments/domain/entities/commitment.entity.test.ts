@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { EntityId, UserId } from "@/backend/modules/shared";
 import { Commitment } from "./commitment.entity";
+import { CommitmentTargetDateBeforeStartDateError } from "../errors/commitment-target-date-before-start-date.error";
 
 describe("Commitment", () => {
   it("creates and serializes an objective", () => {
@@ -36,6 +37,6 @@ describe("Commitment", () => {
         createdAt: "2026-05-12T00:00:00.000Z",
         updatedAt: "2026-05-12T00:00:00.000Z",
       })
-    ).toThrow("Target date");
+    ).toThrow(CommitmentTargetDateBeforeStartDateError);
   });
 });

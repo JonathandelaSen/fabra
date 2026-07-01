@@ -1,4 +1,8 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
+export class InvalidActivityContextSuggestionSourceError extends DomainError {
+  constructor(value: string) { super(ErrorCode.INVALID_ACTIVITY_CONTEXT_SUGGESTION_SOURCE, `Invalid activity context suggestion source: ${value}`, { value }); this.name = "InvalidActivityContextSuggestionSourceError"; }
+}
 
 export const activityContextSuggestionSources = {
   cv: "cv",
@@ -14,7 +18,7 @@ export class ActivityContextSuggestionSource extends ValueObject<ActivityContext
 
   static fromPrimitives(value: string): ActivityContextSuggestionSource {
     if (value !== activityContextSuggestionSources.cv) {
-      throw new Error("Invalid activity context suggestion source.");
+      throw new InvalidActivityContextSuggestionSourceError(value);
     }
     return new ActivityContextSuggestionSource(value);
   }

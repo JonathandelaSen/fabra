@@ -1,5 +1,6 @@
 import { AggregateRoot, EntityId, UserId } from "@/backend/modules/shared";
 import { CommitmentDomainEvent } from "../events/commitment-domain.event";
+import { CommitmentInvalidPropertyError } from "../errors/commitment-invalid-property.error";
 
 export const commitmentOutcomeTypes = {
   promotion: "promotion",
@@ -109,8 +110,8 @@ export class CommitmentOutcome extends AggregateRoot {
 
 function assertText(value: string, label: string, max: number): string {
   const normalized = value.trim();
-  if (!normalized) throw new Error(`${label} cannot be empty.`);
-  if (normalized.length > max) throw new Error(`${label} is too long.`);
+  if (!normalized) throw new CommitmentInvalidPropertyError(`${label} cannot be empty.`);
+  if (normalized.length > max) throw new CommitmentInvalidPropertyError(`${label} is too long.`);
   return normalized;
 }
 
@@ -118,7 +119,7 @@ function normalizeText(value: string | null): string | null {
   if (value === null) return null;
   const normalized = value.trim();
   if (!normalized) return null;
-  if (normalized.length > 10000) throw new Error("Text is too long.");
+  if (normalized.length > 10000) throw new CommitmentInvalidPropertyError("Text is too long.");
   return normalized;
 }
 
@@ -126,6 +127,6 @@ function normalizeCurrency(value: string | null): string | null {
   if (value === null) return null;
   const normalized = value.trim().toUpperCase();
   if (!normalized) return null;
-  if (!/^[A-Z]{3}$/.test(normalized)) throw new Error("Invalid currency.");
+  if (!/^[A-Z]{3}$/.test(normalized)) throw new CommitmentInvalidPropertyError("Invalid currency.");
   return normalized;
 }

@@ -8,6 +8,7 @@ import {
   CVExtractionDiagnostics,
   type CVExtractionDiagnosticsPrimitives,
 } from "./cv-extraction-diagnostics.value-object";
+import { CVDocumentSnapshot } from "./cv-document-snapshot.value-object";
 
 export interface CVAnalysisInputPrimitives {
   cv: CVDocumentPrimitives;
@@ -21,7 +22,7 @@ export interface CVAnalysisInputPrimitives {
 
 export class CVAnalysisInput extends ValueObject<CVAnalysisInputPrimitives> {
   private constructor(
-    private readonly cvValue: CVDocumentPrimitives,
+    private readonly cvValue: CVDocumentSnapshot,
     private readonly analysisTextValue: LongText | null,
     private readonly filenameValue: LongText,
     private readonly fileSizeValue: Counter | null,
@@ -36,7 +37,7 @@ export class CVAnalysisInput extends ValueObject<CVAnalysisInputPrimitives> {
     primitives: CVAnalysisInputPrimitives,
   ): CVAnalysisInput {
     return new CVAnalysisInput(
-      primitives.cv,
+      CVDocumentSnapshot.fromPrimitives(primitives.cv),
       primitives.analysisText === null
         ? null
         : LongText.fromPrimitives(primitives.analysisText),
@@ -54,7 +55,7 @@ export class CVAnalysisInput extends ValueObject<CVAnalysisInputPrimitives> {
 
   toPrimitives(): CVAnalysisInputPrimitives {
     return {
-      cv: this.cvValue,
+      cv: this.cvValue.toPrimitives(),
       analysisText: this.analysisTextValue?.toPrimitives() ?? null,
       filename: this.filenameValue.toPrimitives(),
       fileSize: this.fileSizeValue?.toPrimitives() ?? null,
@@ -65,7 +66,7 @@ export class CVAnalysisInput extends ValueObject<CVAnalysisInputPrimitives> {
   }
 
   get cv(): CVDocumentPrimitives {
-    return this.cvValue;
+    return this.cvValue.toPrimitives();
   }
 
   get analysisText(): string | null {

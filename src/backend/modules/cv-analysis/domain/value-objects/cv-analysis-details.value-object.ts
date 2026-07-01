@@ -4,20 +4,23 @@ import type { CVAnalysisDetailsPrimitives } from "./cv-analysis-details.primitiv
 
 export type { CVAnalysisDetailsPrimitives } from "./cv-analysis-details.primitives";
 
+class CVAnalysisDetailsValue extends ValueObject<unknown> {
+  private constructor(private readonly details: CVAnalysisDetailsPrimitives) { super(); }
+  static fromPrimitives(value: CVAnalysisDetailsPrimitives): CVAnalysisDetailsValue {
+    return new CVAnalysisDetailsValue(structuredClone(value));
+  }
+  toPrimitives(): CVAnalysisDetailsPrimitives { return structuredClone(this.details); }
+}
+
 export class CVAnalysisDetails extends ValueObject<CVAnalysisDetailsPrimitives> {
-  private constructor(private readonly value: CVAnalysisDetailsPrimitives) {
+  private constructor(private readonly value: CVAnalysisDetailsValue) {
     super();
   }
 
   static fromPrimitives(
     primitives: CVAnalysisDetailsPrimitives,
   ): CVAnalysisDetails {
-    return new CVAnalysisDetails({
-      ...primitives,
-      extractedText: { ...primitives.extractedText },
-      keywords: [...primitives.keywords],
-      improvements: [...primitives.improvements],
-    });
+    return new CVAnalysisDetails(CVAnalysisDetailsValue.fromPrimitives(primitives));
   }
 
   withAIResult(input: {
@@ -30,7 +33,7 @@ export class CVAnalysisDetails extends ValueObject<CVAnalysisDetailsPrimitives> 
     analyzedAt: string;
   }): CVAnalysisDetails {
     return CVAnalysisDetails.fromPrimitives({
-      ...this.value,
+      ...this.value.toPrimitives(),
       aiModel: input.aiModel,
       score: input.score,
       feedback: input.feedback,
@@ -42,15 +45,10 @@ export class CVAnalysisDetails extends ValueObject<CVAnalysisDetailsPrimitives> 
   }
 
   getExtractedText(): CVAnalysisExtractedTextPrimitives {
-    return { ...this.value.extractedText };
+    return { ...this.value.toPrimitives().extractedText };
   }
 
   toPrimitives(): CVAnalysisDetailsPrimitives {
-    return {
-      ...this.value,
-      extractedText: { ...this.value.extractedText },
-      keywords: [...this.value.keywords],
-      improvements: [...this.value.improvements],
-    };
+    return this.value.toPrimitives();
   }
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ContentMetricsWindowDays } from "./content-metrics-window-days.value-object";
+import { ContentMetricsWindowDays, InvalidContentMetricsWindowDaysError } from "./content-metrics-window-days.value-object";
 
 describe("ContentMetricsWindowDays", () => {
   it("creates from primitives and converts back", () => {
@@ -11,6 +11,6 @@ describe("ContentMetricsWindowDays", () => {
   });
 
   it("throws error for negative values", () => {
-    expect(() => ContentMetricsWindowDays.fromPrimitives(-1)).toThrow();
+    expect(() => ContentMetricsWindowDays.fromPrimitives(-1)).toThrow(InvalidContentMetricsWindowDaysError);
   });
 });

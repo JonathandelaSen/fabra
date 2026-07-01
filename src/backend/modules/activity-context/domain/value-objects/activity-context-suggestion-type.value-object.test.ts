@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ActivityContextSuggestionType } from "./activity-context-suggestion-type.value-object";
+import { ActivityContextSuggestionType, InvalidActivityContextSuggestionTypeError } from "./activity-context-suggestion-type.value-object";
 
 describe("ActivityContextSuggestionType", () => {
   it("round-trips a valid type", () => {
@@ -7,6 +7,6 @@ describe("ActivityContextSuggestionType", () => {
   });
 
   it("rejects unknown types", () => {
-    expect(() => ActivityContextSuggestionType.fromPrimitives("nope")).toThrow();
+    expect(() => ActivityContextSuggestionType.fromPrimitives("nope")).toThrow(InvalidActivityContextSuggestionTypeError);
   });
 });

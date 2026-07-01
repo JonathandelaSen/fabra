@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ImpersonationTokenHash } from "./impersonation-token-hash.value-object";
+import { ImpersonationTokenHash, InvalidImpersonationTokenHashError } from "./impersonation-token-hash.value-object";
 
 describe("ImpersonationTokenHash", () => {
   it("round-trips a value", () => {
@@ -7,6 +7,6 @@ describe("ImpersonationTokenHash", () => {
   });
 
   it("rejects empty values", () => {
-    expect(() => ImpersonationTokenHash.fromPrimitives("   ")).toThrow();
+    expect(() => ImpersonationTokenHash.fromPrimitives("   ")).toThrow(InvalidImpersonationTokenHashError);
   });
 });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { AIInteractionRating } from "./ai-interaction-rating.value-object";
+import { AIInteractionRating, InvalidAIInteractionRatingError } from "./ai-interaction-rating.value-object";
 
 describe("AIInteractionRating", () => {
   it("round-trips a valid rating", () => {
@@ -7,6 +7,6 @@ describe("AIInteractionRating", () => {
   });
 
   it("rejects an invalid rating", () => {
-    expect(() => AIInteractionRating.fromPrimitives("great")).toThrow();
+    expect(() => AIInteractionRating.fromPrimitives("great")).toThrow(InvalidAIInteractionRatingError);
   });
 });

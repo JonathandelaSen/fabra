@@ -1,10 +1,14 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
+export class InvalidContentMetricsWindowDaysError extends DomainError {
+  constructor(value: number) { super(ErrorCode.INVALID_CONTENT_METRICS_WINDOW_DAYS, `Window days cannot be negative: ${value}`, { value }); this.name = "InvalidContentMetricsWindowDaysError"; }
+}
 
 export class ContentMetricsWindowDays extends ValueObject<number | null> {
   private constructor(private readonly value: number | null) {
     super();
     if (value !== null && value < 0) {
-      throw new Error("Window days cannot be negative.");
+      throw new InvalidContentMetricsWindowDaysError(value);
     }
   }
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ActivityContextSuggestionSource } from "./activity-context-suggestion-source.value-object";
+import { ActivityContextSuggestionSource, InvalidActivityContextSuggestionSourceError } from "./activity-context-suggestion-source.value-object";
 
 describe("ActivityContextSuggestionSource", () => {
   it("round-trips the cv source", () => {
@@ -7,6 +7,6 @@ describe("ActivityContextSuggestionSource", () => {
   });
 
   it("rejects unknown sources", () => {
-    expect(() => ActivityContextSuggestionSource.fromPrimitives("manual")).toThrow();
+    expect(() => ActivityContextSuggestionSource.fromPrimitives("manual")).toThrow(InvalidActivityContextSuggestionSourceError);
   });
 });

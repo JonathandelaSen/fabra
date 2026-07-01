@@ -1,25 +1,26 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { OptionalIsoDate, ValueObject } from "@/backend/modules/shared";
 
 export interface ContentMetricsWindowPrimitives {
   since: string | null;
 }
 
 export class ContentMetricsWindow extends ValueObject<ContentMetricsWindowPrimitives> {
-  private constructor(private readonly sinceDate: Date | null) {
+  private constructor(private readonly sinceDate: OptionalIsoDate) {
     super();
   }
 
   static fromPrimitives(primitives: ContentMetricsWindowPrimitives): ContentMetricsWindow {
-    return new ContentMetricsWindow(primitives.since ? new Date(primitives.since) : null);
+    return new ContentMetricsWindow(OptionalIsoDate.fromPrimitives(primitives.since));
   }
 
   toPrimitives(): ContentMetricsWindowPrimitives {
     return {
-      since: this.sinceDate ? this.sinceDate.toISOString() : null,
+      since: this.sinceDate.toPrimitives(),
     };
   }
 
   get since(): Date | null {
-    return this.sinceDate;
+    const since = this.sinceDate.toPrimitives();
+    return since === null ? null : new Date(since);
   }
 }

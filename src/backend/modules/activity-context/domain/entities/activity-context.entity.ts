@@ -4,6 +4,9 @@ import { ActivityContextCreatedEvent } from "../events/activity-context-created.
 import { ActivityContextDeletedEvent } from "../events/activity-context-deleted.event";
 import { ActivityContextRestoredEvent } from "../events/activity-context-restored.event";
 import { ActivityContextUpdatedEvent } from "../events/activity-context-updated.event";
+import { InvalidActivityContextNameError } from "../errors/invalid-activity-context-name.error";
+import { InvalidActivityContextStatusError } from "../errors/invalid-activity-context-status.error";
+import { InvalidActivityContextTypeError } from "../errors/invalid-activity-context-type.error";
 
 export const activityContextTypes = {
   employment: "employment",
@@ -128,21 +131,21 @@ export class ActivityContext extends AggregateRoot {
 
 function assertType(value: ActivityContextType): ActivityContextType {
   if (!Object.values(activityContextTypes).includes(value)) {
-    throw new Error("Invalid activity context type.");
+    throw new InvalidActivityContextTypeError(value);
   }
   return value;
 }
 
 function assertStatus(value: ActivityContextStatus): ActivityContextStatus {
   if (!Object.values(activityContextStatuses).includes(value)) {
-    throw new Error("Invalid activity context status.");
+    throw new InvalidActivityContextStatusError(value);
   }
   return value;
 }
 
 function assertName(value: string): string {
   const normalized = value.trim();
-  if (!normalized) throw new Error("Activity context name cannot be empty.");
-  if (normalized.length > 160) throw new Error("Activity context name is too long.");
+  if (!normalized) throw new InvalidActivityContextNameError(value, "Activity context name cannot be empty.");
+  if (normalized.length > 160) throw new InvalidActivityContextNameError(value, "Activity context name is too long.");
   return normalized;
 }

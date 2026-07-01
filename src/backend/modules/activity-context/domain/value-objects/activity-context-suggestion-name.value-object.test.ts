@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ActivityContextSuggestionName } from "./activity-context-suggestion-name.value-object";
+import { ActivityContextSuggestionName, InvalidActivityContextSuggestionNameError } from "./activity-context-suggestion-name.value-object";
 
 describe("ActivityContextSuggestionName", () => {
   it("trims and round-trips a value", () => {
@@ -7,6 +7,6 @@ describe("ActivityContextSuggestionName", () => {
   });
 
   it("rejects empty values", () => {
-    expect(() => ActivityContextSuggestionName.fromPrimitives("   ")).toThrow();
+    expect(() => ActivityContextSuggestionName.fromPrimitives("   ")).toThrow(InvalidActivityContextSuggestionNameError);
   });
 });

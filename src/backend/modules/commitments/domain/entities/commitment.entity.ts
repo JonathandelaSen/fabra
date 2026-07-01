@@ -128,8 +128,8 @@ export class Commitment extends AggregateRoot {
 
 function assertText(value: string, label: string, max: number): string {
   const normalized = value.trim();
-  if (!normalized) throw new Error(`${label} cannot be empty.`);
-  if (normalized.length > max) throw new Error(`${label} is too long.`);
+  if (!normalized) throw new CommitmentInvalidPropertyError(`${label} cannot be empty.`);
+  if (normalized.length > max) throw new CommitmentInvalidPropertyError(`${label} is too long.`);
   return normalized;
 }
 
@@ -137,15 +137,15 @@ function normalizeText(value: string | null, max: number): string | null {
   if (value === null) return null;
   const normalized = value.trim();
   if (!normalized) return null;
-  if (normalized.length > max) throw new Error("Text is too long.");
+  if (normalized.length > max) throw new CommitmentInvalidPropertyError("Text is too long.");
   return normalized;
 }
 
 import {
   CommitmentInvalidDateError,
-  CommitmentTargetDateBeforeStartDateError,
-  CommitmentInvalidPropertyError,
-} from "../errors/commitment-validation.errors";
+} from "../errors/commitment-invalid-date.error";
+import { CommitmentInvalidPropertyError } from "../errors/commitment-invalid-property.error";
+import { CommitmentTargetDateBeforeStartDateError } from "../errors/commitment-target-date-before-start-date.error";
 
 function validateDateRange(startDate: string, targetDate: string | null): void {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) throw new CommitmentInvalidDateError("Invalid start date.");

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { UserEmail } from "./user-email.value-object";
+import { InvalidUserEmailError, UserEmail } from "./user-email.value-object";
 
 describe("UserEmail", () => {
   it("round-trips through primitives", () => {
@@ -8,8 +8,6 @@ describe("UserEmail", () => {
   });
 
   it("rejects empty values", () => {
-    expect(() => UserEmail.fromPrimitives("  ")).toThrow(
-      "User email cannot be empty."
-    );
+    expect(() => UserEmail.fromPrimitives("  ")).toThrow(InvalidUserEmailError);
   });
 });
