@@ -10,7 +10,7 @@ export type SuggestionSource =
 
 class InvalidSuggestionSourceError extends DomainError {
   constructor(value: string) {
-    super(ErrorCode.VALIDATION_FAILED, `Invalid suggestion source: ${value}`, { value });
+    super(ErrorCode.WORK_JOURNAL_INVALID_SUGGESTION_SOURCE, `Invalid suggestion source: ${value}`, { value });
     this.name = "InvalidSuggestionSourceError";
   }
 }
