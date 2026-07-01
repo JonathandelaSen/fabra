@@ -1,16 +1,16 @@
-import { OptionalIsoDate, ValueObject } from "@/backend/modules/shared";
+import { OptionalTimestamp, ValueObject } from "@/backend/modules/shared";
 
 export interface ContentMetricsWindowPrimitives {
   since: string | null;
 }
 
 export class ContentMetricsWindow extends ValueObject<ContentMetricsWindowPrimitives> {
-  private constructor(private readonly sinceDate: OptionalIsoDate) {
+  private constructor(private readonly sinceDate: OptionalTimestamp) {
     super();
   }
 
   static fromPrimitives(primitives: ContentMetricsWindowPrimitives): ContentMetricsWindow {
-    return new ContentMetricsWindow(OptionalIsoDate.fromPrimitives(primitives.since));
+    return new ContentMetricsWindow(OptionalTimestamp.fromPrimitives(primitives.since));
   }
 
   toPrimitives(): ContentMetricsWindowPrimitives {

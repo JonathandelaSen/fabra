@@ -8,6 +8,7 @@ export default defineConfig({
     },
   },
   test: {
+    execArgv: ["--no-experimental-webstorage"],
     environment: "jsdom",
     environmentOptions: {
       jsdom: {
