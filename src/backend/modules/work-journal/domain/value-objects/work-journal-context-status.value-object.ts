@@ -1,4 +1,5 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 
 export const workJournalContextStatuses = {
   active: "active",
@@ -7,6 +8,13 @@ export const workJournalContextStatuses = {
 
 export type ContextStatus =
   (typeof workJournalContextStatuses)[keyof typeof workJournalContextStatuses];
+
+class InvalidContextStatusError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.WORK_JOURNAL_INVALID_CONTEXT_STATUS, `Invalid work journal context status: ${value}`, { value });
+    this.name = "InvalidContextStatusError";
+  }
+}
 
 export class WorkJournalContextStatus extends ValueObject<ContextStatus> {
   private constructor(private readonly value: ContextStatus) {
@@ -18,7 +26,7 @@ export class WorkJournalContextStatus extends ValueObject<ContextStatus> {
       value !== workJournalContextStatuses.active &&
       value !== workJournalContextStatuses.archived
     ) {
-      throw new Error(`Invalid work journal context status: ${value}`);
+      throw new InvalidContextStatusError(value);
     }
     return new WorkJournalContextStatus(value);
   }
