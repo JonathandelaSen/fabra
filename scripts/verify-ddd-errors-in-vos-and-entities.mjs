@@ -5,6 +5,8 @@ import ts from "typescript";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
+const DOMAIN_ERRORS_PATH_PATTERN = /\/domain\/errors\/[^/]+\.error$/;
+
 async function walkFiles(dir) {
   let entries;
   try {
@@ -35,13 +37,68 @@ function parseSource(source, fileName) {
   return ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest, true);
 }
 
-function checkSourceFile(sourceFile, file, violations) {
+function classExtendsErrorLike(classDecl) {
+  return (
+    classDecl.heritageClauses?.some((clause) =>
+      clause.types.some((type) => {
+        const name = type.expression.getText();
+        return name === "Error" || name === "DomainError" || name.endsWith("Error");
+      })
+    ) ?? false
+  );
+}
+
+// Resolves an import specifier to an absolute file path (without extension),
+// relative to the file that contains the import. Returns null for bare/package
+// specifiers we can't resolve statically (e.g. "@/backend/modules/shared").
+function resolveImportSpecifier(specifier, fileRelPath, rootDir) {
+  if (specifier.startsWith(".")) {
+    return path.resolve(path.dirname(path.join(rootDir, fileRelPath)), specifier);
+  }
+  if (specifier.startsWith("@/")) {
+    return path.join(rootDir, "src", specifier.slice(2));
+  }
+  return null;
+}
+
+function collectImportedErrorClasses(sourceFile, file, rootDir) {
+  // Maps imported local name -> resolved absolute path (without extension) of
+  // the module it came from, only for imports that live under a
+  // `domain/errors/*.error.ts` file (the convention for real DomainError subclasses).
+  const imports = new Map();
+
+  for (const statement of sourceFile.statements) {
+    if (!ts.isImportDeclaration(statement)) continue;
+    if (!ts.isStringLiteral(statement.moduleSpecifier)) continue;
+    const specifier = statement.moduleSpecifier.text;
+
+    const resolved = resolveImportSpecifier(specifier, file, rootDir);
+    if (!resolved) continue;
+
+    const resolvedPosix = toPosixRelative(rootDir, resolved);
+    if (!DOMAIN_ERRORS_PATH_PATTERN.test(`/${resolvedPosix}`)) continue;
+
+    const namedBindings = statement.importClause?.namedBindings;
+    if (!namedBindings || !ts.isNamedImports(namedBindings)) continue;
+
+    for (const element of namedBindings.elements) {
+      imports.set(element.name.text, resolved);
+    }
+  }
+
+  return imports;
+}
+
+function checkSourceFile(sourceFile, file, violations, rootDir) {
   const localClasses = new Map();
   for (const statement of sourceFile.statements) {
     if (ts.isClassDeclaration(statement) && statement.name) {
       localClasses.set(statement.name.text, statement);
     }
   }
+
+  const importedErrorClasses = collectImportedErrorClasses(sourceFile, file, rootDir);
+  const pendingImportedChecks = [];
 
   function location(node) {
     const { line, character } = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile));
@@ -86,30 +143,29 @@ function checkSourceFile(sourceFile, file, violations) {
     }
 
     const className = expr.expression.getText();
-    if (!localClasses.has(className)) {
-      addViolation(
-        node,
-        "throw-must-be-local-class",
-        `Throw statement throws "${className}" which is not defined in the same file. VOs and Entities must define their own error classes in the same file.`
-      );
+
+    if (localClasses.has(className)) {
+      const classDecl = localClasses.get(className);
+      if (!classExtendsErrorLike(classDecl)) {
+        addViolation(
+          classDecl.name ?? classDecl,
+          "local-error-must-extend-error",
+          `Local error class "${className}" must extend Error or DomainError.`
+        );
+      }
       return;
     }
 
-    const classDecl = localClasses.get(className);
-    const inheritsError = classDecl.heritageClauses?.some((clause) =>
-      clause.types.some((type) => {
-        const name = type.expression.getText();
-        return name === "Error" || name === "DomainError" || name.endsWith("Error");
-      })
-    ) ?? false;
-
-    if (!inheritsError) {
-      addViolation(
-        classDecl.name ?? classDecl,
-        "local-error-must-extend-error",
-        `Local error class "${className}" must extend Error or DomainError.`
-      );
+    if (importedErrorClasses.has(className)) {
+      pendingImportedChecks.push({ node, className, resolvedPath: importedErrorClasses.get(className) });
+      return;
     }
+
+    addViolation(
+      node,
+      "throw-must-be-local-class",
+      `Throw statement throws "${className}" which is neither defined in the same file nor imported from a domain/errors/*.error.ts file. VOs and Entities must define leaf validation errors locally, or import a DomainError subclass from their module's domain/errors/ directory.`
+    );
   }
 
   function visit(node) {
@@ -120,6 +176,42 @@ function checkSourceFile(sourceFile, file, violations) {
   }
 
   visit(sourceFile);
+
+  return pendingImportedChecks;
+}
+
+async function verifyImportedErrorClass(check, violations, rootDir) {
+  const { node, className, resolvedPath } = check;
+  const resolvedRelPath = `${toPosixRelative(rootDir, resolvedPath)}.ts`;
+
+  let source;
+  try {
+    source = await readFile(`${resolvedPath}.ts`, "utf8");
+  } catch {
+    violations.push({
+      file: null,
+      rule: "imported-error-unresolvable",
+      reason: `Could not resolve imported error class "${className}" from "${resolvedRelPath}".`,
+      location: null,
+      node,
+    });
+    return;
+  }
+
+  const errorSourceFile = parseSource(source, resolvedRelPath);
+  const classDecl = errorSourceFile.statements.find(
+    (statement) => ts.isClassDeclaration(statement) && statement.name?.text === className
+  );
+
+  if (!classDecl || !classExtendsErrorLike(classDecl)) {
+    violations.push({
+      file: null,
+      rule: "imported-error-must-extend-domain-error",
+      reason: `Imported error class "${className}" (from "${resolvedRelPath}") must extend DomainError or Error.`,
+      location: null,
+      node,
+    });
+  }
 }
 
 export async function findVoAndEntityErrorViolations({ rootDir = repoRoot } = {}) {
@@ -139,10 +231,25 @@ export async function findVoAndEntityErrorViolations({ rootDir = repoRoot } = {}
   for (const file of targetFiles) {
     const source = await readFile(path.join(rootDir, file), "utf8");
     const sourceFile = parseSource(source, file);
-    checkSourceFile(sourceFile, file, violations);
+    const pendingImportedChecks = checkSourceFile(sourceFile, file, violations, rootDir);
+
+    for (const check of pendingImportedChecks) {
+      const before = violations.length;
+      await verifyImportedErrorClass(check, violations, rootDir);
+      for (let i = before; i < violations.length; i++) {
+        violations[i].file = file;
+        violations[i].location = location(sourceFile, file, violations[i].node);
+        delete violations[i].node;
+      }
+    }
   }
 
   return { violations, fileCount: targetFiles.length };
+}
+
+function location(sourceFile, file, node) {
+  const { line, character } = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile));
+  return `${line + 1}:${character + 1}`;
 }
 
 export function formatVoAndEntityErrorViolations(violations) {

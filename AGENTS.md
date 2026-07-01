@@ -194,7 +194,12 @@ import { NextRequest } from "next/server";
 import { getAuthenticatedRequestContext } from "@/app/api/_shared/auth/request-context";
 import { myModule } from "@/lib/container";
 import { presentMyEntity } from "@/backend/modules/my-module";
-import { ok, created, errorResponse, handleApiError } from "@/backend/modules/shared";
+import {
+  ok,
+  created,
+  errorResponse,
+  handleApiError,
+} from "@/backend/modules/shared";
 import { parseCreateMyEntityRequest } from "./validation";
 
 export async function GET() {
@@ -271,13 +276,9 @@ Each step should be a separate commit.
   - `scripts/verify-ddd-imports.mjs`: module internals must respect DDD import direction. Domain cannot import application or infrastructure, application cannot import infrastructure, infrastructure cannot import application, and feature modules cannot import another feature module's internal paths. Barrel imports (`@/backend/modules/<name>`) across modules are allowed for cross-module query dispatch via QueryBus. Composition roots (`<module>.module.ts`), module barrels, tests, test helpers, external packages, and `src/backend/modules/shared/**` are allowed where appropriate.
   - `scripts/verify-ddd-entities.mjs`: modules listed in `migratedModules` must follow the AggregateRoot/ValueObject/repository rules above.
   - `scripts/verify-ddd-value-objects.mjs`: every `src/backend/modules/**/domain/value-objects/*.value-object.ts` (all modules) must export a class extending `ValueObject` (or a shared base VO), with a private/protected constructor, `static fromPrimitives(...)`, `toPrimitives()`, no mutator methods, and no public mutable properties. Additionally, `*Primitives` boundary interfaces must use plain primitives — a field typed as a VO union alias or domain type (e.g. `EvidenceSourceValue`, `ContextType`, `Date`) is rejected; widen it to its primitive (e.g. `string`) and let `fromPrimitives` narrow/validate. See the patterns in `docs/architecture/value-objects.md`.
-  - `scripts/verify-ddd-errors-in-vos-and-entities.mjs`: every `throw` statement in `*.value-object.ts` and `*.entity.ts` (excluding tests) must throw a locally defined custom error class extending `Error` or `DomainError`. Throwing generic `Error` or `DomainError` directly is prohibited. See `docs/how-tos/how-to-define-errors-in-vos-and-entities.md`.
+  - `scripts/verify-ddd-errors-in-vos-and-entities.mjs`: every `throw` statement in `*.value-object.ts` and `*.entity.ts` (excluding tests) must throw either a custom error class declared locally in the same file (extending `Error` or `DomainError` — for VO leaf validation) or a `DomainError` subclass imported from that module's `domain/errors/*.error.ts` (for entity business-rule actions). Throwing generic `Error` or `DomainError` directly is prohibited. See `docs/how-tos/how-to-define-errors-in-vos-and-entities.md`.
   - `scripts/verify-ddd-route-imports.mjs`: files under `src/app/`, `src/frontend/components/`, and `src/lib/` that import from `@/backend/modules/<name>` must use the barrel (`@/backend/modules/<name>` or `@/backend/modules/<name>/index`), never reach into internal paths like `@/backend/modules/<name>/infrastructure/...`. `@/backend/modules/shared` is exempt.
   - `scripts/verify-ddd-barrel-exports.mjs`: module barrel files (`index.ts`) must not re-export from `infrastructure/` or from `domain/repositories/`. Infrastructure details must be accessed through use cases, and repository port interfaces are module-internal (consumers use them via relative/alias imports within the same module). `@/backend/modules/shared` is exempt.
-
-### Re-export shims in `src/lib/`
-
-Some `src/lib/` files are thin re-export shims that bridge old import paths to domain files inside modules (e.g., `src/lib/cv-profile.ts` → `@/backend/modules/cv-library/domain/cv-profile`). These shims **must import from the domain file directly**, not from the module barrel (`@/backend/modules/<name>`), because the barrel re-exports the full module (use cases, repositories, etc.) and Next.js Turbopack does not tree-shake barrel re-exports in client components — importing the barrel from a client component drags in `server-only` code and breaks the build. These shim files are listed in the `reExportShims` set in `scripts/verify-ddd-route-imports.mjs` so they are exempt from the barrel-only rule.
 
 ## Frontend feature architecture
 
