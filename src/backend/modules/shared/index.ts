@@ -6,7 +6,7 @@ export { UnregisteredQueryHandlerError } from "./domain/bus/query-bus/unregister
 export { AggregateRoot } from "./domain/entities/aggregate-root";
 export type { DomainEvent } from "./domain/bus/event-bus/domain-event";
 export type { InfrastructureEvent } from "./domain/bus/event-bus/infrastructure-event";
-export { EntityId } from "./domain/value-objects/entity-id.value-object";
+export { EntityId, InvalidEntityIdError } from "./domain/value-objects/entity-id.value-object";
 export {
   CopyPastePreparation,
   type CopyPastePreparationPrimitives,

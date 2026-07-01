@@ -1,16 +1,11 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { EntityId } from "@/backend/modules/shared";
 
-export class ProcessQuestionId extends ValueObject<string> {
-  private constructor(private readonly value: string) {
-    super();
-    if (!value.trim()) throw new Error("Process question id is required");
+export class ProcessQuestionId extends EntityId {
+  private constructor(value: string) {
+    super(value, "Process question id");
   }
 
   static fromPrimitives(value: string): ProcessQuestionId {
     return new ProcessQuestionId(value);
-  }
-
-  toPrimitives(): string {
-    return this.value;
   }
 }

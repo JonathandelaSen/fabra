@@ -1,16 +1,11 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { EntityId } from "@/backend/modules/shared";
 
-export class JobOpportunityId extends ValueObject<string> {
-  private constructor(private readonly value: string) {
-    super();
-    if (!value.trim()) throw new Error("Job opportunity id is required");
+export class JobOpportunityId extends EntityId {
+  private constructor(value: string) {
+    super(value, "Job opportunity id");
   }
 
   static fromPrimitives(value: string): JobOpportunityId {
     return new JobOpportunityId(value);
-  }
-
-  toPrimitives(): string {
-    return this.value;
   }
 }

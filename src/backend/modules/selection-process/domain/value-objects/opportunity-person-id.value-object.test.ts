@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { InvalidEntityIdError } from "@/backend/modules/shared";
 import { OpportunityPersonId } from "./opportunity-person-id.value-object";
 
 describe("OpportunityPersonId", () => {
@@ -10,7 +11,7 @@ describe("OpportunityPersonId", () => {
 
   it("rejects an empty identifier", () => {
     expect(() => OpportunityPersonId.fromPrimitives(" ")).toThrow(
-      "Opportunity person id is required",
+      InvalidEntityIdError
     );
   });
 });

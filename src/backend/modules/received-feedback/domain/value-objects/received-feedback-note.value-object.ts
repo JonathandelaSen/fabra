@@ -1,9 +1,17 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
+
+class InvalidReceivedFeedbackNoteError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.INVALID_RECEIVED_FEEDBACK_NOTE, "Received feedback note is too long.", { value });
+    this.name = "InvalidReceivedFeedbackNoteError";
+  }
+}
 
 export class ReceivedFeedbackNote extends ValueObject<string | null> {
   private constructor(private readonly value: string | null) {
     super();
-    if (value && value.length > 10000) throw new Error("Received feedback note is too long.");
+    if (value && value.length > 10000) throw new InvalidReceivedFeedbackNoteError(value);
   }
 
   static fromPrimitives(value: string | null | undefined): ReceivedFeedbackNote {

@@ -1,4 +1,5 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 
 export const OPPORTUNITY_PERSON_ROLES = [
   "external_recruiter",
@@ -24,6 +25,13 @@ const opportunityPersonRoleSet = new Set<string>(OPPORTUNITY_PERSON_ROLES);
 export type OpportunityPersonRoleValue =
   (typeof OPPORTUNITY_PERSON_ROLES)[number];
 
+class InvalidOpportunityPersonRoleError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.INVALID_OPPORTUNITY_PERSON_ROLE, `Invalid opportunity person role: ${value}`, { value });
+    this.name = "InvalidOpportunityPersonRoleError";
+  }
+}
+
 export class OpportunityPersonRole extends ValueObject<string> {
   private constructor(private readonly value: OpportunityPersonRoleValue) {
     super();
@@ -31,7 +39,7 @@ export class OpportunityPersonRole extends ValueObject<string> {
 
   static fromPrimitives(value: string): OpportunityPersonRole {
     if (!opportunityPersonRoleSet.has(value)) {
-      throw new Error(`Invalid opportunity person role: ${value}`);
+      throw new InvalidOpportunityPersonRoleError(value);
     }
     return new OpportunityPersonRole(value as OpportunityPersonRoleValue);
   }

@@ -1,4 +1,12 @@
-import { IsoDate, ValueObject } from "@/backend/modules/shared";
+import { DomainError, IsoDate, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
+
+class InvalidReceivedFeedbackDateError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.INVALID_RECEIVED_FEEDBACK_DATE, "Received feedback date cannot be in the future.", { value });
+    this.name = "InvalidReceivedFeedbackDateError";
+  }
+}
 
 export class ReceivedFeedbackDate extends ValueObject<string> {
   private constructor(private readonly value: string) {
@@ -11,7 +19,7 @@ export class ReceivedFeedbackDate extends ValueObject<string> {
   ): ReceivedFeedbackDate {
     IsoDate.fromPrimitives(value);
     if (value > today)
-      throw new Error("Received feedback date cannot be in the future.");
+      throw new InvalidReceivedFeedbackDateError(value);
     return new ReceivedFeedbackDate(value);
   }
 

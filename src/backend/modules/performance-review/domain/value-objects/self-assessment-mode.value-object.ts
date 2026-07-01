@@ -13,6 +13,13 @@ export const SELF_ASSESSMENT_MODES = [
 
 export type SelfAssessmentModeValue = AssistanceMode;
 
+class InvalidSelfAssessmentModeError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.INVALID_SELF_ASSESSMENT_MODE, `Invalid self-assessment mode: ${value}`, { value });
+    this.name = "InvalidSelfAssessmentModeError";
+  }
+}
+
 export class SelfAssessmentMode extends ValueObject<SelfAssessmentModeValue> {
   private constructor(private readonly value: SelfAssessmentModeValue) {
     super();
@@ -20,7 +27,7 @@ export class SelfAssessmentMode extends ValueObject<SelfAssessmentModeValue> {
 
   static fromPrimitives(value: string): SelfAssessmentMode {
     if (!SELF_ASSESSMENT_MODES.includes(value as SelfAssessmentModeValue)) {
-      throw new DomainError(ErrorCode.VALIDATION_FAILED, `Invalid self-assessment mode: ${value}`);
+      throw new InvalidSelfAssessmentModeError(value);
     }
     return new SelfAssessmentMode(value as SelfAssessmentModeValue);
   }

@@ -16,6 +16,8 @@ import {
   type FollowUpStatusPrimitives,
 } from "../value-objects/follow-up-status.value-object";
 
+import { NextActionRequiredError } from "../errors/next-action-required.error";
+
 export interface FollowUpEntryPrimitives {
   id: string;
   userId: string;
@@ -162,7 +164,7 @@ export class FollowUpEntry extends AggregateRoot {
       this.entryNextActionAt.toPrimitives() !== null &&
       this.entryNextAction === null
     ) {
-      throw new Error("Next action is required when its date is provided");
+      throw new NextActionRequiredError();
     }
   }
 }

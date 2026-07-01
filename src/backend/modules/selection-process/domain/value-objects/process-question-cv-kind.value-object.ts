@@ -1,4 +1,5 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 
 export const processQuestionCVTypes = {
   uploaded: "uploaded",
@@ -8,6 +9,13 @@ export const processQuestionCVTypes = {
 export type ProcessQuestionCVType =
   (typeof processQuestionCVTypes)[keyof typeof processQuestionCVTypes];
 
+class InvalidProcessQuestionCVKindError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.INVALID_PROCESS_QUESTION_CV_KIND, `Invalid process question CV type: ${value}`, { value });
+    this.name = "InvalidProcessQuestionCVKindError";
+  }
+}
+
 export class ProcessQuestionCVKind extends ValueObject<ProcessQuestionCVType> {
   private constructor(private readonly value: ProcessQuestionCVType) {
     super();
@@ -15,7 +23,7 @@ export class ProcessQuestionCVKind extends ValueObject<ProcessQuestionCVType> {
 
   static fromPrimitives(value: string): ProcessQuestionCVKind {
     if (!Object.values(processQuestionCVTypes).includes(value as ProcessQuestionCVType)) {
-      throw new Error(`Invalid process question CV type: ${value}`);
+      throw new InvalidProcessQuestionCVKindError(value);
     }
     return new ProcessQuestionCVKind(value as ProcessQuestionCVType);
   }

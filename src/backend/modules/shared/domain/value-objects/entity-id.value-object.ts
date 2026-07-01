@@ -2,7 +2,7 @@ import { DomainError } from "../errors/domain-error";
 import { ErrorCode } from "@/shared/error-codes";
 import { ValueObject } from "./value-object";
 
-class InvalidEntityIdError extends DomainError {
+export class InvalidEntityIdError extends DomainError {
   constructor(value: string, label: string) {
     super(ErrorCode.INVALID_ENTITY_ID, `${label} cannot be empty.`, { value, label });
     this.name = "InvalidEntityIdError";

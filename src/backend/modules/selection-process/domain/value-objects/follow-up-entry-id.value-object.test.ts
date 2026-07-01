@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { InvalidEntityIdError } from "@/backend/modules/shared";
 import { FollowUpEntryId } from "./follow-up-entry-id.value-object";
 
 describe("FollowUpEntryId", () => {
@@ -10,7 +11,7 @@ describe("FollowUpEntryId", () => {
 
   it("rejects empty ids", () => {
     expect(() => FollowUpEntryId.fromPrimitives(" ")).toThrow(
-      "Follow-up entry id is required",
+      InvalidEntityIdError
     );
   });
 });

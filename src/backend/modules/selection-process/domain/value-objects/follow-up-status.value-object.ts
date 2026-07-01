@@ -1,4 +1,5 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 
 export type FollowUpStatusPrimitives =
   | "interesting"
@@ -17,6 +18,13 @@ export const FOLLOW_UP_STATUSES: readonly FollowUpStatusPrimitives[] = [
   "discarded",
 ];
 
+class InvalidFollowUpStatusError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.INVALID_FOLLOW_UP_STATUS, "Invalid follow-up status", { value });
+    this.name = "InvalidFollowUpStatusError";
+  }
+}
+
 export class FollowUpStatus extends ValueObject<FollowUpStatusPrimitives> {
   private constructor(private readonly value: FollowUpStatusPrimitives) {
     super();
@@ -24,7 +32,7 @@ export class FollowUpStatus extends ValueObject<FollowUpStatusPrimitives> {
 
   static fromPrimitives(value: string): FollowUpStatus {
     if (!FOLLOW_UP_STATUSES.includes(value as FollowUpStatusPrimitives)) {
-      throw new Error("Invalid follow-up status");
+      throw new InvalidFollowUpStatusError(value);
     }
     return new FollowUpStatus(value as FollowUpStatusPrimitives);
   }

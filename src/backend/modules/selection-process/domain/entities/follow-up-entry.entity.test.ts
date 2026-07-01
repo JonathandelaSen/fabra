@@ -35,6 +35,8 @@ function buildEntry(nextAction: string | null = "Prepare tailored CV") {
   });
 }
 
+import { NextActionRequiredError } from "../errors/next-action-required.error";
+
 describe("FollowUpEntry", () => {
   it("creates an append-only tracking snapshot", () => {
     expect(buildEntry().toPrimitives()).toEqual({
@@ -99,7 +101,7 @@ describe("FollowUpEntry", () => {
         createdAt: Timestamp.fromPrimitives(now),
         updatedAt: Timestamp.fromPrimitives(now),
       }),
-    ).toThrow("Next action is required when its date is provided");
+    ).toThrow(NextActionRequiredError);
   });
 
   it("updates the editable historical fields without changing identity", () => {

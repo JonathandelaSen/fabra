@@ -1,16 +1,11 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { EntityId } from "@/backend/modules/shared";
 
-export class FollowUpId extends ValueObject<string> {
-  private constructor(private readonly value: string) {
-    super();
-    if (!value.trim()) throw new Error("Follow-up id is required");
+export class FollowUpId extends EntityId {
+  private constructor(value: string) {
+    super(value, "Follow-up id");
   }
 
   static fromPrimitives(value: string): FollowUpId {
     return new FollowUpId(value);
-  }
-
-  toPrimitives(): string {
-    return this.value;
   }
 }
