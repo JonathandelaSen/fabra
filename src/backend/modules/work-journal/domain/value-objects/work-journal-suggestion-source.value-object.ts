@@ -1,4 +1,5 @@
-import { ValueObject } from "@/backend/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 
 export const workJournalSuggestionSources = {
   cv: "cv",
@@ -7,6 +8,14 @@ export const workJournalSuggestionSources = {
 export type SuggestionSource =
   (typeof workJournalSuggestionSources)[keyof typeof workJournalSuggestionSources];
 
+class InvalidSuggestionSourceError extends DomainError {
+  constructor(value: string) {
+    super(ErrorCode.VALIDATION_FAILED, `Invalid suggestion source: ${value}`, { value });
+    this.name = "InvalidSuggestionSourceError";
+  }
+}
+
+
 export class WorkJournalSuggestionSource extends ValueObject<SuggestionSource> {
   private constructor(private readonly value: SuggestionSource) {
     super();
@@ -14,7 +23,7 @@ export class WorkJournalSuggestionSource extends ValueObject<SuggestionSource> {
 
   static fromPrimitives(value: string): WorkJournalSuggestionSource {
     if (value !== workJournalSuggestionSources.cv) {
-      throw new Error(`Invalid suggestion source: ${value}`);
+      throw new InvalidSuggestionSourceError(value);
     }
     return new WorkJournalSuggestionSource(value);
   }
