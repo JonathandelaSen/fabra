@@ -29,7 +29,11 @@ export function opportunityPerson(jobOpportunityId = "job-1") {
     organization: "Acme",
     email: "marta@example.com",
     phone: "+34 600 000 000",
-    links: [{ url: "https://linkedin.com/in/marta", label: "LinkedIn" }],
+    links: [
+      { url: "https://linkedin.com/in/marta", label: "LinkedIn" },
+      { url: "www.asd.com", label: "Schemeless URL" },
+      { url: "asd.com", label: null },
+    ],
     notes: "Platform reliability matters to her.",
     createdAt: "2026-06-30T09:00:00.000Z",
     updatedAt: "2026-06-30T09:00:00.000Z",
@@ -46,7 +50,11 @@ export function opportunityPersonInput() {
     organization: "Acme",
     email: "marta@example.com",
     phone: "+34 600 000 000",
-    links: [{ url: "https://linkedin.com/in/marta", label: "LinkedIn" }],
+    links: [
+      { url: "https://linkedin.com/in/marta", label: "LinkedIn" },
+      { url: "www.asd.com", label: "Schemeless URL" },
+      { url: "asd.com", label: null },
+    ],
     notes: "Platform reliability matters to her.",
   };
 }

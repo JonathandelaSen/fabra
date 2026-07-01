@@ -53,50 +53,67 @@ export class EvalLatencyMs extends ValueObject<number> {
 
 ## Error Convention for Entities
 
-Similarly, Entities must define and throw local custom error classes rather than throwing generic errors.
+Entities are built from Value Objects, so data-shape validation (negative numbers, empty strings, malformed IDs, etc.) belongs in the VO's constructor, not in the entity. An entity constructor should never re-validate a primitive that its VO already guarantees is valid.
+
+Entity-level errors instead come from **domain actions**: a method on the entity that enforces a business rule at the moment something happens (e.g. "a user cannot upload more than 5 photos"). Define the custom error class in the entity's file and throw it from the action method.
 
 ### Example:
 
 ```typescript
-import { AggregateRoot } from "@/backend/modules/shared";
+import { AggregateRoot, UniqueId } from "@/backend/modules/shared";
+import { UserAge } from "./user-age.value-object";
+import { PhotoUrls } from "./photo-urls.value-object";
 
-// 1. Define the custom error class locally
-class UserAgeError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "UserAgeError";
+// 1. Define the custom error class locally, for a specific domain action
+class MaxPhotosExceededError extends Error {
+  constructor() {
+    super("User cannot upload more than 5 photos");
+    this.name = "MaxPhotosExceededError";
   }
 }
 
 export interface UserPrimitives {
   id: string;
   age: number;
+  photoUrls: string[];
 }
 
 export class User extends AggregateRoot<UserPrimitives> {
   private constructor(
-    private readonly id: string,
-    private readonly age: number
+    private readonly id: UniqueId,
+    private readonly age: UserAge,
+    private photoUrls: PhotoUrls
   ) {
     super();
-    if (age < 0) {
-      // 2. Throw the custom error class
-      throw new UserAgeError("Age cannot be negative");
-    }
   }
 
   static fromPrimitives(primitives: UserPrimitives): User {
-    return new User(primitives.id, primitives.age);
+    return new User(
+      UniqueId.fromPrimitives(primitives.id),
+      UserAge.fromPrimitives(primitives.age),
+      PhotoUrls.fromPrimitives(primitives.photoUrls)
+    );
+  }
+
+  uploadPhoto(url: string): void {
+    if (this.photoUrls.isAtMax()) {
+      // 2. Throw the custom error class from the action that enforces the rule
+      throw new MaxPhotosExceededError();
+    }
+    this.photoUrls = this.photoUrls.add(url);
   }
 
   toPrimitives(): UserPrimitives {
     return {
-      id: this.id,
-      age: this.age,
+      id: this.id.toPrimitives(),
+      age: this.age.toPrimitives(),
+      photoUrls: this.photoUrls.toPrimitives(),
     };
   }
 }
 ```
+
+Every field on the entity is a Value Object — `UniqueId`, `UserAge`, `PhotoUrls` — never a bare primitive. `UserAge` and `PhotoUrls` throw their own local errors (e.g. `UserAgeError`) from their constructors if built from invalid primitives, so the entity never re-checks `age < 0` or shape-validates the photo list itself — by the time `User` holds these VOs, they are guaranteed valid. `PhotoUrls` also stays immutable: `isAtMax()` is a pure query and `add(url)` returns a *new* `PhotoUrls` instance rather than mutating in place, which is why `uploadPhoto` reassigns `this.photoUrls` instead of pushing into an array. The entity's own error, `MaxPhotosExceededError`, models a business rule that only makes sense in the context of an action (`uploadPhoto`), not a data-shape constraint.
 
 ---
 

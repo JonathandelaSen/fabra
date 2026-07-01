@@ -58,4 +58,32 @@ describe("OpportunityPersonForm", () => {
     expect(screen.getByLabelText("Name")).toHaveValue("Marta García");
     expect(screen.getByRole("button", { name: "Save changes" })).toBeInTheDocument();
   });
+
+  it("allows link URLs missing a protocol on submit without prepending anything", async () => {
+    const onSubmit = vi.fn(async () => undefined);
+    const { user } = renderWithProviders(
+      <OpportunityPersonForm
+        isSaving={false}
+        onCancel={vi.fn()}
+        onSubmit={onSubmit}
+      />,
+    );
+
+    await user.type(screen.getByLabelText("Name"), "Marta García");
+    await user.selectOptions(screen.getByLabelText("Primary role"), "hiring_manager");
+    await user.click(screen.getByRole("button", { name: "Add link" }));
+    await user.type(screen.getByLabelText("Link URL 1"), "www.example.com/marta");
+    await user.click(screen.getByRole("button", { name: "Create person" }));
+
+    expect(onSubmit).toHaveBeenCalledWith({
+      name: "Marta García",
+      role: "hiring_manager",
+      jobTitle: null,
+      organization: null,
+      email: null,
+      phone: null,
+      links: [{ url: "www.example.com/marta", label: null }],
+      notes: null,
+    });
+  });
 });

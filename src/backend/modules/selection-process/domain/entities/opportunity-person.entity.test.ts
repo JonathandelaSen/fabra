@@ -24,6 +24,10 @@ function createPerson() {
         url: "https://linkedin.com/in/marta",
         label: "LinkedIn",
       }),
+      Link.fromPrimitives({
+        url: "www.asd.com",
+        label: "Schemeless URL",
+      }),
     ],
     notes: LongText.fromPrimitives("Interested in platform reliability."),
     createdAt: Timestamp.fromPrimitives(now),
@@ -47,6 +51,7 @@ describe("OpportunityPerson", () => {
       phone: "+34 600 000 000",
       links: [
         { url: "https://linkedin.com/in/marta", label: "LinkedIn" },
+        { url: "www.asd.com", label: "Schemeless URL" },
       ],
       notes: "Interested in platform reliability.",
       createdAt: now,

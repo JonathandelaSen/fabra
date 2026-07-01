@@ -81,7 +81,7 @@ export default function JobMatchForm({
             </span>
           </label>
           <input
-            type="url"
+            type="text"
             placeholder={t("jobUrlPlaceholder")}
             className="w-full h-10 px-4 rounded-xl bg-field border border-line text-sm text-text-main placeholder:text-text-faint focus:outline-none focus:border-success-border focus:ring-2 focus:ring-success-border transition-all"
             value={jobUrl}

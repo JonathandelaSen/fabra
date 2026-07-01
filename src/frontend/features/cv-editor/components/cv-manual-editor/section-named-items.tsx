@@ -36,7 +36,16 @@ function NamedItemFields({ item, update }: { item: CVNamedItemPrimitives; update
           multiline={false}
         />
       </div>
-      <div><label className={labelClass}>URL</label><input type="url" value={item.url ?? ""} onChange={(e) => set("url", e.target.value)} placeholder={URL_PLACEHOLDER} className={inputClass} /></div>
+      <div>
+        <label className={labelClass}>URL</label>
+        <input
+          type="text"
+          value={item.url ?? ""}
+          onChange={(e) => set("url", e.target.value)}
+          placeholder={URL_PLACEHOLDER}
+          className={inputClass}
+        />
+      </div>
       {(item.bullets?.length ?? 0) > 0 && (
         <div>
           <label className={labelClass}>{t("details")}</label>

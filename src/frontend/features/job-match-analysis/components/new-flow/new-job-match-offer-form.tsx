@@ -44,7 +44,7 @@ export function NewJobMatchOfferForm({
           </span>
         </label>
         <input
-          type="url"
+          type="text"
           value={jobUrl}
           onChange={(event) => onJobUrlChange(event.target.value)}
           placeholder={formsT("jobUrlPlaceholder")}

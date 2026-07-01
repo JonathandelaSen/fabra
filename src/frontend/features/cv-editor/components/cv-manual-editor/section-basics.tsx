@@ -59,7 +59,13 @@ export function SectionBasics({ basics, onChange }: SectionBasicsProps) {
             <div key={i} className="group flex items-start gap-2">
               <div className="flex-1 min-w-0 space-y-1.5">
                 <input type="text" value={link.label ?? ""} onChange={(e) => updateLink(i, "label", e.target.value)} placeholder={t("linkLabel")} className={inputClass} />
-                <input type="url" value={link.url} onChange={(e) => updateLink(i, "url", e.target.value)} placeholder={URL_PLACEHOLDER} className={inputClass} />
+                <input
+                  type="text"
+                  value={link.url}
+                  onChange={(e) => updateLink(i, "url", e.target.value)}
+                  placeholder={URL_PLACEHOLDER}
+                  className={inputClass}
+                />
               </div>
               <button onClick={() => removeLink(i)} className="shrink-0 mt-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 text-text-faint hover:text-danger-text transition-opacity">
                 <Trash2 className="h-3.5 w-3.5" />

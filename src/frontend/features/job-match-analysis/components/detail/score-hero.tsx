@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   Cpu,
-  Briefcase,
   FileText,
   ExternalLink,
   Loader2,
@@ -64,7 +63,7 @@ export default function ScoreHero({
   feedback,
   model,
   analyzedAt,
-  jobDescription,
+  jobDescription: _jobDescription,
   jobUrl,
   cv,
   cvId,
@@ -161,7 +160,7 @@ export default function ScoreHero({
               {isEditingUrl ? (
                 <div className="inline-flex items-center gap-1.5">
                   <input
-                    type="url"
+                    type="text"
                     value={editedUrl}
                     onChange={(e) => setEditedUrl(e.target.value)}
                     placeholder={URL_PLACEHOLDER}

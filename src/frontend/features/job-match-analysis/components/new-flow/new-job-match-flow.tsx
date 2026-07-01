@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { Zap } from "lucide-react";
 import AIActionLauncher from "@/frontend/components/shared/ai-action-launcher";
 import { AlertBanner, ALERT_BANNER_TONES } from "@/frontend/components/shared/alert-banner";
 import { getErrorMessage } from "@/lib/errors";

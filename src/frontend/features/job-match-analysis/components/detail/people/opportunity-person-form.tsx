@@ -204,7 +204,7 @@ export function OpportunityPersonForm({
                   </Label>
                   <Input
                     id={`opportunity-person-link-url-${link.key}`}
-                    type="url"
+                    type="text"
                     autoComplete="url"
                     required
                     value={link.url}

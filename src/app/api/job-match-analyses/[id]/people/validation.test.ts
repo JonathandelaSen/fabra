@@ -85,4 +85,32 @@ describe("opportunity person validation", () => {
       },
     });
   });
+
+  it("accepts schemeless URLs like www.asd.com or asd.com", () => {
+    expect(
+      parseOpportunityPersonRequest({
+        name: "Marta",
+        role: "hiring_manager",
+        links: [
+          { url: "www.asd.com", label: null },
+          { url: "asd.com", label: null },
+        ],
+      }),
+    ).toEqual({
+      ok: true,
+      value: {
+        name: "Marta",
+        role: "hiring_manager",
+        jobTitle: null,
+        organization: null,
+        email: null,
+        phone: null,
+        links: [
+          { url: "www.asd.com", label: null },
+          { url: "asd.com", label: null },
+        ],
+        notes: null,
+      },
+    });
+  });
 });

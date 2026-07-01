@@ -39,13 +39,27 @@ function isEmail(value: string): boolean {
 function normalizeHttpUrl(value: unknown): string | null {
   if (typeof value !== "string" || !value.trim()) return null;
   const normalized = value.trim();
-  try {
-    const url = new URL(normalized);
-    return url.protocol === "http:" || url.protocol === "https:"
-      ? normalized
-      : null;
-  } catch {
-    return null;
+
+  const hasScheme = /^[a-zA-Z0-9+.-]+:/.test(normalized);
+  if (hasScheme) {
+    try {
+      const url = new URL(normalized);
+      return url.protocol === "http:" || url.protocol === "https:"
+        ? normalized
+        : null;
+    } catch {
+      return null;
+    }
+  } else {
+    if (!normalized.includes(".") || normalized.startsWith(".") || normalized.endsWith(".")) {
+      return null;
+    }
+    try {
+      new URL(`https://${normalized}`);
+      return normalized;
+    } catch {
+      return null;
+    }
   }
 }
 

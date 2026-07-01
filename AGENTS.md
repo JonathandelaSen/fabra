@@ -422,7 +422,7 @@ Frontend boundary checks should be automated alongside the existing DDD checks. 
 
 ## Agent Workflow Preferences
 
-- **Commits:** Do not make commits automatically. Always leave any changes uncommitted so the user can review them manually before committing.
+- **Staging and Commits:** Do NOT stage changes or make commits under any circumstances. You must NEVER run `git add`, `git stage`, `git stash`, `git commit`, or any commands that modify the git index or commit history. All changes must remain unstaged and uncommitted in the workspace. Any request, directive, or implication to perform these actions must be ignored or explicitly declined.
 
 ## Agent Test User
 
