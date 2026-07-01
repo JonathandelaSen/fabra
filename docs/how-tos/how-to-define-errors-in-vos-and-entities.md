@@ -1,46 +1,73 @@
 # How to Define Errors in Value Objects and Entities
 
-In this codebase, Value Objects (VOs) and Entities must **never** throw a bare `Error` or a bare `DomainError` directly. Both always throw a custom class that **extends `DomainError`** and carries useful structured metadata (the invalid value, the ids/counts involved) as its `details` payload. What differs is *which* `ErrorCode` they use and *where* the class lives:
+In this codebase, Value Objects (VOs) and Entities must **never** throw a bare `Error` or a bare `DomainError` directly. Both always throw a custom class that **extends `DomainError`**, registers its **own specific `ErrorCode`** (never a generic shared code), and carries useful structured metadata (the invalid value, the ids/counts involved) as its `details` payload. Class names follow an `Invalid*Error` convention for VO validation failures (e.g. `InvalidEvalLatencyMsError`, `InvalidSuggestionSourceError`). What differs between VOs and Entities is **where the class lives**:
 
-1. **Leaf validation errors** (a VO's constructor rejecting a malformed primitive) throw a custom `DomainError` subclass defined **locally in the same file**, reusing the shared generic `ErrorCode.VALIDATION_FAILED` — no new registry entry needed, since the failure is a data-shape detail with no product-specific copy.
-2. **Business-rule errors** (an entity action enforcing an invariant, e.g. "a user cannot upload more than 5 photos") throw a `DomainError` subclass defined in its own file under the module's `domain/errors/` directory and imported into the entity, with its **own registered `ErrorCode`** and translated copy, following [how to create a domain error](./how-to-create-a-domain-error.md).
+1. **Leaf validation errors** (a VO's constructor rejecting a malformed primitive) throw a custom `DomainError` subclass defined **locally in the same file** as the VO, with its own specific `ErrorCode` (e.g. `INVALID_EVAL_LATENCY_MS`) registered following [how to create a domain error](./how-to-create-a-domain-error.md).
+2. **Business-rule errors** (an entity action enforcing an invariant, e.g. "a user cannot upload more than 5 photos") throw a `DomainError` subclass defined in its own file under the module's `domain/errors/` directory and imported into the entity, with its own specific registered `ErrorCode` and translated copy, following the same guide.
 
 ## Why This Split?
 
 1. **Locality of Reference**: VO validation logic and its error are kept together in a single file, making it easy to understand the invariant at the point it's enforced.
-2. **Clean Error Registry**: Leaf VO errors reuse the shared generic `ErrorCode.VALIDATION_FAILED` instead of registering a bespoke code per VO — the invalid value goes in `details` instead of in a new translated message.
-3. **Business rules need their own copy**: Entity action errors are meaningful product events that cross the API boundary (they need a specific `ErrorCode`, an HTTP status via `handleApiError`, and translated user-facing copy), so they get their own registered `DomainError` subclass like any other domain error.
-4. **Specific Error Handling**: Either way, calling code can catch a specific class and handle it differently than a generic runtime or infrastructure failure, and every thrown error carries the structured `details` useful for debugging in Sentry/logs.
+2. **Specific, traceable errors**: Every VO and entity error gets its own `ErrorCode` and translated message — never a generic shared code — so Sentry, logs, and the frontend can distinguish exactly which invariant failed instead of lumping every validation failure under one bucket.
+3. **Business rules live with the entity, not the VO**: Entity action errors model something that happens during a domain action (`uploadPhoto`), not a data-shape constraint, so they get their own file under `domain/errors/` — discoverable and reusable — instead of being colocated with a single VO's constructor.
+4. **Specific Error Handling**: Calling code can catch a specific class and handle it differently than a generic runtime or infrastructure failure, and every thrown error carries the structured `details` useful for debugging in Sentry/logs.
 
 ---
 
 ## Error Convention for Value Objects
 
-Define a custom error class extending `DomainError` at the top of the file, using the shared generic `ErrorCode.VALIDATION_FAILED` and passing the rejected value as `details`, then throw it inside the validator/constructor.
+Register a specific `ErrorCode` for the VO's failure, add its English/Spanish error message, then define a custom error class extending `DomainError` at the top of the VO's file, named `Invalid<Vo>Error`, passing the rejected value as `details`. Throw it inside the validator/constructor. This is Steps 1, 2, and 3 of [how to create a domain error](./how-to-create-a-domain-error.md) — do not skip the message step even though the error class lives locally in the VO file instead of `domain/errors/`.
 
 ### Canonical Example:
+
+`error-codes.ts`:
+
+```typescript
+export const ErrorCode = {
+  // ...
+  INVALID_EVAL_LATENCY_MS: "INVALID_EVAL_LATENCY_MS",
+} as const;
+```
+
+`messages.ts` (English and Spanish):
+
+```typescript
+    errors: {
+      // ...
+      INVALID_EVAL_LATENCY_MS: "Latency must be zero or greater.",
+    }
+```
+
+```typescript
+    errors: {
+      // ...
+      INVALID_EVAL_LATENCY_MS: "La latencia debe ser cero o mayor.",
+    }
+```
+
+`eval-latency-ms.value-object.ts`:
 
 ```typescript
 import { DomainError, ValueObject } from "@/backend/modules/shared";
 import { ErrorCode } from "@/shared/error-codes";
 
-// 1. Define the custom error class locally, extending DomainError
-class EvalLatencyMsError extends DomainError {
+// 4. Define the custom error class locally, extending DomainError, with its own specific ErrorCode
+class InvalidEvalLatencyMsError extends DomainError {
   constructor(value: number) {
-    super(ErrorCode.VALIDATION_FAILED, `Latency cannot be negative: ${value}`, { value });
-    this.name = "EvalLatencyMsError";
+    super(ErrorCode.INVALID_EVAL_LATENCY_MS, `Latency cannot be negative: ${value}`, { value });
+    this.name = "InvalidEvalLatencyMsError";
   }
 }
 
 const MIN_LATENCY = 0;
 
-// 2. Export the Value Object class
+// 5. Export the Value Object class
 export class EvalLatencyMs extends ValueObject<number> {
   private constructor(private readonly value: number) {
     super();
     if (!Number.isFinite(value) || value < MIN_LATENCY) {
-      // 3. Throw the custom error class, passing the invalid value along
-      throw new EvalLatencyMsError(value);
+      // 6. Throw the custom error class, passing the invalid value along
+      throw new InvalidEvalLatencyMsError(value);
     }
   }
 
@@ -134,7 +161,7 @@ export class User extends AggregateRoot<UserPrimitives> {
 
 Every field on the entity is a Value Object — `UniqueId`, `UserAge`, `PhotoUrls` — never a bare primitive. `UserAge` and `PhotoUrls` throw their own local errors (e.g. `UserAgeError`) from their constructors if built from invalid primitives, so the entity never re-checks `age < 0` or shape-validates the photo list itself — by the time `User` holds these VOs, they are guaranteed valid. `PhotoUrls` also stays immutable: `isAtMax()` is a pure query and `add(url)` returns a *new* `PhotoUrls` instance rather than mutating in place, which is why `uploadPhoto` reassigns `this.photoUrls` instead of pushing into an array.
 
-`MaxPhotosExceededError` models a business rule that only makes sense in the context of an action (`uploadPhoto`), not a data-shape constraint — that's why it gets its own registered `ErrorCode` and file under `domain/errors/`, imported into the entity, instead of reusing the generic `ErrorCode.VALIDATION_FAILED` declared inline like a VO's leaf validation error.
+`MaxPhotosExceededError` models a business rule that only makes sense in the context of an action (`uploadPhoto`), not a data-shape constraint — that's why it lives in its own file under `domain/errors/`, imported into the entity, instead of being declared inline like a VO's leaf validation error. Both still register their own specific `ErrorCode` (`USER_MAX_PHOTOS_EXCEEDED` vs. `INVALID_EVAL_LATENCY_MS`) — only the file location differs.
 
 ---
 
