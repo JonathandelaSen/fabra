@@ -1,32 +1,33 @@
 # How to Define Errors in Value Objects and Entities
 
-In this codebase, Value Objects (VOs) and Entities must **never** throw generic `Error` or `DomainError` directly. There are two allowed patterns, depending on what kind of error it is:
+In this codebase, Value Objects (VOs) and Entities must **never** throw a bare `Error` or a bare `DomainError` directly. Both always throw a custom class that **extends `DomainError`** and carries useful structured metadata (the invalid value, the ids/counts involved) as its `details` payload. What differs is *which* `ErrorCode` they use and *where* the class lives:
 
-1. **Leaf validation errors** (a VO's constructor rejecting a malformed primitive) throw a custom `Error` subclass defined **locally in the same file**.
-2. **Business-rule errors** (an entity action enforcing an invariant, e.g. "a user cannot upload more than 5 photos") throw a full `DomainError` subclass, defined in its own file under the module's `domain/errors/` directory and imported into the entity, following [how to create a domain error](./how-to-create-a-domain-error.md).
+1. **Leaf validation errors** (a VO's constructor rejecting a malformed primitive) throw a custom `DomainError` subclass defined **locally in the same file**, reusing the shared generic `ErrorCode.VALIDATION_FAILED` — no new registry entry needed, since the failure is a data-shape detail with no product-specific copy.
+2. **Business-rule errors** (an entity action enforcing an invariant, e.g. "a user cannot upload more than 5 photos") throw a `DomainError` subclass defined in its own file under the module's `domain/errors/` directory and imported into the entity, with its **own registered `ErrorCode`** and translated copy, following [how to create a domain error](./how-to-create-a-domain-error.md).
 
 ## Why This Split?
 
 1. **Locality of Reference**: VO validation logic and its error are kept together in a single file, making it easy to understand the invariant at the point it's enforced.
-2. **Clean Error Registry**: Avoids polluting the global `ErrorCode` registry with leaf-level VO validation details that are only relevant within a single VO.
-3. **Business rules need the full registry**: Entity action errors cross the API boundary (they need an `ErrorCode`, an HTTP status via `handleApiError`, and translated user-facing copy), so they follow the same registered-`DomainError` convention as any other domain error, and get useful structured `data` for logging/Sentry.
-4. **Specific Error Handling**: Either way, calling code can catch a specific class and handle it differently than a generic runtime or infrastructure failure.
+2. **Clean Error Registry**: Leaf VO errors reuse the shared generic `ErrorCode.VALIDATION_FAILED` instead of registering a bespoke code per VO — the invalid value goes in `details` instead of in a new translated message.
+3. **Business rules need their own copy**: Entity action errors are meaningful product events that cross the API boundary (they need a specific `ErrorCode`, an HTTP status via `handleApiError`, and translated user-facing copy), so they get their own registered `DomainError` subclass like any other domain error.
+4. **Specific Error Handling**: Either way, calling code can catch a specific class and handle it differently than a generic runtime or infrastructure failure, and every thrown error carries the structured `details` useful for debugging in Sentry/logs.
 
 ---
 
 ## Error Convention for Value Objects
 
-Define a custom error class extending `Error` at the top of the file, then throw it inside the validator/constructor.
+Define a custom error class extending `DomainError` at the top of the file, using the shared generic `ErrorCode.VALIDATION_FAILED` and passing the rejected value as `details`, then throw it inside the validator/constructor.
 
 ### Canonical Example:
 
 ```typescript
-import { ValueObject } from "@/backend/modules/shared";
+import { DomainError, ValueObject } from "@/backend/modules/shared";
+import { ErrorCode } from "@/shared/error-codes";
 
-// 1. Define the custom error class locally
-class EvalLatencyMsError extends Error {
-  constructor() {
-    super("Latency cannot be negative.");
+// 1. Define the custom error class locally, extending DomainError
+class EvalLatencyMsError extends DomainError {
+  constructor(value: number) {
+    super(ErrorCode.VALIDATION_FAILED, `Latency cannot be negative: ${value}`, { value });
     this.name = "EvalLatencyMsError";
   }
 }
@@ -38,8 +39,8 @@ export class EvalLatencyMs extends ValueObject<number> {
   private constructor(private readonly value: number) {
     super();
     if (!Number.isFinite(value) || value < MIN_LATENCY) {
-      // 3. Throw the custom error class
-      throw new EvalLatencyMsError();
+      // 3. Throw the custom error class, passing the invalid value along
+      throw new EvalLatencyMsError(value);
     }
   }
 
@@ -133,7 +134,7 @@ export class User extends AggregateRoot<UserPrimitives> {
 
 Every field on the entity is a Value Object — `UniqueId`, `UserAge`, `PhotoUrls` — never a bare primitive. `UserAge` and `PhotoUrls` throw their own local errors (e.g. `UserAgeError`) from their constructors if built from invalid primitives, so the entity never re-checks `age < 0` or shape-validates the photo list itself — by the time `User` holds these VOs, they are guaranteed valid. `PhotoUrls` also stays immutable: `isAtMax()` is a pure query and `add(url)` returns a *new* `PhotoUrls` instance rather than mutating in place, which is why `uploadPhoto` reassigns `this.photoUrls` instead of pushing into an array.
 
-`MaxPhotosExceededError` models a business rule that only makes sense in the context of an action (`uploadPhoto`), not a data-shape constraint — that's why it's a registered `DomainError` in `domain/errors/`, imported into the entity, rather than a bare `Error` subclass declared inline like a VO's leaf validation error.
+`MaxPhotosExceededError` models a business rule that only makes sense in the context of an action (`uploadPhoto`), not a data-shape constraint — that's why it gets its own registered `ErrorCode` and file under `domain/errors/`, imported into the entity, instead of reusing the generic `ErrorCode.VALIDATION_FAILED` declared inline like a VO's leaf validation error.
 
 ---
 
